@@ -46,7 +46,7 @@ function openform($form_name, $method, $action_url, array $options = array()) {
     $action_prefix = fusion_get_settings("site_seo") && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
     $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_prefix.$action_url."' ".$class." ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
     if ($method == 'post') {
-        $token = \defender::getInstance()->generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
+        $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
         $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
     }
@@ -55,7 +55,5 @@ function openform($form_name, $method, $action_url, array $options = array()) {
 }
 
 function closeform() {
-    $html = "</form>\n";
-
-    return $html;
+    return "</form>\n";
 }
