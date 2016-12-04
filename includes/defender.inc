@@ -44,19 +44,8 @@ class defender {
         'thumbnail_2' => '',
     );
     private $input_error_text = array();
-    private $tokenIsValid = TRUE;
-    // Sanitize Fields Automatically
-    /**
-     * Generate a Token
-     * Generates a unique token
-     * @param string $form_id The ID of the form
-     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-     * @return string|string[]        The token string
-     */
-    private $recycled_token = "";
 
     private function  __construct() {
-        new \Defender\Token();
     }
 
     /**

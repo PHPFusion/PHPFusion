@@ -204,7 +204,7 @@ require_once INCLUDES."error_handling_include.php";
 include LOCALE.LOCALESET."global.php";
 
 $defender = defender::getInstance();
-
+new \Defender\Token();
 
 // Define aidlink
 if (iADMIN) {

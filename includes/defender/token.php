@@ -15,6 +15,7 @@ class Token extends \defender {
     private static $debug = FALSE;
 
     public function __construct() {
+
         $locale = fusion_get_locale();
         $error = FALSE;
         if (!empty($_POST)) {
@@ -97,6 +98,14 @@ class Token extends \defender {
 
         return TRUE;
     }
+
+    /**
+     * Generate a Token
+     * Generates a unique token
+     * @param string $form_id The ID of the form
+     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
+     * @return string|string[]        The token string
+     */
 
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 1, $file = "") {
 

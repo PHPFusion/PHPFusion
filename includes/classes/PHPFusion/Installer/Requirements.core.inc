@@ -252,6 +252,23 @@ class Requirements extends Install_Core {
 
         $microtime = microtime(TRUE);
         $system = self::$connection;
+
+        if (!isset($system['db_prefix']) && empty($system['db_prefix']) && defined('DB_PREFIX')) {
+            $system['db_prefix'] = DB_PREFIX;
+        }
+
+        if (!isset($system['cookie_prefix']) && empty($system['cookie_prefix']) && defined('COOKIE_PREFIX')) {
+            $system['cookie_prefix'] = COOKIE_PREFIX;
+        }
+
+        if (!isset($system['secret_key']) && empty($system['secret_key']) && defined('SECRET_KEY')) {
+            $system['secret_key'] = SECRET_KEY;
+        }
+
+        if (!isset($system['secret_key_salt']) && empty($system['secret_key_salt']) && defined('SECRET_KEY_SALT')) {
+            $system['secret_key_salt'] = SECRET_KEY_SALT;
+        }
+
         $locale = self::$locale;
 
         if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
@@ -401,6 +418,7 @@ function write_config(array $system = array()) {
     if (!file_exists(BASEDIR.'config.php')) {
         //touch(BASEDIR.'config_temp.php');
     }
+
     // Force underscore between prefix and cookie name
     if (!empty($system['cookie_prefix'])) {
         $cookie_prefix_last = $system['cookie_prefix'][strlen($system['cookie_prefix']) - 1];

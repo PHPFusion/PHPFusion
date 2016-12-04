@@ -3,7 +3,6 @@ namespace PHPFusion\Steps;
 
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
-use PHPFusion\Installer\Steps\InstallerPermissions;
 
 class InstallerIntroduction extends Install_Core {
 
@@ -20,17 +19,21 @@ class InstallerIntroduction extends Install_Core {
             if (empty(self::$connection['pdo_enabled'])) {
                 self::$connection['pdo_enabled'] = 1;
             }
-            // Need to authenticate
             require(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
-            if (isset($validation[3])) {
-                if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
-                    return $this->step_Upgrade();
-                } else {
-                    return $this->__RecoveryConsole();
+            ini_set('display_errors', FALSE);
+            if (!empty(fusion_get_settings())) {
+                if (isset($validation[3])) {
+                    if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+                        return $this->step_Upgrade();
+                    } else {
+                        return $this->__RecoveryConsole();
+                    }
                 }
+                throw new \Exception('Not a valid Super Administrator');
+            } else {
+                throw new \Exception('No table to upgrade or recover from');
             }
-            throw new \Exception('Not a valid Super Administrator');
         }
         throw new \Exception('No config');
     }
