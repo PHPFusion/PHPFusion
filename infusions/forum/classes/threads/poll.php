@@ -376,7 +376,7 @@ class Poll {
                 dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."'");
                 dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".self::$data['thread_id']."'");
                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='0' WHERE thread_id='".self::$data['thread_id']."'");
-                redirect(INFUSIONS."forum/postify.php?post=deletepoll&amp;error=4&forum_id=".self::$data['forum_id']."&amp;thread_id=".self::$data['thread_id']."&amp;post_id=".intval($_GET['post_id']));
+                redirect(INFUSIONS."forum/postify.php?post=deletepoll&amp;error=4&forum_id=".self::$data['forum_id']."&amp;thread_id=".self::$data['thread_id']);
             }
         }
         redirect(INFUSIONS."forum/viewthread.php?forum_id=".self::$data['forum_id']."&amp;thread_id=".self::$data['thread_id']);
