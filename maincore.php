@@ -205,6 +205,7 @@ include LOCALE.LOCALESET."global.php";
 
 $defender = defender::getInstance();
 new \Defender\Token();
+\Defender\ImageValidation::ValidateMime();
 
 // Define aidlink
 if (iADMIN) {
@@ -230,41 +231,6 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 
 $lastvisited = Authenticate::setLastVisitCookie();
 
-
-// Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
-if ($settings['mime_check'] == "1") {
-    if (isset($_FILES) && count($_FILES)) {
-        require_once INCLUDES."mimetypes_include.php";
-        $mime_types = mimeTypes();
-        foreach ($_FILES as $each) {
-            if (isset($each['name']) && !empty($each['tmp_name'])) {
-                $file_info = pathinfo($each['name']);
-                $extension = $file_info['extension'];
-                if (array_key_exists($extension, $mime_types)) {
-                    if (is_array($mime_types[$extension])) {
-                        $valid_mimetype = FALSE;
-                        foreach ($mime_types[$extension] as $each_mimetype) {
-                            if ($each_mimetype == $each['type']) {
-                                $valid_mimetype = TRUE;
-                                break;
-                            }
-                        }
-                        if (!$valid_mimetype) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                        unset($valid_mimetype);
-                    } else {
-                        if ($mime_types[$extension] != $each['type']) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                    }
-                }
-                unset($file_info, $extension);
-            }
-        }
-        unset($mime_types);
-    }
-}
 
 // Set admin login procedures
 Authenticate::setAdminLogin();

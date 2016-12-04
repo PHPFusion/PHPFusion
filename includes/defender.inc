@@ -435,3 +435,4 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
 
 require(dirname(__FILE__) . '/defender/validation.php');
 require(dirname(__FILE__).'/defender/token.php');
+require(dirname(__FILE__).'/defender/mimecheck.php');

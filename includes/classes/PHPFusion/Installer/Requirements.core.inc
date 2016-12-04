@@ -497,7 +497,18 @@ function write_htaccess() {
     $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
     $htc .= "# Disable directory listing".PHP_EOL;
     $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-
+    // This force image to not be able to be used as other matter
+    // See the harmless_kitten image in image directory
+    $htc .= "ForceType application/octet-stream".PHP_EOL;
+    $htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
+    $htc .= "ForceType image/jpeg".PHP_EOL;
+    $htc .= "</FilesMatch>".PHP_EOL;
+    $htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
+    $htc .= "ForceType image/gif".PHP_EOL;
+    $htc .= "</FilesMatch>".PHP_EOL;
+    $htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
+    $htc .= "ForceType image/png".PHP_EOL;
+    $htc .= "</FilesMatch>".PHP_EOL;
 
     $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
     $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
