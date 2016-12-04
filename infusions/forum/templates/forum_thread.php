@@ -83,7 +83,7 @@ if (!function_exists('render_thread')) {
                 <div class='clearfix'>
                     <div class='pull-right'>{%poll_button%}{%new_thread_button%}</div>
                     <div class='pull-left'>
-                        <div class='display-inline-block m-r-10'>
+                        <div class='dropdown display-inline-block m-r-10'>
                             <a class='btn btn-sm btn-default dropdown-toggle' data-toggle='dropdown'><strong>".$locale['forum_0183']."</strong> {%filter_word%}<span class='caret'></span></a>
                             {%filter_dropdown%}
                         </div>
@@ -96,7 +96,9 @@ if (!function_exists('render_thread')) {
             </div>
             <!--pre_forum_thread-->
             {%post_items%}
-            {%mod_form%}
+            <div class='list-group-item'>
+                {%mod_form%}
+            </div>
             <div class='clearfix m-t-20'>
                 <div class='pull-left m-t-10'>
                 {%new_thread_button%}{%reply_button%}
@@ -133,7 +135,7 @@ if (!function_exists('render_thread')) {
                        '{%time_updated%}' => $locale['forum_0363'].timer($data['thread_lastpost']),
                        '{%thread_tags%}' => (!empty($info['thread_tags_display']) ? "<div class='clearfix'><i class='fa fa-tags text-lighter fa-fw'></i> ".$info['thread_tags_display']."</div>" : ''),
                        '{%poll_form%}' => (!empty($info['poll_form']) ? "<div class='well'>".$info['poll_form']."</div>" : ''),
-                       '{%poll_button%}' => ($can_poll ? "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
+                       '{%poll_button%}' => ($can_poll ? "<a class='btn btn-success btn-sm m-r-10 ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
                        '{%new_thread_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>" : ''),
                        '{%reply_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm m-l-10 ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
                        '{%filter_word%}' => (isset($_GET['section']) && in_array($_GET['section'],

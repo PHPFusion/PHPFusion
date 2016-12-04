@@ -379,7 +379,7 @@ class ForumThreads extends ForumServer {
                 );
                 $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
                 $this->thread_info['mod_form'] .= form_hidden('delete_item_post', '', '');
-                $this->thread_info['mod_form'] .= "<div class='list-group-item'>\n<div class='btn-group m-r-10'>\n
+                $this->thread_info['mod_form'] .= "<div class='btn-group m-r-10'>\n
 						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
@@ -387,7 +387,7 @@ class ForumThreads extends ForumServer {
 					".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
-                                      array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
+                                      array('class' => 'btn-default pull-right m-l-10'))."
 						".form_select('step', '', '',
                                       array(
                                           'options' => $this->thread_info['mod_options'],
@@ -398,8 +398,7 @@ class ForumThreads extends ForumServer {
                                           'inline' => TRUE
                                       )
                     )."
-					</div>\n
-				</div>\n";
+					</div>\n";
                 $this->thread_info['mod_form'] .= closeform();
                 add_to_jquery("
 				$('#check_all').bind('click', function() {
