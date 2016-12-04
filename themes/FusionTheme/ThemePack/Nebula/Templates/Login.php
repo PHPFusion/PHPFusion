@@ -94,7 +94,7 @@ class Login {
         ?>
         <section id="registerForm" class="login-bg" style="left: 0; top: 0; right: 0; bottom: 0; position: fixed; overflow-y:auto">
             <div class="container">
-                <div class="col-xs-12 col-sm-6 col-sm-offset-3 center">
+                <div class="col-xs-12 text-center">
                     <div class="text-center display-block"><?php echo $banner ?></div>
                			<?php $notices = getNotices();
                         if ($notices) {
