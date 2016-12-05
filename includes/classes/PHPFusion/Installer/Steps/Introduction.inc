@@ -145,8 +145,10 @@ class InstallerIntroduction extends Install_Core {
         }
 
         if (isset($_POST['htaccess'])) {
-            $this->write_htaccess();
+            \PHPFusion\Installer\write_htaccess();
+
             addNotice('success', self::$locale['setup_1020']);
+            $this->installer_step(self::STEP_INTRO);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
 
