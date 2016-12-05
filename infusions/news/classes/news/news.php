@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\News;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\SiteLinks;
 
 abstract class News extends NewsServer {
@@ -37,7 +38,7 @@ abstract class News extends NewsServer {
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'news/news.php',
                            'title' => SiteLinks::get_current_SiteLinks("", "link_name")
             ]);
@@ -203,6 +204,44 @@ abstract class News extends NewsServer {
 
         return (string)$cat_filter;
     }
+
+    public static function get_NewsImage($data, $thumbnail = FALSE, $link = FALSE, $image_width = '') {
+        require_once (INCLUDES.'theme_functions_include.php');
+
+        $imageOptimized = IMAGES_N."news_default.jpg";
+        $imageRaw = '';
+
+        if ($data['news_cat_image']) {
+            $imageOptimized = get_image("nc_".$data['news_cat_name']);
+            $imageRaw = $imageOptimized;
+        }
+
+        if (!self::get_news_settings('news_image_frontpage')) {
+            if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
+                $imageOptimized = IMAGES_N.$data['news_image'];
+                $imageRaw = $imageOptimized;
+            }
+            if ($data['news_image_t2'] && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                $imageOptimized = IMAGES_N_T.$data['news_image_t2'];
+            }
+            if ($data['news_image_t1'] && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                $imageOptimized = IMAGES_N_T.$data['news_image_t1'];
+            }
+        }
+
+        if ($thumbnail) {
+            return thumbnail($imageOptimized, ($image_width ?: self::get_news_settings('news_thumb_w')).'px', $link === TRUE && $data['news_extended'] ? INFUSIONS.'/news/news.php?readmore='.$data['news_id'] : FALSE);
+        }
+
+        if ($link === TRUE && $data['news_extended']) {
+            return "<a class='img-link' href='".INFUSIONS.'/news/news.php?readmore='.$data['news_id']."'>\n
+            <img class='img-responsive' src='$imageRaw' alt='".$data['news_subject']."' />\n
+            </a>\n";
+        }
+        return "<img class='img-responsive' src='$imageRaw' alt='".$data['news_subject']."' />\n";
+    }
+
+
 
     /**
      * Parse MVC Data output
@@ -516,7 +555,7 @@ abstract class News extends NewsServer {
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'news/news.php',
                            'title' => SiteLinks::get_current_SiteLinks("", "link_name")
                        ]);
@@ -569,7 +608,7 @@ abstract class News extends NewsServer {
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
             $this->news_cat_breadcrumbs($news_cat_index);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
                                'title' => $data['news_subject']
                            ]);
@@ -635,8 +674,6 @@ abstract class News extends NewsServer {
 
         return (array)$row;
     }
-
-
 
     protected function __clone() {
     }
