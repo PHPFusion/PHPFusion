@@ -308,6 +308,8 @@
 .text-normal, .font-normal {
     font-weight: normal !important;
     text-transform: none !important;
+    text-decoration: none !important;
+    color: inherit !important;
 }
 
 .text-active {
@@ -521,10 +523,6 @@ a .entypo, a .entypo-social {
 }
 
 .sub-nav {
-}
-
-.navbar .fa, .navbar .entypo {
-    margin-right: 10px;
 }
 
 .profile-link {
