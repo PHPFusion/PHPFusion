@@ -91,11 +91,13 @@ if (!function_exists("showsidelinks")) {
     add_to_jquery("
         $('.fusion_css_navigation_panel li:has(ul)').on('click', function(e) {
             e.preventDefault();
-            $('.fusion_css_navigation_panel').find('.sub-nav').slideToggle();
+            $(this).find('.sub-nav').slideToggle('fast');
         });
+
         $('.fusion_css_navigation_panel').find('.sub-nav li').click(function(e) {
             e.stopPropagation();
         });
+
         $('.fusion_css_navigation_panel li:has(ul)').find('a:first').append(' »');
     ");
 }
