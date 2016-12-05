@@ -23,6 +23,8 @@ abstract class RewriteDriver {
 
     protected static $instance = NULL;
 
+    protected $dataStatements = [];
+
     /**
      * Array of Handlers
      * example: news, threads, articles
@@ -327,8 +329,7 @@ abstract class RewriteDriver {
                     $search_regex = $this->cleanRegex($val);
 
                     if (isset($this->rewrite_code[$driver]) && isset($this->rewrite_replace[$driver])) {
-                        $search_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver],
-                                                    $search_regex);
+                        $search_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver], $search_regex);
                     }
 
                     $this->buffer_search_regex[$driver][$key] = $buffer_regex;
@@ -517,9 +518,7 @@ abstract class RewriteDriver {
                                                     $loop_count++;
                                                 }
                                             }
-
                                         }
-
 
                                         $tag_values += $other_values;
                                     }
@@ -543,6 +542,7 @@ abstract class RewriteDriver {
                     }
 
                     reset($tag_values);
+
                     while (list($regexTag, $tag_replacement) = each($tag_values)) {
 
                         for ($i = 0; $i < count($output_matches[0]); $i++) {
