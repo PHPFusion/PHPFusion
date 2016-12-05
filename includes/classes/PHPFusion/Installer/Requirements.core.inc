@@ -493,6 +493,7 @@ function write_htaccess() {
     $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
     $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
     $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+    $htc .= "   SetEnvIfNoCase ^User-Agent$ .*(almaden|Anarchie|ASPSeek|attach|autoemailspider|BackWeb|Bandit|BatchFTP|BlackWidow|Bot\ mailto:craftbot@yahoo.com|Buddy|bumblebee|CherryPicker|ChinaClaw|CICC|Collector|Copier|Crescent|Custo|DA|DIIbot|DISCo|DISCo\ Pump|Download\ Demon|Download\ Wonder|Downloader|Drip|DSurf15a|eCatch|EasyDL/2.99|EirGrabber|EmailCollector|EmailSiphon|EmailWolf|Express\ WebPictures|ExtractorPro|EyeNetIE|FileHound|FlashGet|GetRight|GetSmart|GetWeb!|gigabaz|Go\!Zilla|Go!Zilla|Go-Ahead-Got-It|gotit|Grabber|GrabNet|Grafula|grub-client|HMView|HTTrack|httpdown|ia_archiver|Image\ Stripper|Image\ Sucker|Indy*Library|InterGET|InternetLinkagent|Internet\ Ninja|InternetSeer.com|Iria|JBH*agent|JetCar|JOC\ Web\ Spider|JustView|larbin|LeechFTP|LexiBot|lftp|Link*Sleuth|likse|Link|LinkWalker|Mag-Net|Magnet|Mass\ Downloader|Memo|Microsoft.URL|MIDown\ tool|Mirror|Mister\ PiX|Mozilla.*Indy|Mozilla.*NEWT|Mozilla*MSIECrawler|MS\ FrontPage*|MSFrontPage|MSIECrawler|MSProxy|Navroad|NearSite|NetAnts|NetMechanic|NetSpider|Net\ Vampire|NetZIP|NICErsPRO|Ninja|Octopus|Offline\ Explorer|Offline\ Navigator|Openfind|PageGrabber|Papa\ Foto|pavuk|pcBrowser|Ping|PingALink|Pockey|psbot|Pump|QRVA|RealDownload|Reaper|Recorder|ReGet|Scooter|Seeker|Siphon|sitecheck.internetseer.com|SiteSnagger|SlySearch|SmartDownload|Snake|SpaceBison|sproose|Stripper|Sucker|SuperBot|SuperHTTP|Surfbot|Szukacz|tAkeOut|Teleport\ Pro|URLSpiderPro|Vacuum|VoidEYE|Web\ Image\ Collector|Web\ Sucker|WebAuto|[Ww]eb[Bb]andit|webcollage|WebCopier|Web\ Downloader|WebEMailExtrac.*|WebFetch|WebGo\ IS|WebHook|WebLeacher|WebMiner|WebMirror|WebReaper|WebSauger|Website|Website\ eXtractor|Website\ Quester|Webster|WebStripper|ebWhacker|WebZIP|Wget|Whacker|Widow|WWWOFFLE|x-Tractor|Xaldon\ WebSpider|Xenu|Zeus.*Webster|Zeus) HTTP_SAFE_BADBOT".PHP_EOL;
     $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
     $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
     $htc .= "# Disable directory listing".PHP_EOL;
@@ -507,8 +508,7 @@ function write_htaccess() {
     $htc .= "</FilesMatch>".PHP_EOL;
     $htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
     $htc .= "   ForceType image/png".PHP_EOL;
-    $htc .= "</FilesMatch>".PHP_EOL;
-
+    $htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
     $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
     $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
     $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
