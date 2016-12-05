@@ -255,6 +255,7 @@ header h1 {
     background: #1e2024;
     z-index: 21;
     transition: all 0.3s ease-in-out;
+    overflow-y: scroll;
 }
 
 .canvas-toggle {
