@@ -753,6 +753,7 @@ class NewsAdmin extends NewsAdminModel {
             foreach ($filter_values as $val) {
                 if ($val) {
                     $filter_empty = FALSE;
+                    break;
                 }
             }
 
