@@ -41,7 +41,7 @@ class Infusion_Core {
             foreach ($inf_folder as $folder) {
                 $inf_include = INFUSIONS.$folder."/infusion_db.php";
                 if (file_exists($inf_include)) {
-                    require_once $inf_include;
+                    include $inf_include;
                 }
             }
         }
@@ -157,7 +157,8 @@ class Infusion_Core {
             }
         }
 
-        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        redirect(FUSION_REQUEST);
     }
 
     /**
@@ -432,8 +433,9 @@ class Infusion_Core {
             ':folder' => $infData['inf_folder']
         ));
         addNotice("success", sprintf(self::$locale['424'], $inf['title']));
-        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
+        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        redirect(FUSION_REQUEST);
     }
 
     // Method: Multilanguage multiple insert rows
