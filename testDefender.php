@@ -74,6 +74,12 @@ if (isset($_POST['submit_translations'])) {
     if (\defender::safe()) {
         echo 'Your Value to be saved into SQL is...';
         print_p($weblink_value);
+        echo 'so in order to display your text... automatically it is';
+        $value = \PHPFusion\QuantumFields::parse_label($weblink_value);
+
+        print_p('Current language to display is '.LANGUAGE);
+        echo $value;
+
     }
 }
 echo openform('testQuantum', 'post', FUSION_REQUEST);
