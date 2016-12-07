@@ -67,6 +67,37 @@ if (\defender::safe()) {
 echo closeform();
 closetable();
 
+opentable('Using the multilocale Quantum Fields');
+$weblink_value = '';
+if (isset($_POST['submit_translations'])) {
+    $weblink_value = form_sanitizer($_POST['weblink_description'], '', 'weblink_description', TRUE);
+    if (\defender::safe()) {
+        echo 'Your Value to be saved into SQL is...';
+        print_p($weblink_value);
+        echo 'so in order to display your text... automatically it is';
+        $value = \PHPFusion\QuantumFields::parse_label($weblink_value);
+
+        print_p('Current language to display is '.LANGUAGE);
+        echo $value;
+
+    }
+}
+echo openform('testQuantum', 'post', FUSION_REQUEST);
+echo \PHPFusion\QuantumFields::quantum_multilocale_fields(
+    'weblink_description', 'Weblink Description', $weblink_value,
+    [
+        'type' => 'textarea', // text
+        'required' => true,
+        'class' => 'm-t-10',
+    ]
+);
+echo form_button('submit_translations', 'Submit', 'test');
+echo closeform();
+closetable();
+
+
+
+
 opentable("Testing Inputs with Defender");
 add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {height:auto !important}</style>');
 

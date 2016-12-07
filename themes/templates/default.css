@@ -780,6 +780,7 @@ table.tablesorter thead tr .header {
     cursor: pointer;
 }
 
+td.min { width: 1%;  }
 table.tablesorter tbody td { }
 
 table.tablesorter tbody tr.odd td { }

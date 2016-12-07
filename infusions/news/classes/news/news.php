@@ -299,22 +299,23 @@ abstract class News extends NewsServer {
             $news_pagenav = "";
             $pagecount = 1;
 
-            $data['news_news'] = parse_textarea($data['news_news']);
-            $data['news_extended'] = parse_textarea($data['news_extended']);
 
-            $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ?
-                nl2br(parse_textarea($data['news_news'])) : parse_textarea($data['news_news'])
-            ));
+            $data['news_news'] = parse_textarea($data['news_news'], TRUE, FALSE, TRUE, IMAGES_N, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+            $data['news_extended'] = parse_textarea($data['news_extended'], TRUE, FALSE, TRUE, IMAGES_N, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+
+            $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
 
             if (isset($_GET['readmore'])) {
 
-                $news_text = $data['news_extended'] ? parse_textarea("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : parse_textarea("<p>".$data['news_news']."</p>");
+                $news_text = $data['news_extended'] ? ("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : "<p>".$data['news_news']."</p>";
 
-                $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br($news_text) : $news_text);
+                $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $news_text);
+
                 $pagecount = count($news_news);
                 if (is_array($news_news)) {
                     $news_news = $news_news[$_GET['rowstart']];
                 }
+
                 if ($pagecount > 1) {
                     $news_pagenav = makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."news/news.php?readmore=".$data['news_id']."&amp;");
                 }
