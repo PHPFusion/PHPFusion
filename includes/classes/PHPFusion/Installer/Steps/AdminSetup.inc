@@ -403,7 +403,7 @@ class InstallerAdminSetup extends Install_Core {
                         require_once INCLUDES."multisite_include.php";
                         $this->installer_step(self::STEP_INFUSIONS);
                         redirect(FUSION_REQUEST);
-                        //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                        //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_REQUEST);
                     } else {
                         $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
                         redirect(FUSION_REQUEST);

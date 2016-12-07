@@ -25,6 +25,10 @@ class InstallerInfusions extends Install_Core {
 
     public function __view() {
 
+        if (!defined('IN_FUSION')) {
+            define('IN_FUSION', TRUE);
+        }
+
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
 
         require(INCLUDES.'multisite_include.php');
@@ -34,6 +38,46 @@ class InstallerInfusions extends Install_Core {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
         if (isset($validation[3])) {
+
+            /*
+             * Use DB superadmin password.
+             */
+            $userdata = fusion_get_user(1);
+            $settings = fusion_get_settings();
+            // User level, Admin Rights & User Group definitions
+            define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
+            define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);
+            define("iADMIN", $userdata['user_level'] <= -102 ? 1 : 0);
+            define("iSUPERADMIN", $userdata['user_level'] == -103 ? 1 : 0);
+            define("iUSER", $userdata['user_level']);
+            define("iUSER_RIGHTS", $userdata['user_rights']);
+            define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
+            // Get enabled language settings
+            $language_opts = fusion_get_enabled_languages();
+            $enabled_languages = array_keys($language_opts);
+            // If language change is initiated and if the selected language is valid
+            if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+                $lang = stripinput($_GET['lang']);
+                set_language($lang);
+                $redirectPath = clean_request("", array("lang"), FALSE);
+                redirect($redirectPath);
+            }
+            // Main language detection procedure
+            if (iMEMBER && valid_language($userdata['user_language'])) {
+                define("LANGUAGE", $userdata['user_language']);
+                define("LOCALESET", $userdata['user_language']."/");
+            } else {
+                $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+                if ($data['user_language']) {
+                    define("LANGUAGE", $data['user_language']);
+                    define("LOCALESET", $data['user_language']."/");
+                }
+            }
+            // Check if definitions have been set, if not set the default language to system language
+            if (!defined("LANGUAGE")) {
+                define("LANGUAGE", $settings['locale']);
+                define("LOCALESET", $settings['locale']."/");
+            }
 
             Infusion_Core::getInstance()->load_Configuration();
 
