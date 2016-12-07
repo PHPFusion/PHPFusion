@@ -32,7 +32,6 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'block' => FALSE,
         'alt' => $title,
         'data' => [],
-        'block' => FALSE,
     );
 
     $options += $default_options;
