@@ -250,7 +250,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'safemode' => FALSE,
         'allowclear' => FALSE,
         'multiple' => FALSE,
-        'width' => '250px',
+        'inner_width' => '250px',
+        'width' => '100%',
         'keyflip' => FALSE,
         'tags' => FALSE,
         'jsonmode' => FALSE,
@@ -287,10 +288,10 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' style='width:".$options['width']."px'>\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
-    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
+    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."%;' ".($options['deactivate'] ? 'disabled' : '')." />";
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
