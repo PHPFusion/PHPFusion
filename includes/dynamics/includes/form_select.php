@@ -277,15 +277,14 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if (defender::getInstance()->inputHasError($input_name)) {
+
+    if (defender::inputHasError($input_name)) {
         $error_class = "has-error ";
-        if (!empty($options['error_text'])) {
-            $new_error_text = defender::getInstance()->getErrorText($input_name);
-            if (!empty($new_error_text)) {
-                $options['error_text'] = $new_error_text;
-            }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        $new_error_text = defender::getErrorText($input_name);
+        if (!empty($new_error_text)) {
+            $options['error_text'] = $new_error_text;
         }
+        addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' style='width:".$options['width']."px'>\n";
@@ -295,7 +294,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
-    $html .= (($options['required'] == 1 && defender::getInstance()->inputHasError($input_name)) || defender::getInstance()->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '');
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : "";
