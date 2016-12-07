@@ -768,7 +768,7 @@ class NewsAdmin extends NewsAdminModel {
             echo "</div>\n";
 
             echo "<div class='row m-b-20'>\n";
-            echo "<div class='col-xs-6' style='vertical-align:top;'>\n";
+            echo "<div class='col-xs-6 vt'>\n";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
             <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("news_clear", $this->locale['news_0243'], "clear", array('class' => 'btn-default btn-sm'));
@@ -895,16 +895,16 @@ class NewsAdmin extends NewsAdminModel {
             <thead>
             <tr>
                 <td></td>
-                <td class="strong col-xs-4"><?php echo $this->locale['news_0200'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0201'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0209'] ?></td>
-                <td class="strong"><?php echo $this->locale['sticky'] ?></td>
-                <td class="strong"><?php echo $this->locale['draft'] ?></td>
-                <td class="strong"><?php echo $this->locale['global_073'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0216'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0142'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0200'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0201'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0209'] ?></td>
+                <td class="strong min"><?php echo $this->locale['sticky'] ?></td>
+                <td class="strong min"><?php echo $this->locale['draft'] ?></td>
+                <td class="strong min"><?php echo $this->locale['global_073'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0216'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0142'] ?></td>
                 <td class="strong"><?php echo $this->locale['actions'] ?></td>
-                <td class="strong">ID</td>
+                <td class="strong min">ID</td>
             </tr>
             </thead>
             <tbody>
@@ -938,7 +938,6 @@ class NewsAdmin extends NewsAdminModel {
                         <td><?php echo format_word($data['comments_count'], $this->locale['fmt_comment']) ?></td>
                         <td><?php echo format_word($data['image_count'], $this->locale['fmt_photo']) ?></td>
                         <td>
-                            <div class="pull-left"><?php echo display_avatar($data, "20px", "", FALSE, "img-rounded") ?></div>
                             <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'],
                                                                                $data['user_status']) ?></div>
                         </td>
