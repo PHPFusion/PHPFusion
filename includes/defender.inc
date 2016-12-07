@@ -43,7 +43,7 @@ class defender {
         'thumbnail_1' => '',
         'thumbnail_2' => '',
     );
-    private $input_error_text = array();
+    private static $input_error_text = array();
 
     private function  __construct() {
     }
@@ -195,8 +195,8 @@ class defender {
      * @param $input_name
      * @param $text
      */
-    public function setErrorText($input_name, $text) {
-        $this->input_error_text[$input_name] = $text;
+    public static function setErrorText($input_name, $text) {
+        self::$input_error_text[$input_name] = $text;
     }
 
     /**
@@ -206,15 +206,15 @@ class defender {
      * @param $input_name
      * @return null
      */
-    public function getErrorText($input_name) {
-        if ($this->inputHasError($input_name)) {
-            return isset($this->input_error_text[$input_name]) ? $this->input_error_text[$input_name] : NULL;
+    public static function getErrorText($input_name) {
+        if (self::inputHasError($input_name)) {
+            return isset(self::$input_error_text[$input_name]) ? self::$input_error_text[$input_name] : NULL;
         }
 
         return NULL;
     }
 
-    public function inputHasError($input_name) {
+    public static function inputHasError($input_name) {
         if (isset(self::$input_errors[$input_name])) {
             return TRUE;
         }
@@ -222,7 +222,7 @@ class defender {
         return FALSE;
     }
 
-    public function get_inputError() {
+    public static function get_inputError() {
         return self::$input_errors;
     }
 
