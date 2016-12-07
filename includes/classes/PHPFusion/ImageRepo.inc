@@ -137,10 +137,10 @@ class ImageRepo {
                     break;
                 case 'nc_':
                 default :
-                    $image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+                    $image = file_exists(INFUSIONS.'news/news_cats/'.$data['image']) ? INFUSIONS.'news/news_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
                     break;
                 case 'bl_':
-                    $image = file_exists(IMAGES_BC.$data['image']) ? IMAGES_BC.$data['image'] : IMAGES."imagenotfound.jpg";
+                    $image = file_exists(INFUSIONS.'blog/blog_cats/'.$data['image']) ? INFUSIONS.'blog/blog_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
                     break;
             }
             // Set image
