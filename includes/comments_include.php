@@ -19,13 +19,14 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 /**
- * @param $comment_type - abbr or short ID
- * @param $comment_db - Current Application DB - DB_BLOG for example.
- * @param $comment_col - current sql primary key column - 'blog_id' for example
- * @param $comment_item_id - current sql primary key value '$_GET['blog_id']' for example
- * @param $clink - current page link 'FUSION_SELF' is ok.
+ * @param            $comment_type
+ * @param            $comment_db
+ * @param            $comment_col
+ * @param            $comment_item_id
+ * @param            $clink
+ * @param bool|FALSE $ratings
  */
-function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings) {
+function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings = FALSE) {
     PHPFusion\Feedback\Comments::getInstance(
         array(
             'comment_item_type' => $comment_type,
