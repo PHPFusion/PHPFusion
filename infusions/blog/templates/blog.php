@@ -115,7 +115,7 @@ if (!function_exists('display_blog_item')) {
                     'comment_item_id' => $_GET['readmore'],
                     'clink' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                     'comment_echo' => TRUE,
-                    'comment_allow_ratings' => !empty($data['blog_allow_jquery_ratings'] ? TRUE : FALSE)
+                    'comment_allow_ratings' => $data['blog_allow_ratings']
                 )
             )->showComments();
         }

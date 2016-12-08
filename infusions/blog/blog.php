@@ -153,11 +153,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $blog_blog = parse_textarea($item['blog_blog']);
             $blog_extended = parse_textarea($item['blog_extended']);
 
-            if (fusion_get_settings('comments_jquery')) {
-                $item['blog_allow_jquery_ratings'] = $item['blog_allow_ratings'];
-                $item['blog_allow_ratings'] = FALSE;
-            }
-
             $item += array(
                 "blog_subject" => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
                 "blog_blog" => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br($blog_blog) : $blog_blog),
