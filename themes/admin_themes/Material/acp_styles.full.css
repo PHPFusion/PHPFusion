@@ -4072,3 +4072,6 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dra
 #panel-side6 li img.handle {
   cursor: ns-resize;
 }
+ol, ul {
+  list-style: none;
+}

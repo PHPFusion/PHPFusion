@@ -1649,3 +1649,7 @@ h4.news-title-info {
     display: block;
     margin-top: 20px;
 }
+
+ol, ul {
+    list-style: none;
+}
