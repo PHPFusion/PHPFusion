@@ -88,6 +88,14 @@ class defender {
         return $return_default;
     }
 
+    public static function encode($value) {
+        return base64_encode(json_encode($value));
+    }
+
+    public static function decode($value) {
+        return base64_decode(json_decode($value));
+    }
+
     /**
      * Read serialized array
      * @param $string - serialized string
