@@ -100,14 +100,13 @@ class Token extends \defender {
     }
 
     /**
-     * Generate a Token
      * Generates a unique token
-     * @param string $form_id The ID of the form
-     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-     * @return string|string[]        The token string
+     * @param string $form_id
+     * @param int    $max_tokens
+     * @param string $file
+     * @return mixed|string|\string[]
      */
-
-    public static function generate_token($form_id = 'phpfusion', $max_tokens = 1, $file = "") {
+    public static function generate_token($form_id = 'phpfusion', $max_tokens = 1, $file = '') {
 
         $userdata = fusion_get_userdata();
 
