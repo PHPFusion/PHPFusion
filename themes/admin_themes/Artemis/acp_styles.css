@@ -1746,12 +1746,28 @@ div.mce-edit-area {
 }
 
 #devlpr.login_page .login_bg {
-    background: url(images/login_bg.jpg);
+    /* background: url(images/login_bg.jpg);*/
     background-size: cover;
     min-height: 600px;
     height: 100%;
     overflow: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    background: #0E233B;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #294566), color-stop(1, #0c1f38));
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: radial-gradient(ellipse farthest-corner at center, #294566 0%,#0c1f38 100%);
+    background-repeat: no-repeat;
+    background-position: center center;
+
 }
 
 #devlpr.login_page .login_wrapper {

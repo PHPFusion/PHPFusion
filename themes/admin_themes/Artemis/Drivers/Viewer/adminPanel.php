@@ -84,7 +84,7 @@ class adminPanel extends resource {
                     <li><?php echo showMemoryUsage() ?></li>
                     <li><?php $locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
                 <?php endif; ?>
-                <li class="pull-right"><strong>Artemis <?php echo $locale['render_engine'] ?> 3.1</strong></li>
+                <li class="pull-right"><strong>Artemis <?php echo $locale['render_engine'] ?> 3.2</strong></li>
             </ul>
         </footer>
         <?php
