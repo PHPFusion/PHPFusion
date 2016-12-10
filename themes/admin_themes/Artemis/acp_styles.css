@@ -350,7 +350,7 @@ a:hover, a:focus {
 #devlpr #main_content > header {
     height: 70px;
     background-color: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: 0 27px;
     position: absolute;
     top: 0;
