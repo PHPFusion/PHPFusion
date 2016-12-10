@@ -33,6 +33,8 @@ class Core {
         'breadcrumbs' => FALSE, // show breadcrumbs
         'right' => TRUE, // RIGHT
         'left' => TRUE, // LEFT
+        'left_pre_content' => '',
+        'left_post_content' => '',
         'upper' => TRUE, //AU_UPPER
         'upper_container' => TRUE,
         'body_upper' => TRUE, // U_CENTER
