@@ -75,7 +75,7 @@ class HomePanel {
                         AND (".time()." < ns.news_end OR ns.news_end = 0)
                         AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
                         group by ns.news_id
-                        ORDER BY ns.news_sticky DESC, ns.news_datestamp DESC, comment_count DESC, LIMIT 15",
+                        ORDER BY ns.news_sticky DESC, ns.news_datestamp DESC, comment_count DESC LIMIT 15",
             'locale' => array(
                 'norecord' => self::$locale['home_0050'],
                 'blockTitle' => self::$locale['home_0000'],
