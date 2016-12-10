@@ -35,6 +35,11 @@ if (($folder = filter_input(INPUT_POST, 'infuse'))) {
 
 
 opentable($locale['400']);
+
+echo "<div class='text-right'>\n";
+echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+echo "</div>\n";
+
 $temp = opendir(INFUSIONS);
 $infs = array();
 while ($folder = readdir($temp)) {
@@ -95,8 +100,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
     $content .= "</div>\n";
     echo $content;
 }
+
 closetable();
-echo "<div class='well text-center m-t-20'>\n";
-echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-echo "</div>\n";
+
 require_once THEMES."templates/footer.php";
