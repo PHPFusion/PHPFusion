@@ -193,3 +193,7 @@ PHP-Fusion 9 Core Template Forum CSS
 	padding: 10px 20px;
 	font-size:11px;
 }
+.forum-img-wrapper {
+	display: block;
+	overflow: auto;
+}
