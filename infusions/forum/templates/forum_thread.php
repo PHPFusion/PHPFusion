@@ -232,11 +232,13 @@ if (!function_exists('render_post_item')) {
         ";
 
         $li_admin = '';
-        if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] == USER_LEVEL_SUPER_ADMIN) {
-            $li_admin .= "<li class='divider'></li>\n";
-            $li_admin .= "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
-            $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
-            $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
+        if ($data['user_id'] != 1) {
+            if (iSUPERADMIN && iADMIN && checkrights('M')) {
+                $li_admin .= "<li class='divider'></li>\n";
+                $li_admin .= "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
+                $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
+                $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
+            }
         }
 
         return strtr($template,
