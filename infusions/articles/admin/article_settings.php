@@ -41,13 +41,13 @@ if (isset($_POST['savesettings'])) {
 echo "<div class='well m-t-20'>".$locale['articles_0031']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 openside('');
-echo form_text("article_pagination", $locale['articles_0032'], $article_settings['article_pagination'], array(
-    "inline" => TRUE, "max_length" => 4, "width" => "150px", "type" => "number"
+echo form_text('article_pagination', $locale['articles_0032'], $article_settings['article_pagination'], array(
+    'inline' => TRUE, 'max_length' => 4, 'width' => '150px', 'type' => 'number'
 ));
-echo form_select("article_allow_submission", $locale['articles_0033'], $article_settings['article_allow_submission'], array(
-    "inline" => TRUE, "options" => array($locale['disable'], $locale['enable'])
+echo form_select('article_allow_submission', $locale['articles_0033'], $article_settings['article_allow_submission'], array(
+    'inline' => TRUE, 'options' => array($locale['disable'], $locale['enable'])
 ));
-echo form_checkbox("article_extended_required", $locale['articles_0034'], $article_settings['article_extended_required'], array("inline" => TRUE));
+echo form_checkbox('article_extended_required', $locale['articles_0034'], $article_settings['article_extended_required'], array('inline' => TRUE));
 closeside();
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
 echo closeform();
