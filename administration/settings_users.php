@@ -63,6 +63,7 @@ if (isset($_POST['savesettings'])) {
         addNotice("success", $locale['900']);
         redirect(FUSION_SELF.fusion_get_aidlink());
     }
+}
 
 opentable($locale['user_settings']);
 echo "<div class='well'>".$locale['user_description']."</div>";
