@@ -99,17 +99,17 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 $choice_opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], array("options" => $choice_opts));
+echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], array('options' => $choice_opts));
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], array(
     'max_length' => 3,
-    'width' => '100px',
-    'number' => 1
+    'inner_width' => '150px',
+    'type' => 'number'
 ));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
 echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], array(
     'max_length' => 3,
-    'width' => '100px',
-    'number' => 1
+    'inner_width' => '150px',
+    'type' => 'number'
 ));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
 $action_opts = array('0' => $locale['1012'], '1' => $locale['1013']);
@@ -125,20 +125,20 @@ echo "
 	".form_text('avatar_width', '', $settings2['avatar_width'], array(
         'class' => 'pull-left m-r-10',
         'max_length' => 4,
-        'number' => 1,
+        'type' => 'number',
         'width' => '150px'
     ))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
 	".form_text('avatar_height', '', $settings2['avatar_height'], array(
         'class' => 'pull-left',
         'max_length' => 4,
-        'number' => 1,
+        'type' => 'number',
         'width' => '150px'
     ))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+//$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 $calc_c = calculate_byte($settings2['avatar_filesize']);
 $calc_b = $settings2['avatar_filesize'] / $calc_c;
 echo "
@@ -148,15 +148,15 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array(
-        'required' => 1,
-        'number' => 1,
+        'required' => TRUE,
+        'type' => 'number',
         'error_text' => $locale['error_rate'],
         'width' => '150px',
         'max_length' => 4,
         'class' => 'pull-left m-r-10'
     ))."
 	".form_select('calc_c', '', $calc_c, array(
-        'options' => $calc_opts,
+        'options' => $locale['1020'],
         'placeholder' => $locale['choose'],
         'class' => 'pull-left',
         'width' => '180px'
@@ -167,7 +167,7 @@ echo "
 $ratio_opts = array('0' => $locale['955'], '1' => $locale['956']);
 echo form_select('avatar_ratio', $locale['1001'], $settings2['avatar_ratio'], array(
     'options' => $ratio_opts,
-    'inline' => 1,
+    'inline' => TRUE,
     'width' => '100%'
 ));
 closeside();
@@ -177,9 +177,9 @@ openside('');
 echo form_select('hide_userprofiles', $locale['673'], $settings2['hide_userprofiles'], array('options' => $choice_opts));
 closeside();
 openside('');
-echo form_select('userNameChange', $locale['691'], $settings2['userNameChange'], array("options" => $choice_opts));
-echo form_select('userthemes', $locale['668'], $settings2['userthemes'], array("options" => $choice_opts));
-echo form_select('multiple_logins', $locale['1014'], $settings2['multiple_logins'], array("options" => $choice_opts));
+echo form_select('userNameChange', $locale['691'], $settings2['userNameChange'], array('options' => $choice_opts));
+echo form_select('userthemes', $locale['668'], $settings2['userthemes'], array('options' => $choice_opts));
+echo form_select('multiple_logins', $locale['1014'], $settings2['multiple_logins'], array('options' => $choice_opts));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>".$locale['1014a']."</span>\n";
 closeside();
 echo "</div>\n</div>\n";
