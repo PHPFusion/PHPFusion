@@ -1034,16 +1034,16 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<small><div class='edit_reason'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'],
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'],
                                                                                                          $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate",
                                                                                                                                                                $pdata['post_edittime'])." - ";
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
                         $edit_reason .= "</a></div>";
-                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><small class='text-lighter'>- ".$pdata['post_editreason']."</small></div>\n";
+                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><span class='text-lighter'>- ".$pdata['post_editreason']."</span></div>\n";
                     } else {
-                        $edit_reason .= "</div>\n</small>";
+                        $edit_reason .= "</div>";
                     }
 
                     $pdata['post_edit_reason'] = $edit_reason;
