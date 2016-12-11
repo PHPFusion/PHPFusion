@@ -4075,3 +4075,6 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dra
 ol, ul {
   list-style: none;
 }
+.forum.label > .detail {
+  padding: .80em .60em;
+}
