@@ -1160,35 +1160,42 @@ function user_blacklisted($user_id) {
  */
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
-    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
-
-    $temp = opendir($folder);
-    while ($file = readdir($temp)) {
-        if ($type == "files" && !in_array($file, $filter)) {
-            if (!empty($ext_filter)) {
-                if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+    if (file_exists($folder)) {
+        $temp = opendir($folder);
+        while ($file = readdir($temp)) {
+            if ($type == "files" && !in_array($file, $filter)) {
+                if (!empty($ext_filter)) {
+                    if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+                        $res[] = $file;
+                    }
+                } else {
+                    if (is_file($folder.$file)) {
+                        $res[] = $file;
+                    }
+                }
+            } elseif ($type == "folders" && !in_array($file, $filter)) {
+                if (is_dir($folder.$file)) {
                     $res[] = $file;
                 }
-            } else {
-                if (is_file($folder.$file)) {
-                    $res[] = $file;
-                }
-            }
-        } elseif ($type == "folders" && !in_array($file, $filter)) {
-            if (is_dir($folder.$file)) {
-                $res[] = $file;
             }
         }
+        closedir($temp);
+        if ($sort) {
+            sort($res);
+        }
+    } else {
+        $error_log = debug_backtrace()[1];
+        $function = (isset($error_log['class']) ? $error_log['class'] : '').(isset($error_log['type']) ? $error_log['type'] : '').(isset($error_log['function']) ? $error_log['function'] : '');
+        $error_log = strtr(fusion_get_locale('err_103', LOCALE.LOCALESET.'errors.php'), [
+            '{%folder%}' => $folder,
+            '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
+        ]);
+        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
     }
-    closedir($temp);
-    if ($sort) {
-        sort($res);
-    }
-
 
     return $res;
 }
