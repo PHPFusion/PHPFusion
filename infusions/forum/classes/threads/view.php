@@ -530,7 +530,7 @@ class ViewThread extends ForumServer {
                             // require thread_subject if first post
                             if ($is_first_post) {
                                 $post_data['thread_subject'] = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
-
+                                $_POST['thread_tags'] = isset($_POST['thread_tags']) ? $_POST['thread_tags'] : '';
                                 $current_thread_tags = form_sanitizer($_POST['thread_tags'], '', 'thread_tags');
                                 if ($thread_data['thread_tags'] !== $current_thread_tags) {
                                     // Assign the old ones into history

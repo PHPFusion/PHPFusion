@@ -233,7 +233,7 @@ if (!function_exists('render_post_item')) {
 
         $li_admin = '';
         if ($data['user_id'] != 1) {
-            if (iSUPERADMIN && iADMIN && checkrights('M')) {
+            if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
                 $li_admin .= "<li class='divider'></li>\n";
                 $li_admin .= "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
                 $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
