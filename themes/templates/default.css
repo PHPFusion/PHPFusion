@@ -398,11 +398,9 @@
     border: 1px solid;
 }
 
-/* ol,ul */
-/* ol, ul {
+ul.block {
     list-style: none outside none;
-}*/
-
+}
 ol.decimal { list-style: decimal inside; }
 
 ul {

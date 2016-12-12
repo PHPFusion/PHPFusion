@@ -38,12 +38,8 @@ function replaceDir($output = "") {
     }
     return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
-
-if (fusion_get_settings('site_seo')) {
-    add_handler("replaceDir");
-}
+add_handler("replaceDir");
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
-
 $data = array(
     "title" => $locale['errunk'],
     "image" => IMAGES."unknown.png"
