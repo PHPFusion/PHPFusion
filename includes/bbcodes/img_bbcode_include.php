@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("img_bbcode_callback")) {
     function img_bbcode_callback($matches) {
         if (substr($matches[3], -1, 1) != "/") {
-            return "<span style='display: block; width: 300px; max-height: 300px; overflow: auto;' class='forum-img-wrapper'><img src='".$matches[1].str_replace(array(
+            return "<span class='forum-img-wrapper'><img src='".$matches[1].str_replace(array(
                                                                                                                                                                      "?",
                                                                                                                                                                      "&amp;",
                                                                                                                                                                      "&",

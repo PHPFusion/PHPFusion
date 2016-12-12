@@ -49,7 +49,7 @@ if (isset($_POST['savesettings'])) {
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_opts = array(1 => $locale['blog_0538'], 1000 => $locale['blog_0539'], 1000000 => $locale['blog_0540']);
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
 opentable($locale['blog_settings']);
@@ -57,8 +57,8 @@ echo "<div class='well'>".$locale['blog_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_text("blog_pagination", $locale['669b'], $blog_settings['blog_pagination'], array(
-    "inline" => TRUE, "max_length" => 4, "width" => "150px", "type" => "number"
+echo form_text('blog_pagination', $locale['669b'], $blog_settings['blog_pagination'], array(
+    'inline' => TRUE, 'max_length' => 4, 'inner_width' => '150px', 'width' => '150px', 'type' => 'number'
 ));
 echo "
 <div class='row'>
@@ -67,11 +67,11 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9 p-l-5'>
 	".form_text('blog_thumb_w', '', $blog_settings['blog_thumb_w'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
 	".form_text('blog_thumb_h', '', $blog_settings['blog_thumb_h'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
@@ -83,11 +83,11 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9 p-l-5'>
 	".form_text('blog_photo_w', '', $blog_settings['blog_photo_w'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
 	".form_text('blog_photo_h', '', $blog_settings['blog_photo_h'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
@@ -99,11 +99,11 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9 p-l-5'>
 	".form_text('blog_photo_max_w', '', $blog_settings['blog_photo_max_w'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
 	".form_text('blog_photo_max_h', '', $blog_settings['blog_photo_max_h'], array(
-        'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
+        'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
@@ -115,24 +115,24 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9 p-l-5'>
 	".form_text('calc_b', '', $calc_b, array(
-        'required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4,
+        'required' => TRUE, 'type' => 'number', 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4,
         'class' => 'pull-left m-r-10'
     ))."
 	".form_select('calc_c', '', $calc_c, array(
-        'options' => $calc_opts, 'placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'
+        'options' => $calc_opts, 'placeholder' => $locale['choose'], 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'
     ))."
 	</div>
 </div>
 ";
 closeside();
 openside("");
-echo form_select("blog_allow_submission", $locale['blog_0600'], $blog_settings['blog_allow_submission'], array(
+echo form_select('blog_allow_submission', $locale['blog_0600'], $blog_settings['blog_allow_submission'], array(
     "inline" => TRUE, "options" => array($locale['disable'], $locale['enable'])
 ));
-echo form_select("blog_allow_submission_files", $locale['blog_0601'], $blog_settings['blog_allow_submission_files'], array(
+echo form_select('blog_allow_submission_files', $locale['blog_0601'], $blog_settings['blog_allow_submission_files'], array(
     "inline" => TRUE, "options" => array($locale['disable'], $locale['enable'])
 ));
-echo form_checkbox("blog_extended_required", $locale['blog_0602'], $blog_settings['blog_extended_required'], array("inline" => TRUE));
+echo form_checkbox('blog_extended_required', $locale['blog_0602'], $blog_settings['blog_extended_required'], array('inline' => TRUE));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";

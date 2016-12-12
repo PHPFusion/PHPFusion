@@ -46,11 +46,12 @@ echo "<div class='well'>".$locale['wl_0006']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside("");
 echo form_text('links_per_page', $locale['wl_603'], $wl_settings['links_per_page'], array(
-    'inline' => 1,
-    'required' => 1,
+    'inline' => TRUE,
+    'required' => TRUE,
     'error_text' => $locale['error_value'],
-    'number' => 1,
-    'width' => '250px'
+    'type' => 'number',
+    'inner_width' => '150px',
+    'width' => '150px'
 ));
 closeside();
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";

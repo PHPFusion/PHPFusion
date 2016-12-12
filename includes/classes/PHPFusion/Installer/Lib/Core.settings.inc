@@ -472,7 +472,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 2
             ],
             [
-                'settings_name' => 'save_sent',
+                'settings_name' => 'pm_save_sent',
                 'settings_value' => 2
             ],
             [

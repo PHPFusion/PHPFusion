@@ -83,6 +83,9 @@ $locale['blog_0533'] = "Category Parent:";
 $locale['blog_0535'] = "No Blog Categories defined";
 $locale['blog_0536'] = "Click here to upload category images";
 $locale['blog_0537'] = "Parent";
+$locale['blog_0538'] = "Bytes (bytes)";
+$locale['blog_0539'] = "KB (Kilobytes)";
+$locale['blog_0540'] = "MB (Megabytes)";
 // Popup Error/Warning Messages
 $locale['blog_0550'] = "Delete this Blog category?";
 // Error Messages
