@@ -21,8 +21,6 @@ namespace PHPFusion\Rewrite;
 
 abstract class RewriteDriver {
 
-    protected static $instance = NULL;
-
     protected $dataStatements = [];
 
     /**
@@ -131,17 +129,7 @@ abstract class RewriteDriver {
     protected $buffer_search_regex = array();
     protected $path_search_regex = array();
 
-    /**
-     * Get the instance of the class
-     * @return static
-     */
-    public static function getInstance() {
-        if (self::$instance === NULL) {
-            self::$instance = new static();
-        }
 
-        return self::$instance;
-    }
 
     /**
      * Import Handlers from Database

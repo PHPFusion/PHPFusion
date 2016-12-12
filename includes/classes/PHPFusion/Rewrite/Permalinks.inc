@@ -23,6 +23,21 @@ class Permalinks extends RewriteDriver {
 
     public $debug_regex = TRUE;
 
+    private static $permalink_instance = NULL;
+
+    /**
+     * Get the instance of the class
+     * @return static
+     */
+    public static function getPermalinkInstance() {
+        if (self::$permalink_instance === NULL) {
+            self::$permalink_instance = new static();
+        }
+
+        return self::$permalink_instance;
+    }
+
+
     /**
      * Returns the Output
      * This function will first call the handleOutput() and then it will return the
@@ -51,8 +66,18 @@ class Permalinks extends RewriteDriver {
         $this->replace_output();
 
         // Prepend all the File/Images/CSS/JS etc Links with ROOT path
-        $this->appendRootAll();
-
+        /*
+         * This does not apply to page that is not SEO enabled driver.
+         * i.e. IN_PERMALINK is only defined when Browser URL is pretty url
+         * The exception found is at Error.php because there is a error path handler that must work
+         * for both SEO page and NON SEO page
+         */
+        if (defined('IN_PERMALINK')) {
+            $file = Router::getRouterInstance()->getFilePath();
+            if ($file !== 'error.php') {
+                $this->appendRootAll();
+            }
+        }
     }
 
     /**

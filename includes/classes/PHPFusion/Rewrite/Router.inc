@@ -59,10 +59,20 @@ class Router extends RewriteDriver {
      */
     private $get_parameters = array();
 
+    private static $router_instance = NULL;
+
     public function __construct() {
         // Pretty URL
         $this->requesturi = urldecode(PERMALINK_CURRENT_PATH);
     }
+
+    public static function getRouterInstance() {
+        if (self::$router_instance === NULL) {
+            self::$router_instance = new static();
+        }
+        return self::$router_instance;
+    }
+
 
     /**
      * @param mixed $pathtofile

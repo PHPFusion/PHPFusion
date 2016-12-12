@@ -32,7 +32,7 @@ if (fusion_get_settings("maintenance") == "1") {
 }
 
 if (fusion_get_settings("site_seo") == 1) {
-    $permalink = \PHPFusion\Rewrite\Permalinks::getInstance();
+    $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
 }
 
 require_once INCLUDES."breadcrumbs.php";

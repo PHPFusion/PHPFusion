@@ -119,13 +119,13 @@ if (ob_get_length() !== FALSE) {
 $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
-if (!isset($_GET['aid']) && fusion_get_settings("site_seo") == 1) {
-
-    \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing($output);
-
-    if (isset($router) && $router->getFilePath() !== "error.php") {
-        $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
-    }
+//if (!isset($_GET['aid']) && fusion_get_settings("site_seo") == 1) {
+if (!isset($_GET['aid'])) {
+    \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing($output);
+    //if (isset($router) && $router->getFilePath() !== "error.php") {
+      //  $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
+    //}
+    $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput($output);
 }
 
 if (isset($permalink)) {
