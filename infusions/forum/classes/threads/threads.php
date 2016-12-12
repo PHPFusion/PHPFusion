@@ -193,6 +193,7 @@ class ForumThreads extends ForumServer {
                                                                                                                                              $author['user_status'])."</span>",
                         "thread_author" => $author,
                         "thread_last" => array(
+                            'user' => $lastuser,
                             'avatar' => display_avatar($lastuser, '35px', '', FALSE, 'img-rounded'),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time' => $threads['post_datestamp'],
