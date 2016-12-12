@@ -110,6 +110,7 @@ if (dbrows($result) > 0) {
                                                                                                                            $author['user_status'])."</span>",
             "thread_author" => $author,
             "thread_last" => array(
+                'user' => $author,
                 'avatar' => display_avatar($lastuser, '30px', '', '', ''),
                 'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                 'time' => $threads['post_datestamp'],
