@@ -99,12 +99,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
      */
     public function fetchFirstColumn($statement, $row = 0) {
         //seek
-        for ($i = 0; $i < $row; $i++) {
-            $statement->fetchColumn();
+        if ($statement !==FALSE) {
+            for ($i = 0; $i < $row; $i++) {
+                $statement->fetchColumn();
+            }
+            //returns false when an error occurs
+            return $statement->fetchColumn();
         }
-
-        //returns false when an error occurs
-        return $statement->fetchColumn();
     }
 
     /**
