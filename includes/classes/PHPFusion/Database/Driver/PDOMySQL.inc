@@ -206,9 +206,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
             $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
         } catch (PDOException $error) {
+            //$file = debug_print_backtrace();
             throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
                 ? new SelectionException($error->getMessage(), $error->getCode(), $error)
-                : new ConnectionException($error->getMessage(), $error->getCode(), $error);
+                : new \ErrorException($error->getMessage(), $error->getCode(), 1, debug_backtrace()[1]['file']); //new ConnectionException($error->getMessage(), $error->getCode(), $error);
         }
     }
 
