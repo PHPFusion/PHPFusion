@@ -104,10 +104,11 @@ class Core {
         return NULL;
     }
 
+    public $cssPath = '';
     public function get_themePack($themePack) {
         $path = THEME."ThemePack/".$themePack."/Theme.php";
-        $cssPath = THEME."ThemePack/".$themePack."/Styles.css";
-        add_to_head("<link rel='stylesheet' href='$cssPath' type='text/css'/>");
+        $this->cssPath = THEME."ThemePack/".$themePack."/Styles.css";
+        add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
         require_once $path;
     }
 

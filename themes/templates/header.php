@@ -31,7 +31,7 @@ if (fusion_get_settings("maintenance") == "1") {
     }
 }
 
-if (fusion_get_settings("site_seo") == 1) {
+if (fusion_get_settings("site_seo")) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
 }
 
