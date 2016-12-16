@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".fusion_get_locale('xml_lang')."'>\n";
+echo "<html lang='".fusion_get_locale('xml_lang')."'".(fusion_get_settings("create_og_tags") ?  " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings("sitename")."</title>\n";
 echo "<meta charset='".fusion_get_locale('charset')."' />\n";
