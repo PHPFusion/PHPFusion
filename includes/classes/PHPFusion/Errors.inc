@@ -308,7 +308,7 @@ class Errors {
 
         $form_action = FUSION_REQUEST;
         if (fusion_get_settings('site_seo') && !isset($_GET['aid'])) {
-            $form_action = FUSION_ROOT.ltrim($form_action, '/');
+            $form_action = (substr_count(fusion_get_settings('site_path'), '/') > 1 ? '../' : '').ROOT.ltrim($form_action, '/');
         }
 
         $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
