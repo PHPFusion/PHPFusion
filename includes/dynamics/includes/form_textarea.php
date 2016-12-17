@@ -180,19 +180,19 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
+                entity_encoding : 'raw',
                 menubar: false,
                 statusbar: false,
                 content_css: '".$options['tinymce_css']."',
                 image_list: $tinymce_list,
                 plugins: [
-                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link lists charmap print preview hr anchor pagebreak spellchecker',
+                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                     'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 height: 30,
                 image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")."',
-                entity_encoding : 'raw',
+                toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
                 language: '".$locale['tinymce']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 object_resizing: false,
