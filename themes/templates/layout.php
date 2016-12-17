@@ -38,10 +38,20 @@ if (fusion_get_settings('create_og_tags')) {
 	echo "<meta property='og:image' content='".fusion_get_settings('siteurl').fusion_get_settings('sitebanner')."' />\n";
 	echo "<meta property='og:type' content='website' />\n";
 }
-
+// Load bootstrap stylesheets
 if (fusion_get_settings('bootstrap') == TRUE) {
-	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
+    define('BOOTSTRAPPED', TRUE);
+    echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+    $user_theme = fusion_get_userdata('user_theme');
+    $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
+    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
+    if (!empty($theme_data)) {
+        $theme_css = THEMES.$theme_data['theme_file'];
+        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n";
+    }
 }
 
 if (fusion_get_settings('entypo')) {
@@ -55,23 +65,6 @@ if (fusion_get_settings('entypo')) {
 
 if (fusion_get_settings('fontawesome')) {
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
-}
-
-// Load bootstrap stylesheets
-if (fusion_get_settings('bootstrap')) {
-	define('BOOTSTRAPPED', TRUE);
-	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
-	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
-
-if (fusion_get_settings('bootstrap')) {
-	$user_theme = fusion_get_userdata('user_theme');
-	$theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
-	$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-	
-    if (!empty($theme_data)) {
-		$theme_css = THEMES.$theme_data['theme_file'];
-		echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n";
-    }
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
@@ -104,7 +97,7 @@ $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive<".(time() -
  * replace <body> tags with your own theme definition body tags. Some body tags require additional params
  * for the theme purposes.
  */
- 
+
 if (!defined("THEME_BODY")) {
 	echo "<body>\n";
 } else {
@@ -145,8 +138,9 @@ if (!empty($fusion_jquery_tags)) {
 }
 
 $jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, array('flaggedComments' => FALSE));
-
-echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
+echo "<script type='text/javascript'>\n";
+echo "$(function() { $jquery_tags });";
+echo "</script>\n";
 
 // Load bootstrap javascript
 if (fusion_get_settings('bootstrap')) {
@@ -157,6 +151,5 @@ if (fusion_get_settings('bootstrap')) {
 
 //Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
-
 echo "</body>\n";
 echo "</html>\n";
