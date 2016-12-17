@@ -603,8 +603,12 @@ class SiteLinks {
                         // The breadcrumbs series of arrays - stable
                         $reference = $this->getLinkInstance();
                         if (!empty($reference)) {
+
                             $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
-                            parse_str($uri['query'], $uriQuery);
+                            $uriQuery = '';
+                            if (!empty($uri['query'])) {
+                                parse_str($uri['query'], $uriQuery);
+                            }
                             foreach ($reference as $refData) {
                                 if (stristr($refData['link'], '../')) {
                                     $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
