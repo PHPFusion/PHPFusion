@@ -117,7 +117,7 @@ class Router extends RewriteDriver {
             $this->setWarning(6);
         }
 
-        if (fusion_get_settings("debug_seo") == 1) {
+        if (fusion_get_settings('debug_seo') && iSUPERADMIN && iADMIN) {
             $this->displayWarnings();
         }
     }
@@ -552,7 +552,7 @@ class Router extends RewriteDriver {
      * @access private
      */
     private function displayWarnings() {
-        echo "\n<div class='rewrites-queries' style='padding: 10px 10px 10px 10px; border: 3px double #225500; background-color: #ffccaa; line-height: 15px;'>\n";
+        echo "<div class='rewrites-queries' style='padding: 10px 10px 10px 10px; border: 1px double #000; background-color: #fbfbfb; line-height: 15px;'>\n";
         echo "<strong>Queries which were made for Rewriting:</strong><br /><br />\n";
         foreach ($this->queries as $key => $query) {
             echo $query.";<br />\n";
@@ -562,7 +562,7 @@ class Router extends RewriteDriver {
 	        $('#rewrites-debug-info').slideToggle('slow');
         }
         </script>\n";
-        echo "<input type='button' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
+        echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
         echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
         echo "Request URI: <strong>".$this->requesturi."</strong><br />";
         echo "<div id='rewrites-debug-info' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
