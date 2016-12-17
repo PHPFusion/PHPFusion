@@ -38,7 +38,7 @@ $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : 
 
 define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
 
-$checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level>101");
+$checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level<".USER_LEVEL_MEMBER."");
 if ($checkRights > 0) {
     $isAdmin = TRUE;
 } else {
@@ -608,16 +608,16 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		LIMIT $rowstart,20");
     echo "<div class='clearfix'><div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-3'>";
     echo "<div class='btn-group m-b-15'>\n";
-    echo "<a class='button btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
+    echo "<a class='button btn btn-primary' href='".FUSION_SELF.fusion_get_aidlink()."&amp;step=add'>".$locale['402']."</a>\n";
     if ($settings['enable_deactivation'] == 1) {
         if (dbcount("(user_id)", DB_USERS,
                     "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
-            echo "<a class='button btn btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
+            echo "<a class='button btn btn-default' href='".FUSION_SELF.fusion_get_aidlink()."&amp;step=inactive'>".$locale['580']."</a>\n";
         }
     }
     echo "</div>\n";
     echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-3 pull-right'>";
-    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'p-0 m-t-0 m-b-15'));
+    echo openform('viewstatus', 'get', FUSION_SELF.fusion_get_aidlink(), array('class' => 'p-0 m-t-0 m-b-15'));
     echo form_hidden('aid', '', iAUTH);
     echo form_hidden('sortby', '', $sortby);
     echo form_hidden('rowstart', '', $rowstart);
@@ -630,7 +630,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         'options' => $opts,
         'placeholder' => $locale['choose'],
         'class' => 'm-b-0',
-        'inline' => 1,
+        'inline' => TRUE,
         'width' => "100%",
         'allowclear' => 1
     ));
@@ -645,15 +645,15 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             echo "<div class='list-group-item clearfix'>\n";
             echo "<div class='pull-left m-r-10'>\n".display_avatar($data, '50px', '', '', 'img-rounded')."</div>\n";
             echo "<div class='pull-right m-l-15 m-t-10'>\n";
-            $ban_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
-            $suspend_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=3";
-            $cancel_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=5";
-            $anon_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=6";
-            $deac_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=7";
-            $inac_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=8";
+            $ban_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
+            $suspend_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=3";
+            $cancel_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=5";
+            $anon_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=6";
+            $deac_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=7";
+            $inac_link = FUSION_SELF.fusion_get_aidlink()."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=8";
             echo "<div class='btn-group'>\n";
-            if (iSUPERADMIN || $data['user_level'] < 102) {
-                echo "<a class='btn button btn-sm btn-default ' href='".FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."&amp;settings'>".$locale['406']."</a>\n";
+            if (iSUPERADMIN || $data['user_level'] > -102) {
+                echo "<a class='btn button btn-sm btn-default ' href='".FUSION_SELF.fusion_get_aidlink()."&amp;step=edit&amp;user_id=".$data['user_id']."&amp;settings'>".$locale['406']."</a>\n";
                 if ($status == 0) {
                     echo "<a class='btn button btn-sm btn-default ' href='".stripinput(USER_MANAGEMENT_SELF."&action=3&user_id=".$data['user_id'])."'>".$locale['553']."</a>\n";
                 } elseif ($status == 2) {
@@ -681,7 +681,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             echo "</div>\n";
             echo "</div>\n";
             echo "<div class='overflow-hide'>\n";
-            echo "<a class='strong display-inline-block' href='".FUSION_SELF.$aidlink."&amp;step=view&amp;user_id=".$data['user_id']."'>".$data['user_name']."</a>\n";
+            echo "<a class='strong display-inline-block' href='".FUSION_SELF.fusion_get_aidlink()."&amp;step=view&amp;user_id=".$data['user_id']."'>".$data['user_name']."</a>\n";
             echo "<br/><span class='text-smaller'>".getuserlevel($data['user_level'])."</span>\n";
             echo "</div>\n";
             echo "</div>\n";
@@ -737,14 +737,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         "9"
     );
     echo "<table class='table table-responsive table-striped center'>\n<tr>\n";
-    echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>";
+    echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.fusion_get_aidlink()."&amp;status=".$status."'>".$locale['414']."</a></td>";
     for ($i = 0; $i < 36; $i++) {
-        echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF.$aidlink."&amp;sortby=".$alphanum[$i]."&amp;status=$status'>".$alphanum[$i]."</a></div></td>";
-        echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>\n</tr>\n<tr>\n" : "\n");
+        echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF.fusion_get_aidlink()."&amp;sortby=".$alphanum[$i]."&amp;status=$status'>".$alphanum[$i]."</a></div></td>";
+        echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.fusion_get_aidlink()."&amp;status=".$status."'>".$locale['414']."</a></td>\n</tr>\n<tr>\n" : "\n");
     }
     echo "</tr>\n</table>\n";
     echo "<hr />\n";
-    echo openform('searchform', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'notice' => 0));
+    echo openform('searchform', 'get', FUSION_SELF.fusion_get_aidlink(), array('max_tokens' => 1, 'notice' => 0));
     echo form_hidden('aid', '', iAUTH);
     echo form_hidden('status', '', $status);
     echo form_text('search_text', $locale['415'], '', array('inline' => 1));
@@ -753,7 +753,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     closetable();
     if ($rows > 20) {
         echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3,
-                                                                          FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
+                                                                          FUSION_SELF.fusion_get_aidlink()."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
     }
 }
 require_once THEMES."templates/footer.php";
