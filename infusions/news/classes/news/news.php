@@ -587,21 +587,6 @@ abstract class News extends NewsServer {
 
             $news_subject = $data['news_subject'];
 
-            if (fusion_get_settings("create_og_tags")) {
-                add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
-                add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
-                add_to_head("<meta property='og:site_name' content='".fusion_get_settings('sitename')."' />");
-                add_to_head("<meta property='og:type' content='article' />");
-                add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/news.php?readmore=".$_GET['readmore']."' />");
-                if ($data['news_image']) {
-                    $og_image = IMAGES_N.$data['news_image'];
-                } else {
-                    $og_image = IMAGES_NC.$data['news_cat_image'];
-                }
-                $og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
-                add_to_head("<meta property='og:image' content='".$og_image."' />");
-            }
-
             $_GET['cat_id'] = $data['news_cat_id'];
 
             set_title($news_subject.self::$locale['global_200'].self::$locale['news_0004']);
