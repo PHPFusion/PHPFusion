@@ -112,7 +112,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "")."'>\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
@@ -121,17 +121,17 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 if ($options['keyflip']) { // flip mode = store array values
                     $chain = $options['chainable'] ? "class='$v'" : '';
                     if ($input_value !== '') {
-                        $select = ($input_value == $v) ? "selected" : "";
+                        $select = ($input_value == $v) ? " selected" : "";
                     }
-                    $html .= "<option value='$v' ".$chain." ".$select.">".$v."</option>\n";
+                    $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
                 } else { // normal mode = store array keys
                     $chain = ($options['chainable']) ? "class='$arr'" : '';
                     $select = '';
                     if ($input_value !== '') {
                         $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                        $select = (isset($input_value) && $input_value == $arr) ? 'selected' : '';
+                        $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                     }
-                    $html .= "<option value='$arr' ".$chain." ".$select.">$v</option>\n";
+                    $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
                 }
                 unset($arr);
             } // end foreach
