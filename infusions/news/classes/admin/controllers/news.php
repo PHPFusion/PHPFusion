@@ -100,6 +100,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_visibility' => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
                 'news_draft' => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
                 'news_sticky' => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name' => form_sanitizer($_POST['news_name'], '', 'news_name'),
                 'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
                 'news_allow_ratings' => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
