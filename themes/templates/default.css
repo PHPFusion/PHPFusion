@@ -160,6 +160,10 @@
 
 .m-auto { margin: 0 auto !important; }
 
+.m-l--15 { margin-left: -15px !important; }
+
+.m-r--15 { margin-right: -15px !important; }
+
 /*padding family*/
 .p-0 { padding: 0 !important; }
 
