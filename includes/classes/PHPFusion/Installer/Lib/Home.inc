@@ -171,6 +171,7 @@ class HomeInstall extends Install_Core {
             'slider_height' => 700,
             'slider_navigation' => 0,
             'slider_indicator' => 0,
+            'slider_interval' => 0,
         );
         $colData[1] = array(
             'page_id' => $page_id,
