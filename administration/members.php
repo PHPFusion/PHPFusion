@@ -562,6 +562,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             $message = str_replace("[SITENAME]", $settings['sitename'], $message);
             $message = str_replace("[ADMIN_USERNAME]", fusion_get_userdata('user_name'), $message);
             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+            $message = str_replace("[DEACTIVATION_PERIOD]", $settings['deactivation_period'], $message);
             $message = str_replace("[REACTIVATION_LINK]", $settings['siteurl']."reactivate.php?user_id=".$udata['user_id']."&code=".$code,
                                    $message);
 
