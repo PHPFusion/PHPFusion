@@ -630,6 +630,7 @@ if (!function_exists('display_avatar')) {
         if (!$userdata['user_id']) {
             $userdata['user_id'] = 1;
         }
+        $link = fusion_get_settings('hide_userprofiles') == TRUE ? FALSE : $link;
         $class = ($class) ? "class='$class'" : '';
         // Need a full path - or else Jquery script cannot use this function.
         //$default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
