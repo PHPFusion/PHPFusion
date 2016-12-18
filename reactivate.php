@@ -22,7 +22,7 @@ require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."reactivate.php";
 
 if (iMEMBER) {
-    redirect("index.php");
+   redirect(BASEDIR."index.php");
 }
 
 if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) && preg_check("/^[0-9a-z]{32}$/", $_GET['code'])) {
@@ -32,11 +32,11 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
         $code = md5($data['user_actiontime'].$data['user_password']);
         if ($_GET['code'] == $code) {
             if ($data['user_actiontime'] > time()) {
-                $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit=NOW() WHERE user_id='".$_GET['user_id']."'");
+                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit=".time()." WHERE user_id='".$_GET['user_id']."'");
                 unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
                 $message = str_replace("[USER_NAME]", $data['user_name'], $locale['505']);
                 require_once INCLUDES."sendmail_include.php";
-                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['504'], $message);
+                sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), $locale['504'], $message);
                 redirect(BASEDIR."login.php");
             } else {
                 redirect(FUSION_SELF."?error=1");
@@ -64,4 +64,3 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
 }
 
 require_once THEMES."templates/footer.php";
-
