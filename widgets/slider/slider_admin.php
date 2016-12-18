@@ -340,7 +340,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             form_select('slider_path', self::$slider_locale['0534'], self::$slider_settings['slider_path'],
                         array('inline' => TRUE, 'options' => $image_options)).
             form_text('slider_height', self::$slider_locale['0501'], self::$slider_settings['slider_height'],
-                      array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
+                      array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px')).
             form_text('slider_interval', self::$slider_locale['0603'], self::$slider_settings['slider_interval'],
                   array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'ms', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
         ?>
