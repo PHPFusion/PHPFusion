@@ -36,7 +36,7 @@ $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : 
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
-define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
+define("USER_MANAGEMENT_SELF", FUSION_SELF.fusion_get_aidlink()."&sortby=$sortby&status=$status&rowstart=$rowstart");
 
 $checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level<".USER_LEVEL_MEMBER."");
 if ($checkRights > 0) {
@@ -75,17 +75,17 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         echo "<br />\n".$locale['611'];
         echo "</div>\n<div class='admin-message alert alert-warning m-t-10'><strong>".$locale['617']."</strong>\n".$locale['618']."\n";
         if (checkrights("S9")) {
-            echo "<a href='".ADMIN."settings_users.php".$aidlink."'>".$locale['619']."</a>";
+            echo "<a href='".ADMIN."settings_users.php".fusion_get_aidlink()."'>".$locale['619']."</a>";
         }
     }
     echo "</div>\n<div class='tbl1 text-center'>\n";
-    echo openform('member_form', 'post', FUSION_SELF.$aidlink."&amp;step=inactive");
+    echo openform('member_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;step=inactive");
     echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary'));
     echo form_button('deactivate_users', $button, $button, array('class' => 'btn-primary'));
     echo closeform();
     echo "</div>\n";
     closetable();
-    if (isset($_POST['deactivate_users']) && $defender->safe()) {
+    if (isset($_POST['deactivate_users']) && defender::safe()) {
         require_once LOCALE.LOCALESET."admin/members_email.php";
         require_once INCLUDES."sendmail_include.php";
         $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
@@ -104,7 +104,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                 suspend_log($data['user_id'], 7, $locale['621']);
             }
         }
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_SELF.fusion_get_aidlink());
     }
 // Add new User
 } elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
@@ -123,13 +123,13 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $udata = $userInput->getData();
         unset($userInput);
 
-        if ($defender->safe()) {
-            redirect(FUSION_SELF.$aidlink);
+        if (defender::safe()) {
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
     }
 
-    if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && !$defender->safe())) {
+    if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && !defender::safe())) {
 
         opentable($locale['480']);
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['480']]);
@@ -160,7 +160,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     if (dbrows($result)) {
         $user_data = dbarray($result);
     } else {
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_SELF.fusion_get_aidlink());
     }
     opentable($locale['u104']." ".$user_data['user_name']);
     member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
@@ -185,7 +185,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 } elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
     if (!$user_data || $user_data['user_level'] == -103) {
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_SELF.fusion_get_aidlink());
     }
     $errors = array();
     if (isset($_POST['savechanges'])) {
@@ -199,8 +199,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $userInput->saveUpdate();
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         unset($userInput);
-        if ($defender->safe()) {
-            redirect(FUSION_SELF.$aidlink);
+        if (defender::safe()) {
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
     opentable($locale['430']);
@@ -547,7 +547,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
     // Deactivate User
 } elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin || iSUPERADMIN)) {
-    $result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
+    $result = dbquery("SELECT user_id, user_name, user_password, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
     if (dbrows($result)) {
         $udata = dbarray($result);
         if ($udata['user_status'] == 7) {
@@ -556,18 +556,18 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         } else {
             require_once LOCALE.LOCALESET."admin/members_email.php";
             require_once INCLUDES."sendmail_include.php";
-            $code = md5($response_required.$data['user_password']);
+            $code = md5($response_required.$udata['user_password']);
 
             $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_deactivate_message']);
             $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-            $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
+            $message = str_replace("[ADMIN_USERNAME]", fusion_get_userdata('user_name'), $message);
             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-            $message = str_replace("[REACTIVATION_LINK]", fusion_get_settings('siteurl')."reactivate.php?user_id=".$data['user_id']."&code=".$code,
+            $message = str_replace("[REACTIVATION_LINK]", $settings['siteurl']."reactivate.php?user_id=".$udata['user_id']."&code=".$code,
                                    $message);
 
             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_deactivate_subject']);
 
-            if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
+            if (sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".$response_required."' WHERE user_id='".$user_id."'");
                 suspend_log($user_id, 7);
             }
