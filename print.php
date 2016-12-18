@@ -16,15 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-include LOCALE.LOCALESET."print.php";
-include THEMES.'templates/render_functions.php';
+$settings = fusion_get_settings();
+$locale = fusion_get_locale('', LOCALE.LOCALESET."print.php");
 
-if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
-    redirect(BASEDIR."maintenance.php");
+if (fusion_get_settings('maintenance') == "1") {
+    if (fusion_get_settings('maintenance_level') < fusion_get_userdata('user_level') or empty(fusion_get_userdata('user_level'))) {
+        if (fusion_get_settings('site_seo')) {
+            redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+        } else {
+            redirect(BASEDIR."maintenance.php");
+        }
+    }
 }
 
 if (iMEMBER) {
-    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+    dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata('user_id')."'");
 }
 
 echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
@@ -74,9 +80,7 @@ if (isset($_GET['type'])) {
                         $article = nl2br($article);
                     }
                     echo "<strong>".$data['article_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['article_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['article_datestamp']))."</span>\n";
                     echo "<hr />".$article."\n";
                 }
             }
@@ -111,9 +115,7 @@ if (isset($_GET['type'])) {
                         $news_extended = "";
                     }
                     echo "<strong>".$data['news_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['news_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['news_datestamp']))."</span>\n";
                     echo "<hr />".$news."\n";
                     if ($news_extended) {
                         echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";
@@ -151,9 +153,7 @@ if (isset($_GET['type'])) {
                         $blog_extended = "";
                     }
                     echo "<strong>".$data['blog_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['blog_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['blog_datestamp']))."</span>\n";
                     echo "<hr />".$blog."\n";
                     if ($blog_extended) {
                         echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
@@ -185,14 +185,11 @@ if (isset($_GET['type'])) {
                         $res = TRUE;
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
-                        echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'], $data['user_name'],
-                                                                                    $data['user_status']).$locale['502'].showdate("forumdate",
-                                                                                                                                  $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
+                        echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
                         echo nl2br(parseubb(parsesmileys($data['post_message'])));
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
-                            echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
-                                                             $data['edit_status']).$locale['502'].showdate("forumdate", $data['post_edittime']);
+                            echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
                             echo "</div>\n";
                         }
                         echo "</div>\n";
@@ -228,14 +225,11 @@ if (isset($_GET['type'])) {
                                 echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                             }
                             echo "<div style='margin-left:20px'>\n";
-                            echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'], $data['user_name'],
-                                                                                        $data['user_status']).$locale['502'].showdate("forumdate",
-                                                                                                                                      $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
+                            echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
                             echo nl2br(parseubb(parsesmileys($data['post_message'])));
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
-                                echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
-                                                                 $data['edit_status']).$locale['502'].showdate("forumdate", $data['post_edittime']);
+                                echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
                                 echo "</div>\n";
                             }
                             echo "</div>\n";
