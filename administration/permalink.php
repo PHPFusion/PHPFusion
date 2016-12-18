@@ -473,10 +473,10 @@ switch ($_GET['section']) {
             echo "</table>\n";
 
         }
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['400']]);
         break;
 
     case "pl2":
-
         echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n<tbody>\n<tr>\n";
         if (count($available_rewrites) != count($enabled_rewrites)) {
             echo "<tr>\n";
@@ -500,6 +500,7 @@ switch ($_GET['section']) {
             }
         }
         echo "</tbody>\n</table>\n";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['401']]);
         break;
 
     case "pls":
@@ -513,8 +514,7 @@ switch ($_GET['section']) {
         echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary', 'inline' => 1));
         echo "</div></div>\n";
         echo closeform();
-
-
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['401a']]);
         break;
 }
 
