@@ -112,7 +112,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">\n";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
@@ -487,7 +487,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= $options['allowclear'] ? "<option value=''></option>\n" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.
             $this_select = '';
@@ -524,7 +524,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     }
     if (!$level) {
         $html = &$html;
-        $html .= "</select>";
+        $html .= "</select>\n";
         $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';
         $html .= "</div>\n";
