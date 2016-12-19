@@ -18,8 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."admin/members_include.php";
-
 
 function getsuspension($type, $action = FALSE) {
 
@@ -92,7 +90,7 @@ function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
 
 function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0) {
 
-    $locale = fusion_get_locale();
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
     $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
     $rows = dbcount("(suspend_id)", DB_SUSPENDS, "suspended_user='$user_id'$db_type");
@@ -164,25 +162,24 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
 }
 
 function member_nav($second = "", $third = "") {
-    global $aidlink;
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
-    $locale = fusion_get_locale();
+	echo "<div class='breadcrumb'>\n";
+	echo "<li class='crumb'>\n";
+	echo "<a href='".FUSION_SELF.fusion_get_aidlink()."'>".$locale['susp115']."</a>\n";
+	echo "</li>";
 
-    echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
-    echo "<td class='tbl2'>\n";
-    echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['susp115']."</a>\n";
     if ($second && $second = explode("|", $second)) {
-        echo " &gt; <a href='".$second[0]."'>".$second[1]."</a>\n";
+        echo "<li class='crumb'><a href='".$second[0]."'>".$second[1]."</a>\n</li>\n";
     }
     if ($third && $third = explode("|", $third)) {
-        echo " &gt; <a href='".$third[0]."'>".$third[1]."</a>\n";
+        echo "<li class='crumb'><a href='".$third[0]."'>".$third[1]."</a>\n</li>\n";
     }
-    echo "</td>\n</tr>\n</table>\n";
-    echo "<div style='margin:5px'></div>\n";
+	echo "</div>\n";
 }
 
 function member_url($step, $user_id) {
     global $aidlink;
 
-    return FUSION_SELF.$aidlink."&amp;step=".$step.($user_id ? "&amp;user_id=$user_id" : "");
+    return FUSION_SELF.fusion_get_aidlink()."&amp;step=".$step.($user_id ? "&amp;user_id=$user_id" : "");
 }
