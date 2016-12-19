@@ -240,11 +240,6 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* decoratives */
-.form-group {
-    display: inline-block;
-}
-
 .no-shadow {
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
