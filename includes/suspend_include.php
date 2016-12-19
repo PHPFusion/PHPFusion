@@ -24,27 +24,7 @@ function getsuspension($type, $action = FALSE) {
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
     $i = ($action ? 1 : 0);
-    if ($type == 0) {
-        return $locale['susp'.$i.'0'];
-    } elseif ($type == 1) {
-        return $locale['susp'.$i.'1'];
-    } elseif ($type == 2) {
-        return $locale['susp'.$i.'2'];
-    } elseif ($type == 3) {
-        return $locale['susp'.$i.'3'];
-    } elseif ($type == 4) {
-        return $locale['susp'.$i.'4'];
-    } elseif ($type == 5) {
-        return $locale['susp'.$i.'5'];
-    } elseif ($type == 6) {
-        return $locale['susp'.$i.'6'];
-    } elseif ($type == 7) {
-        return $locale['susp'.$i.'7'];
-    } elseif ($type == 8) {
-        return $locale['susp'.$i.'8'];
-    } else {
-        return $locale['susp_sys'];
-    }
+	return $type > 8 ? $locale['susp_sys'] : $locale['susp'.$i.$type];
 }
 
 function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRUE) {
