@@ -243,7 +243,6 @@
 /* decoratives */
 .form-group {
     display: inline-block;
-    width: 100%;
 }
 
 .no-shadow {
@@ -681,7 +680,7 @@ dl, dt, dd {
 
 /* Parse Users */
 .user-tooltip { width: 250px; padding-bottom: 10px; }
-
+.form-inline > .form-group { width: auto !important; }
 table {
     font-size: 100%;
 }
