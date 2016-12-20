@@ -32,7 +32,7 @@ $regex = array(
 
 $pattern = array(
     "submit/%stype%/articles" => "submit.php?stype=%stype%",
-    "submit/%stype%/articles/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=a",
+    "submit/%stype%/articles/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=A",
     "articles/comments-%c_start%/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
     "articles/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%",
     "articles/%article_id%-%rowstart%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
