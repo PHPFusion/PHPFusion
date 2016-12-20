@@ -33,6 +33,7 @@ $result = dbquery("
 
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
+        echo THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' title='".$data['article_subject']."' class='side'>".trimlink($data['article_subject'], 21)."</a><br />\n";
     }
 } else {
     echo "<div style='text-align:center'>".$locale['global_031']."</div>\n";
