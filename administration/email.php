@@ -20,40 +20,42 @@ pageAccess('MAIL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/emails.php";
 require_once INCLUDES."html_buttons_include.php";
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'email.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+
 if (isset($_POST['save_template'])) {
     $data = array(
-        "template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
-        "template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
-        "template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
-        "template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
-        "template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
-        "template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
-        "template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
-        "template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
+        'template_id' => form_sanitizer($_POST['template_id'], '', 'template_id'),
+        'template_key' => form_sanitizer($_POST['template_key'], '', 'template_key'),
+        'template_format' => form_sanitizer($_POST['template_format'], '', 'template_format'),
+        'template_subject' => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
+        'template_content' => form_sanitizer($_POST['template_content'], '', 'template_content'),
+        'template_active' => form_sanitizer($_POST['template_active'], '', 'template_active'),
+        'template_sender_name' => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
+        'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     );
-    if (defender::safe()) {
+    if (\defender::safe()) {
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
         addNotice('success', $locale['410']);
-        redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
+        redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
 } elseif (isset($_POST['test_template'])) {
     $data = array(
-        "template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
-        "template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
-        "template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
-        "template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
-        "template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
-        "template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
-        "template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
-        "template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
+        'template_id' => form_sanitizer($_POST['template_id'], '', 'template_id'),
+        'template_key' => form_sanitizer($_POST['template_key'], '', 'template_key'),
+        'template_format' => form_sanitizer($_POST['template_format'], '', 'template_format'),
+        'template_subject' => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
+        'template_content' => form_sanitizer($_POST['template_content'], '', 'template_content'),
+        'template_active' => form_sanitizer($_POST['template_active'], '', 'template_active'),
+        'template_sender_name' => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
+        'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     );
-    if (defender::safe()) {
+    if (\defender::safe()) {
         require_once INCLUDES."sendmail_include.php";
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
         sendemail_template($data['template_key'], $locale['412'], $locale['413'], $locale['414'], $locale['415'], $locale['416'],
                            $userdata['user_email']);
         addNotice('success', sprintf($locale['411'], $userdata['user_email']));
-        redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
+        redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
 }
 $result = dbquery("SELECT template_id, template_key, template_name, template_language
@@ -76,7 +78,6 @@ $tab_values = array_values($tab_title['id']);
 $_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) && in_array($_GET['section'], $tab_values) ? $_GET['section'] : $tab_values[0];
 
 opentable($locale['400']);
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'email.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 echo opentab($tab_title, $_GET['section'], "email-templates-tab", TRUE);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], TRUE);
@@ -105,7 +106,7 @@ if (dbrows($result)) {
     }
 }
 
-echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array("class" => "m-t-20"));
+echo openform('emailtemplateform', 'post', FUSION_SELF.fusion_get_aidlink(), array("class" => "m-t-20"));
 echo form_hidden('template_id', '', $data['template_id']);
 echo form_hidden('template_key', '', $data['template_key']);
 echo "<div class='row'>\n";
@@ -114,7 +115,7 @@ echo "<div class='col-xs-12 col-sm-8'>\n";
 echo form_select('template_active', $locale['421'], $data['template_active'], array(
     'options' => array($locale['disable'], $locale['enable']),
     'placeholder' => $locale['choose'],
-    "inline" => TRUE,
+    'inline' => TRUE,
 ));
 
 echo "</div>\n";
@@ -131,8 +132,8 @@ echo "<div class='row m-b-10'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 
 echo form_select('template_format', $locale['426'], $data['template_format'], array(
-    "options" => array('html' => $locale['418'], 'plain' => $locale['419']),
-    "inline" => TRUE,
+    'options' => array('html' => $locale['418'], 'plain' => $locale['419']),
+    'inline' => TRUE,
 ));
 
 echo "</div>\n";
@@ -144,10 +145,10 @@ echo "</div>\n";
 echo "<div class='row m-b-10'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 echo form_text('template_sender_name', $data['template_key'] == "CONTACT" ? $locale['428'] : $locale['429'], $data['template_sender_name'], array(
-    "required" => TRUE,
+    'required' => TRUE,
     'error_text' => $locale['472'],
-    "inline" => TRUE,
-    "class" => "m-b-0",
+    'inline' => TRUE,
+    'class' => 'm-b-0',
 ));
 
 if ($data['template_key'] == "CONTACT") {
@@ -156,8 +157,8 @@ if ($data['template_key'] == "CONTACT") {
 echo form_text('template_sender_email', $data['template_key'] == "CONTACT" ? $locale['431'] : $locale['432'], $data['template_sender_email'], array(
     'required' => TRUE,
     'error_text' => $locale['473'],
-    "inline" => TRUE,
-    "class" => "m-b-0",
+    'inline' => TRUE,
+    'class' => 'm-b-0',
 ));
 if ($data['template_key'] == "CONTACT") {
     echo "<p><small>** ".$locale['433']."</small>\n</p>\n";
@@ -165,8 +166,8 @@ if ($data['template_key'] == "CONTACT") {
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside("");
-echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary m-r-10'));
-echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-default m-r-10'));
+echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary'));
+echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-default'));
 echo form_button('reset', $locale['440'], $locale['440'], array('class' => 'btn-default'));
 closeside();
 echo "</div>\n";
@@ -177,7 +178,7 @@ openside("");
 echo form_text('template_subject', $locale['434'], $data['template_subject'], array(
     'required' => 1,
     'error_text' => $locale['470'],
-    "autosize" => TRUE,
+    'autosize' => TRUE,
 ));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-default button' value='[SITENAME]' onclick=\"insertText('template_subject', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
@@ -201,10 +202,10 @@ echo "</tr>\n";
 echo "<tbody>\n";
 echo "<tr>\n";
 echo "<td>[SITENAME]</td>\n";
-echo "<td>".fusion_get_settings("sitename")."</td>\n";
+echo "<td>".fusion_get_settings('sitename')."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td>[SITEURL]</td>\n";
-echo "<td>".fusion_get_settings("siteurl")."</td>\n";
+echo "<td>".fusion_get_settings('siteurl')."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td>[SUBJECT]</td>\n";
 echo "<td>".$locale['454']."</td>\n";
@@ -238,12 +239,12 @@ if ($data['template_format'] == "plain") {
 	");
 }
 echo form_textarea('template_content', $locale['435'], $data['template_content'], array(
-    "required" => TRUE,
+    'required' => TRUE,
     'error_text' => $locale['471'],
-    "autosize" => TRUE,
-    "preview" => $data['template_format'] == "html" ? TRUE : FALSE,
-    "html" => $data['template_format'] == "html" ? TRUE : FALSE,
-    "inputform" => "emailtemplateform",
+    'autosize' => TRUE,
+    'preview' => $data['template_format'] == 'html' ? TRUE : FALSE,
+    'html' => $data['template_format'] == 'html' ? TRUE : FALSE,
+    'inputform' => 'emailtemplateform',
 ));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-default button' value='[SUBJECT]' onclick=\"insertText('template_content', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
@@ -264,14 +265,14 @@ foreach ($image_files as $image) {
     $opts[$image] = $image;
 }
 echo form_select('insertimage', '', '', array(
-    "options" => $opts,
-    "placeholder" => $locale['469'],
-    "allowclear" => TRUE
+    'options' => $opts,
+    'placeholder' => $locale['469'],
+    'allowclear' => TRUE
 ));
 echo "</div>\n";
 closeside();
-echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary m-r-10'));
-echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-default m-r-10'));
+echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary'));
+echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-default'));
 echo form_button('reset', $locale['440'], $locale['440'], array('class' => 'btn-default'));
 
 echo closeform();
@@ -302,7 +303,7 @@ add_to_jquery("
         }
      });
      $('#insertimage').on('change', function(e) {
-        insertText('template_content', '<img src=\"".fusion_get_settings("siteurl")."images/' + this.options[this.selectedIndex].value + '\" alt=\"\" style=\"margin:5px;\" align=\"left\" />', 'emailtemplateform'); this.selectedIndex=0;
+        insertText('template_content', '<img src=\"".fusion_get_settings('siteurl')."images/' + this.options[this.selectedIndex].value + '\" alt=\"\" style=\"margin:5px;\" align=\"left\" />', 'emailtemplateform'); this.selectedIndex=0;
         $(this).select2({
                 formatSelection: color,
                 escapeMarkup: function(m) { return m; },

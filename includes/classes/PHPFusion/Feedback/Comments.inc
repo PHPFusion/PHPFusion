@@ -341,7 +341,7 @@ class Comments {
             $comment_data = array(
                 'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : $default_comment_id,
                 'comment_name' => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
-                'comment_subject' => empty($_POST['comment_cat']) ? form_sanitizer($_POST['comment_subject'], '', 'comment_subject') : '',
+                'comment_subject' => empty($_POST['comment_cat']) && isset($_POST['comment_subject']) ? form_sanitizer($_POST['comment_subject'], '', 'comment_subject') : '',
                 'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
                 'comment_item_id' => $this->getParams('comment_item_id'),
                 'comment_type' => $this->getParams('comment_item_type'),
@@ -410,8 +410,7 @@ class Comments {
                     $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
 
                     if ($this->jquery_enabled === FALSE && \defender::safe()) {
-                        //if ($_POST['post_comment'] !== 'ajax' && \defender::safe()) {
-                        addNotice("success", $this->locale['global_027']);
+                        addNotice("success", $this->locale['c114']);
                         $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                         $c_link = $this->getParams('clink');
                         redirect(self::format_clink("$c_link&amp;c_start=$_c"));
@@ -447,7 +446,7 @@ class Comments {
                                 $func($this->getParams());
                             }
 
-                            if (iMEMBER && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
+                            if (iMEMBER && fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
                                 dbquery_insert(DB_RATINGS, $ratings_data, ($ratings_data['rating_id'] ? 'update' : 'save'));
                             }
 
@@ -633,7 +632,7 @@ class Comments {
             $this->c_arr['c_info']['ratings_count'] = dbarray(dbquery($ratings_query));
 
             $this->c_arr['c_info']['ratings_remove_form'] = '';
-            if (!$this->getParams('comment_allow_vote')) {
+            if (!$this->getParams('comment_allow_ratings') && !$this->getParams('comment_allow_vote')) {
                 $ratings_html = '';
                 $prefix = $this->getParams('comment_item_type')."-".$this->getParams('comment_item_id');
                 $ratings_html .= openform('remove_ratings_frm', 'post', $this->getParams('clink'), array(

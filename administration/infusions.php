@@ -20,14 +20,26 @@ require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
+
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+
+
+
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
+
 } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
     PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
 }
+
+
 opentable($locale['400']);
+
+echo "<div class='text-right'>\n";
+echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+echo "</div>\n";
+
 $temp = opendir(INFUSIONS);
 $infs = array();
 while ($folder = readdir($temp)) {
@@ -88,8 +100,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
     $content .= "</div>\n";
     echo $content;
 }
+
 closetable();
-echo "<div class='well text-center m-t-20'>\n";
-echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-echo "</div>\n";
+
 require_once THEMES."templates/footer.php";

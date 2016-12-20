@@ -220,7 +220,6 @@ a:hover, a:focus {
     line-height: 50px;
     font-size: 20px;
     border-radius: 10px;
-    overflow: hidden;
 }
 
 #devlpr .app_menu .app_list li a div.apps h4 {
@@ -351,7 +350,7 @@ a:hover, a:focus {
 #devlpr #main_content > header {
     height: 70px;
     background-color: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: 0 27px;
     position: absolute;
     top: 0;
@@ -1365,7 +1364,13 @@ table tbody td {
     padding: 20px 15px 12px 15px;
     color: #000;
 }
-
+.select2-drop td {
+    color: #fff;
+}
+.select2-drop td,
+.select2-search-choice td {
+    padding: 0;
+}
 footer {
     width: 100%;
     height: 32px;
@@ -1741,12 +1746,28 @@ div.mce-edit-area {
 }
 
 #devlpr.login_page .login_bg {
-    background: url(images/login_bg.jpg);
+    /* background: url(images/login_bg.jpg);*/
     background-size: cover;
     min-height: 600px;
     height: 100%;
     overflow: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    background: #0E233B;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #294566), color-stop(1, #0c1f38));
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: radial-gradient(ellipse farthest-corner at center, #294566 0%,#0c1f38 100%);
+    background-repeat: no-repeat;
+    background-position: center center;
+
 }
 
 #devlpr.login_page .login_wrapper {
@@ -1895,7 +1916,7 @@ div.mce-edit-area {
 }
 
 .input-group .form-control {
-    padding: 6px 15px 0 !important;
+    padding: 0 15px 0;
 }
 /* Forms */
 /*

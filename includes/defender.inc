@@ -20,13 +20,12 @@
 
 class defender {
 
+    public static $input_errors = array();
     private static $debug = FALSE;
     private static $defender_instance = NULL;
     private static $remote_file = '';
     public $ref = array();
-
     public $error_title = '';
-    public $input_errors = array();
     public $field = array();
 
     // Declared by Form Sanitizer
@@ -44,17 +43,10 @@ class defender {
         'thumbnail_1' => '',
         'thumbnail_2' => '',
     );
-    private $input_error_text = array();
-    private $tokenIsValid = TRUE;
-    // Sanitize Fields Automatically
-    /**
-     * Generate a Token
-     * Generates a unique token
-     * @param string $form_id The ID of the form
-     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-     * @return string|string[]        The token string
-     */
-    private $recycled_token = "";
+    private static $input_error_text = array();
+
+    private function  __construct() {
+    }
 
     /**
      * Generates and return class instance
@@ -70,6 +62,19 @@ class defender {
     }
 
     /**
+     * Request whether safe to proceed at all times
+     * @return bool
+     */
+    public static function safe() {
+        if (!defined("FUSION_NULL")) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+
+    /**
      * Serialize an array securely
      * @param array $array
      * @return string
@@ -81,6 +86,14 @@ class defender {
         }
 
         return $return_default;
+    }
+
+    public static function encode($value) {
+        return base64_encode(json_encode($value));
+    }
+
+    public static function decode($value) {
+        return base64_decode(json_decode($value));
     }
 
     /**
@@ -100,22 +113,10 @@ class defender {
         return $return_default;
     }
 
-    /**
-     * ID for Session
-     * No $userName because it can be changed and tampered via Edit Profile.
-     * Using IP address extends for guest
-     * @return mixed
-     */
-    static function set_sessionUserID() {
-        $userdata = fusion_get_userdata();
-        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
-    }
-
-    static function add_field_session(array $array) {
+    public static function add_field_session(array $array) {
         $_SESSION['form_fields'][self::pageHash(self::$remote_file)][$array['input_name']] = $array;
     }
 
-    // Checks whether an input was marked as invalid
     /**
      * Generates a md5 hash of the current page to make token session unique
      * Eg. /php-fusion/infusions/blog/blog.php for Non
@@ -134,8 +135,11 @@ class defender {
                 $hash = $encrypt ? md5($_POST['file']) : $_POST['file'];
             }
         }
-        return (string) $hash;
+
+        return (string)$hash;
     }
+
+    // Checks whether an input was marked as invalid
 
     /**
      * Return the current document field session or sessions
@@ -143,7 +147,7 @@ class defender {
      * @param string $input_name
      * @return string
      */
-    static function get_current_field_session($input_name = "") {
+    public static function get_current_field_session($input_name = '') {
         if ($input_name && isset($_SESSION['form_fields'][self::pageHash()][$input_name])) {
             return $_SESSION['form_fields'][self::pageHash()][$input_name];
         } else {
@@ -169,111 +173,29 @@ class defender {
     }
 
     /**
-     * @param bool|FALSE $debug_status
+     * ID for Session
+     * No $userName because it can be changed and tampered via Edit Profile.
+     * Using IP address extends for guest
+     * @return mixed
      */
-    public function setDebug($debug_status = FALSE) {
-        self::$debug = $debug_status;
-    }
-
-
-    public function generate_token($form_id = 'phpfusion', $max_tokens = 10, $file = "") {
-
+    protected static function set_sessionUserID() {
         $userdata = fusion_get_userdata();
-        $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-        // store just one token for each form if the user is a guest
-        if ($user_id == 0) {
-            $max_tokens = 1;
-        }
-        // resets remote file every callback
-        self::$remote_file = ($file ? $file : '');
 
-        if (isset($_POST['fusion_token']) && $this->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
-            /**
-             * Attempt to recover the token instead of generating a new one
-             * Checks if a token is being posted and if is valid, and then
-             * checks if the form for which this token was intended is
-             * the same form for which we are trying to generate a token
-             */
-            $token = stripinput($_POST['fusion_token']);
-
-            if (self::$debug) {
-                addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
-            }
-
-            $this->recycled_token = $token;
-
-        } else {
-
-            $token_time = time();
-            $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
-            $key = $user_id.$token_time.$form_id.SECRET_KEY;
-            $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-            // generate a new token
-            $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
-            // store the token in session
-            $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
-            if (self::$debug) {
-                if (!self::safe()) {
-                    addNotice('danger', 'FUSION NULL is DECLARED');
-                }
-                if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                    addNotice('danger', 'Current Token That is Going to be validated in this page: ');
-                    addNotice('danger',
-                              $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]); // is not going to be able to read the new one.
-                } else {
-                    addNotice('warning', 'There is no token for this page this round');
-                }
-            }
-            // some cleaning, remove oldest token if there are too many
-            if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
-                if (self::$debug) {
-                    addNotice('warning',
-                              'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][0].'. This token cannot be validated anymore.');
-                }
-                array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
-            }
-
-            if (self::$debug) {
-                if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
-                    addNotice('danger', "After clean up, the token remaining is on ".$form_id." is -- ");
-                    addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
-                } else {
-                    addNotice('warning', 'There is no token for this page this round');
-                }
-            }
-        }
-
-        return $token;
+        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
     }
 
     /**
-     * Request whether safe to proceed at all times
-     * @return bool
+     * @param bool|FALSE $value
      */
-    public static function safe() {
-        if (!defined("FUSION_NULL")) {
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-
-    public function remove_token() {
-
-        if (self::safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
-            $tokens = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
-            $current_token = reset($tokens);
-            if ($this->recycled_token && $this->recycled_token !== $current_token) {
-                array_shift($tokens);
-            }
-        }
+    public function debug($value = FALSE) {
+        self::$debug = $value;
     }
 
     /**
      * @return array
      */
     public function getInputErrors() {
-        return $this->input_errors;
+        return self::$input_errors;
     }
 
     /**
@@ -281,8 +203,8 @@ class defender {
      * @param $input_name
      * @param $text
      */
-    public function setErrorText($input_name, $text) {
-        $this->input_error_text[$input_name] = $text;
+    public static function setErrorText($input_name, $text) {
+        self::$input_error_text[$input_name] = $text;
     }
 
     /**
@@ -292,128 +214,24 @@ class defender {
      * @param $input_name
      * @return null
      */
-    public function getErrorText($input_name) {
-        if ($this->inputHasError($input_name)) {
-            return isset($this->input_error_text[$input_name]) ? $this->input_error_text[$input_name] : NULL;
+    public static function getErrorText($input_name) {
+        if (self::inputHasError($input_name)) {
+            return isset(self::$input_error_text[$input_name]) ? self::$input_error_text[$input_name] : NULL;
         }
 
         return NULL;
     }
 
-    public function get_inputError() {
-        return $this->input_errors;
-    }
-
-    public function inputHasError($input_name) {
-        if (isset($this->input_errors[$input_name])) {
+    public static function inputHasError($input_name) {
+        if (isset(self::$input_errors[$input_name])) {
             return TRUE;
         }
 
         return FALSE;
     }
 
-    /**
-     * Token Sniffer
-     * Checks whether a post contains a valid token
-     */
-    public function sniff_token() {
-        $locale = fusion_get_locale();
-        $error = FALSE;
-        if (!empty($_POST)) {
-            // Check if a token is being posted and make sure is a string
-            if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
-                $error = $locale['token_error_2'];
-            } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                // Cannot find any token for this form
-                $error = $locale['token_error_9'];
-                // Check if the token exists in storage
-            } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
-            } elseif (!self::verify_token(0)) {
-                $error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
-            }
-        }
-        // Check if any error was set
-        if ($error !== FALSE) {
-            // Flag the token as invalid
-            $this->tokenIsValid = FALSE;
-            // Flag that something went wrong
-            $this->stop();
-            if (self::$debug === TRUE) {
-                // Add Error Notices
-                setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
-                addNotice('danger', $error);
-            }
-        }
-    }
-
-    /**
-     * Plain Token Validation - executed at maincore.php through sniff_token() only.
-     * Makes thorough checks of a posted token, and the token alone. It does not unset token.
-     * @param int $post_time The time in seconds before a posted form is accepted,
-     *                            this is used to prevent spamming post submissions
-     * @return bool
-     */
-    private static function verify_token($post_time = 5) {
-
-        $locale = fusion_get_locale();
-        $userdata = fusion_get_userdata();
-        $error = FALSE;
-        $settings = fusion_get_settings();
-        $token_data = explode(".", stripinput($_POST['fusion_token']));
-        // check if the token has the correct format
-        if (count($token_data) == 3) {
-            list($tuser_id, $token_time, $hash) = $token_data;
-            $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-            $algo = $settings['password_algorithm'];
-            $salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-            // check if the logged user has the same ID as the one in token
-            if ($tuser_id != $user_id) {
-                $error = $locale['token_error_4'];
-                // make sure the token datestamp is a number
-            } elseif (!isnum($token_time)) {
-                $error = $locale['token_error_5'];
-                // check if the hash is valid
-            } elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
-                $error = $locale['token_error_7'];
-                // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-            } elseif (time() - $token_time < $post_time) {
-                $error = $locale['token_error_6'];
-            }
-        } else {
-            // token format is incorrect
-            $error = $locale['token_error_8'];
-        }
-        // Check if any error was set
-        if ($error !== FALSE) {
-            self::stop();
-            if (self::$debug) {
-                addNotice('danger', $error);
-            }
-
-            return FALSE;
-        }
-        // If we made it so far everything is good
-        if (self::$debug) {
-            addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
-        }
-
-        return TRUE;
-    }
-
-    /**
-     * Send an Unsafe Signal acorss all PHP-Fusion Components
-     * This will automatically halt on all important execution without exiting.
-     */
-    static function stop() {
-        if (!defined('FUSION_NULL')) {
-            addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
-            define('FUSION_NULL', TRUE);
-            if (self::$debug) {
-                debug_print_backtrace();
-                define("STOP_REDIRECT", TRUE);
-            }
-        }
+    public static function get_inputError() {
+        return self::$input_errors;
     }
 
     /**
@@ -501,6 +319,7 @@ class defender {
                             addNotice('warning',
                                       '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
+
                         // Return user's input for correction
                         return $this->field_value;
 
@@ -546,7 +365,12 @@ class defender {
     /** @noinspection PhpInconsistentReturnPointsInspection */
     public function validate() {
 
-        $locale = fusion_get_locale();
+        \Defender\Validation::inputName($this->field_name);
+        \Defender\Validation::inputDefault($this->field_default);
+        \Defender\Validation::inputValue($this->field_value);
+        \Defender\Validation::inputConfig($this->field_config);
+
+        $locale = fusion_get_locale(LOCALE.LOCALESET.'defender.php');
         // Are there situations were inputs could have leading
         // or trailing spaces? If not then uncomment line below
         //$this->field_value = trim($this->field_value);
@@ -557,155 +381,21 @@ class defender {
          * This solution was needed to load the defender.inc.php before
          * defining LOCALESET
          */
-        include_once LOCALE.LOCALESET."defender.php";
         // declare the validation rules and assign them
         // type of fields vs type of validator
-        $validation_rules_assigned = array(
-            'color' => 'textbox',
-            'dropdown' => 'textbox',
-            'text' => 'textbox',
-            'textarea' => 'textbox',
-            'textbox' => 'textbox',
-            'checkbox' => 'checkbox',
-            'password' => 'password',
-            'date' => 'date',
-            'timestamp' => 'timestamp',
-            'number' => 'number',
-            'email' => 'email',
-            'address' => 'address',
-            'name' => 'name',
-            'url' => 'url',
-            'image' => 'image',
-            'file' => 'file',
-            'document' => 'document',
-            "radio" => "textbox",
-            'mediaSelect' => 'path'
-        );
+
         // execute sanitisation rules at point blank precision using switch
         try {
             if (!empty($this->field_config['type'])) {
                 if (empty($this->field_value) && ($this->field_config['type'] !== "number")) {
                     return $this->field_default;
                 }
-                switch ($validation_rules_assigned[$this->field_config['type']]) {
-                    case 'textbox':
-                        return $this->verify_text();
-                        break;
-                    case 'date':
-                        return $this->verify_date();
-                        break;
-                    case 'timestamp':
-                        return $this->verify_date();
-                        break;
-                    case 'password':
-                        return $this->verify_password();
-                        break;
-                    case 'email':
-                        return $this->verify_email();
-                        break;
-                    case 'number' :
-                        return $this->verify_number();
-                        break;
-                    case 'file' :
-                        return $this->verify_file_upload();
-                        break;
-                    case 'url' :
-                        return $this->verify_url();
-                        break;
-                    case 'checkbox' :
-                        return $this->verify_checkbox();
-                        break;
-                    case 'name':
-                        $name = $this->field_name;
-                        if ($this->field_config['required'] && !$_POST[$name][0]) {
-                            $this->stop();
-                            self::setInputError($name.'-firstname');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][1]) {
-                            $this->stop();
-                            self::setInputError($name.'-lastname');
-                        }
-                        if ($this->safe()) {
-                            $return_value = $this->verify_text();
 
-                            return $return_value;
-                        }
-                        break;
-                    case 'address':
-                        $name = $this->field_name;
-                        if ($this->field_config['required'] && !$_POST[$name][0]) {
-                            $this->stop();
-                            self::setInputError($name.'-street-1');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][2]) {
-                            $this->stop();
-                            self::setInputError($name.'-country');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][3]) {
-                            $this->stop();
-                            self::setInputError($name.'-region');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][4]) {
-                            $this->stop();
-                            self::setInputError($name.'-city');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][5]) {
-                            $this->stop();
-                            self::setInputError($name.'-postcode');
-                        }
-                        if ($this->safe()) {
-                            $return_value = $this->verify_text();
-
-                            return $return_value;
-                        }
-                        break;
-                    // DEV: To be reviewed
-                    case 'image' :
-                        return $this->verify_image_upload();
-                        break;
-                    // need to know what is this field.
-                    case 'document':
-                        $name = $this->field_name;
-                        if ($this->field_config['required'] && !$_POST[$name][0]) {
-                            $this->stop();
-                            self::setInputError($name.'-doc-1');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][1]) {
-                            $this->stop();
-                            self::setInputError($name.'-doc-2');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][2]) {
-                            $this->stop();
-                            self::setInputError($name.'-doc-3');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][3]) {
-                            $this->stop();
-                            self::setInputError($name.'-doc-4');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][4]) {
-                            $this->stop();
-                            self::setInputError($name.'-doc-5');
-                        }
-                        if ($this->safe()) {
-                            $return_value = $this->verify_text();
-
-                            return $return_value;
-                        }
-                        break;
-
-                    case 'path' :
-                        return $this->verify_path();
-                        break;
-
-                    default:
-                        $this->stop();
-                        $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
-                        addNotice('danger', $this->field_name.$locale['type_unknown']);
-                }
+                return \Defender\Validation::getValidated();
             } else {
                 $this->stop();
-                $locale['type_unset'] = '%s: has no type set'; // to be moved
-                addNotice('danger', $this->field_name.$locale['type_unset']);
+                $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
+                addNotice('danger', sprintf($locale['type_unknown'], self::$inputName));
             }
         } catch (Exception $e) {
             $this->stop();
@@ -714,680 +404,29 @@ class defender {
     }
 
     /**
-     * validate and sanitize a text
-     * accepts only 50 characters + @ + 4 characters
-     * returns str the sanitized input or bool FALSE
-     * if safemode is set and the check fails
+     * Send an Unsafe Signal acorss all PHP-Fusion Components
+     * This will automatically halt on all important execution without exiting.
      */
-    protected function verify_text() {
-
-        // each configuration for text validation should have a min and max length check
-        $default_length = [
-            'min_length' => 1,
-            'max_length' => '',
-        ];
-        $this->field_config += $default_length;
-
-        if (is_array($this->field_value)) {
-            $vars = array();
-            foreach ($this->field_value as $val) {
-
-                if ($this->field_config['max_length']) {
-                    // Input max length needs a value.
-                    if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $val)) {
-                        $this->stop();
-                        self::setInputError($this->field_name);
-
-                        return $this->field_default;
-                    }
-                }
-
-
-                $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
+    static function stop() {
+        if (!defined('FUSION_NULL')) {
+            addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
+            define('FUSION_NULL', TRUE);
+            if (self::$debug) {
+                debug_print_backtrace();
+                define("STOP_REDIRECT", TRUE);
             }
-            // set options for checking on delimiter, and default is pipe (json,serialized val)
-            $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : "|";
-            $value = implode($delimiter, $vars);
-
-        } else {
-
-            if ($this->field_config['max_length']) {
-                if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $this->field_value)) {
-                    $this->stop();
-                    self::setInputError($this->field_name);
-
-                    return FALSE;
-                }
-            }
-
-            $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value))));
-        }
-        if ($this->field_config['required'] && !$value) {
-            self::setInputError($this->field_name);
-        }
-        if ($this->field_config['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
-            return FALSE;
-        } else {
-            return $value;
         }
     }
 
-    public function setInputError($input_name) {
-        $this->input_errors[$input_name] = TRUE;
-    }
-
-    /**
-     * Check and verify submitted date
-     * If type is timestamp, it will return a Unix timestamp
-     * If type is date, it will return a date
-     * @return int|string
+    /*
+     * Highlight the form field as error
      */
-    protected function verify_date() {
-        global $locale;
 
-        if ($this->field_value) {
-
-            $dateParams = strtotime($this->field_value);
-            $dateParams = getdate($dateParams);
-
-            if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
-
-                switch ($this->field_config['type']) {
-                    case "timestamp":
-
-                        $secured = (int)mktime($dateParams['hours'],
-                                               $dateParams['minutes'],
-                                               $dateParams['seconds'],
-                                               $dateParams['mon'],
-                                               $dateParams['mday'],
-                                               $dateParams['year']
-                        );
-
-                        return $secured;
-
-                        break;
-                    case "date":
-
-                        return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
-                        break;
-                }
-
-            } else {
-                $this->stop();
-                self::setInputError($this->field_name);
-                addNotice('info', sprintf($locale['df_404'], $this->field_config['title']));
-            }
-        }
-
-        return (string)$this->field_default;
+    public static function setInputError($input_name) {
+        self::$input_errors[$input_name] = TRUE;
     }
 
-    /**
-     * Checks if is a valid password
-     * accepts minimum of 8 and maximum of 64 due to encrypt limit
-     * returns str the input or bool FALSE if check fails
-     */
-    protected function verify_password() {
-        // add min length, add max length, add strong password into roadmaps.
-        if ($this->field_config['required'] && !$this->field_value) {
-            self::setInputError($this->field_name);
-        }
-        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{".$this->field_config['min_length'].",".$this->field_config['max_length']."}$/i",
-                       $this->field_value)) {
-            return $this->field_value;
-        }
 
-        return FALSE;
-    }
-
-    /**
-     * Checks if is a valid email address
-     * accepts only 50 characters + @ + 4 characters
-     * returns str the input or bool FALSE if check fails
-     */
-    protected function verify_email() {
-        if ($this->field_config['required'] && !$this->field_value) {
-            self::setInputError($this->field_name);
-        }
-        if (preg_check("/^[-0-9A-Z+_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
-            return $this->field_value;
-        }
-        return FALSE;
-    }
-
-    /**
-     * Checks if is a valid number
-     * returns str the input or bool FALSE if check fails
-     * TODO: support decimal
-     */
-    protected function verify_number() {
-        if ($this->field_config['required'] && (empty($this->field_value))) {
-            self::setInputError($this->field_name);
-        }
-
-        if (is_array($this->field_value)) {
-            $vars = array();
-            foreach ($this->field_value as $val) {
-                if (!empty($val) && isnum($val, TRUE)) {
-                    $vars[] = $val;
-                }
-            }
-            $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
-            $value = implode($delimiter, $vars);
-
-            return $value; // empty str is returned if $vars ends up empty
-
-        } elseif (empty($this->field_value) || isnum($this->field_value, TRUE)) {
-            return $this->field_value;
-        } else {
-            return FALSE;
-        }
-
-    }
-
-    /** @noinspection PhpInconsistentReturnPointsInspection */
-    protected function verify_file_upload() {
-        global $locale;
-        require_once INCLUDES."infusions_include.php";
-        if ($this->field_config['multiple']) {
-            if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
-                $upload = array('error' => 0);
-                if ($this->field_config['max_count'] < count($_FILES[$this->field_config['input_name']]['name'])) {
-                    $this->stop();
-                    $upload = array('error' => 1);
-                    addNotice('danger', $locale['df_424']);
-                    self::setInputError($this->field_name);
-                } else {
-                    for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name']) - 1; $i++) {
-                        if (($this->field_config['max_count'] == $i)) {
-                            break;
-                        }
-                        $source_file = $this->field_config['input_name'];
-                        $target_file = $_FILES[$this->field_config['input_name']]['name'][$i];
-                        $target_folder = $this->field_config['path'];
-                        $valid_ext = $this->field_config['valid_ext'];
-                        $max_size = $this->field_config['max_byte'];
-                        $query = '';
-
-                        if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
-                            if (stristr($valid_ext, ',')) {
-                                $valid_ext = explode(",", $valid_ext);
-                            } elseif (stristr($valid_ext, '|')) {
-                                $valid_ext = explode("|", $valid_ext);
-                            } else {
-                                $this->stop();
-                                addNotice('warning',
-                                          'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
-                            }
-                            $file = $_FILES[$source_file];
-                            $file_type = $file['type'][$i];
-                            if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
-                                $target_file = stripfilename(substr($file['name'][$i], 0,
-                                                                    strrpos($file['name'][$i], ".")));
-                            }
-                            $file_ext = strtolower(strrchr($file['name'][$i], "."));
-                            $file_dest = rtrim($target_folder, '/').'/';
-                            $upload_file = array(
-                                "source_file" => $source_file,
-                                "source_size" => $file['size'][$i],
-                                "source_ext" => $file_ext,
-                                "target_file" => $target_file.$file_ext,
-                                "target_folder" => $target_folder,
-                                "valid_ext" => $valid_ext,
-                                "max_size" => $max_size,
-                                "query" => $query,
-                                "error" => 0
-                            );
-                            if ($file['size'][$i] > $max_size) {
-                                // Maximum file size exceeded
-                                $upload['error'] = 1;
-                            } elseif (!in_array($file_ext, $valid_ext)) {
-                                // Invalid file extension
-                                $upload['error'] = 2;
-                            } else {
-                                $target_file = filename_exists($file_dest, $target_file.$file_ext);
-                                $upload_file['target_file'] = $target_file;
-                                move_uploaded_file($file['tmp_name'][$i], $file_dest.$target_file);
-                                if (function_exists("chmod")) {
-                                    chmod($file_dest.$target_file, 0644);
-                                }
-                                if ($query && !dbquery($query)) {
-                                    // Invalid query string
-                                    $upload['error'] = 3;
-                                    if (file_exists($file_dest.$target_file)) {
-                                        unlink($file_dest.$target_file);
-                                    }
-                                }
-                            }
-                            if ($upload['error'] !== 0) {
-                                if (file_exists($file_dest.$target_file.$file_ext)) {
-                                    @unlink($file_dest.$target_file.$file_ext);
-                                }
-                            }
-                            $upload['source_file'][$i] = $upload_file['source_file'];
-                            $upload['source_size'][$i] = $upload_file['source_size'];
-                            $upload['source_ext'][$i] = $upload_file['source_ext'];
-                            $upload['target_file'][$i] = $upload_file['target_file'];
-                            $upload['target_folder'][$i] = $upload_file['target_folder'];
-                            $upload['valid_ext'][$i] = $upload_file['valid_ext'];
-                            $upload['max_size'][$i] = $upload_file['max_size'];
-                            $upload['query'][$i] = $upload_file['query'];
-                            $upload['type'][$i] = $file_type;
-                        } else {
-                            // File not uploaded
-                            $upload['error'] = array("error" => 4);
-                        }
-                        if ($upload['error'] !== 0) {
-                            $this->stop();
-                            switch ($upload['error']) {
-                                case 1: // Maximum file size exceeded
-                                    addNotice('danger', sprintf($locale['df_416'],
-                                                                parsebytesize($this->field_config['max_byte'])));
-                                    self::setInputError($this->field_name);
-                                    break;
-                                case 2: // Invalid File extensions
-                                    addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
-                                    self::setInputError($this->field_name);
-                                    break;
-                                case 3: // Invalid Query String
-                                    addNotice('danger', $locale['df_422']);
-                                    self::setInputError($this->field_name);
-                                    break;
-                                case 4: // File not uploaded
-                                    addNotice('danger', $locale['df_423']);
-                                    self::setInputError($this->field_name);
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                return $upload;
-            } else {
-                return array();
-            }
-        } else {
-            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && $this->safe()) {
-
-                $upload = upload_file($this->field_config['input_name'],
-                                      $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
-                                      $this->field_config['valid_ext'], $this->field_config['max_byte']);
-                if ($upload['error'] != 0) {
-                    $this->stop(); // return FALSE
-                    switch ($upload['error']) {
-                        case 1: // Maximum file size exceeded
-                            addNotice('danger',
-                                      sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-                            self::setInputError($this->field_name);
-                            break;
-                        case 2: // Invalid File extensions
-                            addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
-                            self::setInputError($this->field_name);
-                            break;
-                        case 3: // Invalid Query String
-                            addNotice('danger', $locale['df_422']);
-                            self::setInputError($this->field_name);
-                            break;
-                        case 4: // File not uploaded
-                            addNotice('danger', $locale['df_423']);
-                            self::setInputError($this->field_name);
-                            break;
-                    }
-                } else {
-                    return $upload;
-                }
-            } else {
-                return FALSE;
-            }
-        }
-    }
-
-    /**
-     * Checks if is a valid URL
-     * require path.
-     * returns str the input or bool FALSE if check fails
-     */
-    protected function verify_url() {
-        if ($this->field_config['required'] && !$this->field_value) {
-            self::setInputError($this->field_name);
-        }
-        if ($this->field_value) {
-            $url_parts = parse_url($this->field_value);
-            $internal_url = fusion_get_settings('siteurl').$this->field_value;
-            if (!isset($url_parts['scheme']) && isset($url_parts['path'])) { // no http://
-                // Check both remote and internal.
-                $remote_url = 'http://'.$this->field_value;
-                if (self::validateURL($internal_url) !== FALSE) {
-                    return $internal_url;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
-                    return $remote_url;
-                }
-            } else {
-                $remote_url = $this->field_value;
-                if (self::validateURL($internal_url) !== FALSE) {
-                    return $this->field_value;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
-                    return $this->field_value;
-                }
-            }
-
-            return FALSE;
-        }
-    }
-
-    /**
-     * Validate URL
-     * @param $url
-     * @return bool
-     */
-    protected static function validateURL($url) {
-        if (function_exists('curl_version')) {
-            $fp = curl_init($url);
-            curl_setopt($fp, CURLOPT_TIMEOUT, 20);
-            curl_setopt($fp, CURLOPT_FAILONERROR, TRUE);
-            curl_setopt($fp, CURLOPT_REFERER, $url);
-            curl_setopt($fp, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-            curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_exec($fp);
-            if (curl_errno($fp) != 0) {
-                curl_close($fp);
-                return FALSE;
-            } else {
-                curl_close($fp);
-                return $url;
-            }
-        } elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-            return FALSE;
-        }
-
-        return FALSE;
-    }
-
-    /**
-     * Validate a checkbox
-     * If field Value is multiple checkbox, post value must be an array
-     * If field value is a radio, post value must not be an array
-     * If field value is a number, post value must be a boolean 1 or 0
-     */
-    protected function verify_checkbox() {
-        if ($this->field_config['required'] && !$this->field_value) {
-            self::setInputError($this->field_name);
-        }
-        if (is_array($this->field_value)) {
-            $vars = array();
-            foreach ($this->field_value as $val) {
-                $vars[] = stripinput($val);
-            }
-            $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
-            $value = implode($delimiter, $vars);
-
-            return $value;
-        } elseif (!empty($this->field_value)) {
-            if (isnum($this->field_value)) {
-                if ($this->field_value == 1) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            } else {
-                return stripinput($this->field_value);
-            }
-        } else {
-            return FALSE;
-        }
-    }
-
-    /**
-     * Verify Image Upload
-     * @return array
-     */
-    protected function verify_image_upload() {
-        $locale = fusion_get_locale();
-        require_once INCLUDES."infusions_include.php";
-        if ($this->field_config['multiple']) {
-
-            $target_folder = $this->field_config['path'];
-            $target_width = $this->field_config['max_width'];
-            $target_height = $this->field_config['max_height'];
-            $max_size = $this->field_config['max_byte'];
-            $delete_original = $this->field_config['delete_original'];
-            $thumb1 = $this->field_config['thumbnail'];
-            $thumb2 = $this->field_config['thumbnail2'];
-            $thumb1_ratio = $this->field_config['thumbnail_ratio'];
-            $thumb1_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
-            $thumb1_suffix = $this->field_config['thumbnail_suffix'];
-            $thumb1_width = $this->field_config['thumbnail_w'];
-            $thumb1_height = $this->field_config['thumbnail_h'];
-            $thumb2_ratio = $this->field_config['thumbnail2_ratio'];
-            $thumb2_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
-            $thumb2_suffix = $this->field_config['thumbnail2_suffix'];
-            $thumb2_width = $this->field_config['thumbnail2_w'];
-            $thumb2_height = $this->field_config['thumbnail2_h'];
-            $query = '';
-
-            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][0]) && $this->safe()) {
-                $result = array();
-                for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name']) - 1; $i++) {
-                    if (is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][$i])) {
-                        $image = $_FILES[$this->field_config['input_name']];
-                        $target_name = $_FILES[$this->field_config['input_name']]['name'][$i];
-                        if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
-                            $image_name = $target_name;
-                        } else {
-                            $image_name = stripfilename(substr($image['name'][$i], 0,
-                                                               strrpos($image['name'][$i], ".")));
-                        }
-                        $image_ext = strtolower(strrchr($image['name'][$i], "."));
-                        $image_res = array();
-                        if (filesize($image['tmp_name'][$i]) > 10 && @getimagesize($image['tmp_name'][$i])) {
-                            $image_res = @getimagesize($image['tmp_name'][$i]);
-                        }
-                        $image_info = array(
-                            "image" => FALSE,
-                            "image_name" => $image_name.$image_ext,
-                            "image_ext" => $image_ext,
-                            "image_size" => $image['size'],
-                            "image_width" => $image_res[0],
-                            "image_height" => $image_res[1],
-                            "thumb1" => FALSE,
-                            "thumb1_name" => "",
-                            "thumb2" => FALSE,
-                            "thumb2_name" => "",
-                            "error" => 0,
-                        );
-                        if ($image_ext == ".gif") {
-                            $filetype = 1;
-                        } elseif ($image_ext == ".jpg") {
-                            $filetype = 2;
-                        } elseif ($image_ext == ".png") {
-                            $filetype = 3;
-                        } else {
-                            $filetype = FALSE;
-                        }
-                        if ($image['size'][$i] > $max_size) {
-                            // Invalid file size
-                            $image_info['error'] = 1;
-                        } elseif (!$filetype || !verify_image($image['tmp_name'][$i])) {
-                            // Unsupported image type
-                            $image_info['error'] = 2;
-                        } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
-                            // Invalid image resolution
-                            $image_info['error'] = 3;
-                        } else {
-                            if (!file_exists($target_folder)) {
-                                mkdir($target_folder, 0755);
-                            }
-                            $image_name_full = filename_exists($target_folder, $image_name.$image_ext);
-                            $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
-                            $image_info['image_name'] = $image_name_full;
-                            $image_info['image'] = TRUE;
-                            move_uploaded_file($image['tmp_name'][$i], $target_folder.$image_name_full);
-                            if (function_exists("chmod")) {
-                                chmod($target_folder.$image_name_full, 0755);
-                            }
-                            if ($query && !dbquery($query)) {
-                                // Invalid query string
-                                $image_info['error'] = 4;
-                                if (file_exists($target_folder.$image_name_full)) {
-                                    @unlink($target_folder.$image_name_full);
-                                }
-                            } elseif ($thumb1 || $thumb2) {
-                                require_once INCLUDES."photo_functions_include.php";
-                                $noThumb = FALSE;
-                                if ($thumb1) {
-                                    if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
-                                        $noThumb = TRUE;
-                                        $image_info['thumb1_name'] = $image_info['image_name'];
-                                        $image_info['thumb1'] = TRUE;
-                                    } else {
-                                        if (!file_exists($thumb1_folder)) {
-                                            mkdir($thumb1_folder, 0755, TRUE);
-                                        }
-                                        $image_name_t1 = filename_exists($thumb1_folder,
-                                                                         $image_name.$thumb1_suffix.$image_ext);
-                                        $image_info['thumb1_name'] = $image_name_t1;
-                                        $image_info['thumb1'] = TRUE;
-                                        if ($thumb1_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full,
-                                                            $thumb1_folder.$image_name_t1, $thumb1_width,
-                                                            $thumb1_height);
-                                        } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full,
-                                                                  $thumb1_folder.$image_name_t1, $thumb1_width);
-                                        }
-                                    }
-                                }
-                                if ($thumb2) {
-                                    if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
-                                        $noThumb = TRUE;
-                                        $image_info['thumb2_name'] = $image_info['image_name'];
-                                        $image_info['thumb2'] = TRUE;
-                                    } else {
-                                        if (!file_exists($thumb2_folder)) {
-                                            mkdir($thumb2_folder, 0755, TRUE);
-                                        }
-                                        $image_name_t2 = filename_exists($thumb2_folder,
-                                                                         $image_name.$thumb2_suffix.$image_ext);
-                                        $image_info['thumb2_name'] = $image_name_t2;
-                                        $image_info['thumb2'] = TRUE;
-                                        if ($thumb2_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full,
-                                                            $thumb2_folder.$image_name_t2, $thumb2_width,
-                                                            $thumb2_height);
-                                        } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full,
-                                                                  $thumb2_folder.$image_name_t2, $thumb2_width);
-                                        }
-                                    }
-                                }
-                                if ($delete_original && !$noThumb) {
-                                    unlink($target_folder.$image_name_full);
-                                    $image_info['image'] = FALSE;
-                                }
-                            }
-                        }
-                    } else {
-                        $image_info = array("error" => 5);
-                    }
-                    if ($image_info['error'] != 0) {
-                        switch ($image_info['error']) {
-                            case 1: // Invalid file size
-                                addNotice('danger',
-                                          sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-                                self::setInputError($this->field_name);
-                                break;
-                            case 2: // Unsupported image type
-                                addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
-                                self::setInputError($this->field_name);
-                                break;
-                            case 3: // Invalid image resolution
-                                addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width'],
-                                                            $this->field_config['max_height']));
-                                self::setInputError($this->field_name);
-                                break;
-                            case 4: // Invalid query string
-                                addNotice('danger', $locale['df_422']);
-                                self::setInputError($this->field_name);
-                                break;
-                            case 5: // Image not uploaded
-                                addNotice('danger', $locale['df_423']);
-                                self::setInputError($this->field_name);
-                                break;
-                        }
-                        $result[$i] = $image_info;
-                    } else {
-                        $result[$i] = $image_info;
-                    }
-                } // end for
-                return $result;
-            } else {
-                return array();
-            }
-        } else {
-            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && $this->safe()) {
-                $upload = upload_image($this->field_config['input_name'],
-                                       $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
-                                       $this->field_config['max_width'], $this->field_config['max_height'],
-                                       $this->field_config['max_byte'], $this->field_config['delete_original'],
-                                       $this->field_config['thumbnail'], $this->field_config['thumbnail2'], 1,
-                                       $this->field_config['path'].$this->field_config['thumbnail_folder']."/",
-                                       $this->field_config['thumbnail_suffix'], $this->field_config['thumbnail_w'],
-                                       $this->field_config['thumbnail_h'], 0,
-                                       $this->field_config['path'].$this->field_config['thumbnail_folder']."/",
-                                       $this->field_config['thumbnail2_suffix'], $this->field_config['thumbnail2_w'],
-                                       $this->field_config['thumbnail2_h']);
-                if ($upload['error'] != 0) {
-                    $this->stop();
-                    switch ($upload['error']) {
-                        case 1: // Invalid file size
-                            addNotice('danger',
-                                      sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-                            self::setInputError($this->field_name);
-                            break;
-                        case 2: // Unsupported image type
-                            addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
-                            self::setInputError($this->field_name);
-                            break;
-                        case 3: // Invalid image resolution
-                            addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width'],
-                                                        $this->field_config['max_height']));
-                            self::setInputError($this->field_name);
-                            break;
-                        case 4: // Invalid query string
-                            addNotice('danger', $locale['df_422']);
-                            self::setInputError($this->field_name);
-                            break;
-                        case 5: // Image not uploaded
-                            addNotice('danger', $locale['df_423']);
-                            self::setInputError($this->field_name);
-                            break;
-                    }
-
-                    return $upload;
-                } else {
-                    return $upload;
-                }
-            } else {
-                return array();
-            }
-        }
-    }
-
-    /**
-     * Verify Paths within CMS
-     * @return bool|string
-     */
-    protected function verify_path() {
-        if ($this->field_config['required'] && !$this->field_value) {
-            self::setInputError($this->field_name);
-        }
-        if (file_exists($this->field_config['path'].$this->field_value) && is_file($this->field_config['path'].$this->field_value)) {
-            return $this->field_value;
-        }
-
-        return FALSE;
-    }
 }
 
 /**
@@ -1401,3 +440,7 @@ class defender {
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
+
+require(dirname(__FILE__) . '/defender/validation.php');
+require(dirname(__FILE__).'/defender/token.php');
+require(dirname(__FILE__).'/defender/mimecheck.php');

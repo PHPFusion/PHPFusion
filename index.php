@@ -23,7 +23,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     define("IN_PERMALINK", TRUE);
 
-    $router = new PHPFusion\Rewrite\Router();
+    $router = PHPFusion\Rewrite\Router::getRouterInstance();
 
     $router->rewritePage();
 

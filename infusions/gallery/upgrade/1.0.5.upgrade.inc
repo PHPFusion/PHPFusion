@@ -19,7 +19,7 @@
 $inf_version = '1.0.5';
 require_once INCLUDES."infusions_include.php";
 
-if (!column_exists(DB_PHOTOS, 'photo_keywords')) {
+if (!column_exists(DB_PHOTOS, 'photo_keywords', FALSE)) {
     // Option to use keywords in photos
     $inf_altertable[] = DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description";
 }
@@ -33,12 +33,12 @@ $check_array = [
     'album_thumb2' => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1",
 ];
 foreach ($check_array as $key => $value) {
-    if (!column_exists(DB_PHOTO_ALBUMS, $key)) {
+    if (!column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
         $inf_altertable[] = DB_PHOTO_ALBUMS.$value;
     }
 }
 // Make sure access table are support for new levels
-if (column_exists(DB_PHOTO_ALBUMS, 'album_access')) {
+if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
     $inf_altertable[] = DB_PHOTO_ALBUMS." CHANGE album_access album_access CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
 }
 
@@ -93,5 +93,5 @@ if (dbrows($result) > 0) {
         }
     }
 }
-// Remove old cats link and update new path for admin link
-$inf_deldbrow[] = DB_ADMIN." SET admin_link='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";
+
+$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/gallery/gallery.png', `admin_link`='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";

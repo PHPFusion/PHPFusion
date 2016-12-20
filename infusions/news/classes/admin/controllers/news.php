@@ -100,6 +100,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_visibility' => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
                 'news_draft' => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
                 'news_sticky' => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name' => isset($_POST['news_name']) ? "1" : "0",
                 'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
                 'news_allow_ratings' => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
@@ -470,8 +471,8 @@ class NewsAdmin extends NewsAdminModel {
                              array(
                                  'allowclear' => TRUE,
                                  'placeholder' => $this->locale['news_0270'],
-                                 'inline' => TRUE,
-                                 'width' => '100%',
+                                 'inline' => FALSE,
+                                 'inner_width' => '100%',
                                  'options' => $news_photo_opts
                              )
                 ).
@@ -479,17 +480,16 @@ class NewsAdmin extends NewsAdminModel {
                             array(
                                 'allowclear' => TRUE,
                                 'placeholder' => $this->locale['news_0270'],
-                                'inline' => TRUE,
-                                'width' => '100%',
+                                'inline' => FALSE,
+                                'inner_width' => '100%',
                                 'options' => $news_photo_opts
                             )
                 ).
-                form_select('news_image_align', $this->locale['news_0218'], '', array("options" => $alignOptions, 'inline' => TRUE));
+                form_select('news_image_align', $this->locale['news_0218'], '', array("options" => $alignOptions, 'inline' => FALSE, 'inner_width'=>'100%'));
         endif;
         closeside();
 
         ob_start();
-        openside($this->locale['news_0006']);
         echo openmodal('image_gallery_modal', $this->locale['news_0006'], array('button_id' => 'image_gallery'));
         echo openform('gallery_form', 'POST', FUSION_REQUEST, array('enctype' => TRUE));
 
@@ -719,9 +719,9 @@ class NewsAdmin extends NewsAdminModel {
         <div class="m-t-15">
             <?php
             echo openform("news_filter", "post", FUSION_REQUEST);
-            echo "<div class='clearfix'>\n";
+            echo "<div class='row clearfix'>\n";
 
-            echo "<div class='pull-right'>\n";
+            echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"),
                                                                                  FALSE)."'>".$this->locale['news_0002']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
@@ -753,19 +753,23 @@ class NewsAdmin extends NewsAdminModel {
             foreach ($filter_values as $val) {
                 if ($val) {
                     $filter_empty = FALSE;
+                    break;
                 }
             }
 
-            echo "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
+            echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
             echo form_text("news_text", "", $filter_values['news_text'], array(
                 "placeholder" => $this->locale['news_0200'],
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_news",
-                "width" => "250px"
+                "inner_width" => "250px"
             ));
             echo "</div>\n";
-            echo "<div class='display-inline-block' style='vertical-align:top;'>\n";
+            echo "</div>\n";
+
+            echo "<div class='row m-b-20'>\n";
+            echo "<div class='col-xs-6 vt'>\n";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
             <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("news_clear", $this->locale['news_0243'], "clear", array('class' => 'btn-default btn-sm'));
@@ -858,7 +862,7 @@ class NewsAdmin extends NewsAdminModel {
             echo closeform();
             ?>
         </div>
-
+        <hr/>
         <?php echo openform("news_table", "post", FUSION_REQUEST); ?>
         <?php echo form_hidden("table_action", "", ""); ?>
 
@@ -866,7 +870,7 @@ class NewsAdmin extends NewsAdminModel {
             <div class="display-inline-block m-l-10">
                 <?php echo form_select('news_display', $this->locale['show'], $limit,
                                        array(
-                                           'width' => '100px',
+                                           'inner_width' => '100px',
                                            'inline' => TRUE,
                                            'options' => array(
                                                5 => 5,
@@ -892,16 +896,16 @@ class NewsAdmin extends NewsAdminModel {
             <thead>
             <tr>
                 <td></td>
-                <td class="strong col-xs-4"><?php echo $this->locale['news_0200'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0201'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0209'] ?></td>
-                <td class="strong"><?php echo $this->locale['sticky'] ?></td>
-                <td class="strong"><?php echo $this->locale['draft'] ?></td>
-                <td class="strong"><?php echo $this->locale['global_073'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0216'] ?></td>
-                <td class="strong"><?php echo $this->locale['news_0142'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0200'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0201'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0209'] ?></td>
+                <td class="strong min"><?php echo $this->locale['sticky'] ?></td>
+                <td class="strong min"><?php echo $this->locale['draft'] ?></td>
+                <td class="strong min"><?php echo $this->locale['global_073'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0216'] ?></td>
+                <td class="strong min"><?php echo $this->locale['news_0142'] ?></td>
                 <td class="strong"><?php echo $this->locale['actions'] ?></td>
-                <td class="strong">ID</td>
+                <td class="strong min">ID</td>
             </tr>
             </thead>
             <tbody>
@@ -935,7 +939,6 @@ class NewsAdmin extends NewsAdminModel {
                         <td><?php echo format_word($data['comments_count'], $this->locale['fmt_comment']) ?></td>
                         <td><?php echo format_word($data['image_count'], $this->locale['fmt_photo']) ?></td>
                         <td>
-                            <div class="pull-left"><?php echo display_avatar($data, "20px", "", FALSE, "img-rounded") ?></div>
                             <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'],
                                                                                $data['user_status']) ?></div>
                         </td>

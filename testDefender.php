@@ -24,8 +24,81 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
-opentable("Testing Inputs with Defender");
 
+opentable("Cross Site Request Forgery Test");
+$token = '';
+if (isset($_POST['refresh'])) {
+    // initiate hard reset
+    redirect(FUSION_SELF);
+}
+if (isset($_POST['test_token'])) {
+    $token = $_POST['fusion_token'];
+    if (\defender::safe()) {
+        addNotice("success", "Great, token is valid, and we saved your input and enter into our records");
+    }
+} else {
+    if ($token) {
+        addNotice("danger", "Token authentication failed");
+    }
+}
+echo openform('token_form', 'post', FUSION_SELF, ['class' => 'well']);
+
+if (\defender::safe()) {
+    echo(!$token ? "<h4>Step 1: A new token generated.</h4>" : "<h4>Step 2: Logged Token Test (Hacker copying your token)</h4>\n");
+    echo "<hr/>\n";
+    if ($token && \defender::safe()) {
+        echo form_text('fusion_token', 'Last Posted Fusion Token Value', $token);
+        echo form_text('spam_title', 'Title', 'Nike Air with Good Adidas Cushion');
+        echo form_textarea('spam', 'Spam Message', lorem_ipsum(400));
+    }
+    if (!$token) {
+        echo form_text('spam_title', 'Title', '');
+        echo form_textarea('spam_message', 'Description', '', ['bbcode' => TRUE, 'autosize' => TRUE]);
+    }
+
+    echo form_button('test_token', $token ? 'Hackathon it!' : 'Launch Test', '');
+    if ($token && \defender::safe()) {
+        echo "<div class='display-inline-block alert alert-warning m-l-15'>Or maybe even try F5 and see if it repost.</div>\n";
+    }
+} else {
+    echo "<div class='alert alert-danger'>Post Fails... well try F5 reload as well, just in case.</div>\n";
+    echo form_button('refresh', 'Reset Test', '');
+}
+echo closeform();
+closetable();
+
+opentable('Using the multilocale Quantum Fields');
+$weblink_value = '';
+if (isset($_POST['submit_translations'])) {
+    $weblink_value = form_sanitizer($_POST['weblink_description'], '', 'weblink_description', TRUE);
+    if (\defender::safe()) {
+        echo 'Your Value to be saved into SQL is...';
+        print_p($weblink_value);
+        echo 'so in order to display your text... automatically it is';
+        $value = \PHPFusion\QuantumFields::parse_label($weblink_value);
+
+        print_p('Current language to display is '.LANGUAGE);
+        echo $value;
+
+    }
+}
+echo openform('testQuantum', 'post', FUSION_REQUEST);
+echo \PHPFusion\QuantumFields::quantum_multilocale_fields(
+    'weblink_description', 'Weblink Description', $weblink_value,
+    [
+        'type' => 'textarea', // text
+        'required' => true,
+        'class' => 'm-t-10',
+    ]
+);
+echo form_button('submit_translations', 'Submit', 'test');
+echo closeform();
+closetable();
+
+
+
+
+opentable("Testing Inputs with Defender");
 add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {height:auto !important}</style>');
 
 // Test new Send PM to a user - uncomment to test

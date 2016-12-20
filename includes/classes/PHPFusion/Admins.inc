@@ -93,23 +93,14 @@ class Admins {
      */
     private $current_page = '';
     private $locale = '';
+    private $comment_type = array();
+    private $submit_type = array();
+    private $link_type = array();
 
-
-    /**
-     * Build a return that always synchronize with the DB_ADMIN url.
-     */
-    private function _currentPage() {
-        $path = $_SERVER['PHP_SELF'];
-        if (defined('START_PAGE')) {
-            $path_info = pathinfo(START_PAGE);
-            if (stristr(FUSION_REQUEST, '/administration/')) {
-                $path = $path_info['filename'].'.php';
-            } else {
-                $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
-            }
-        }
-        return $path;
+    private function __construct() {
     }
+
+    // add a setter for icons
 
     /**
      * @return object
@@ -130,11 +121,76 @@ class Admins {
                     4 => $GLOBALS['locale']['ac04'],
                     5 => $GLOBALS['locale']['ac05'],
                 );
-                self::$instance->current_page = self::$instance->_currentPage();
 
+                self::$instance->current_page = self::$instance->_currentPage();
             }
         }
+
+
         return (object) self::$instance;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminPages() {
+
+        if (empty($this->admin_pages)) {
+            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
+            $rows = dbrows($result);
+            if ($rows) {
+                while ($data = dbarray($result)) {
+                    if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
+                        $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
+                        $this->admin_pages[$data['admin_page']][] = $data;
+                    }
+                }
+            }
+        }
+
+        return $this->admin_pages;
+    }
+
+    /**
+     * Build a return that always synchronize with the DB_ADMIN url.
+     */
+    private function _currentPage() {
+        $path = $_SERVER['PHP_SELF'];
+        if (defined('START_PAGE')) {
+            $path_info = pathinfo(START_PAGE);
+            if (stristr(FUSION_REQUEST, '/administration/')) {
+                $path = $path_info['filename'].'.php';
+            } else {
+                $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
+            }
+        }
+
+        return $path;
+    }
+
+    /**
+     * @param $page - 0-5 is core section pages. 6 and above are free to use.
+     * @param $section_title - Section title
+     * @param $icons - Section Icons
+     */
+    public function addAdminSection($page, $section_title, $icons) {
+        $this->admin_sections[$page] = $section_title;
+        $this->admin_section_icons[$page] = $icons;
+        $this->admin_pages[$page] = array();
+    }
+
+    public function setAdminBreadcrumbs() {
+        BreadCrumbs::getInstance()->addBreadCrumb([
+                                                      'link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
+                                                      'title' => $GLOBALS['locale']['ac10']
+                                                  ]);
+        $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+        if ($acTab != 0 && $acTab <= 5) {
+            BreadCrumbs::getInstance()->addBreadCrumb([
+                                                          'link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
+                                                          'title' => $GLOBALS['locale']['ac0'.$acTab]
+                                                      ]);
+        }
     }
 
     /**
@@ -158,19 +214,6 @@ class Admins {
         return '0';
     }
 
-    // add a setter for icons
-
-    /**
-     * @param $page - 0-5 is core section pages. 6 and above are free to use.
-     * @param $section_title - Section title
-     * @param $icons - Section Icons
-     */
-    public function addAdminSection($page, $section_title, $icons) {
-        $this->admin_sections[$page] = $section_title;
-        $this->admin_section_icons[$page] = $icons;
-        $this->admin_pages[$page] = array();
-    }
-
     /**
      * @return array
      */
@@ -186,27 +229,9 @@ class Admins {
         $this->admin_page_icons[$rights] = $icons;
     }
 
-    private $comment_type = array();
-
-    /**
-     * @param $type - comment prefix
-     * @param $title - title
-     */
-    public function setCommentType($type, $title) {
-        $this->comment_type[$type] = $title;
+    public function getLinkType($type = NULL) {
+        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
     }
-
-    private $submit_type = array();
-
-    /**
-     * @param $type - submissions prefix
-     * @param $title - title
-     */
-    public function setSubmitType($type, $title) {
-        $this->submit_type[$type] = $title;
-    }
-
-    private $link_type = array();
 
     /**
      * @param $type - link prefix
@@ -216,46 +241,28 @@ class Admins {
         $this->link_type[$type] = $link;
     }
 
-    public function getLinkType($type = NULL) {
-        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
-    }
-
     public function getSubmitType($type = NULL) {
         return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
+    }
+
+    /**
+     * @param $type - submissions prefix
+     * @param $title - title
+     */
+    public function setSubmitType($type, $title) {
+        $this->submit_type[$type] = $title;
     }
 
     public function getCommentType($type = NULL) {
         return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
     }
 
-
     /**
-     * @return array
+     * @param $type - comment prefix
+     * @param $title - title
      */
-    public function getAdminSections() {
-        return $this->admin_sections;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getAdminPages() {
-
-        if (empty($this->admin_pages)) {
-            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
-            $rows = dbrows($result);
-            if ($rows) {
-                while ($data = dbarray($result)) {
-                    if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
-                        $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
-                        $this->admin_pages[$data['admin_page']][] = $data;
-                    }
-                }
-            }
-        }
-
-        return $this->admin_pages;
+    public function setCommentType($type, $title) {
+        $this->comment_type[$type] = $title;
     }
 
     /**
@@ -322,6 +329,13 @@ class Admins {
         $html .= "</ul>\n";
 
         return $html;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminSections() {
+        return $this->admin_sections;
     }
 
     /**

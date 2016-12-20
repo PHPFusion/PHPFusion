@@ -110,6 +110,7 @@ class ImageRepo {
         $selects = array(
             "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN
         );
+
         if ($installedTables['blog']) {
             $selects[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
         }
@@ -136,10 +137,10 @@ class ImageRepo {
                     break;
                 case 'nc_':
                 default :
-                    $image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+                    $image = file_exists(INFUSIONS.'news/news_cats/'.$data['image']) ? INFUSIONS.'news/news_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
                     break;
                 case 'bl_':
-                    $image = file_exists(IMAGES_BC.$data['image']) ? IMAGES_BC.$data['image'] : IMAGES."imagenotfound.jpg";
+                    $image = file_exists(INFUSIONS.'blog/blog_cats/'.$data['image']) ? INFUSIONS.'blog/blog_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
                     break;
             }
             // Set image

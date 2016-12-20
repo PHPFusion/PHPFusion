@@ -18,12 +18,6 @@
 
 /* Updated 2014/July - https://github.com/sciactive/pnotify */
 require_once __DIR__.'/../output_handling_include.php';
-
-if (!defined('NOTIFICATION_UI')) {
-    define('NOTIFICATION_UI', TRUE);
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
-}
-
 /**
  * Pop up notification
  * @param       $title

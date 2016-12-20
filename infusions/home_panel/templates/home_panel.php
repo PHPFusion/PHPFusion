@@ -31,6 +31,9 @@ if (!function_exists('display_home')) {
                     foreach ($content['data'] as $data) {
                         echo "<div class='col-xs-12 col-sm-3 content clearfix'>";
                         opentable($content['blockTitle']);
+                        if (isset($data['image'])) {
+                            echo "<img class='img-responsive' src='".$data['image']."'/><br/>";
+                        }
                         echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
                         echo "<div class='small m-b-10'>".$data['meta']."</div>";
                         echo "<div class='overflow-hide'>".fusion_first_words($data['content'], 100)."</div>";

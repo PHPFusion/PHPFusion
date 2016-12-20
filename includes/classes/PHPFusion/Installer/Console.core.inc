@@ -71,12 +71,15 @@ class Console_Core extends Install_Core {
         if (self::$localeset) {
             $html .= form_hidden('localeset', self::$localeset);
         }
-        // need to do a button
+
         if (self::$step) {
             foreach (self::$step as $button_prop) {
                 $default_class['class'] = "btn-primary";
                 $button_prop += $default_class;
-                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], array('class' => $button_prop['class']));
+                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'],
+                                     array(
+                                         'class' => $button_prop['class'],
+                                     ));
             }
         }
         $html .= "</div>\n</div>\n"; // end col-8 & row

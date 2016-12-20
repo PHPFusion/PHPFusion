@@ -19,27 +19,32 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
-$locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
+$locale = fusion_get_locale("",
+                            array(
+                                LOCALE.LOCALESET."setup.php",
+                                INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+                            )
+);
+
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = "1.1";
-$inf_developer = "PHP Fusion Development Team";
-$inf_email = "info@php-fusion.co.uk";
-$inf_weburl = "https://www.php-fusion.co.uk";
-$inf_folder = "forum";
-$inf_image = "forums.png";
+$inf_version = '1.0.5';
+$inf_developer = 'PHP Fusion Development Team';
+$inf_email = 'info@php-fusion.co.uk';
+$inf_weburl = 'https://www.php-fusion.co.uk';
+$inf_folder = 'forum';
+$inf_image = 'forums.png';
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-    "title" => $locale['forums']['title'],
-    "rights" => "FO",
+    'title' => $locale['forums']['title'],
+    'rights' => 'FO',
 );
 $inf_mlt[] = array(
-    "title" => $locale['setup_3038'],
-    "rights" => "FR",
+    'title' => $locale['setup_3038'],
+    'rights' => 'FR',
 );
 // Create tables
 $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
@@ -230,7 +235,7 @@ $inf_adminpanel[] = array(
 );
 
 // Insert Forum Settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '".USER_LEVEL_SUPER_ADMIN."', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')";

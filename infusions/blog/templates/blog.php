@@ -105,7 +105,7 @@ if (!function_exists('display_blog_item')) {
             echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
         }
         echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
-        if ($data['blog_allow_comments']) {
+        if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
             echo "<hr />\n";
             \PHPFusion\Feedback\Comments::getInstance(
                 array(
@@ -115,11 +115,11 @@ if (!function_exists('display_blog_item')) {
                     'comment_item_id' => $_GET['readmore'],
                     'clink' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                     'comment_echo' => TRUE,
-                    'comment_allow_ratings' => !empty($data['blog_allow_jquery_ratings'] ? TRUE : FALSE)
+                    'comment_allow_ratings' => $data['blog_allow_ratings']
                 )
             )->showComments();
         }
-        if ($data['blog_allow_ratings']) {
+        if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
             echo "<hr />  ".showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
         }
         $str = ob_get_contents();

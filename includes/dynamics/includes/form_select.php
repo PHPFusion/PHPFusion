@@ -102,17 +102,17 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
-        $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
+        $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.gif'>\n</div>\n";
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
@@ -121,17 +121,17 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 if ($options['keyflip']) { // flip mode = store array values
                     $chain = $options['chainable'] ? "class='$v'" : '';
                     if ($input_value !== '') {
-                        $select = ($input_value == $v) ? "selected" : "";
+                        $select = ($input_value == $v) ? " selected" : "";
                     }
-                    $html .= "<option value='$v' ".$chain." ".$select.">".$v."</option>\n";
+                    $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
                 } else { // normal mode = store array keys
                     $chain = ($options['chainable']) ? "class='$arr'" : '';
                     $select = '';
                     if ($input_value !== '') {
                         $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                        $select = (isset($input_value) && $input_value == $arr) ? 'selected' : '';
+                        $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                     }
-                    $html .= "<option value='$arr' ".$chain." ".$select.">$v</option>\n";
+                    $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
                 }
                 unset($arr);
             } // end foreach
@@ -226,17 +226,6 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         add_to_jquery("$('#".$options['input_id']."').select2('data', $encoded);"); */
     }
     // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
-        }
-    }
-
     return $html;
 }
 
@@ -261,7 +250,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'safemode' => FALSE,
         'allowclear' => FALSE,
         'multiple' => FALSE,
-        'width' => '250px',
+        'inner_width' => '250px',
+        'width' => '100%',
         'keyflip' => FALSE,
         'tags' => FALSE,
         'jsonmode' => FALSE,
@@ -287,25 +277,24 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if (defender::getInstance()->inputHasError($input_name)) {
+
+    if (defender::inputHasError($input_name)) {
         $error_class = "has-error ";
-        if (!empty($options['error_text'])) {
-            $new_error_text = defender::getInstance()->getErrorText($input_name);
-            if (!empty($new_error_text)) {
-                $options['error_text'] = $new_error_text;
-            }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        $new_error_text = defender::getErrorText($input_name);
+        if (!empty($new_error_text)) {
+            $options['error_text'] = $new_error_text;
         }
+        addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' style='width:".$options['width']."px'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3 p-l-0' : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
-    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
+    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."%;' ".($options['deactivate'] ? 'disabled' : '')." />";
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
-    $html .= (($options['required'] == 1 && defender::getInstance()->inputHasError($input_name)) || defender::getInstance()->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '');
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : "";
@@ -354,17 +343,6 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		".$allowclear."
 		})".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
 	");
-
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
-        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
-        }
-    }
 
     return $html;
 }
@@ -417,16 +395,7 @@ function user_search($user_id) {
  */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
     global $defender, $locale;
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
         'required' => FALSE,
@@ -518,7 +487,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= $options['allowclear'] ? "<option value=''></option>\n" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.
             $this_select = '';
@@ -555,7 +524,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     }
     if (!$level) {
         $html = &$html;
-        $html .= "</select>";
+        $html .= "</select>\n";
         $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';
         $html .= "</div>\n";

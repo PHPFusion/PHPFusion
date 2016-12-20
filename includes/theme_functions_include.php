@@ -630,10 +630,15 @@ if (!function_exists('display_avatar')) {
         if (!$userdata['user_id']) {
             $userdata['user_id'] = 1;
         }
+        $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $class = ($class) ? "class='$class'" : '';
         // Need a full path - or else Jquery script cannot use this function.
-        $default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
-        $user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
+        //$default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
+        $default_avatar = fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
+        //$default_avatar = IMAGES.'avatars/no-avatar.jpg';
+        $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
+        //$user_avatar = IMAGES.'avatars/'.$userdata['user_avatar'];
+        //$user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
         $imgTpl = "<img class='img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
         $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);

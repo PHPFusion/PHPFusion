@@ -186,10 +186,10 @@ if (!function_exists('render_photo')) {
         echo "</div>\n</div>\n";
         echo "</div>\n</div>\n";
         echo "<!--sub_photo-->";
-        if ($info['photo_allow_comments']) {
-            showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], INFUSIONS."gallery/gallery.php?photo_id=".$_GET['photo_id']);
+        if (fusion_get_settings('comments_enabled') && $info['photo_allow_comments']) {
+            showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], INFUSIONS."gallery/gallery.php?photo_id=".$_GET['photo_id'], $info['photo_allow_ratings']);
         }
-        if ($info['photo_allow_ratings']) {
+        if (fusion_get_settings('ratings_enabled') && $info['photo_allow_ratings']) {
             showratings("P", $_GET['photo_id'], INFUSIONS."gallery/gallery.php?photo_id=".$_GET['photo_id']);
         }
         closetable();

@@ -160,6 +160,10 @@
 
 .m-auto { margin: 0 auto !important; }
 
+.m-l--15 { margin-left: -15px !important; }
+
+.m-r--15 { margin-right: -15px !important; }
+
 /*padding family*/
 .p-0 { padding: 0 !important; }
 
@@ -236,12 +240,6 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* decoratives */
-.form-group {
-    display: inline-block;
-    width: 100%;
-}
-
 .no-shadow {
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
@@ -308,6 +306,8 @@
 .text-normal, .font-normal {
     font-weight: normal !important;
     text-transform: none !important;
+    text-decoration: none !important;
+    color: inherit !important;
 }
 
 .text-active {
@@ -396,11 +396,9 @@
     border: 1px solid;
 }
 
-/* ol,ul */
-ol, ul {
+ul.block {
     list-style: none outside none;
 }
-
 ol.decimal { list-style: decimal inside; }
 
 ul {
@@ -521,10 +519,6 @@ a .entypo, a .entypo-social {
 }
 
 .sub-nav {
-}
-
-.navbar .fa, .navbar .entypo {
-    margin-right: 10px;
 }
 
 .profile-link {
@@ -681,7 +675,7 @@ dl, dt, dd {
 
 /* Parse Users */
 .user-tooltip { width: 250px; padding-bottom: 10px; }
-
+.form-inline > .form-group { width: auto !important; }
 table {
     font-size: 100%;
 }
@@ -782,6 +776,7 @@ table.tablesorter thead tr .header {
     cursor: pointer;
 }
 
+td.min { width: 1%;  }
 table.tablesorter tbody td { }
 
 table.tablesorter tbody tr.odd td { }

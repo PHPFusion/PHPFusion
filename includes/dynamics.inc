@@ -22,7 +22,7 @@
  * Class Dynamics
  * @package PHPFusion
  */
-class dynamics {
+class Dynamics {
 
     public function __construct() {
 
@@ -43,6 +43,20 @@ class dynamics {
         require_once DYNAMICS."includes/form_paragraph.php";
         require_once DYNAMICS."includes/form_document.php";
 
+        if (!defined("SELECT2")) {
+            define("SELECT2", TRUE);
+            \PHPFusion\OutputHandler::addToFooter("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
+            \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+            $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+            $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
+            if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+                \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
+            }
+        }
+
     }
+
+
+
 
 }

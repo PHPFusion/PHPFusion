@@ -90,7 +90,7 @@ function display_registerform($info) {
 }
 
 function display_home($info) {
-    require_once INFUSIONS."home_panel/home_class.php";
+    require_once(INFUSIONS.'home_panel/home_class.php');
     ThemePack\Nebula\Templates\Panels\HomePanel::display_page($info);
 }
 
@@ -127,15 +127,3 @@ function render_comments($c_data, $c_info, $index = 0) {
     ThemePack\Nebula\Templates\Comment::getInstance()->display_comment($c_data, $c_info, $index);
 }
 */
-
-function render_articles_main($info) {
-    ThemePack\Nebula\Templates\Articles::render_articles_main($info);
-}
-
-function render_article($subject, $article, $info) {
-    ThemePack\Nebula\Templates\Articles::render_article($subject, $article, $info);
-}
-
-function render_articles_category($info) {
-    ThemePack\Nebula\Templates\Articles::render_articles_category($info);
-}

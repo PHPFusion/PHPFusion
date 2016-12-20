@@ -253,6 +253,7 @@ class ThreadTags extends ForumServer {
                         "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
                         "thread_author" => $author,
                         "thread_last" => array(
+                            'user' => $author,
                             'avatar' => display_avatar($lastuser, '30px', '', '', ''),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time' => $threads['post_datestamp'],

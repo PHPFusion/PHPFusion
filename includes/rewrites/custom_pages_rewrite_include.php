@@ -29,6 +29,7 @@ $regex = array(
 );
 
 $pattern = array(
+    'pages/%page_id%/%page_title%' => 'viewpage.php?page_id=%page_id%',
     "pages/%page_id%/row-%rowstart%/c-%comment%/comments-%c_start%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;comment=%comment%&amp;c_start=%c_start%",
     "pages/%page_id%/language-%lang%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;lang=%lang%",
     "pages/%page_id%/%page_title%" => "viewpage.php?page_id=%page_id%",

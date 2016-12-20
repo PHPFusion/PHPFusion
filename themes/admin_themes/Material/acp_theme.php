@@ -22,7 +22,7 @@ if (!defined('IN_FUSION')) {
 define('MATERIAL', THEMES.'admin_themes/Material/');
 require_once INCLUDES.'theme_functions_include.php';
 require_once MATERIAL.'theme_autoloader.php';
-
+\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 Material\Main::AddTo();
 
 function render_admin_login() {

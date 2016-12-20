@@ -75,7 +75,7 @@ class HomePanel {
                         AND (".time()." < ns.news_end OR ns.news_end = 0)
                         AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
                         group by ns.news_id
-                        ORDER BY ns.news_sticky DESC, comment_count DESC, ns.news_datestamp DESC LIMIT 15",
+                        ORDER BY ns.news_sticky DESC, ns.news_datestamp DESC, comment_count DESC LIMIT 15",
             'locale' => array(
                 'norecord' => self::$locale['home_0050'],
                 'blockTitle' => self::$locale['home_0000'],
@@ -93,7 +93,9 @@ class HomePanel {
                         FROM ".DB_ARTICLES." as ar
                         INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
                         INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
-                        WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
+                        WHERE 
+							ar.article_draft='0' AND ac.article_cat_status='0' AND ".groupaccess('ar.article_visibility')." AND ".groupaccess('ac.article_cat_visibility')."
+							".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."' AND ar.article_language='".LANGUAGE."'" : "")."
                         ORDER BY ar.article_datestamp DESC LIMIT 10",
             'locale' => array(
                 'norecord' => self::$locale['home_0051'],
@@ -216,7 +218,7 @@ class HomePanel {
                     'cat' => $cat,
                     'url' => strtr($config['contentLinkPattern'], $pairs),
                     'title' => $row['title'],
-                    'image' => '',
+                    'image' => isset($row['image']) ? $row['image'] : '',
                     'meta' => self::$locale['home_0105'].profile_link($row['user_id'], $row['user_name'],
                                                                       $row['user_status'])." ".showdate('newsdate',
                                                                                                         $row['datestamp']).self::$locale['home_0106'].$cat,
@@ -290,7 +292,6 @@ class HomePanel {
 
             self::$contents[$table]['data'] = $data;
         }
-
 
         if (!empty(self::$latest_content)) {
             $items = sorter(self::$latest_content, 'datestamp', 'DESC');

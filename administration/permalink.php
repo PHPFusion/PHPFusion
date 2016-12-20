@@ -20,9 +20,8 @@ require_once "../maincore.php";
 pageAccess('PL');
 
 require_once THEMES."templates/admin_header.php";
-$locale = array();
-$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/permalinks.php");
+
+$locale = fusion_get_locale('', array(LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'admin/permalinks.php'));
 
 $settings = fusion_get_settings();
 
@@ -54,6 +53,7 @@ $settings_seo = array(
 if (isset($_POST['savesettings'])) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
+
         if ($defender->safe()) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
         }
@@ -103,6 +103,7 @@ if (isset($_POST['savesettings'])) {
         $htc .= "	RewriteCond %{REQUEST_URI} !^/(administration|config|index.php)".PHP_EOL;
         $htc .= "	RewriteRule ^(.*?)$ index.php [L]".PHP_EOL;
         $htc .= "</IfModule>".PHP_EOL;
+
     } else {
         // Error pages
         $htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400".PHP_EOL;
@@ -120,21 +121,23 @@ if (isset($_POST['savesettings'])) {
             touch(BASEDIR.".htaccess");
         }
     }
+
     // Write the contents to .htaccess
     $temp = fopen(BASEDIR.".htaccess", "w");
     if (fwrite($temp, $htc)) {
         fclose($temp);
     }
 
-    if ($defender->safe()) {
-        addNotice("success", "<i class='fa fa-lg fa-check-square-o m-r-10'></i>".$locale['900']);
+    if (\defender::safe()) {
+        addNotice("success", $locale['900']);
         redirect(FUSION_SELF.$aidlink."&amp;section=pls");
     }
 }
 
 if (isset($_POST['savepermalinks'])) {
     $error = 0;
-    if ($defender->safe()) {
+
+    if (\defender::safe()) {
 
         if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
             $permalinks = stripinput($_POST['permalink']);
@@ -381,7 +384,7 @@ switch ($_GET['section']) {
         // edit
         if (!empty($edit_name) && !empty($driver)) {
 
-            echo openform('editpatterns', 'post', FUSION_SELF.$aidlink);
+            echo openform('editpatterns', 'post', FUSION_REQUEST);
 
             ob_start();
             echo openmodal("permalinkHelper", $locale['408'], array("button_id" => "pButton"));
@@ -439,12 +442,14 @@ switch ($_GET['section']) {
         } else {
 
             echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n";
+
             if (!empty($permalink)) {
                 echo "<tr>\n";
                 echo "<th width='1%' style='white-space:nowrap'>".$locale['402']."</th>\n";
                 echo "<th style='white-space:nowrap'><strong>".$locale['403']."</th>\n";
                 echo "<th width='1%' style='white-space:nowrap'>".$locale['404']."</th>\n";
                 echo "</tr>\n";
+
                 foreach ($permalink as $data) {
                     echo "<tr>\n";
                     if (!file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_include.php") || !file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_info.php") || !file_exists(LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php")) {
@@ -468,10 +473,10 @@ switch ($_GET['section']) {
             echo "</table>\n";
 
         }
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['400']]);
         break;
 
     case "pl2":
-
         echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n<tbody>\n<tr>\n";
         if (count($available_rewrites) != count($enabled_rewrites)) {
             echo "<tr>\n";
@@ -495,10 +500,11 @@ switch ($_GET['section']) {
             }
         }
         echo "</tbody>\n</table>\n";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['401']]);
         break;
 
     case "pls":
-        echo openform('settingsseo', 'post', FUSION_SELF.$aidlink);
+        echo openform('settingsseo', 'post', FUSION_REQUEST);
         echo "<div class='well m-t-20'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
         echo "<div class='panel panel-default m-t-20'>\n<div class='panel-body'>\n";
         $opts = array('0' => $locale['disable'], '1' => $locale['enable']);
@@ -508,8 +514,7 @@ switch ($_GET['section']) {
         echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary', 'inline' => 1));
         echo "</div></div>\n";
         echo closeform();
-
-
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['401a']]);
         break;
 }
 

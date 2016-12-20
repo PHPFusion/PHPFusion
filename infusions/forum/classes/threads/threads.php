@@ -193,6 +193,7 @@ class ForumThreads extends ForumServer {
                                                                                                                                              $author['user_status'])."</span>",
                         "thread_author" => $author,
                         "thread_last" => array(
+                            'user' => $lastuser,
                             'avatar' => display_avatar($lastuser, '35px', '', FALSE, 'img-rounded'),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time' => $threads['post_datestamp'],
@@ -379,7 +380,7 @@ class ForumThreads extends ForumServer {
                 );
                 $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
                 $this->thread_info['mod_form'] .= form_hidden('delete_item_post', '', '');
-                $this->thread_info['mod_form'] .= "<div class='list-group-item'>\n<div class='btn-group m-r-10'>\n
+                $this->thread_info['mod_form'] .= "<div class='btn-group m-r-10'>\n
 						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
@@ -387,7 +388,7 @@ class ForumThreads extends ForumServer {
 					".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
-                                      array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
+                                      array('class' => 'btn-default pull-right m-l-10'))."
 						".form_select('step', '', '',
                                       array(
                                           'options' => $this->thread_info['mod_options'],
@@ -398,8 +399,7 @@ class ForumThreads extends ForumServer {
                                           'inline' => TRUE
                                       )
                     )."
-					</div>\n
-				</div>\n";
+					</div>\n";
                 $this->thread_info['mod_form'] .= closeform();
                 add_to_jquery("
 				$('#check_all').bind('click', function() {
@@ -919,6 +919,7 @@ class ForumThreads extends ForumServer {
 
                 // Displays mood buttons
                 $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
+
                 $pdata['post_mood_message'] = $this->mood()->get_mood_message();
 
 
@@ -1034,16 +1035,16 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<small><div class='edit_reason'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'],
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'],
                                                                                                          $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate",
                                                                                                                                                                $pdata['post_edittime'])." - ";
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
                         $edit_reason .= "</a></div>";
-                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><small class='text-lighter'>- ".$pdata['post_editreason']."</small></div>\n";
+                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><span class='text-lighter'>- ".$pdata['post_editreason']."</span></div>\n";
                     } else {
-                        $edit_reason .= "</div>\n</small>";
+                        $edit_reason .= "</div>";
                     }
 
                     $pdata['post_edit_reason'] = $edit_reason;

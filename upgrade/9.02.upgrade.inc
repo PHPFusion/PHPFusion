@@ -32,6 +32,13 @@ define('DB_WEBLINKS', DB_PREFIX."weblinks");
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
+/*
+ * @todo: fix bugs (27/11/16)
+ * Bugs tested and found:
+ * - Administration Panel links is outdated
+ */
+
+
 if (!function_exists('rrmdir')) {
     /**
      * Remove all files, subdirs and ultimatly the directory in a given dir
@@ -59,189 +66,185 @@ if (!function_exists('rrmdir')) {
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
  */
-/*
+ini_set('display_errors', FALSE);
 dbquery("SET NAMES 'utf8'");
 $result = dbquery("SHOW TABLES");
 while ($row = dbarray($result)) {
-
     foreach ($row as $key => $table) {
-
         $inf_altertable[] = $table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-
         $result2 = dbquery("SHOW COLUMNS FROM ".$table);
-
         // We must change all data like find/replace in columns of broken chars, this may differ for each locales.
         // Please help to complete this list if you know what´s missing with your locale set
         while ($column = dbarray($result2)) {
-
             if (column_exists($table, $column['Field'], FALSE)) {
-
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'ÃŸ','ß')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¤','ä')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¼','ü')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¶','ö')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã„','Ä')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ãœ','Ü')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã–','Ö')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'â‚¬','€')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¥','Å')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'ð', 'ğ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'ý', 'ı')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'þ', 'ş')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ð', 'Ğ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ý', 'İ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Þ', 'Ş')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã‰','É')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€œ','\"')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€','\"')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã‡','Ç')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãƒ','Ã')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¥','Å')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã ','À')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãº','ú')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€¢','-')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã˜','Ø')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãµ','õ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã­','í')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¢','â')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã£','ã')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãª','ê')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¡','á')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã©','é')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã³','ó')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€“','–')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã§','ç')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Âª','ª')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Âº','º')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã ','à')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ccedil;','ç')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&atilde;','ã')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&aacute;','á')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&acirc;','â')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&eacute;','é')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&iacute;','í')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&otilde;','õ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uacute;','ú')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ccedil;','ç')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Aacute;','Á')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Acirc;','Â')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Eacute;','É')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Iacute;','Í')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Otilde;','Õ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Uacute;','Ú')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ccedil;','Ç')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Atilde;','Ã')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Agrave;','À')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ecirc;','Ê')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Oacute;','Ó')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ocirc;','Ô')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Uuml;','Ü')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&atilde;','ã')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&agrave;','à')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ecirc;','ê')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oacute;','ó')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ocirc;','ô')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uuml;','ü')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&amp;','&')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&gt;','>')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lt;','<')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&circ;','ˆ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&tilde;','˜')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uml;','¨')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cute;','´')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cedil;','¸')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&quot;','\"')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ldquo;','“')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rdquo;','”')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lsquo;','‘')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rsquo;','’')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lsaquo;','‹')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rsaquo;','›')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&laquo;','«')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&raquo;','»')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ordm;','º')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ordf;','ª')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ndash;','–')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&mdash;','—')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&macr;','¯')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&hellip;','…')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&brvbar;','¦')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&bull;','•')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&para;','¶')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sect;','§')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup1;','¹')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup2;','²')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup3;','³')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac12;','½')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac14;','¼')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac34;','¾')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8539;','⅛')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8540;','⅜')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8541;','⅝')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8542;','⅞')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&gt;','>')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lt;','<')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&plusmn;','±')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&minus;','−')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&times;','×')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&divide;','÷')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lowast;','∗')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frasl;','⁄')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&permil;','‰')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&int;','∫')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sum;','∑')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prod;','∏')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&radic;','√')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&infin;','∞')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&asymp;','≈')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cong;','≅')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prop;','∝')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&equiv;','≡')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ne;','≠')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&le;','≤')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ge;','≥')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&there4;','∴')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sdot;','⋅')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&middot;','·')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&part;','∂')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&image;','ℑ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&real;','ℜ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prime;','′')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Prime;','″')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&deg;','°')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ang;','∠')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&perp;','⊥')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&nabla;','∇')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oplus;','⊕')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&otimes;','⊗')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&alefsym;','ℵ')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oslash;','ø')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Oslash;','Ø')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&isin;','∈')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&notin;','∉')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cap;','∩')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cup;','∪')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sub;','⊂')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup;','⊃')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sube;','⊆')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&supe;','⊇')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&exist;','∃')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&forall;','∀')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&empty;','∅')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&not;','¬')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&and;','∧')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&or;','∨')";
-                $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&crarr;','↵')";
+                // Fix on user_offset column
+                if ($column['Field'] !== 'user_offset') {
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'ÃŸ','ß')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¤','ä')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¼','ü')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¶','ö')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã„','Ä')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ãœ','Ü')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã–','Ö')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'â‚¬','€')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¥','Å')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'ð', 'ğ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'ý', 'ı')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'þ', 'ş')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ð', 'Ğ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ý', 'İ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Þ', 'Ş')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã‰','É')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€œ','\"')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€','\"')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã‡','Ç')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãƒ','Ã')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¥','Å')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã ','À')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãº','ú')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€¢','-')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã˜','Ø')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãµ','õ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã­','í')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¢','â')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã£','ã')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ãª','ê')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã¡','á')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã©','é')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã³','ó')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'â€“','–')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã§','ç')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Âª','ª')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Âº','º')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, 'Ã ','à')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ccedil;','ç')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&atilde;','ã')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&aacute;','á')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&acirc;','â')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&eacute;','é')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&iacute;','í')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&otilde;','õ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uacute;','ú')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ccedil;','ç')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Aacute;','Á')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Acirc;','Â')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Eacute;','É')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Iacute;','Í')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Otilde;','Õ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Uacute;','Ú')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ccedil;','Ç')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Atilde;','Ã')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Agrave;','À')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ecirc;','Ê')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Oacute;','Ó')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Ocirc;','Ô')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Uuml;','Ü')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&atilde;','ã')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&agrave;','à')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ecirc;','ê')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oacute;','ó')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ocirc;','ô')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uuml;','ü')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&amp;','&')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&gt;','>')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lt;','<')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&circ;','ˆ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&tilde;','˜')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&uml;','¨')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cute;','´')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cedil;','¸')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&quot;','\"')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ldquo;','“')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rdquo;','”')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lsquo;','‘')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rsquo;','’')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lsaquo;','‹')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&rsaquo;','›')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&laquo;','«')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&raquo;','»')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ordm;','º')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ordf;','ª')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ndash;','–')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&mdash;','—')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&macr;','¯')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&hellip;','…')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&brvbar;','¦')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&bull;','•')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&para;','¶')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sect;','§')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup1;','¹')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup2;','²')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup3;','³')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac12;','½')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac14;','¼')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frac34;','¾')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8539;','⅛')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8540;','⅜')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8541;','⅝')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&#8542;','⅞')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&gt;','>')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lt;','<')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&plusmn;','±')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&minus;','−')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&times;','×')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&divide;','÷')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&lowast;','∗')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&frasl;','⁄')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&permil;','‰')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&int;','∫')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sum;','∑')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prod;','∏')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&radic;','√')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&infin;','∞')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&asymp;','≈')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cong;','≅')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prop;','∝')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&equiv;','≡')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ne;','≠')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&le;','≤')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ge;','≥')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&there4;','∴')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sdot;','⋅')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&middot;','·')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&part;','∂')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&image;','ℑ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&real;','ℜ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&prime;','′')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Prime;','″')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&deg;','°')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&ang;','∠')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&perp;','⊥')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&nabla;','∇')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oplus;','⊕')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&otimes;','⊗')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&alefsym;','ℵ')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&oslash;','ø')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&Oslash;','Ø')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&isin;','∈')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&notin;','∉')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cap;','∩')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&cup;','∪')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sub;','⊂')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sup;','⊃')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&sube;','⊆')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&supe;','⊇')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&exist;','∃')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&forall;','∀')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&empty;','∅')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&not;','¬')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&and;','∧')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&or;','∨')";
+                    $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&crarr;','↵')";
+                }
             }
         }
     }
 }
-*/
+ini_set('display_errors', 'On');
 
 /*
  * Upgrade Users
  */
-
 // Modify All Users Level > 0
 $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS);
 if (dbrows($result) > 0) {
@@ -406,7 +409,7 @@ $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
 /*
  * Admin Panel Upgrade
  */
-$check_aray = [
+$check_array = [
     // Add Language Administration Page
     'LANG' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'language.png', '".$locale['setup_3051']."', 'settings_languages.php', '4')",
     // Add Permalinks Administration Page
@@ -417,7 +420,7 @@ $check_aray = [
     // Add Email Administration Page
     'MAIL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['setup_3800']."', 'email.php', '3')",
 ];
-foreach ($check_aray as $key => $value) {
+foreach ($check_array as $key => $value) {
     if (!dbcount("(admin_rights)", DB_ADMIN, "admin_rights='$key'")) {
         $inf_insertdbrow[] = $value;
     }
@@ -430,50 +433,51 @@ $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_ipp.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='submissions.php'";
 // Update new administration icons
 $new_icon_array = array(
-    "APWR" => "adminpass.png",
-    "AD" => "administrator.png",
-    "A" => "articles.png",
-    "SB" => "banner.png",
-    "BB" => "bbcodes.png",
-    "B" => "blacklist.png",
-    "BLOG" => "blog.png",
-    "CP" => "c-pages.png",
-    "DB" => "db_backup.png",
-    "D" => "download.png",
-    "MAIL" => "email.png",
-    "ERRO" => "errors.png",
-    "FQ" => "faq.png",
-    "F" => "forums.png",
-    "PH" => "gallery.png",
-    "IM" => "images.png",
-    "I" => "infusions.png",
-    "LANG" => "language.png",
-    "S1" => "settings.png",
-    "M" => "members.png",
-    "MI" => "migration.png",
-    "S6" => "misc.png",
-    "N" => "news.png",
-    "P" => "panels.png",
-    "PL" => "permalink.png",
-    "PI" => "phpinfo.png",
-    "PO" => "polls.png",
-    "S7" => "pm.png",
-    "S4" => "registration.png",
-    "ROB" => "robots.png",
-    "S12" => "security.png",
-    "S" => "shout.png",
-    "SL" => "sitelinks.png",
-    "SM" => "smileys.png",
-    "TS" => "theme.png",
-    "S3" => "theme_settings.png",
-    "S2" => "time.png",
-    "U" => "upgrade.png",
-    "UF" => "user_fields.png",
-    "UG" => "user_groups.png",
-    "UL" => "user_log.png",
-    "S9" => "user_settings.png",
-    "W" => "weblink.png",
+    'APWR' => 'adminpass.png',
+    'AD' => 'administrator.png',
+    'A' => '../infusions/articles/articles.png',
+    'SB' => 'banner.png',
+    'BB' => 'bbcodes.png',
+    'B' => 'blacklist.png',
+    'BLOG' => '../infusions/blog/blog.png',
+    'CP' => 'c-pages.png',
+    'DB' => 'db_backup.png',
+    'D' => '../infusions/download/download.png',
+    'MAIL' => 'email.png',
+    'ERRO' => 'errors.png',
+    'FQ' => '../infusions/faq/faq.png',
+    'F' => '../infusions/forum/forums.png',
+    'PH' => '../infusions/gallery/gallery.png',
+    'IM' => 'images.png',
+    'I' => 'infusions.png',
+    'LANG' => 'language.png',
+    'S1' => 'settings.png',
+    'M' => 'members.png',
+    'MI' => 'migration.png',
+    'S6' => 'misc.png',
+    'N' => '../infusions/news/news.png',
+    'P' => 'panels.png',
+    'PL' => 'permalink.png',
+    'PI' => 'phpinfo.png',
+    'PO' => 'polls.png',
+    'S7' => 'pm.png',
+    'S4' => 'registration.png',
+    'ROB' => 'robots.png',
+    'S12' => 'security.png',
+    'S' => '../infusions/shoutbox/shout.png',
+    'SL' => 'sitelinks.png',
+    'SM' => 'smileys.png',
+    'TS' => 'theme.png',
+    'S3' => 'theme_settings.png',
+    'S2' => 'time.png',
+    'U' => 'upgrade.png',
+    'UF' => 'user_fields.png',
+    'UG' => 'user_groups.png',
+    'UL' => 'user_log.png',
+    'S9' => 'user_settings.png',
+    'W' => '../infusions/weblinks/weblink.png',
 );
+
 foreach ($new_icon_array as $admin_rights => $icon_file) {
     $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
 }
@@ -572,36 +576,40 @@ if (!empty($uf_to_install)) {
 // The infusions table should not exist in any version prior to this
 $check_infusions = [
     DB_ARTICLES => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '0')",
         'check' => 'articles'
     ],
     DB_DOWNLOADS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '0')",
         'check' => 'downloads'
     ],
     DB_FAQS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '0')",
         'check' => 'faq'
     ],
     DB_FORUMS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '0')",
         'check' => 'forum'
     ],
     DB_PHOTOS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '0')",
         'check' => 'gallery'
     ],
     DB_NEWS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '0')",
         'check' => 'news'
     ],
     DB_WEBLINKS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '0')",
         'check' => 'weblinks'
     ],
     DB_PREFIX."shoutbox" => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '0')",
         'check' => 'shoutbox'
+    ],
+    DB_PREFIX."polls" => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '0')",
+        'check' => 'member_poll_panel'
     ]
 ];
 foreach ($check_infusions as $table_name => $value) {
@@ -613,7 +621,6 @@ foreach ($check_infusions as $table_name => $value) {
 /*
  * Downloads Migrate
  */
-
 // Move all download images
 if (file_exists(BASEDIR."downloads/images/")) {
     $attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);

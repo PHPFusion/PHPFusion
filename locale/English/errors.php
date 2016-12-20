@@ -16,3 +16,4 @@ $locale['E_STRICT'] = "";
 $locale['err_100'] = "N/A";
 $locale['err_101'] = "WARNING: An error occurred while parsing the page. Please see PHP-Fusion's [ERROR_LOG_URL]Error Log[/ERROR_LOG_URL] for more details.";
 $locale['err_102'] = "Show me the bug!";
+$locale['err_103'] = "{%function%} {%folder%} does not exists.";

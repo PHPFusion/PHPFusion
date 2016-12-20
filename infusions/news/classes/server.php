@@ -40,11 +40,12 @@ class NewsServer {
         return self::$news_admin_instance;
     }
 
-    public static function get_news_settings() {
+    public static function get_news_settings($key = NULL) {
         if (empty(self::$news_settings)) {
             self::$news_settings = get_settings("news");
         }
-        return self::$news_settings;
+
+        return $key === NULL ? self::$news_settings : (isset(self::$news_settings[$key]) ? self::$news_settings[$key] : NULL);
     }
 
 

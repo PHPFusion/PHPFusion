@@ -176,6 +176,7 @@ class SiteLinks {
             'searchbar_btn_class' => 'btn-primary',
             'caret_icon' => 'caret',
             'link_position' => [2,3],
+            'html_content' => '',
         ];
 
         $options += $default_options;
@@ -201,7 +202,7 @@ class SiteLinks {
             $pageInfo = pathinfo($_SERVER['REQUEST_URI']);
             $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
             $site_path = ltrim(fusion_get_settings("site_path"), "/");
-            $start_page = str_replace($site_path, "", $start_page);
+            $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
             $start_page .= $pageInfo['basename'];
 
             if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
@@ -425,6 +426,7 @@ class SiteLinks {
 
         // Show primary links
         $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
+        $res .= self::getMenuParam('html_content');
 
         if (empty($id)) {
             $res .= "<!--Menu Item End-->\n";
@@ -461,10 +463,9 @@ class SiteLinks {
                     $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";
                     $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
-                    $searchbar .= openform('searchform', 'post', BASEDIR.'search.php?stype=all',
+                    $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
                                            array(
                                                'class' => 'm-b-10',
-                                               'remote_url' => fusion_get_settings('site_path')."search.php"
                                            )
                     );
                     $searchbar .= form_text('stext', '', '',
@@ -551,7 +552,7 @@ class SiteLinks {
                 "link_url" => "",
                 "link_icon" => "",
                 "link_class" => "",
-                "link_active" => FALSE,
+                "link_active" => '',
                 "link_title" => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
                 "link_window" => FALSE,
@@ -585,7 +586,12 @@ class SiteLinks {
                  * Taking into account that current start page does not match
                  */
                 $secondary_active = FALSE;
-                if ($link_data['link_active'] == FALSE) {
+
+                // Active Helper Function
+                // If developer does not set it as true/false deliberately, only then system takes into account to calculate.
+                // The default values for link_active is blank, not false or true.
+                // It is therefore encouraged to set true or false when adding links for best efficiency.
+                if (!is_bool($link_data['link_active'])) {
                     if (self::getMenuParam('start_page') !== $link_data['link_url']) {
                         // All Sublinks will be compared to - stable
                         $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
@@ -593,38 +599,37 @@ class SiteLinks {
                         if (!empty($linkRef)) {
                             $linkRefURI = array_flip($linkRef);
                         }
+
                         // The breadcrumbs series of arrays - stable
                         $reference = $this->getLinkInstance();
                         if (!empty($reference)) {
+
+                            $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
+                            $uriQuery = '';
+                            if (!empty($uri['query'])) {
+                                parse_str($uri['query'], $uriQuery);
+                            }
                             foreach ($reference as $refData) {
                                 if (stristr($refData['link'], '../')) {
                                     $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
                                 }
                                 if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-                                    /*
-                                     * If child link is part of the current page breadcrumb then parent is active
-                                     */
+                                    //If child link is part of the current page breadcrumb then parent is active
                                     if (!empty($refData['link'])) {
                                         if (isset($linkRefURI[$refData['link']])) {
                                             $secondary_active = TRUE;
                                             break;
                                         }
                                     }
-                                    /*
-                                     * If parts of link url forms the breadcrumbs' link
-                                     */
+                                     // If parts of link url forms the breadcrumbs' link
                                     if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                         $secondary_active = TRUE;
                                         break;
                                     }
-                                    /*
-                                     * If both links has uri requests string.
-                                     */
+                                     // If both links has the same uri requests string.
                                     if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
-                                        $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
                                         $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
-                                        if (isset($uri['query']) && isset($ref_uri['query'])) {
-                                            parse_str($uri['query'], $uriQuery);
+                                        if (!empty($uri['query']) && !empty($ref_uri['query'])) {
                                             parse_str($ref_uri['query'], $ref_uriQuery);
                                             if (count($ref_uriQuery) == count($uriQuery)) {
                                                 $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
@@ -641,14 +646,13 @@ class SiteLinks {
                                     break;
                                 }
                             }
+
                         }
                     }
                 }
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
-
                     if ($i == 0 && $id > 0) {
                         $li_class[] = "first-link";
                     }
@@ -657,16 +661,19 @@ class SiteLinks {
 
                     if ($secondary_active) {
                         $link_is_active = TRUE;
+                    } elseif (strtr(FUSION_REQUEST, array(fusion_get_settings('site_path')=> '', '&amp;'=>'&')) == str_replace('../', '', $link_data['link_url'])) {
+                        $link_is_active = TRUE;
                     } elseif (self::getMenuParam('start_page') == $link_data['link_url']) {
                         $link_is_active = TRUE;
                     } elseif (fusion_get_settings('site_path').self::getMenuParam('start_page') == $link_data['link_url']) {
                         $link_is_active = TRUE;
                     } elseif ((self::getMenuParam('start_page') == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
                         $link_is_active = TRUE;
-                    }
-                    if ($link_data['link_url'] === '#') {
+                    } elseif ($link_data['link_url'] === '#') {
                         $link_is_active = FALSE;
                     }
+
+
 
                     if ($link_is_active) {
                         $li_class[] = "current-link active";
@@ -731,6 +738,4 @@ class SiteLinks {
     }
 
     // CSS build a vertical menu
-
-
 }

@@ -352,7 +352,7 @@ class Securimage {
      * scripts (i.e. securimage_show.php)
      * @var string
      */
-    public $session_name = COOKIE_PREFIX.'session';
+    public $session_name;
     /**
      * true to use the wordlist file, false to generate random captcha codes
      * @var bool
@@ -735,6 +735,7 @@ class Securimage {
      *     ?>
      */
     public function __construct($options = array()) {
+        $this->session_name = COOKIE_PREFIX.'session';
         $this->securimage_path = dirname(__FILE__);
 
         if (!is_array($options)) {
@@ -899,6 +900,253 @@ class Securimage {
             }
         } else {
             return FALSE;
+        }
+    }
+
+    /**
+     * Opens a connection to the configured database.
+     * @see Securimage::$use_database Use database
+     * @see Securimage::$database_driver Database driver
+     * @see Securimage::$pdo_conn pdo_conn
+     * @return bool true if the database connection was successful, false if not
+     */
+    protected function openDatabase() {
+        $this->pdo_conn = FALSE;
+
+        if ($this->use_database) {
+            $pdo_extension = 'PDO_'.strtoupper($this->database_driver);
+
+            if (!extension_loaded($pdo_extension)) {
+                trigger_error("Database support is turned on in Securimage, but the chosen extension $pdo_extension is not loaded in PHP.",
+                              E_USER_WARNING);
+
+                return FALSE;
+            }
+        }
+
+        if ($this->database_driver == self::SI_DRIVER_SQLITE3) {
+            if (!file_exists($this->database_file)) {
+                $fp = fopen($this->database_file, 'w+');
+                if (!$fp) {
+                    $err = error_get_last();
+                    trigger_error("Securimage failed to create SQLite3 database file '{$this->database_file}'. Reason: {$err['message']}",
+                                  E_USER_WARNING);
+
+                    return FALSE;
+                }
+                fclose($fp);
+                chmod($this->database_file, 0666);
+            } else {
+                if (!is_writeable($this->database_file)) {
+                    trigger_error("Securimage does not have read/write access to database file '{$this->database_file}. Make sure permissions are 0666 and writeable by user '".get_current_user()."'",
+                                  E_USER_WARNING);
+
+                    return FALSE;
+                }
+            }
+        }
+
+        try {
+            $dsn = $this->getDsn();
+
+            $options = array();
+            $this->pdo_conn = new PDO($dsn, $this->database_user, $this->database_pass, $options);
+        } catch (PDOException $pdoex) {
+            trigger_error("Database connection failed: ".$pdoex->getMessage(), E_USER_WARNING);
+
+            return FALSE;
+        } catch (Exception $ex) {
+            trigger_error($ex->getMessage(), E_USER_WARNING);
+
+            return FALSE;
+        }
+
+        try {
+            if (!$this->skip_table_check && !$this->checkTablesExist()) {
+                // create tables...
+                $this->createDatabaseTables();
+            }
+        } catch (Exception $ex) {
+            trigger_error($ex->getMessage(), E_USER_WARNING);
+            $this->pdo_conn = FALSE;
+
+            return FALSE;
+        }
+
+        if (mt_rand(0, 100) / 100.0 == 1.0) {
+            $this->purgeOldCodesFromDatabase();
+        }
+
+        return $this->pdo_conn;
+    }
+
+    /**
+     * Get the PDO DSN string for connecting to the database
+     * @see Securimage::$database_driver Database driver
+     * @throws Exception  If database specific options are not configured
+     * @return string     The DSN for connecting to the database
+     */
+    protected function getDsn() {
+        $dsn = sprintf('%s:', $this->database_driver);
+
+        switch ($this->database_driver) {
+            case self::SI_DRIVER_SQLITE3:
+                $dsn .= $this->database_file;
+                break;
+
+            case self::SI_DRIVER_MYSQL:
+            case self::SI_DRIVER_PGSQL:
+                if (empty($this->database_host)) {
+                    throw new Exception('Securimage::database_host is not set');
+                } else {
+                    if (empty($this->database_name)) {
+                        throw new Exception('Securimage::database_name is not set');
+                    }
+                }
+
+                $dsn .= sprintf('host=%s;dbname=%s',
+                                $this->database_host,
+                                $this->database_name);
+                break;
+
+        }
+
+        return $dsn;
+    }
+
+    /**
+     * Checks if the necessary database tables for storing captcha codes exist
+     * @throws Exception If the table check failed for some reason
+     * @return boolean true if the database do exist, false if not
+     */
+    protected function checkTablesExist() {
+        $table = $this->pdo_conn->quote($this->database_table);
+
+        switch ($this->database_driver) {
+            case self::SI_DRIVER_SQLITE3:
+                // query row count for sqlite, PRAGMA queries seem to return no
+                // rowCount using PDO even if there are rows returned
+                $query = "SELECT COUNT(id) FROM $table";
+                break;
+
+            case self::SI_DRIVER_MYSQL:
+                $query = "SHOW TABLES LIKE $table";
+                break;
+
+            case self::SI_DRIVER_PGSQL:
+                $query = "SELECT * FROM information_schema.columns WHERE table_name = $table;";
+                break;
+        }
+
+        $result = $this->pdo_conn->query($query);
+
+        if (!$result) {
+            $err = $this->pdo_conn->errorInfo();
+
+            if ($this->database_driver == self::SI_DRIVER_SQLITE3 &&
+                $err[1] === 1 && strpos($err[2], 'no such table') !== FALSE
+            ) {
+                return FALSE;
+            }
+
+            throw new Exception("Failed to check tables: {$err[0]} - {$err[1]}: {$err[2]}");
+        } else {
+            if ($this->database_driver == self::SI_DRIVER_SQLITE3) {
+                // successful here regardless of row count for sqlite
+                return TRUE;
+            } else {
+                if ($result->rowCount() == 0) {
+                    return FALSE;
+                } else {
+                    return TRUE;
+                }
+            }
+        }
+    }
+
+    /**
+     * Create the necessary databaes table for storing captcha codes.
+     * Based on the database adapter used, the tables will created in the existing connection.
+     * @see Securimage::$database_driver Database driver
+     * @return boolean true if the tables were created, false if not
+     */
+    protected function createDatabaseTables() {
+        $queries = array();
+
+        switch ($this->database_driver) {
+            case self::SI_DRIVER_SQLITE3:
+                $queries[] = "CREATE TABLE \"{$this->database_table}\" (
+                                id VARCHAR(40),
+                                namespace VARCHAR(32) NOT NULL,
+                                code VARCHAR(32) NOT NULL,
+                                code_display VARCHAR(32) NOT NULL,
+                                created INTEGER NOT NULL,
+                                audio_data BLOB NULL,
+                                PRIMARY KEY(id, namespace)
+                              )";
+
+                $queries[] = "CREATE INDEX ndx_created ON {$this->database_table} (created)";
+                break;
+
+            case self::SI_DRIVER_MYSQL:
+                $queries[] = "CREATE TABLE `{$this->database_table}` (
+                                `id` VARCHAR(40) NOT NULL,
+                                `namespace` VARCHAR(32) NOT NULL,
+                                `code` VARCHAR(32) NOT NULL,
+                                `code_display` VARCHAR(32) NOT NULL,
+                                `created` INT NOT NULL,
+                                `audio_data` MEDIUMBLOB NULL,
+                                PRIMARY KEY(id, namespace),
+                                INDEX(created)
+                              )";
+                break;
+
+            case self::SI_DRIVER_PGSQL:
+                $queries[] = "CREATE TABLE {$this->database_table} (
+                                id character varying(40) NOT NULL,
+                                namespace character varying(32) NOT NULL,
+                                code character varying(32) NOT NULL,
+                                code_display character varying(32) NOT NULL,
+                                created integer NOT NULL,
+                                audio_data bytea NULL,
+                                CONSTRAINT pkey_id_namespace PRIMARY KEY (id, namespace)
+                              )";
+
+                $queries[] = "CREATE INDEX ndx_created ON {$this->database_table} (created);";
+                break;
+        }
+
+        $this->pdo_conn->beginTransaction();
+
+        foreach ($queries as $query) {
+            $result = $this->pdo_conn->query($query);
+
+            if (!$result) {
+                $err = $this->pdo_conn->errorInfo();
+                trigger_error("Failed to create table.  {$err[1]}: {$err[2]}", E_USER_WARNING);
+                $this->pdo_conn->rollBack();
+                $this->pdo_conn = FALSE;
+
+                return FALSE;
+            }
+        }
+
+        $this->pdo_conn->commit();
+
+        return TRUE;
+    }
+
+    /**
+     * Deletes old (expired) codes from the database
+     */
+    protected function purgeOldCodesFromDatabase() {
+        if ($this->use_database && $this->pdo_conn) {
+            $now = time();
+            $limit = (!is_numeric($this->expiry_time) || $this->expiry_time < 1) ? 86400 : $this->expiry_time;
+
+            $query = sprintf("DELETE FROM %s WHERE %s - created > %s", $this->database_table, $now, $this->pdo_conn->quote("$limit", PDO::PARAM_INT));
+
+            $result = $this->pdo_conn->query($query);
         }
     }
 
@@ -1107,6 +1355,31 @@ class Securimage {
             return $code;
         } else {
             return $code['code'];
+        }
+    }
+
+    /**
+     * Remove a stored code from the database based on captchaId or IP address.
+     */
+    protected function clearCodeFromDatabase() {
+        if ($this->pdo_conn) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $ns = $this->pdo_conn->quote($this->namespace);
+            $id = Securimage::$_captchaId;
+
+            if (empty($id)) {
+                $id = $ip; // if no captchaId set, IP address is captchaId.
+            }
+
+            $id = $this->pdo_conn->quote($id);
+
+            $query = sprintf("DELETE FROM %s WHERE id = %s AND namespace = %s",
+                             $this->database_table, $id, $ns);
+
+            $result = $this->pdo_conn->query($query);
+            if (!$result) {
+                trigger_error("Failed to delete code from database.", E_USER_WARNING);
+            }
         }
     }
 
@@ -1823,278 +2096,6 @@ class Securimage {
         }
 
         return $success !== FALSE;
-    }
-
-    /**
-     * Opens a connection to the configured database.
-     * @see Securimage::$use_database Use database
-     * @see Securimage::$database_driver Database driver
-     * @see Securimage::$pdo_conn pdo_conn
-     * @return bool true if the database connection was successful, false if not
-     */
-    protected function openDatabase() {
-        $this->pdo_conn = FALSE;
-
-        if ($this->use_database) {
-            $pdo_extension = 'PDO_'.strtoupper($this->database_driver);
-
-            if (!extension_loaded($pdo_extension)) {
-                trigger_error("Database support is turned on in Securimage, but the chosen extension $pdo_extension is not loaded in PHP.",
-                              E_USER_WARNING);
-
-                return FALSE;
-            }
-        }
-
-        if ($this->database_driver == self::SI_DRIVER_SQLITE3) {
-            if (!file_exists($this->database_file)) {
-                $fp = fopen($this->database_file, 'w+');
-                if (!$fp) {
-                    $err = error_get_last();
-                    trigger_error("Securimage failed to create SQLite3 database file '{$this->database_file}'. Reason: {$err['message']}",
-                                  E_USER_WARNING);
-
-                    return FALSE;
-                }
-                fclose($fp);
-                chmod($this->database_file, 0666);
-            } else {
-                if (!is_writeable($this->database_file)) {
-                    trigger_error("Securimage does not have read/write access to database file '{$this->database_file}. Make sure permissions are 0666 and writeable by user '".get_current_user()."'",
-                                  E_USER_WARNING);
-
-                    return FALSE;
-                }
-            }
-        }
-
-        try {
-            $dsn = $this->getDsn();
-
-            $options = array();
-            $this->pdo_conn = new PDO($dsn, $this->database_user, $this->database_pass, $options);
-        } catch (PDOException $pdoex) {
-            trigger_error("Database connection failed: ".$pdoex->getMessage(), E_USER_WARNING);
-
-            return FALSE;
-        } catch (Exception $ex) {
-            trigger_error($ex->getMessage(), E_USER_WARNING);
-
-            return FALSE;
-        }
-
-        try {
-            if (!$this->skip_table_check && !$this->checkTablesExist()) {
-                // create tables...
-                $this->createDatabaseTables();
-            }
-        } catch (Exception $ex) {
-            trigger_error($ex->getMessage(), E_USER_WARNING);
-            $this->pdo_conn = FALSE;
-
-            return FALSE;
-        }
-
-        if (mt_rand(0, 100) / 100.0 == 1.0) {
-            $this->purgeOldCodesFromDatabase();
-        }
-
-        return $this->pdo_conn;
-    }
-
-    /**
-     * Get the PDO DSN string for connecting to the database
-     * @see Securimage::$database_driver Database driver
-     * @throws Exception  If database specific options are not configured
-     * @return string     The DSN for connecting to the database
-     */
-    protected function getDsn() {
-        $dsn = sprintf('%s:', $this->database_driver);
-
-        switch ($this->database_driver) {
-            case self::SI_DRIVER_SQLITE3:
-                $dsn .= $this->database_file;
-                break;
-
-            case self::SI_DRIVER_MYSQL:
-            case self::SI_DRIVER_PGSQL:
-                if (empty($this->database_host)) {
-                    throw new Exception('Securimage::database_host is not set');
-                } else {
-                    if (empty($this->database_name)) {
-                        throw new Exception('Securimage::database_name is not set');
-                    }
-                }
-
-                $dsn .= sprintf('host=%s;dbname=%s',
-                                $this->database_host,
-                                $this->database_name);
-                break;
-
-        }
-
-        return $dsn;
-    }
-
-    /**
-     * Checks if the necessary database tables for storing captcha codes exist
-     * @throws Exception If the table check failed for some reason
-     * @return boolean true if the database do exist, false if not
-     */
-    protected function checkTablesExist() {
-        $table = $this->pdo_conn->quote($this->database_table);
-
-        switch ($this->database_driver) {
-            case self::SI_DRIVER_SQLITE3:
-                // query row count for sqlite, PRAGMA queries seem to return no
-                // rowCount using PDO even if there are rows returned
-                $query = "SELECT COUNT(id) FROM $table";
-                break;
-
-            case self::SI_DRIVER_MYSQL:
-                $query = "SHOW TABLES LIKE $table";
-                break;
-
-            case self::SI_DRIVER_PGSQL:
-                $query = "SELECT * FROM information_schema.columns WHERE table_name = $table;";
-                break;
-        }
-
-        $result = $this->pdo_conn->query($query);
-
-        if (!$result) {
-            $err = $this->pdo_conn->errorInfo();
-
-            if ($this->database_driver == self::SI_DRIVER_SQLITE3 &&
-                $err[1] === 1 && strpos($err[2], 'no such table') !== FALSE
-            ) {
-                return FALSE;
-            }
-
-            throw new Exception("Failed to check tables: {$err[0]} - {$err[1]}: {$err[2]}");
-        } else {
-            if ($this->database_driver == self::SI_DRIVER_SQLITE3) {
-                // successful here regardless of row count for sqlite
-                return TRUE;
-            } else {
-                if ($result->rowCount() == 0) {
-                    return FALSE;
-                } else {
-                    return TRUE;
-                }
-            }
-        }
-    }
-
-    /**
-     * Create the necessary databaes table for storing captcha codes.
-     * Based on the database adapter used, the tables will created in the existing connection.
-     * @see Securimage::$database_driver Database driver
-     * @return boolean true if the tables were created, false if not
-     */
-    protected function createDatabaseTables() {
-        $queries = array();
-
-        switch ($this->database_driver) {
-            case self::SI_DRIVER_SQLITE3:
-                $queries[] = "CREATE TABLE \"{$this->database_table}\" (
-                                id VARCHAR(40),
-                                namespace VARCHAR(32) NOT NULL,
-                                code VARCHAR(32) NOT NULL,
-                                code_display VARCHAR(32) NOT NULL,
-                                created INTEGER NOT NULL,
-                                audio_data BLOB NULL,
-                                PRIMARY KEY(id, namespace)
-                              )";
-
-                $queries[] = "CREATE INDEX ndx_created ON {$this->database_table} (created)";
-                break;
-
-            case self::SI_DRIVER_MYSQL:
-                $queries[] = "CREATE TABLE `{$this->database_table}` (
-                                `id` VARCHAR(40) NOT NULL,
-                                `namespace` VARCHAR(32) NOT NULL,
-                                `code` VARCHAR(32) NOT NULL,
-                                `code_display` VARCHAR(32) NOT NULL,
-                                `created` INT NOT NULL,
-                                `audio_data` MEDIUMBLOB NULL,
-                                PRIMARY KEY(id, namespace),
-                                INDEX(created)
-                              )";
-                break;
-
-            case self::SI_DRIVER_PGSQL:
-                $queries[] = "CREATE TABLE {$this->database_table} (
-                                id character varying(40) NOT NULL,
-                                namespace character varying(32) NOT NULL,
-                                code character varying(32) NOT NULL,
-                                code_display character varying(32) NOT NULL,
-                                created integer NOT NULL,
-                                audio_data bytea NULL,
-                                CONSTRAINT pkey_id_namespace PRIMARY KEY (id, namespace)
-                              )";
-
-                $queries[] = "CREATE INDEX ndx_created ON {$this->database_table} (created);";
-                break;
-        }
-
-        $this->pdo_conn->beginTransaction();
-
-        foreach ($queries as $query) {
-            $result = $this->pdo_conn->query($query);
-
-            if (!$result) {
-                $err = $this->pdo_conn->errorInfo();
-                trigger_error("Failed to create table.  {$err[1]}: {$err[2]}", E_USER_WARNING);
-                $this->pdo_conn->rollBack();
-                $this->pdo_conn = FALSE;
-
-                return FALSE;
-            }
-        }
-
-        $this->pdo_conn->commit();
-
-        return TRUE;
-    }
-
-    /**
-     * Deletes old (expired) codes from the database
-     */
-    protected function purgeOldCodesFromDatabase() {
-        if ($this->use_database && $this->pdo_conn) {
-            $now = time();
-            $limit = (!is_numeric($this->expiry_time) || $this->expiry_time < 1) ? 86400 : $this->expiry_time;
-
-            $query = sprintf("DELETE FROM %s WHERE %s - created > %s", $this->database_table, $now, $this->pdo_conn->quote("$limit", PDO::PARAM_INT));
-
-            $result = $this->pdo_conn->query($query);
-        }
-    }
-
-    /**
-     * Remove a stored code from the database based on captchaId or IP address.
-     */
-    protected function clearCodeFromDatabase() {
-        if ($this->pdo_conn) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $ns = $this->pdo_conn->quote($this->namespace);
-            $id = Securimage::$_captchaId;
-
-            if (empty($id)) {
-                $id = $ip; // if no captchaId set, IP address is captchaId.
-            }
-
-            $id = $this->pdo_conn->quote($id);
-
-            $query = sprintf("DELETE FROM %s WHERE id = %s AND namespace = %s",
-                             $this->database_table, $id, $ns);
-
-            $result = $this->pdo_conn->query($query);
-            if (!$result) {
-                trigger_error("Failed to delete code from database.", E_USER_WARNING);
-            }
-        }
     }
 
     /**

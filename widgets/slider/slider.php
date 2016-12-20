@@ -35,6 +35,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                 'slider_height' => 300,
                 'slider_navigation' => FALSE,
                 'slider_indicator' => FALSE,
+                'slider_interval' => 0,
             );
 
             $slider_options = \defender::unserialize($colData['page_options']);
@@ -114,6 +115,10 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
         <?php
         $html = ob_get_contents();
         ob_end_clean();
+
+        if (self::$sliderOptions['slider_interval']) {
+            add_to_jquery("$('#".self::$sliderOptions['slider_id']."').carousel({ interval: ".self::$sliderOptions['slider_interval']." });");
+        }
 
         return (string)$html;
     }

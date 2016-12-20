@@ -660,7 +660,7 @@ function parse_imageDir($data, $prefix_ = "") {
 
 /**
  * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
- * @param            $data
+ * @param            $text
  * @param bool|TRUE  $smileys
  * @param bool|TRUE  $bbcode
  * @param bool|TRUE  $decode
@@ -668,21 +668,19 @@ function parse_imageDir($data, $prefix_ = "") {
  * @param bool|FALSE $add_line_breaks
  * @return string
  */
-function parse_textarea($data, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
-    $data = $smileys ? parsesmileys($data) : $data;
-    $data = $bbcode ? parseubb($data) : $data;
-    $data = $default_image_folder ? parse_imageDir($data, $default_image_folder) : $data;
-    $data = $add_line_breaks ? nl2br($data) : $data;
-
-    return (string)$data;
+function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
+    $text = $decode ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
+    $text = $default_image_folder ? parse_imageDir($text, $default_image_folder) : $text;
+    $text = $smileys ? parsesmileys($text) : $text;
+    $text = $bbcode ? parseubb($text) : $text;
+    $text = $add_line_breaks ? nl2br($text) : $text;
+    return (string)$text;
 }
 
 /**
  * Parse bbcode
- * @param string  $text
- * @param boolean $selected The names of the required bbcodes to parse, separated by "|"
+ * @param        $text
+ * @param string $selected - The names of the required bbcodes to parse, separated by "|"
  * @return string
  */
 function parseubb($text, $selected = "") {
@@ -775,11 +773,13 @@ function hide_email($email, $title = "", $subject = "") {
  * @return string
  */
 function formatcode($text) {
-    $text = str_replace("  ", "&nbsp; ", $text);
-    $text = str_replace("  ", " &nbsp;", $text);
-    $text = str_replace("\t", "&nbsp; &nbsp;", $text);
+    $text = str_replace(
+        ["  ", "  ", "\t"],
+        ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;"],
+        $text
+    );
     $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
-    $text = stripinput($text);
+
     return $text;
 }
 
@@ -1160,35 +1160,42 @@ function user_blacklisted($user_id) {
  */
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
-    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
-
-    $temp = opendir($folder);
-    while ($file = readdir($temp)) {
-        if ($type == "files" && !in_array($file, $filter)) {
-            if (!empty($ext_filter)) {
-                if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+    if (file_exists($folder)) {
+        $temp = opendir($folder);
+        while ($file = readdir($temp)) {
+            if ($type == "files" && !in_array($file, $filter)) {
+                if (!empty($ext_filter)) {
+                    if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+                        $res[] = $file;
+                    }
+                } else {
+                    if (is_file($folder.$file)) {
+                        $res[] = $file;
+                    }
+                }
+            } elseif ($type == "folders" && !in_array($file, $filter)) {
+                if (is_dir($folder.$file)) {
                     $res[] = $file;
                 }
-            } else {
-                if (is_file($folder.$file)) {
-                    $res[] = $file;
-                }
-            }
-        } elseif ($type == "folders" && !in_array($file, $filter)) {
-            if (is_dir($folder.$file)) {
-                $res[] = $file;
             }
         }
+        closedir($temp);
+        if ($sort) {
+            sort($res);
+        }
+    } else {
+        $error_log = debug_backtrace()[1];
+        $function = (isset($error_log['class']) ? $error_log['class'] : '').(isset($error_log['type']) ? $error_log['type'] : '').(isset($error_log['function']) ? $error_log['function'] : '');
+        $error_log = strtr(fusion_get_locale('err_103', LOCALE.LOCALESET.'errors.php'), [
+            '{%folder%}' => $folder,
+            '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
+        ]);
+        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
     }
-    closedir($temp);
-    if ($sort) {
-        sort($res);
-    }
-
 
     return $res;
 }

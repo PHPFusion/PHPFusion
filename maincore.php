@@ -139,9 +139,7 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-
     $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
-
     $userdata = $auth->getUserData();
     unset($auth, $_POST['user_name'], $_POST['user_pass']);
     redirect(FUSION_REQUEST);
@@ -149,7 +147,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
     $userdata = Authenticate::logOut();
     redirect(BASEDIR."index.php");
 } else {
-    $userdata = Authenticate::validateAuthUser(); // ok userdata never add _1.
+    $userdata = Authenticate::validateAuthUser();
 }
 
 // User level, Admin Rights & User Group definitions
@@ -205,6 +203,12 @@ require_once INCLUDES."error_handling_include.php";
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
 
+$defender = defender::getInstance();
+if (!defined('FUSION_ALLOW_REMOTE')) {
+    new \Defender\Token();
+}
+\Defender\ImageValidation::ValidateMime();
+
 // Define aidlink
 if (iADMIN) {
 
@@ -230,48 +234,10 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 $lastvisited = Authenticate::setLastVisitCookie();
 
 
-// Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
-if ($settings['mime_check'] == "1") {
-    if (isset($_FILES) && count($_FILES)) {
-        require_once INCLUDES."mimetypes_include.php";
-        $mime_types = mimeTypes();
-        foreach ($_FILES as $each) {
-            if (isset($each['name']) && !empty($each['tmp_name'])) {
-                $file_info = pathinfo($each['name']);
-                $extension = $file_info['extension'];
-                if (array_key_exists($extension, $mime_types)) {
-                    if (is_array($mime_types[$extension])) {
-                        $valid_mimetype = FALSE;
-                        foreach ($mime_types[$extension] as $each_mimetype) {
-                            if ($each_mimetype == $each['type']) {
-                                $valid_mimetype = TRUE;
-                                break;
-                            }
-                        }
-                        if (!$valid_mimetype) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                        unset($valid_mimetype);
-                    } else {
-                        if ($mime_types[$extension] != $each['type']) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                    }
-                }
-                unset($file_info, $extension);
-            }
-        }
-        unset($mime_types);
-    }
-}
-
-$defender = defender::getInstance();
-$defender->sniff_token();
-
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-new dynamics();
+new Dynamics();
 
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;

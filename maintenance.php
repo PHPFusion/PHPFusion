@@ -22,7 +22,7 @@ if (!fusion_get_settings("maintenance")) {
 }
 
 if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
-    \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing("");
+    \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing("");
 }
 
 $info = array();

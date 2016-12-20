@@ -246,7 +246,6 @@ header h1 {
 }
 
 .nebulaCanvas {
-    padding: 3% 25px;
     width: 250px;
     position: fixed;
     top: 0;
@@ -256,10 +255,14 @@ header h1 {
     z-index: 21;
     transition: all 0.3s ease-in-out;
 }
-
+.nebulaCanvas .contentLeft {
+    padding: 3% 25px;
+    height: 100vh;
+    overflow-y:scroll;
+}
 .canvas-toggle {
     position: absolute;
-    margin-left: 90%;
+    margin-left: 100%;
     top: 200px;
     display: block;
     background: #1e2024;

@@ -222,7 +222,7 @@ class Admin {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-user fa-fw'></i> ".$theme_data['author']."</span>";
                 }
                 if (!empty($theme_data['web'])) {
-                    echo "<a class='badge display-inline-block text-normal' target='_blank' title='".$locale['theme_1015']."' href='".$theme_data['web']."'><i class='fa fa-globe fa-fw'></i> ".$locale['theme_1015']."</a>";
+                    echo "<a class='badge display-inline-block' target='_blank' title='".$locale['theme_1015']."' href='".$theme_data['web']."'><i class='fa fa-globe fa-fw'></i> ".$locale['theme_1015']."</a>";
                 }
                 echo "<div class='m-t-10'>\n";
                 if ($status == TRUE) {

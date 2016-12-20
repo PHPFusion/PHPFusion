@@ -99,12 +99,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
      */
     public function fetchFirstColumn($statement, $row = 0) {
         //seek
-        for ($i = 0; $i < $row; $i++) {
-            $statement->fetchColumn();
+        if ($statement !==FALSE) {
+            for ($i = 0; $i < $row; $i++) {
+                $statement->fetchColumn();
+            }
+            //returns false when an error occurs
+            return $statement->fetchColumn();
         }
-
-        //returns false when an error occurs
-        return $statement->fetchColumn();
     }
 
     /**
@@ -205,9 +206,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
             $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
         } catch (PDOException $error) {
+            //$file = debug_print_backtrace();
             throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
                 ? new SelectionException($error->getMessage(), $error->getCode(), $error)
-                : new ConnectionException($error->getMessage(), $error->getCode(), $error);
+                : new \ErrorException($error->getMessage(), $error->getCode(), 1, debug_backtrace()[1]['file']); //new ConnectionException($error->getMessage(), $error->getCode(), $error);
         }
     }
 

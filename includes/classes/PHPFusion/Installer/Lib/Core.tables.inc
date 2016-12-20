@@ -817,51 +817,51 @@ function get_core_tables($localeset) {
             'auto_increment' => TRUE,
             'key' => 1, //PRIMARY KEY (alias_id)
             'unsigned' => TRUE,
-        ],//alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+        ],
         'alias_url' => [
             'type' => 'VARCHAR',
             'length' => 200
-        ],//alias_url VARCHAR(200) NOT NULL DEFAULT '',
+        ],
         'alias_php_url' => [
             'type' => 'VARCHAR',
             'length' => 200
-        ], //alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
+        ],
         'alias_type' => [
             'type' => 'VARCHAR',
             'length' => 10
-        ],//alias_type VARCHAR(10) NOT NULL DEFAULT '',
+        ],
         'alias_item_id' => [
             'type' => 'INT',
             'length' => 10,
             'unsigned' => TRUE,
             'default' => '0'
-        ] //alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ]
     ];
     $table_package['permalinks_method'] = [
         'pattern_id' => [
-            'type' => 'MEDIUMINT', //@note:changed
+            'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1, //PRIMARY KEY (pattern_id)
+            'key' => 1,
             'unsigned' => TRUE,
         ], //pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'pattern_type' => [
             'type' => 'INT',
             'length' => 5,
             'unsigned' => TRUE
-        ], //pattern_type INT(5) UNSIGNED NOT NULL, ... int can no default?
+        ],
         'pattern_source' => [
             'type' => 'VARCHAR',
             'length' => 200,
-        ], //pattern_source VARCHAR(200) NOT NULL DEFAULT '',
+        ],
         'pattern_target' => [
             'type' => 'VARCHAR',
             'length' => 200,
-        ], //pattern_target VARCHAR(200) NOT NULL DEFAULT '',
+        ],
         'pattern_cat' => [
             'type' => 'VARCHAR',
             'length' => 10,
-        ] //pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
+        ]
     ];
     $table_package['permalinks_rewrites'] = [
         'rewrite_id' => [
@@ -870,11 +870,11 @@ function get_core_tables($localeset) {
             'auto_increment' => TRUE,
             'key' => 1, //PRIMARY KEY (rewrite_id)
             'unsigned' => TRUE,
-        ], //rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+        ],
         'rewrite_name' => [
             'type' => 'VARCHAR',
             'length' => 50,
-        ] //rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
+        ]
     ];
     $table_package['settings'] = [
         'settings_name' => [

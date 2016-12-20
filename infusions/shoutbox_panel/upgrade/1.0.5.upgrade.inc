@@ -17,6 +17,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
-if (column_exists(DB_SHOUTBOX, 'shout_hidden')) {
+if (column_exists(DB_SHOUTBOX, 'shout_hidden', FALSE)) {
     $inf_altertable[] = DB_SHOUTBOX." CHANGE shout_hidden shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0'";
 }

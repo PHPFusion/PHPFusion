@@ -59,10 +59,20 @@ class Router extends RewriteDriver {
      */
     private $get_parameters = array();
 
+    private static $router_instance = NULL;
+
     public function __construct() {
         // Pretty URL
         $this->requesturi = urldecode(PERMALINK_CURRENT_PATH);
     }
+
+    public static function getRouterInstance() {
+        if (self::$router_instance === NULL) {
+            self::$router_instance = new static();
+        }
+        return self::$router_instance;
+    }
+
 
     /**
      * @param mixed $pathtofile
@@ -107,8 +117,8 @@ class Router extends RewriteDriver {
             $this->setWarning(6);
         }
 
-        if (fusion_get_settings("debug_seo") == 1) {
-            // Together with Alias
+        if (fusion_get_settings('debug_seo') && iSUPERADMIN && iADMIN) {
+            $this->displayWarnings();
         }
     }
 
@@ -469,8 +479,9 @@ class Router extends RewriteDriver {
                                                 $tag_values[$tagRequests[$tagKey]] = $matches[$tagKey];
                                             }
 
-                                            $urlParams = array_combine(array_values($tagData),
-                                                                       array_values($tag_values));
+                                            $this->dataStatements[$type][] = $tag_values;
+
+                                            $urlParams = array_combine(array_values($tagData), array_values($tag_values));
                                         }
 
                                         /**
@@ -529,5 +540,133 @@ class Router extends RewriteDriver {
      */
     public function getFilePath() {
         return $this->pathtofile;
+    }
+
+
+    /**
+     * Show Warnings or Debugging Information
+     *
+     * This function will show the Warnings or Debugging Information
+     * if Warnings are enabled or if Debug Mode is enabled.
+     *
+     * @access private
+     */
+    private function displayWarnings() {
+        echo "<div class='rewrites-queries' style='padding: 10px 10px 10px 10px; border: 1px double #000; background-color: #fbfbfb; line-height: 15px;'>\n";
+        echo "<strong>Queries which were made for Rewriting:</strong><br /><br />\n";
+        foreach ($this->queries as $key => $query) {
+            echo $query.";<br />\n";
+        }
+        echo "<script type='text/javascript'>
+        function rewritestoggledebugdiv() {
+	        $('#rewrites-debug-info').slideToggle('slow');
+        }
+        </script>\n";
+        echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
+        echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
+        echo "Request URI: <strong>".$this->requesturi."</strong><br />";
+        echo "<div id='rewrites-debug-info' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
+        foreach ($this->warnings as $key => $val) {
+            echo (intval($key) + 1).". ".$val."<br />\n";
+        }
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Handlers Stack = Array (<br />";
+        foreach ($this->handlers as $key => $name) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$name."<br />";
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Alias Patterns = Array (<br />";
+        foreach ($this->alias_pattern as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Rewrite Codes = Array (<br />";
+        foreach ($this->rewrite_code as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Rewrite Replace = Array (<br />";
+        foreach ($this->rewrite_replace as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Pattern Search = Array (<br />";
+        foreach ($this->pattern_search as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Pattern Replace = Array (<br />";
+        foreach ($this->pattern_replace as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Pattern Regex = Array (<br />";
+        foreach ($this->patterns_regex as $type => $tag) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($tag as $key => $val) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Module Property Information:<br />";
+        foreach ($this->pattern_tables as $type => $val) {
+            $propHTML = '';
+            foreach($val as $val_pattern => $arrayProp) {
+                $propHTML .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$val_pattern} will be translated on ".$arrayProp['table']." WHERE ".$arrayProp['primary_key'] ." is equals to $val_pattern<br/>\n";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;".$type." rewrite module <br/>".$propHTML."<br />";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "Data Cache = Array (<br />";
+        foreach ($this->dataStatements as $type => $info) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
+            foreach ($info as $id => $dbinfo) {
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$id."] => Array (<br />";
+                foreach ($dbinfo as $colname => $colvalue) {
+                    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$colname."] => ".$colvalue."<br />";
+                }
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+            }
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
+        }
+        echo ");<br />\n";
+        echo "<hr style='border-color:#000;' />\n";
+        echo "\$_GET Parameters = Array (<br />";
+        foreach ($this->get_parameters as $key => $val) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
+        }
+        echo ");<br />\n";
+        echo "</div>\n";
+        echo "</div>\n";
     }
 }

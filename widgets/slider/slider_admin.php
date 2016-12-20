@@ -46,6 +46,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         'slider_path' => 0,
         'slider_height' => '300',
         'slider_navigation' => TRUE,
+        'slider_interval' => 200,
         'slider_indicator' => TRUE,
     );
     private static $widget_instance = NULL;
@@ -220,7 +221,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             'slider_path' => form_sanitizer($_POST['slider_path'], '', 'slider_path'),
             'slider_height' => form_sanitizer($_POST['slider_height'], '', 'slider_height'),
             'slider_navigation' => form_sanitizer($_POST['slider_navigation'], 0, 'slider_navigation'),
-            'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator')
+            'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
+            'slider_interval' => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
         );
         if (defender::safe() && !empty($widget_settings)) {
             return \defender::serialize($widget_settings);
@@ -338,7 +340,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             form_select('slider_path', self::$slider_locale['0534'], self::$slider_settings['slider_path'],
                         array('inline' => TRUE, 'options' => $image_options)).
             form_text('slider_height', self::$slider_locale['0501'], self::$slider_settings['slider_height'],
-                      array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
+                      array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px')).
+            form_text('slider_interval', self::$slider_locale['0603'], self::$slider_settings['slider_interval'],
+                  array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'ms', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">

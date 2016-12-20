@@ -49,7 +49,7 @@ class loginPanel extends resource {
                             setNotice('danger', $locale['global_182']);
                         }
  
-                        $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+                        $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_REQUEST; //FUSION_SELF."?".FUSION_QUERY;
                         echo openform('admin-login-form', 'post', $form_action);
 
                         ?>
