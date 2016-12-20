@@ -235,7 +235,7 @@ class Admin {
 			require_once INCLUDES."infusions_include.php";
 			$src_file = 'theme_files';
 			$target_folder = THEMES;
-			$valid_ext = '.zip';
+			$valid_ext = '.zip,';
 			$max_size = 5*1000*1000;
 			$upload = upload_file($src_file, '', $target_folder, $valid_ext, $max_size);
 			if ($upload['error'] != '0') {
@@ -261,11 +261,11 @@ class Admin {
 				if (is_file($target_file)) {
 					$path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
 					if (class_exists('ZipArchive')) {
-						$zip = new ZipArchive;
+						$zip = new \ZipArchive;
 						$res = $zip->open($target_file);
 						if ($res === TRUE) {
 							// checks if first folder is theme.php
-							if ($zip->locateName('theme.php') !== FALSE) {
+							if ($zip->locateName('theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
 								// extract it to the path we determined above
 								$zip->extractTo($path);
 								addNotice('success', $locale['theme_success_001']);
@@ -290,7 +290,7 @@ class Admin {
 			}
 		}
 		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('enctype' => 1, 'max_tokens' => 1));
-		echo form_fileinput('theme_files', $locale['theme_1007'], '', array());
+		echo form_fileinput('theme_files', $locale['theme_1007'], '', array('type' => 'object','preview_off' => TRUE));
 		echo form_button('upload', $locale['theme_1007'], 'upload theme', array('class' => 'btn btn-primary'));
 		echo closeform();
 	}
