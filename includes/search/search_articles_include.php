@@ -60,7 +60,8 @@ if (db_exists(DB_ARTICLES)) {
 				tac.article_cat_id, tac.article_cat_name
             	FROM ".DB_ARTICLES." ta
 				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
+				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND ta.article_language='".LANGUAGE."' AND " : "WHERE ")."
+				ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess('ta.article_visibility')." AND ".groupaccess('tac.article_cat_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""), $swords_for_query);
             $rows = dbrows($result);
         } else {
@@ -76,7 +77,8 @@ if (db_exists(DB_ARTICLES)) {
             	FROM ".DB_ARTICLES." ta
 				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 				LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
+				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND ta.article_language='".LANGUAGE."' AND " : "WHERE ")."
+				ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess('ta.article_visibility')." AND ".groupaccess('tac.article_cat_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
 				".$sortby.$limit, $swords_for_query
 				);

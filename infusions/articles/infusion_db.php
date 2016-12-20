@@ -16,13 +16,44 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+    die("Access Denied!");
 }
-define("IMAGES_A", INFUSIONS."articles/images/");
-define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
-define("DB_ARTICLES", DB_PREFIX."articles");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('A', fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitType('a', fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('A', fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
+
+// Locales
+if (!defined("ARTICLE_LOCALE")) {
+    if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles.php")) {
+        define("ARTICLE_LOCALE", INFUSIONS."articles/locale/".LOCALESET."articles.php");
+    } else {
+        define("ARTICLE_LOCALE", INFUSIONS."articles/locale/English/articles.php");
+    }
+}
+if (!defined("ARTICLE_ADMIN_LOCALE")) {
+    if (file_exists(INFUSIONS."articles/locale/".LOCALESET."article_admin.php")) {
+        define("ARTICLE_ADMIN_LOCALE", INFUSIONS."articles/locale/".LOCALESET."article_admin.php");
+    } else {
+        define("ARTICLE_ADMIN_LOCALE", INFUSIONS."articles/locale/English/article_admin.php");
+    }
+}
+
+// Paths
+if (!defined("ARTICLE_CLASS")) {
+    define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
+}
+if (!defined("IMAGES_A")) {
+	define("IMAGES_A", INFUSIONS."articles/images/");
+}
+
+// Database
+if (!defined("DB_ARTICLE_CATS")) {
+	define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
+}
+if (!defined("DB_ARTICLES")) {
+	define("DB_ARTICLES", DB_PREFIX."articles");
+}
+
+// Admin Settings
+\PHPFusion\Admins::getInstance() -> setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
+\PHPFusion\Admins::getInstance() -> setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
+\PHPFusion\Admins::getInstance() -> setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance() -> setSubmitType("a", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance() -> setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");

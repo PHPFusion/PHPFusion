@@ -60,29 +60,30 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
-        case "A":
+		case "A":
             if (!db_exists(DB_ARTICLES)) {
                 redirect(BASEDIR."error.php?code=404");
             }
-            $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
-            tu.user_id, tu.user_name, tu.user_status
+            $result = dbquery("
+			SELECT 
+				ta.article_subject, ta.article_article, ta.article_breaks, ta.article_datestamp,
+				tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_ARTICLES." ta
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-            WHERE article_id='".intval($item_id)."' AND article_draft='0'");
+            WHERE ta.article_id='".intval($item_id)."' AND ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
+			LIMIT 0,1");
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
-                if (checkgroup($data['article_visibility'])) {
-                    $res = TRUE;
-                    $article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
-                    if ($data['article_breaks'] == "y") {
-                        $article = nl2br($article);
-                    }
-                    echo "<strong>".$data['article_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['article_datestamp']))."</span>\n";
-                    echo "<hr />".$article."\n";
-                }
+				$res = TRUE;
+				$article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
+				if ($data['article_breaks'] == "y") {
+					$article = nl2br($article);
+				}
+				echo "<strong>".$data['article_subject']."</strong><br />\n";
+				echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
+				echo "<hr />".$article."\n";
             }
             if (!$res) {
                 redirect($settings['opening_page']);
