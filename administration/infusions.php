@@ -71,7 +71,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
             $content .= "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
             if ($inf['status'] > 0) {
                 if ($inf['status'] > 1) {
-                    $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                    $content .= form_button('infuse', $locale['416'], $inf['folder'],
                                             array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet', 'input_id' => 'infuse_'.$i));
                 } else {
                     $content .= form_button('defuse', $locale['411'], $inf['folder'],
