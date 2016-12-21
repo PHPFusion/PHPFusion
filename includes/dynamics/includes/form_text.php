@@ -167,7 +167,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $input_type = "number";
             $min = (!empty($options['number_min']) && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
             $max = (!empty($options['number_max']) && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
-            $step = "step='".$options['number_step']."' ";
+            $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
             break;
         case "text":
             $input_type = "text";
@@ -225,7 +225,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {
         define('NUMBERS_ONLY_JS', TRUE);
         add_to_jquery("$('input[data-type=\"number\"]').keypress(function(e) {
-		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
 		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
 		});\n");
     }
