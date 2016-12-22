@@ -114,14 +114,14 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
     }
 
-    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
+    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 p-l-0'>\n" : "\n";
 
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
             if ($options['deactivate_key'] == $key) {
                 $checkbox .= form_hidden($input_name, '', $key);
             }
-            $checkbox .= "<div class='m-b-10'>\n";
+            $checkbox .= "<div class='m-b-0'>\n";
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
             ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">".$value."</label>\n";

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_custompages_include.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,68 +15,92 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion\Search;
+
+use PHPFusion\ImageRepo;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$locale = fusion_get_locale('', LOCALE.LOCALESET."search/custompages.php");
-if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
-	$order_by = array(
-		'0' => ' DESC',
-		'1' => ' ASC',
-		);
-	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$order_by[$_POST['order']] : "";
-	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
-        if ($_POST['fields'] == 0) {
-			$ssubject = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
-            $fieldsvar = search_fieldsvar($ssubject);
+if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_param('stype') == 'all') {
 
-        } elseif ($_POST['fields'] == 1) {
-			$smessage = search_querylike_safe("page_content", $swords_keys_for_query, $c_swords, $fields_count, 0);
-			$ssnippet = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 1);
-			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/custompages.php");
+    $formatted_result = '';
+    $item_count = "0 ".$locale['c402']." ".$locale['522']."<br />\n";
 
-        } elseif ($_POST['fields'] == 2) {
-        	$ssubject = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
-        	$smessage = search_querylike_safe("page_content", $swords_keys_for_query, $c_swords, $fields_count, 1);
-			$ssnippet = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 2);
-			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
+    $order_by = array(
+        '0' => ' DESC',
+        '1' => ' ASC',
+    );
 
-        } else{
-			$fieldsvar = "";
+    $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY page_title".$order_by[Search_Engine::get_param('order')] : '';
+    $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
+
+    switch (Search_Engine::get_param('fields')) {
+        case 2:
+            Search_Engine::search_column('page_content', 0);
+            Search_Engine::search_column('page_title', 1);
+            Search_Engine::search_column('page_title', 2);
+            break;
+        case 1:
+            Search_Engine::search_column('page_content', 0);
+            Search_Engine::search_column('page_title', 1);
+            break;
+        default:
+            Search_Engine::search_column('page_title', 0);
+    }
+
+    if (!empty(Search_Engine::get_param('search_param'))) {
+
+        $query = "SELECT * FROM ".DB_CUSTOM_PAGES.(multilang_table('CP') ? " WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".Search_Engine::search_conditions();
+
+        $result = dbquery($query, Search_Engine::get_param('search_param'));
+
+        if (dbrows($result)) {
+            $rows = dbrows($result);
+        } else {
+            $rows = 0;
+        }
+
+        if ($rows != 0) {
+
+            $item_count = "<a href='".FUSION_SELF."?stype=custompages&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
+            $result = dbquery($query.$sortby.$limit, Search_Engine::get_param('search_param'));
+
+            $search_result = "<ul class='block spacer-xs'>\n";
+            while ($data = dbarray($result)) {
+                $search_result = "";
+                $text_all = stripslashes($data['page_content']);
+                ob_start();
+                eval ("?>".$text_all."<?php ");
+                $text_all = ob_get_contents();
+                ob_end_clean();
+                $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
+                $text_frag = Search_Engine::search_textfrag($text_all);
+                $subj_c = Search_Engine::search_stringscount($data['page_title']);
+                $text_c = Search_Engine::search_stringscount($text_all);
+                $search_result .= "<li><a href='viewpage.php?page_id=".$data['page_id']."'>".$data['page_title']."</a>"."<br /><br />\n";
+                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
+                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c404'].", ";
+                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c405']."</span></li>\n";
+
+            }
+
+            // Pass strings for theme developers
+            $formatted_result = strtr(Search::render_search_item(), [
+                '{%image%}' => ImageRepo::getimage('ac_CP'),
+                '{%icon_class%}' => "fa fa-sticky-note-o fa-lg fa-fw",
+                '{%search_title%}' => $locale['c400'],
+                '{%search_result%}' => $item_count,
+                '{%search_content%}' => $search_result
+            ]);
 
         }
-    if ($fieldsvar) {
-		$rows = dbcount("(page_id)", DB_CUSTOM_PAGES,
-                            (multilang_table("CP") ? "page_language='".LANGUAGE."' AND " : "").groupaccess('page_access')." AND ".$fieldsvar."", $swords_for_query);
-    } else {
-        $rows = 0;
+
+        Search_Engine::search_navigation($rows);
+        Search_Engine::search_globalarray($formatted_result);
+        Search_Engine::append_item_count($item_count);
+
     }
-    if ($rows != 0) {
-        $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
-        $result = dbquery("SELECT *
-        	FROM ".DB_CUSTOM_PAGES."
-			".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".$fieldsvar."
-			".$sortby.$limit, $swords_for_query);
-        while ($data = dbarray($result)) {
-            $search_result = "";
-            $text_all = stripslashes($data['page_content']);
-            ob_start();
-            eval ("?>".$text_all."<?php ");
-            $text_all = ob_get_contents();
-            ob_end_clean();
-            $text_all = search_striphtmlbbcodes($text_all);
-            $text_frag = search_textfrag($text_all);
-            $subj_c = search_stringscount($data['page_title']);
-            $text_c = search_stringscount($text_all);
-            $search_result .= "<a href='viewpage.php?page_id=".$data['page_id']."'>".$data['page_title']."</a>"."<br /><br />\n";
-            $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
-            $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c404'].", ";
-            $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c405']."</span><br /><br />\n";
-            search_globalarray($search_result);
-        }
-    } else {
-        $items_count .= THEME_BULLET."&nbsp;0 ".$locale['c402']." ".$locale['522']."<br />\n";
-    }
-    $navigation_result = search_navigation($rows);
 }

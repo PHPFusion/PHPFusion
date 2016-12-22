@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_articles_include.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,91 +15,100 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion\Search;
+use PHPFusion\ImageRepo;
+use PHPFusion\Search;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 if (db_exists(DB_ARTICLES)) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/articles.php");
-    if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
-	$sort_by = array(
-		'datestamp' => "article_datestamp",
-		'subject' => "article_subject",
-		'author' => "article_name",
-		);
-	$order_by = array(
-		'0' => ' DESC',
-		'1' => ' ASC',
-		);
-	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
-	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
-        if ($_POST['fields'] == 0) {
-			$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
-            $fieldsvar = search_fieldsvar($ssubject);
+    if (Search_Engine::get_param('stype') == 'articles' || Search_Engine::get_param('stype') == 'all') {
 
-        } elseif ($_POST['fields'] == 1) {
-			$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 0);
-			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 1);
-			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'search/articles.php');
+        $formatted_result = '';
+        $item_count = "0 ".$locale['a402']." ".$locale['522']."<br />\n";
 
-        } elseif ($_POST['fields'] == 2) {
-        	$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
-        	$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
-			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
-			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
+        $sort_by = array(
+            'datestamp' => "article_datestamp",
+            'subject' => "article_subject",
+            'author' => "article_name",
+        );
+        $order_by = array(
+            '0' => ' DESC',
+            '1' => ' ASC',
+        );
+        $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
+        $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : "");
+        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND article_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        } else{
-			$fieldsvar = "";
-
+        switch(Search_Engine::get_param('fields')) {
+            case 2:
+                Search_Engine::search_column('article_subject', 0);
+                Search_Engine::search_column('article_article', 1);
+                Search_Engine::search_column('article_snippet', 2);
+                break;
+            case 1:
+                Search_Engine::search_column('article_article', 0);
+                Search_Engine::search_column('article_snippet', 1);
+                break;
+            default:
+                Search_Engine::search_column('article_subject', 0);
         }
 
-        if ($fieldsvar) {
-            $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
-				ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
-				tac.article_cat_id, tac.article_cat_name
-            	FROM ".DB_ARTICLES." ta
-				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND ta.article_language='".LANGUAGE."' AND " : "WHERE ")."
-				ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess('ta.article_visibility')." AND ".groupaccess('tac.article_cat_visibility')." AND ".$fieldsvar."
-				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""), $swords_for_query);
+        if (!empty(Search_Engine::get_param('search_param'))) {
+
+            $query = "SELECT ta.*, tac.*, u.user_id, u.user_name, u.user_status, u.user_level, u.user_avatar
+            FROM ".DB_ARTICLES." ta
+            INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+            INNER JOIN ".DB_USERS." u ON ta.article_name=u.user_id
+            ".(multilang_table('AR') ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")
+            .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions()
+            .$date_search;
+            $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
             $rows = 0;
         }
+
         if ($rows != 0) {
-            $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=articles&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
-            $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT ta.article_id, ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
-				ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
-				tac.article_cat_id, tac.article_cat_name,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
-            	FROM ".DB_ARTICLES." ta
-				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-				LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND ta.article_language='".LANGUAGE."' AND " : "WHERE ")."
-				ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess('ta.article_visibility')." AND ".groupaccess('tac.article_cat_visibility')." AND ".$fieldsvar."
-				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
-				".$sortby.$limit, $swords_for_query
-				);
+
+            $item_count = "<a href='".FUSION_SELF."?stype=articles&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
+
+            $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
+
+            $search_result = "<ul class='block spacer-xs'>\n";
             while ($data = dbarray($result)) {
-                $search_result = "";
-                $text_all = search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
-                $text_frag = search_textfrag($text_all);
-                $subj_c = search_stringscount($data['article_subject']);
-                $text_c = search_stringscount($data['article_snippet']." ".$data['article_article']);
+                $text_all = Search_Engine::search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
+                $text_frag = Search_Engine::search_textfrag($text_all);
+                $subj_c = Search_Engine::search_stringscount($data['article_subject']);
+                $text_c = Search_Engine::search_stringscount($data['article_snippet']." ".$data['article_article']);
+                $search_result .= "<li>\n";
                 $search_result .= "<a href='infusions/articles/articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
                 $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'],
-                                                                                             $data['user_status'])."\n";
+                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
                 $search_result .= $locale['global_071'].showdate("longdate", $data['article_datestamp'])."</span><br />\n";
                 $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a404'].", ";
                 $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a405']."</span><br /><br />\n";
-                search_globalarray($search_result);
+                $search_result .= "</li>\n";
             }
-        } else {
-            $items_count .= THEME_BULLET."&nbsp;0 ".$locale['a402']." ".$locale['522']."<br />\n";
+
+            $search_result .= "</ul>\n";
+
+            // Pass strings for theme developers
+            $formatted_result = strtr(Search::render_search_item(), [
+                '{%image%}' => ImageRepo::getimage('ac_A'),
+                '{%icon_class%}' => "fa fa-book fa-lg fa-fw",
+                '{%search_title%}' => $locale['a400'],
+                '{%search_result%}' => $item_count,
+                '{%search_content%}' => $search_result
+            ]);
         }
-        $navigation_result = search_navigation($rows);
+
+        Search_Engine::search_navigation($rows);
+        Search_Engine::search_globalarray($formatted_result);
+        Search_Engine::append_item_count($item_count);
+
     }
 }

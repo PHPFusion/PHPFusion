@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_downloads_include_button.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,27 +15,32 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_DOWNLOADS)) {
-$form_elements += array(
-		'downloads' => array(
-					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
-					'disabled' => array(),
-					'display' => array(),
-					'nodisplay' => array(),
-					)
-				);
-$radio_button += array(
-		'downloads' => form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
-                                        array(
-                                            'type'      => 'radio',
-                                            'value'     => 'downloads',
-                                            'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)',
-                                            'input_id' => 'downloads'
-                                          )
-                              )
-						);
+    $form_elements += array(
+        'downloads' => array(
+            'enabled' => array(
+                '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
+                '7' => 'chars'
+            ),
+            'disabled' => array(),
+            'display' => array(),
+            'nodisplay' => array(),
+        )
+    );
+    $radio_button += array(
+        'downloads' => form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), Search_Engine::get_param('stype'),
+                                     array(
+                                         'type' => 'radio',
+                                         'value' => 'downloads',
+                                         'reverse_label' => TRUE,
+                                         'onclick' => 'display(this.value)',
+                                         'input_id' => 'downloads'
+                                     )
+        )
+    );
 }
