@@ -55,7 +55,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             "article_cat_name" => "",
             "article_cat_parent" => 0,
             "article_cat_description" => "",
-            "article_cat_status" => 1,
+            "article_cat_status" => 0,
             "article_cat_visibility" => iGUEST,
             "article_cat_language" => LANGUAGE,
 			"article_cat_hidden" => ""
@@ -206,7 +206,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 					));
 					
 					echo form_select("article_cat_status", $this->locale['article_0307'], $data['article_cat_status'], array(
-						"options" => array(0 => $this->locale['publish'], 1 => $this->locale['unpublish']),
+						"options" => array(0 => $this->locale['unpublish'], 1 => $this->locale['publish']),
 						"placeholder" => $this->locale['choose'],
 						"inline" => TRUE,
 					));
@@ -250,10 +250,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                     ) {
                         switch ($_POST['table_action']) {
                             case "publish":
-                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='0' WHERE article_cat_id='".intval($article_cat_id)."'");
+                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='1' WHERE article_cat_id='".intval($article_cat_id)."'");
                                 break;
                             case "unpublish":
-                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='1' WHERE article_cat_id='".intval($article_cat_id)."'");
+                                dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status='0' WHERE article_cat_id='".intval($article_cat_id)."'");
                                 break;
                             case "delete":
                                 if (!dbcount("(article_id)", DB_ARTICLES, "article_cat='".$article_cat_id."'") && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$article_cat_id."'")) {
@@ -292,10 +292,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         if (!empty($_POST['article_cat_status']) && isnum($_POST['article_cat_status'])) {
             switch ($_POST['article_cat_status']) {
-                case 1: // unpublished
+                case 1: // published
                     $search_string['article_cat_status'] = array("input" => 1, "operator" => "=");
                     break;
-                case 2: // published
+                case 2: // unpublished
                     $search_string['article_cat_status'] = array("input" => 0, "operator" => "=");
                     break;
             }
@@ -382,7 +382,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 			<div id="article_filter_options"<?php echo ($filter_empty ? " style='display: none;'" : ""); ?>>
 				<div class="display-inline-block">
 					<?php echo form_select("article_cat_status", "", $filter_values['article_cat_status'], array(
-						"allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0173']." -", "options" => array(0 => $this->locale['article_0174'], 2 => $this->locale['publish'], 1 => $this->locale['unpublish'])
+						"allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0173']." -", "options" => array(0 => $this->locale['article_0174'], 2 => $this->locale['unpublish'], 1 => $this->locale['publish'])
 					)); ?>
 				</div>
 				<div class="display-inline-block">
@@ -482,7 +482,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 						</div>
                     </td>
 					<td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
-                    <td><span class="badge"><?php echo ($cdata['article_cat_status'] == 0 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
+                    <td><span class="badge"><?php echo ($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['article_cat_language']) ?></td>
                 </tr>

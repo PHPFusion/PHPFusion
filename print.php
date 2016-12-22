@@ -71,7 +71,7 @@ if (isset($_GET['type'])) {
             FROM ".DB_ARTICLES." ta
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-            WHERE ta.article_id='".intval($item_id)."' AND ta.article_draft='0' AND tac.article_cat_status='0' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
+            WHERE ta.article_id='".intval($item_id)."' AND ta.article_draft='0' AND tac.article_cat_status='1' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
 			LIMIT 0,1");
             $res = FALSE;
             if (dbrows($result)) {

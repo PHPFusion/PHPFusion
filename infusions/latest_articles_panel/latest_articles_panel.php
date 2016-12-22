@@ -25,7 +25,7 @@ $result = dbquery("
 		a.article_id, a.article_subject
 	FROM ".DB_ARTICLES." AS a
 	INNER JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
-	WHERE a.article_draft='0' AND ac.article_cat_status='0' AND ".groupaccess("a.article_visibility")." AND ".groupaccess("ac.article_cat_visibility")."
+	WHERE a.article_draft='0' AND ac.article_cat_status='1' AND ".groupaccess("a.article_visibility")." AND ".groupaccess("ac.article_cat_visibility")."
 	".(multilang_table("AR") ? "AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY a.article_datestamp DESC
 	LIMIT 0,5
