@@ -61,7 +61,7 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
 	article_cat_name        VARCHAR(100)          NOT NULL DEFAULT '',
 	article_cat_description TEXT                  NOT NULL,
 	article_cat_visibility  CHAR(4)               NOT NULL DEFAULT '0',
-	article_cat_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
+	article_cat_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '0',
 	article_cat_language    VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (article_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
