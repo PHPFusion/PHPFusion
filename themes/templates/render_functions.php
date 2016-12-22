@@ -21,6 +21,63 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+function open_table($title = '') {
+    static $opentable = '';
+    if (empty($opentable)) {
+        ob_start();
+        opentable($title);
+        $opentable = ob_get_contents();
+        ob_end_clean();
+        if (empty($opentable)) {
+            $opentable = opentable($title);
+        }
+    }
+    return $opentable;
+}
+
+function close_table($title = '') {
+    static $closetable = '';
+    if (empty($closetable)) {
+        ob_start();
+        closetable($title);
+        $closetable = ob_get_contents();
+        ob_end_clean();
+        if (empty($closetable)) {
+            $closetable = opentable($title);
+        }
+    }
+    return $closetable;
+}
+
+function open_side($title = '') {
+    static $openside = '';
+    if (empty($closetable)) {
+        ob_start();
+        openside($title);
+        $openside = ob_get_contents();
+        ob_end_clean();
+        if (empty($openside)) {
+            $openside = openside($title);
+        }
+    }
+    return $openside;
+}
+
+function close_side($title = '') {
+    static $closeside = '';
+    if (empty($closeside)) {
+        ob_start();
+        openside($title);
+        $closeside = ob_get_contents();
+        ob_end_clean();
+        if (empty($closeside)) {
+            $closeside = openside($title);
+        }
+    }
+    return $closeside;
+}
+
+
 // Render comments template
 if (!function_exists("render_comments")) {
     /**

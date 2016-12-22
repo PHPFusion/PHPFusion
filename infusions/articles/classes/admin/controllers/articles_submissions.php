@@ -169,7 +169,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 		?>
 		<div class="well clearfix">
 		  <div class="pull-left">
-		    <?php echo $this -> dataUser['user_avatar'].($this -> dataUser['user_name'] ? display_avatar($this -> dataUser, "30px", "", "", "") : ""); ?>
+		    <?php echo display_avatar($this -> dataUser, "30px", "", FALSE, "img-rounded"); ?>
 		  </div>
 		  <div class="overflow-hide">
 		    <?php

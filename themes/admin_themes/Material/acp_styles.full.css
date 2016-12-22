@@ -1676,6 +1676,8 @@ select[multiple].input-sm {
 }
 .form-group {
   margin-bottom: 15px;
+  display: inline-block;
+  width: 100%;
 }
 .form-group-sm .form-control {
   height: 30px;

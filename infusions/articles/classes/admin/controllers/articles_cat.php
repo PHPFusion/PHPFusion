@@ -240,9 +240,9 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 		// Table Actions
         if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
 
-			$input = form_sanitizer($_POST['article_cat_id'], "", "article_cat_id");
-			$input = ($input ? explode(",", $input) : array());
+			$input = !empty($_POST['article_cat_id']) ? form_sanitizer($_POST['article_cat_id'], "", "article_cat_id") : "";
             if (!empty($input)) {
+			$input = ($input ? explode(",", $input) : array());
                 foreach ($input as $article_cat_id) {
                     // check input table
                     if (dbcount("('article_cat_id')", DB_ARTICLE_CATS,
@@ -484,7 +484,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 					<td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
                     <td><span class="badge"><?php echo ($cdata['article_cat_status'] == 0 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
-                    <td><?php echo $cdata['article_cat_language'] ?></td>
+                    <td><?php echo translate_lang_names($cdata['article_cat_language']) ?></td>
                 </tr>
                 <?php
                 if (isset($data[$cdata['article_cat_id']])) {
