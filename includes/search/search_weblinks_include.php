@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
-use PHPFusion\Search;
+
+use PHPFusion\ImageRepo;
+use \PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");

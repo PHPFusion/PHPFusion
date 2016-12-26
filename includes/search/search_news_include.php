@@ -16,9 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
+use PHPFusion\ImageRepo;
+use \PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 if (db_exists(DB_NEWS)) {
 
     if (Search_Engine::get_param('stype') == 'news' || Search_Engine::get_param('stype') == 'all') {

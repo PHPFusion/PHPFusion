@@ -18,6 +18,7 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
+use \PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
