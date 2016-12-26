@@ -32,29 +32,59 @@ class ImageValidation {
             if (isset($_FILES) && count($_FILES)) {
                 $mime_types = mimeTypes();
                 foreach ($_FILES as $each) {
+                    // Here can be param,
+
                     if (isset($each['name']) && !empty($each['name']) && !empty($each['tmp_name'])) {
-                        $file_info = pathinfo($each['name']);
-                        $extension = $file_info['extension'];
-                        if (array_key_exists($extension, $mime_types)) {
-                            if (is_array($mime_types[$extension])) {
-                                $valid_mimetype = FALSE;
-                                foreach ($mime_types[$extension] as $each_mimetype) {
-                                    if ($each_mimetype == $each['type']) {
-                                        $valid_mimetype = TRUE;
-                                        break;
+                        if (is_array($each['name'])) {
+
+                            for($i = 0; $i < count($each['name']); $i++) {
+                                $file_info = pathinfo($each['name'][$i]);
+                                $extension = $file_info['extension'];
+                                if (isset($mime_types[$extension])) {
+                                    if (is_array($mime_types[$extension])) {
+                                        $valid_mimetype = FALSE;
+                                        foreach ($mime_types[$extension] as $each_mimetype) {
+                                            if ($each_mimetype == $each['type'][$i]) {
+                                                $valid_mimetype = TRUE;
+                                                break;
+                                            }
+                                        }
+                                        if (!$valid_mimetype) {
+                                            die('Prevented an unwanted file upload attempt!');
+                                        }
+                                        unset($valid_mimetype);
+                                    } else {
+                                        if ($mime_types[$extension] != $each['type']) {
+                                            die('Prevented an unwanted file upload attempt!');
+                                        }
                                     }
                                 }
-                                if (!$valid_mimetype) {
-                                    die('Prevented an unwanted file upload attempt!');
-                                }
-                                unset($valid_mimetype);
-                            } else {
-                                if ($mime_types[$extension] != $each['type']) {
-                                    die('Prevented an unwanted file upload attempt!');
+                                unset($file_info, $extension);
+                            }
+                        } else {
+                            $file_info = pathinfo($each['name']);
+                            $extension = $file_info['extension'];
+                            if (isset($mime_types[$extension])) {
+                                if (is_array($mime_types[$extension])) {
+                                    $valid_mimetype = FALSE;
+                                    foreach ($mime_types[$extension] as $each_mimetype) {
+                                        if ($each_mimetype == $each['type']) {
+                                            $valid_mimetype = TRUE;
+                                            break;
+                                        }
+                                    }
+                                    if (!$valid_mimetype) {
+                                        die('Prevented an unwanted file upload attempt!');
+                                    }
+                                    unset($valid_mimetype);
+                                } else {
+                                    if ($mime_types[$extension] != $each['type']) {
+                                        die('Prevented an unwanted file upload attempt!');
+                                    }
                                 }
                             }
+                            unset($file_info, $extension);
                         }
-                        unset($file_info, $extension);
                     }
                 }
                 unset($mime_types);
@@ -72,7 +102,7 @@ class ImageValidation {
      */
     public static function mime_check($file_src, $file_ext, $valid_ext) {
         if (extension_loaded('fileinfo')) {
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $type = $finfo->file($file_src);
             $mime_types = mimeTypes();
             // build the mime type according to the allowed extension.
