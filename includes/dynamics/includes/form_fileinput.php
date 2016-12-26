@@ -27,7 +27,7 @@
  */
 function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
     $locale = fusion_get_locale();
-    $defender = defender::getInstance();
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
@@ -88,7 +88,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $options['input_id'] = trim($options['input_id'], "[]");
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
@@ -144,12 +144,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
-    $html .= ($defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-
+    $html .= (\defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
     // Inserts Media Selector
     // Draw the framework first
     if ($options['media'] == TRUE) {
-
         $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files', 'psd|txt|md|php|exe|bat|pdf|js');
 
         $container_height = 300;
@@ -190,12 +188,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= "</div>\n";
         $html .= "</div>\n";
     }
-
-
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    $defender->add_field_session(
+    \defender::getInstance()->add_field_session(
         array(
             'input_name' => trim($input_name, '[]'),
             'type' => ((array)$options['type'] == array('image') ? 'image' : 'file'),
@@ -227,7 +223,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     );
 
     if ($options['media']) {
-        $defender->add_field_session(
+        \defender::getInstance()->add_field_session(
             array(
                 'input_name' => $input_name."-mediaSelector",
                 'title' => trim($title, '[]'),

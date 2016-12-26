@@ -207,7 +207,7 @@ $defender = defender::getInstance();
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();
 }
-\Defender\ImageValidation::ValidateMime();
+\Defender\ImageValidation::ValidateExtensions();
 
 // Define aidlink
 if (iADMIN) {

@@ -24,22 +24,18 @@ namespace Defender;
  */
 class ImageValidation {
 
-    public static function ValidateMime() {
+    /**
+     * Check extensions only. This will not check against mimetype header
+     */
+    public static function ValidateExtensions() {
         if (fusion_get_settings('mime_check')) {
             if (isset($_FILES) && count($_FILES)) {
-                require_once (INCLUDES. 'mimetypes_include.php');
                 $mime_types = mimeTypes();
-
                 foreach ($_FILES as $each) {
-
-                    if (isset($each['name'])
-                        && !empty($each['name']) && !empty($each['tmp_name'])) {
-
+                    if (isset($each['name']) && !empty($each['name']) && !empty($each['tmp_name'])) {
                         $file_info = pathinfo($each['name']);
                         $extension = $file_info['extension'];
-
                         if (array_key_exists($extension, $mime_types)) {
-
                             if (is_array($mime_types[$extension])) {
                                 $valid_mimetype = FALSE;
                                 foreach ($mime_types[$extension] as $each_mimetype) {
@@ -65,4 +61,42 @@ class ImageValidation {
             }
         }
     }
+
+    /**
+     * Check for alteration of file extensions to prevent unwanted payload executions
+     * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
+     * @param $file_src - the tmp src file
+     * @param $file_ext - the current tmp src file extensions
+     * @param $valid_ext - all accepted file extensions
+     * @return bool
+     */
+    public static function mime_check($file_src, $file_ext, $valid_ext) {
+        if (extension_loaded('fileinfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $type = $finfo->file($file_src);
+            $mime_types = mimeTypes();
+            // build the mime type according to the allowed extension.
+            $check_type = array();
+            foreach($valid_ext as $ext) {
+                $ext = strtolower(ltrim($ext, '.'));
+                if (isset($mime_types[$ext])) {
+                    $check_type[$ext] = $mime_types[$ext];
+                }
+            }
+            $check_ext = ltrim($file_ext, '.');
+            if (!empty($check_type[$check_ext])) {
+                if (is_array($check_type[$check_ext])) {
+                    if (in_array($type, $check_type[$check_ext])) {
+                        return TRUE;
+                    }
+                }
+            }
+            return FALSE;
+        }
+        /*
+         * Abort mimecheck because the webserver does not have this extension.
+         */
+        return TRUE;
+    }
 }
+require_once(dirname(__FILE__).'/../mimetypes_include.php');
