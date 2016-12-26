@@ -78,6 +78,18 @@ class Core {
         }
     }
 
+    protected static function set_body_span() {
+        $full_sum = 12;
+        $_right_status = (self::getParam('right') && defined('RIGHT') && (RIGHT or self::getParam('right_pre_content') or self::getParam('right_post_content'))) ? TRUE : FALSE;
+        $_left_status = (self::getParam('left') && defined('LEFT') && (LEFT or self::getParam('left_pre_content') or self::getParam('left_post_content'))) ? TRUE : FALSE;
+        if ($_right_status && $_left_status) {
+            $full_sum = $full_sum - (self::getParam('right_span') + self::getParam('left_span'));
+        } else {
+            $full_sum = $full_sum - ($_left_status ? self::getParam('left_span') : $_right_status ? self::getParam('right_span') : 0);
+        }
+        self::replaceParam('main_span', $full_sum);
+    }
+
     public static function replaceParam($prop, $value) {
         self::$options[$prop] = $value;
     }
