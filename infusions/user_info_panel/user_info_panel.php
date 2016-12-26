@@ -114,11 +114,11 @@ if (iMEMBER) {
     echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
     if ($installedModules) {
         echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
-        echo "<div id='ShowHide001' style='display:none'>\n";
+        echo "<li><ul id='ShowHide001' style='display:none'>\n";
         foreach ($installedModules as $stype => $text) {
             echo "<li><a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a></li>\n";
         }
-        echo "</div>\n";
+        echo "</ul></li>\n";
     }
     echo "</ul>\n";
     echo "</div>\n";

@@ -191,7 +191,7 @@ class Search_Engine extends Search_Model {
             $disabled_status = TRUE;
         }
         //$search_areas = "<p><strong>".$locale['406']."</strong></p>\n";
-        $search_areas = "<table width='100%'>\n<tr>\n";
+        $search_areas = "<table style='width:100%'>\n<tr>\n";
         $search_areas .= "<td>".$locale['420']."</td>\n";
         $search_areas .= "<td>\n";
         $search_areas .= form_select('datelimit', '', self::get_param('datelimit'),
@@ -468,11 +468,11 @@ class Search_Engine extends Search_Model {
         }
 
         echo "<div class='search_result'>\n";
-        echo "<ul class='block'>\n";
+        echo "<div class='block'>\n";
         for ($i = $from; $i < $to; $i++) {
             echo self::$search_result_array[$i];
         }
-        echo "</ul>\n";
+        echo "</div>\n";
         echo "</div>\n";
 
         echo self::$navigation_result;
