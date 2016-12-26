@@ -110,11 +110,15 @@ if (!function_exists("display_quickReply")) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
 
-        $qr_form = "<!--sub_forum_thread-->\n";
         $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$info['thread_id'];
-        $qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
-        $qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
-        $qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
+        if (isset($_GET['pid']) && isnum($_GET['pid'])) {
+            $form_url = FORUM."forum/viewthread.php?thread_id=".$info['thread_id']."&&pid=".$info['pid'];
+        }
+
+        $html = "<!--sub_forum_thread-->\n";
+        $html .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
+        $html .= "<h4>".$locale['forum_0168']."</h4>\n";
+        $html .= form_textarea('post_message', $locale['forum_0601'], '',
                                   array(
                                       'bbcode' => TRUE,
                                       'required' => TRUE,
@@ -122,20 +126,19 @@ if (!function_exists("display_quickReply")) {
                                       'preview' => TRUE,
                                       'form_name' => 'quick_reply_form'
                                   ));
-        $qr_form .= "<div class='m-t-10 pull-right'>\n";
-        $qr_form .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
-        $qr_form .= "</div>\n";
-        $qr_form .= "<div class='overflow-hide'>\n";
-        $qr_form .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+        $html .= "<div class='m-t-10 pull-right'>\n";
+        $html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
+        $html .= "</div>\n";
+        $html .= "<div class='overflow-hide'>\n";
+        $html .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
         if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-            $qr_form .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $html .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
         }
         if ($forum_settings['thread_notify']) {
-            $qr_form .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $html .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
         }
-        $qr_form .= "</div>\n";
-        $qr_form .= closeform();
-
-        return (string)$qr_form;
+        $html .= "</div>\n";
+        $html .= closeform();
+        return (string)$html;
     }
 }

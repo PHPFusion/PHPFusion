@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
@@ -303,9 +304,10 @@ class ForumThreads extends ForumServer {
 
             // Set Forum Breadcrumbs
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
+
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'forum/viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
                                'title' => $this->thread_data['thread_subject']
                            ]);
