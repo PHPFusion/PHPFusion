@@ -20,7 +20,8 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
 require_once THEMES."templates/global/register.php";
 include THEMES."templates/global/profile.php";
-
+add_to_title($locale['global_107']);
+add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
 
 if (iMEMBER or $settings['enable_registration'] == 0) {
