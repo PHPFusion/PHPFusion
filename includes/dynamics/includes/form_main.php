@@ -41,13 +41,13 @@ function openform($form_name, $method, $action_url, array $options = array()) {
 
     $class = "";
     if (!\defender::safe()) {
-        $class .= "class='warning ".$options['class']."' ";
+        $class .= "warning ".$options['class'];
     } elseif (!empty($options['class'])) {
-        $class .= "class='".$options['class']."'";
+        $class .= $options['class'];
     }
 
     $action_prefix = fusion_get_settings("site_seo") && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
-    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_prefix.$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_prefix.$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').">\n";
     if ($method == 'post') {
         $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
