@@ -1236,6 +1236,8 @@ class Securimage {
      *     ?>
      * @return bool true if the given code was correct, false if not.
      */
+    private $code_entered = '';
+
     public function check($code) {
         $this->code_entered = $code;
         $this->validate();
@@ -1250,6 +1252,8 @@ class Securimage {
      * This function does not return a value.
      * @see Securimage::$correct_code 'correct_code' property
      */
+    private $correct_code = FALSE;
+
     protected function validate() {
         if (!is_string($this->code) || strlen($this->code) == 0) {
             $code = $this->getCode(TRUE);
@@ -1279,7 +1283,6 @@ class Securimage {
         $code_entered = trim((($this->case_sensitive) ? $this->code_entered
             : strtolower($this->code_entered))
         );
-        $this->correct_code = FALSE;
 
         if ($code != '') {
             if (strpos($code, ' ') !== FALSE) {
