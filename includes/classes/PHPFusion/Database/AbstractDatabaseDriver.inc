@@ -93,7 +93,10 @@ abstract class AbstractDatabaseDriver {
         foreach (self::getGlobalQueryLog() as $connectionID => $queries) {
             $count = $count + count($queries);
         }
-
+        // Add warning notice for Site Owner
+        if (iSUPERADMIN && $count > 30) {
+            addNotice('danger', 'There are too many queries this page. Please reduce it to below 30');
+        }
         return $count;
     }
 
