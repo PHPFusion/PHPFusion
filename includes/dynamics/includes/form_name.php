@@ -46,7 +46,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         'safemode' => FALSE,
     );
     $error_class = $defender->inputHasError($input_name.'-firstname') || $defender->inputHasError($input_name.'-lastname') ? "has-error " : "";
-    $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
+    $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
