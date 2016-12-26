@@ -65,7 +65,6 @@ if (db_exists(DB_FAQS)) {
             $item_count = "<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
             $search_result = "<ul class='block spacer-xs'>\n";
             while ($data = dbarray($result)) {
-                $search_result = "";
                 $text_all = $data['faq_answer'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
