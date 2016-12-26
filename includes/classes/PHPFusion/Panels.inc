@@ -366,11 +366,13 @@ class Panels {
                 $match_url .= "/".$script_url[$current];
                 $base_url_count--;
             }
-            if (stristr($exclude_list, '?')) {
-                return (in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list) ? FALSE : TRUE);
-            } else {
-                return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
-            }
+            // exclude list is an array
+            // current url.
+            return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
+            //if (stristr($exclude_list, '?')) {
+              //  return (in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list) ? FALSE : TRUE);
+            //} else {
+            //}
         } else {
             return TRUE;
         }
