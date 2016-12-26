@@ -34,7 +34,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-        pageAccess("N");
+        pageAccess('N');
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
@@ -57,16 +57,17 @@ class NewsAdmin extends NewsAdminModel {
          * Global vars
          */
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."'");
+            $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id=:news_id", array(':news_id'=> (isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])));
             if (dbrows($result)) {
                 $this->news_data = dbarray($result);
             } else {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
-
+        $this->default_news_data['news_name'] = fusion_get_userdata('user_id');
         $this->news_data['news_breaks'] = (fusion_get_settings("tinymce_enabled") ? 'n' : 'y');
         $this->news_data += $this->default_news_data;
+
         self::newsContent_form();
     }
 
@@ -100,7 +101,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_visibility' => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
                 'news_draft' => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
                 'news_sticky' => isset($_POST['news_sticky']) ? "1" : "0",
-                'news_name' => isset($_POST['news_name']) ? "1" : "0",
+                'news_name' => form_sanitizer($_POST['news_name'], 0, 'news_name'),
                 'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
                 'news_allow_ratings' => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
@@ -191,6 +192,7 @@ class NewsAdmin extends NewsAdminModel {
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
+                echo form_hidden('news_name', '', $this->news_data['news_name']);
                 echo form_text('news_subject', $this->locale['news_0200'], $this->news_data['news_subject'],
                                array(
                                    'required' => 1,
@@ -637,6 +639,7 @@ class NewsAdmin extends NewsAdminModel {
 
         // Switch to post
         $sql_condition = "";
+        $sql_params = array();
         $search_string = array();
         if (isset($_POST['p-submit-news_text'])) {
             $search_string['news_subject'] = array(
@@ -681,7 +684,8 @@ class NewsAdmin extends NewsAdminModel {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                $sql_condition .= " AND $key ".$values['operator']." :".$key;
+                $sql_params[':'.$key] = ($values['operator'] == "LIKE" ? "%" : '').$values['input'].($values['operator'] == "LIKE" ? "%" : '');
             }
         }
 
@@ -696,25 +700,24 @@ class NewsAdmin extends NewsAdminModel {
         if (!isset($_POST['news_display'])) {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
-
-        $news_query = "SELECT n.*, nc.*, IF(nc.news_cat_name !='', nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
-                    count(c.comment_id) 'comments_count',
-                    count(ni.news_image_id) 'image_count',
-                    u.user_id, u.user_name, u.user_status, u.user_avatar
-                    FROM ".DB_NEWS." n
-                    LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
-                    LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=n.news_id AND c.comment_type='N'
-                    LEFT JOIN ".DB_NEWS_IMAGES." ni USING (news_id)
-                    INNER JOIN ".DB_USERS." u on u.user_id= n.news_name
-                    WHERE ".(multilang_table("NS") ? "news_language='".LANGUAGE."'" : "")."
-                    $sql_condition
-                    GROUP BY n.news_id
-                    ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC
-                    LIMIT $rowstart, $limit
-                    ";
-
-        $result2 = dbquery($news_query);
+        $news_query = "SELECT n.*, nc.*,
+        IF(nc.news_cat_name, nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
+        count(c.comment_id) 'comments_count', count(ni.news_image_id) 'image_count', 
+        u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_NEWS." n
+        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
+        LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=n.news_id AND c.comment_type='N'
+        LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=n.news_id
+        LEFT JOIN ".DB_USERS." u on u.user_id=n.news_name
+        WHERE news_language=:language $sql_condition
+        GROUP BY n.news_id
+        ORDER BY n.news_draft DESC, n.news_sticky DESC, n.news_datestamp DESC
+        LIMIT $rowstart, $limit
+        ";
+        $sql_params[':language'] = LANGUAGE;
+        $result2 = dbquery($news_query, $sql_params);
         $news_rows = dbrows($result2);
+
         ?>
         <div class="m-t-15">
             <?php
