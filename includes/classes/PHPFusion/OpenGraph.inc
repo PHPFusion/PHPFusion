@@ -18,7 +18,7 @@
 namespace PHPFusion;
 
 class OpenGraph {
-	private $data = array(
+	private static $data = array(
 		'title' => '',
 		'description' => '',
 		'url' => '',
@@ -30,7 +30,7 @@ class OpenGraph {
 
 	private static $ogAdded = false;
 
-	public function ogCustomPage($pageid = 0) {
+	public static function ogCustomPage($pageid = 0) {
 		$settings = fusion_get_settings();
 
 		$info = array();
@@ -44,10 +44,10 @@ class OpenGraph {
 			$info['description'] = fusion_first_words(strip_tags($data['page_content']), 50);
 		}
 
-		$this->setValues($info);
+		OpenGraph::setValues($info);
 	}
 
-	public function ogUserProfile($userid = 0) {
+	public static function ogUserProfile($userid = 0) {
 		$settings = fusion_get_settings();
 
 		$info = array();
@@ -78,37 +78,43 @@ class OpenGraph {
 			$info['description'] = $settings['description'];
 		}
 
-		$this->setValues($info);
+		OpenGraph::setValues($info);
 	}
 
-	public function ogDefault() {
-		$this->setValues();
+	public static function ogDefault() {
+		OpenGraph::setValues();
 	}
 
-	private function setValues($values = array()) {
+	private static function setValues($values = array()) {
 		$settings = fusion_get_settings();
 
-		if (!$this::$ogAdded) {
+		if (!OpenGraph::$ogAdded) {
 
 			foreach ($values as $key => $value) {
-				$this->data[$key] = trim($value);
+				OpenGraph::$data[$key] = trim($value);
 			}
 
-			$this->data['site_name'] = $settings['sitename'];
+			OpenGraph::$data['site_name'] = $settings['sitename'];
 			if ($values['title'] != '' && $values['description'] != '' && $values['url'] != '' && $values['keywords'] != '') {
+				OpenGraph::$data['title'] = $values['title'];
+				OpenGraph::$data['description'] = $values['description'];
+				OpenGraph::$data['url'] = $values['url'];
+				OpenGraph::$data['keywords'] = $values['keywords'];
+				if ($values['image'] != '') OpenGraph::$data['image'] = $values['image'];
+				if ($values['type'] != '') OpenGraph::$data['type'] = $values['type'];
 			} else {
-				$this->setDefaults();
+				OpenGraph::setDefaults();
 			}
 
-			$this->addToHead();
-			$this::$ogAdded = true;
+			OpenGraph::addToHead();
+			OpenGraph::$ogAdded = true;
 		}
 	}
 
-	private function setDefaults() {
+	private static function setDefaults() {
 		$settings = fusion_get_settings();
 
-		$this->data = array(
+		OpenGraph::$data = array(
 			'title' => $settings['sitename'],
 			'description' => $settings['description'],
 			'url' => $settings['siteurl'],
@@ -119,9 +125,9 @@ class OpenGraph {
 		);
 	}
 
-	private function addToHead() {
-		foreach ($this->data as $key => $value) {
-			if ($this->data != '') {
+	private static function addToHead() {
+		foreach (OpenGraph::$data as $key => $value) {
+			if (OpenGraph::$data != '') {
 				add_to_head('<meta property="og:'.$key.'" content="'.$value.'" />');
 			}
 		}

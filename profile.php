@@ -66,6 +66,8 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $info = $userFields->get_profile_output();
     render_userprofile($info);
 
+	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
+
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 
     /*

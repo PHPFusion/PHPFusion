@@ -18,4 +18,5 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 PHPFusion\Page\PageView::getInstance(TRUE)->display_Page();
+PHPFusion\OpenGraph::ogCustomPage($_GET['page_id']);
 require_once THEMES."templates/footer.php";
