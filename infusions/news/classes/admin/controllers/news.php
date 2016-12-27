@@ -702,7 +702,7 @@ class NewsAdmin extends NewsAdminModel {
         }
         $news_query = "SELECT n.*, nc.*,
         IF(nc.news_cat_name, nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
-        count(c.comment_id) 'comments_count', count(ni.news_image_id) 'image_count', 
+        count(c.comment_id) 'comments_count', count(ni.news_image_id) 'image_count',
         u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_NEWS." n
         LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
@@ -766,7 +766,8 @@ class NewsAdmin extends NewsAdminModel {
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_news",
-                "inner_width" => "250px"
+                "inner_width" => "250px",
+                "group_size" => "sm"
             ));
             echo "</div>\n";
             echo "</div>\n";

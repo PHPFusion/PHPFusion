@@ -391,18 +391,20 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_news",
-                "width" => "250px"
+                "width" => "250px",
+                "group_size" => "sm"
             ));
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
         <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
-            echo form_button("news_clear", $this->locale['news_0243'], "clear");
+            echo form_button("news_clear", $this->locale['news_0243'], "clear", array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";
 
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
+                e.preventDefault();
                 $('#news_filter_options').slideToggle();
                 var caret_status = $('#filter_caret').hasClass('fa-caret-down');
                 if (caret_status == 1) {
