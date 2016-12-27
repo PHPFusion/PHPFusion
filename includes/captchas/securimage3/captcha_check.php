@@ -16,9 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "securimage.php";
-
 $securimage = new Securimage();
-
-if ($securimage->check($_POST['captcha_code']) == TRUE) {
+$captcha_code = stripinput($_POST['captcha_code']);
+if ($securimage->check(form_sanitizer($captcha_code)) == TRUE) {
 	$_CAPTCHA_IS_VALID = TRUE;
 }

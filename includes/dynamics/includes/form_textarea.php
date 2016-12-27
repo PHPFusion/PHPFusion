@@ -280,7 +280,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0 p-r-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9 p-r-0' : '')."'>\n" : '';
     $tab_active = 0;
@@ -322,7 +322,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['inline_editing'] == TRUE) {
         $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." ": '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." ": '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."' ".($options['deactivate'] ? ' readonly' : '').($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {

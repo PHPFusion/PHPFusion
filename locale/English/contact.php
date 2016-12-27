@@ -16,7 +16,7 @@ $locale['420'] = "You must specify a Name";
 $locale['421'] = "You must specify an Email Address";
 $locale['422'] = "You must specify a Subject";
 $locale['423'] = "You must specify a Message";
-$locale['424'] = "You must enter correct Validation Code";
+//$locale['424'] = "You must enter correct Validation Code";
 $locale['425'] = "Internal error: cannot send your message.";
 // Message Sent
 $locale['440'] = "Your Message has been sent";

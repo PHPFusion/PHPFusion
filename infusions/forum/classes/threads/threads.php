@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
@@ -303,9 +304,10 @@ class ForumThreads extends ForumServer {
 
             // Set Forum Breadcrumbs
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
+
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'forum/viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
                                'title' => $this->thread_data['thread_subject']
                            ]);
@@ -452,7 +454,6 @@ class ForumThreads extends ForumServer {
                 'mod_form' => ''
             );
 
-            //print_p($this->thread_info);
             if (!empty($this->thread_info['thread_tags'])) {
                 $this->thread_info['thread_tags_display'] = $this->tag(FALSE)->display_thread_tags($this->thread_info['thread_tags']);
             }
@@ -832,6 +833,7 @@ class ForumThreads extends ForumServer {
                 $post_attachments = "";
                 if ($pdata['attach_files_count'] || $pdata['attach_image_count']) {
                     if ($this->getThreadPermission("can_download_attach")) {
+
                         $attachResult = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($pdata['post_id'])."'");
                         if (dbrows($attachResult) > 0) {
                             $aImage = "";
@@ -916,19 +918,14 @@ class ForumThreads extends ForumServer {
                     $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".
                         sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
                 }
-
                 // Displays mood buttons
                 $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
-
                 $pdata['post_mood_message'] = $this->mood()->get_mood_message();
-
-
                 /**
                  * User Stuffs, Sig, User Message, Web
                  */
                 // Quote & Edit Link
                 if ($this->getThreadPermission("can_reply")) {
-
                     if (!$this->thread_info['thread']['thread_locked']) {
                         $pdata['post_quote'] = array(
                             'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],

@@ -91,7 +91,7 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery("
 			SELECT article_cat_id, article_cat_name 
 			FROM ".DB_ARTICLE_CATS." 
-			WHERE article_cat_status='0' AND ".groupaccess("article_cat_visibility")."
+			WHERE article_cat_status='1' AND ".groupaccess("article_cat_visibility")."
 			".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
 			ORDER BY article_cat_id ASC
 		");
@@ -162,7 +162,7 @@ abstract class Articles extends ArticlesServer {
 			LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
 			LEFT JOIN ".DB_RATINGS." AS ar ON ar.rating_item_id=a.article_id AND ar.rating_type='A'
 			LEFT JOIN ".DB_COMMENTS." AS ad ON ad.comment_item_id=a.article_id AND ad.comment_type='A' AND ad.comment_hidden='0'
-			WHERE a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='0' AND ".groupaccess("ac.article_cat_visibility")."
+			WHERE a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."
 			".(multilang_table("AR") ? " AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
 			".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
 			GROUP BY a.article_id
@@ -330,7 +330,7 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery("
 			SELECT * 
 			FROM ".DB_ARTICLE_CATS."
-			WHERE article_cat_id='".intval($article_cat_id)."' AND article_cat_status='0' AND ".groupaccess("article_cat_visibility")."
+			WHERE article_cat_id='".intval($article_cat_id)."' AND article_cat_status='1' AND ".groupaccess("article_cat_visibility")."
 			".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
 			LIMIT 0,1
 		");
@@ -400,7 +400,7 @@ abstract class Articles extends ArticlesServer {
         function breadcrumb_arrays($index, $id) {
             $crumb = &$crumb;
             if (isset($index[get_parent($index, $id)])) {
-                $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$id."' AND article_cat_status='0' AND ".groupaccess("article_cat_visibility").""));
+                $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$id."' AND article_cat_status='1' AND ".groupaccess("article_cat_visibility").""));
                 $crumb = array(
                     "link" => INFUSIONS."articles/articles.php?cat_id=".$_name['article_cat_id'],
                     "title" => $_name['article_cat_name']

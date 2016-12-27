@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Search_Engine.inc
+| Author: Frederick MC Chan
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Search;
 
 use PHPFusion\Search;
@@ -175,7 +191,7 @@ class Search_Engine extends Search_Model {
             $disabled_status = TRUE;
         }
         //$search_areas = "<p><strong>".$locale['406']."</strong></p>\n";
-        $search_areas = "<table width='100%'>\n<tr>\n";
+        $search_areas = "<table style='width:100%'>\n<tr>\n";
         $search_areas .= "<td>".$locale['420']."</td>\n";
         $search_areas .= "<td>\n";
         $search_areas .= form_select('datelimit', '', self::get_param('datelimit'),
@@ -452,11 +468,11 @@ class Search_Engine extends Search_Model {
         }
 
         echo "<div class='search_result'>\n";
-        echo "<ul class='block'>\n";
+        echo "<div class='block'>\n";
         for ($i = $from; $i < $to; $i++) {
             echo self::$search_result_array[$i];
         }
-        echo "</ul>\n";
+        echo "</div>\n";
         echo "</div>\n";
 
         echo self::$navigation_result;

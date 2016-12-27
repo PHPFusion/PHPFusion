@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Search_Model.inc
+| Author: Frederick MC Chan
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Search;
 
 use PHPFusion\Search;
@@ -142,7 +158,7 @@ abstract class Search_Model {
     // generate search navigation
     public static function search_navigation($rows) {
         self::$site_search_count += $rows;
-        $navigation_result = "<div align='center m-t-5'>\n";
+        $navigation_result = "<div class='center m-t-5'>\n";
         $navigation_result .= makePageNav(Search_Engine::get_param('rowstart'), 10, (self::$site_search_count > 100 || self::search_globalarray("") ? 100 : self::$site_search_count), 3, BASEDIR."search.php?stype=".Search_Engine::get_param('stype')."&amp;stext=".urlencode(Search_Engine::get_param('stext'))."&amp;".Search_Engine::get_param('composevars'));
         $navigation_result .= "\n</div>\n";
         self::$navigation_result = $navigation_result;

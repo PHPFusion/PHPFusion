@@ -328,6 +328,8 @@ $locale['global_465'] = "TB";
 $locale['global_500'] = "You are being redirected to %s, please wait. If you're not redirected, click here.";
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
+$locale['global_601'] = "You must enter a correct validation code";
+
 $locale['recaptcha'] = "en";
 // Site links
 $locale['global_700'] = "Show More";

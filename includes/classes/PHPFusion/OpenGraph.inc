@@ -18,7 +18,7 @@
 namespace PHPFusion;
 
 class OpenGraph {
-	private $data = array(
+	private static $data = array(
 		'title' => '',
 		'description' => '',
 		'url' => '',
@@ -30,7 +30,7 @@ class OpenGraph {
 
 	private static $ogAdded = false;
 
-	public function ogCustomPage($pageid = 0) {
+	public static function ogCustomPage($pageid = 0) {
 		$settings = fusion_get_settings();
 
 		$info = array();
@@ -38,17 +38,18 @@ class OpenGraph {
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['url'] = $settings['siteurl'].'viewpage.php?page_id='.$pageid;
-			$info['keywords'] = $data['page_keywords'];
-			$info['image'] = $settings['siteurl'].'images/favicons/mstile-144x144.png';
-			$info['title'] = $data['page_title'];
-			$info['description'] = fusion_first_words(strip_tags($data['page_content']), 50);
+			$info['keywords'] = $data['page_keywords'] ? $data['page_keywords'] : fusion_get_settings('keywords');
+			$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+			$info['title'] = $data['page_title'].' - '.fusion_get_settings('sitename');
+			$info['description'] = $data['page_content'] ? fusion_first_words(strip_tags($data['page_content']), 50) : $settings['description'];
 		}
 
-		$this->setValues($info);
+		OpenGraph::setValues($info);
 	}
 
-	public function ogUserProfile($userid = 0) {
+	public static function ogUserProfile($userid = 0) {
 		$settings = fusion_get_settings();
+		$locale = fusion_get_locale();
 
 		$info = array();
 		$result = dbquery("SELECT * FROM `".DB_USERS."` WHERE `user_id` = '".intval($userid)."' LIMIT 1");
@@ -70,58 +71,61 @@ class OpenGraph {
 				$data['user_name'] .= " (".$realname.")";
 			}
 
-			$info['title'] = $data['user_name'];
-			if (isset($data['user_avatar']) && trim($data['user_avatar'])) {
-				$info['image'] = $settings['siteurl'].'images/avatars/'.$data['user_avatar'];
-			}
-
+			$info['title'] = $locale['u103'].$locale['global_201'].$data['user_name'];
+			$info['image'] = $data['user_avatar'] ? $settings['siteurl'].'images/avatars/'.$data['user_avatar'] : $settings['siteurl'].'images/avatars/no-avatar.jpg';
 			$info['description'] = $settings['description'];
 		}
 
-		$this->setValues($info);
+		OpenGraph::setValues($info);
 	}
 
-	public function ogDefault() {
-		$this->setValues();
+	public static function ogDefault() {
+		OpenGraph::setValues();
 	}
 
-	private function setValues($values = array()) {
+	private static function setValues($values = array()) {
 		$settings = fusion_get_settings();
 
-		if (!$this::$ogAdded) {
+		if (!OpenGraph::$ogAdded) {
 
 			foreach ($values as $key => $value) {
-				$this->data[$key] = trim($value);
+				OpenGraph::$data[$key] = trim($value);
 			}
 
-			$this->data['site_name'] = $settings['sitename'];
-			if ($values['title'] != '' && $values['description'] != '' && $values['url'] != '' && $values['keywords'] != '') {
+			OpenGraph::$data['site_name'] = $settings['sitename'];
+			if (!empty($values['title']) && !empty($values['description']) && !empty($values['url']) && !empty($values['keywords'])) {
+				OpenGraph::$data['title'] = $values['title'];
+				OpenGraph::$data['description'] = $values['description'];
+				OpenGraph::$data['url'] = $values['url'];
+				OpenGraph::$data['keywords'] = $values['keywords'];
+				if (!empty($values['image'])) OpenGraph::$data['image'] = $values['image'];
+				if (!empty($values['type'])) OpenGraph::$data['type'] = $values['type'];
 			} else {
-				$this->setDefaults();
+				OpenGraph::setDefaults();
 			}
 
-			$this->addToHead();
-			$this::$ogAdded = true;
+			OpenGraph::addToHead();
+			OpenGraph::$ogAdded = true;
 		}
 	}
 
-	private function setDefaults() {
+	private static function setDefaults() {
 		$settings = fusion_get_settings();
 
-		$this->data = array(
+		OpenGraph::$data = array(
 			'title' => $settings['sitename'],
 			'description' => $settings['description'],
 			'url' => $settings['siteurl'],
 			'keywords' => $settings['keywords'],
-			'image' => $settings['siteurl'].'images/favicons/mstile-144x144.png',
+			'image' => $settings['siteurl'].'images/favicons/mstile-150x150.png',
 			'site_name' => $settings['sitename'],
 			'type' => 'website'
 		);
 	}
 
-	private function addToHead() {
-		foreach ($this->data as $key => $value) {
-			if ($this->data != '') {
+	private static function addToHead() {
+		foreach (OpenGraph::$data as $key => $value) {
+			if (OpenGraph::$data != '') {
 				add_to_head('<meta property="og:'.$key.'" content="'.$value.'" />');
 			}
 		}

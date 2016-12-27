@@ -29,7 +29,7 @@ if (!column_exists(DB_ARTICLE_CATS, "article_cat_visibility", FALSE)) {
 }
 
 if (!column_exists(DB_ARTICLE_CATS, "article_cat_status", FALSE)) {
-	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER article_cat_visibility");
+	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER article_cat_visibility");
 }
 
 

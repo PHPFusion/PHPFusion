@@ -23,12 +23,7 @@ use ThemeFactory\Core;
 class MainFrame extends Core {
 
     public function __construct($license = FALSE) {
-
-        if (self::getParam('right') && defined('RIGHT') && (RIGHT or self::getParam('right_pre_content') or self::getParam('right_post_content'))) {
-            $real_span = 12 - self::getParam('right_span');
-            self::replaceParam('main_span', (!empty(self::getParam('main_span')) ? self::getParam('main_span') : $real_span));
-            self::replaceParam('right_span', 12-self::getParam('main_span'));
-        }
+        self::set_body_span();
 
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();

@@ -39,9 +39,9 @@ if (!function_exists("showsidelinks")) {
         }
 
         if (!$id) {
-            echo "<ul class='main-nav'>\n";
+            echo "<ul class='main-nav block'>\n";
         } else {
-            echo "<ul class='sub-nav p-l-10' style='display: none;'>\n";
+            echo "<ul class='sub-nav p-l-10 block' style='display: none;'>\n";
         }
 
         $i = 0;

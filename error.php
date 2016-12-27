@@ -30,7 +30,7 @@ function replaceDir($output = "") {
         function replaceHTMLTags($m) {
             $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
             $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/") - 1);
-            $actualDepth = ($pathDepth ? str_repeat("../", $pathDepth) : '');
+            $actualDepth = ($pathDepth ? str_repeat("../", ($pathDepth >=0) ? $pathDepth : 0 ) : '');
             $replace = $m[1]."=".$m[2].($actualDepth).$m[3];
             return $replace;
         }
@@ -41,7 +41,7 @@ add_handler("replaceDir");
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
 $data = array(
     "title" => $locale['errunk'],
-    "image" => IMAGES."unknown.png"
+    "image" => IMAGES."error/unknown.png"
 );
 
 if (isset($_GET['code'])) {

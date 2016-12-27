@@ -1,7 +1,25 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: includes/defender/validation/upload.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+/**
+ * Class Upload
+ * Handles file or image uploads validation
+ */
 class Upload extends \Defender\Validation {
-
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
     protected function verify_file_upload() {
@@ -16,10 +34,13 @@ class Upload extends \Defender\Validation {
                     addNotice('danger', $locale['df_424']);
                     \defender::setInputError(self::$inputName);
                 } else {
+
                     for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
+
                         if ((self::$inputConfig['max_count'] == $i)) {
                             break;
                         }
+
                         $source_file = self::$inputConfig['input_name'];
                         $target_file = $_FILES[self::$inputConfig['input_name']]['name'][$i];
                         $target_folder = self::$inputConfig['path'];
@@ -28,6 +49,9 @@ class Upload extends \Defender\Validation {
                         $query = '';
 
                         if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
+                            /*
+                             * Preparation
+                             */
                             if (stristr($valid_ext, ',')) {
                                 $valid_ext = explode(",", $valid_ext);
                             } elseif (stristr($valid_ext, '|')) {
@@ -55,12 +79,15 @@ class Upload extends \Defender\Validation {
                                 "query" => $query,
                                 "error" => 0
                             );
+
                             if ($file['size'][$i] > $max_size) {
                                 // Maximum file size exceeded
                                 $upload['error'] = 1;
                             } elseif (!in_array($file_ext, $valid_ext)) {
-                                // Invalid file extension
+                                // Invalid file extension or mimetypes
                                 $upload['error'] = 2;
+                            } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'][$i], $file_ext, $valid_ext) === FALSE) {
+                                $upload['error'] = 4;
                             } else {
                                 $target_file = filename_exists($file_dest, $target_file.$file_ext);
                                 $upload_file['target_file'] = $target_file;
@@ -117,17 +144,15 @@ class Upload extends \Defender\Validation {
                         }
                     }
                 }
-
                 return $upload;
             } else {
                 return array();
             }
         } else {
+
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
 
-                $upload = upload_file(self::$inputConfig['input_name'],
-                    $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'],
-                    self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
+                $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
                 if ($upload['error'] != 0) {
                     \defender::stop(); // return FALSE
                     switch ($upload['error']) {
@@ -158,14 +183,14 @@ class Upload extends \Defender\Validation {
         }
     }
 
-
     /**
      * Verify Image Upload
      * @return array
      */
     protected function verify_image_upload() {
+
         $locale = fusion_get_locale();
-        require_once INCLUDES."infusions_include.php";
+
         if (self::$inputConfig['multiple']) {
             $target_folder = self::$inputConfig['path'];
             $target_width = self::$inputConfig['max_width'];
@@ -231,6 +256,8 @@ class Upload extends \Defender\Validation {
                         } elseif (!$filetype || !verify_image($image['tmp_name'][$i])) {
                             // Unsupported image type
                             $image_info['error'] = 2;
+                        } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'][$i], $image_ext, array('.jpg', '.jpeg', '.png','.png','.svg','.gif','.bmp')) === FALSE) {
+                            $image_info['error'] = 5;
                         } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                             // Invalid image resolution
                             $image_info['error'] = 3;
@@ -393,6 +420,7 @@ class Upload extends \Defender\Validation {
             }
         }
     }
-
-
 }
+
+require_once(dirname(__FILE__).'/../../mimetypes_include.php');
+require_once(dirname(__FILE__).'/../../infusions_include.php');

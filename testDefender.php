@@ -24,6 +24,17 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
+opentable('MimeCheck');
+echo openform('post', 'post', BASEDIR.'testDefender.php', array('enctype'=>TRUE));
+if (isset($_POST['upload_file'])) {
+    $files = form_sanitizer($_FILES['files_input'], '', 'files_input');
+}
+echo form_fileinput('files_input[]', 'Insert Illegal Files', '', array('type'=>'files', 'max_count'=>3,         "max_byte" => 100000000000000000000500000,
+    'multiple'=>TRUE, 'template'=>'modern', 'upload_path'=>IMAGES.'test/'));
+echo form_button('upload_file', 'Start Upload', 'upload');
+echo closeform();
+closetable();
+
 
 opentable("Cross Site Request Forgery Test");
 $token = '';

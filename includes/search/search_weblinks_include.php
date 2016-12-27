@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
-use PHPFusion\Search;
+
+use PHPFusion\ImageRepo;
+use \PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -62,7 +64,7 @@ if (db_exists(DB_WEBLINKS)) {
             $query = "SELECT tw.*,twc.*
             FROM ".DB_WEBLINKS." tw
             INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-            ".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')."
+            ".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND tw.weblink_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')."
             AND ".Search_Engine::search_conditions().$date_search;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
@@ -75,16 +77,10 @@ if (db_exists(DB_WEBLINKS)) {
         if ($rows != 0) {
             $item_count = "<a href='".FUSION_SELF."?stype=weblinks&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
 
-            $result = dbquery("SELECT tw.*,twc.*
-            	FROM ".DB_WEBLINKS." tw
-				INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-				".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')." AND
-				".Search_Engine::search_conditions().$date_search
-				.$sortby.$limit, Search_Engine::get_param('search_param'));
+            $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
             $search_result = "<ul class='block spacer-xs'>\n";
             while ($data = dbarray($result)) {
-                $search_result = "";
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['w403']."</span>";
                 } else {
@@ -108,7 +104,7 @@ if (db_exists(DB_WEBLINKS)) {
             $formatted_result = strtr(Search::render_search_item(), [
                 '{%image%}' => ImageRepo::getimage('ac_W'),
                 '{%icon_class%}' => "fa fa-link fa-lg fa-fw",
-                '{%search_title%}' => $locale['a400'],
+                '{%search_title%}' => $locale['w400'],
                 '{%search_result%}' => $item_count,
                 '{%search_content%}' => $search_result
             ]);

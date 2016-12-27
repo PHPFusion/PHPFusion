@@ -355,6 +355,7 @@ class Panels {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
         }
+
         if (is_array($exclude_list)) {
             $script_url = explode("/", $_SERVER['PHP_SELF']);
             $url_count = count($script_url);
@@ -365,13 +366,13 @@ class Panels {
                 $match_url .= "/".$script_url[$current];
                 $base_url_count--;
             }
-            if (!in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""),
-                                                                  $exclude_list)
-            ) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+            // exclude list is an array
+            // current url.
+            return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
+            //if (stristr($exclude_list, '?')) {
+              //  return (in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list) ? FALSE : TRUE);
+            //} else {
+            //}
         } else {
             return TRUE;
         }

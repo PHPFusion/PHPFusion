@@ -106,35 +106,36 @@ class Admins {
      * @return object
      */
     public static function getInstance() {
-        //$aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
-
-            if (!defined('IN_SETUP')) {
-                self::$instance->admin_pages = self::$instance->getAdminPages();
-                self::$instance->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
-                self::$instance->admin_sections = array(
-                    0 => $GLOBALS['locale']['ac00'],
-                    1 => $GLOBALS['locale']['ac01'],
-                    2 => $GLOBALS['locale']['ac02'],
-                    3 => $GLOBALS['locale']['ac03'],
-                    4 => $GLOBALS['locale']['ac04'],
-                    5 => $GLOBALS['locale']['ac05'],
-                );
-
-                self::$instance->current_page = self::$instance->_currentPage();
-            }
         }
 
+        self::$instance->setAdmin();
 
         return (object) self::$instance;
     }
+
+    public function setAdmin() {
+        if (!defined('IN_SETUP')) {
+            $this->admin_pages = $this->getAdminPages();
+            $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
+            $this->admin_sections = array(
+                0 => $GLOBALS['locale']['ac00'],
+                1 => $GLOBALS['locale']['ac01'],
+                2 => $GLOBALS['locale']['ac02'],
+                3 => $GLOBALS['locale']['ac03'],
+                4 => $GLOBALS['locale']['ac04'],
+                5 => $GLOBALS['locale']['ac05'],
+            );
+            $this->current_page = $this->_currentPage();
+        }
+    }
+
 
     /**
      * @return array
      */
     public function getAdminPages() {
-
         if (empty($this->admin_pages)) {
             $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
             $rows = dbrows($result);

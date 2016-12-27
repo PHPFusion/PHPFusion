@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusions_include.php
-| Author: Hans Kristian Flaatten (Starefossen)
-| Co-Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -149,8 +148,10 @@ if (!function_exists('send_pm')) {
 
 // Upload file function
 if (!function_exists('upload_file')) {
+
     function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
         global $defender;
+
         if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
 
             if (stristr($valid_ext, ',')) {
@@ -185,6 +186,8 @@ if (!function_exists('upload_file')) {
             } elseif (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
+            } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+                $upload_file['error'] = 4;
             } else {
                 $target_file = filename_exists($target_folder, $target_file.$file_ext);
                 $upload_file['target_file'] = $target_file;
@@ -204,13 +207,13 @@ if (!function_exists('upload_file')) {
             // File not uploaded
             $upload_file = array("error" => 4);
         }
-
         return $upload_file;
     }
 }
 
 // Upload image function
 if (!function_exists('upload_image')) {
+
     function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "") {
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
@@ -255,6 +258,8 @@ if (!function_exists('upload_image')) {
                 } elseif (!$filetype || !verify_image($image['tmp_name'])) {
                     // Unsupported image type
                     $image_info['error'] = 2;
+                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, array('.jpg', '.jpeg', '.png','.png','.svg','.gif','.bmp')) === FALSE) {
+                    $image_info['error'] = 5;
                 } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                     // Invalid image resolution
                     $image_info['error'] = 3;

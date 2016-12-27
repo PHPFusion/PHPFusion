@@ -21,7 +21,7 @@ use PHPFusion\Authenticate;
 //ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Minify PHP output
 
 // Uncomment to see server errors without modifying php.ini
-//ini_set('display_errors', '1');
+ini_set('display_errors', '1');
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
@@ -207,7 +207,7 @@ $defender = defender::getInstance();
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();
 }
-\Defender\ImageValidation::ValidateMime();
+\Defender\ImageValidation::ValidateExtensions();
 
 // Define aidlink
 if (iADMIN) {

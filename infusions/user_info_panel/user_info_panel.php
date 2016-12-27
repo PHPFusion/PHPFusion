@@ -49,8 +49,7 @@ if (iMEMBER) {
 	SUM(message_folder=2) AS archive_count,
 	SUM(message_read=0 AND message_folder=0) AS unread_count
 	FROM ".DB_MESSAGES."
-	WHERE message_to='".$userdata['user_id']."'
-	");
+	WHERE message_to=:user_id", array(':user_id'=> $userdata['user_id']));
 
     $messages_count = dbarray($messages_count);
     $inbox_count = (int)$messages_count['inbox_count'];
@@ -65,7 +64,7 @@ if (iMEMBER) {
     echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\n";
     echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
     echo "</div>\n";
-    echo "<ul class='user-info-bar'>\n";
+    echo "<ul class='user-info-bar block'>\n";
     echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment' style='font-size: 30px;'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
     echo "</ul>\n";
 
@@ -104,7 +103,7 @@ if (iMEMBER) {
     echo "<div id='navigation-user'>\n";
     echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
     echo "<hr class='side-hr'>\n";
-    echo "<ul>\n";
+    echo "<ul class='block'>\n";
     echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']." <i class='pull-right entypo suitcase'></i></a></li>\n";
     echo "<li><a class='side' href='".BASEDIR."messages.php'>".$locale['UM081']." <i class='pull-right entypo mail'></i></a></li>\n";
     if (db_exists(DB_FORUM_THREADS)) {
@@ -114,11 +113,11 @@ if (iMEMBER) {
     echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
     if ($installedModules) {
         echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
-        echo "<div id='ShowHide001' style='display:none'>\n";
+        echo "<li><ul id='ShowHide001' style='display:none'>\n";
         foreach ($installedModules as $stype => $text) {
             echo "<li><a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a></li>\n";
         }
-        echo "</div>\n";
+        echo "</ul></li>\n";
     }
     echo "</ul>\n";
     echo "</div>\n";
