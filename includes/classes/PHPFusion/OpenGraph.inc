@@ -38,10 +38,10 @@ class OpenGraph {
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['url'] = $settings['siteurl'].'viewpage.php?page_id='.$pageid;
-			$info['keywords'] = $data['page_keywords'];
-			$info['image'] = $settings['siteurl'].'images/favicons/mstile-144x144.png';
-			$info['title'] = $data['page_title'];
-			$info['description'] = fusion_first_words(strip_tags($data['page_content']), 50);
+			$info['keywords'] = $data['page_keywords'] ? $data['page_keywords'] : fusion_get_settings('keywords');
+			$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
+			$info['title'] = $data['page_title'].' - '.fusion_get_settings('sitename');
+			$info['description'] = $data['page_content'] ? fusion_first_words(strip_tags($data['page_content']), 50) : $settings['description'];
 		}
 
 		OpenGraph::setValues($info);
@@ -49,6 +49,7 @@ class OpenGraph {
 
 	public static function ogUserProfile($userid = 0) {
 		$settings = fusion_get_settings();
+		$locale = fusion_get_locale();
 
 		$info = array();
 		$result = dbquery("SELECT * FROM `".DB_USERS."` WHERE `user_id` = '".intval($userid)."' LIMIT 1");
@@ -70,11 +71,8 @@ class OpenGraph {
 				$data['user_name'] .= " (".$realname.")";
 			}
 
-			$info['title'] = $data['user_name'];
-			if (isset($data['user_avatar']) && trim($data['user_avatar'])) {
-				$info['image'] = $settings['siteurl'].'images/avatars/'.$data['user_avatar'];
-			}
-
+			$info['title'] = $locale['u103'].$locale['global_201'].$data['user_name'];
+			$info['image'] = $data['user_avatar'] ? $settings['siteurl'].'images/avatars/'.$data['user_avatar'] : $settings['siteurl'].'images/avatars/no-avatar.jpg';
 			$info['description'] = $settings['description'];
 		}
 
@@ -95,13 +93,13 @@ class OpenGraph {
 			}
 
 			OpenGraph::$data['site_name'] = $settings['sitename'];
-			if ($values['title'] != '' && $values['description'] != '' && $values['url'] != '' && $values['keywords'] != '') {
+			if (!empty($values['title']) && !empty($values['description']) && !empty($values['url']) && !empty($values['keywords'])) {
 				OpenGraph::$data['title'] = $values['title'];
 				OpenGraph::$data['description'] = $values['description'];
 				OpenGraph::$data['url'] = $values['url'];
 				OpenGraph::$data['keywords'] = $values['keywords'];
-				if ($values['image'] != '') OpenGraph::$data['image'] = $values['image'];
-				if ($values['type'] != '') OpenGraph::$data['type'] = $values['type'];
+				if (!empty($values['image'])) OpenGraph::$data['image'] = $values['image'];
+				if (!empty($values['type'])) OpenGraph::$data['type'] = $values['type'];
 			} else {
 				OpenGraph::setDefaults();
 			}
@@ -119,7 +117,7 @@ class OpenGraph {
 			'description' => $settings['description'],
 			'url' => $settings['siteurl'],
 			'keywords' => $settings['keywords'],
-			'image' => $settings['siteurl'].'images/favicons/mstile-144x144.png',
+			'image' => $settings['siteurl'].'images/favicons/mstile-150x150.png',
 			'site_name' => $settings['sitename'],
 			'type' => 'website'
 		);
