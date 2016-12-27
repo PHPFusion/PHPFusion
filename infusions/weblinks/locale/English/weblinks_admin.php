@@ -14,8 +14,8 @@ $locale['WLS_0008'] = "Settings";
 $locale['WLS_0030'] = "Web Link successfully created";
 $locale['WLS_0031'] = "Web Link successfully updated";
 $locale['WLS_0032'] = "Web Link successfully deleted";
-$locale['WLS_0033'] = "Web Linkek successfully updated";
-$locale['WLS_0034'] = "You must choose at least one Web Linket";
+$locale['WLS_0033'] = "Web Links successfully updated";
+$locale['WLS_0034'] = "You must choose at least one Web Link";
 $locale['WLS_0035'] = "Web Link successfully published";
 $locale['WLS_0036'] = "Web Link publishing deleted";
 
@@ -47,7 +47,7 @@ $locale['WLS_0103'] = "Visibility";
 $locale['WLS_0110'] = "Add Web Link";
 $locale['WLS_0111'] = "Delete this Web Link?";
 $locale['WLS_0112'] = "There are no Weblink created.";
-$locale['WLS_0113'] = "There are no Web Link, which match with the Searchoptions.";
+$locale['WLS_0113'] = "There are no Web Links which match the Search options.";
 $locale['WLS_0114'] = "Before you can create a Web Link, you must create a Category.";
 $locale['WLS_0115'] = "Web Link is checked, broken links found %s.";
 $locale['WLS_0116'] = "Status Unpublished update.";
@@ -88,10 +88,10 @@ $locale['WLS_0205'] = "Review Submission";
 // Form - Web Link
 $locale['WLS_0250'] = "Link Name";
 $locale['WLS_0251'] = "Link Name";
-$locale['WLS_0252'] = "A Name from the Web Link.";
+$locale['WLS_0252'] = "A Name of the Web Link.";
 $locale['WLS_0253'] = "Web Link URL";
-$locale['WLS_0254'] = "Leírás";
-$locale['WLS_0255'] = "Adj meg egy Leírást";
+$locale['WLS_0254'] = "Descrition";
+$locale['WLS_0255'] = "Please enter the description";
 $locale['WLS_0256'] = "Category";
 $locale['WLS_0257'] = "Visibility";
 $locale['WLS_0258'] = "Date";
@@ -126,7 +126,7 @@ $locale['WLS_0402'] = "Submissions";
 $locale['WLS_0403'] = "Extended Web Link required";
 
 // Submissions - Titles
-$locale['WLS_0900'] = "Submit beküldése";
+$locale['WLS_0900'] = "Submit Weblink";
 
 // Submissions - Success Submission
 $locale['WLS_0910'] = "Web Link is successfully submitted.";
