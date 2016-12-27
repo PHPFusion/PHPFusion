@@ -19,8 +19,36 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
-define("DB_WEBLINKS", DB_PREFIX."weblinks");
+// Locales
+if (!defined("WEBLINK_LOCALE")) {
+    if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
+        define("WEBLINK_LOCALE", INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php");
+    } else {
+        define("WEBLINK_LOCALE", INFUSIONS."weblinks/locale/English/weblinks.php");
+    }
+}
+
+if (!defined("WEBLINK_ADMIN_LOCALE")) {
+    if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
+        define("WEBLINK_ADMIN_LOCALE", INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php");
+    } else {
+        define("WEBLINK_ADMIN_LOCALE", INFUSIONS."weblinks/locale/English/weblinks_admin.php");
+    }
+}
+
+// Paths
+if (!defined("WEBLINKS_CLASS")) {
+    define("WEBLINKS_CLASS", INFUSIONS."weblinks/classes/");
+}
+
+// Database
+if (!defined("DB_WEBLINK_CATS")) {
+	define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
+}
+if (!defined("DB_WEBLINKS")) {
+	define("DB_WEBLINKS", DB_PREFIX."weblinks");
+}
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
 \PHPFusion\Admins::getInstance()->setSubmitType('l', fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"));

@@ -156,11 +156,12 @@ class PageList extends PageAdmin {
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_page",
-                "width" => "250px"
+                "width" => "250px",
+                "group_size" => "sm"
             ));
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
-            echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['page_0107']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
+            echo "<a class='btn btn-sm m-r-10 ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['page_0107']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108'], array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";

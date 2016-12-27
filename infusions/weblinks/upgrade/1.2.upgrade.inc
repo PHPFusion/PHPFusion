@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: weblinks/upgrade/1.0.5.upgrade.inc
+| Filename: weblinks/upgrade/1.2.upgrade.inc
 | Update weblinks to Version 9.02 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
@@ -16,7 +16,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
+// Upgrade 1.2
+if (column_exists(DB_WEBLINK_CATS, "weblink_cat_sorting", FALSE)) {
+	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP weblink_cat_sorting");
+}
+
+if (!column_exists(DB_WEBLINKS, "weblink_status", FALSE)) {
+	dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_visibility");
+}
+
+if (!column_exists(DB_WEBLINK_CATS, "weblink_cat_visibility", FALSE)) {
+	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER weblink_cat_description");
+}
+
+if (!column_exists(DB_WEBLINK_CATS, "weblink_cat_status", FALSE)) {
+	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_cat_description");
+}
+
+// Upgrade 1.1
 // Moving access level from weblinks categories to weblinks and create field for subcategories
 $check_array = [
     'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
@@ -26,17 +45,21 @@ foreach ($check_array as $key => $value) {
         $inf_altertable[] = DB_WEBLINKS.$value;
     }
 }
+
+// Set weblink visibility
+if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
+	$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
+	if (dbrows($result) > 0) {
+	    while ($data = dbarray($result)) {
+	        $inf_updatedbrow[] = DB_WEBLINKS." SET weblink_visibility='-".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'";
+	    }
+	}
+}
+
 if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
     $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access";
 }
 
-// Set weblink visibility
-$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
-if (dbrows($result) > 0) {
-    while ($data = dbarray($result)) {
-        $inf_updatedbrow[] = DB_WEBLINKS." SET weblink_visibility='-".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'";
-    }
-}
 $check_array = [
     'weblink_cat_parent' => " ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id",
     // Add multilocale support

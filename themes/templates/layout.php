@@ -29,15 +29,15 @@ echo "<meta name='image' content='".fusion_get_settings('siteurl').fusion_get_se
 if (fusion_get_enabled_languages() > 1) {
 	echo "<link rel='alternate' hreflang='x-default' href='".fusion_get_settings('siteurl')."' />\n";
 }
-
-if (fusion_get_settings('create_og_tags')) {
+// It will be replaced
+/*if (fusion_get_settings('create_og_tags')) {
 	echo "<meta property='og:title' content='".fusion_get_settings('sitename')."' />\n";
 	echo "<meta property='og:description' content='".fusion_get_settings('description')."' />\n";
 	echo "<meta property='og:url' content='".fusion_get_settings('siteurl')."' />\n";
 	echo "<meta property='og:keywords' content='".fusion_get_settings('keywords')."' />\n";
 	echo "<meta property='og:image' content='".fusion_get_settings('siteurl').fusion_get_settings('sitebanner')."' />\n";
 	echo "<meta property='og:type' content='website' />\n";
-}
+}*/
 // Load bootstrap stylesheets
 if (fusion_get_settings('bootstrap') == TRUE) {
     define('BOOTSTRAPPED', TRUE);
@@ -153,3 +153,5 @@ if (fusion_get_settings('bootstrap')) {
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>\n";
+
+PHPFusion\OpenGraph::ogDefault();
