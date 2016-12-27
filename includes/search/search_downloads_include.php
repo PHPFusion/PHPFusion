@@ -76,7 +76,7 @@ if (db_exists(DB_DOWNLOADS)) {
 
             $item_count = "<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
 
-            $result = dbquery("SELECT td.*,tdc.*
+            $result = dbquery("SELECT td.*,tdc.*,
             tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
             FROM ".DB_DOWNLOADS." td
             INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
