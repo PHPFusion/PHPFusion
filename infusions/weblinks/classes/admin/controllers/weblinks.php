@@ -376,12 +376,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
 					"append_button" => TRUE,
 					"append_value" => "<i class='fa fa-search'></i>",
 					"append_form_value" => "search_weblink",
-					"width" => "250px"
+					"width" => "250px",
+                    "group_size" => "sm"
 				)); ?>
 				</div>
 
 				<div class="display-inline-block" style="vertical-align: top;">
-				  <a class="btn btn-sm <?php echo ($filter_empty ? "btn-default" : "btn-info"); ?>" id="toggle_options" href="#">
+				  <a class="btn btn-sm m-r-10 <?php echo ($filter_empty ? "btn-default" : "btn-info"); ?>" id="toggle_options" href="#">
 				    <?php echo $this->locale['WLS_0121']; ?>
 					<span id="filter_caret" class="fa fa-fw <?php echo ($filter_empty ? "fa-caret-down" : "fa-caret-up"); ?>"></span>
 				  </a>
