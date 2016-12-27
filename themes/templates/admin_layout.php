@@ -18,6 +18,7 @@
 $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
 $locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 $settings = fusion_get_settings();
+\PHPFusion\Admins::getInstance()->setAdmin();
 header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>";
 echo "<html lang='".fusion_get_locale('xml_lang')."'>";
