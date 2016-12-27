@@ -106,12 +106,12 @@ class Admins {
      * @return object
      */
     public static function getInstance() {
-        //$aidlink = fusion_get_aidlink();
-
         if (self::$instance === NULL) {
-            //print_p(debug_backtrace());
             self::$instance = new static();
         }
+
+        self::$instance->setAdmin();
+
         return (object) self::$instance;
     }
 
