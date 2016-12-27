@@ -107,7 +107,7 @@ if (!function_exists("display_main_articles")) {
 			  <?php $i = 0;
 				foreach ($info['article_filter'] as $link => $title) {
 					$filter_active = (!isset($_GET['type']) && $i == '0') || isset($_GET['type']) && stristr($link, $_GET['type']) ? "text-dark strong" : "";
-					echo "<a href=".$link." class='display-inline $filter_active m-r-10'>".$title."</a>";
+					echo "<a href='".$link."' class='display-inline $filter_active m-r-10'>".$title."</a>";
 					$i++;
 				}
 			  ?>
