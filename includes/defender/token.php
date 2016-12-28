@@ -71,7 +71,7 @@ class Token extends \defender {
 
             // If you allow repost, token will be valid since it is not being consumed.
             // Bots will capture a valid token key and repost again and again.
-            if (self::$allow_repost == FALSE) {
+            if (self::$allow_repost == FALSE && !iADMIN) {
                 $tokens_consumed = '';
                 $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 if (!empty($token_rings)) {
@@ -178,7 +178,8 @@ class Token extends \defender {
         if ($user_id == 0) $max_tokens = 1;
 
         // Only generate new tokens when token is less than max allowed tokens
-        if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) < $max_tokens) {
+
+        if (!isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) || count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) < $max_tokens) {
 
             $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
             $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
