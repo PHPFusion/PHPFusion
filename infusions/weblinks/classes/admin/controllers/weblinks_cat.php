@@ -318,7 +318,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 			LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
 			WHERE ".(multilang_table("WL") ? "ac.weblink_cat_language='".LANGUAGE."'" : "")."
 			$sql_condition
-			GROUP BY a.weblink_id, ac.weblink_cat_id
+			GROUP BY ac.weblink_cat_id
 			ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
         );
 
