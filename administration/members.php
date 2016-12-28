@@ -758,3 +758,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
 }
 require_once THEMES."templates/footer.php";
+
+/*
+ * New Codes Implementation - Work In Progress
+ * require_once "../maincore.php";
+require_once THEMES."templates/admin_header.php";
+require_once ADMIN.'members/members_administration.php';
+Administration\Members\Members_Admin::getInstance()->display_admin();
+require_once THEMES."templates/footer.php";
+ */
