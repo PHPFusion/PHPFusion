@@ -325,7 +325,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             LEFT JOIN ".DB_ARTICLES." AS a ON a.article_cat=ac.article_cat_id
             WHERE ".(multilang_table("AR") ? "ac.article_cat_language='".LANGUAGE."'" : "")."
             $sql_condition
-            GROUP BY a.article_id, ac.article_cat_id
+            GROUP BY ac.article_cat_id
             ORDER BY ac.article_cat_parent ASC, ac.article_cat_id ASC"
         );
 
