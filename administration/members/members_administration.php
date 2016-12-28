@@ -38,7 +38,8 @@ class Members_Admin {
         self::$response_required = TIME + (86400 * self::$settings['deactivation_response']);
         self::$locale = fusion_get_locale('', [
             LOCALE.LOCALESET."admin/members.php",
-            LOCALE.LOCALESET."user_fields.php"
+            LOCALE.LOCALESET."user_fields.php",
+            LOCALE.LOCALESET."members_email.php"
         ]);
 
         self::$rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
@@ -385,10 +386,18 @@ class Members_Admin {
             if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
                 $user_action = new Members_Action();
                 $user_action->set_userID($_POST['user_id']);// this is by way of post.
+                $user_action->set_action($_POST['action']);
+                $user_action->execute();
+
+
                 switch ($_POST['action']) {
                     case 'ban': // ban user
-                        $user_action->display_ban_form();
                         break;
+                    case 'deactivate':
+
+                        break;
+
+
                     case 2: // deactivate user
                         require_once LOCALE.LOCALESET."admin/members_email.php";
                         require_once INCLUDES."sendmail_include.php";

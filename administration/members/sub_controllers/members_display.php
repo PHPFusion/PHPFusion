@@ -149,10 +149,8 @@ class Members_Display extends Members_Admin {
         }
 
         if (!empty($selected_status)) {
-            $status_cond = " WHERE user_status IN (:status) ";
-            $status_bind = array(
-                ':status' => implode(',', $selected_status)
-            );
+            $status_cond = " WHERE user_status IN (".implode(',', $selected_status).") ";
+            $status_bind = array();
             foreach ($selected_status as $susp_i) {
                 $statuses[$susp_i] = '<strong>'.getsuspension($susp_i).'</strong>';
             }
@@ -165,6 +163,8 @@ class Members_Display extends Members_Admin {
         }
 
         $query_bind = array_merge($status_bind, $search_bind);
+
+
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
@@ -175,7 +175,7 @@ class Members_Display extends Members_Admin {
         $rows = dbrows($result);
         $page_nav = $rowCount > $rows ? makepagenav($rowstart, $limit, $rows, 5, FUSION_SELF.fusion_get_aidlink()) : '';
 
-        $list_sum = sprintf('Displaying %s - %d of %d records found', implode(',', $statuses), $rows, $rowCount);
+        $list_sum = sprintf('Displaying %s - %d of %d records found', implode(', ', $statuses), $rows, $rowCount);
         if ($rows != '0') {
             while ($data = dbarray($result)) {
                 // the key which to be excluded should be unset
@@ -234,8 +234,11 @@ class Members_Display extends Members_Admin {
                 $list_result .= call_user_func_array(array($interface, 'list_func'), array($user_id, $list, $selected_fields));
             }
         }
-
-        $user_actions = form_button('action', 'Ban', 'ban', array('class'=>'m-r-10'));
+        /*
+         * User Actions Button
+         */
+        $user_actions = form_button('action', 'Ban', 'ban', array('class'=>'m-r-10')).
+            form_button('action', 'Reinstate', 'reinstate', array('class'=>'m-r-10'));
 
         echo openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
         echo form_hidden('aid', '', iAUTH);

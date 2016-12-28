@@ -18,7 +18,7 @@ class Members_View extends Members_Admin {
         <div class='pull-left'>{%filter_text%} {%filter_button%}</div>
         </div>
         <!----filter---->
-        <div id='filter_panel' class='spacer-xs' style='display:none'>            
+        <div id='filter_panel' style='display:none'>            
             <div class='list-group-item'>
                 <div class='row'>
                     <div class='col-xs-3'><strong>Display Results.</strong></div>
