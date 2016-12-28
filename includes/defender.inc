@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -33,36 +34,39 @@ class defender {
     public $field_value = '';
     public $field_default = '';
     public $field_config = array(
-        'type' => '',
-        'value' => '',
+        'type'        => '',
+        'value'       => '',
         //'default' => '',
-        'name' => '',
+        'name'        => '',
         //'id' => '',
-        'safemode' => '',
-        'path' => '',
+        'safemode'    => '',
+        'path'        => '',
         'thumbnail_1' => '',
         'thumbnail_2' => '',
     );
     private static $input_error_text = array();
 
-    private function  __construct() {
+    private function __construct() {
     }
 
     /**
      * Generates and return class instance
      * Eliminates global usage in functions
      * Instead of using  - `global $defender`, try `\defender->getInstance()`
+     *
      * @return null|static
      */
     public static function getInstance() {
         if (self::$defender_instance === NULL) {
             self::$defender_instance = new static();
         }
+
         return self::$defender_instance;
     }
 
     /**
      * Request whether safe to proceed at all times
+     *
      * @return bool
      */
     public static function safe() {
@@ -73,10 +77,11 @@ class defender {
         return FALSE;
     }
 
-
     /**
      * Serialize an array securely
+     *
      * @param array $array
+     *
      * @return string
      */
     public static function serialize(array $array = array()) {
@@ -98,7 +103,9 @@ class defender {
 
     /**
      * Read serialized array
+     *
      * @param $string - serialized string
+     *
      * @return array|mixed
      */
     public static function unserialize($string) {
@@ -120,15 +127,17 @@ class defender {
     /**
      * Generates a md5 hash of the current page to make token session unique
      * Eg. /php-fusion/infusions/blog/blog.php for Non
+     *
      * @param string     $file
      * @param bool|FALSE $encrypt
+     *
      * @return string
      */
-    public static function pageHash($file = "", $encrypt = TRUE) {
+    public static function pageHash($file = "", $encrypt = FALSE) {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             $hash = $encrypt ? md5('administration') : 'administration';
         } else {
-            $hash = $encrypt ? md5($_SERVER['REQUEST_URI']) : $_SERVER['REQUEST_URI'];
+            $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
             if (!empty($file)) {
                 $hash = $encrypt ? md5($file) : $file;
             } elseif (!empty($_POST['file'])) {
@@ -144,7 +153,9 @@ class defender {
     /**
      * Return the current document field session or sessions
      * Use for debug purposes
+     *
      * @param string $input_name
+     *
      * @return string
      */
     public static function get_current_field_session($input_name = '') {
@@ -176,6 +187,7 @@ class defender {
      * ID for Session
      * No $userName because it can be changed and tampered via Edit Profile.
      * Using IP address extends for guest
+     *
      * @return mixed
      */
     protected static function set_sessionUserID() {
@@ -200,6 +212,7 @@ class defender {
 
     /**
      * Set and override default field error text
+     *
      * @param $input_name
      * @param $text
      */
@@ -211,7 +224,9 @@ class defender {
      * Fetches the latest error text of this input
      * Important! Ensure your applications do not refresh screen for this error to show.
      * Usage \defender::safe(); for conditional redirect.
+     *
      * @param $input_name
+     *
      * @return null
      */
     public static function getErrorText($input_name) {
@@ -236,10 +251,12 @@ class defender {
 
     /**
      * Sanitize
+     *
      * @param            $value
      * @param string     $default
      * @param bool|FALSE $input_name
      * @param bool|FALSE $is_multiLang
+     *
      * @return string
      * @throws Exception
      */
@@ -301,7 +318,7 @@ class defender {
                     // If truly FALSE the check failed
                     if ($secured === FALSE || ($this->field_config['required'] == 1 && ($secured === FALSE || $secured == '')) ||
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i',
-                                                                 $secured)) || // regex will fail for an imploded array, maybe move this check
+                                $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
                         // Flag that something went wrong
@@ -317,7 +334,7 @@ class defender {
                         // Add a notice
                         if (self::$debug) {
                             addNotice('warning',
-                                      '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                                '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
 
                         // Return user's input for correction
@@ -426,21 +443,22 @@ class defender {
         self::$input_errors[$input_name] = TRUE;
     }
 
-
 }
 
 /**
  * Verify and Sanitize Inputs
+ *
  * @param            $value
  * @param string     $default
  * @param bool|FALSE $input_name
  * @param bool|FALSE $is_multiLang
+ *
  * @return mixed
  */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-require(dirname(__FILE__) . '/defender/validation.php');
+require(dirname(__FILE__).'/defender/validation.php');
 require(dirname(__FILE__).'/defender/token.php');
 require(dirname(__FILE__).'/defender/mimecheck.php');

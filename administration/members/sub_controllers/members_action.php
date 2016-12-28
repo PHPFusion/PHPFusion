@@ -22,7 +22,7 @@ class Members_Action extends Members_Admin {
     public function set_userID(array $value = array()) {
         foreach ($value as $id) {
             if (isnum($id)) {
-                $user_id[] = $id;
+                $user_id[$id] = $id;
             }
         }
         $this->action_user_id = $user_id;
@@ -32,12 +32,8 @@ class Members_Action extends Members_Admin {
      * This is a multi ban
      */
     public function display_ban_form() {
-        $query = "SELECT user_id, user_name, user_avatar, user_level, user_status FROM ".DB_USERS." WHERE user_id IN (:user_id) AND user_level >:user_level";
-        $bind = array(
-            ':user_id'    => implode(',', $this->action_user_id),
-            ':user_level' => USER_LEVEL_SUPER_ADMIN
-        );
-        $result = dbquery($query, $bind);
+        $query = "SELECT user_id, user_name, user_avatar, user_level, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
+        $result = dbquery($query);
         if (dbrows($result)) {
             $user_to_ban = array();
             $user_to_unban = array();
@@ -65,7 +61,7 @@ class Members_Action extends Members_Admin {
                             <span class='va p-r-15'><strong>".$user_data['user_name']."</strong><br/>".getuserlevel($user_data['user_level'])."</span>                            
                         </div>                   
                     </td>
-                    <td>".form_text('reason', '', '', array('input_id' => 'reason_'.$user_data['user_id'], 'placeholder' => self::$locale['585a'], 'class'=>'m-b-0'))."</td>
+                    <td>".form_text('reason['.$user_data['user_id'].']', '', '', array('input_id' => 'reason_'.$user_data['user_id'], 'placeholder' => self::$locale['585a'], 'class'=>'m-b-0'))."</td>
                     <td>".form_button('ban_user', 'Ban '.$user_data['user_name'], $user_data['user_id'], array('input_id' => 'ban_'.$user_data['user_id'], 'class' => 'btn-danger'))."</td>
                     </tr>";
                 }
@@ -78,7 +74,7 @@ class Members_Action extends Members_Admin {
                 $tab['title'][] = "Unban";
                 $tab['id'][] = 'unban';
                 $tab_content .= opentabbody($tab['title'][0], $tab['id'][0], 0);
-                $tab_content .= openform('ban', 'post', FUSION_SELF.fusion_get_aidlink(), array('remote_url' => ADMIN.'members/sub_controllers/actions/ban.php'));
+                $tab_content .= openform('ban', 'post', FUSION_SELF.fusion_get_aidlink(), array('remote_url' => fusion_get_settings('site_path').'administration/members/sub_controllers/actions/ban.php'));
                 $tab_content .= "<table class='table table-responsive table-striped'>\n";
                 $tab_content .= "<thead>\n<tr><th>User</th><th>State Reinstate Reasons</th><th>Confirm Reinstatement?</th></tr>\n</thead><tbody>";
                 foreach ($user_to_ban as $user_data) {
@@ -90,7 +86,7 @@ class Members_Action extends Members_Admin {
                             <span class='va p-r-15'><strong>".$user_data['user_name']."</strong><br/>".getuserlevel($user_data['user_level'])."</span>                            
                         </div>                   
                     </td>
-                    <td>".form_text('reason', '', '', array('input_id' => 'reason_'.$user_data['user_id'], 'placeholder' => self::$locale['585a'], 'class'=>'m-b-0'))."</td>
+                    <td>".form_text('reason['.$user_data['user_id'].']', '', '', array('input_id' => 'reason_'.$user_data['user_id'], 'placeholder' => self::$locale['585a'], 'class'=>'m-b-0'))."</td>
                     <td>".form_button('ban_user', 'Reinstate '.$user_data['user_name'], $user_data['user_id'], array('input_id' => 'reinstate'.$user_data['user_id'], 'class' => 'btn-success'))."</td>
                     </tr>";
                 }
@@ -113,11 +109,12 @@ class Members_Action extends Members_Admin {
                 $('button[name=ban_user]').bind('click', function(e) {
                     e.preventDefault();
                     var button = $(this);
-                    var sendData = $(this).closest('form').serialize();                                        
+                    var data = { 'uid' : button.val() }
+                    var sendData = $(this).closest('form').serialize() + '&' + $.param(data);                                    
                     $.ajax({
                         url: '".FUSION_ROOT.ADMIN."members/sub_controllers/actions/ban.php',
                         type: 'POST',
-                        dataType: 'json',
+                        dataType: 'html',
                         data : sendData,
                         success: function(result){
                             console.log(result);
@@ -133,7 +130,6 @@ class Members_Action extends Members_Admin {
                 </script>
                 ";
             add_to_jquery(str_replace(array("<script>", "</script>"), '', $javascript));
-
         } else {
             redirect(USER_MANAGEMENT_SELF."&status=ber");
         }

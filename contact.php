@@ -99,7 +99,7 @@ $message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail
 $message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
 echo "<div class='text-center well'>".$message."</div>\n";
 echo "<!--contact_pre_idx-->";
-echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
+echo openform('contactform', 'post', FUSION_SELF);
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
 echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64));

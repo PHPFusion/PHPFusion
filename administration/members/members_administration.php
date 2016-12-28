@@ -372,7 +372,7 @@ class Members_Admin {
                         opentable($locale['410']." ".$locale['612'].": ".$user_data['user_name']);
                         echo "<h2>".$locale['425']."</h2>";
                         echo "<p>".sprintf($locale['425a'], "<strong>".$user_data['user_name']."</strong>")."</p>\n";
-                        echo openform('mod_form', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;step=delete&amp;user_id=".$user_id, array('max_tokens' => 1));
+                        echo openform('mod_form', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;step=delete&amp;user_id=".$user_id);
                         echo form_button('delete_user', $locale['426'], $locale['426'], array('class' => 'btn-primary m-r-10'));
                         echo form_button('cancel', $locale['427'], $locale['427'], array('class' => 'btn-primary'));
                         echo closeform();
@@ -443,7 +443,7 @@ class Members_Admin {
                                     $action = $locale['592'];
                                 }
                                 opentable($suspend_title);
-                                echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id, array('max_tokens' => 1));
+                                echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id);
                                 echo "<table cellpadding='0' cellspacing='0' width='460' class='table table-responsive center'>\n<tbody>\n<tr>\n";
                                 echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
                                 if ($udata['user_status'] != 3) {
@@ -500,7 +500,7 @@ class Members_Admin {
                                     $action = $locale['601'];
                                 }
                                 opentable($ban_title);
-                                echo openform('sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id, array('max_tokens' => 1));
+                                echo openform('sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id);
                                 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
                                 echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
                                 echo "</tr>\n<tr>\n";

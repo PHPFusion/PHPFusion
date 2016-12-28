@@ -1,17 +1,18 @@
 <?php
 require_once dirname(__FILE__).'/../../../../maincore.php';
+/*
+ * Singleton Ban
+ */
 if (\defender::safe()) {
-    if (isset($_POST['ban_action']) && isset($_POST['user_id'])) {
+    if (isset($_POST['uid'])) {
         require_once INCLUDES."sendmail_include.php";
         $locale = fusion_get_locale(LOCALE.LOCALESET."admin/members_email.php");
         $settings = fusion_get_settings();
-        if ($user = fusion_get_user($_POST['user_id'])) {
+        if ($user = fusion_get_user($_POST['uid'])) {
             if (!empty($user)) {
-
                 $user_id = $user['user_id'];
                 $user_status = $user['user_status'];
                 $ban_reason = form_sanitizer($_POST['ban_reason'], '', 'ban_reason');
-
                 if ($_POST['ban_action'] == 1) {
                     if ($user_status == 0) {
                         // to ban
@@ -43,7 +44,7 @@ if (\defender::safe()) {
                         );
                     }
 
-                } elseif ($_POST['ban_action'] == 0 && $user_status > 0 && $user_id) {
+                } elseif ($_POST['uid'] == 0 && $user_status > 0 && $user_id) {
                     $result = dbquery("UPDATE ".DB_USERS." SET user_status=:user_status, user_actiontime=:action_time WHERE user_id=:user_id", array(
                         ':user_status' => 0,
                         ':action_time' => 0,

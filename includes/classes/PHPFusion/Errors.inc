@@ -241,8 +241,7 @@ class Errors {
                 <div class='m-t-10 display-inline-block' style='width:300px'>
                     <?php
                     echo openform('logform', 'post',
-                                  FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file",
-                                  array('max_tokens' => 1));
+                                  FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
                     echo form_hidden('error_id', '', $data['error_id']);
                     echo form_select('error_status', $locale['mark_as'], $data['error_status'], array(
                         "inline" => TRUE,

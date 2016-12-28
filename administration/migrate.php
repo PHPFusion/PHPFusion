@@ -131,7 +131,7 @@ function user_posts_migrate_console() {
         $data['0'] = $locale['124'];
     }
 
-    echo openform('inputform', 'post', "".FUSION_SELF.$aidlink."", array('max_tokens' => 1));
+    echo openform('inputform', 'post', FUSION_SELF.$aidlink);
     echo "<table style='width:100%' class='table table-striped'>\n";
     echo "<thead>\n";
     echo "<tr style='height:30px;'><th style='width:33%; text-align:left'>".$locale['125']."</th><th style='width:33%; text-align:left;'>".$locale['126']."</th><th class='text-left'>&nbsp;</th>\n</tr>\n";

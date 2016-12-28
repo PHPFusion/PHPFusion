@@ -112,7 +112,7 @@ if (!$recaptcha_upgrade) {
  */
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
-echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink(), array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');

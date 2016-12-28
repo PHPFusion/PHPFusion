@@ -51,7 +51,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['comme
         $data = dbarray($result);
         opentable($locale['400']);
         $form_action = FUSION_SELF.$aidlink."&amp;comment_id=".$_GET['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id'];
-        echo openform('settingsform', 'post', $form_action, array('max_tokens' => 1));
+        echo openform('settingsform', 'post', $form_action);
         echo form_textarea('comment_message', '', $data['comment_message'],
                            array('autosize' => TRUE, 'bbcode' => TRUE, 'preview' => TRUE, 'form_name' => 'settingsform'));
         echo form_button('save_comment', $locale['421'], $locale['421'], array('class' => 'btn-primary btn-sm'));

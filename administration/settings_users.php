@@ -67,7 +67,7 @@ if (isset($_POST['savesettings'])) {
 
 opentable($locale['user_settings']);
 echo "<div class='well'>".$locale['user_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
