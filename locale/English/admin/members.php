@@ -5,7 +5,7 @@ $locale['ME_402'] = 'Display Filters';
 $locale['ME_403'] = 'Add a new User';
 $locale['ME_404'] = 'Apply Filter';
 $locale['ME_405'] = 'There are no user found under the search criteria';
-
+//
 $locale['ME_407'] = 'Displaying %s - %d of %d records found';
 $locale['ME_408'] = 'Basic Information';
 $locale['ME_409'] = 'Detailed Information';
@@ -30,6 +30,9 @@ $locale['ME_433'] = 'Please specify a reason for the action';
 $locale['ME_434'] = 'Reason';
 $locale['ME_435'] = 'Duration';
 $locale['ME_436'] = 'Days';
+
+$locale['ME_450'] = 'Add New User';
+$locale['ME_451'] = '%s\'s Profile';
 
 // Actions
 $locale['ME_500'] = 'Ban';
@@ -57,6 +60,12 @@ $locale['ME_'] = '';
 $locale['ME_'] = '';
 $locale['ME_'] = '';
 
+// Edit Member Details
+$locale['430'] = "Edit Member";
+// Add Member Errors
+$locale['480'] = "Add Member";
+$locale['481'] = "The member account has been created.";
+$locale['482'] = "The member account could not be created.";
 
 
 
@@ -106,12 +115,7 @@ Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Ano
 Are you sure you want to delete this user?\n";
 $locale['426'] = "Yes";
 $locale['427'] = "No";
-// Edit Member Details
-$locale['430'] = "Edit Member";
-// Add Member Errors
-$locale['480'] = "Add Member";
-$locale['481'] = "The member account has been created.";
-$locale['482'] = "The member account could not be created.";
+
 // Suspension Log 
 $locale['510s'] = "Suspension Log for ";
 $locale['511s'] = "There are no recorded suspensions for this member in the suspension log.";

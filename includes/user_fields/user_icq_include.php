@@ -22,17 +22,14 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
     $options += array(
-        'inline' => TRUE,
-        'number' => TRUE,
+        'inline'     => TRUE,
+        'number'     => TRUE,
         'max_length' => 9,
-        'regex' => '^(-*[0-9]-*){8,9}$',
+        'regex'      => '^(-*[0-9]-*){8,9}$',
         'error_text' => $locale['uf_icq_error']
     );
     $user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
-
 // Display in profile
 } elseif ($profile_method == "display") {
-    if ($field_value) {
-        $user_fields = array('title' => $locale['uf_icq'], 'value' => $field_value);
-    }
+    $user_fields = array('title' => $locale['uf_icq'], 'value' => $field_value ?: $locale['na']);
 }

@@ -61,7 +61,5 @@ $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
-$info += $userFields->get_profile_input();
-render_userform($info);
-
+$userFields = $userFields->display_profile_input($info);
 require_once THEMES."templates/footer.php";

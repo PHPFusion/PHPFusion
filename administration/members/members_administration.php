@@ -4,8 +4,11 @@ namespace Administration\Members;
 use Administration\Members\Sub_Controllers\Display_Members;
 use Administration\Members\Sub_Controllers\Members_Action;
 use Administration\Members\Sub_Controllers\Members_Display;
+use Administration\Members\Sub_Controllers\Members_Profile;
 use PHPFusion\BreadCrumbs;
-use PHPFusion\QuantumFields;
+use PHPFusion\Members;
+use PHPFusion\UserFields;
+use PHPFusion\UserFieldsInput;
 
 class Members_Admin {
 
@@ -17,6 +20,8 @@ class Members_Admin {
     protected static $status = 0;
     protected static $usr_mysql_status = 0;
     protected static $user_id = 0;
+    protected static $user_data = array();
+
     /*
      * Status filter links
      */
@@ -66,23 +71,24 @@ class Members_Admin {
 
         $base_url = FUSION_SELF.fusion_get_aidlink();
         self::$status_uri = array(
-            self::USER_MEMBER        => $base_url."&amp;status=".self::USER_MEMBER,
-            self::USER_UNACTIVATED        => $base_url."&amp;status=".self::USER_UNACTIVATED,
-            self::USER_BAN        => $base_url."&amp;status=".self::USER_BAN,
-            self::USER_SUSPEND    => $base_url."&amp;status=".self::USER_SUSPEND,
+            self::USER_MEMBER       => $base_url."&amp;status=".self::USER_MEMBER,
+            self::USER_UNACTIVATED  => $base_url."&amp;status=".self::USER_UNACTIVATED,
+            self::USER_BAN          => $base_url."&amp;status=".self::USER_BAN,
+            self::USER_SUSPEND      => $base_url."&amp;status=".self::USER_SUSPEND,
             self::USER_SECURITY_BAN => $base_url."&amp;status=".self::USER_SECURITY_BAN,
-            self::USER_CANCEL     => $base_url."&amp;status=".self::USER_CANCEL,
-            self::USER_ANON       => $base_url."&amp;status=".self::USER_ANON,
-            self::USER_DEACTIVATE => $base_url."&amp;status=".self::USER_DEACTIVATE,
+            self::USER_CANCEL       => $base_url."&amp;status=".self::USER_CANCEL,
+            self::USER_ANON         => $base_url."&amp;status=".self::USER_ANON,
+            self::USER_DEACTIVATE   => $base_url."&amp;status=".self::USER_DEACTIVATE,
+            'add_user' =>  $base_url.'&amp;ref=add',
+            'view' =>  $base_url.'&amp;ref=view&amp;lookup=',
         );
 
-        self::$user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : 0);
+        self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id'=>isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
 
-        $checkRights = dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", array(
-            ':user_id'    => self::$user_id,
-            ':user_level' => USER_LEVEL_MEMBER,
-        ));
-        if ($checkRights > 0) {
+        if (dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", array(
+                ':user_id'    => self::$user_id,
+                ':user_level' => USER_LEVEL_MEMBER,
+            )) > 0) {
             self::$is_admin = TRUE;
         } else {
             self::$is_admin = FALSE;
@@ -99,11 +105,15 @@ class Members_Admin {
     }
 
     public function display_admin() {
+
         if (isset($_POST['cancel'])) {
             redirect(USER_MANAGEMENT_SELF);
         }
+
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['400']]);
+
         if (isset($_GET['ref'])) {
+
             switch ($_GET['ref']) {
                 case 'log': // Show Logs
                     if (self::$is_admin) {
@@ -168,79 +178,34 @@ class Members_Admin {
                     }
                     // Deactivate Inactive Users
                     break;
-                case 'add': // add members
-                    // have self admin check
-                    if (isset($_POST['add_user'])) {
 
-                        $userInput = new \PHPFusion\UserFieldsInput();
-                        $userInput->validation = FALSE;
-                        $userInput->emailVerification = FALSE;
-                        $userInput->adminActivation = FALSE;
-                        $userInput->registration = TRUE;
-                        $userInput->skipCurrentPass = TRUE;
-
-                        $userInput->saveInsert();
-
-                        $udata = $userInput->getData();
-                        unset($userInput);
-
-                        if (defender::safe()) {
-                            redirect(FUSION_SELF.fusion_get_aidlink());
-                        }
-
-                    }
-                    if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && !defender::safe())) {
-
-                        opentable($locale['480']);
-                        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['480']]);
-
-                        $userFields = new \PHPFusion\UserFields();
-                        $userFields->postName = "add_user";
-                        $userFields->postValue = $locale['480'];
-                        $userFields->displayValidation = fusion_get_settings("display_validation");
-                        $userFields->plugin_folder = INCLUDES."user_fields/";
-                        $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-                        $userFields->showAdminPass = FALSE;
-                        $userFields->skipCurrentPass = TRUE;
-                        $userFields->registration = TRUE;
-                        $userFields->method = 'input';
-
-                        $info = $userFields->get_profile_input();
-                        render_userform($info);
-                        closetable();
-                    }
-
+                // OK
+                case 'add':
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
+                    opentable(self::$locale['ME_450']);
+                    Members_Profile::display_new_user_form();
+                    closetable();
                     break;
-                case 'view': // View User Profile
-                    $result = dbquery("SELECT u.*, s.suspend_reason
-		FROM ".DB_USERS." u
-		LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-		WHERE user_id='".$user_id."'
-		ORDER BY suspend_date DESC
-		LIMIT 1");
-                    if (dbrows($result)) {
-                        $user_data = dbarray($result);
+                case 'view':
+                    if (!empty(self::$user_id)) {
+                        $query = "SELECT u.*, s.suspend_reason
+                                FROM ".DB_USERS." u
+                                LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
+                                WHERE u.user_id=:user_id GROUP BY u.user_id 
+                                ORDER BY s.suspend_date DESC                                
+                                ";
+                        $bind = array(
+                            ':user_id' => self::$user_id
+                        );
+                        self::$user_data = dbarray(dbquery($query, $bind));
+                        $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
+                        BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
+                        opentable($title);
+                        Members_Profile::display_user_profile();
+                        closetable();
                     } else {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
-                    opentable($locale['u104']." ".$user_data['user_name']);
-                    member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
-                    $userFields = new \PHPFusion\UserFields();
-                    $userFields->postName = "register";
-                    $userFields->postValue = $locale['u101'];
-                    $userFields->displayValidation = $settings['display_validation'];
-                    $userFields->displayTerms = $settings['enable_terms'];
-                    $userFields->plugin_folder = INCLUDES."user_fields/";
-                    $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-                    $userFields->showAdminPass = FALSE;
-                    $userFields->skipCurrentPass = TRUE;
-                    $userFields->registration = FALSE;
-                    $userFields->userData = $user_data;
-                    $userFields->method = 'display';
-
-                    $info = $userFields->get_profile_output();
-                    render_userprofile($info);
-                    closetable();
                     break;
                 case 'edit': // Edit User Profile
                     $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
@@ -264,7 +229,7 @@ class Members_Admin {
                         }
                     }
                     opentable($locale['430']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['430']]);
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['430']]);
                     $userFields = new UserFields();
                     $userFields->postName = "savechanges";
                     $userFields->postValue = $locale['430'];
@@ -277,8 +242,8 @@ class Members_Admin {
                     $userFields->userData = $user_data;
                     $userFields->method = 'input';
                     $userFields->admin_mode = TRUE;
-                    $info = $userFields->get_profile_input();
-                    render_userform($info);
+                    $userFields->display_profile_input();
+
                     closetable();
                     break;
                 case 'delete':
@@ -395,22 +360,22 @@ class Members_Admin {
         } else {
             if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
                 $user_action = new Members_Action();
-                $user_action->set_userID($_POST['user_id']);// this is by way of post.
-                $user_action->set_action($_POST['action']);
+                $user_action->set_userID((array)$_POST['user_id']);
+                $user_action->set_action((string)$_POST['action']);
                 $user_action->execute();
             }
-
             opentable(self::$locale['ME_400']);
             echo Members_Display::render_listing();
             closetable();
-
         }
-
     }
 
 }
+
 require_once(ADMIN.'members/members_view.php');
 require_once(ADMIN.'members/sub_controllers/members_display.php');
 require_once(ADMIN.'members/sub_controllers/members_action.php');
+require_once(ADMIN.'members/sub_controllers/members_profile.php');
+
 // require all the connected files here
 require_once INCLUDES."suspend_include.php";

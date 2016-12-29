@@ -228,7 +228,7 @@ class Members_Display extends Members_Admin {
 
                 $list[$data['user_id']]['checkbox'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) ? form_checkbox('user_id[]', '', '', ['input_id' => 'user_id_'.$data['user_id'], 'value' => $data['user_id']]) : '';
                 $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>\n
-                <div class='overflow-hide'><a href=''>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
+                <div class='overflow-hide'><a href='".self::$status_uri['view'].$data['user_id']."'>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
                 </div>\n";
                 $list[$data['user_id']]['user_level'] = getuserlevel($data['user_level']);
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
@@ -277,7 +277,7 @@ class Members_Display extends Members_Admin {
                 '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', array('icon' => 'caret')),
                 //form_button('email', 'Send Email', 'email', array('icon' => 'fa fa-paper-plane-o', 'class' => 'btn-link')) .
                 //form_button('pm', 'Send PM', 'pm', array('icon' => 'fa fa-envelope-open-o', 'class' => 'btn-link')),
-                '{%action_button%}'       => form_button('add', self::$locale['ME_403'], 'add', array('class' => 'btn-success')),
+                '{%action_button%}'       => "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>\n",
                 '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
                 '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",
                 '{%filter_extras%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>",

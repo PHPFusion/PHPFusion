@@ -22,9 +22,9 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
     $options += array(
-        'inline' => TRUE,
+        'inline'     => TRUE,
         'max_length' => 100,
-        'regex' => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+        'regex'      => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
         // TODO: Change the error text in case a value was entered but is not valid
         'error_text' => $locale['uf_yahoo_error']
     );
@@ -32,7 +32,5 @@ if ($profile_method == "input") {
 
 // Display in profile
 } elseif ($profile_method == "display") {
-    if ($field_value) {
-        $user_fields = array('title' => $locale['uf_yahoo'], 'value' => $field_value);
-    }
+    $user_fields = array('title' => $locale['uf_yahoo'], 'value' => $field_value ?: $locale['na']);
 }

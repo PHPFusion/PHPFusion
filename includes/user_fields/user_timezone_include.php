@@ -37,5 +37,5 @@ if ($profile_method == "input") {
     // Display in profile
 } elseif ($profile_method == "display") {
     // Insert and update
-    $user_fields = array('title' => $locale['uf_timezone'], 'value' => $field_value);
+    $user_fields = array('title' => $locale['uf_timezone'], 'value' => $field_value ?: $locale['na']);
 }

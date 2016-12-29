@@ -93,8 +93,8 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
     $userFields->showAdminPass = FALSE;
     $userFields->skipCurrentPass = TRUE;
     $userFields->registration = TRUE;
-    $info = $userFields->get_profile_input();
-    display_registerform($info);
+    $userFields->display_profile_input();
+    //display_registerform($info);
 }
 
 require_once THEMES."templates/footer.php";
