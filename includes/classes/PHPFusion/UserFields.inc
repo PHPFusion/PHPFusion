@@ -131,6 +131,7 @@ class UserFields extends QuantumFields {
 
         $this->method = 'input';
         $this->options += $this->default_options;
+
         if ($_GET['section'] == 1) {
             $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
@@ -302,7 +303,7 @@ class UserFields extends QuantumFields {
 
         $this->info += array(
             'register'  => $this->registration,
-            'pages'     => ($this->paginate && !$this->registration) ? $this->info['section'] = $this->sect : '',
+            'pages'     => ($this->paginate && !$this->registration) ? $_GET['section'] : '',
             'openform'  => openform($this->formname, 'post', FUSION_REQUEST, array(
                 'enctype' => $this->showAvatarInput ? TRUE : FALSE,
             )),

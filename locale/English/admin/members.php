@@ -30,9 +30,30 @@ $locale['ME_433'] = 'Please specify a reason for the action';
 $locale['ME_434'] = 'Reason';
 $locale['ME_435'] = 'Duration';
 $locale['ME_436'] = 'Days';
+$locale['ME_437'] = 'Update User';
 
 $locale['ME_450'] = 'Add New User';
 $locale['ME_451'] = '%s\'s Profile';
+$locale['ME_452'] = 'Edit %s\'s Profile';
+$locale['ME_453'] = 'Delete User %s';
+$locale['ME_454'] = "Warning!";
+$locale['ME_455'] = "You are about to delete user %s!\nThe contents posted by this user on this site will be deleted if you proceed.\n
+Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n
+Are you sure you want to delete this user?\n";
+$locale['ME_456'] = 'Delete User';
+
+
+$locale['ME_460'] = 'There are no users to be deactivated';
+$locale['ME_461'] = '%s has been deactivated';
+$locale['ME_462'] = 'Deactivate Inactive Members';
+$locale['ME_463'] = 'You have more then 50 inactive users and will have to run the deactivation process (%d) times.';
+$locale['ME_464'] = '%d user(s) have not logged in for %d day(s) and have been marked as inactive. By deactivating these users they will have (%d) day(s) before they are %s.';
+$locale['ME_465'] = 'Please note that some users may have submitted content to your site such as forum posts, comments, photos etc. These will be deleted when deactivated users are beeing deleted.';
+$locale['ME_466'] = 'It is strongly recommended to change deactivation action to anonymize instead of delete to prevent data loss!';
+$locale['ME_467'] = "Set deactivation system to anonymize.";
+$locale['ME_468'] = 'Automatic deactivation of inactive users.';
+
+
 
 // Actions
 $locale['ME_500'] = 'Ban';
@@ -51,7 +72,7 @@ $locale['ME_553'] = 'suspended';
 $locale['ME_554'] = 'security banned';
 $locale['ME_555'] = 'cancelled';
 $locale['ME_556'] = 'anonymized';
-
+$locale['ME_557'] = 'permanently deleted';
 
 $locale['ME_'] = '';
 $locale['ME_'] = '';
@@ -101,18 +122,6 @@ $locale['421'] = "Ban Removed";
 $locale['422'] = "Member Deleted";
 $locale['423'] = "Are you sure you wish to delete this member?";
 $locale['424'] = "Member Activated";
-$locale['425'] = "Warning!";
-$locale['425a'] = "You are about to delete user %s!\nThe following content posted by this user on this site will be deleted if you proceed:\n
-- Articles\n
-- News\n
-- Forum Threads.Note that posts made by other users in these threads will also be deleted, along with the poll votes and attachemets existent in this threads.\n
-- Forum Posts.\n
-- Forum Attachements.\n
-- Private messages sent or received by this user.\n
-- Poll votes\n
-- Ratings given\n\n
-Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n
-Are you sure you want to delete this user?\n";
 $locale['426'] = "Yes";
 $locale['427'] = "No";
 
@@ -162,8 +171,8 @@ $locale['576'] = "Account cancelled";
 $locale['577'] = "Account cancellation undone";
 $locale['578'] = "Account cancelled and anonymized";
 $locale['579'] = "Account anonymization undone";
-$locale['580'] = "Deactivate Inactive Members";
-$locale['581'] = "You have more then 50 inactive users and will have to run the deactivation process (%d) times.";
+
+
 $locale['582'] = "Reactivate";
 $locale['583'] = "Re-instate";
 $locale['584'] = "Select new status";
@@ -181,15 +190,8 @@ $locale['602'] = "Unban";
 $locale['603'] = "unbanning";
 $locale['604'] = "Reason:";
 // Deactivation System
-$locale['610'] = "%d user(s) have not logged in for %d day(s) and have been marked as inactive. By deactivating these users they will have (%d) day(s) before they are %s.";
-$locale['611'] = "Please note that some users may have submitted content to your site such as forum posts, comments, photos etc. These will be deleted when deactivated users are beeing deleted.";
+
+
 $locale['612'] = "user";
 $locale['613'] = "users";
 $locale['614'] = "Deactivate";
-$locale['615'] = "permanently deleted";
-$locale['616'] = "anonymize";
-$locale['617'] = "Warning:";
-$locale['618'] = "It is strongly recommended to change deactivation action to anonymize instead of delete to prevent data loss!";
-$locale['619'] = "You can do so here.";
-$locale['620'] = "anonymize";
-$locale['621'] = "Automatic deactivation of inactive users.";

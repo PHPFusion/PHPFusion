@@ -230,14 +230,15 @@ class Members_Display extends Members_Admin {
                 $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>\n
                 <div class='overflow-hide'><a href='".self::$status_uri['view'].$data['user_id']."'>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
                 </div>\n";
+                $list[$data['user_id']]['user_actions'] = "<a href='".self::$status_uri['edit'].$data['user_id']."'>".self::$locale['edit']."</a> - <a href='".self::$status_uri['delete'].$data['user_id']."''>".self::$locale['delete']."</a> - <a href='".self::$status_uri['view'].$data['user_id']."'>".self::$locale['view']."</a>";
                 $list[$data['user_id']]['user_level'] = getuserlevel($data['user_level']);
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
             }
         }
 
         // Render table header and table result
-        $table_head = "<tr><th></th><th colspan='3' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
-        $table_subheader = "<th class='min'><th>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
+        $table_head = "<tr><th></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
+        $table_subheader = "<th class='min'><th>".self::$locale['ME_410']."</th><th></th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
         foreach ($selected_fields as $column) {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
@@ -261,7 +262,6 @@ class Members_Display extends Members_Admin {
             form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class'=>'m-r-10')).
             form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class'=>'m-r-10')).
             form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class'=>'m-r-10'));
-
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
         $html .= form_hidden('aid', '', iAUTH);
@@ -306,6 +306,7 @@ class Members_Display extends Members_Admin {
         $html = "<tr>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
                 <td>".$list[$user_id]['user_name']."</td>\n
+                <td class='no-break'>".$list[$user_id]['user_actions']."</td>
                 <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
                 <td>\n".$list[$user_id]['user_email']."</td>\n";
         foreach ($selected_fields as $column) {
