@@ -19,6 +19,12 @@ namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
 
+/**
+ * Class Errors
+ * PHP-Fusion Error Handling
+ *
+ * @package PHPFusion
+ */
 class Errors {
     private static $instances = array();
     private static $locale = array();
@@ -32,6 +38,23 @@ class Errors {
     private $error_id = '';
     private $errors = array();
     private $new_errors = array();
+
+    /*
+     * Severity when set Error Level
+     */
+    const E_ERROR = 1;
+    const E_WARNING = 2;
+    const E_PARSE = 4;
+    const E_NOTICE = 8;
+    const E_CORE_ERROR = 16;
+    const E_CORE_WARNING = 32;
+    const E_COMPILE_ERROR = 64;
+    const E_COMPILE_WARNING = 128;
+    const E_USER_ERROR = 256;
+    const E_USER_WARNING = 512;
+    const E_USER_NOTICE = 1024;
+    const E_ALL = 2047;
+    const E_STRICT = 2048;
 
     public function __construct() {
         if (empty(self::$locale)) {
@@ -80,31 +103,26 @@ class Errors {
 
     /**
      * Custom error handler for PHP processor
-     * @param $error_level
-     * @param $error_message
-     * @param $error_file
-     * @param $error_line
-     * @param $error_context
+     *
+     * @param $error_level   - Severity
+     * @param $error_message - $e->message
+     * @param $error_file    - The file in question, run a debug_backtrace()[2] in the file
+     * @param $error_line    - The line in question, run a debug_backtrace()[2] in the file
      */
-    public function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
+    public function setError($error_level, $error_message, $error_file, $error_line) {
         $userdata = fusion_get_userdata();
-
         $showLiveError = TRUE; // directly show error - push to another instance
-
         $db = DatabaseFactory::getConnection();
-
         $result = $db->query(
             "SELECT error_id, error_status FROM ".DB_ERRORS."
             WHERE error_message = :message AND error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
             ORDER BY error_timestamp DESC LIMIT 1", array(
             ':message' => $error_message,
-            ':file' => $error_file,
-            ':page' => FUSION_REQUEST,
-            ':line' => $error_line,
+            ':file'    => $error_file,
+            ':page'    => FUSION_REQUEST,
+            ':line'    => $error_line,
         ));
-
         if ($db->countRows($result) == 0) {
-
             $db->query("INSERT INTO ".DB_ERRORS." (
 				error_level, error_message, error_file, error_line, error_page,
 				error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
@@ -113,36 +131,31 @@ class Errors {
 				'".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
 				'0', '".time()."'
 			)", array(
-                ':level' => $error_level,
+                ':level'   => $error_level,
                 ':message' => $error_message,
-                ':file' => $error_file,
-                ':page' => FUSION_REQUEST,
-                ':line' => $error_line,
+                ':file'    => $error_file,
+                ':page'    => FUSION_REQUEST,
+                ':line'    => $error_line,
             ));
             $errorId = $db->getLastId();
-
         } else {
-
             $data = $db->fetchAssoc($result);
-
             $errorId = $data['error_id'];
-
             if ($data['error_status'] == 2) {
                 $showLiveError = FALSE;
             }
-
         }
 
         if ($showLiveError) {
             $this->new_errors[$errorId] = array(
-                "error_id" => $errorId,
-                "error_level" => $error_level,
-                "error_file" => $error_file,
-                "error_line" => $error_line,
-                "error_page" => FUSION_REQUEST,
-                "error_message" => $error_message,
+                "error_id"        => $errorId,
+                "error_level"     => $error_level,
+                "error_file"      => $error_file,
+                "error_line"      => $error_line,
+                "error_page"      => FUSION_REQUEST,
+                "error_message"   => $error_message,
                 "error_timestamp" => time(),
-                "error_status" => 0,
+                "error_status"    => 0,
             );
         }
     }
@@ -213,7 +226,7 @@ class Errors {
                 <h2><?php echo $data['error_message'] ?></h2>
 
                 <h3 style='border-bottom:0;' class='display-inline'><label
-                        class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
+                            class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
                 </h3>
 
                 <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
@@ -221,9 +234,9 @@ class Errors {
 
                 <div class='m-t-10'>
                     <div class='display-inline-block m-r-20'><i class='fa fa-file-code-o m-r-10'></i><strong
-                            class='m-r-10'><?php echo $locale['ERROR_411'] ?></strong> -- <a
-                            href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id'] ?>#page'
-                            title='<?php echo $data['error_page'] ?>'>
+                                class='m-r-10'><?php echo $locale['ERROR_411'] ?></strong> -- <a
+                                href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id'] ?>#page'
+                                title='<?php echo $data['error_page'] ?>'>
                             <?php echo self::getMaxFolders($data['error_page'], 3); ?></a>
                     </div>
                     <span class='text-lighter'><?php echo $locale['ERROR_463'] ?></span>
@@ -236,15 +249,16 @@ class Errors {
                     <span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
 
                     <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong
-                            class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong></div>
+                                class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
+                    </div>
                 </div>
                 <div class='m-t-10 display-inline-block' style='width:300px'>
                     <?php
                     echo openform('logform', 'post',
-                                  FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
+                        FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
                     echo form_hidden('error_id', '', $data['error_id']);
                     echo form_select('error_status', $locale['mark_as'], $data['error_status'], array(
-                        "inline" => TRUE,
+                        "inline"  => TRUE,
                         "options" => self::get_logTypes()
                     ));
                     echo closeform();
@@ -298,6 +312,7 @@ class Errors {
 
     /**
      * Displays error logs HTML
+     *
      * @return string
      */
     private function getErrorLogs() {
@@ -322,7 +337,7 @@ class Errors {
             $html .= "<table id='error_logs_table' class='table table-responsive center'>";
             $html .= "<tr>";
             $html .= "<th>".$locale['ERROR_410']."</th>";
-            $html .= "<th class='col-xs-2'>".$locale['ERROR_462'] ."</th>";
+            $html .= "<th class='col-xs-2'>".$locale['ERROR_462']."</th>";
             $html .= "<th class='col-xs-4'>".$locale['ERROR_414']."</th>\n";
             $html .= "</tr>\n";
 
@@ -353,7 +368,7 @@ class Errors {
                     $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
-                    $html .= strtr($data['error_message'], ['#'=>'<br/>#'])."</div>\n";
+                    $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</div>\n";
                     $html .= "</td></tr>\n";
 
@@ -387,7 +402,7 @@ class Errors {
                     $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."-$i'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
-                    $html .= strtr($data['error_message'], ['#'=>'<br/>#'])."</div>\n";
+                    $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
                     $html .= "</div>\n";
                     $html .= "</td></tr>\n";
                 }
@@ -449,19 +464,19 @@ class Errors {
     private static function get_errorTypes($type) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."errors.php");
         $error_types = array(
-            1 => array("E_ERROR", $locale['E_ERROR']),
-            2 => array("E_WARNING", $locale['E_WARNING']),
-            4 => array("E_PARSE", $locale['E_PARSE']),
-            8 => array("E_NOTICE", $locale['E_NOTICE']),
-            16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
-            32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
-            64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
-            128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
-            256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
-            512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
-            1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
-            2047 => array("E_ALL", $locale['E_ALL']),
-            2048 => array("E_STRICT", $locale['E_STRICT'])
+            self::E_ERROR           => array("E_ERROR", $locale['E_ERROR']),
+            self::E_WARNING         => array("E_WARNING", $locale['E_WARNING']),
+            self::E_PARSE           => array("E_PARSE", $locale['E_PARSE']),
+            self::E_NOTICE          => array("E_NOTICE", $locale['E_NOTICE']),
+            self::E_CORE_ERROR      => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
+            self::E_CORE_WARNING    => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
+            self::E_COMPILE_ERROR   => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
+            self::E_COMPILE_WARNING => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
+            self::E_USER_ERROR      => array("E_USER_ERROR", $locale['E_USER_ERROR']),
+            self::E_USER_WARNING    => array("E_USER_WARNING", $locale['E_USER_WARNING']),
+            self::E_USER_NOTICE     => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
+            self::E_ALL             => array("E_ALL", $locale['E_ALL']),
+            self::E_STRICT          => array("E_STRICT", $locale['E_STRICT'])
         );
         if (isset($error_types[$type])) {
             return $error_types[$type][1];
@@ -537,16 +552,16 @@ class Errors {
             $formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
             if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
                 $formatted_code .= "<td class='".$line_class."'>".str_replace(array(
-                                                                                  '<code>',
-                                                                                  '</code>'
-                                                                              ), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
+                        '<code>',
+                        '</code>'
+                    ), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
             } else {
                 $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array(
-                                                                                                                           '<code>',
-                                                                                                                           '</code>'
-                                                                                                                       ), '',
-                                                                                                                       highlight_string('<?php '.$code_line,
-                                                                                                                                        TRUE)))."
+                        '<code>',
+                        '</code>'
+                    ), '',
+                        highlight_string('<?php '.$code_line,
+                            TRUE)))."
 				</td>\n</tr>\n";
                 if ($line_count == $error_line) {
                     $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
@@ -554,6 +569,7 @@ class Errors {
             }
             $line_count++;
         }
+
         return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
     }
 
@@ -564,6 +580,7 @@ class Errors {
             preg_match('`^\s*`', $code, $matches);
             $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
         }
+
         return implode("\n", $lines);
     }
 
@@ -578,16 +595,16 @@ class Errors {
             $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
 
             $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
-                                 array(
-                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
-                                     "</a>"
-                                 ), $locale['err_101']);
+                array(
+                    "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
+                    "</a>"
+                ), $locale['err_101']);
 
             $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
 
             $cHtml = openmodal('tbody', $locale['ERROR_464'],
-                               array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
+                array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
 
             $cHtml .= $this->getErrorLogs();
 
