@@ -33,41 +33,37 @@ class Members_Action extends Members_Admin {
         $this->action = $value;
     }
 
+    /**
+     * Step Actions to Take.
+     * @var array
+     */
     private $action_map = array(
-        'ban'       => [
+        parent::USER_BAN => [
             'check_operator'       => '==',
             'check_value'          => 0,
-            'title'                => 409,
-            'message'              => 'The following users will be banned',
-            'success_message'      => '%s has been banned',
+            'title'                => 'ME_500',
+            'a_message'       => 'ME_550',
             'user_status_change'   => 1,
-            'user_status_log_func' => 'suspend_log', // 1 for suspend, 2 for unsuspend
-            'user_email_title'     => 'email_ban_subject',
-            'user_email_message'   => 'email_ban_message',
+            'user_status_log_func' => 'suspend_log',
+            'email' => TRUE,
+            'reason' => TRUE,
+            'email_title'     => 'email_ban_subject',
+            'email_message'   => 'email_ban_message',
         ],
-        'reinstate' => [
+        parent::USER_REINSTATE  => [
             'check_operator'       => '>',
-            'check_value'          => 1,
-            'title'                => 408,
-            'message'              => 'The following users will be reinstated',
-            'success_message'      => '%s has been reinstated',
-            'user_status_change'   => 0,
-            'user_status_log_func' => 'unsuspend_log',
-            'user_email_title'     => '',
-            'user_email_message'   => '',
-        ],
-        'activate'  => [
-            'check_operator'       => '!==',
             'check_value'          => 0,
-            'title'                => 408,
-            'message'              => 'The following users will be activated',
-            'success_message'      => '%s has been activated',
+            'title'                => 'ME_501',
+            'a_message'              => 'ME_551',
             'user_status_change'   => 0,
+            'reason' => FALSE,
             'user_status_log_func' => 'unsuspend_log',
-            'user_email_title'     => 'email_activate_subject',
-            'user_email_message'   => 'email_activate_message',
+            'email' => TRUE,
+            'email_title' => 'email_activate_subject',
+            'email_message' => 'email_activate_message',
         ],
-        'suspend'   => [
+
+        parent::USER_SUSPEND   => [
             'check_operator'       => '==',
             'check_value'          => 0,
             'title'                => 590,
@@ -76,10 +72,11 @@ class Members_Action extends Members_Admin {
             'user_status_change'   => 0,
             'action_time'          => TRUE,
             'user_status_log_func' => 'suspend_log',
-            'user_email_title'     => 'email_suspend_subject',
-            'user_email_message'   => 'email_suspend_message',
+            'email_title'     => 'email_suspend_subject',
+            'email_message'   => 'email_suspend_message',
         ],
-        'security' => [
+
+        parent::USER_SECURITY_BAN => [
             'check_operator'       => '==',
             'check_value'          => 0,
             'title'                => 590,
@@ -87,10 +84,11 @@ class Members_Action extends Members_Admin {
             'success_message'      => '%s has been security banned for %s',
             'user_status_change'   => 4,
             'user_status_log_func' => 'suspend_log',
-            'user_email_title'     => 'email_secban_subject',
-            'user_email_message'   => 'email_secban_message',
+            'email_title'     => 'email_secban_subject',
+            'email_message'   => 'email_secban_message',
         ],
-        'cancelled' => [
+
+        parent::USER_CANCEL => [
             'check_operator'       => '==',
             'check_value'          => 0,
             'title'                => 590,
@@ -102,7 +100,29 @@ class Members_Action extends Members_Admin {
             //'user_email_title'     => 'email_secban_subject', ?? why not email this guy?
             //'user_email_message'   => 'email_secban_message', ?? why not email this guy?
         ],
-
+        parent::USER_ANON => [
+            'check_operator'       => '==',
+            'check_value'          => 0,
+            'title'                => 590,
+            'message'              => 'The following users have will be cancelled',
+            'success_message'      => '%s has been cancelled. Response time given %s',
+            'user_status_change'   => 5,
+            'action_time'          => TRUE,
+            'user_status_log_func' => 'suspend_log',
+            //'user_email_title'     => 'email_secban_subject', ?? why not email this guy?
+            //'user_email_message'   => 'email_secban_message', ?? why not email this guy?
+        ],
+        parent::USER_DEACTIVATE  => [
+            'check_operator'       => '!==',
+            'check_value'          => 0,
+            'title'                => 'ME_502',
+            'a_message'              => 'ME_552',
+            'user_status_change'   => 0,
+            'user_status_log_func' => 'suspend_log',
+            'email' => TRUE,
+            'user_email_title'     => 'email_activate_subject',
+            'user_email_message'   => 'email_activate_message',
+        ]
     );
 
     public function user_check($x, $y, $z) {
@@ -134,8 +154,10 @@ class Members_Action extends Members_Admin {
     private $users = array();
 
     public function execute() {
+        $form = '';
+        $users_list = '';
 
-        $query = "SELECT user_id, user_name, user_avatar, user_level, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
+        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
         $result = dbquery($query);
         if (dbrows($result)) {
             while ($u_data = dbarray($result)) {
@@ -152,19 +174,17 @@ class Members_Action extends Members_Admin {
         if (!empty($this->users)) {
 
             if (isset($_POST['post_action'])) {
-
                 $settings = fusion_get_settings();
-
                 $userdata = fusion_get_userdata();
-
-                $reason = form_sanitizer($_POST['reason'], '', 'reason');
-
+                $reason = '';
+                if (!empty($this->action_map[$this->action]['reason'])) {
+                    $reason = form_sanitizer($_POST['reason'], '', 'reason');
+                }
                 $duration = 0;
-                if (isset($this->action_map[$this->action]['action_time'])) {
+                if (!empty($this->action_map[$this->action]['action_time'])) {
                     $duration = form_sanitizer($_POST['duration'], '', 'duration');
                     $duration = ($duration * 86400) + TIME;
                 }
-
                 if (\defender::safe()) {
 
                     foreach ($this->users as $user_id => $u_data) {
@@ -174,20 +194,23 @@ class Members_Action extends Members_Admin {
                             ':action_time' => $duration,
                             ':user_id'     => $user_id
                         ));
-
+                        /*
+                         * Executes log
+                         */
                         if (!empty($this->action_map[$this->action]['user_status_log_func'])) {
                             $this->action_map[$this->action]['user_status_log_func']($user_id, $this->action, $reason);
                         }
-
-                        if (!empty($this->action_map[$this->action]['user_email_title']) && !empty($this->action_map[$this->action]['user_email_message'])) {
-
-                            $subject = strtr(self::$locale[$this->action_map[$this->action]]['user_email_title'],
+                        /*
+                         * Email users
+                         */
+                        if (!empty($this->action_map[$this->action]['email'])) {
+                            $email_locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/members_email.php');
+                            $subject = strtr($email_locale[$this->action_map[$this->action]['email_title']],
                                 [
                                     '[SITENAME]' => $settings['sitename']
                                 ]
                             );
-
-                            $message = strtr(self::$locale[$this->action_map[$this->action]['user_email_message']],
+                            $message = strtr($email_locale[$this->action_map[$this->action]['email_message']],
                                 [
                                     '[USER_NAME]'      => $u_data['user_name'],
                                     '[REASON]'         => $reason,
@@ -197,19 +220,15 @@ class Members_Action extends Members_Admin {
                                     '[DATE]'           => showdate('longdate', $duration)
                                 ]
                             );
-
                             sendemail($u_data['user_name'], $u_data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
                         }
-
                         $u_name[] = $u_data['user_name'];
                     }
-                    addNotice('success', sprintf($this->action_map[$this->action]['success_message'], implode(', ', $u_name)));
+                    addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
-
             } else {
 
-                $users_list = '';
                 $height = '45px';
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),
@@ -220,19 +239,23 @@ class Members_Action extends Members_Admin {
                         ]
                     );
                 }
-                $form = form_textarea('reason', self::$locale['515'], '', array('placeholder' => self::$locale['585a']));
-                $form .= form_hidden('action', '', $this->action);
-                if (isset($this->action_map[$this->action]['action_time'])) {
-                    $form .= form_textarea('duration', self::$locale['596'], '', array('append' => TRUE, 'append_value' => 'Days', 'required' => TRUE, 'inner_width' => '120px'));
+                if (!empty($this->action_map[$this->action]['reason'])) {
+                    $form .= form_textarea('reason', self::$locale['ME_433'], '', array('required'=>TRUE, 'placeholder' => self::$locale['ME_434']));
                 }
-                $form .= form_button('post_action', 'Update', $this->action, array('class' => 'btn-primary'));
-
+                if (isset($this->action_map[$this->action]['action_time'])) {
+                    $form .= form_textarea('duration', self::$locale['ME_435'], '', array('append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px'));
+                }
+                $form .= form_hidden('action', '', $this->action);
+                foreach($this->action_user_id as $user_id) {
+                    $form .= form_hidden('user_id[]', '', $user_id);
+                }
+                $form .= form_button('post_action', self::$locale['update'], $this->action, array('class' => 'btn-primary'));
                 ob_start();
-                echo openmodal('uAdmin_modal', 'Ban User', array('static' => TRUE));
+                echo openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']], array('static' => TRUE));
                 echo openform('uAdmin_frm', 'post', FUSION_SELF.fusion_get_aidlink());
                 echo strtr($this->action_form_template(), [
-                    '{%message%}'   => $this->action_map[$this->action]['message'],
-                    '{%user_list%}' => $users_list,
+                    '{%message%}'   => sprintf(self::$locale['ME_431'], self::$locale[$this->action_map[$this->action]['a_message']]),
+                    '{%users_list%}' => $users_list,
                     '{%form%}'      => $form,
                 ]);
                 echo closeform();
@@ -242,7 +265,7 @@ class Members_Action extends Members_Admin {
                 add_to_footer($modal);
             }
         } else {
-            addNotice('danger', 'Error: Actions against selected users could not be completed');
+            addNotice('danger', self::$locale['ME_430']);
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
@@ -252,7 +275,7 @@ class Members_Action extends Members_Admin {
         <p><strong>{%message%}</strong></p>
         {%users_list%}
         <hr/>
-        <div class='well'>{%form%}</div>
+        {%form%}
         ";
     }
 
@@ -270,6 +293,6 @@ class Members_Action extends Members_Admin {
 
 }
 
-require_once(dirname(__FILE__).'/../../includes/sendmail_include.php');
-require_once(dirname(__FILE__).'/../../includes/suspend_include.php');
+require_once(dirname(__FILE__).'/../../../includes/sendmail_include.php');
+require_once(dirname(__FILE__).'/../../../includes/suspend_include.php');
 // add user actions - put this in members - ////display_suspend_log($this->user_id, 1, 0, 10);//$rowstart, 10);

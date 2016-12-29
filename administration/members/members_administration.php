@@ -25,21 +25,25 @@ class Members_Admin {
     protected static $response_required = 0;
 
     const USER_BAN = 1;
+    const USER_REINSTATE = 2;
     const USER_SUSPEND = 3;
+    const USER_SECURITY_BAN = 4;
     const USER_CANCEL = 5;
     const USER_ANON = 6;
     const USER_DEACTIVATE = 7;
-    const USER_INACTIVE = 8;
 
     public function __construct() {
 
         self::$settings = fusion_get_settings();
         self::$time_overdue = TIME - (86400 * self::$settings['deactivation_period']);
         self::$response_required = TIME + (86400 * self::$settings['deactivation_response']);
+        /*
+         * LOCALE
+         */
         self::$locale = fusion_get_locale('', [
             LOCALE.LOCALESET."admin/members.php",
-            LOCALE.LOCALESET."user_fields.php",
-            LOCALE.LOCALESET."members_email.php"
+            LOCALE.LOCALESET.'admin/members_include.php',
+            LOCALE.LOCALESET."user_fields.php"
         ]);
 
         self::$rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
@@ -55,14 +59,12 @@ class Members_Admin {
         }
 
         self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
-
         self::$link_uri = array(
             self::USER_BAN        => self::$exit_link."&amp;action=".self::USER_BAN."&amp;user_id={%user_id%}",
             self::USER_SUSPEND    => self::$exit_link."&amp;action=".self::USER_SUSPEND."&amp;user_id={%user_id%}",
             self::USER_CANCEL     => self::$exit_link."&amp;action=".self::USER_CANCEL."&amp;user_id={%user_id%}",
             self::USER_ANON       => self::$exit_link."&amp;action=".self::USER_ANON."&amp;user_id={%user_id%}",
             self::USER_DEACTIVATE => self::$exit_link."&amp;action=".self::USER_DEACTIVATE."&amp;user_id={%user_id%}",
-            self::USER_INACTIVE   => self::$exit_link."&amp;action=".self::USER_INACTIVE."&amp;user_id={%user_id%}",
         );
 
         self::$user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : 0);
@@ -384,37 +386,13 @@ class Members_Admin {
         } else {
 
             if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
+
                 $user_action = new Members_Action();
                 $user_action->set_userID($_POST['user_id']);// this is by way of post.
                 $user_action->set_action($_POST['action']);
                 $user_action->execute();
 
-
                 switch ($_POST['action']) {
-                    case 'ban': // ban user
-                        break;
-                    case 'deactivate':
-
-                        break;
-
-
-                    case 2: // deactivate user
-                        require_once LOCALE.LOCALESET."admin/members_email.php";
-                        require_once INCLUDES."sendmail_include.php";
-                        $result = dbquery("SELECT user_name, user_email FROM ".DB_USERS." WHERE user_id='".$user_id."' LIMIT 1");
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                            suspend_log($user_id, 2);
-                            $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_activate_subject']);
-                            $message = str_replace("[USER_NAME]", $udata['user_name'], $message);
-                            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                            sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-                            redirect(USER_MANAGEMENT_SELF."&status=aok");
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF."&status=aer");
-                        }
-                        break;
                     case 3: // suspend user
 
                         include LOCALE.LOCALESET."admin/members_email.php";

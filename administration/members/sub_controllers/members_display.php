@@ -1,11 +1,30 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: \members_display.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
 use Administration\Members\Members_View;
 use PHPFusion\QuantumFields;
-
+/**
+ * Class Members_Display
+ *
+ * @package Administration\Members\Sub_Controllers
+ */
 class Members_Display extends Members_Admin {
 
     public static function render_listing() {
@@ -92,19 +111,16 @@ class Members_Display extends Members_Admin {
         }
 
         $tLocale = [
-            'user_hide_email' => 'Email Hidden?',
-            'user_timezone'   => 'Timezone',
-            'user_joined'     => 'Joined Date',
-            'user_lastvisit'  => 'Last Login',
-            'user_ip'         => 'IP',
-            'user_ip_type'    => 'IP Type',
-            'user_groups'     => 'User Groups',
-            'user_groups'     => 'User Groups',
+            'user_hide_email' => self::$locale['ME_420'],
+            'user_joined'     => self::$locale['ME_421'],
+            'user_lastvisit'  => self::$locale['ME_422'],
+            'user_ip'         => self::$locale['ME_423'],
+            'user_ip_type'    => self::$locale['ME_424'],
+            'user_groups'     => self::$locale['ME_425']
         ];
 
         $field_checkboxes = [
             'user_hide_email' => form_checkbox('display[user_hide_email]', $tLocale['user_hide_email'], (isset($selected_fields['user_hide_email']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_timezone'   => form_checkbox('display[user_timezone]', $tLocale['user_timezone'], (isset($selected_fields['user_timezone']) ? 1 : 0), array('reverse_label' => TRUE)),
             'user_joined'     => form_checkbox('display[user_joined]', $tLocale['user_joined'], (isset($selected_fields['user_joined']) ? 1 : 0), array('reverse_label' => TRUE)),
             'user_lastvisit'  => form_checkbox('display[user_lastvisit]', $tLocale['user_lastvisit'], (isset($selected_fields['user_lastvisit']) ? 1 : 0), array('reverse_label' => TRUE)),
             'user_ip'         => form_checkbox('display[user_ip]', $tLocale['user_ip'], (isset($selected_fields['user_ip']) ? 1 : 0), array('reverse_label' => TRUE)),
@@ -175,7 +191,7 @@ class Members_Display extends Members_Admin {
         $rows = dbrows($result);
         $page_nav = $rowCount > $rows ? makepagenav($rowstart, $limit, $rows, 5, FUSION_SELF.fusion_get_aidlink()) : '';
 
-        $list_sum = sprintf('Displaying %s - %d of %d records found', implode(', ', $statuses), $rows, $rowCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', $statuses), $rows, $rowCount);
         if ($rows != '0') {
             while ($data = dbarray($result)) {
                 // the key which to be excluded should be unset
@@ -218,15 +234,14 @@ class Members_Display extends Members_Admin {
         }
 
         // Render table header and table result
-        $table_head = "<tr><th></th><th colspan='3' class='text-center'>Basic Information</th><th colspan='".count($selected_fields)."' class='text-center'>Detailed Information</th></tr>";
-        $table_subheader = "<th class='min'><th>User</th><th class='min'>User Level</th>\n<th class='min'>User Email</th>";
+        $table_head = "<tr><th></th><th colspan='3' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
+        $table_subheader = "<th class='min'><th>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
         foreach ($selected_fields as $column) {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', 'Check All', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
-
-        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>There are no user found under the search criteria.</td>\n</tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', self::$locale['ME_406'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
         if (!empty($list)) {
             $list_result = '';
             $interface = new Members_Display();
@@ -237,30 +252,35 @@ class Members_Display extends Members_Admin {
         /*
          * User Actions Button
          */
-        $user_actions = form_button('action', 'Ban', 'ban', array('class'=>'m-r-10')).
-            form_button('action', 'Reinstate', 'reinstate', array('class'=>'m-r-10'));
 
+        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class'=>'btn-success m-r-10')).
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class'=>'m-r-10')).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class'=>'m-r-10')).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class'=>'m-r-10')).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class'=>'m-r-10')).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class'=>'m-r-10')).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class'=>'m-r-10'));
+
+        opentable(self::$locale['ME_400']);
         echo openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
         echo form_hidden('aid', '', iAUTH);
         echo strtr(Members_View::display_members(), array(
-                '{%opentable%}'           => open_table(self::$locale['400']),
-                '{%closetable%}'          => close_table(),
-                '{%filter_text%}'         => form_text('search_text', '', '', array('placeholder'        => 'Search members...',
+                '{%filter_text%}'         => form_text('search_text', '', '', array('placeholder'        => self::$locale['ME_401'],
                                                                                     'append'             => TRUE,
                                                                                     'append_button'      => TRUE,
-                                                                                    'append_value'       => 'Search',
+                                                                                    'append_value'       => self::$locale['search'],
                                                                                     'append_form_value'  => 'search_member',
                                                                                     'append_button_name' => 'search_member',
                                                                                     'class'              => 'm-b-0'
                 )),
-                '{%filter_button%}'       => form_button('filter_btn', 'Display Filters', 'filter_btn', array('icon' => 'caret')),
+                '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', array('icon' => 'caret')),
                 //form_button('email', 'Send Email', 'email', array('icon' => 'fa fa-paper-plane-o', 'class' => 'btn-link')) .
                 //form_button('pm', 'Send PM', 'pm', array('icon' => 'fa fa-envelope-open-o', 'class' => 'btn-link')),
-                '{%action_button%}'       => form_button('add', 'Add a new User', 'add', array('class' => 'btn-success')),
+                '{%action_button%}'       => form_button('add', self::$locale['ME_403'], 'add', array('class' => 'btn-success')),
                 '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
                 '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",
                 '{%filter_extras%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>",
-                '{%filter_apply_button%}' => form_button('apply_filter', 'Apply Filter', 'apply_filter', array('class' => 'btn-primary')),
+                '{%filter_apply_button%}' => form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', array('class' => 'btn-primary')),
                 '{%page_count%}'          => $list_sum,
                 '{%list_head%}'           => $table_head,
                 '{%list_column%}'         => $table_subheader,
@@ -271,6 +291,7 @@ class Members_Display extends Members_Admin {
             )
         );
         echo closeform();
+        closetable();
 
         $javascript = "<script>
         $('#filter_panel').hide();        
@@ -306,5 +327,4 @@ class Members_Display extends Members_Admin {
 
         return $html;
     }
-
 }
