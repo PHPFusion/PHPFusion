@@ -1138,22 +1138,8 @@ class QuantumFields extends \SqlHandler {
                 $user_data = $callback_data;
                 $profile_method = $method;
                 // can access options vars
-                if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
-                    include $options['plugin_locale_folder'].$data['field_name'].".php";
-                }
-                if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
-                    include $options['plugin_folder'].$data['field_name']."_include.php";
-                }
-                if (isset($options['debug']) && $options['debug']) {
-                    print_p("Finding ".$options['plugin_locale_folder'].$data['field_name'].".php");
-                    if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
-                        print_p($data['field_name']." locale loaded");
-                    }
-                    print_p("Finding ".$options['plugin_folder'].$data['field_name']."_include.php");
-                    if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
-                        print_p($data['field_name']." module loaded");
-                    }
-                }
+                $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
+                include $options['plugin_folder'].$data['field_name']."_include.php";
                 if (isset($user_fields)) {
                     return $user_fields;
                 }

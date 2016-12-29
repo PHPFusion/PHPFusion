@@ -34,6 +34,6 @@ if ($profile_method == "input") {
             $user_fields = array('title' => $locale['uf_shouts-stat'], 'value' => $field_value);
         }
     } else {
-        $user_fields = array('title'=> $locale['uf_shouts-stat'], 'value'=>fusion_get_locale('na'));
+        $user_fields = array('title' => $locale['uf_shouts-stat'], 'value' => fusion_get_locale('na'));
     }
 }

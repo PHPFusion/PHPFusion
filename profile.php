@@ -62,9 +62,8 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $userFields->method = 'display';
     $userFields->plugin_folder = INCLUDES."user_fields/";
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-
-    $info = $userFields->get_profile_output();
-    render_userprofile($info);
+    $userFields->display_profile_output();
+    //render_userprofile($info);
 
 	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
 

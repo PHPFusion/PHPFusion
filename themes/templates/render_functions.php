@@ -77,7 +77,6 @@ function close_side($title = '') {
     return $closeside;
 }
 
-
 // Render comments template
 if (!function_exists("render_comments")) {
     /**

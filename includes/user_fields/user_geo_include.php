@@ -31,7 +31,7 @@ if ($profile_method == "input") {
             $field_value .= "$value<br/>\n";
         }
     } else {
-        $field_value = fusion_get_locale('na');
+        $field_value = $locale['na'];
     }
     $user_fields = array('title' => $locale['uf_geo'], 'value' => $field_value);
 }

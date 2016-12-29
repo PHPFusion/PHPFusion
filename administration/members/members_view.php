@@ -4,15 +4,7 @@ namespace Administration\Members;
 class Members_View extends Members_Admin {
 
     public static function display_members() {
-        $locale = self::$locale;
-
-        if (isset($_GET['status']) && ($_GET['status']) == "der") {
-            addNotice("warning", $locale['error']);
-        }
-        if (isset($_GET['status']) && ($_GET['status']) == "dok") {
-            addNotice("success", $locale['422']);
-        }
-        $html = "<div class='clearfix'>
+        return "<div class='clearfix'>
         <div class='pull-right'>{%action_button%}</div>
         <div class='pull-left'>{%filter_text%} {%filter_button%}</div>
         </div>
@@ -35,7 +27,7 @@ class Members_View extends Members_Admin {
         <!----//filter---->
         <hr/>       
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
-        <div class='list-group-item spacer-sm p-5'>{%user_actions%}</div>
+        <div id='user_action_bar' class='list-group-item spacer-sm p-5'>{%user_actions%}</div>
         <table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
             <thead>
                 {%list_head%}
@@ -49,7 +41,6 @@ class Members_View extends Members_Admin {
             </tfoot>
         </table>
         ";
-        return $html;
     }
 
 

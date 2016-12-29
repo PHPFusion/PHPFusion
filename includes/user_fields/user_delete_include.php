@@ -31,43 +31,43 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
     if (!defined('ADMIN_PANEL')) {
 
-    if (iMEMBER && isset($_POST['delete_me']) && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
-        $data = fusion_get_userdata('user_id');
+        if (iMEMBER && isset($_POST['delete_me']) && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
+            $data = fusion_get_userdata('user_id');
 
-        if (db_exists(DB_ARTICLES)) {
-            dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data."'");
-        }
-        dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data."'");
-        dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data."' OR message_from='".$data."'");
-        if (db_exists(DB_NEWS)) {
-            dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data."'");
-        }
-        if (db_exists(DB_POLL_VOTES)) {
-            dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data."'");
-        }
-        dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$data."'");
-        dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$data."'");
-        if (db_exists(DB_FORUM_THREADS)) {
-            dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$data."'");
-        }
-        if (db_exists(DB_FORUM_POSTS)) {
-            dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$data."'");
-        }
-        if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
-            dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$data."'");
-        }
-        dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data."'");
+            if (db_exists(DB_ARTICLES)) {
+                dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data."'");
+            }
+            dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data."'");
+            dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data."' OR message_from='".$data."'");
+            if (db_exists(DB_NEWS)) {
+                dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data."'");
+            }
+            if (db_exists(DB_POLL_VOTES)) {
+                dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data."'");
+            }
+            dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$data."'");
+            dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$data."'");
+            if (db_exists(DB_FORUM_THREADS)) {
+                dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$data."'");
+            }
+            if (db_exists(DB_FORUM_POSTS)) {
+                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$data."'");
+            }
+            if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+                dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$data."'");
+            }
+            dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data."'");
 
-        addNotice('success', $locale['uf_delete_exit']);
-        redirect('index.php');
-    }
+            addNotice('success', $locale['uf_delete_exit']);
+            redirect('index.php');
+        }
 
-    if (iMEMBER && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
-        $action_url = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
-        $ab = openform('delete_me', 'post', $action_url);
-        $ab .= form_button('delete_me', $locale['uf_delete_del'], "delete_me");
-        $ab .= closeform();
-        $user_fields = array('title' => $locale['uf_delete'], 'value' => $ab);
+        if (iMEMBER && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
+            $action_url = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+            $ab = openform('delete_me', 'post', $action_url);
+            $ab .= form_button('delete_me', $locale['uf_delete_del'], "delete_me");
+            $ab .= closeform();
+            $user_fields = array('title' => $locale['uf_delete'], 'value' => $ab);
         }
     }
 }
