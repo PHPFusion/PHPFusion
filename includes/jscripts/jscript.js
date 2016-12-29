@@ -157,6 +157,11 @@ function insertText(f, h, e) {
 function show_hide(a) {
     document.getElementById(a).style.display = document.getElementById(a).style.display == "none" ? "block" : "none"
 }
+/*
+Variations to show_hide, in the form of a sliding action
+ */
+function slide_hide(a) { $('#'+a).slideToggle(); }
+
 /**
  * Need documentation
  * @param c

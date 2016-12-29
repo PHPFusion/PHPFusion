@@ -163,7 +163,7 @@ if (isset($permalink)) {
 
 // Output the final complete page content
 echo $output;
-\Defender\Token::remove_token();
+
 remove_notice();
 
 if ((ob_get_length() > 0)) { // length is a number

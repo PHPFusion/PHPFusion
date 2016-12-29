@@ -95,7 +95,7 @@ foreach ($locale['dateformats'] as $dateformat) {
 unset($dateformat);
 opentable($locale['time_settings']);
 echo "<div class='well'>".$locale['time_description']."</div>\n";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
 echo "<table class='table table-condensed table-hover table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td valign='top' width='40%' class='tbl'><strong>".$locale['458']." (".$locale['459']."):</strong></td>\n";
 echo "<td width='60%' class='tbl'>".strftime($settings2['longdate'], (time()) + ($settings2['serveroffset'] * 3600))."</td>\n";

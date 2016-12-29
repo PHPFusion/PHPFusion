@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/*
 require_once "../maincore.php";
 pageAccess('M');
 require_once THEMES."templates/admin_header.php";
@@ -757,4 +758,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                                                                           FUSION_SELF.fusion_get_aidlink()."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
     }
 }
+require_once THEMES."templates/footer.php";
+*/
+/*
+ * New Codes Implementation - Work In Progress
+ * */
+
+ require_once "../maincore.php";
+require_once THEMES."templates/admin_header.php";
+require_once ADMIN.'members/members_administration.php';
+Administration\Members\Members_Admin::getInstance()->display_admin();
 require_once THEMES."templates/footer.php";

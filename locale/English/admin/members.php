@@ -1,4 +1,63 @@
 <?php
+
+$locale['ME_400'] = 'User Management';
+$locale['ME_401'] = 'Search User...';
+$locale['ME_402'] = 'Display Filters';
+$locale['ME_403'] = 'Add a new User';
+$locale['ME_404'] = 'Apply Filter';
+$locale['ME_405'] = 'There are no user found under the search criteria';
+$locale['ME_406'] = 'Check All';
+$locale['ME_407'] = 'Displaying %s - %d of %d records found';
+$locale['ME_408'] = 'Basic Information';
+$locale['ME_409'] = 'Detailed Information';
+$locale['ME_410'] = 'User';
+$locale['ME_411'] = 'User Level';
+$locale['ME_412'] = 'Email Address';
+
+$locale['ME_420'] = 'Email Hidden?';
+$locale['ME_421'] = 'Joined Date';
+$locale['ME_422'] = 'Last Login';
+$locale['ME_423'] = 'IP Address';
+$locale['ME_424'] = 'IP Type';
+$locale['ME_425'] = 'User Groups';
+
+$locale['ME_430'] = 'Error: Actions against selected users could not be completed';
+$locale['ME_431'] = 'The following users will be %s:';
+$locale['ME_432'] = '%s has been %s';
+$locale['ME_433'] = 'Please specify a reason for the action';
+$locale['ME_434'] = 'Reason';
+$locale['ME_435'] = 'Duration';
+$locale['ME_436'] = 'Days';
+
+// Actions
+$locale['ME_500'] = 'Ban';
+$locale['ME_501'] = 'Reinstate';
+$locale['ME_502'] = 'Deactivate';
+$locale['ME_503'] = 'Suspend';
+$locale['ME_504'] = 'Security Ban';
+$locale['ME_505'] = 'Cancel';
+$locale['ME_506'] = 'Anonymize';
+
+$locale['ME_'] = '';
+$locale['ME_'] = '';
+$locale['ME_'] = '';
+$locale['ME_'] = '';
+$locale['ME_'] = '';
+$locale['ME_'] = '';
+
+// a_message keys
+$locale['ME_550'] = 'banned';
+$locale['ME_551'] = 'reinstated';
+$locale['ME_552'] = 'deactivated';
+
+
+
+
+
+
+
+
+
 // Member Management Options
 $locale['400'] = "User Management";
 $locale['401'] = "User";
@@ -52,7 +111,9 @@ $locale['511s'] = "There are no recorded suspensions for this member in the susp
 $locale['512s'] = "Previous suspensions of ";
 $locale['513'] = "No."; // as in number
 $locale['514'] = "Date";
+
 $locale['515'] = "Reason";
+
 $locale['516'] = "Suspending Administrator";
 $locale['517'] = "System Action";
 $locale['518'] = "Back to User Profile";
@@ -102,7 +163,7 @@ $locale['592'] = "suspending";
 $locale['593'] = "unsuspending";
 $locale['594'] = "Please specify a reason for why you are ";
 $locale['595'] = " the user ";
-$locale['596'] = "Duration:";
+
 $locale['600'] = "Security ban";
 $locale['601'] = "security banning";
 $locale['602'] = "Unban";

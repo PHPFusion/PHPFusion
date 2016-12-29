@@ -18,6 +18,7 @@
 namespace PHPFusion\Weblinks;
 
 use PHPFusion\SiteLinks;
+use \PHPFusion\BreadCrumbs;
 
 abstract class Weblinks extends WeblinksServer {
 
@@ -37,17 +38,17 @@ abstract class Weblinks extends WeblinksServer {
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        BreadCrumbs::getInstance()->addBreadCrumb(
             array(
-				"link" => INFUSIONS."weblinks/weblinks.php",
-				"title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "link" => INFUSIONS."weblinks/weblinks.php",
+                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
             )
         );
 
         $info = array(
             "weblink_cat_id" => intval(0),
             "weblink_cat_name" => self::$locale['web_0001'],
-			"weblink_cat_description" => "",
+            "weblink_cat_description" => "",
             "weblink_cat_language" => LANGUAGE,
             "weblink_categories" => array(),
             "weblink_item_rows" => 0,
@@ -69,8 +70,8 @@ abstract class Weblinks extends WeblinksServer {
      */
     private function get_WeblinkFilters() {
         $array['allowed_filters'] = array(
-			"latest"  => self::$locale['web_0030'],
-			"opened" => self::$locale['web_0031'],
+            "latest"  => self::$locale['web_0030'],
+            "opened" => self::$locale['web_0031'],
         );
         foreach ($array['allowed_filters'] as $type => $filter_name) {
             $filter_link = INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "")."type=".$type;
@@ -86,16 +87,16 @@ abstract class Weblinks extends WeblinksServer {
      * @return mixed
      */
     protected function get_WeblinkCategories() {
-		$info['weblink_categories'] = array();
+        $info['weblink_categories'] = array();
         $result = dbquery("
-			SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
-			FROM ".DB_WEBLINK_CATS." wc
-			LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility")."
-			WHERE wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
-			".(multilang_table("WL") ? " AND wc.weblink_cat_language='".LANGUAGE."'" : "")."
-			GROUP BY wc.weblink_cat_id
-			ORDER BY wc.weblink_cat_id ASC
-		");
+            SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
+            FROM ".DB_WEBLINK_CATS." wc
+            LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility")."
+            WHERE wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
+            ".(multilang_table("WL") ? " AND wc.weblink_cat_language='".LANGUAGE."'" : "")."
+            GROUP BY wc.weblink_cat_id
+            ORDER BY wc.weblink_cat_id ASC
+        ");
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
                 $info['weblink_categories'][$cdata['weblink_cat_id']] = array(
@@ -155,17 +156,17 @@ abstract class Weblinks extends WeblinksServer {
         $weblink_settings = self::get_weblink_settings();
 
         return "
-			SELECT
-				a.*, ac.*
-			FROM ".DB_WEBLINKS." a
-			LEFT JOIN ".DB_WEBLINK_CATS." ac ON ac.weblink_cat_id=a.weblink_cat
-			WHERE a.weblink_status='1' AND ".groupaccess("a.weblink_visibility")." AND ac.weblink_cat_status='1' AND ".groupaccess("ac.weblink_cat_visibility")."
-			".(multilang_table("WL") ? " AND a.weblink_language='".LANGUAGE."' AND ac.weblink_cat_language='".LANGUAGE."'" : "")."
-			".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
-			GROUP BY a.weblink_id
-			ORDER BY ".self::check_WeblinksFilter()."
-			LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".$weblink_settings['links_per_page']."")."
-		";
+            SELECT
+                a.*, ac.*
+            FROM ".DB_WEBLINKS." a
+            LEFT JOIN ".DB_WEBLINK_CATS." ac ON ac.weblink_cat_id=a.weblink_cat
+            WHERE a.weblink_status='1' AND ".groupaccess("a.weblink_visibility")." AND ac.weblink_cat_status='1' AND ".groupaccess("ac.weblink_cat_visibility")."
+            ".(multilang_table("WL") ? " AND a.weblink_language='".LANGUAGE."' AND ac.weblink_cat_language='".LANGUAGE."'" : "")."
+            ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
+            GROUP BY a.weblink_id
+            ORDER BY ".self::check_WeblinksFilter()."
+            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".$weblink_settings['links_per_page']."")."
+        ";
 
     }
 
@@ -180,11 +181,11 @@ abstract class Weblinks extends WeblinksServer {
         $filter = array("latest", "opened");
 
         if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
-			switch ($_GET['type']) {
-				case "latest":  $catfilter = "a.weblink_datestamp DESC"; break;
-				case "opened": $catfilter = "weblink_count DESC";       break;
-				default:        $catfilter = "a.weblink_datestamp DESC";
-			}
+            switch ($_GET['type']) {
+                case "latest":  $catfilter = "a.weblink_datestamp DESC"; break;
+                case "opened": $catfilter = "weblink_count DESC";       break;
+                default:        $catfilter = "a.weblink_datestamp DESC";
+            }
         } else {
             $catfilter = "a.weblink_datestamp DESC";
         }
@@ -204,12 +205,12 @@ abstract class Weblinks extends WeblinksServer {
 
         if (!empty($data)) {
 
-			// Page Nav
+            // Page Nav
             $articlePagenav = "";
             $pagecount = 1;
 
 
-			// Admin Informations
+            // Admin Informations
             $adminActions = array();
             if (iADMIN && checkrights("W")) {
                 $adminActions = array(
@@ -224,14 +225,14 @@ abstract class Weblinks extends WeblinksServer {
                 );
             }
 
-			// Build Array
+            // Build Array
             $info = array(
-				# Links and Admin Actions
+                # Links and Admin Actions
                 "weblinks_url" => INFUSIONS."weblinks/weblinks.php?weblink_id=".$data['weblink_id'],
                 "weblinks_cat_url" => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'],
-				"admin_actions" => $adminActions,
+                "admin_actions" => $adminActions,
 
-				# Page Nav
+                # Page Nav
                 "page_count" => $pagecount,
                 "weblink_pagenav" => $articlePagenav
             );
@@ -252,10 +253,10 @@ abstract class Weblinks extends WeblinksServer {
 
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
-		$info = array(
+        $info = array(
             "weblink_cat_id" => intval(0),
             "weblink_cat_name" => self::$locale['web_0001'],
-			"weblink_cat_description" => "",
+            "weblink_cat_description" => "",
             "weblink_cat_language" => LANGUAGE,
             "weblink_categories" => array(),
             "weblink_item_rows" => 0,
@@ -267,20 +268,20 @@ abstract class Weblinks extends WeblinksServer {
 
         // Filtered by Category ID.
         $result = dbquery("
-			SELECT *
-			FROM ".DB_WEBLINK_CATS."
-			WHERE weblink_cat_id='".intval($weblink_cat_id)."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility")."
-			".(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")."
-			LIMIT 0,1
-		");
+            SELECT *
+            FROM ".DB_WEBLINK_CATS."
+            WHERE weblink_cat_id='".intval($weblink_cat_id)."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility")."
+            ".(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")."
+            LIMIT 0,1
+        ");
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
             set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
-           \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array(
-				"link" => INFUSIONS."weblinks/weblinks.php",
-				"title" => SiteLinks::get_current_SiteLinks("", "link_name")
+           BreadCrumbs::getInstance()->addBreadCrumb(array(
+                "link" => INFUSIONS."weblinks/weblinks.php",
+                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
             ));
             add_to_title(self::$locale['global_201'].$data['weblink_cat_name']);
 
@@ -290,7 +291,7 @@ abstract class Weblinks extends WeblinksServer {
             // build categorial data.
             $info['weblink_cat_id'] = $data['weblink_cat_id'];
             $info['weblink_cat_name'] = $data['weblink_cat_name'];
-			$info['weblink_cat_description'] = nl2br(parse_textarea($data['weblink_cat_description']));
+            $info['weblink_cat_description'] = nl2br(parse_textarea($data['weblink_cat_description']));
             $info['weblink_cat_language'] = $data['weblink_cat_language'];
 
             $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
@@ -365,14 +366,14 @@ abstract class Weblinks extends WeblinksServer {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'][$i], "title" => $value));
+                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'][$i], "title" => $value));
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
+            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
         }
     }
 

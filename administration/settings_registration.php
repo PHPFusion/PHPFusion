@@ -60,7 +60,7 @@ if (isset($_POST['savesettings'])) {
     }
 }
 opentable($locale['register_settings']);
-echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink(), array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 $opts = array('1' => $locale['yes'], '0' => $locale['no']);
 echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";

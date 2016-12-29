@@ -39,45 +39,46 @@ class Admins {
     );
     /**
      * Default core administration pages
+     *
      * @var array
      */
     public $admin_page_icons = array(
-        'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
-        'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
-        'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
+        'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
+        'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
+        'PM'   => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
-        'AD' => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
-        'B' => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
-        'M' => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
-        'MI' => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
-        'SU' => "<i class='admin-ico fa fa-fw fa-file-o'></i>", // User Submissions
-        'UF' => "<i class='admin-ico fa fa-fw fa-table'></i>", // User Fields
-        'UG' => "<i class='admin-ico fa fa-fw fa-users'></i>", // user groups
-        'UL' => "<i class='admin-ico fa fa-fw fa-coffee'></i>", // user logs
-        'SB' => "<i class='admin-ico fa fa-fw fa-language'></i>", // Banners
-        'BB' => "<i class='admin-ico fa fa-fw fa-bold'></i>", // Bbcode
-        'DB' => "<i class='admin-ico fa fa-fw fa-history'></i>", // database backup
+        'AD'   => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
+        'B'    => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
+        'M'    => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
+        'MI'   => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
+        'SU'   => "<i class='admin-ico fa fa-fw fa-file-o'></i>", // User Submissions
+        'UF'   => "<i class='admin-ico fa fa-fw fa-table'></i>", // User Fields
+        'UG'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // user groups
+        'UL'   => "<i class='admin-ico fa fa-fw fa-coffee'></i>", // user logs
+        'SB'   => "<i class='admin-ico fa fa-fw fa-language'></i>", // Banners
+        'BB'   => "<i class='admin-ico fa fa-fw fa-bold'></i>", // Bbcode
+        'DB'   => "<i class='admin-ico fa fa-fw fa-history'></i>", // database backup
         'MAIL' => "<i class='admin-ico fa fa-fw fa-send'></i>", // Email templates
         'ERRO' => "<i class='admin-ico fa fa-fw fa-bug'></i>", // Error Logs
-        'I' => "<i class='admin-ico fa fa-fw fa-cubes'></i>", // Infusions
-        'P' => "<i class='admin-ico fa fa-fw fa-desktop'></i>", // Panels
-        'PL' => "<i class='admin-ico fa fa-fw fa-puzzle-piece'></i>", // Permalink
-        'PI' => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // php Info
-        'ROB' => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
-        'SL' => "<i class='admin-ico fa fa-fw fa-link'></i>", // Site Links
-        'SM' => "<i class='admin-ico fa fa-fw fa-smile-o'></i>", // Smileys
-        'TS' => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme
-        'U' => "<i class='admin-ico fa fa-fw fa-database'></i>", // Upgrade
+        'I'    => "<i class='admin-ico fa fa-fw fa-cubes'></i>", // Infusions
+        'P'    => "<i class='admin-ico fa fa-fw fa-desktop'></i>", // Panels
+        'PL'   => "<i class='admin-ico fa fa-fw fa-puzzle-piece'></i>", // Permalink
+        'PI'   => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // php Info
+        'ROB'  => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
+        'SL'   => "<i class='admin-ico fa fa-fw fa-link'></i>", // Site Links
+        'SM'   => "<i class='admin-ico fa fa-fw fa-smile-o'></i>", // Smileys
+        'TS'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme
+        'U'    => "<i class='admin-ico fa fa-fw fa-database'></i>", // Upgrade
         'LANG' => "<i class='admin-ico fa fa-fw fa-flag'></i>", // Language Settings
-        'S1' => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings
-        'S2' => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
-        'S3' => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
-        'S4' => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
-        'S6' => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
-        'S7' => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
-        'S9' => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
-        'S10' => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
-        'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
+        'S1'   => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings
+        'S2'   => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
+        'S3'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
+        'S4'   => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
+        'S6'   => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
+        'S7'   => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
+        'S9'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
+        'S10'  => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
+        'S12'  => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
     );
     /**
      * @var array
@@ -110,9 +111,7 @@ class Admins {
             self::$instance = new static();
         }
 
-        self::$instance->setAdmin();
-
-        return (object) self::$instance;
+        return (object)self::$instance;
     }
 
     public function setAdmin() {
@@ -130,7 +129,6 @@ class Admins {
             $this->current_page = $this->_currentPage();
         }
     }
-
 
     /**
      * @return array
@@ -170,9 +168,9 @@ class Admins {
     }
 
     /**
-     * @param $page - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons - Section Icons
+     * @param $icons         - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
@@ -182,15 +180,15 @@ class Admins {
 
     public function setAdminBreadcrumbs() {
         BreadCrumbs::getInstance()->addBreadCrumb([
-                                                      'link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
-                                                      'title' => $GLOBALS['locale']['ac10']
-                                                  ]);
+            'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
+            'title' => $GLOBALS['locale']['ac10']
+        ]);
         $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
         if ($acTab != 0 && $acTab <= 5) {
             BreadCrumbs::getInstance()->addBreadCrumb([
-                                                          'link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
-                                                          'title' => $GLOBALS['locale']['ac0'.$acTab]
-                                                      ]);
+                'link'  => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
+                'title' => $GLOBALS['locale']['ac0'.$acTab]
+            ]);
         }
     }
 
@@ -247,7 +245,7 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type  - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -259,7 +257,7 @@ class Admins {
     }
 
     /**
-     * @param $type - comment prefix
+     * @param $type  - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -282,7 +280,9 @@ class Admins {
 
     /**
      * Displays vertical collapsible administration navigation
+     *
      * @param bool|FALSE $image_icon
+     *
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
@@ -341,17 +341,20 @@ class Admins {
 
     /**
      * @param $page_number
+     *
      * @return string
      */
     public function get_admin_section_icons($page_number) {
         if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
+
         return FALSE;
     }
 
     /**
      * Replace admin page icons
+     *
      * @param $page
      * @param $icons
      */
@@ -363,7 +366,9 @@ class Admins {
 
     /**
      * Get the administration page icons
+     *
      * @param $admin_rights
+     *
      * @return bool
      */
     public function get_admin_icons($admin_rights) {
@@ -377,7 +382,9 @@ class Admins {
 
     /**
      * Displays horizontal administration navigation
+     *
      * @param bool $icon_only
+     *
      * @return string
      */
     public function horizontal_admin_nav($icon_only = FALSE) {

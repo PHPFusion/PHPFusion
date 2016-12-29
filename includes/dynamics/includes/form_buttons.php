@@ -41,11 +41,11 @@ function form_button($input_name, $title, $input_value, array $options = array()
     }
 
     if ($options['type'] == 'link') {
-        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i> " : '').$title."</a>";
+        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</a>";
     } elseif ($options['type'] == 'button') {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i> " : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
     } else {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i> " : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
     }
 
     return $html;

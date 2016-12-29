@@ -318,7 +318,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 			LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
 			WHERE ".(multilang_table("WL") ? "ac.weblink_cat_language='".LANGUAGE."'" : "")."
 			$sql_condition
-			GROUP BY a.weblink_id, ac.weblink_cat_id
+			GROUP BY ac.weblink_cat_id
 			ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
         );
 
@@ -358,15 +358,20 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 				<!-- Search -->
 				<div class="display-inline-block pull-left m-r-10" style="width: 300px;">
 				<?php echo form_text("weblink_cat_name", "", $filter_values['weblink_cat_name'], array(
-					"placeholder" => $this->locale['WLS_0133'], "append_button" => TRUE, "append_value" => "<i class='fa fa-fw fa-search'></i>", "append_form_value" => "search_weblink", "width" => "250px"
+					"placeholder" => $this->locale['WLS_0133'],
+                    "append_button" => TRUE,
+                    "append_value" => "<i class='fa fa-fw fa-search'></i>",
+                    "append_form_value" => "search_weblink",
+                    "width" => "250px",
+                    "group_size" => "sm"
 				)); ?>
 				</div>
 				<div class="display-inline-block">
-				  <a class="btn btn-sm <?php echo (!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
-				    <?php echo $this -> locale['WLS_0121']; ?>
+				  <a class="btn btn-sm m-r-10 <?php echo (!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
+				    <?php echo $this->locale['WLS_0121']; ?>
 				    <span id="filter_caret" class="fa <?php echo (!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
 				  </a>
-				  <?php echo form_button("weblink_clear", $this -> locale['WLS_0122'], "clear"); ?>
+				  <?php echo form_button("weblink_clear", $this->locale['WLS_0122'], "clear", array('class' => 'btn-default btn-sm')); ?>
 				</div>
 			</div>
 
@@ -413,6 +418,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 		add_to_jquery("
 			// Toogle Options
 			$('#toggle_options').bind('click', function(e) {
+                e.preventDefault();
 				$('#weblink_filter_options').slideToggle();
 				var caret_status = $('#filter_caret').hasClass('fa-caret-down');
 				if (caret_status == 1) {

@@ -24,7 +24,6 @@ require_once THEMES."templates/admin_header.php";
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
 }
-\PHPFusion\Admins::getInstance()->setAdmin();
 /**
  * $admin_sections are generated from navigation.php
  * $admin_pages are generated from navigation.php

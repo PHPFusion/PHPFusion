@@ -91,15 +91,15 @@ function showcounter() {
  * @return string
  */
 if (!function_exists("alert")) {
-    function alert($title, $text = "", array $options = array()) {
+    function alert($title, array $options = array()) {
         $options += array(
             "class" => !empty($options['class']) ? $options['class'] : "alert-info",
             "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
         );
         if ($options['dismiss'] == TRUE) {
-            $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>$title</strong>".($text ? " ".$text : "")."</div>";
+            $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>$title</div>";
         } else {
-            $html = "<div class='alert ".$options['class']."'><strong>$title</strong>".($text ? " ".$text : "")."</div>";
+            $html = "<div class='alert ".$options['class']."'>$title</div>";
         }
         add_to_jquery("$('div.alert a').addClass('alert-link');");
 

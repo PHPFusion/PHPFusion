@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Weblinks;
 
+use \PHPFusion\Breadcrumbs;
+
 class WeblinksAdminView extends WeblinksAdminModel {
 
     private $allowed_pages = array("weblinks", "weblinks_category", "weblinks_form", "submissions", "settings");
@@ -36,34 +38,34 @@ class WeblinksAdminView extends WeblinksAdminModel {
 		add_to_title($this->locale['WLS_0000']);
 
 		// Handle Breadcrumbs and Titles
-		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $this->locale['WLS_0001']));
+		BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $this->locale['WLS_0001']));
 
 		$weblinkTitle = $this->locale['WLS_0001'];
 		$weblinkCatTitle = $this->locale['WLS_0004'];
 
 		if ($_GET['section'] == "weblinks") {
-			\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks", "title" => $this->locale['WLS_0001']));
+			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks", "title" => $this->locale['WLS_0001']));
 			if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
-				\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks&amp;ref=weblinks_form", "title" => (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003'])));
+				BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks&amp;ref=weblinks_form", "title" => (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003'])));
 				$weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);
 			}
 		}
 
 		if ($_GET['section'] == "weblinks_category") {
-			\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", "title" => $this->locale['WLS_0004']));
+			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", "title" => $this->locale['WLS_0004']));
 			if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
-					\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category&amp;ref=weblink_cat_form", "title" => (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006'])));
+					BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category&amp;ref=weblink_cat_form", "title" => (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006'])));
 				$weblinkCatTitle = (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006']);
 
 			}
 		}
 
 		if ($_GET['section'] == "submissions") {
-			\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['WLS_0007']));
+			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['WLS_0007']));
 		}
 
 		if ($_GET['section'] == "settings") {
-			\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['WLS_0008']));
+			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['WLS_0008']));
 		}
 
 		// Handle Tabs

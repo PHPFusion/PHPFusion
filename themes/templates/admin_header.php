@@ -51,7 +51,7 @@ if ($settings['bootstrap']) {
 
 ob_start();
 
-@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
+@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link=:base_url", array(':base_url' => FUSION_SELF)));
 \PHPFusion\OutputHandler::setTitle($GLOBALS['locale']['global_123'].$GLOBALS['locale']['global_201'].($title ? $title.$GLOBALS['locale']['global_201'] : ""));
 
 // If the user is not logged in as admin then don't parse the administration page

@@ -335,7 +335,7 @@ class Poll {
                 }
 
                 // blank poll - no poll on edit or new thread
-                $poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens' => 1));
+                $poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
                 $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255,
                                                                                                                                   'placeholder' => $locale['forum_0604a'],
                                                                                                                                   'inline' => TRUE,

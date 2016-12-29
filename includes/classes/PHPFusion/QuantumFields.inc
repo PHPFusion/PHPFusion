@@ -1948,7 +1948,7 @@ class QuantumFields extends \SqlHandler {
             $this->create_fields($this->field_data, 'dynamics');
         }
         echo "<div class='m-t-20'>\n";
-        echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
+        echo openform('fieldform', 'post', $form_action);
         echo form_button('save_field', $this->locale['fields_0488'], 'save', array(
             'input_id' => "save_field2",
             'class' => 'btn-primary m-b-20'
@@ -2450,7 +2450,7 @@ class QuantumFields extends \SqlHandler {
             $this->create_fields($this->field_data, 'module');
         }
         echo "<div class='m-t-20'>\n";
-        echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
+        echo openform('fieldform', 'post', $form_action);
         echo "<p class='strong text-dark'>".$user_field_name."</p>\n";
         echo "<div class='well'>\n";
         echo "<p class='strong'>".$this->locale['fields_0400']."</p>\n";
