@@ -26,9 +26,6 @@ use PHPFusion\QuantumFields;
  * @package Administration\Members\Sub_Controllers
  */
 class Members_Display extends Members_Admin {
-
-
-
     public static function render_listing() {
         add_to_footer("<script type='text/javascript' src='".ADMIN."members/js/user_display.js'></script>");
 
@@ -118,7 +115,8 @@ class Members_Display extends Members_Admin {
             'user_lastvisit'  => self::$locale['ME_422'],
             'user_ip'         => self::$locale['ME_423'],
             'user_ip_type'    => self::$locale['ME_424'],
-            'user_groups'     => self::$locale['ME_425']
+            'user_groups'     => self::$locale['ME_425'],
+            'user_timezone'   => self::$locale['ME_426']
         ];
 
         $field_checkboxes = [

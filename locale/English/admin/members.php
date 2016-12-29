@@ -21,6 +21,7 @@ $locale['ME_422'] = 'Last Login';
 $locale['ME_423'] = 'IP Address';
 $locale['ME_424'] = 'IP Type';
 $locale['ME_425'] = 'User Groups';
+$locale['ME_426'] = 'Timezone';
 
 // Action Form
 $locale['ME_430'] = 'Error: Actions against selected users could not be completed';
@@ -42,7 +43,6 @@ Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Ano
 Are you sure you want to delete this user?\n";
 $locale['ME_456'] = 'Delete User';
 
-
 $locale['ME_460'] = 'There are no users to be deactivated';
 $locale['ME_461'] = '%s has been deactivated';
 $locale['ME_462'] = 'Deactivate Inactive Members';
@@ -52,8 +52,6 @@ $locale['ME_465'] = 'Please note that some users may have submitted content to y
 $locale['ME_466'] = 'It is strongly recommended to change deactivation action to anonymize instead of delete to prevent data loss!';
 $locale['ME_467'] = "Set deactivation system to anonymize.";
 $locale['ME_468'] = 'Automatic deactivation of inactive users.';
-
-
 
 // Actions
 $locale['ME_500'] = 'Ban';
@@ -87,13 +85,6 @@ $locale['430'] = "Edit Member";
 $locale['480'] = "Add Member";
 $locale['481'] = "The member account has been created.";
 $locale['482'] = "The member account could not be created.";
-
-
-
-
-
-
-
 
 // Member Management Options
 $locale['400'] = "User Management";
@@ -189,9 +180,8 @@ $locale['601'] = "security banning";
 $locale['602'] = "Unban";
 $locale['603'] = "unbanning";
 $locale['604'] = "Reason:";
+
 // Deactivation System
-
-
 $locale['612'] = "user";
 $locale['613'] = "users";
 $locale['614'] = "Deactivate";
