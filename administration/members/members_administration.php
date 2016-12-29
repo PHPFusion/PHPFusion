@@ -17,13 +17,16 @@ class Members_Admin {
     protected static $status = 0;
     protected static $usr_mysql_status = 0;
     protected static $user_id = 0;
-    protected static $link_uri = array();
-
+    /*
+     * Status filter links
+     */
+    protected static $status_uri = array();
     protected static $exit_link = '';
     protected static $is_admin = FALSE;
     protected static $time_overdue = 0;
     protected static $response_required = 0;
 
+    const USER_MEMBER = 0;
     const USER_BAN = 1;
     const USER_REINSTATE = 2;
     const USER_SUSPEND = 3;
@@ -31,6 +34,7 @@ class Members_Admin {
     const USER_CANCEL = 5;
     const USER_ANON = 6;
     const USER_DEACTIVATE = 7;
+    const USER_UNACTIVATED = 2;
 
     public function __construct() {
 
@@ -58,13 +62,18 @@ class Members_Admin {
             self::$usr_mysql_status = "0' AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0";
         }
 
-        self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
-        self::$link_uri = array(
-            self::USER_BAN        => self::$exit_link."&amp;action=".self::USER_BAN."&amp;user_id={%user_id%}",
-            self::USER_SUSPEND    => self::$exit_link."&amp;action=".self::USER_SUSPEND."&amp;user_id={%user_id%}",
-            self::USER_CANCEL     => self::$exit_link."&amp;action=".self::USER_CANCEL."&amp;user_id={%user_id%}",
-            self::USER_ANON       => self::$exit_link."&amp;action=".self::USER_ANON."&amp;user_id={%user_id%}",
-            self::USER_DEACTIVATE => self::$exit_link."&amp;action=".self::USER_DEACTIVATE."&amp;user_id={%user_id%}",
+        //self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
+
+        $base_url = FUSION_SELF.fusion_get_aidlink();
+        self::$status_uri = array(
+            self::USER_MEMBER        => $base_url."&amp;status=".self::USER_MEMBER,
+            self::USER_UNACTIVATED        => $base_url."&amp;status=".self::USER_UNACTIVATED,
+            self::USER_BAN        => $base_url."&amp;status=".self::USER_BAN,
+            self::USER_SUSPEND    => $base_url."&amp;status=".self::USER_SUSPEND,
+            self::USER_SECURITY_BAN => $base_url."&amp;status=".self::USER_SECURITY_BAN,
+            self::USER_CANCEL     => $base_url."&amp;status=".self::USER_CANCEL,
+            self::USER_ANON       => $base_url."&amp;status=".self::USER_ANON,
+            self::USER_DEACTIVATE => $base_url."&amp;status=".self::USER_DEACTIVATE,
         );
 
         self::$user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : 0);
@@ -384,197 +393,17 @@ class Members_Admin {
                     break;
             }
         } else {
-
             if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
-
                 $user_action = new Members_Action();
                 $user_action->set_userID($_POST['user_id']);// this is by way of post.
                 $user_action->set_action($_POST['action']);
                 $user_action->execute();
-
-                switch ($_POST['action']) {
-                    case 3: // suspend user
-
-                        include LOCALE.LOCALESET."admin/members_email.php";
-                        require_once INCLUDES."sendmail_include.php";
-                        $result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            if (isset($_POST['suspend_user'])) {
-                                if ($udata['user_status'] == 3) {
-                                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                    unsuspend_log($user_id, 3, stripinput($_POST['suspend_reason']));
-                                    redirect(USER_MANAGEMENT_SELF."&status=sre");
-                                } else {
-                                    $actiontime = (isset($_POST['suspend_duration']) && isnum($_POST['suspend_duration']) ? $_POST['suspend_duration'] * 86400 : 864000) + time();
-                                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='3', user_actiontime='$actiontime' WHERE user_id='".$user_id."'");
-                                    suspend_log($user_id, 3, stripinput($_POST['suspend_reason']));
-                                    $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_suspend_message']);
-                                    $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-                                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                                    $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
-                                    $message = str_replace("[DATE]", showdate('longdate', $actiontime), $message);
-                                    $message = str_replace("[REASON]", stripinput($_POST['suspend_reason']), $message);
-
-                                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_suspend_subject']);
-
-                                    sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-                                    redirect(USER_MANAGEMENT_SELF."&status=sad");
-                                }
-                            } else {
-                                if ($udata['user_status'] == 3) {
-                                    $suspend_title = $locale['591']." ".$udata['user_name'];
-                                    $action = $locale['593'];
-                                } else {
-                                    $suspend_title = $locale['590']." ".$udata['user_name'];
-                                    $action = $locale['592'];
-                                }
-                                opentable($suspend_title);
-                                echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id);
-                                echo "<table cellpadding='0' cellspacing='0' width='460' class='table table-responsive center'>\n<tbody>\n<tr>\n";
-                                echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
-                                if ($udata['user_status'] != 3) {
-                                    echo "</tr>\n<tr>\n";
-                                    echo "<td valign='top' width='80' class='tbl'>".$locale['596']."</td>\n";
-                                    echo "<td class='tbl'><input type='text' name='suspend_duration' class='textbox' style='width:60px;' /> <span class='small'>(".$locale['551'].")</span></td>\n";
-                                }
-                                echo "</tr>\n<tr>\n";
-                                echo "<td valign='top' width='80' class='tbl'>".$locale['552']."</td>\n";
-                                echo "<td class='tbl'>\n";
-                                echo form_textarea('suspend_reason', '', '');
-                                echo "</td>\n</tr>\n<tr>\n";
-                                echo "<td colspan='2' align='center'>\n";
-                                echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
-                                echo form_button('suspend_user', $suspend_title, $suspend_title, array('class' => 'btn-primary'));
-                                echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-                                closetable();
-                                display_suspend_log($user_id, 3, 10, 10);
-                            }
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF."&status=ser");
-                        }
-                        break;
-                    case 4: // security ban
-                        require_once LOCALE.LOCALESET."admin/members_email.php";
-                        require_once INCLUDES."sendmail_include.php";
-                        $result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            if (isset($_POST['sban_user'])) {
-                                if ($udata['user_status'] == 4) {
-                                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                    unsuspend_log($user_id, 4, stripinput($_POST['sban_reason']));
-                                    redirect(USER_MANAGEMENT_SELF."&status=sbre");
-                                } else {
-                                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='4', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                    suspend_log($user_id, 4, stripinput($_POST['sban_reason']));
-                                    $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_secban_message']);
-                                    $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-                                    $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
-                                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-
-                                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_secban_subject']);
-                                    sendemail($udata['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'],
-                                        $locale['email_secban_subject'], $message);
-                                    redirect(USER_MANAGEMENT_SELF."&status=sbad");
-                                }
-                            } else {
-                                if ($udata['user_status'] == 4) {
-                                    $ban_title = $locale['602'].$udata['user_name'];
-                                    $action = $locale['603'];
-                                } else {
-                                    $ban_title = $locale['600']." ".$udata['user_name'];
-                                    $action = $locale['601'];
-                                }
-                                opentable($ban_title);
-                                echo openform('sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id);
-                                echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
-                                echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
-                                echo "</tr>\n<tr>\n";
-                                echo "<td valign='top' width='80' class='tbl'>".$locale['604']."</td>\n";
-                                echo "<td class='tbl'>\n";
-                                echo form_textarea('sban_reason', '', '');
-                                echo "</td>\n</tr>\n<tr>\n";
-                                echo "<td colspan='2' align='center'>\n";
-                                echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
-                                echo form_button('sban_user', $ban_title, $ban_title, array('class' => 'btn-primary'));
-                                echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-                                closetable();
-                                display_suspend_log($user_id, 4, 10, 10);
-                            }
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF."&status=sber");
-                        }
-                        break;
-                    case 5: //cancel
-                        $result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<".USER_LEVEL_SUPER_ADMIN);
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            if ($udata['user_status'] == 5) {
-                                $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                unsuspend_log($user_id, 5);
-                            } else {
-                                $result = dbquery("UPDATE ".DB_USERS." SET user_status='5', user_actiontime='".$response_required."' WHERE user_id='".$user_id."'");
-                                suspend_log($user_id, 5);
-                            }
-                            redirect(USER_MANAGEMENT_SELF);
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF);
-                        }
-                        break;
-                    case 6: // anonymize
-                        $result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            if ($udata['user_status'] == 6) {
-                                $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                unsuspend_log($user_id, 6);
-                            } else {
-                                $result = dbquery("UPDATE ".DB_USERS." SET user_status='6', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                suspend_log($user_id, 6);
-                            }
-                            redirect(USER_MANAGEMENT_SELF);
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF);
-                        }
-                        break;
-                    case 7: //deactivate
-                        $result = dbquery("SELECT user_id, user_name, user_password, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
-                        if (dbrows($result)) {
-                            $udata = dbarray($result);
-                            if ($udata['user_status'] == 7) {
-                                $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
-                                unsuspend_log($user_id, 7);
-                            } else {
-                                require_once LOCALE.LOCALESET."admin/members_email.php";
-                                require_once INCLUDES."sendmail_include.php";
-                                $code = md5($response_required.$udata['user_password']);
-
-                                $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_deactivate_message']);
-                                $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-                                $message = str_replace("[ADMIN_USERNAME]", fusion_get_userdata('user_name'), $message);
-                                $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                                $message = str_replace("[DEACTIVATION_PERIOD]", $settings['deactivation_period'], $message);
-                                $message = str_replace("[REACTIVATION_LINK]", $settings['siteurl']."reactivate.php?user_id=".$udata['user_id']."&code=".$code,
-                                    $message);
-
-                                $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_deactivate_subject']);
-
-                                if (sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
-                                    $result = dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".$response_required."' WHERE user_id='".$user_id."'");
-                                    suspend_log($user_id, 7);
-                                }
-                            }
-                            redirect(USER_MANAGEMENT_SELF);
-                        } else {
-                            redirect(USER_MANAGEMENT_SELF);
-                        }
-                        break;
-                }
             }
 
-            // members viewing
-            Members_Display::render_listing();
+            opentable(self::$locale['ME_400']);
+            echo Members_Display::render_listing();
+            closetable();
+
         }
 
     }

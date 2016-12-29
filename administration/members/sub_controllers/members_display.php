@@ -27,16 +27,17 @@ use PHPFusion\QuantumFields;
  */
 class Members_Display extends Members_Admin {
 
+
+
     public static function render_listing() {
+        add_to_footer("<script type='text/javascript' src='".ADMIN."members/js/user_display.js'></script>");
 
         $c_name = 'usertbl_results';
         $default_selected = array('user_timezone', 'user_joined', 'user_lastvisit', 'user_groups');
         $default_status_selected = array('0');
-
         $s_name = 'usertbl_status';
 
         if (isset($_POST['apply_filter'])) {
-
             // Display Cookie
             if (isset($_POST['display']) && is_array($_POST['display'])) {
                 $selected_display_keys = \defender::sanitize_array(array_keys($_POST['display']));
@@ -47,7 +48,6 @@ class Members_Display extends Members_Admin {
                 $cookie_selected = implode(',', $default_selected);
                 setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             }
-
             if (isset($_POST['user_status']) && is_array($_POST['user_status'])) {
                 $selected_display_keys = \defender::sanitize_array(array_keys($_POST['user_status']));
                 $status_cookie_selected = implode(',', $selected_display_keys);
@@ -57,21 +57,23 @@ class Members_Display extends Members_Admin {
                 $status_cookie_selected = implode(',', $default_status_selected);
                 setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
             }
-
         } else {
-
             if (!isset($_COOKIE[$c_name])) {
                 $cookie_selected = implode(',', $default_selected);
                 setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             } else {
                 $cookie_selected = stripinput($_COOKIE[$c_name]);
             }
-
-            if (!isset($_COOKIE[$s_name])) {
-                $status_cookie_selected = implode(',', $default_status_selected);
+            if (isset($_GET['status']) && isnum($_GET['status']) && $_GET['status'] <= 7) {
+                $status_cookie_selected = $_GET['status'];
                 setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
             } else {
-                $status_cookie_selected = stripinput($_COOKIE[$s_name]);
+                if (!isset($_COOKIE[$s_name])) {
+                    $status_cookie_selected = implode(',', $default_status_selected);
+                    setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
+                } else {
+                    $status_cookie_selected = stripinput($_COOKIE[$s_name]);
+                }
             }
         }
 
@@ -168,19 +170,17 @@ class Members_Display extends Members_Admin {
             $status_cond = " WHERE user_status IN (".implode(',', $selected_status).") ";
             $status_bind = array();
             foreach ($selected_status as $susp_i) {
-                $statuses[$susp_i] = '<strong>'.getsuspension($susp_i).'</strong>';
+                $statuses[$susp_i] = $susp_i;//'<strong>'.getsuspension($susp_i).'</strong>';
             }
         } else {
             $status_cond = ' WHERE user_status=:status';
             $status_bind = array(
                 ':status' => 0,
             );
-            $statuses = array(0 => '<strong>'.getsuspension(0).'</strong>');
+            $statuses = array(0 => 0);
         }
 
         $query_bind = array_merge($status_bind, $search_bind);
-
-
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
@@ -190,8 +190,10 @@ class Members_Display extends Members_Admin {
         $result = dbquery($query, $query_bind);
         $rows = dbrows($result);
         $page_nav = $rowCount > $rows ? makepagenav($rowstart, $limit, $rows, 5, FUSION_SELF.fusion_get_aidlink()) : '';
+        $interface = new static();
 
-        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', $statuses), $rows, $rowCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map(array($interface, 'list_uri'), $statuses)), $rows, $rowCount);
+
         if ($rows != '0') {
             while ($data = dbarray($result)) {
                 // the key which to be excluded should be unset
@@ -240,11 +242,11 @@ class Members_Display extends Members_Admin {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', self::$locale['ME_406'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', '', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
+
         if (!empty($list)) {
             $list_result = '';
-            $interface = new Members_Display();
             foreach ($list as $user_id => $prop) {
                 $list_result .= call_user_func_array(array($interface, 'list_func'), array($user_id, $list, $selected_fields));
             }
@@ -252,7 +254,6 @@ class Members_Display extends Members_Admin {
         /*
          * User Actions Button
          */
-
         $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class'=>'btn-success m-r-10')).
             form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class'=>'m-r-10')).
             form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class'=>'m-r-10')).
@@ -261,10 +262,10 @@ class Members_Display extends Members_Admin {
             form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class'=>'m-r-10')).
             form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class'=>'m-r-10'));
 
-        opentable(self::$locale['ME_400']);
-        echo openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
-        echo form_hidden('aid', '', iAUTH);
-        echo strtr(Members_View::display_members(), array(
+
+        $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
+        $html .= form_hidden('aid', '', iAUTH);
+        $html .= strtr(Members_View::display_members(), array(
                 '{%filter_text%}'         => form_text('search_text', '', '', array('placeholder'        => self::$locale['ME_401'],
                                                                                     'append'             => TRUE,
                                                                                     'append_button'      => TRUE,
@@ -290,28 +291,14 @@ class Members_Display extends Members_Admin {
                 '{%user_actions%}'        => $user_actions,
             )
         );
-        echo closeform();
-        closetable();
-
-        $javascript = "<script>
-        $('#filter_panel').hide();        
-        $('#filter_btn').bind('click', function(e) {
-            e.preventDefault();
-            $(this).toggleClass('active');
-            slide_hide('filter_panel');            
-        });        
-        $('#check_all').bind('click', function() {            
-            if ($(this).is(':checked')) {                                
-                $('input[name^=user_id]:checkbox').prop('checked', true);                    
-            } else {                
-                $('input[name^=user_id]:checkbox').prop('checked', false);    
-            }
-        });
-        // Show the user actions bar.
-        
-        </script>";
-        add_to_jquery(str_replace(array('<script>', '</script>'), '', $javascript));
+        $html .= closeform();
+        return $html;
     }
+
+    protected function list_uri($value) {
+        return "<a href='".self::$status_uri[$value]."'><strong>".getsuspension($value)."</strong></a>\n";
+    }
+
     /*
      * Render Listing Functions
      */
