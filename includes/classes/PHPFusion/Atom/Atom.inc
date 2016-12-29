@@ -351,16 +351,11 @@ class Atom {
                 addNotice('success', sprintf($locale['theme_1019b'], ucwords($this->theme_name)));
                 redirect(FUSION_REQUEST);
             }
-            if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME,
-                                                                                  "settings_theme='".$this->theme_name."'")
-            ) {
-                // show alert form
-                $html = openform("widget_infuse", "post", FUSION_REQUEST);
-                $html .= "<div>".$locale['theme_1032']."</div>";
-                $html .= form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class" => "btn-primary m-t-10"));
-                $html .= closeform();
-                echo alert("", $html);
-
+            if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
+                echo openform("widget_infuse", "post", FUSION_REQUEST);
+                echo "<div>".$locale['theme_1032']."</div>";
+                echo form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class" => "btn-primary m-t-10"));
+                echo closeform();
             } else {
                 $html = openform("widget_defuse", "post", FUSION_REQUEST, array("class" => "text-right"));
                 $html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class" => "btn-danger"));
