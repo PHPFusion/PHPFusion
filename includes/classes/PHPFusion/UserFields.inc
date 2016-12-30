@@ -691,8 +691,8 @@ class UserFields extends QuantumFields {
                     default:
                         $basic_info .= strtr($field_template, [
                             '{%field_id%}'    => $field_id,
-                            '{%field_title%}' => $field_data['title'],
-                            '{%field_value%}' => ($field_data['value'] ?: $locale['na'])
+                            '{%field_title%}' => !empty($field_data['title']) ? $field_data['title'] : $locale['na'],
+                            '{%field_value%}' => !empty($field_data['value']) ? $field_data['value'] : $locale['na']
                         ]);
                         break;
                 }
