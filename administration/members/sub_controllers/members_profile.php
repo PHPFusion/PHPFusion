@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: members/sub_controllers/members_profile.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
@@ -26,7 +42,7 @@ class Members_Profile extends Members_Admin {
             $userInput->skipCurrentPass = TRUE;
             $userInput->saveInsert();
             unset($userInput);
-            if (defender::safe()) {
+            if (\defender::safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
@@ -75,7 +91,7 @@ class Members_Profile extends Members_Admin {
             $userInput->saveUpdate();
             self::$user_data = $userInput->getData();
             unset($userInput);
-            if (defender::safe()) {
+            if (\defender::safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
