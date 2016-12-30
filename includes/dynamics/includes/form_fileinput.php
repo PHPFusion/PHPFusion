@@ -183,7 +183,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 mediaSelect();
             ");
         }
-        $html .= ($defender->inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+        $html .= (\defender::inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
         $html .= "</div>\n";
         $html .= "</div>\n";
