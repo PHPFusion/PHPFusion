@@ -80,7 +80,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         echo "</div>\n";
         echo "</div>\n";
 
-		echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success m-l-10", "icon" => "fa fa-fw fa-hdd-o"));
+		echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
         echo closeform();
 		closetable();
     }

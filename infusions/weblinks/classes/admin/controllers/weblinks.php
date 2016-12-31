@@ -207,7 +207,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
      */
     private function display_weblinkButtons($unique_id, $breaker = true) {
 		echo "<div class='m-t-20'>\n";
-		echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-trash", "input-id" => "cancel-".$unique_id.""));
+		echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id.""));
 		echo form_button("save", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id.""));
 		echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-r-10", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""));
 		echo "</div>\n";
@@ -461,6 +461,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 <td class="strong"><?php echo $this->locale['WLS_0102'] ?></td>
                 <td class="strong"><?php echo $this->locale['WLS_0103'] ?></td>
                 <td class="strong"><?php echo $this->locale['language'] ?></td>
+                <td class="strong"><?php echo $this->locale['WLS_0104'] ?></td>
             </tr>
             </thead>
             <tbody>
@@ -473,13 +474,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     ?>
                     <tr data-id="<?php echo $data['weblink_id']; ?>">
                         <td><?php echo form_checkbox("weblink_id[]", "", "", array("value" => $data['weblink_id'], "class" => "m-0")) ?></td>
-                        <td>
-                            <span class="text-dark"><?php echo $data['weblink_name']; ?></span>
-							<div class="actionbar text-smaller" id="ae-<?php echo $data['weblink_id']; ?>-actions">
-								<a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-								<a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
-							</div>
-                        </td>
+                        <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
                         <td>
                             <a class="text-dark" href="<?php echo $cat_edit_link ?>">
                                 <?php echo $data['weblink_cat_name']; ?>
@@ -490,6 +485,10 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         </td>
 						<td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
 						<td><?php echo $data['weblink_language'] ?></td>
+                        <td>
+                            <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                            <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                        </td>
                     </tr>
                     <?php
                 endwhile;
@@ -505,13 +504,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
 		// jQuery
 		add_to_jquery("
-			// Actionbars
-			$('.actionbar').hide();
-			$('tr').hover(
-				function(e) { $('#ae-'+ $(this).data('id') +'-actions').show(); },
-				function(e) { $('#ae-'+ $(this).data('id') +'-actions').hide(); }
-			);
-
 			// Toggle Filters
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();

@@ -255,7 +255,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
 					$submitUser = $this->locale['user_na'];
 					if ($data['user_name']) {
-						$submitUser = display_avatar($data, "20px", "", FALSE, "img-rounded");
+						$submitUser = display_avatar($data, "20px", "", FALSE, "img-rounded m-r-5");
 						$submitUser .= profile_link($data['user_id'], $data['user_name'], $data['user_status']);
 					}
 
@@ -267,7 +267,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                         <td><?php echo $submitUser; ?></td>
 						<td><?php echo timer($data['submit_datestamp']); ?></td>
 						<td>
-						  <a href="<?php echo $reviewLink; ?>" title="<?php echo $this->locale['WLS_0205']; ?>" class="btn-sm btn-default"><i class="fa fa-fw fa-eye"></i> <?php echo $this->locale['WLS_0205']; ?></a>
+						  <a href="<?php echo $reviewLink; ?>" title="<?php echo $this->locale['WLS_0205']; ?>" class="btn btn-default btn-sm"><i class="fa fa-fw fa-eye"></i> <?php echo $this->locale['WLS_0205']; ?></a>
                         </td>
                     </tr>
                     <?php
