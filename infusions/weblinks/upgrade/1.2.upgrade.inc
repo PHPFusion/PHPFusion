@@ -18,21 +18,34 @@
 +--------------------------------------------------------*/
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
+
 // Upgrade 1.2
 if (column_exists(DB_WEBLINK_CATS, "weblink_cat_sorting", FALSE)) {
-	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP weblink_cat_sorting");
+    $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_sorting";
 }
 
-if (!column_exists(DB_WEBLINKS, "weblink_status", FALSE)) {
-	dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_visibility");
+$check_wbl12 = [
+    'weblink_language' => " ADD weblink_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_count",
+    'weblink_status' => " ADD weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_visibility",
+
+];
+
+foreach ($check_wbl12 as $key => $value) {
+    if (!column_exists(DB_WEBLINKS, $key, FALSE)) {
+        $inf_altertable[] = DB_WEBLINKS.$value;
+    }
 }
 
-if (!column_exists(DB_WEBLINK_CATS, "weblink_cat_visibility", FALSE)) {
-	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER weblink_cat_description");
-}
+$check_wblC12 = [
+    'weblink_cat_visibility' => " ADD weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER weblink_cat_description",
+    'weblink_cat_status' => " ADD weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_cat_description",
 
-if (!column_exists(DB_WEBLINK_CATS, "weblink_cat_status", FALSE)) {
-	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_cat_description");
+];
+
+foreach ($check_wblC12 as $key => $value) {
+    if (!column_exists(DB_WEBLINK_CATS, $key, FALSE)) {
+        $inf_altertable[] = DB_WEBLINK_CATS.$value;
+    }
 }
 
 // Upgrade 1.1
