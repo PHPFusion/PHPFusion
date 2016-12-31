@@ -95,7 +95,7 @@ if (dbrows($result2) != 0) {
     closeside();
     echo "</div>\n";
     echo "</div>\n";
-    echo form_button('save_faq', $locale['faq_0303'], $locale['faq_0303'], array('class' => 'btn-primary m-t-10'));
+    echo form_button('save_faq', $locale['faq_0303'], $locale['faq_0303'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
     echo closeform();
 } else {
     echo "<div class='well text-center m-t-20'>\n";
