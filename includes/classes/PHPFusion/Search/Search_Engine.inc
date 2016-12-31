@@ -63,6 +63,7 @@ class Search_Engine extends Search_Model {
      */
     protected function __construct() {
         $search_modules = self::load_search_modules();
+
         // Formats POST
         if (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) {
             self::$rowstart = $_GET['rowstart'];
@@ -120,13 +121,14 @@ class Search_Engine extends Search_Model {
             self::$forum_id = $_GET['forum_id'];
         }
         // Prepare SType
-        if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['stype']), $search_modules)) {
+        if (isset($_GET['stype']) || isset($_GET['stype']) && in_array(isset($_GET['stype']), $search_modules)) {
             if (isset($_GET['stype']) && in_array($_GET['stype'], $search_modules) || isset($_POST['stype']) && in_array($_POST['stype'], $search_modules)) {
                 self::$search_type = (isset($_POST['stype']) ? lcfirst($_POST['stype']) : (isset($_GET['stype']) ? lcfirst($_GET['stype']) : lcfirst(str_replace('.php', '', fusion_get_settings('default_search')))));
             }
         } else {
             self::$search_type = (isset($_POST['stype']) && in_array($_POST['stype'], $search_modules, TRUE)) ? $_POST['stype'] : lcfirst(str_replace('.php', '', fusion_get_settings('default_search')));
         }
+
         // Memory Limits
         $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit"))) * 1024 * 1024;
         $memory_limit = !isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024 ? 8 * 1024 * 1024 : $memory_limit;
@@ -297,7 +299,7 @@ class Search_Engine extends Search_Model {
         $info = [
             'openform' => openform('advanced_search_form', 'post', BASEDIR.'search.php'),
             'closeform' => closeform(),
-            'search_form_stext' => form_text('stext', $locale['401'], urldecode(self::get_param('stext')), array('inline'=> FALSE, 'placeholder'=>$locale['401'])),
+            'search_form_stext' => form_text('stext', $locale['400'], urldecode(self::get_param('stext')), array('inline'=> FALSE, 'placeholder'=>$locale['401'])),
             'search_form_button' => form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary')),
             'search_form_method' => form_checkbox('method', '', self::get_param('method'),
                                                        array(
