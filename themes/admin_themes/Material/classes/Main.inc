@@ -52,12 +52,13 @@ class Main extends Components {
                         echo  display_avatar($userdata, '90px', '', FALSE, 'avatar');
                     echo '</div>';
                     echo '<div class="text-left">';
-                        echo "<h3><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong></h3>";
+                        echo '<h3><strong>'.$locale['welcome'].', '.$userdata['user_name'].'</strong></h3>';
                         echo '<p>'.getuserlevel($userdata['user_level']).'</p>';
                     echo '</div>';
                 echo '</div>';
 
-                echo openform('admin-login-form', 'post', ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0");
+                $form_action = FUSION_SELF.fusion_get_aidlink() == ADMIN.'index.php'.fusion_get_aidlink() ? FUSION_SELF.fusion_get_aidlink().'&amp;pagenum=0' : FUSION_REQUEST;
+                echo openform('admin-login-form', 'post', $form_action);
                     echo form_text('admin_password', '', '', array('type' => 'password', 'callback_check' => 'check_admin_pass', 'placeholder' => $locale['281'], 'error_text' => $locale['global_182'], 'autocomplete_off' => TRUE, 'required' => TRUE));
                     echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
                 echo closeform();
