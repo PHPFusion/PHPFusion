@@ -50,7 +50,6 @@ class Token extends \defender {
     private static $debug = FALSE;
 
     public function __construct() {
-
         $locale = fusion_get_locale();
         $error = FALSE;
 
