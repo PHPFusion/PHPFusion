@@ -196,7 +196,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo openform("publish_blog", "post", FUSION_REQUEST);
             echo "<div class='well clearfix'>\n";
             echo "<div class='pull-left'>\n";
-            echo display_avatar($data, "30px", "", "", "");
+            echo display_avatar($data, "30px", "", TRUE, "img-rounded m-r-5");
             echo "</div>\n";
             echo "<div class='overflow-hide'>\n";
             echo $locale['blog_0132'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
@@ -309,8 +309,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_hidden('blog_language', '', $callback_data['blog_language']);
             }
             echo form_hidden('blog_datestamp', '', $callback_data['blog_datestamp']);
-            echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-default m-r-10'));
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-primary m-r-10'));
+            echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
             closeside();
             openside("");
             echo "<label><input type='checkbox' name='blog_draft' value='1'".($callback_data['blog_draft'] ? "checked='checked'" : "")." /> ".$locale['blog_0431']."</label><br />\n";
@@ -331,9 +331,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 );
             }
             echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
-            echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-default m-r-10'));
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-primary m-r-10'));
-            echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], array('class' => 'btn-warning m-r-10'));
+            echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
             echo closeform();
         }
     }
@@ -348,23 +348,27 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['blog_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<table class='table table-striped'>\n";
-        echo "<tr>\n";
-        echo "<th>".$locale['blog_0136']."</th>\n<th>".$locale['blog_0142']."</th><th>".$locale['blog_0143']."</th><th>".$locale['blog_0144']."</th>";
-        echo "</tr>\n";
-        echo "<tbody>\n";
-        while ($data = dbarray($result)) {
-            $submit_criteria = unserialize($data['submit_criteria']);
             echo "<tr>\n";
-            echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
-                    "section",
-                    "aid"
-                ), TRUE)."'>".$submit_criteria['blog_subject']."</a></td>\n";
-            echo "<td>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
-            echo "<td>".timer($data['submit_datestamp'])."</td>\n";
-            echo "<td>".$data['submit_id']."</td>\n";
+                echo "<th>".$locale['blog_0144']."</th>\n";
+                echo "<th>".$locale['blog_0142']."</th>\n";
+                echo "<th>".$locale['blog_0143']."</th>\n";
+                echo "<th>".$locale['blog_0136']."</th>\n";
             echo "</tr>\n";
-        }
-        echo "</tbody>\n</table>\n";
+            echo "<tbody>\n";
+            while ($data = dbarray($result)) {
+                $submit_criteria = unserialize($data['submit_criteria']);
+                echo "<tr>\n";
+                    echo "<td>".$data['submit_id']."</td>\n";
+                    echo "<td>".display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
+                    echo "<td>".timer($data['submit_datestamp'])."</td>\n";
+                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
+                            "section",
+                            "aid"
+                        ), TRUE)."'>".$submit_criteria['blog_subject']."</a></td>\n";
+                echo "</tr>\n";
+            }
+            echo "</tbody>\n";
+        echo "</table>\n";
     } else {
         echo "<div class='well text-center m-t-20'>".$locale['blog_0130']."</div>\n";
     }

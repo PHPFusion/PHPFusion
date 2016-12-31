@@ -23,7 +23,7 @@ $locale['blog_0400'] = "Current Blogs";
 $locale['blog_0401'] = "Add Blog";
 $locale['blog_0402'] = "Edit Blog";
 $locale['blog_0405'] = "Blog";
-$locale['blog_0406'] = "Blog Settings";
+$locale['blog_0406'] = "Settings";
 $locale['blog_0407'] = "Blog Categories";
 $locale['blog_0408'] = "Currently displaying %d of %d total blog entries";
 $locale['blog_0409'] = "Add Blog Category";
@@ -68,7 +68,7 @@ $locale['blog_0444'] = "Hit enter after each keywords";
 // Blog Categories titles
 $locale['blog_0500'] = "Edit Blog Category";
 $locale['blog_0501'] = "Add Blog Category";
-$locale['blog_0502'] = "Current Blog Categories";
+$locale['blog_0502'] = "Categories";
 // Blog Categories messages
 $locale['blog_0520'] = "Blog Category added";
 $locale['blog_0521'] = "Blog Category updated";
@@ -107,7 +107,7 @@ $locale['blog_0460'] = "All Blog Entries";
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
-$locale['blog_0600'] = "Blog Submissions";
+$locale['blog_0600'] = "Submissions";
 $locale['blog_0601'] = "Submission Image";
 $locale['blog_0602'] = "Required extended blog?";
 // Public Submissions Form

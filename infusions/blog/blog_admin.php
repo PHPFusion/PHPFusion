@@ -70,19 +70,19 @@ $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowe
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? TRUE : FALSE;
 $master_title['title'][] = $locale['blog_0400'];
 $master_title['id'][] = 'blog';
-$master_title['icon'] = '';
+$master_title['icon'][] = 'fa fa-graduation-cap';
 $master_title['title'][] = $edit ? $locale['blog_0402'] : $locale['blog_0401'];
 $master_title['id'][] = 'blog_form';
-$master_title['icon'] = '';
+$master_title['icon'][] = 'fa fa-plus';
 $master_title['title'][] = $locale['blog_0502'];
 $master_title['id'][] = 'blog_category';
-$master_title['icon'] = '';
+$master_title['icon'][] = 'fa fa-folder';
+$master_title['title'][] = $locale['blog_0600']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'")."</span>";
+$master_title['id'][] = 'submissions';
+$master_title['icon'][] = 'fa fa-fw fa-inbox';
 $master_title['title'][] = $locale['blog_0406'];
 $master_title['id'][] = 'settings';
-$master_title['icon'] = '';
-$master_title['title'][] = $locale['blog_0600'];
-$master_title['id'][] = 'submissions';
-$master_title['icon'] = '';
+$master_title['icon'][] = 'fa fa-cogs';
 $tab_active = $_GET['section'];
 opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', TRUE);
@@ -95,11 +95,11 @@ switch ($_GET['section']) {
         include "admin/blog_cat.php";
         break;
     case "settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][4]]);
         include "admin/blog_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $master_title['title'][4]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
         include "admin/blog_submissions.php";
         break;
     default:
