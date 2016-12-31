@@ -598,8 +598,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
     }
 
     $prefix = $fusion_query ? '?' : '';
-
-    $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;');
+    $query = $url['path'].$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
 
     return (string)$query;
 }
