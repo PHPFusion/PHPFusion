@@ -27,6 +27,7 @@
  * @return string
  */
 function openform($form_name, $method, $action_url, array $options = array()) {
+    $action_url = str_replace(BASEDIR, '', $action_url);
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
     $default_options = array(
         'form_id' => !empty($options['form_id']) ? $options['form_id'] : $form_name,
@@ -37,7 +38,6 @@ function openform($form_name, $method, $action_url, array $options = array()) {
         'inline' => FALSE,
     );
     $options += $default_options;
-
 
     $class = "";
     if (!\defender::safe()) {

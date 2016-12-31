@@ -141,6 +141,6 @@ echo form_select('blog_image_link', $locale['951'], $blog_settings['blog_image_l
 echo form_select('blog_thumb_ratio', $locale['954'], $blog_settings['blog_thumb_ratio'], array("options" => $thumb_opts, "width" => "100%"));
 closeside();
 echo "</div></div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 echo closeform();
 closetable();

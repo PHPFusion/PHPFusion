@@ -6,13 +6,14 @@ $locale['download_0002'] = "Add Downloads";
 $locale['download_0003'] = "Edit Downloads";
 $locale['download_0004'] = "All Downloads";
 $locale['download_0005'] = "Currently displaying %d of %d total Downloads entries";
+$locale['download_0006'] = "Settings";
 // Filters
 $locale['download_0010'] = "Filter by:";
 $locale['download_0011'] = "Filter show category by";
 // Downloads Category titles
 $locale['download_0020'] = "Current Downloads Categories";
 $locale['download_0021'] = "Edit Downloads Category";
-$locale['download_0022'] = "Downloads Category";
+$locale['download_0022'] = "Categories";
 $locale['download_0023'] = "Downloads Category Editor";
 // Downloads submissions
 $locale['download_0039'] = "Return to [SITENAME]";
@@ -28,7 +29,7 @@ $locale['download_0046'] = "Downloads Submissions";
 $locale['download_0047'] = "Required screenshot?";
 $locale['download_0048'] = "Required full description?";
 // Downloads submissions - admin
-$locale['download_0049'] = "Downloads Submissions";
+$locale['download_0049'] = "Submissions";
 $locale['download_0050'] = "There are currently no Downloads submissions";
 $locale['download_0051'] = "There are currently %s pending for your review.";
 $locale['download_0052'] = "Submission Subject for Review";

@@ -232,7 +232,7 @@ function photo_form() {
         echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $data['photo_allow_comments']);
         echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $data['photo_allow_ratings']);
         echo "</div>\n</div>\n";
-        echo form_button('save_photo', $locale['photo_0012'], $locale['photo_0012'], array('class' => 'btn-success btn-sm m-r-10'));
+        echo form_button('save_photo', $locale['photo_0012'], $locale['photo_0012'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
         echo closeform();
     } else {
         echo "<div class='well m-t-20 text-center'>\n";

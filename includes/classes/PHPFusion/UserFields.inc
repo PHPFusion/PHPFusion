@@ -345,6 +345,7 @@ class UserFields extends QuantumFields {
         display_register_form($this->info);
         echo strtr(ob_get_clean(), [
                 '{%tab_header%}'                => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '',
+                '{%open_form%}'                 => $this->info['openform'],
                 '{%user_name_field%}'           => $this->info['user_name'],
                 '{%user_email_field%}'          => $this->info['user_email'],
                 '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
@@ -355,6 +356,7 @@ class UserFields extends QuantumFields {
                 '{%captcha_fields%}'            => $this->info['validate'],
                 '{%eula%}'                      => $this->info['terms'],
                 '{%post_button%}'               => $this->info['button'],
+                '{%close_form%}'                => $this->info['closeform'],
                 '{%tab_footer%}'                => isset($tab_title) ? closetab() : ''
             ]
         );
@@ -689,8 +691,8 @@ class UserFields extends QuantumFields {
                     default:
                         $basic_info .= strtr($field_template, [
                             '{%field_id%}'    => $field_id,
-                            '{%field_title%}' => $field_data['title'],
-                            '{%field_value%}' => ($field_data['value'] ?: $locale['na'])
+                            '{%field_title%}' => !empty($field_data['title']) ? $field_data['title'] : $locale['na'],
+                            '{%field_value%}' => !empty($field_data['value']) ? $field_data['value'] : $locale['na']
                         ]);
                         break;
                 }

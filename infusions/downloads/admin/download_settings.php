@@ -194,7 +194,7 @@ echo form_select('download_types[]', $locale['932'], $dl_settings['download_type
 
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 echo closeform();
 
 add_to_jquery("

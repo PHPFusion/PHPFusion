@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: members/sub_controllers/members_action.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace Administration\Members\Sub_Controllers;
 
 use Administration\Members\Members_Admin;
@@ -109,8 +124,8 @@ class Members_Action extends Members_Admin {
         parent::USER_ANON         => [
             'check_operator'       => '!==',
             'check_value'          => parent::USER_ANON,
-            'title'                => 'ML_506',
-            'a_message'            => 'ML_556',
+            'title'                => 'ME_506',
+            'a_message'            => 'ME_556',
             'user_status_change'   => parent::USER_ANON,
             'action_time'          => TRUE,
             'user_status_log_func' => 'suspend_log'

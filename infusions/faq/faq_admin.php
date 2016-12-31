@@ -41,13 +41,13 @@ $faqCat_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GE
 opentable($locale['faq_0100']);
 $faq_tab['title'][] = $locale['faq_0101'];
 $faq_tab['id'][] = "faq-list";
-$faq_tab['icon'][] = "";
+$faq_tab['icon'][] = "fa fa-life-buoy";
 $faq_tab['title'][] = $faq_edit ? $locale['faq_0102c'] : $locale['faq_0102b'];
 $faq_tab['id'][] = "faqs";
-$faq_tab['icon'][] = "";
+$faq_tab['icon'][] = $faq_edit ? "fa fa-pencil" : "fa fa-plus";
 $faq_tab['title'][] = $faqCat_edit ? $locale['faq_0102d'] : $locale['faq_0102'];
 $faq_tab['id'][] = "faq-category";
-$faq_tab['icon'][] = "";
+$faq_tab['icon'][] = $faqCat_edit ? "fa fa-pencil" : "fa fa-folder";
 $allowed_pages = array("faq-list", "faq-category", "faqs");
 
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "faq-list";

@@ -128,12 +128,12 @@ class PageAdmin extends PageModel {
 
         $tab_title['title'][] = self::$current_section == 'compose_frm' ? self::$locale['back'] : self::$locale['page_0205'];
         $tab_title['id'][] = 'cp1';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = self::$current_section == 'compose_frm' ? 'fa fa-arrow-left' : '';
 
         if (self::$current_section == 'compose_frm') {
             $tab_title['title'][] = self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200'];
             $tab_title['id'][] = 'compose_frm';
-            $tab_title['icon'][] = '';
+            $tab_title['icon'][] = 'fa fa-pencil';
         }
 
         $tab_active = self::$current_section;

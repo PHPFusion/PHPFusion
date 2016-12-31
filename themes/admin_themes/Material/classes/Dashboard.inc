@@ -303,7 +303,7 @@ class Dashboard {
                                     }
 
                                     echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                        echo '<div class="pull-left display-inline-block m-t-0 m-b-0">'.display_avatar($ratings_data, '25px', '', FALSE, 'img-rounded m-r-5', '').'</div>';
+                                        echo '<div class="pull-left display-inline-block m-t-0 m-b-0">'.display_avatar($submit_data, '25px', '', FALSE, 'img-rounded m-r-5', '').'</div>';
                                         echo '<strong>'.profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status']).' </strong>';
                                         echo $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
                                         echo timer($submit_data['submit_datestamp']);

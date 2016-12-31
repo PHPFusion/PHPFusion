@@ -345,11 +345,11 @@ class NewsAdmin extends NewsAdminModel {
     private function display_newsButtons($unique_id) {
         echo "<div class='m-t-20'>\n";
         echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'],
-                         array('class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id));
+                         array('class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times'));
         echo form_button('save', $this->locale['news_0241'], $this->locale['news_0241'],
-                         array('class' => 'btn-success', 'input_id' => 'save-'.$unique_id));
+                         array('class' => 'btn-success', 'input_id' => 'save-'.$unique_id, 'icon' => 'fa fa-hdd-o'));
         echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'],
-                         array("class" => "btn-primary m-l-10", 'input_id' => 'save_and_close-'.$unique_id));
+                         array("class" => "btn-primary m-l-10", 'input_id' => 'save_and_close-'.$unique_id, 'icon' => 'fa fa-hdd-o'));
         echo "</div>";
         echo "<hr/>";
     }
@@ -726,12 +726,12 @@ class NewsAdmin extends NewsAdminModel {
 
             echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"),
-                                                                                 FALSE)."'>".$this->locale['news_0002']."</a>";
+                                                                                 FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['news_0002']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$this->locale['sticky']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$this->locale['unsticky']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
+            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
             echo "</div>\n";
 
             ?>

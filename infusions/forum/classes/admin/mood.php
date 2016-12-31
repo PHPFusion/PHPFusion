@@ -152,11 +152,10 @@ class ForumAdminMood extends ForumAdminInterface {
                 'options' => $groups,
                 'inline' => TRUE,
                 'type' => 'radio'
-            )).
-            form_button('save_mood', !empty($this->data['mood_id']) ? $locale['forum_106'] : $locale['forum_105'],
-                        $locale['save_changes'], array('class' => 'btn-primary m-r-10')).
-            form_button('cancel_mood', $locale['cancel'], $locale['cancel']).
-            closeform();
+            ));
+            echo form_button('save_mood', !empty($this->data['mood_id']) ? $locale['forum_106'] : $locale['forum_105'], $locale['save_changes'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('cancel_mood', $locale['cancel'], $locale['cancel'], array('icon' => 'fa fa-times'));
+            echo closeform();
     }
 
     /**

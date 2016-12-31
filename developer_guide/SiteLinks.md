@@ -114,3 +114,40 @@ echo showsublinks("", "", array('callback_data' => $siteLinks_item_example));
 If you declare a custom version of the function showsublinks() in your theme, you can actually override the behavior of the default showsublinks() function.
 Modifications can be easily done by copying the default function into your own theme. After which, PHP-Fusion 9 will use your version and omit the default
 version. This is particularly interesting for the development of a hierarchy based 'Mega Menu' especially in themes and infusion.
+
+## Usage of Token API for Cross Page Requests
+For security good concerns, we have implemented Token validation for Page to Page validation of form submissions.
+As a **thumb rule**, we only allow any form to submit to itself by default.
+
+If your form is targetting to execute on any remote file other than itself, in openform(), you need to add 
+````$options['remote_url]```` as ````fusion_get_settings('site_path').'your-remote-file.php'````
+in order for token to be successfully validated. 
+
+Cross Page refers to generally page not itself, or is a remote one, even if it is hosted in the same server and same PHP-Fusion Installation.
+This applies to AJAX requests as well.
+
+An example of ajax requests **URL** param for a Ajax Request should be:
+````
+add_to_jquery("
+    function load_results(input) {
+        var data = { 'q' : input }
+        $.ajax({
+            url: '".FUSION_ROOT."your-remote-file.php',
+            type: 'GET',
+            dataType: 'html',
+            data : $.param(data),
+            success: function(result) {
+                $('#typeahead_result').html(result);
+            },
+            complete: function(result){
+                // do a recent search table
+                $('#typeahead').addClass('open');
+            },
+            error: function() {
+                console.log('Typeahead Error');
+            }
+        });
+    }
+");
+````
+**Note:** Const **FUSION_ROOT** which refers to your 'base directory' or 'root folder' is used, due to .htaccess file is always present, and XHR http requests friendly.

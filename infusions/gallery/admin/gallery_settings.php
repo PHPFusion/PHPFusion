@@ -209,14 +209,15 @@ echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $g
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
     //"format"=>"rgb",
 ));
-echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success m-r-10'));
+echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
 echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], array(
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-    'class' => 'btn-default',
+    'class' => 'btn-danger',
+    'icon' => 'fa fa-trash'
 ));
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 echo closeform();
 add_to_jquery("
         $('#photo_watermark').bind('change', function(){

@@ -44,23 +44,23 @@ $catEdit = isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['c
 // master template
 $master_tab_title['title'][] = $locale['download_0000'];
 $master_tab_title['id'][] = "downloads";
-$master_tab_title['icon'][] = "";
+$master_tab_title['icon'][] = "fa fa-cloud-download";
 
 $master_tab_title['title'][] = $edit ? $locale['download_0003'] : $locale['download_0002'];
 $master_tab_title['id'][] = "download_form";
-$master_tab_title['icon'][] = "";
+$master_tab_title['icon'][] = $edit ? "fa fa-pencil" : "fa fa-plus";
 
 $master_tab_title['title'][] = $catEdit ? $locale['download_0021'] : $locale['download_0022'];
 $master_tab_title['id'][] = "download_category";
-$master_tab_title['icon'][] = "";
+$master_tab_title['icon'][] = $catEdit ? "fa fa-pencil" : "fa fa-folder";
 
-$master_tab_title['title'][] = $locale['download_settings'];
-$master_tab_title['id'][] = "download_settings";
-$master_tab_title['icon'][] = "";
-
-$master_tab_title['title'][] = $locale['download_0049'];
+$master_tab_title['title'][] = $locale['download_0049']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'")."</span>";
 $master_tab_title['id'][] = "submissions";
-$master_tab_title['icon'][] = "";
+$master_tab_title['icon'][] = "fa fa-inbox";
+
+$master_tab_title['title'][] = $locale['download_0006'];
+$master_tab_title['id'][] = "download_settings";
+$master_tab_title['icon'][] = "fa fa-cogs";
 
 opentable($locale['download_0001']);
 echo opentab($master_tab_title, $_GET['section'], "download_admin", TRUE);
@@ -81,11 +81,11 @@ switch ($_GET['section']) {
         include "admin/download_cats.php";
         break;
     case "download_settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][3]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][4]]);
         include "admin/download_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $master_tab_title['title'][4]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
         include "admin/download_submissions.php";
         break;
     default:

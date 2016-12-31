@@ -233,8 +233,8 @@ if (multilang_table("BL")) {
     echo form_hidden('blog_language', '', $data['blog_language']);
 }
 
-echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
-echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array('class' => 'btn-primary'));
+echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-times'));
+echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 closeside();
 echo "</div>\n</div>\n";
 $snippetSettings = array(
@@ -340,10 +340,7 @@ echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' oncli
 echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes'".($data['blog_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['blog_0435']."</label>";
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-default m-r-10'));
-echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array(
-    'class' => 'btn-success',
-    'icon' => 'fa fa-square-check-o'
-));
+echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-primary', 'icon' => 'fa fa-eye'));
 echo closeform();
 echo "</div>\n";

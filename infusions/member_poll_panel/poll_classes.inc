@@ -313,10 +313,10 @@ class MemberPoll {
         opentable(self::$locale['POLL_000']);
             $master_tab_title['title'][] = self::$locale['POLL_000'];
             $master_tab_title['id'][] = "poll";
-            $master_tab_title['icon'][] = "";
+            $master_tab_title['icon'][] = "fa fa-bar-chart";
             $master_tab_title['title'][] = $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043'];
             $master_tab_title['id'][] = "poll_vote";
-            $master_tab_title['icon'][] = "";
+            $master_tab_title['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-plus';
 
             echo opentab($master_tab_title, $_GET['section'], "poll", TRUE);
                 switch ($_GET['section']) {
@@ -559,12 +559,14 @@ class MemberPoll {
             echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], array('inline' => TRUE, 'inner_width'=>'250px'));
             echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], array(
                 'class' => 'btn-primary m-r-10',
-                'inline' => 1
+                'inline' => TRUE,
+                'icon' => 'fa fa-plus'
             ));
 
             echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], array(
                 'class' => 'btn-success',
-                'inline' => 1
+                'inline' => TRUE,
+                'icon' => 'fa fa-hdd-o'
             ));
         echo closeform();
     }

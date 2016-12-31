@@ -117,7 +117,7 @@ echo form_select("blog_cat_image", $locale['blog_0531'], $data['blog_cat_image']
     "inline" => TRUE,
     "options" => blogCatImageOpts(),
 ));
-echo form_button("save_cat", $locale['blog_0532'], $locale['blog_0532'], array("class" => "btn-success"));
+echo form_button("save_cat", $locale['blog_0532'], $locale['blog_0532'], array("class" => "btn-success", "icon" => "fa fa-hdd-o"));
 closeside();
 openside($locale['blog_0407']);
 $result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");

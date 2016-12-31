@@ -118,8 +118,7 @@ class PageList extends PageAdmin {
             echo "<div class='clearfix'>\n";
 
             echo "<div class='pull-right'>\n";
-            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("section=compose_frm", array("section"),
-                                                                                 FALSE)."'>".self::$locale['page_0200']."</a>";
+            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("section=compose_frm", array("section"), FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['page_0200']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
             echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
@@ -247,11 +246,6 @@ class PageList extends PageAdmin {
         <?php
 
         add_to_jquery("
-		$('.actionbar').hide();
-		$('tr').hover(
-			function(e) { $('#cp-'+ $(this).data('id') +'-actions').show(); },
-			function(e) { $('#cp-'+ $(this).data('id') +'-actions').hide(); }
-		);
 		$('.qform').hide();
 		$('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
 		");
@@ -260,13 +254,14 @@ class PageList extends PageAdmin {
         echo "<table class='table table-responsive".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
         echo "<tr>\n";
         echo "<th></th>\n";
-        echo "<th  class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
+        echo "<th>".$locale['page_0106']."</th>\n";
+        echo "<th>".self::$locale['page_0101']."</th>\n";
         echo "<th>".$locale['page_0102']."</th>\n";
         echo "<th>".$locale['page_0103']."</th>\n";
         echo "<th>".$locale['page_0104']."</th>\n";
         echo "<th>".$locale['page_0105']."</th>\n";
         echo "<th>".$locale['page_0305']."</th>\n";
-        echo "<th>".$locale['page_0106']."</th>\n";
+        echo "<th>".$locale['page_0118']."</th>\n";
         echo "</tr>\n";
 
         if (dbrows($page_result) > 0) {
@@ -292,19 +287,18 @@ class PageList extends PageAdmin {
                         'value' => $pageData['page_id'], 'input_id' => 'cp-'.$pageData['page_id']
                     ))."</td>";
 
-                echo "<td><a href='$pageLink'>".$pageData['page_title']."</a>\n";
-                echo "<div class='actionbar text-smaller' id='cp-".$pageData['page_id']."-actions'>
-				<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> |
-				<a href='".FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
-				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>
-				</div>\n";
-                echo "</td>\n";
+                echo "<td>".$pageData['page_id']."</td>\n";
+                echo "<td><a href='$pageLink'>".$pageData['page_title']."</a></td>\n";
                 echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
                 echo "<td>".$pageLanguage."</td>\n";
                 echo "<td>$pageParent</td>\n";
                 echo "<td>".$pageData['page_sub_count']."</td>\n";
                 echo "<td>$pageStatus</td>\n";
-                echo "<td>".$pageData['page_id']."</td>\n";
+                echo "<td>";
+                    echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> |
+                <a href='".FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
+                <a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>";
+                echo "</td>";
                 echo "</tr>\n";
             }
             echo "</tbody>\n";

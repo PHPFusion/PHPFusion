@@ -17,6 +17,7 @@ $locale['page_0114'] = "Select Language";
 $locale['page_0115'] = "All Author";
 $locale['page_0116'] = "Select Author";
 $locale['page_0117'] = "Please specify a page title"; // 451
+$locale['page_0118'] = "Actions";
 // Custom Pages titles
 $locale['page_0200'] = "Add New Page"; //ex 400
 $locale['page_0201'] = "Edit Page"; // ex 401

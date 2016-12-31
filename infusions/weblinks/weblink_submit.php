@@ -18,5 +18,5 @@
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 require_once THEMES."templates/header.php";
 require_once WEBLINKS_CLASS."autoloader.php";
-PHPFusion\Weblinks\WeblinksServer::WeblinksSubmit() -> displayWeblinks();
+PHPFusion\Weblinks\WeblinksServer::WeblinksSubmit()->displayWeblinks();
 require_once THEMES."templates/footer.php";

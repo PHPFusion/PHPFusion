@@ -166,10 +166,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     }
     closeside();
     echo "</div>\n</div>\n";
-    echo form_button('save_cat', $locale['download_0309'], $locale['download_0309'], array(
-        'class' => 'btn-success btn-sm m-t-10',
-        'icon' => 'fa fa-check-square-o'
-    ));
+    echo form_button('save_cat', $locale['download_0309'], $locale['download_0309'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
     echo closeform();
     echo closetabbody();
     echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);

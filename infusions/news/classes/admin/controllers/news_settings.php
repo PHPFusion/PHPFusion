@@ -177,10 +177,8 @@ class NewsSettingsAdmin extends NewsAdminModel {
                          array("options" => $thumb_opts));
         closeside();
         echo "</div></div>\n";
-        echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
+        echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
         echo closeform();
         closetable();
     }
-
-
 }

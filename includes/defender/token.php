@@ -50,7 +50,6 @@ class Token extends \defender {
     private static $debug = FALSE;
 
     public function __construct() {
-
         $locale = fusion_get_locale();
         $error = FALSE;
 
@@ -102,6 +101,7 @@ class Token extends \defender {
             self::$tokenIsValid = TRUE;
             self::stop();
             if (self::$debug === TRUE) {
+                addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $error);
             }
         }
@@ -126,7 +126,6 @@ class Token extends \defender {
         if (!$post_time) {
             $post_time = $settings['flood_interval'];
         }
-
         // check if the token has the correct format
         if (count($token_data) == 3) {
             list($tuser_id, $token_time, $hash) = $token_data;
@@ -207,7 +206,7 @@ class Token extends \defender {
             }
             if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                 $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
-                $text = "<strong>New Valid tokens for Form ID '$form_id': </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n";
+                $text = "<strong>New Valid tokens for Form ID '$form_id' for ".self::pageHash($file).": </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n";
                 echo alert($text, ['class' => 'alert-success']);
             } else {
                 echo alert('There is no token for this page this round');

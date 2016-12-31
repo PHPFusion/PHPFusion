@@ -212,7 +212,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         echo openform("publish_news", "post", FUSION_REQUEST);
                         echo "<div class='well clearfix'>\n";
                         echo "<div class='pull-left'>\n";
-                        echo display_avatar($data, "30px", "", "", "");
+                        echo display_avatar($data, "30px", "", TRUE, "img-rounded m-r-5");
                         echo "</div>\n";
                         echo "<div class='overflow-hide'>\n";
                         echo $locale['news_0132'].profile_link($data['user_id'], $data['user_name'],
@@ -310,9 +310,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         }
                         echo form_hidden('news_datestamp', '', $callback_data['news_datestamp']);
                         echo form_button('preview', $locale['news_0240'], $locale['news_0240'],
-                                         array('class' => 'btn-default m-r-10'));
+                                         array('class' => 'btn-default btn-sm m-r-10', 'icon' => 'fa fa-eye'));
                         echo form_button('publish', $locale['news_0134'], $locale['news_0134'],
-                                         array('class' => 'btn-primary m-r-10'));
+                                         array('class' => 'btn-success btn-sm', 'icon' => 'fa fa-hdd-o'));
                         closeside();
                         openside("");
                         echo "<label><input type='checkbox' name='news_draft' value='1'".($callback_data['news_draft'] ? "checked='checked'" : "")." /> ".$locale['news_0210']."</label><br />\n";
@@ -332,11 +332,11 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         echo form_textarea('news_extended', $locale['news_0204'], $callback_data['news_extended'],
                                            $extendedSettings);
                         echo form_button('preview', $locale['news_0240'], $locale['news_0240'],
-                                         array('class' => 'btn-default m-r-10'));
+                                         array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
                         echo form_button('publish', $locale['news_0134'], $locale['news_0134'],
-                                         array('class' => 'btn-primary m-r-10'));
+                                         array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
                         echo form_button('delete', $locale['news_0135'], $locale['news_0135'],
-                                         array('class' => 'btn-warning m-r-10'));
+                                         array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
                         echo closeform();
                     }
                 }
@@ -352,22 +352,26 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
             if ($rows > 0) {
                 echo "<div class='well'>".sprintf($locale['news_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
                 echo "<table class='table table-striped'>\n";
-                echo "<tr>\n";
-                echo "<th>".$locale['news_0136']."</th>\n<th>".$locale['news_0142']."</th><th>".$locale['news_0143']."</th><th>".$locale['news_0144']."</th>";
-                echo "</tr>\n";
-                echo "<tbody>\n";
-                while ($data = dbarray($result)) {
-                    $submit_criteria = unserialize($data['submit_criteria']);
                     echo "<tr>\n";
-                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
-                            "section", "aid"
-                        ), TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
-                    echo "<td>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
-                    echo "<td>".timer($data['submit_datestamp'])."</td>\n";
-                    echo "<td>".$data['submit_id']."</td>\n";
+                        echo "<th>".$locale['news_0144']."</th>\n";
+                        echo "<th>".$locale['news_0142']."</th>\n";
+                        echo "<th>".$locale['news_0143']."</th>\n";
+                        echo "<th>".$locale['news_0136']."</th>\n";
                     echo "</tr>\n";
-                }
-                echo "</tbody>\n</table>\n";
+                    echo "<tbody>\n";
+                    while ($data = dbarray($result)) {
+                        $submit_criteria = unserialize($data['submit_criteria']);
+                        echo "<tr>\n";
+                        echo "<td>".$data['submit_id']."</td>\n";
+                        echo "<td>".display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
+                        echo "<td>".timer($data['submit_datestamp'])."</td>\n";
+                        echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
+                                "section", "aid"
+                            ), TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
+                        echo "</tr>\n";
+                    }
+                    echo "</tbody>\n";
+                echo "</table>\n";
             } else {
                 echo "<div class='well text-center m-t-20'>".$locale['news_0130']."</div>\n";
             }

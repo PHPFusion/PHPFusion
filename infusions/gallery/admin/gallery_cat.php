@@ -179,5 +179,5 @@ echo form_select('album_language', $locale['album_0008'], $data['album_language'
 ));
 echo form_text('album_order', $locale['album_0011'], $data['album_order'], array("type" => "number", 'inline' => TRUE));
 echo "</div>\n</div>\n";
-echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], array('class' => 'btn-success btn-sm m-r-10'));
+echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 echo closeform();

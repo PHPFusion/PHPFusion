@@ -29,9 +29,7 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
     $(".dropdown").on("show.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).slideDown(300);});
     $(".dropdown").on("hide.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).slideUp(200);});
-    $("#page_title-field .input-group, #news_text-field .input-group, #news_cat_name-field .input-group").addClass("input-group-sm");
     $("li.home-link a").text("").html('<i class="fa fa-home fa-lg"></i>');
-    $(".pull-right.small").removeClass("position-absolute pull-right");
 
     $("body").on("click", "[data-action]", function(e) {
         switch ($(this).data("action")) {

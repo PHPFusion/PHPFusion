@@ -42,6 +42,7 @@ $locale['WLS_0100'] = "Subject";
 $locale['WLS_0101'] = "Category";
 $locale['WLS_0102'] = "Status";
 $locale['WLS_0103'] = "Visibility";
+$locale['WLS_0104'] = "Actions";
 
 // Table - Web Link - Misc
 $locale['WLS_0110'] = "Add Web Link";

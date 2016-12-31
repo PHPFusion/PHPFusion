@@ -589,19 +589,19 @@ class Errors {
         $locale = self::$locale;
         $aidlink = fusion_get_aidlink();
 
-        $html = "";
+        $html = '';
         if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
-
-            $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
-
+            $html .= "<div class='display-block'>";
+            $html .= "<i class='fa fa-bug fa-lg'></i></button>\n";
             $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
                 array(
                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
                     "</a>"
                 ), $locale['err_101']);
 
-            $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
+            $html .= "<span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
+            $html .= "</div>\n";
 
             $cHtml = openmodal('tbody', $locale['ERROR_464'],
                 array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));

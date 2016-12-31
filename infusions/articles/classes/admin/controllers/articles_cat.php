@@ -210,16 +210,16 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         "inline" => TRUE,
                     ));
 
-                    echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", "icon" => "fa fa-fw fa-trash"));
-                    echo form_button("save_cat", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-l-10", "icon" => "fa fa-fw fa-hdd-o"));
-                    echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-l-10", "icon" => "fa fa-fw fa-floppy-o"));
+                    echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default btn-sm", "icon" => "fa fa-fw fa-times"));
+                    echo form_button("save_cat", $this->locale['save'], $this->locale['save'], array("class" => "btn-success btn-sm m-l-10", "icon" => "fa fa-fw fa-hdd-o"));
+                    echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary btn-sm m-l-10", "icon" => "fa fa-fw fa-floppy-o"));
 
                     closeside();
                     ?>
                 </div>
             </div>
             <?php
-            echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", "icon" => "fa fa-fw fa-trash"));
+            echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", "icon" => "fa fa-fw fa-times"));
             echo form_button("save_cat", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-l-10", "icon" => "fa fa-fw fa-hdd-o"));
             echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-l-10", "icon" => "fa fa-fw fa-floppy-o"));
             echo closeform();
@@ -438,13 +438,6 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             $('#article_cat_status, #article_cat_visibility, #article_cat_language').bind('change', function(e){
                 $(this).closest('form').submit();
             });
-
-            // Actionbars
-            $('.actionbar').hide();
-            $('tr').hover(
-                function(e) { $('#ac-'+ $(this).data('id') +'-actions').show(); },
-                function(e) { $('#ac-'+ $(this).data('id') +'-actions').hide(); }
-            );
         ");
 
     }
@@ -467,6 +460,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 <th><?php echo $this->locale['article_0152'] ?></th>
                 <th><?php echo $this->locale['article_0153'] ?></th>
                 <th><?php echo $this->locale['language'] ?></th>
+                <th><?php echo $this->locale['article_0107'] ?></th>
             </tr>
             </thead>
             <tbody>
@@ -479,17 +473,15 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 ?>
                 <tr data-id="<?= $cat_id; ?>">
                     <td><?php echo form_checkbox("article_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-b-0")) ?></td>
-                    <td>
-                        <span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span>
-                        <div class="actionbar text-smaller" id="ac-<?php echo $cat_id; ?>-actions">
-                            <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-                            <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
-                        </div>
-                    </td>
+                    <td><span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span></td>
                     <td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
                     <td><span class="badge"><?php echo ($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['article_cat_language']) ?></td>
+                    <td>
+                        <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                        <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                    </td>
                 </tr>
                 <?php
                 if (isset($data[$cdata['article_cat_id']])) {

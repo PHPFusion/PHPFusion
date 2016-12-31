@@ -142,7 +142,7 @@ if ($gll_settings['gallery_allow_submission']) {
                                                                                    str_replace(',', ' ', ".jpg,.gif,.png"),
                                                                                    $gll_settings['photo_max_w'],
                                                                                    $gll_settings['photo_max_h'])."</div>\n";
-            echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-primary'));
+            echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
             echo closeform();
         } else {
             echo "<div class='well' style='text-align:center'><br />\n".$locale['gallery_0024']."<br /><br />\n</div>\n";

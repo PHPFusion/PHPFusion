@@ -144,7 +144,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo openform("publish_download", "post", FUSION_REQUEST);
                 echo "<div class='well clearfix'>\n";
                 echo "<div class='pull-left'>\n";
-                echo display_avatar($callback_data, "30px", "", "", "");
+                echo display_avatar($callback_data, "30px", "", FALSE, "img-rounded m-r-5");
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo $locale['download_0056'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
@@ -206,6 +206,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     echo form_hidden('download_file', '', $callback_data['download_file']);
                     echo form_hidden("download_url", "", "");
                 } else {
+                    echo "<p><strong>".$locale['download_0215']."</strong></p>\n";
                     echo form_text('download_url', '', $callback_data['download_url']);
                     echo form_hidden("download_file", "", "");
                 }
@@ -235,9 +236,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     'placeholder' => $locale['choose'],
                     'width' => '100%'
                 ));
-                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], array(
-                    'class' => 'btn-primary m-r-10',
-                ));
+                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], array('class' => 'btn-success btn-sm', 'icon' => 'fa fa-hdd-o'));
                 closeside();
                 openside('');
                 echo form_checkbox('download_allow_comments', $locale['download_0223'], $callback_data['download_allow_comments'],
@@ -257,8 +256,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_text('download_filesize', $locale['download_0211'], $callback_data['download_filesize'], array('inline' => 1));
                 closeside();
                 echo "</div>\n</div>\n"; // end row.
-                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], array('class' => 'btn-primary m-r-10'));
-                echo form_button('delete', $locale['download_0060'], $locale['download_0060'], array('class' => 'btn-warning m-r-10'));
+                echo form_button('publish', $locale['download_0061'], $locale['download_0061'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
+                echo form_button('delete', $locale['download_0060'], $locale['download_0060'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
                 echo closeform();
             }
         }
@@ -274,24 +273,27 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<table class='table table-striped'>\n";
-        echo "<tr>\n";
-        echo "<th>".$locale['download_0052']."</th>\n<th>".$locale['download_0053']."</th>
-		<th>".$locale['download_0054']."</th><th>".$locale['download_0055']."</th>";
-        echo "</tr>\n";
-        echo "<tbody>\n";
-        while ($callback_data = dbarray($result)) {
-            $submit_criteria = unserialize($callback_data['submit_criteria']);
             echo "<tr>\n";
-            echo "<td><a href='".clean_request("submit_id=".$callback_data['submit_id'], array(
-                    "section",
-                    "aid"
-                ), TRUE)."'>".$submit_criteria['download_title']."</a></td>\n";
-            echo "<td>".profile_link($callback_data['user_id'], $callback_data['user_name'], $callback_data['user_status'])."</td>\n";
-            echo "<td>".timer($callback_data['submit_datestamp'])."</td>\n";
-            echo "<td>".$callback_data['submit_id']."</td>\n";
+                echo "<th>".$locale['download_0055']."</th>\n";
+                echo "<th>".$locale['download_0053']."</th>\n";
+                echo "<th>".$locale['download_0054']."</th>\n";
+                echo "<th>".$locale['download_0052']."</th>\n";
             echo "</tr>\n";
-        }
-        echo "</tbody>\n</table>\n";
+            echo "<tbody>\n";
+            while ($callback_data = dbarray($result)) {
+                $submit_criteria = unserialize($callback_data['submit_criteria']);
+                echo "<tr>\n";
+                echo "<td>".$callback_data['submit_id']."</td>\n";
+                echo "<td>".display_avatar($callback_data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($callback_data['user_id'], $callback_data['user_name'], $callback_data['user_status'])."</td>\n";
+                echo "<td>".timer($callback_data['submit_datestamp'])."</td>\n";
+                echo "<td><a href='".clean_request("submit_id=".$callback_data['submit_id'], array(
+                        "section",
+                        "aid"
+                    ), TRUE)."'>".$submit_criteria['download_title']."</a></td>\n";
+                echo "</tr>\n";
+            }
+            echo "</tbody>\n";
+        echo "</table>\n";
     } else {
         echo "<div class='well text-center m-t-20'>".$locale['download_0050']."</div>\n";
     }

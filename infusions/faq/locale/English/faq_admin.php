@@ -19,6 +19,7 @@ $locale['faq_0113'] = "There are no Frequently Asked Question defined";
 $locale['faq_0114'] = "Listing %d of total %d FAQs entries";
 $locale['faq_0115'] = "Listing %d of total %d Categories";
 $locale['faq_0116'] = "There are no FAQ Category defined";
+$locale['faq_0117'] = "Categories";
 // Faq Category form
 $locale['faq_0200'] = "Category Name";
 $locale['faq_0201'] = "Fill in category name";

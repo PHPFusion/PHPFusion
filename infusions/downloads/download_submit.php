@@ -58,6 +58,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             'download_version' => form_sanitizer($_POST['download_version'], '', 'download_version'),
             'download_file' => '',
             'download_url' => '',
+            'download_image' => ''
         );
         /**
          * Download File Section
@@ -253,7 +254,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 
             echo "</div>\n</div>\n";
 
-            echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-primary'));
+            echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 
             echo closeform();
 
