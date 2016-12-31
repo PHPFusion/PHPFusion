@@ -156,8 +156,8 @@ class ForumAdminTags extends ForumAdminInterface {
                                )
             ).
 
-            form_button('save_tag', $button_locale, $button_locale, array('class' => 'btn-primary m-r-10')).
-            form_button('cancel_tag', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default')).
+            form_button('save_tag', $button_locale, $button_locale, array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o')).
+            form_button('cancel_tag', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default', 'icon' => 'fa fa-times')).
             closeform();
 
         return $html;

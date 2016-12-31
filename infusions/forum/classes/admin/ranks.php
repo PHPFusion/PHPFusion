@@ -197,8 +197,8 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             "</span>\n".
 
-            form_button('save_rank', self::$locale['428'], self::$locale['428'], array('class' => 'btn-primary m-r-10')).
-            form_button('cancel_rank', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default')).
+            form_button('save_rank', self::$locale['428'], self::$locale['428'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o')).
+            form_button('cancel_rank', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default', 'icon' => 'fa fa-times')).
 
             closeform();
 

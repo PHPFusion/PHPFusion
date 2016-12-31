@@ -260,7 +260,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         closeside();
         echo "</div>\n";
         echo "</div>\n";
-        echo form_button('savesettings', self::$locale['750'], self::$locale['750'], array('class' => 'btn-success'));
+        echo form_button('savesettings', self::$locale['750'], self::$locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
         echo closeform();
     }
 

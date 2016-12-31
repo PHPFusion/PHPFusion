@@ -694,19 +694,19 @@ class ForumAdminView extends ForumAdminInterface {
 
         $tab_title['title'][] = self::$locale['forum_admin_000'];
         $tab_title['id'][] = 'fm';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = 'fa fa-comment-o';
         $tab_title['title'][] = self::$locale['forum_admin_001'];
         $tab_title['id'][] = 'fr';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = 'fa fa-star';
         $tab_title['title'][] = self::$locale['forum_admin_002'];
         $tab_title['id'][] = 'ft';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = 'fa fa-tags';
         $tab_title['title'][] = self::$locale['forum_admin_004'];
         $tab_title['id'][] = 'fmd';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = 'fa fa-thumbs-up';
         $tab_title['title'][] = self::$locale['forum_admin_003'];
         $tab_title['id'][] = 'fs';
-        $tab_title['icon'][] = '';
+        $tab_title['icon'][] = 'fa fa-cogs';
 
         echo opentab($tab_title, (isset($_GET['section']) ? $_GET['section'] : 'fm'), 'forum-admin-tabs', TRUE, 'nav-tabs', 'section', ['action', 'ref', 'mood_id', 'forum_id']);
         if (isset($_GET['section'])) {
