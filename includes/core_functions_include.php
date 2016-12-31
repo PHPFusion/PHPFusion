@@ -962,6 +962,7 @@ function verify_image($file) {
 function censorwords($text) {
     $settings['bad_words'] = trim(fusion_get_settings('bad_words'));
     $settings['bad_words_enabled'] = (boolean)fusion_get_settings('bad_words_enabled');
+    $settings['bad_word_replace'] = fusion_get_settings('bad_word_replace');
     if ($settings['bad_words_enabled'] && $settings['bad_words']) {
         $words = preg_quote($settings['bad_words'], "/");
         $words = preg_replace("/\\s+/", "|", $words);
