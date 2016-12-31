@@ -191,19 +191,19 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 echo form_checkbox("news_cat_draft", $this->locale['news_0306'], $data['news_cat_draft'], array("reverse_label" => TRUE));
                 echo form_checkbox("news_cat_sticky", $this->locale['news_0307'], $data['news_cat_sticky'],
                                    array("reverse_label" => TRUE));
-                echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default"));
-                echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10"));
+                echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", 'icon' => 'fa fa-times'));
+                echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o'));
                 echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'],
-                                 array("class" => "btn-primary m-l-10"));
+                                 array("class" => "btn-primary", 'icon' => 'fa fa-hdd-o'));
                 closeside();
                 ?>
             </div>
         </div>
         <?php
-        echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default"));
-        echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10"));
+        echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", 'icon' => 'fa fa-times'));
+        echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o'));
         echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'],
-                         array("input_id" => 's2', "class" => "btn-primary m-l-10"));
+                         array("input_id" => 's2', "class" => "btn-primary m-l-10", 'icon' => 'fa fa-hdd-o'));
         echo "</div>\n";
     }
 
@@ -347,13 +347,13 @@ class NewsCategoryAdmin extends NewsAdminModel {
             echo "<div class='pull-right'>\n";
 
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_cat_form", array("ref"),
-                                                                                 FALSE)."'>".$this->locale['news_0022']."</a>";
+                                                                                 FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['news_0022']."</a>";
 
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$this->locale['sticky']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$this->locale['unsticky']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
+            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
             echo "</div>\n";
 
             ?>

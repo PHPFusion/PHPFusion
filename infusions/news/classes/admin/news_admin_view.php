@@ -43,20 +43,23 @@ class NewsAdminView extends NewsAdminModel {
         if (!empty($_GET['ref'])) {
             $master_title['title'][] = $locale['back'];
             $master_title['id'][] = 'back';
-            $master_title['icon'] = '';
+            $master_title['icon'][] = 'fa fa-arrow-left';
         }
 
         $news_title = $locale['news_0001'];
+        $news_icon = 'fa fa-newspaper-o';
         if (isset($_GET['ref']) && $_GET['ref'] == "news_form") {
             $news_title = $locale['news_0002'];
+            $news_icon = 'fa fa-plus';
             if (isset($_GET['news_id'])) {
                 $news_title = $locale['news_0003'];
+                $news_icon = 'fa fa-pencil';
             }
         }
 
         $master_title['title'][] = $news_title;
         $master_title['id'][] = 'news';
-        $master_title['icon'] = '';
+        $master_title['icon'][] = $news_icon;
 
         $news_cat_title = $locale['news_0020'];
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
@@ -65,16 +68,16 @@ class NewsAdminView extends NewsAdminModel {
                 $news_cat_title = $locale['news_0021'];
             }
         }
-
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
         $master_title['title'][] = $news_cat_title;
         $master_title['id'][] = 'news_category';
-        $master_title['icon'] = '';
-        $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
-        $master_title['id'][] = 'settings';
-        $master_title['icon'] = '';
-        $master_title['title'][] = $locale['news_0023'];
+        $master_title['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-folder';
+        $master_title['title'][] = $locale['news_0023']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")."</span>";
         $master_title['id'][] = 'submissions';
-        $master_title['icon'] = '';
+        $master_title['icon'][] = 'fa fa-inbox';
+        $master_title['title'][] = $locale['news_0004'];
+        $master_title['id'][] = 'settings';
+        $master_title['icon'][] = 'fa fa-cogs';
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_title]);
 
@@ -90,7 +93,7 @@ class NewsAdminView extends NewsAdminModel {
                 NewsSettingsAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "submissions":
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:

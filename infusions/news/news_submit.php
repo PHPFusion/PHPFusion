@@ -170,10 +170,10 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         echo form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'], $textArea_opts);
         $textArea_opts['required'] = $news_settings['news_extended_required'] ? TRUE : FALSE;
         echo form_textarea('news_body', $locale['news_0203b'], $criteriaArray['news_body'], $textArea_opts);
+        echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
         echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['news_0240'],
                                                                 $locale['news_0240'],
-                                                                array('class' => 'btn-primary m-r-10'));
-        echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
+                                                                array('icon' => 'fa fa-eye'));
         echo closeform();
     }
 } else {
