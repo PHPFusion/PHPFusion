@@ -169,16 +169,16 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         ?>
         <div class="well clearfix">
           <div class="pull-left">
-            <?php echo display_avatar($this -> dataUser, "30px", "", FALSE, "img-rounded"); ?>
+            <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-r-5"); ?>
           </div>
           <div class="overflow-hide">
             <?php
-            $submissionUser = ($this -> dataUser['user_name'] != $this->locale['user_na'] ? profile_link($this -> dataUser['user_id'], $this -> dataUser['user_name'], $this -> dataUser['user_status']) : $this -> locale['user_na']);
+            $submissionUser = ($this->dataUser['user_name'] != $this->locale['user_na'] ? profile_link($this->dataUser['user_id'], $this -> dataUser['user_name'], $this -> dataUser['user_status']) : $this -> locale['user_na']);
             $submissionDate = showdate("shortdate", $this -> inputArray['article_datestamp']);
-            $submissionTime = timer($this -> inputArray['article_datestamp']);
+            $submissionTime = timer($this->inputArray['article_datestamp']);
 
             $replacements = array("{%SUBMISSION_AUTHOR%}" => $submissionUser, "{%SUBMISSION_DATE%}" => $submissionDate, "{%SUBMISSION_TIME%}" => $submissionTime);
-            $submissionInfo = strtr($this -> locale['article_0350']."<br />".$this -> locale['article_0351'], $replacements);
+            $submissionInfo = strtr($this->locale['article_0350']."<br />".$this -> locale['article_0351'], $replacements);
 
             echo $submissionInfo;
             ?>
@@ -314,7 +314,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     $submitData = unserialize($data['submit_criteria']);
                     $submitUser = $this->locale['user_na'];
                     if ($data['user_name']) {
-                        $submitUser = display_avatar($data, "20px", "", "", "");
+                        $submitUser = display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5');
                         $submitUser .= profile_link($data['user_id'], $data['user_name'], $data['user_status']);
                     }
 
@@ -326,7 +326,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                         <td><?php echo $submitUser; ?></td>
                         <td><?php echo timer($data['submit_datestamp']); ?></td>
                         <td>
-                          <a href="<?php echo $reviewLink; ?>" title="<?php echo $this->locale['article_0205']; ?>" class="btn-sm btn-default"><i class="fa fa-fw fa-eye"></i> <?php echo $this->locale['article_0205']; ?></a>
+                          <a href="<?php echo $reviewLink; ?>" title="<?php echo $this->locale['article_0205']; ?>" class="btn btn-default btn-sm"><i class="fa fa-fw fa-eye"></i> <?php echo $this->locale['article_0205']; ?></a>
                         </td>
                     </tr>
                     <?php

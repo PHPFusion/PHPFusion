@@ -43,6 +43,7 @@ $locale['article_0103'] = "Comments";
 $locale['article_0104'] = "Ratings";
 $locale['article_0105'] = "Author";
 $locale['article_0106'] = "Visibility";
+$locale['article_0107'] = "Actions";
 
 // Table - Articles - Misc
 $locale['article_0110'] = "Add Article";

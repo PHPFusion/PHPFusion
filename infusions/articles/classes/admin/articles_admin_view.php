@@ -42,7 +42,6 @@ class ArticlesAdminView extends ArticlesAdminModel {
         $articleCatTitle = $this->locale['article_0004'];
 
         if ($_GET['section'] == "article") {
-            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article", "title" => $this->locale['article_0001']));
             if (isset($_GET['ref']) && $_GET['ref'] == "article_form") {
                 if (!isset($_GET['article_id'])) {
                     BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article&amp;ref=article_form", "title" => $this->locale['article_0002']));
@@ -65,14 +64,6 @@ class ArticlesAdminView extends ArticlesAdminModel {
                     $articleCatTitle = $this->locale['article_0006'];
                 }
             }
-        }
-
-        if ($_GET['section'] == "submissions") {
-            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['article_0007']));
-        }
-
-        if ($_GET['section'] == "settings") {
-            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['article_0008']));
         }
 
         // Handle Tabs
@@ -104,9 +95,11 @@ class ArticlesAdminView extends ArticlesAdminModel {
                 break;
             case "submissions":
                 ArticlesSubmissionsAdmin::getInstance()->displayArticlesAdmin();
+                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['article_0007']));
                 break;
             case "settings":
                 ArticlesSettingsAdmin::getInstance()->displayArticlesAdmin();
+                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['article_0008']));
                 break;
             default:
                 ArticlesAdmin::getInstance()->displayArticlesAdmin();

@@ -190,7 +190,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 openside($this->locale['article_0261']);
 
                 echo form_select_tree("article_cat", $this->locale['article_0253'], $this->article_data['article_cat'], array(
-                        "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'], 
+                        "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
                         "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                     ),
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
@@ -253,7 +253,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     private function display_articleButtons($unique_id, $breaker = true) {
         ?>
         <div class="m-t-20">
-          <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-trash", "input-id" => "cancel-".$unique_id."")); ?>
+          <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id."")); ?>
           <?php echo form_button("save", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id."")); ?>
           <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-r-10", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id."")); ?>
         </div>
@@ -500,10 +500,10 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
         <!-- Display Items -->
         <div class="display-block">
-            <div class="display-inline-block m-l-10">
+            <div class="display-inline-block">
                 <?php
                     echo form_select("article_display", $this->locale['article_0132'], $limit, array(
-                        "width" => "100px", "inline" => TRUE, "options" => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100)
+                        "width" => "100px", "options" => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100)
                     ));
                 ?>
             </div>
@@ -519,7 +519,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <thead>
             <tr>
                 <td></td>
-                <td class="strong col-xs-4"><?php echo $this->locale['article_0100'] ?></td>
+                <td class="strong"><?php echo $this->locale['article_0100'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0101'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0102'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0103'] ?></td>
@@ -527,6 +527,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 <td class="strong"><?php echo $this->locale['article_0105'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0106'] ?></td>
                 <td class="strong"><?php echo $this->locale['language'] ?></td>
+                <td class="strong"><?php echo $this->locale['article_0107'] ?></td>
             </tr>
             </thead>
             <tbody>
@@ -539,13 +540,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     ?>
                     <tr data-id="<?php echo $data['article_id']; ?>">
                         <td><?php echo form_checkbox("article_id[]", "", "", array("value" => $data['article_id'], "class" => "m-0")) ?></td>
-                        <td>
-                            <span class="text-dark"><?php echo $data['article_subject']; ?></span>
-                            <div class="actionbar text-smaller" id="ae-<?php echo $data['article_id']; ?>-actions">
-                                <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-                                <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
-                            </div>
-                        </td>
+                        <td><span class="text-dark"><?php echo $data['article_subject']; ?></span></td>
                         <td>
                             <a class="text-dark" href="<?php echo $cat_edit_link ?>">
                                 <?php echo $data['article_cat_name']; ?>
@@ -557,11 +552,15 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         <td><?php echo ($data['article_allow_comments'] ? format_word($data['comments_count'], $this->locale['fmt_comment']) : $this->locale['disable']); ?></td>
                         <td><?php echo ($data['article_allow_ratings']  ? format_word($data['ratings_count'], $this->locale['fmt_rating'])   : $this->locale['disable']); ?></td>
                         <td>
-                            <div class="pull-left"><?php echo display_avatar($data, "20px", "", FALSE, "img-rounded"); ?></div>
+                            <div class="pull-left"><?php echo display_avatar($data, "20px", "", FALSE, "img-rounded m-r-5"); ?></div>
                             <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']); ?></div>
                         </td>
                         <td><span class="badge"><?php echo getgroupname($data['article_visibility']); ?></span></td>
                         <td><?php echo $data['article_language'] ?></td>
+                        <td>
+                            <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                            <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                        </td>
                     </tr>
                     <?php
                 endwhile;
@@ -577,13 +576,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
         // jQuery
         add_to_jquery("
-            // Actionbars
-            $('.actionbar').hide();
-            $('tr').hover(
-                function(e) { $('#ae-'+ $(this).data('id') +'-actions').show(); },
-                function(e) { $('#ae-'+ $(this).data('id') +'-actions').hide(); }
-            );
-
             // Toggle Filters
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
