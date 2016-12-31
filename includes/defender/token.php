@@ -47,7 +47,7 @@ class Token extends \defender {
      *
      * @var bool - true to debug
      */
-    private static $debug = FALSE;
+    private static $debug = TRUE;
 
     public function __construct() {
 

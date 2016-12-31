@@ -133,7 +133,7 @@ class defender {
      *
      * @return string
      */
-    public static function pageHash($file = "", $encrypt = FALSE) {
+    public static function pageHash($file = '', $encrypt = FALSE) {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             $hash = $encrypt ? md5('administration') : 'administration';
         } else {
