@@ -107,12 +107,9 @@ class ComposeContent extends PageAdmin {
                     </div>
                     <div class="panel-footer">
                         <?php
-                        echo form_button('save', self::$locale['save'], self::$locale['save'],
-                                         array('class' => 'btn-primary m-r-10'));
-                        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'],
-                                         array('class' => 'btn-success m-r-10'));
-                        echo form_button('preview', self::$locale['preview'], self::$locale['preview'],
-                                         array('class' => 'btn-default m-r-10'));
+                        echo form_button('save', self::$locale['save'], self::$locale['save'], array('class' => 'btn-success btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
+                        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-primary brn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
+                        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], array('class' => 'btn-default btn-sm', 'icon' => 'fa fa-eye'));
                         ?>
                     </div>
                 </div>
