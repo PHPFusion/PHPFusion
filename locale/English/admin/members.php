@@ -72,12 +72,17 @@ $locale['ME_555'] = 'cancelled';
 $locale['ME_556'] = 'anonymized';
 $locale['ME_557'] = 'permanently deleted';
 
-$locale['ME_'] = '';
-$locale['ME_'] = '';
-$locale['ME_'] = '';
-$locale['ME_'] = '';
-$locale['ME_'] = '';
-$locale['ME_'] = '';
+
+
+
+
+
+
+/*--------------------------------------------------------------------------
+These are old locale. They are MOST LIKELY not being used by the new member center.
+Please remove them or reindex the keys if you find any.
+*--------------------------------------------------------------------------*/
+
 
 // Edit Member Details
 $locale['430'] = "Edit Member";
