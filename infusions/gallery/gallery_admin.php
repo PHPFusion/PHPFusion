@@ -42,19 +42,19 @@ $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
 $gallery_tab['title'][] = $locale['gallery_0001'];
 $gallery_tab['id'][] = "gallery";
-$gallery_tab['icon'][] = "";
+$gallery_tab['icon'][] = "fa fa-camera-retro";
 $gallery_tab['title'][] = $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002'];
 $gallery_tab['id'][] = "photo_form";
-$gallery_tab['icon'][] = "";
+$gallery_tab['icon'][] = "fa fa-picture-o";
 $gallery_tab['title'][] = $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004'];
 $gallery_tab['id'][] = "album_form";
-$gallery_tab['icon'][] = "";
+$gallery_tab['icon'][] = "fa fa-plus";
+$gallery_tab['title'][] = $locale['gallery_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'")."</span>";
+$gallery_tab['id'][] = "submissions";
+$gallery_tab['icon'][] = "fa fa-inbox";
 $gallery_tab['title'][] = $locale['gallery_0006'];
 $gallery_tab['id'][] = "settings";
-$gallery_tab['icon'][] = "";
-$gallery_tab['title'][] = $locale['gallery_0007'];
-$gallery_tab['id'][] = "submissions";
-$gallery_tab['icon'][] = "";
+$gallery_tab['icon'][] = "fa fa-cogs";
 $allowed_pages = array("album_form", "photo_form", "settings", "submissions", "actions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
 $_GET['album'] = 0;
@@ -75,11 +75,11 @@ switch ($_GET['section']) {
         include "admin/gallery_actions.php";
         break;
     case "settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][3]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]]);
         include "admin/gallery_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
         include "admin/photo_submissions.php";
         break;
     default:
