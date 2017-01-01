@@ -47,7 +47,6 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
         if ($rows != 0) {
 
             $item_count = "<a href='".FUSION_SELF."?stype=members&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['m401'] : $locale['m402'])." ".$locale['522']."</a><br />\n";
-
             $order_by = array(
                 '0' => ' DESC',
                 '1' => ' ASC',
@@ -63,24 +62,21 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
             /*
              * HTML
              */
-            $search_result = "<!---members_search_results---><ul class='block spacer-xs'>\n";
+            $search_result = '';
             while ($data = dbarray($result)) {
-                $search_result .= "<li>\n
-                    <div class='clearfix'><div class='pull-left m-r-10'>".display_avatar($data, '70px', '', FALSE, '')."</div>
-                    <div class='overflow-hide'>
-                        <h4 class='m-0'>
-                        ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."
-                        </h4>".getuserlevel($data['user_level'])."
-                    </div></div>\n
-                    </li>\n
-                    ";
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}' => BASEDIR."profile.php?lookup=".$data['user_id'],
+                        '{%item_image%}' => display_avatar($data, '70px', '', FALSE, ''),
+                        '{%item_title%}' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
+                        '{%item_description%}' => getuserlevel($data['user_level']),
+                    ]
+                );
             }
-            $search_result .= "</ul>\n<!---//members_search_results--->";
 
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getImage('ac_M'),
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}' => "<img src='".ImageRepo::getimage('ac_M')."' alt='".$locale['user1']."' style='width:32px;'/>",
                 '{%icon_class%}' => 'fa fa-user-circle fa-lg fa-fw',
-                '{%search_title%}' => "Members",
+                '{%search_title%}' => $locale['user1'],
                 '{%search_result%}' => $item_count,
                 '{%search_content%}' => $search_result
             ]);

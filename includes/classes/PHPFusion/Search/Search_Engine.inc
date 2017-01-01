@@ -23,6 +23,23 @@ class Search_Engine extends Search_Model {
 
     protected static $search_instance = NULL;
 
+    /*
+     * Template
+     * Adds a third option to replace output template.
+     * Just extend and declare your own by mutating the following
+     * strings.
+     *
+     * In order to access the variables, extend your class to Search_Engine!
+     */
+    protected static $render_search = '';
+    protected static $search_no_result = '';
+    protected static $search_count = '';
+    protected static $search_item_wrapper = '';
+
+    protected static $search_item = '';
+    protected static $search_item_list = '';
+    protected static $search_item_image = '';
+
     /**
      * Returns params
      * @param null $key
@@ -376,12 +393,11 @@ class Search_Engine extends Search_Model {
         $locale = self::$locale;
         self::$composevars = "method=".self::get_param('method')."&amp;datelimit=".self::get_param('datelimit')."&amp;fields=".self::get_param('fields')."&amp;sort=".self::get_param('sort')."&amp;order=".self::get_param('order')."&amp;chars=".self::get_param('chars')."&amp;forum_id=".self::get_param('forum_id')."&amp;";
         add_to_title($locale['global_201'].$locale['408']);
-        /*
-         * Now we all understand what each string fucking means...
-         */
+
         $search_text = explode(' ', urldecode(self::$search_text));
         $qualified_search_text = array();
         $disqualified_search_text = array();
+
         /*
          * @todo: roadmap on author
          */
@@ -500,7 +516,7 @@ class Search_Engine extends Search_Model {
      * - Prevents string mutation
      * @param $path
      */
-    private static function __Load($path) {
+    protected static function __Load($path) {
         $file = INCLUDES.'search/'.$path;
         if (file_exists($file)) {
             include($file);

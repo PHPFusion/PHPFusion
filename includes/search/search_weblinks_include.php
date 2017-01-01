@@ -79,7 +79,7 @@ if (db_exists(DB_WEBLINKS)) {
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
             while ($data = dbarray($result)) {
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['w403']."</span>";
@@ -91,14 +91,21 @@ if (db_exists(DB_WEBLINKS)) {
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
                 $text_c = Search_Engine::search_stringscount($data['weblink_description']);
-                $search_result .= "<li><a href='".INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>".$new."<br /><br />\n";
-                if ($text_frag != "") {
-                    $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                }
-                $search_result .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
-            }
 
-            $search_result .= "</ul>\n";
+                $desc = '';
+                if ($text_frag != "") {
+                    $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+                }
+                $desc .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
+
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}' => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
+                        '{%item_image%}' => '',
+                        '{%item_title%}' => $data['weblink_name'].' '.$new,
+                        '{%item_description%}' => $desc,
+                    ]
+                );
+            }
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item(), [

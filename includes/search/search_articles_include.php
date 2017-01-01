@@ -78,26 +78,37 @@ if (db_exists(DB_ARTICLES)) {
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
             while ($data = dbarray($result)) {
                 $text_all = Search_Engine::search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['article_subject']);
                 $text_c = Search_Engine::search_stringscount($data['article_snippet']." ".$data['article_article']);
-                $search_result .= "<li>\n";
-                $search_result .= "<a href='infusions/articles/articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
-                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
-                $search_result .= $locale['global_071'].showdate("longdate", $data['article_datestamp'])."</span><br />\n";
-                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a404'].", ";
-                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a405']."</span><br /><br />\n";
-                $search_result .= "</li>\n";
+
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+
+                $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
+                $meta .= $locale['global_071'].showdate("longdate", $data['article_datestamp'])."</span><br />\n";
+
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a405']."</span>";
+
+                $search_result .= strtr(Search::render_search_item_list(), [
+                        '{%item_url%}' => INFUSIONS."/articles/articles.php?article_id=".$data['article_id'],
+                        '{%item_target%}' => 'self',
+                        '{%item_image%}' => '',
+                        '{%item_title%}' => $data['article_subject'],
+                        '{%item_description%}' => $meta,
+                        '{%item_search_criteria%}' => $criteria,
+                        '{%item_search_context%}' => $context,
+                    ]
+                );
             }
 
             $search_result .= "</ul>\n";
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
                 '{%image%}' => ImageRepo::getimage('ac_A'),
                 '{%icon_class%}' => "fa fa-book fa-lg fa-fw",
                 '{%search_title%}' => $locale['a400'],

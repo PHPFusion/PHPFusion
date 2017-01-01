@@ -78,32 +78,34 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
 
             $result = dbquery($query.$sortby.$limit, $param);
 
-            $search_result = "<ul class='block spacer-xs'>\n";
-
+            $search_result = '';
             while ($link_data = dbarray($result)) {
-
                 $link_data += $default_link_data;
-
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
-
                 if (!empty($link_data['link_url'])) {
-                    $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
+                    $itemlink = BASEDIR.$link_data['link_url'];
                     // if link has site protocol
                     if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
                         or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))
                     ) {
-                        $itemlink = " href='".$link_data['link_url']."' ";
+                        $itemlink = $link_data['link_url'];
                     }
                 }
-
                 $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
-                $link_icon = (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : '');
-                $search_result .= "<li><a $itemlink $link_target>".$link_icon.$link_data['link_name']."</a></li>";
+                $link_icon = (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : "<i class='fa fa-sitemap fa-2x fa-fw'></i>");
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}' => $itemlink,
+                        '{%item_target%}' => $link_target,
+                        '{%item_image%}' => $link_icon,
+                        '{%item_title%}' => $link_data['link_name'],
+                        '{%item_description%}' => '',
+                    ]
+                );
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_CP'),
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}' => "<img src='".ImageRepo::getimage('ac_SL')."' alt='".$locale['s400']."' style='width:32px;'/>",
                 '{%icon_class%}' => "fa fa-sitemap fa-lg fa-fw",
                 '{%search_title%}' => $locale['s400'],
                 '{%search_result%}' => $item_count,

@@ -63,21 +63,33 @@ if (db_exists(DB_FAQS)) {
 
         if ($rows != 0) {
             $item_count = "<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
+
             while ($data = dbarray($result)) {
                 $text_all = $data['faq_answer'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['faq_question']);
                 $text_c = Search_Engine::search_stringscount($data['faq_answer']);
-                $search_result .= "<li><a href='infusions/faq/faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_question']."</a>"."<br /><br />\n";
-                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
-                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span></li>\n";
+
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span>";
+
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}' => INFUSIONS."/faq/faq.php?cat_id=".$data['faq_cat_id'],
+                        '{%item_target%}' => '',
+                        '{%item_image%}' => '',
+                        '{%item_title%}' => $data['faq_question'],
+                        '{%item_description%}' => $data['faq_answer'],
+                        '{%item_search_criteria%}' => $criteria,
+                        '{%item_search_context%}' => $context,
+                    ]
+                );
             }
-            $search_result .= "</ul>\n";
+
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
                 '{%image%}' => ImageRepo::getimage('ac_FQ'),
                 '{%icon_class%}' => "fa fa-question-circle fa-lg fa-fw",
                 '{%search_title%}' => $locale['fq400'],

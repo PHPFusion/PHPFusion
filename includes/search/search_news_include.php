@@ -18,6 +18,7 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
+use PHPFusion\News\News;
 use \PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
@@ -70,41 +71,54 @@ if (db_exists(DB_NEWS)) {
             $rows = 0;
         }
         if ($rows != 0) {
-
+            require_once INFUSIONS.'news/classes/autoloader.php';
             $item_count = "<a href='".FUSION_SELF."?stype=news&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
 
-            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status
+            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status,
+                ni.news_image, ni.news_image_t1, ni.news_image_t2
             	FROM ".DB_NEWS." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+				LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND tn.news_image_front_default=ni.news_image_id
 				".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')."
 				AND (news_start='0'||news_start<=NOW())
 				AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions().$date_search.$sortby.$limit
 				, Search_Engine::get_param('search_param')
             );
 
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
+
             while ($data = dbarray($result)) {
+
                 $text_all = $data['news_news']." ".$data['news_extended'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['news_subject']);
                 $text_c = Search_Engine::search_stringscount($data['news_news']);
                 $text_c2 = Search_Engine::search_stringscount($data['news_extended']);
-                $search_result .= "<li>\n";
-                $search_result .= "<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."'>".$data['news_subject']."</a>"."<br /><br />\n";
-                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
-                $search_result .= $locale['global_071'].showdate("longdate", $data['news_datestamp'])."</span><br />\n";
-                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
-                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
-                $search_result .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span><br /><br />\n";
-                $search_result .= "</li>\n";
+
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div>";
+
+                $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." ".$locale['global_071'].showdate("longdate", $data['news_datestamp'])."</span><br />\n";
+
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
+                $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
+
+                $search_result .= strtr(Search::render_search_item_list(), [
+                        '{%item_url%}' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
+                        '{%item_target%}' => '',
+                        '{%item_image%}' => News::get_NewsImage($data, TRUE, TRUE, '100'),
+                        '{%item_title%}' => $data['news_subject'],
+                        '{%item_description%}' => $meta,
+                        '{%item_search_criteria%}' => $criteria,
+                        '{%item_search_context%}' => $context,
+                    ]
+                );
             }
-            $search_result .= "</ul>\n";
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_N'),
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}' => "<img src='".ImageRepo::getimage('ac_N')."' alt='".$locale['n400']."' style='width:32px;'/>",
                 '{%icon_class%}' => "fa fa-newspaper-o fa-lg fa-fw",
                 '{%search_title%}' => $locale['n400'],
                 '{%search_result%}' => $item_count,
