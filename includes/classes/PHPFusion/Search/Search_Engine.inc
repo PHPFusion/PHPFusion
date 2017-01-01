@@ -463,9 +463,10 @@ class Search_Engine extends Search_Model {
             ]);
         }
         else {
+
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
-                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : '')
+                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
             ]);
         }
 

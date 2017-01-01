@@ -28,6 +28,7 @@ $locale['417'] = "Site locale:";
 $locale['418'] = "Site theme:";
 $locale['418a'] = "Site Admin Theme:";
 $locale['419'] = "Default search location:";
+$locale['419a'] = "Entire Site";
 $locale['420'] = "Exclude Left Panels:";
 $locale['421'] = "Exclude Upper Panels:";
 $locale['422'] = "Exclude Lower Panels:";
