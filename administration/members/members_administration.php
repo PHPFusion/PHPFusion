@@ -239,7 +239,7 @@ class Members_Admin {
                 case 'edit': // Edit User Profile
                     if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-                        if (empty(self::$user_data) || self::$user_data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
                         $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
@@ -254,7 +254,7 @@ class Members_Admin {
                 case 'delete':
                     if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-                        if (empty(self::$user_data) || self::$user_data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
                         opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
