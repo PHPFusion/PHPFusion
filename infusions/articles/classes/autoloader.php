@@ -28,7 +28,8 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Articles\\ArticlesCategoryAdmin" => ARTICLE_CLASS."/admin/controllers/articles_cat.php",
         "PHPFusion\\Articles\\ArticlesSettingsAdmin" => ARTICLE_CLASS."/admin/controllers/articles_settings.php",
         "PHPFusion\\Articles\\ArticlesSubmissionsAdmin" => ARTICLE_CLASS."/admin/controllers/articles_submissions.php",
-        "PHPFusion\\Articles\\ArticlesAdmin" => ARTICLE_CLASS."/admin/controllers/articles.php"
+        "PHPFusion\\Articles\\ArticlesAdmin" => ARTICLE_CLASS."/admin/controllers/articles.php",
+        "PHPFusion\\OpenGraphArticles" => ARTICLE_CLASS."/articles/OpenGraphArticles.php"
     );
 
     if (isset($autoload_register_paths[$className])) {

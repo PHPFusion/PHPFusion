@@ -469,15 +469,6 @@ abstract class Articles extends ArticlesServer {
 
             $article_subject = $data['article_subject'];
 
-            // Social Media
-            if (fusion_get_settings("create_og_tags")) {
-                add_to_head("<meta property='og:title' content='".$data['article_subject']."' />");
-                add_to_head("<meta property='og:description' content='".strip_tags($data['article_article'])."' />");
-                add_to_head("<meta property='og:site_name' content='".fusion_get_settings('sitename')."' />");
-                add_to_head("<meta property='og:type' content='article' />");
-                add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/articles/articles.php?article_id=".$_GET['article_id']."' />");
-            }
-
             $_GET['cat_id'] = $data['article_cat_id'];
 
             set_title($article_subject.self::$locale['global_200'].self::$locale['article_0005']);
