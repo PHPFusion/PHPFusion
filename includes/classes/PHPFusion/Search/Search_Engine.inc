@@ -480,7 +480,6 @@ class Search_Engine extends Search_Model {
             ]);
         }
         else {
-
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
                 '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
@@ -489,13 +488,18 @@ class Search_Engine extends Search_Model {
 
         echo "<div class='search_result'>\n";
         echo "<div class='block'>\n";
-        for ($i = $from; $i < $to; $i++) {
-            echo self::$search_result_array[$i];
+        foreach(self::$search_result_array as $results) {
+            echo $results;
         }
+
+        // Now it is by per module. Therefore rowstart does not apply
+        //for ($i = $from; $i < $to; $i++) {
+          //  echo self::$search_result_array[$i];
+        //}
         echo "</div>\n";
         echo "</div>\n";
 
-        echo self::$navigation_result;
+        //echo self::$navigation_result;
     }
     /**
      * Controller for omitting search

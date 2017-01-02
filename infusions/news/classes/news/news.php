@@ -211,7 +211,7 @@ abstract class News extends NewsServer {
         $imageOptimized = IMAGES_N."news_default.jpg";
         $imageRaw = '';
 
-        if ($data['news_cat_image']) {
+        if (!empty($data['news_cat_image'])) {
             $imageOptimized = get_image("nc_".$data['news_cat_name']);
             $imageRaw = $imageOptimized;
         }

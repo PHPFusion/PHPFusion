@@ -363,6 +363,7 @@ class Errors {
                     $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
+
                     /* Toggle Info */
                     $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
                     $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."'>\n";
@@ -398,12 +399,10 @@ class Errors {
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
                     /* Toggle Info */
-                    $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
-                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."-$i'>\n";
+                    $html .= "<tr class='collapse' id='err-rmd-".$data['error_id']."-$i'><td colspan='4' class='hiddenRow no-border'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
-                    $html .= "</div>\n";
                     $html .= "</td></tr>\n";
                 }
             }
@@ -512,7 +511,7 @@ class Errors {
                     type: 'json',
                     data: sendData,
                     success: function(e) {
-                        //console.log(e);
+                        console.log(e);
                         if (e.status == 'OK') {
                             var target_group_add  = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.to);
                             var target_group_remove = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.from)
@@ -520,7 +519,8 @@ class Errors {
                             target_group_remove.removeClass('active');
                         }
                         else if (e.status == 'RMD') {
-                             $('tr#rmd-'+e.fusion_error_id).html('');
+                             $('tr#rmd-'+e.fusion_error_id).remove();
+                             $('tr#err-rmd-'+e.fusion_error_id).remove();
                         }
                     },
                     error : function(e) {
