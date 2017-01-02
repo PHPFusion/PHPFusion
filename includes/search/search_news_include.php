@@ -44,7 +44,7 @@ if (db_exists(DB_NEWS)) {
         );
 
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
-        $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
+        $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '0,3');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND news_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
         switch (Search_Engine::get_param('fields')) {
@@ -100,7 +100,7 @@ if (db_exists(DB_NEWS)) {
 
                 $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div>";
 
-                $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." ".$locale['global_071'].showdate("longdate", $data['news_datestamp'])."</span><br />\n";
+                $meta = "<span class='small2'>".$locale['global_070'].$data['user_name']." ".$locale['global_071'].showdate("longdate", $data['news_datestamp'])."</span><br />\n";
 
                 $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
@@ -109,7 +109,7 @@ if (db_exists(DB_NEWS)) {
                 $search_result .= strtr(Search::render_search_item_list(), [
                         '{%item_url%}'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
                         '{%item_target%}'          => '',
-                        '{%item_image%}'           => News::get_NewsImage($data, TRUE, TRUE, '100'),
+                        '{%item_image%}'           => News::get_NewsImage($data, TRUE, FALSE, '100'),
                         '{%item_title%}'           => $data['news_subject'],
                         '{%item_description%}'     => $meta,
                         '{%item_search_criteria%}' => $criteria,
