@@ -33,8 +33,8 @@ if (db_exists(DB_FORUMS)) {
 
         $sort_by = array(
             'datestamp' => "post_datestamp",
-            'subject' => "thread_subject",
-            'author' => "post_author",
+            'subject'   => "thread_subject",
+            'author'    => "post_author",
         );
 
         $order_by = array(
@@ -45,7 +45,7 @@ if (db_exists(DB_FORUMS)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND post_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
                 Search_Engine::search_column('thread_subject', 'forum');
                 Search_Engine::search_column('post_message', 'forum');
@@ -77,7 +77,7 @@ if (db_exists(DB_FORUMS)) {
             $rows = 0;
         }
 
-        if ($rows !=0) {
+        if ($rows != 0) {
 
             $item_count = "<a href='".FUSION_SELF."?stype=forums&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
 
@@ -91,9 +91,8 @@ if (db_exists(DB_FORUMS)) {
             LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
             LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
             ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').
-            (Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : '')."
+                (Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : '')."
             AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search.$sortby.$limit;
-
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
 
@@ -106,28 +105,31 @@ if (db_exists(DB_FORUMS)) {
                 $subj_c = Search_Engine::search_stringscount($data['thread_subject']);
                 $text_c = Search_Engine::search_stringscount($data['post_message']);;
 
-                $desc = "<div class='text-normal'>".$text_frag."</div>";
-                $desc .= "<span class='text-smaller'>".$locale['global_070'].$data['user_name']."\n";
-                $desc .= $locale['global_071'].showdate("longdate", $data['post_datestamp'])."</span><br/>\n";
-                $desc .= "<span class='text-smaller text-lighter'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['f406']." ".$locale['f407'].", ";
-                $desc .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['f406']." ".$locale['f408']."</span>";
+                $context = "<div class='text-normal'>".$text_frag."</div>";
+
+                $meta = "<span class='text-smaller'>".$locale['global_070'].$data['user_name']."\n";
+                $meta .= $locale['global_071'].showdate("longdate", $data['post_datestamp'])."</span><br/>\n";
+
+                $criteria = "<span class='text-smaller text-lighter'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['f406']." ".$locale['f407'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['f406']." ".$locale['f408']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                      '{%item_url%}' => '',
-                    //'{%item_url%}' => FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id'],
-                        '{%item_image%}' => display_avatar($data, '70px', '', '', FALSE),
-                        '{%item_title%}' => ($data['thread_sticky'] == 1 ? '['.$locale['f404'].']' : '').$data['thread_subject'],
-                        '{%item_description%}' => $desc
+                        '{%item_url%}'             => FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id'],
+                        '{%item_image%}'           => display_avatar($data, '70px', '', '', FALSE),
+                        '{%item_title%}'           => ($data['thread_sticky'] == 1 ? '['.$locale['f404'].']' : '').$data['thread_subject'],
+                        '{%item_description%}'     => $meta,
+                        '{%item_search_context%}'  => $context,
+                        '{%item_search_criteria%}' => $criteria,
                     ]
                 );
             }
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_F')."' alt='".$locale['f400']."' style='width:32px;'/>",
-                '{%icon_class%}' => "fa fa-comments-o fa-lg fa-fw",
-                '{%search_title%}' => $locale['f400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_F')."' alt='".$locale['f400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-comments-o fa-lg fa-fw",
+                '{%search_title%}'   => $locale['f400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }
