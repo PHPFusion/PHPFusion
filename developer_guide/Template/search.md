@@ -65,7 +65,6 @@ For theme developers who wishes to customize your theme output for search **glob
 // add before render_page
 
 function render_search() {
-return "
 return open_table('{%title%}')."
         <div class='my_custom_template'>        
         <div class='clearfix m-b-15'>{%search_text%}</div>        
