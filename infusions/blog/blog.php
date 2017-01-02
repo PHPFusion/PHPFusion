@@ -27,6 +27,7 @@ if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
     include INFUSIONS."blog/locale/English/blog.php";
 }
 require_once INFUSIONS."blog/classes/Functions.php";
+require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 
@@ -266,6 +267,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
                 $result2 = dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".$_GET['readmore']."'");
                 $item['blog_reads']++;
             }
+            \PHPFusion\OpenGraphBlogs::ogBlog($_GET['readmore']);
         }
 
     } else {
