@@ -83,7 +83,7 @@ class OpenGraph {
 		OpenGraph::setValues();
 	}
 
-	private static function setValues($values = array()) {
+	protected static function setValues($values = array()) {
 		$settings = fusion_get_settings();
 
 		if (!OpenGraph::$ogAdded) {
