@@ -83,7 +83,7 @@ class Members_Admin {
             self::$usr_mysql_status = "0' AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0";
         }
 
-        //self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
+        self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
 
         $base_url = FUSION_SELF.fusion_get_aidlink();
         self::$status_uri = array(
@@ -126,7 +126,7 @@ class Members_Admin {
     public function display_admin() {
 
         if (isset($_POST['cancel'])) {
-            redirect(USER_MANAGEMENT_SELF);
+            redirect(self::$exit_link);
         }
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['400']]);
@@ -239,7 +239,7 @@ class Members_Admin {
                 case 'edit': // Edit User Profile
                     if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-                        if (empty(self::$user_data) || self::$user_data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
                         $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
@@ -254,7 +254,7 @@ class Members_Admin {
                 case 'delete':
                     if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
-                        if (empty(self::$user_data) || self::$user_data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                        if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
                         opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
