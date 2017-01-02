@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion\Articles;
+use PHPFusion\OpenGraphArticles;
 
 /**
  * Controller package for if/else
@@ -30,6 +31,7 @@ class ArticlesView extends Articles {
         if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
             $info = $this->set_ArticlesItemInfo($_GET['article_id']);
             render_article_item($info);
+	        OpenGraphArticles::ogArticle($_GET['article_id']);
 			
 		// Display Category
         } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
