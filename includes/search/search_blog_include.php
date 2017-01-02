@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
@@ -30,8 +31,8 @@ if (db_exists(DB_BLOG)) {
     if (Search_Engine::get_param('stype') == "blog" || Search_Engine::get_param('stype') == "all") {
         $sort_by = array(
             'datestamp' => "blog_datestamp",
-            'subject' => "blog_subject",
-            'author' => "blog_name",
+            'subject'   => "blog_subject",
+            'author'    => "blog_name",
         );
         $order_by = array(
             '0' => ' DESC',
@@ -41,24 +42,25 @@ if (db_exists(DB_BLOG)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND blog_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('blog_subject', 0);
-                Search_Engine::search_column('blog_blog', 1);
-                Search_Engine::search_column('blog_extended', 2);
+                Search_Engine::search_column('blog_subject', 'blog');
+                Search_Engine::search_column('blog_blog', 'blog');
+                Search_Engine::search_column('blog_extended', 'blog');
                 break;
             case 1:
-                Search_Engine::search_column('blog_blog', 0);
-                Search_Engine::search_column('blog_extended', 1);
+                Search_Engine::search_column('blog_blog', 'blog');
+                Search_Engine::search_column('blog_extended', 'blog');
                 break;
             case 0:
-                Search_Engine::search_column('blog_subject', 0);
+                Search_Engine::search_column('blog_subject', 'blog');
                 break;
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT blog_id FROM ".DB_BLOG."
-            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND ".Search_Engine::search_conditions()." AND (blog_start='0'||blog_start<=NOW())".$date_search;
+            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." 
+            AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
@@ -73,7 +75,7 @@ if (db_exists(DB_BLOG)) {
             FROM ".DB_BLOG." tn
             LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
             ".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
-            AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) AND ".Search_Engine::search_conditions()." ".$date_search.$sortby.$limit;
+            AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) AND ".Search_Engine::search_conditions('blog')." ".$date_search.$sortby.$limit;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
 
@@ -97,13 +99,13 @@ if (db_exists(DB_BLOG)) {
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}' => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
-                        '{%item_target%}' => 'self',
-                        '{%item_image%}' => '',
-                        '{%item_title%}' => $data['blog_subject'],
-                        '{%item_description%}' => $meta,
+                        '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+                        '{%item_target%}'          => 'self',
+                        '{%item_image%}'           => '',
+                        '{%item_title%}'           => $data['blog_subject'],
+                        '{%item_description%}'     => $meta,
                         '{%item_search_criteria%}' => $criteria,
-                        '{%item_search_context%}' => $context
+                        '{%item_search_context%}'  => $context
                     ]
                 );
 
@@ -111,10 +113,10 @@ if (db_exists(DB_BLOG)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['n400']."' style='width:32px;'/>",
-                '{%icon_class%}' => "fa fa-pencil-square fa-lg fa-fw",
-                '{%search_title%}' => $locale['n400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['n400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-pencil-square fa-lg fa-fw",
+                '{%search_title%}'   => $locale['n400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

@@ -18,8 +18,7 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use \PHPFusion\Search;
-use PHPFusion\SiteLinks;
+use PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -40,14 +39,14 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
     $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY link_title".$order_by[Search_Engine::get_param('order')] : '';
     $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
 
-    Search_Engine::search_column('link_name', 0);
-    Search_Engine::search_column('link_url', 1);
-    Search_Engine::search_column('link_name', 2);
+    Search_Engine::search_column('link_name', 'sitelinks');
+    Search_Engine::search_column('link_url', 'sitelinks');
+    Search_Engine::search_column('link_id', 'sitelinks');
 
     if (!empty(Search_Engine::get_param('search_param'))) {
 
         $query = "SELECT * FROM ".DB_SITE_LINKS.(multilang_table('SL') ? " WHERE link_language='".LANGUAGE."' AND " : "WHERE ")
-            .groupaccess('link_visibility')." AND link_url !='' AND link_name != '---' AND link_name != '===' AND link_status = '1' AND ".Search_Engine::search_conditions();
+            .groupaccess('link_visibility')." AND link_url !='' AND link_name != '---' AND link_name != '===' AND link_status = '1' AND ".Search_Engine::search_conditions('sitelinks');
 
         $param = Search_Engine::get_param('search_param');
 

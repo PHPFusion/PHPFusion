@@ -47,27 +47,30 @@ if (db_exists(DB_FORUMS)) {
 
         switch(Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('thread_subject', 0);
-                Search_Engine::search_column('post_message', 1);
-                Search_Engine::search_column('forum_name', 2);
+                Search_Engine::search_column('thread_subject', 'forum');
+                Search_Engine::search_column('post_message', 'forum');
+                Search_Engine::search_column('forum_name', 'forum');
                 break;
             case 1:
-                Search_Engine::search_column('post_message', 0);
-                Search_Engine::search_column('forum_description', 1);
+                Search_Engine::search_column('post_message', 'forum');
+                Search_Engine::search_column('forum_description', 'forum');
                 break;
             default:
-                Search_Engine::search_column('thread_subject', 0);
+                Search_Engine::search_column('thread_subject', 'forum');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-
+            /*
+             * Group by the thread. We don't need about 100 results of the same thread.
+             */
             $query = "
             SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tt.thread_subject, tf.forum_access, tf.forum_name, tf.forum_description
             FROM ".DB_FORUM_POSTS." tp
             LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = tp.forum_id
             LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id
-            ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').(Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : "")."
-            AND ".Search_Engine::search_conditions()." GROUP BY tt.thread_id ".$date_search;
+            ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access')
+                .(Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : "")."
+            AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
@@ -89,7 +92,7 @@ if (db_exists(DB_FORUMS)) {
             LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
             ".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').
             (Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : '')."
-            AND ".Search_Engine::search_conditions()." GROUP BY tt.thread_id ".$date_search.$sortby.$limit;
+            AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search.$sortby.$limit;
 
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));

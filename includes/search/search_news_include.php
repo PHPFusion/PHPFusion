@@ -19,7 +19,7 @@ namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
 use PHPFusion\News\News;
-use \PHPFusion\Search;
+use PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -34,8 +34,8 @@ if (db_exists(DB_NEWS)) {
 
         $sort_by = array(
             'datestamp' => "news_datestamp",
-            'subject' => "news_subject",
-            'author' => "news_name",
+            'subject'   => "news_subject",
+            'author'    => "news_name",
         );
 
         $order_by = array(
@@ -47,25 +47,27 @@ if (db_exists(DB_NEWS)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND news_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('news_subject', 0);
-                Search_Engine::search_column('news_news', 1);
-                Search_Engine::search_column('news_extended', 2);
+                Search_Engine::search_column('news_subject', 'news');
+                Search_Engine::search_column('news_news', 'news');
+                Search_Engine::search_column('news_extended', 'news');
                 break;
             case 1:
-                Search_Engine::search_column('news_news', 0);
-                Search_Engine::search_column('news_extended', 1);
+                Search_Engine::search_column('news_news', 'news');
+                Search_Engine::search_column('news_extended', 'news');
                 break;
             default:
-                Search_Engine::search_column('news_subject', 0);
+                Search_Engine::search_column('news_subject', 'news');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
+
             $rows = dbcount("(news_id)", DB_NEWS,
-                            (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".Search_Engine::search_conditions()." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW())
+                (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND 
+                            ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW())
                             ".$date_search,
-                            Search_Engine::get_param('search_param')
+                Search_Engine::get_param('search_param')
             );
         } else {
             $rows = 0;
@@ -81,8 +83,8 @@ if (db_exists(DB_NEWS)) {
 				LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND tn.news_image_front_default=ni.news_image_id
 				".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')."
 				AND (news_start='0'||news_start<=NOW())
-				AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions().$date_search.$sortby.$limit
-				, Search_Engine::get_param('search_param')
+				AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions('news').$date_search.$sortby.$limit
+                , Search_Engine::get_param('search_param')
             );
 
             $search_result = '';
@@ -105,23 +107,23 @@ if (db_exists(DB_NEWS)) {
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
-                        '{%item_target%}' => '',
-                        '{%item_image%}' => News::get_NewsImage($data, TRUE, TRUE, '100'),
-                        '{%item_title%}' => $data['news_subject'],
-                        '{%item_description%}' => $meta,
+                        '{%item_url%}'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
+                        '{%item_target%}'          => '',
+                        '{%item_image%}'           => News::get_NewsImage($data, TRUE, TRUE, '100'),
+                        '{%item_title%}'           => $data['news_subject'],
+                        '{%item_description%}'     => $meta,
                         '{%item_search_criteria%}' => $criteria,
-                        '{%item_search_context%}' => $context,
+                        '{%item_search_context%}'  => $context,
                     ]
                 );
             }
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_N')."' alt='".$locale['n400']."' style='width:32px;'/>",
-                '{%icon_class%}' => "fa fa-newspaper-o fa-lg fa-fw",
-                '{%search_title%}' => $locale['n400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_N')."' alt='".$locale['n400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-newspaper-o fa-lg fa-fw",
+                '{%search_title%}'   => $locale['n400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

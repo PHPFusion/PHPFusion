@@ -45,16 +45,16 @@ if (db_exists(DB_ARTICLES)) {
 
         switch(Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('article_subject', 0);
-                Search_Engine::search_column('article_article', 1);
-                Search_Engine::search_column('article_snippet', 2);
+                Search_Engine::search_column('article_subject', 'article');
+                Search_Engine::search_column('article_article', 'article');
+                Search_Engine::search_column('article_snippet', 'article');
                 break;
             case 1:
-                Search_Engine::search_column('article_article', 0);
-                Search_Engine::search_column('article_snippet', 1);
+                Search_Engine::search_column('article_article', 'article');
+                Search_Engine::search_column('article_snippet', 'article');
                 break;
             default:
-                Search_Engine::search_column('article_subject', 0);
+                Search_Engine::search_column('article_subject', 'article');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
@@ -64,7 +64,7 @@ if (db_exists(DB_ARTICLES)) {
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             INNER JOIN ".DB_USERS." u ON ta.article_name=u.user_id
             ".(multilang_table('AR') ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")
-            .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions()
+            .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions('article')
             .$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
@@ -120,6 +120,5 @@ if (db_exists(DB_ARTICLES)) {
         Search_Engine::search_navigation($rows);
         Search_Engine::search_globalarray($formatted_result);
         Search_Engine::append_item_count($item_count);
-
     }
 }

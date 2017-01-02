@@ -415,10 +415,11 @@ class Search_Engine extends Search_Model {
             }
         }
         unset($search_text);
-
         self::$swords = $qualified_search_text;
+
         self::$c_swords = count($qualified_search_text) ?: redirect(FUSION_SELF);
         self::$i_swords = count($disqualified_search_text);
+
         self::$swords_keys_for_query = array_keys(self::$search_param);
         self::$swords_values_for_query = array_values(self::$search_param);
 
