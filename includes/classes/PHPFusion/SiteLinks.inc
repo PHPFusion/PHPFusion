@@ -19,8 +19,9 @@ namespace PHPFusion;
 
 /**
  * Class SiteLinks
+ *
  * @package PHPFusion
- * Navigational Bar
+ *          Navigational Bar
  */
 class SiteLinks {
 
@@ -28,6 +29,7 @@ class SiteLinks {
      * @param string $sep
      * @param string $class
      * @param array  $options
+     *
      * @return static
      *
      * A blank static is set up once for each available $options['id']
@@ -47,6 +49,7 @@ class SiteLinks {
 
     /**
      * Get Site Links Position Options
+     *
      * @return array
      */
     public static function get_SiteLinksPosition() {
@@ -65,7 +68,9 @@ class SiteLinks {
 
     /**
      * Get Sitelinks SQL Row
+     *
      * @param $id
+     *
      * @return array|bool
      */
     public static function get_SiteLinks($id) {
@@ -81,8 +86,10 @@ class SiteLinks {
 
     /**
      * Given a matching URL, fetch Sitelinks data
+     *
      * @param string $url - url to match (link_url) column
      * @param string $key - column data to output, blank for all
+     *
      * @return array|bool
      */
     public static function get_current_SiteLinks($url = "", $key = NULL) {
@@ -103,7 +110,9 @@ class SiteLinks {
 
     /**
      * Link ID validation
+     *
      * @param $link_id
+     *
      * @return bool|string
      */
     public static function verify_sitelinks($link_id) {
@@ -116,7 +125,9 @@ class SiteLinks {
 
     /**
      * SQL Delete Site Link Action
+     *
      * @param $link_id
+     *
      * @return bool|mixed|null|PDOStatement|resource
      */
     public static function delete_sitelinks($link_id) {
@@ -136,6 +147,7 @@ class SiteLinks {
 
     /**
      * Get Group Array
+     *
      * @return array
      */
     public static function get_LinkVisibility() {
@@ -150,7 +162,9 @@ class SiteLinks {
 
     /**
      * Calling the SiteLinks instance with Custom Parameters
-     * @param array  $options
+     *
+     * @param array $options
+     *
      * @return static
      */
     public static function setSubLinks(array $options = array()) {
@@ -158,25 +172,25 @@ class SiteLinks {
          * If set an ID, it will re-run the class to create a new object again.
          */
         $default_options = [
-            'id' => self::MenuDefaultID,
-            'container' => FALSE,
-            'responsive' => TRUE,
-            'navbar_class' => 'navbar-default',
-            'nav_class' => '',
+            'id'                   => self::MenuDefaultID,
+            'container'            => FALSE,
+            'responsive'           => TRUE,
+            'navbar_class'         => 'navbar-default',
+            'nav_class'            => '',
             'additional_nav_class' => '',
-            'item_class' => '', // $class
-            'locale' => [],
-            'separator' => '', // $sep
-            'links_per_page' => '',
-            'grouping' => '',
-            'show_banner' => FALSE,
-            'show_header' => FALSE,
-            'language_switcher' => FALSE,
-            'searchbar' => FALSE,
-            'searchbar_btn_class' => 'btn-primary',
-            'caret_icon' => 'caret',
-            'link_position' => [2,3],
-            'html_content' => '',
+            'item_class'           => '', // $class
+            'locale'               => [],
+            'separator'            => '', // $sep
+            'links_per_page'       => '',
+            'grouping'             => '',
+            'show_banner'          => FALSE,
+            'show_header'          => FALSE,
+            'language_switcher'    => FALSE,
+            'searchbar'            => FALSE,
+            'searchbar_btn_class'  => 'btn-primary',
+            'caret_icon'           => 'caret',
+            'link_position'        => [2, 3],
+            'html_content'         => '',
         ];
 
         $options += $default_options;
@@ -224,12 +238,14 @@ class SiteLinks {
 
     /**
      * Fetches Site Links Hierarchy Data - for a less support complexity
+     *
      * @param array $options
      * - join
      * - link_position (array)
      * - condition
      * - group
      * - order
+     *
      * @return array
      */
     public static function get_SiteLinksData(array $options = array()) {
@@ -247,11 +263,11 @@ class SiteLinks {
         }
 
         $default_link_filter = array(
-            'join' => '',
+            'join'               => '',
             'position_condition' => '(sl.link_position='.($link_position ? $link_position : implode(' OR sl.link_position=', $default_position)).')',
-            'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1",
-            'group' => '',
-            'order' => "link_cat ASC, link_order ASC",
+            'condition'          => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1",
+            'group'              => '',
+            'order'              => "link_cat ASC, link_order ASC",
         );
         $options += $default_link_filter;
 
@@ -269,6 +285,7 @@ class SiteLinks {
 
     /**
      * @param string $id
+     *
      * @return static
      */
     public static function getInstance($id = self::MenuDefaultID) {
@@ -282,6 +299,7 @@ class SiteLinks {
 
     /**
      * Add a link to primary menu
+     *
      * @param            int /string $link_id
      * @param string     $link_name
      * @param int        $link_cat
@@ -294,21 +312,22 @@ class SiteLinks {
      */
     public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$primary_cache_data[self::$id][$link_cat][$link_id] = [
-            'link_id' => $link_id,
-            'link_name' => $link_name,
-            'link_cat' => $link_cat,
-            'link_url' => $link_url,
-            'link_icon' => $link_icon,
-            'link_active' => $link_active,
-            'link_title' => $link_title,
+            'link_id'       => $link_id,
+            'link_name'     => $link_name,
+            'link_cat'      => $link_cat,
+            'link_url'      => $link_url,
+            'link_icon'     => $link_icon,
+            'link_active'   => $link_active,
+            'link_title'    => $link_title,
             'link_disabled' => $link_disabled,
-            'link_window' => $link_window,
-            'link_class' => $link_class
+            'link_window'   => $link_window,
+            'link_class'    => $link_class
         ];
     }
 
     /**
      * Add a link to secondary menu
+     *
      * @param            int /string $link_id
      * @param string     $link_name
      * @param int        $link_cat
@@ -321,22 +340,21 @@ class SiteLinks {
      */
     public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE, $link_class = '') {
         self::$optional_cache_data[self::$id][$link_cat][$link_id] = [
-            'link_id' => $link_id,
-            'link_name' => $link_name,
-            'link_cat' => $link_cat,
-            'link_url' => $link_url,
-            'link_icon' => $link_icon,
-            'link_active' => $link_active,
-            'link_title' => $link_title,
+            'link_id'       => $link_id,
+            'link_name'     => $link_name,
+            'link_cat'      => $link_cat,
+            'link_url'      => $link_url,
+            'link_icon'     => $link_icon,
+            'link_active'   => $link_active,
+            'link_title'    => $link_title,
             'link_disabled' => $link_disabled,
-            'link_window' => $link_window,
-            'link_class' => $link_class,
+            'link_window'   => $link_window,
+            'link_class'    => $link_class,
         ];
     }
 
     private static function setLinks() {
         $primary_cache = (isset(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
-
 
         $secondary_cache = (isset(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
         if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
@@ -366,16 +384,16 @@ class SiteLinks {
                     $data[$more_index] = array_slice($base_data, self::getMenuParam('links_per_page'), 9, TRUE);
                     $data[0] = array_slice($base_data, 0, self::getMenuParam('links_per_page'), TRUE);
                     $more[$more_index] = array(
-                        "link_id" => $more_index,
-                        "link_cat" => 0,
-                        "link_name" => fusion_get_locale('global_700'),
-                        "link_url" => "#",
-                        "link_icon" => "",
+                        "link_id"         => $more_index,
+                        "link_cat"        => 0,
+                        "link_name"       => fusion_get_locale('global_700'),
+                        "link_url"        => "#",
+                        "link_icon"       => "",
                         "link_visibility" => 0,
-                        "link_position" => 2,
-                        "link_window" => 0,
-                        "link_order" => self::getMenuParam('links_per_page'),
-                        "link_language" => LANGUAGE
+                        "link_position"   => 2,
+                        "link_window"     => 0,
+                        "link_order"      => self::getMenuParam('links_per_page'),
+                        "link_language"   => LANGUAGE
                     );
                     $data[0] += $more;
                     self::replaceMenuParam('callback_data', $data);
@@ -465,22 +483,22 @@ class SiteLinks {
                     $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
-                                           array(
-                                               'class' => 'm-b-10',
-                                               'remote_url' => fusion_get_settings('site_path').'search.php'
-                                           )
+                        array(
+                            'class'      => 'm-b-10',
+                            'remote_url' => fusion_get_settings('site_path').'search.php'
+                        )
                     );
                     $searchbar .= form_text('stext', '', '',
-                                            array(
-                                                'placeholder' => $locale['search'],
-                                                'append_button' => TRUE,
-                                                'append_type' => "submit",
-                                                "append_form_value" => $locale['search'],
-                                                "append_value" => "<i class='fa fa-search'></i> ".$locale['search'],
-                                                "append_button_name" => "search",
-                                                "append_class" => $this->getMenuParam('searchbar_btn_class'),
-                                                'class' => 'm-0',
-                                            )
+                        array(
+                            'placeholder'        => $locale['search'],
+                            'append_button'      => TRUE,
+                            'append_type'        => "submit",
+                            "append_form_value"  => $locale['search'],
+                            "append_value"       => "<i class='fa fa-search'></i> ".$locale['search'],
+                            "append_button_name" => "search",
+                            "append_class"       => $this->getMenuParam('searchbar_btn_class'),
+                            'class'              => 'm-0',
+                        )
                     );
                     $searchbar .= closeform();
                     $searchbar .= "</li>\n";
@@ -489,7 +507,7 @@ class SiteLinks {
                 }
                 $res .= "</ul>\n";
             }
-            $res .= (self::getMenuParam('responsive'))  ? "</div>\n" : "";
+            $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
             $res .= "</div>\n";
         }
@@ -501,6 +519,7 @@ class SiteLinks {
         if ($key) {
             return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
         }
+
         return self::$instances[self::$id]->menu_options;
     }
 
@@ -515,13 +534,14 @@ class SiteLinks {
     private function get_SubLinks_URL($data, $link_id) {
         $linkRef = &$linkRef;
         if (isset($data[$link_id])) {
-            foreach($data[$link_id] as $link) {
+            foreach ($data[$link_id] as $link) {
                 $linkRef[$link['link_id']] = $link['link_url'];
                 if (isset($data[$link['link_id']])) {
                     $linkRef = array_merge_recursive($linkRef, $this->get_SubLinks_URL($data, $link['link_id']));
                 }
             }
         }
+
         return $linkRef;
     }
 
@@ -534,6 +554,7 @@ class SiteLinks {
             $linkInstance->setLastClickable(TRUE);
             self::$link_instances = $linkInstance->toArray();
         }
+
         return self::$link_instances;
     }
 
@@ -548,16 +569,16 @@ class SiteLinks {
             $i = 0;
 
             $default_link_data = array(
-                "link_id" => 0,
-                "link_name" => "",
-                "link_cat" => 0,
-                "link_url" => "",
-                "link_icon" => "",
-                "link_class" => "",
-                "link_active" => '',
-                "link_title" => FALSE, // true to add dropdown-header class to li.
+                "link_id"       => 0,
+                "link_name"     => "",
+                "link_cat"      => 0,
+                "link_url"      => "",
+                "link_icon"     => "",
+                "link_class"    => "",
+                "link_active"   => '',
+                "link_title"    => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
-                "link_window" => FALSE,
+                "link_window"   => FALSE,
             );
 
             foreach ($data[$id] as $link_id => $link_data) {
@@ -613,7 +634,7 @@ class SiteLinks {
                             }
                             foreach ($reference as $refData) {
                                 if (stristr($refData['link'], '../')) {
-                                    $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
+                                    $refData['link'] = str_replace(str_repeat('../', substr_count($refData['link'], '../')), '', $refData['link']);
                                 }
                                 if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
                                     //If child link is part of the current page breadcrumb then parent is active
@@ -623,12 +644,12 @@ class SiteLinks {
                                             break;
                                         }
                                     }
-                                     // If parts of link url forms the breadcrumbs' link
+                                    // If parts of link url forms the breadcrumbs' link
                                     if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                         $secondary_active = TRUE;
                                         break;
                                     }
-                                     // If both links has the same uri requests string.
+                                    // If both links has the same uri requests string.
                                     if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
                                         $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
                                         if (!empty($uri['query']) && !empty($ref_uri['query'])) {
@@ -663,7 +684,7 @@ class SiteLinks {
 
                     if ($secondary_active) {
                         $link_is_active = TRUE;
-                    } elseif (strtr(FUSION_REQUEST, array(fusion_get_settings('site_path')=> '', '&amp;'=>'&')) == str_replace('../', '', $link_data['link_url'])) {
+                    } elseif (strtr(FUSION_REQUEST, array(fusion_get_settings('site_path') => '', '&amp;' => '&')) == str_replace('../', '', $link_data['link_url'])) {
                         $link_is_active = TRUE;
                     } elseif (self::getMenuParam('start_page') == $link_data['link_url']) {
                         $link_is_active = TRUE;
@@ -674,13 +695,9 @@ class SiteLinks {
                     } elseif ($link_data['link_url'] === '#') {
                         $link_is_active = FALSE;
                     }
-
-
-
                     if ($link_is_active) {
                         $li_class[] = "current-link active";
                     }
-
                     $itemlink = '';
                     if (!empty($link_data['link_url'])) {
                         $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
@@ -691,7 +708,6 @@ class SiteLinks {
                             $itemlink = " href='".$link_data['link_url']."' ";
                         }
                     }
-
                     $has_child = FALSE;
                     $l_1 = "";
                     $l_2 = "";
