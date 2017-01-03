@@ -362,7 +362,7 @@ class Errors {
                     $html .= "</tr>\n";
 
                     /* Toggle Info */
-                    $html .= "<tr class='collapse' id='err-rmd-".$data['error_id']."-$i'><td colspan='4' class='hiddenRow no-border'>\n";
+                    $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
@@ -375,7 +375,7 @@ class Errors {
                     $link_title = $this->getMaxFolders($data['error_file'], 1);
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
-                    $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."-$i' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+                    $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
                     $html .= "<code class='error_page'>".$data['error_page']." <span class='label label-success'>**</span></code><br/>\n";
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
@@ -389,7 +389,7 @@ class Errors {
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
                     /* Toggle Info */
-                    $html .= "<tr class='collapse' id='err-rmd-".$data['error_id']."-$i'><td colspan='4' class='hiddenRow no-border'>\n";
+                    $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
@@ -509,7 +509,7 @@ class Errors {
                         }
                         else if (e.status == 'RMD') {
                              $('tr#rmd-'+e.fusion_error_id).remove();
-                             $('tr#err-rmd-'+e.fusion_error_id).remove();
+                             $('tr#err_rmd-'+e.fusion_error_id).remove();                             
                         }
                     },
                     error : function(e) {
