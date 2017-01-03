@@ -1583,24 +1583,32 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 }
 
 /**
- * Formatted value of a variable to debug
+ * Variable dump printer for debugging purposes
+ * @param      $array
+ * @param bool $modal
+ * @param bool $print
  *
- * @param mixed   $array
- * @param boolean $modal TRUE if you want to render it as a modal dialog
+ * @return string
  */
-function print_p($array, $modal = FALSE) {
-    if ($modal == TRUE) {
-        ob_start();
-        echo openmodal('Debug', 'Debug');
-    }
-    echo "<pre style='white-space:pre-wrap !important;'>";
+function print_p($array, $modal = FALSE, $print = TRUE) {
+    ob_start();
     echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
-    echo "</pre>";
+    $debug = ob_get_clean();
     if ($modal == TRUE) {
-        echo closemodal();
-        PHPFusion\OutputHandler::addToFooter(ob_get_contents());
-        ob_end_clean();
+        $modal = openmodal('Debug', 'Debug');
+        $modal .= "<pre style='white-space:pre-wrap !important;'>";
+        $modal .= $debug;
+        $modal .= "</pre>\n";
+        $modal .= closemodal();
+        PHPFusion\OutputHandler::addToFooter($modal);
+        return FALSE;
     }
+    if ($print == TRUE) {
+        echo "<pre style='white-space:pre-wrap !important;'>";
+        echo $debug;
+        echo "</pre>\n";
+    }
+    return $debug;
 }
 
 /**
