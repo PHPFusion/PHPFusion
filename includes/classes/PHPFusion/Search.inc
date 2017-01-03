@@ -117,7 +117,7 @@ class Search extends Search_Engine {
         <li>
         <div class='clearfix'>
         <div class='pull-left m-r-10'>{%item_image%}</div>
-        <div class='overflow-hide'><a href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></div>
+        <div class='overflow-hide'><span class='va' style='height:30px;'></span><span class='va'><a href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></span></div>
         </div>
         </a>
         </li>
