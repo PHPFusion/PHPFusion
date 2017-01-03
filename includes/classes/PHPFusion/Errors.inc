@@ -311,7 +311,7 @@ class Errors {
     }
 
     /**
-     * Displays error logs HTML
+     * Displays error logs HTML Form
      *
      * @return string
      */
@@ -343,9 +343,6 @@ class Errors {
 
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
-                    $aidlink = fusion_get_aidlink();
-
-                    $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 1);
 
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
@@ -365,24 +362,17 @@ class Errors {
                     $html .= "</tr>\n";
 
                     /* Toggle Info */
-                    $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
-                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."'>\n";
+                    $html .= "<tr class='collapse' id='err-rmd-".$data['error_id']."-$i'><td colspan='4' class='hiddenRow no-border'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
                     $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#' => '<br/>#'])."</div>\n";
-                    $html .= "</div>\n";
                     $html .= "</td></tr>\n";
-
                 }
             }
 
             if (!empty($this->new_errors)) {
                 foreach ($this->new_errors as $i => $data) {
-
-                    $file = $data['error_file'];
-                    $aidlink = fusion_get_aidlink();
                     $link_title = $this->getMaxFolders($data['error_file'], 1);
-
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
                     $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."-$i' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
@@ -406,7 +396,6 @@ class Errors {
                     $html .= "</td></tr>\n";
                 }
             }
-
             $html .= "</table>\n";
             if ($this->rows > 20) {
                 $html .= "<div class='m-t-10 text-center'>\n";
@@ -416,7 +405,6 @@ class Errors {
         } else {
             $html .= "<div class='text-center well'>".$locale['ERROR_418']."</div>\n";
         }
-
         $this->errorjs();
 
         return $html;
@@ -496,6 +484,7 @@ class Errors {
                 jQuery('html, body').animate({scrollTop:0}, 'slow');
                 return false;
             });
+            
             $('.move_error_log').bind('click', function() {
                 var form = $('#error_logform');
                 var data = {
@@ -505,7 +494,7 @@ class Errors {
                 };
                 var sendData = form.serialize() + '&' + $.param(data);
                 $.ajax({
-                    url: '".ADMIN."includes/error_logs_updater.php',
+                    url: '".FUSION_ROOT.ADMIN."includes/error_logs_updater.php',
                     dataType: 'json',
                     method : 'GET',
                     type: 'json',
@@ -588,7 +577,6 @@ class Errors {
     public function showFooterErrors() {
         $locale = self::$locale;
         $aidlink = fusion_get_aidlink();
-
         $html = '';
         if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
             $html .= "<div class='display-block'>";
@@ -598,20 +586,14 @@ class Errors {
                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
                     "</a>"
                 ), $locale['err_101']);
-
             $html .= "<span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
             $html .= "</div>\n";
 
-            $cHtml = openmodal('tbody', $locale['ERROR_464'],
-                array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
-
+            $cHtml = openmodal('tbody', $locale['ERROR_464'], array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
             $cHtml .= $this->getErrorLogs();
-
             $cHtml .= closemodal();
-
             add_to_footer($cHtml);
-
         }
 
         return $html;

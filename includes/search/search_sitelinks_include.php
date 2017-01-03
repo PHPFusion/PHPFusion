@@ -82,6 +82,9 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
                 $link_data += $default_link_data;
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
                 if (!empty($link_data['link_url'])) {
+                    if ($link_data['link_url'] == 'index.php') {
+                        $link_data['link_url'] = fusion_get_settings('opening_page');
+                    }
                     $itemlink = BASEDIR.$link_data['link_url'];
                     // if link has site protocol
                     if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
@@ -90,8 +93,11 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
                         $itemlink = $link_data['link_url'];
                     }
                 }
+
+
                 $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                 $link_icon = (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : "<img style='max-width:32px;' src='".IMAGES."php-fusion-icon.png' title='".$link_data['link_name']."'/>");
+
                 $search_result .= strtr(Search::render_search_item(), [
                         '{%item_url%}' => $itemlink,
                         '{%item_target%}' => $link_target,
