@@ -38,7 +38,7 @@ class InstallerIntroduction extends Install_Core {
             require(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
             ini_set('display_errors', FALSE);
-            if (!empty(fusion_get_settings())) {
+            if (!empty(fusion_get_settings('version'))) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
                         return $this->step_Upgrade();
