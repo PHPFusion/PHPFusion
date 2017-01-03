@@ -99,7 +99,7 @@ if (db_exists(DB_BLOG)) {
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+                        '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."&sref=search",
                         '{%item_target%}'          => 'self',
                         '{%item_image%}'           => '',
                         '{%item_title%}'           => $data['blog_subject'],

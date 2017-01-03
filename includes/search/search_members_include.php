@@ -65,9 +65,9 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
             $search_result = '';
             while ($data = dbarray($result)) {
                 $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}' => BASEDIR."profile.php?lookup=".$data['user_id'],
-                        '{%item_image%}' => display_avatar($data, '70px', '', FALSE, ''),
-                        '{%item_title%}' => $data['user_name'],
+                        '{%item_url%}'         => BASEDIR."profile.php?lookup=".$data['user_id']."&sref=search",
+                        '{%item_image%}'       => display_avatar($data, '70px', '', FALSE, ''),
+                        '{%item_title%}'       => $data['user_name'],
                         '{%item_description%}' => getuserlevel($data['user_level']),
                     ]
                 );

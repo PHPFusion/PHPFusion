@@ -89,7 +89,7 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c405']."</span>\n";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => BASEDIR."viewpage.php?page_id=".$data['page_id'],
+                        '{%item_url%}'             => BASEDIR."viewpage.php?page_id=".$data['page_id']."&sref=search",
                         '{%item_image%}'           => "<i class='fa fa-file-o fa-lg'></i>",
                         '{%item_title%}'           => $data['page_title'],
                         '{%item_description%}'     => $desc,

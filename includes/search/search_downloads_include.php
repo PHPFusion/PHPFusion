@@ -110,7 +110,7 @@ if (db_exists(DB_DOWNLOADS)) {
                 $meta .= "<span class='alt'>".$locale['d408']."</span> ".$data['download_count']."</span>";
 
                 $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'             => DOWNLOADS."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'],
+                        '{%item_url%}'             => DOWNLOADS."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']."&sref=search",
                         '{%item_image%}'           => "<i class='fa fa-download fa-lg'></i>",
                         '{%item_title%}'           => $data['download_title'].' - '.$data['download_filesize'].' '.$new,
                         '{%item_description%}'     => $meta,

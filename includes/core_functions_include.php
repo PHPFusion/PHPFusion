@@ -319,7 +319,6 @@ function check_admin_pass($password) {
  */
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
-
     if (!defined('STOP_REDIRECT')) {
 
         if (isnum($delay)) {

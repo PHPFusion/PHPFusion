@@ -114,7 +114,7 @@ if (db_exists(DB_FORUMS)) {
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['f406']." ".$locale['f408']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id'],
+                        '{%item_url%}'             => FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id']."&sref=search",
                         '{%item_image%}'           => display_avatar($data, '70px', '', '', FALSE),
                         '{%item_title%}'           => ($data['thread_sticky'] == 1 ? '['.$locale['f404'].']' : '').$data['thread_subject'],
                         '{%item_description%}'     => $meta,

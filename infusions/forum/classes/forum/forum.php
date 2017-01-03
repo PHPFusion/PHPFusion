@@ -114,7 +114,7 @@ class Forum extends ForumServer {
                 case 'participated':
                     include FORUM_SECTIONS."participated.php";
                     add_to_title($locale['global_201'].$locale['global_024']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=participated",
                                        'title' => $locale['global_024']
                                    ]);
@@ -123,7 +123,7 @@ class Forum extends ForumServer {
                 case 'latest':
                     include FORUM_SECTIONS."latest.php";
                     add_to_title($locale['global_201'].$locale['global_021']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=latest",
                                        'title' => $locale['global_021']
                                    ]);
@@ -132,7 +132,7 @@ class Forum extends ForumServer {
                 case 'tracked':
                     include FORUM_SECTIONS."tracked.php";
                     add_to_title($locale['global_201'].$locale['global_056']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=tracked",
                                        'title' => $locale['global_056']
                                    ]);
@@ -141,7 +141,7 @@ class Forum extends ForumServer {
                 case "unanswered":
                     include FORUM_SECTIONS."unanswered.php";
                     add_to_title($locale['global_201'].$locale['global_027']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS."forum/index.php?section=unanswered",
                                        'title' => $locale['global_027']
                                    ]);
@@ -150,7 +150,7 @@ class Forum extends ForumServer {
                 case "unsolved":
                     include FORUM_SECTIONS."unsolved.php";
                     add_to_title($locale['global_201'].$locale['global_028']);
-                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS."forum/index.php?section=unsolved",
                                        'title' => $locale['global_028']
                                    ]);
