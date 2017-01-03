@@ -5,10 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: switcher.php
-| Author: Max "Matonor" Toball
-| Version: 1.3
-| Last Change: 03/20/07
-| Description: Universal Property Switcher for PHP-Fusion v7
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,38 +20,34 @@ if (!defined("IN_FUSION")) {
 }
 
 class Switcher {
-    var $args;
-    var $buttons;
-    var $class;
-    var $cookies;
-    var $dir;
-    var $enabled;
-    var $error;
-    var $ext;
-    var $mode;
-    var $name;
-    var $post;
-    var $props;
-    var $selected;
-    var $separator;
+    private $args;
+    private $changed = FALSE;
+    private $buttons = array();
+    private $class;
+    private $cookies;
+    private $dir;
+    private $enabled = TRUE;
+    private $error = FALSE;
+    private $ext;
+    private $mode;
+    private $name;
+    private $post;
+    private $props = array();
+    public $selected = '';
+    private $separator;
 
-    function Switcher($mode, $dir, $ext, $default, $class = "", $separator = " ", $auto = TRUE, $args = "") {
+    public function __construct($mode, $dir, $ext, $default, $class = '', $separator = " ", $auto = TRUE, $args = '') {
         $this->args = $args;
-        $this->buttons = array();
-        $this->changed = FALSE;
         $this->class = $class;
         $this->cookie = $_COOKIE;
         $this->default = $default;
         $this->dir = THEME.$dir;
-        $this->enabled = TRUE;
-        $this->error = FALSE;
         $this->ext = $ext;
         $this->mode = $mode;
         $this->name = $dir;
         $this->post = $_POST;
-        $this->props = array();
-        $this->selected = "";
         $this->separator = $separator;
+
         if ($auto) {
             $this->props = $this->getProps();
             $this->selected = $this->getSelected();
@@ -64,67 +57,64 @@ class Switcher {
         }
     }
 
-    function getProps() {
-        $mode = $this->mode;
-        if ($mode == "select") {
-            $dir = $this->dir;
-            $ext = $this->ext;
-            $dirHandle = opendir($dir);
+    public function disable() {
+        $this->enabled = FALSE;
+        $this->selected = $this->default;
+    }
+
+    private function getProps() {
+        if ($this->mode == 'select') {
+            $dirHandle = opendir($this->dir);
             $props = array();
             if ($dirHandle) {
                 while (FALSE !== ($file = readdir($dirHandle))) {
-                    if (!is_dir($dir."/".$file) && preg_match("/[A-z0-9]+\.".$ext."\z/", $file)) {
-                        $props[] = str_replace(".".$ext, "", $file);
+                    if (!is_dir($this->dir.'/'.$file) && preg_match("/[A-z0-9]+\.".$this->ext."\z/", $file)) {
+                        $props[] = str_replace('.'.$this->ext, '', $file);
                     }
                 }
             }
-        } elseif ($mode == "increment") {
-            $props = array("less", "reset", "more");
+        } elseif ($this->mode == 'increment') {
+            $props = array('less', 'reset', 'more');
         }
 
         return $props;
     }
 
-    function getSelected() {
-        $args = $this->args;
-        $cookie = $this->cookie;
-        $cookie_val = isset($cookie["theme_".$this->name]) ? $cookie["theme_".$this->name] : "";
-        $mode = $this->mode;
-        $name = $this->name;
-        $post = $this->post;
-        $props = $this->props;
-        $value = "";
-        if ($mode == "select") {
-            if (isset($post['change_'.$name])) {
-                foreach ($props as $prop) {
-                    if (isset($post[$prop.'_x'])) {
+    private function getSelected() {
+        $cookie_val = isset($this->cookie['theme_'.$this->name]) ? $this->cookie['theme_'.$this->name] : '';
+        $value = '';
+
+        if ($this->mode == 'select') {
+            if (isset($this->post['change_'.$this->name])) {
+                foreach ($this->props as $prop) {
+                    if (isset($this->post[$prop.'_x'])) {
                         $this->changed = TRUE;
 
                         return $prop;
                     }
                 }
             } elseif (!empty($cookie_val)) {
-                if (in_array($cookie_val, $props)) {
+                if (in_array($cookie_val, $this->props)) {
                     return $cookie_val;
                 }
             }
 
             return $this->default;
-        } elseif ($mode == "increment") {
-            if (is_numeric($cookie_val) && !isset($post['reset_x'])) {
+        } elseif ($this->mode == 'increment') {
+            if (is_numeric($cookie_val) && !isset($this->post['reset_x'])) {
                 $value = $cookie_val;
             } else {
                 $value = $this->default;
             }
-            if (isset($post['change_'.$name])) {
+            if (isset($this->post['change_'.$this->name])) {
                 $this->changed = TRUE;
-                if (isset($post['less_x'])) {
-                    if (!isset($args['min']) || $value + $args['step'] >= $args['min']) {
-                        $value = $value - $args['step'];
+                if (isset($this->post['less_x'])) {
+                    if (!isset($this->args['min']) || $value + $this->args['step'] >= $this->args['min']) {
+                        $value = $value - $this->args['step'];
                     }
-                } elseif (isset($post['more_x'])) {
-                    if (!isset($args['max']) || $value + $args['step'] <= $args['max']) {
-                        $value = $value + $args['step'];
+                } elseif (isset($this->post['more_x'])) {
+                    if (!isset($this->args['max']) || $value + $this->args['step'] <= $this->args['max']) {
+                        $value = $value + $this->args['step'];
                     }
                 }
             }
@@ -133,46 +123,40 @@ class Switcher {
         }
     }
 
-    function writeSelected() {
+    private function writeSelected() {
         if ($this->selected == $this->default) {
-            setcookie("theme_".$this->name, $this->selected, time() - 3600 * 24 * 14, "/");
+            setcookie('theme_'.$this->name, $this->selected, time() - 3600 * 24 * 14, '/');
         } else {
-            setcookie("theme_".$this->name, $this->selected, time() + 3600 * 24 * 14, "/");
+            setcookie('theme_'.$this->name, $this->selected, time() + 3600 * 24 * 14, '/');
         }
     }
 
-    function disable() {
-        $this->enabled = FALSE;
-        $this->selected = $this->default;
-    }
-
-    function makeForm($class = "") {
-        $separator = $this->separator;
-        if ($this->enabled) {
-            $this->buttons = $this->getButtons();
-
-            return "<form id='theme_".$this->name."' class='$class' method='post' action='".FUSION_REQUEST."'>\n<div>\n<input type='hidden' name='change_".$this->name."' value='1'/>\n".implode($separator."\n",
-                                                                                                                                                                                                 $this->buttons)."</div>\n</form>";
-        }
-    }
-
-    function getButtons() {
-        $props = $this->props;
-        $dir = $this->dir;
-        $ext = $this->ext;
-        $class = $this->class;
-        $buttons = array();
-        foreach ($props as $prop) {
+    private function getButtons() {
+        foreach ($this->props as $prop) {
             if ($prop != $this->selected) {
-                $buttons[] = "<input type='image' name='$prop' src='$dir/$prop.$ext' class='$class' alt='$prop' />";
+                $this->buttons[] = '<input type="image" name="'.$prop.'" src="'.$this->dir.'/'.$prop.'.'.$this->ext.'" class="'.$this->class.'" alt="'.$prop.'"/>';
             }
         }
 
-        return $buttons;
+        return $this->buttons;
     }
 
-    function makeHeadTag() {
-        return "<link rel='stylesheet' href='".$this->dir."/".$this->selected.".css' type='text/css' />\n";
+    public function makeForm($class = '') {
+        if ($this->enabled) {
+            $this->buttons = $this->getButtons();
+
+            $form = '<form id="theme_'.$this->name.'"'.(!empty($class) ? ' class="'.$class.'"' : '').' method="post" action="'.FUSION_REQUEST.'">';
+            $form .= '<div>';
+            $form .= '<input type="hidden" name="change_'.$this->name.'" value="1"/>';
+            $form .= implode($this->separator, $this->buttons);
+            $form .= '</div>';
+            $form .= '</form>';
+
+            return $form;
+        }
+    }
+
+    public function makeHeadTag() {
+        return add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->dir.'/'.$this->selected.'.css"/>');
     }
 }
-
