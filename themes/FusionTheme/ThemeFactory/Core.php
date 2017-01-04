@@ -22,39 +22,57 @@ class Core {
      * readme.md
      */
     private static $options = array(
-        'header' => TRUE, // has header
-        'header_content' => '', // content in the header
-        'headerBg' => TRUE, // use header_background
-        'headerBg_class' => '', // use custom header background class
-        'subheader_content' => '',
+        'header'             => TRUE, // has header
+        'header_content'     => '', // content in the header
+        'headerBg'           => TRUE, // use header_background
+        'headerBg_class'     => '', // use custom header background class
+        'subheader_content'  => '',
         'subheader_container' => TRUE,
-        'body_class' => '', // set body section class
-        'body_container' => TRUE, // whether is a container or full grid
-        'breadcrumbs' => FALSE, // show breadcrumbs
-        'right' => TRUE, // RIGHT
-        'left' => TRUE, // LEFT
-        'left_pre_content' => '',
-        'left_post_content' => '',
-        'upper' => TRUE, //AU_UPPER
-        'upper_container' => TRUE,
-        'body_upper' => TRUE, // U_CENTER
-        'body_upper_container' => TRUE,
-        'lower' => TRUE, // BL_LOWER
-        'lower_container' => TRUE,
-        'body_lower' => TRUE, // L_CENTER
-        'body_lower_container' => TRUE,
+        'body_class'         => '', // set body section class
+        'body_container'     => TRUE, // whether is a container or full grid
+        'breadcrumbs'        => FALSE, // show breadcrumbs
+        'right'              => TRUE, // RIGHT
+        'left'               => TRUE, // LEFT
+        'left_pre_content'   => '',
+        'left_post_content'  => '',
+        /*
+         * AU_UPPER
+         */
+        'upper'              => TRUE, //status
+        'upper_content'      => '',
+        'upper_container'    => TRUE,
+        /*
+         * U_CENTER
+         */
+        'u_center'           => TRUE,
+        'u_center_content'   => '',
+        'u_center_container' => TRUE,
+        /*
+         * BL_LOWER
+         */
+        'bl_lower'           => TRUE, // BL_LOWER
+        'bl_lower_content'   => '',
+        'bl_lower_container' => TRUE,
+        /*
+         * L_CENTER
+         */
+        'l_center'           => TRUE, // BL_LOWER
+        'l_center_content'   => '',
+        'l_center_container' => TRUE,
+
         'footer' => TRUE, // has footer
-        'footer_container' => TRUE,
-        'copyright' => TRUE,
+        'footer_container'    => TRUE,
+
+        'copyright'           => TRUE,
         'copyright_container' => TRUE,
-        'right_span' => 3,
-        'right_class' => '',
-        'left_span' => 2,
-        'left_class' => '',
-        'main_span' => '',
-        'right_is_affix' => FALSE, // @todo: auto affix
-        'right_pre_content' => '', // right side top content
-        'right_post_content' => '', // right side bottom content
+        'right_span'          => 3,
+        'right_class'         => '',
+        'left_span'           => 2,
+        'left_class'          => '',
+        'main_span'           => '',
+        'right_is_affix'      => FALSE, // @todo: auto affix
+        'right_pre_content'   => '', // right side top content
+        'right_post_content'  => '', // right side bottom content
     );
 
     private static $instance = NULL;
@@ -98,6 +116,7 @@ class Core {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
+
         return self::$instance;
     }
 
@@ -117,6 +136,7 @@ class Core {
     }
 
     public $cssPath = '';
+
     public function get_themePack($themePack) {
         $path = THEME."ThemePack/".$themePack."/Theme.php";
         $this->cssPath = THEME."ThemePack/".$themePack."/Styles.css";
@@ -124,9 +144,9 @@ class Core {
         require_once $path;
     }
 
-
     /**
      * @param string $modules
+     *
      * @return mixed
      */
     protected function get_Modules($modules = 'Footer\\News') {
