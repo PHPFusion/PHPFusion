@@ -333,7 +333,7 @@ class NewThread extends ForumServer {
                     $this->info = array(
                         'title' => $locale['forum_0057'],
                         'description' => '',
-                        'openform' => openform('input_form', 'post', FORUM."newthread.php?forum_id=".$post_data['forum_id'],
+                        'openform' => openform('input_form', 'post', FUSION_SELF."?forum_id=".$post_data['forum_id'],
                                                array(
                                                    'enctype' => self::getPermission("can_upload_attach")
                                                )
@@ -665,7 +665,7 @@ class NewThread extends ForumServer {
                 $this->info = array(
                     'title' => $locale['forum_0057'],
                     'description' => '',
-                    'openform' => openform('input_form', 'post', FORUM."newthread.php", array('enctype' => FALSE)),
+                    'openform' => openform('input_form', 'post', FUSION_SELF, array('enctype' => FALSE)),
                     'closeform' => closeform(),
                     'forum_id_field' => '',
                     'thread_id_field' => '',

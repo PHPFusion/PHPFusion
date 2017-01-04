@@ -18,7 +18,7 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use \PHPFusion\Search;
+use PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -33,8 +33,8 @@ if (db_exists(DB_WEBLINKS)) {
 
         $sort_by = array(
             'datestamp' => "weblink_datestamp",
-            'subject' => "weblink_name",
-            'author' => "weblink_datestamp",
+            'subject'   => "weblink_name",
+            'author'    => "weblink_datestamp",
         );
         $order_by = array(
             '0' => ' DESC',
@@ -44,19 +44,18 @@ if (db_exists(DB_WEBLINKS)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND weblink_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('weblink_name', 0);
-                Search_Engine::search_column('weblink_description', 1);
-                Search_Engine::search_column('weblink_url', 2);
+                Search_Engine::search_column('weblink_name', 'weblinks');
+                Search_Engine::search_column('weblink_description', 'weblinks');
+                Search_Engine::search_column('weblink_url', 'weblinks');
                 break;
             case 1:
-                Search_Engine::search_column('weblink_description', 0);
-                Search_Engine::search_column('weblink_url', 1);
+                Search_Engine::search_column('weblink_description', 'weblinks');
+                Search_Engine::search_column('weblink_url', 'weblinks');
                 break;
             default:
-                Search_Engine::search_column('weblink_name', 0);
+                Search_Engine::search_column('weblink_name', 'weblinks');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
@@ -65,7 +64,7 @@ if (db_exists(DB_WEBLINKS)) {
             FROM ".DB_WEBLINKS." tw
             INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
             ".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND tw.weblink_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')."
-            AND ".Search_Engine::search_conditions().$date_search;
+            AND ".Search_Engine::search_conditions('weblinks').$date_search;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
@@ -79,7 +78,7 @@ if (db_exists(DB_WEBLINKS)) {
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
             while ($data = dbarray($result)) {
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['w403']."</span>";
@@ -91,21 +90,28 @@ if (db_exists(DB_WEBLINKS)) {
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
                 $text_c = Search_Engine::search_stringscount($data['weblink_description']);
-                $search_result .= "<li><a href='".INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>".$new."<br /><br />\n";
-                if ($text_frag != "") {
-                    $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                }
-                $search_result .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
-            }
 
-            $search_result .= "</ul>\n";
+                $desc = '';
+                if ($text_frag != "") {
+                    $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+                }
+                $desc .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
+
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
+                        '{%item_image%}'       => '',
+                        '{%item_title%}'       => $data['weblink_name'].' '.$new,
+                        '{%item_description%}' => $desc,
+                    ]
+                );
+            }
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_W'),
-                '{%icon_class%}' => "fa fa-link fa-lg fa-fw",
-                '{%search_title%}' => $locale['w400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => ImageRepo::getimage('ac_W'),
+                '{%icon_class%}'     => "fa fa-link fa-lg fa-fw",
+                '{%search_title%}'   => $locale['w400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
 

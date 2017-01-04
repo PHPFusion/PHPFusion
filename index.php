@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-
 $settings = fusion_get_settings();
-
 if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     define("IN_PERMALINK", TRUE);
@@ -70,7 +68,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
     }
 } else {
     if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-        redirect("home.php");
+        redirect('home.php');
     } else {
         redirect($settings['opening_page']);
     }

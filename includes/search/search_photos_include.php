@@ -18,7 +18,7 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use \PHPFusion\Search;
+use PHPFusion\Search;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -36,8 +36,8 @@ if (db_exists(DB_PHOTOS)) {
         }
         $sort_by = array(
             'datestamp' => "photo_datestamp",
-            'subject' => "photo_title",
-            'author' => "photo_user",
+            'subject'   => "photo_title",
+            'author'    => "photo_user",
         );
         $order_by = array(
             '0' => ' DESC',
@@ -47,29 +47,32 @@ if (db_exists(DB_PHOTOS)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND photo_datestamp>='.(TIME - Search_Engine::get_param('datelimit').' OR album_datestamp>='.(TIME - Search_Engine::get_param('datelimit'))).' ' : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('photo_title', 0);
-                Search_Engine::search_column('photo_description', 1);
-                Search_Engine::search_column('album_title', 2);
-                Search_Engine::search_column('album_description', 3);
+                Search_Engine::search_column('photo_title', 'gallery');
+                Search_Engine::search_column('photo_description', 'gallery');
+                Search_Engine::search_column('album_title', 'gallery');
+                Search_Engine::search_column('album_description', 'gallery');
                 break;
             case 1:
-                Search_Engine::search_column('photo_description', 0);
-                Search_Engine::search_column('album_description', 1);
+                Search_Engine::search_column('photo_description', 'gallery');
+                Search_Engine::search_column('album_description', 'gallery');
                 break;
             default:
-                Search_Engine::search_column('photo_title', 0);
-                Search_Engine::search_column('album_title', 1);
+                Search_Engine::search_column('photo_title', 'gallery');
+                Search_Engine::search_column('album_title', 'gallery');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
 
-            $result = dbquery("SELECT tp.*,ta.*
-            	FROM ".DB_PHOTOS." tp
-				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-				".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND
-				".Search_Engine::search_conditions(), Search_Engine::get_param('search_param'));
+            $query = "
+            SELECT tp.*,ta.*
+            FROM ".DB_PHOTOS." tp
+            INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
+            ".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND
+            ".Search_Engine::search_conditions('gallery');
+            $param = Search_Engine::get_param('search_param');
+            $result = dbquery($query, $param);
 
             $rows = dbrows($result);
         } else {
@@ -79,16 +82,10 @@ if (db_exists(DB_PHOTOS)) {
 
             $item_count = "<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
 
-            $result = dbquery("SELECT tp.*,ta.*
-            	FROM ".DB_PHOTOS." tp
-				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-				".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".Search_Engine::search_conditions().
-				$date_search.$sortby.$limit);
+            $result = dbquery($query.$date_search.$sortby.$limit, $param);
 
-            $search_result = "<ul class='block spacer-xs'>\n";
-
+            $search_result = '';
             while ($data = dbarray($result)) {
-
                 $search_result = "";
                 if ($data['photo_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['p403']."</span>";
@@ -100,40 +97,45 @@ if (db_exists(DB_PHOTOS)) {
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['photo_title']) + Search_Engine::search_stringscount($data['album_title']);
                 $text_c = Search_Engine::search_stringscount($data['photo_description']) + Search_Engine::search_stringscount($data['album_description']);
+
                 $search_result .= "<table width='100%'>";
                 $search_result .= "<tr><td width='".$settings['thumb_w']."'>";
                 $photodir = PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : "");
-
-                $search_result .= "<li>\n";
+                $image_link = INFUSIONS.'gallery/photogallery.php?photo_id='.$data['photo_id'];
 
                 if ($data['photo_thumb1'] != "" && file_exists($photodir.$data['photo_thumb1'])) {
-                    $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'><img src='".$photodir.$data['photo_thumb1']."' style='border:none' alt='".$data['photo_title']."' /></a>";
+                    $image = "<img src='".$photodir.$data['photo_thumb1']."' style='border:none' alt='".$data['photo_title']."' />";
                 } else {
                     if ($data['photo_thumb2'] != "" && file_exists($photodir.$data['photo_thumb2'])) {
-                        $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'><img src='".$photodir.$data['photo_thumb2']."' style='border:none' alt='".$data['photo_title']."' /></a>";
+                        $image = "<img src='".$photodir.$data['photo_thumb2']."' style='border:none' alt='".$data['photo_title']."' />";
                     } else {
-                        $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'><img src='".get_image("imagenotfound")."' style='border:none' alt='".$data['photo_title']."' /></a>";
+                        $image = "<img src='".get_image("imagenotfound")."' style='border:none' alt='".$data['photo_title']."' />";
                     }
                 }
-                $search_result .= "</td><td>";
-                $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'>".$data['photo_title']."</a>".$new." (".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a>)"."<br /><br />\n";
+
+                $desc = '';
                 if ($text_frag != "") {
-                    $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
+                    $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
                 }
-                $search_result .= "<span class='small'><font class='alt'>".$locale['p405']."</font> ".showdate("%d.%m.%y",
-                                                                                                               $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
-                $search_result .= "</td></tr></table></li>\n";
+                $desc .= "<span class='small'><font class='alt'>".$locale['p405']."</font> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
+
+                $search_result .= strtr(Search::render_search_item_image(), [
+                        '{%item_url%}'         => $image_link."&sref=search",
+                        '{%item_target%}'      => '',
+                        '{%item_image%}'       => $image,
+                        '{%item_title%}'       => $data['photo_title']."</a>".$new." (".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],
+                        '{%item_description%}' => $desc
+                    ]
+                );
+
             }
-
-
-            $search_result .= "</ul>\n";
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_A'),
-                '{%icon_class%}' => "fa fa-retro-camera fa-lg fa-fw",
-                '{%search_title%}' => $locale['a400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => ImageRepo::getimage('ac_A'),
+                '{%icon_class%}'     => "fa fa-retro-camera fa-lg fa-fw",
+                '{%search_title%}'   => $locale['a400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

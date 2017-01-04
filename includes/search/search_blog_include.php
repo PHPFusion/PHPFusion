@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
@@ -30,8 +31,8 @@ if (db_exists(DB_BLOG)) {
     if (Search_Engine::get_param('stype') == "blog" || Search_Engine::get_param('stype') == "all") {
         $sort_by = array(
             'datestamp' => "blog_datestamp",
-            'subject' => "blog_subject",
-            'author' => "blog_name",
+            'subject'   => "blog_subject",
+            'author'    => "blog_name",
         );
         $order_by = array(
             '0' => ' DESC',
@@ -41,24 +42,25 @@ if (db_exists(DB_BLOG)) {
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND blog_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('blog_subject', 0);
-                Search_Engine::search_column('blog_blog', 1);
-                Search_Engine::search_column('blog_extended', 2);
+                Search_Engine::search_column('blog_subject', 'blog');
+                Search_Engine::search_column('blog_blog', 'blog');
+                Search_Engine::search_column('blog_extended', 'blog');
                 break;
             case 1:
-                Search_Engine::search_column('blog_blog', 0);
-                Search_Engine::search_column('blog_extended', 1);
+                Search_Engine::search_column('blog_blog', 'blog');
+                Search_Engine::search_column('blog_extended', 'blog');
                 break;
             case 0:
-                Search_Engine::search_column('blog_subject', 0);
+                Search_Engine::search_column('blog_subject', 'blog');
                 break;
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT blog_id FROM ".DB_BLOG."
-            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND ".Search_Engine::search_conditions()." AND (blog_start='0'||blog_start<=NOW())".$date_search;
+            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." 
+            AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
@@ -66,18 +68,19 @@ if (db_exists(DB_BLOG)) {
         }
 
         if ($rows != 0) {
-            $item_count = "<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".FUSION_SELF."?stype=blog&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
 
             $query = "
             SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
             FROM ".DB_BLOG." tn
             LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
             ".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
-            AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) AND ".Search_Engine::search_conditions()." ".$date_search.$sortby.$limit;
+            AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) AND ".Search_Engine::search_conditions('blog')." ".$date_search.$sortby.$limit;
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
 
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
+
             while ($data = dbarray($result)) {
                 $text_all = $data['blog_blog']." ".$data['blog_extended'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
@@ -85,23 +88,35 @@ if (db_exists(DB_BLOG)) {
                 $subj_c = Search_Engine::search_stringscount($data['blog_subject']);
                 $text_c = Search_Engine::search_stringscount($data['blog_blog']);
                 $text_c2 = Search_Engine::search_stringscount($data['blog_extended']);
-                $search_result .= "<li>\n";
-                $search_result .= "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$data['blog_subject']."</a>"."<br /><br />\n";
-                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
-                $search_result .= $locale['global_071'].showdate("longdate", $data['blog_datestamp'])."</span><br />\n";
-                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
-                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
-                $search_result .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span><br /><br />\n";
-                $search_result .= "</li>\n";
+
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".parse_textarea($text_frag)."</div><br />";
+
+                $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
+                $meta .= $locale['global_071'].showdate("longdate", $data['blog_datestamp'])."</span><br />\n";
+
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
+                $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
+
+                $search_result .= strtr(Search::render_search_item_list(), [
+                        '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."&sref=search",
+                        '{%item_target%}'          => 'self',
+                        '{%item_image%}'           => '',
+                        '{%item_title%}'           => $data['blog_subject'],
+                        '{%item_description%}'     => $meta,
+                        '{%item_search_criteria%}' => $criteria,
+                        '{%item_search_context%}'  => $context
+                    ]
+                );
+
             }
-            $search_result .= "</ul>\n";
+
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_BLOG'),
-                '{%icon_class%}' => "fa fa-pencil-square fa-lg fa-fw",
-                '{%search_title%}' => $locale['n400'],
-                '{%search_result%}' => $item_count,
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['n400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-pencil-square fa-lg fa-fw",
+                '{%search_title%}'   => $locale['n400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

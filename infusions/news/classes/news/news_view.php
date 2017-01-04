@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion\News;
+use PHPFusion\OpenGraphNews;
 
 /**
  * Controller package for if/else
@@ -30,6 +31,7 @@ class NewsView extends News {
             // Item Result
             $info = $this->set_NewsItemInfo($_GET['readmore']);
             render_news_item($info);
+	        OpenGraphNews::ogNews($_GET['readmore']);
         } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             // Category Result
             $info = $this->set_NewsCatInfo($_GET['cat_id']);

@@ -315,9 +315,9 @@ class ViewThread extends ForumServer {
             }
 
             // template data
-            $form_action = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+            $form_action = FUSION_SELF."?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
             if (isset($_GET['post_id'])) {
-                $form_action = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".intval($_GET['post_id']);
+                $form_action = FUSION_SELF."?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".intval($_GET['post_id']);
             }
 
             // Quote Get
@@ -602,7 +602,7 @@ class ViewThread extends ForumServer {
                     }
 
                     // template data
-                    $form_action = FORUM."viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+                    $form_action = FUSION_SELF."?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
 
                     // get attachment.
                     $attachments = array();

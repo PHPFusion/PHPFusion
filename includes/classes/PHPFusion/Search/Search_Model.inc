@@ -137,23 +137,38 @@ abstract class Search_Model {
         return $count;
     }
 
-    // conditions
-    public static function search_column($field, $field_index) {
+    /*
+     * Indexer to avoid duplication of fields search in other module.
+     */
+    private static $search_index = 0;
+    private static $search_mod;
+
+    // conditions parser
+    public static function search_column($field, $field_module) {
+        if (self::$search_mod == $field_module) {
+            self::$search_index++;
+        } else {
+            self::$search_mod = $field_module;
+            self::$search_index = 0;
+        }
         $last_sword_index = self::$c_swords - 1;
         for ($i = 0; $i <  self::$c_swords; $i++) {
-            if (isset(self::$swords_keys_for_query[ $i * self::$fields_count + $field_index ])) {
-                $sword_var = self::$swords_keys_for_query[ $i * self::$fields_count + $field_index ];
-                self::$conditions[$field_index] = $field ." LIKE {$sword_var}" . ($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
+            if (isset(self::$swords_keys_for_query[ $i * self::$fields_count + self::$search_index ])) {
+                $sword_var = self::$swords_keys_for_query[ $i * self::$fields_count + self::$search_index ];
+                self::$conditions[$field_module][$field][] = $field ." LIKE {$sword_var}" . ($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
             }
         }
     }
 
-    public static function search_conditions() {
+
+    public static function search_conditions($field_module) {
         // the conditions is imposition and must reset.
-        if (!empty(self::$conditions)) {
-            return "(".implode(' || ', self::$conditions).")";
+        if (!empty(self::$conditions[$field_module])) {
+            return "(".implode(' || ', array_map(function($field_var){ return implode('', $field_var); }, self::$conditions[$field_module])).")";
         }
     }
+
+
 
     // generate search navigation
     public static function search_navigation($rows) {

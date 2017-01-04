@@ -134,7 +134,11 @@ if (!isset($fusion_jquery_tags)) {
 }
 
 // Load layout
-require_once __DIR__ . (defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
+if (defined('ADMIN_PANEL')) {
+    require_once __DIR__.'/admin_layout.php';
+} else {
+    require_once __DIR__.'/layout.php';
+}
 
 // Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore

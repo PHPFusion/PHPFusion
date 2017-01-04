@@ -98,7 +98,7 @@ class defender {
     }
 
     public static function decode($value) {
-        return base64_decode(json_decode($value));
+        return json_decode(base64_decode($value), TRUE);
     }
 
     /**

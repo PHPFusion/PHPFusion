@@ -211,7 +211,7 @@ abstract class News extends NewsServer {
         $imageOptimized = IMAGES_N."news_default.jpg";
         $imageRaw = '';
 
-        if ($data['news_cat_image']) {
+        if (!empty($data['news_cat_image'])) {
             $imageOptimized = get_image("nc_".$data['news_cat_name']);
             $imageRaw = $imageOptimized;
         }
@@ -625,10 +625,10 @@ abstract class News extends NewsServer {
 
     private static function get_NewsRatings($data) {
         $html = '';
-        if ($data['news_allow_ratings'] == TRUE) {
+        if (fusion_get_settings('ratings_enabled') && $data['news_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
+            showratings("N", $_GET['readmore'], FUSION_SELF."?readmore=".$_GET['readmore']);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -638,10 +638,10 @@ abstract class News extends NewsServer {
 
     private static function get_NewsComments($data) {
         $html = "";
-        if ($data['news_allow_comments'] == TRUE) {
+        if (fusion_get_settings('comments_enabled') && $data['news_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id'], $data['news_allow_ratings']);
+            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], FUSION_SELF."?readmore=".$data['news_id'], $data['news_allow_ratings']);
             $html = ob_get_contents();
             ob_end_clean();
         }

@@ -23,6 +23,23 @@ class Search_Engine extends Search_Model {
 
     protected static $search_instance = NULL;
 
+    /*
+     * Template
+     * Adds a third option to replace output template.
+     * Just extend and declare your own by mutating the following
+     * strings.
+     *
+     * In order to access the variables, extend your class to Search_Engine!
+     */
+    protected static $render_search = '';
+    protected static $search_no_result = '';
+    protected static $search_count = '';
+    protected static $search_item_wrapper = '';
+
+    protected static $search_item = '';
+    protected static $search_item_list = '';
+    protected static $search_item_image = '';
+
     /**
      * Returns params
      * @param null $key
@@ -376,12 +393,11 @@ class Search_Engine extends Search_Model {
         $locale = self::$locale;
         self::$composevars = "method=".self::get_param('method')."&amp;datelimit=".self::get_param('datelimit')."&amp;fields=".self::get_param('fields')."&amp;sort=".self::get_param('sort')."&amp;order=".self::get_param('order')."&amp;chars=".self::get_param('chars')."&amp;forum_id=".self::get_param('forum_id')."&amp;";
         add_to_title($locale['global_201'].$locale['408']);
-        /*
-         * Now we all understand what each string fucking means...
-         */
+
         $search_text = explode(' ', urldecode(self::$search_text));
         $qualified_search_text = array();
         $disqualified_search_text = array();
+
         /*
          * @todo: roadmap on author
          */
@@ -399,10 +415,11 @@ class Search_Engine extends Search_Model {
             }
         }
         unset($search_text);
-
         self::$swords = $qualified_search_text;
+
         self::$c_swords = count($qualified_search_text) ?: redirect(FUSION_SELF);
         self::$i_swords = count($disqualified_search_text);
+
         self::$swords_keys_for_query = array_keys(self::$search_param);
         self::$swords_values_for_query = array_values(self::$search_param);
 
@@ -465,19 +482,24 @@ class Search_Engine extends Search_Model {
         else {
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
-                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : '')
+                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
             ]);
         }
 
         echo "<div class='search_result'>\n";
         echo "<div class='block'>\n";
-        for ($i = $from; $i < $to; $i++) {
-            echo self::$search_result_array[$i];
+        foreach(self::$search_result_array as $results) {
+            echo $results;
         }
+
+        // Now it is by per module. Therefore rowstart does not apply
+        //for ($i = $from; $i < $to; $i++) {
+          //  echo self::$search_result_array[$i];
+        //}
         echo "</div>\n";
         echo "</div>\n";
 
-        echo self::$navigation_result;
+        //echo self::$navigation_result;
     }
     /**
      * Controller for omitting search
@@ -499,7 +521,7 @@ class Search_Engine extends Search_Model {
      * - Prevents string mutation
      * @param $path
      */
-    private static function __Load($path) {
+    protected static function __Load($path) {
         $file = INCLUDES.'search/'.$path;
         if (file_exists($file)) {
             include($file);

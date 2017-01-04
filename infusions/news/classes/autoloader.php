@@ -28,7 +28,8 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\News\\NewsCategoryAdmin" => NEWS_CLASS."/admin/controllers/news_cat.php",
         "PHPFusion\\News\\NewsSettingsAdmin" => NEWS_CLASS."/admin/controllers/news_settings.php",
         "PHPFusion\\News\\NewsSubmissionsAdmin" => NEWS_CLASS."/admin/controllers/news_submissions.php",
-        "PHPFusion\\News\\NewsAdmin" => NEWS_CLASS."/admin/controllers/news.php"
+        "PHPFusion\\News\\NewsAdmin" => NEWS_CLASS."/admin/controllers/news.php",
+        "PHPFusion\\OpenGraphNews" => NEWS_CLASS."/news/OpenGraphNews.php"
     );
 
     if (isset($autoload_register_paths[$className])) {

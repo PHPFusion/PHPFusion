@@ -25,6 +25,7 @@ use PHPFusion\Search\Search_Engine;
  * @package PHPFusion
  */
 class Search extends Search_Engine {
+
     /**
      * Global view function
      */
@@ -41,9 +42,15 @@ class Search extends Search_Engine {
      * @return string
      */
     public static function render_search() {
+        // Developer's option - mutate this string to output your template
+        if (self::$render_search) {
+            return self::$render_search;
+        }
+        // Designer's option - make a design a HTML in render_search() function in your theme
         if (function_exists('render_search')) {
             return (string)render_search();
         }
+        // Default
         return open_table('{%title%}')."
         <div class='spacer-sm'>
         <div class='clearfix m-b-15'>{%search_text%}</div>
@@ -73,6 +80,9 @@ class Search extends Search_Engine {
      * @return string
      */
     public static function render_search_no_result() {
+        if (self::$search_no_result) {
+            return self::$search_no_result;
+        }
         if (function_exists('render_search_no_result')) {
             return (string)render_search_no_result();
         }
@@ -84,27 +94,95 @@ class Search extends Search_Engine {
      * @return string
      */
     public static function render_search_count() {
+        if (self::$search_count) {
+            return self::$search_count;
+        }
         if (function_exists('render_search_count')) {
             return (string)render_search_count();
         }
         return "<div class='clearfix spacer-xs well'>{%search_count%}{%result_text%}</div>";
     }
 
+    /*
+     * Template for search Simple Items
+     */
+    public static function render_search_item() {
+        if (self::$search_item) {
+            return self::$search_item;
+        }
+        if (function_exists('render_search_item')) {
+            return (string)self::render_search_item();
+        }
+        return "
+        <li>
+        <div class='clearfix'>
+        <div class='pull-left m-r-10'>{%item_image%}</div>
+        <div class='overflow-hide'><span class='va' style='height:30px;'></span><span class='va'><a href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></span></div>
+        </div>
+        </a>
+        </li>
+        ";
+    }
+
+
+    /*
+     * Template for search Full Listing Item Type
+     */
+    public static function render_search_item_list() {
+        if (self::$search_item_list) {
+            return self::$search_item_list;
+        }
+        if (function_exists('render_search_item_list')) {
+            return (string)self::render_search_item_list();
+        }
+        return "
+        <li class='spacer-xs'>
+        <div class='clearfix'>
+        <div class='pull-left m-r-10'>{%item_image%}</div>
+        <div class='overflow-hide'><a href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>
+        {%item_description%}
+        {%item_search_context%}
+        {%item_search_criteria%}
+        </div>
+        </div>        
+        </li>
+        ";
+    }
+
+    /**
+     * Template for search Image Listing Item Type
+     * @return string
+     */
+    public static function render_search_item_image() {
+        if (self::$search_item_image) {
+            return self::$search_item_image;
+        }
+        if (function_exists('render_search_item_image')) {
+            return (string)self::render_search_item_image();
+        }
+        return "
+        <li class='display-inline-block m-2'><a href='{%item_url%}'>{%item_image%}</a></li>
+        ";
+    }
+
     /**
      * Template for each search module results
      * @return string
      */
-    public static function render_search_item() {
+    public static function render_search_item_wrapper() {
+        if (self::$search_item_wrapper) {
+            return self::$search_item_wrapper;
+        }
         if (function_exists('render_search_item')) {
-            return (string)render_search_item();
+            return (string)render_search_item_wrapper();
         }
         return "<div class='panel panel-default'>\n
         <div class='panel-body'>
-        <h4><i class='{%icon_class%}' style='color:#14BDA6'></i>{%search_title%}</h4>
+        <h4>{%image%} {%search_title%}</h4>
         </div>\n
         <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET."{%search_result%}</div></div>
         <div class='panel-body'>
-        {%search_content%}
+        <ul class='block spacer-xs'>{%search_content%}</ul>
         </div>\n
         </div>\n
         ";

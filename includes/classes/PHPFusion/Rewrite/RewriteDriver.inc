@@ -26,22 +26,25 @@ abstract class RewriteDriver {
     /**
      * Array of Handlers
      * example: news, threads, articles
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $handlers = array();
 
     /**
      * Array of Total Queries which were run.
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $queries = array();
 
     /**
      * The site render HTML buffer which is to be scanned
+     *
      * @data_type string
-     * @access protected
+     * @access    protected
      */
 
     protected $output = "";
@@ -49,8 +52,9 @@ abstract class RewriteDriver {
     /**
      * Tags for the permalinks.
      * example: %thread_id%, %news_id%
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
 
     protected $rewrite_code = array();
@@ -58,48 +62,54 @@ abstract class RewriteDriver {
     /**
      * Replacement for Tags for REGEX.
      * example: %thread_id% should be replaced with ([0-9]+)
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $rewrite_replace = array();
 
     /**
      * Array of DB Table Names with Schema
      * example: prefix_news, prefix_threads, prefix_articles
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $pattern_tables = array();
 
     /**
      * Array of Pattern for Aliases
      * which are made for matching.
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $alias_pattern = array();
 
     /**
      * Permalink Patterns which will be searched
      * to match against current request.
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $pattern_search = array();
 
     /**
      * Target URLs to which permalink request
      * will be rewrited.
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $pattern_replace = array();
 
     /**
      * Array of Regular Expressions Patterns
      * which are made for matching.
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $patterns_regex = array();
 
@@ -109,27 +119,28 @@ abstract class RewriteDriver {
      * Statements are calculation results of Rewrite scan
      * We will have various types of regex statements
      * This is the results data of the entire permalink success/fails
+     *
      * @var array
      */
     protected $regex_statements = array();
 
     /**
      * Portion of the URL to match in the Regex
+     *
      * @data_type String
-     * @access protected
+     * @access    protected
      */
     protected $requesturi = "";
 
     /**
      * Array of Warnings
+     *
      * @data_type Array
-     * @access protected
+     * @access    protected
      */
     protected $warnings = array();
     protected $buffer_search_regex = array();
     protected $path_search_regex = array();
-
-
 
     /**
      * Import Handlers from Database
@@ -155,6 +166,7 @@ abstract class RewriteDriver {
      * This will Add new rewrite include file to be included.
      *
      * @param string $include_prefix Prefix of the file to be included.
+     *
      * @access protected
      */
     private function AddRewrite($include_prefix) {
@@ -200,8 +212,9 @@ abstract class RewriteDriver {
      * search patterns.
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
-     * @param array  $regex Array of Tags to be added.
+     * @param array  $regex  Array of Tags to be added.
      * @param string $driver Type or Handler name
+     *
      * @access protected
      */
     protected function addRegexTag($regex, $driver) {
@@ -219,6 +232,7 @@ abstract class RewriteDriver {
      *
      * @param integer $code The Code Number of the Warning
      * @param string  $info Any other Info to Show along with Warning
+     *
      * @access protected
      */
     protected function setWarning($code, $info = "") {
@@ -311,7 +325,7 @@ abstract class RewriteDriver {
 
                     if (isset($this->rewrite_code[$driver]) && isset($this->rewrite_replace[$driver])) {
                         $buffer_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver],
-                                                    $buffer_regex);
+                            $buffer_regex);
                     }
 
                     $search_regex = $this->cleanRegex($val);
@@ -335,7 +349,9 @@ abstract class RewriteDriver {
      * This function will append the BASEDIR path to the Search pattern. This is
      * required in some cases like when we are on actual php script page and
      * Permalinks are ON.
+     *
      * @param string $str The String
+     *
      * @return string
      * @access protected
      */
@@ -359,7 +375,9 @@ abstract class RewriteDriver {
      * Clean the REGEX by escaping some characters
      *
      * This function will escape some characters in the Regex expression
+     *
      * @param string $regex The expression String
+     *
      * @return string
      */
     protected static function cleanRegex($regex) {
@@ -536,9 +554,9 @@ abstract class RewriteDriver {
                         for ($i = 0; $i < count($output_matches[0]); $i++) {
 
                             $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
-                                                                    $statements[$i]["search"]);
+                                $statements[$i]["search"]);
                             $statements[$i]["replace"] = str_replace($regexTag, $tag_replacement[$i],
-                                                                     $statements[$i]["replace"]);
+                                $statements[$i]["replace"]);
                             $loop_count++;
                         }
                         $loop_count++;
@@ -573,14 +591,14 @@ abstract class RewriteDriver {
                     }
 
                     $output_capture_buffer = array(
-                        "search" => $search,
-                        "output_matches" => $output_matches[0],
+                        "search"          => $search,
+                        "output_matches"  => $output_matches[0],
                         "replace_matches" => $replace_matches[0],
-                        "seach_pattern" => $search_pattern,
-                        "replace_patern" => $replace_pattern,
-                        "tag_values" => $tag_values,
-                        "statements" => $statements,
-                        "loop_counter" => $loop_count,
+                        "seach_pattern"   => $search_pattern,
+                        "replace_patern"  => $replace_pattern,
+                        "tag_values"      => $tag_values,
+                        "statements"      => $statements,
+                        "loop_counter"    => $loop_count,
                     );
 
                 } else {
@@ -588,8 +606,8 @@ abstract class RewriteDriver {
                     preg_match_all("~$search_str~i", $this->output, $match);
 
                     $this->regex_statements['failed'][$field][] = array(
-                        "search" => $search,
-                        "status" => "No matching content or failed regex matches",
+                        "search"  => $search,
+                        "status"  => "No matching content or failed regex matches",
                         "results" => $match
                     );
 
@@ -605,7 +623,9 @@ abstract class RewriteDriver {
      * Wrap a String with Single Quotes (')
      * This function will wrap a string passed with Single Quotes.
      * Example: mystring will become 'mystring'
+     *
      * @param string $str The String
+     *
      * @access protected
      * @return string
      */
@@ -618,7 +638,9 @@ abstract class RewriteDriver {
 
     /**
      * Add compatibalities with double quotes HTML codes for Permalink
+     *
      * @param $str
+     *
      * @return string
      */
     protected static function wrapDoubleQuotes($str) {
@@ -636,6 +658,7 @@ abstract class RewriteDriver {
      * This function can be customized according to your needs.
      *
      * @param string $string The URL String
+     *
      * @return string
      * @access protected
      */
@@ -655,7 +678,7 @@ abstract class RewriteDriver {
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
 
         $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
-                               $string); // Replace multiple occurences of Delimiter by 1 occurence only
+            $string); // Replace multiple occurences of Delimiter by 1 occurence only
 
         //$string = trim($string, "-");
 
@@ -665,71 +688,74 @@ abstract class RewriteDriver {
     /**
      * Replaces special characters in a string with their "non-special" counterpart.
      * Useful for friendly URLs.
+     *
      * @access public
+     *
      * @param string
+     *
      * @return string
      */
     protected static function normalize($string) {
         $table = array(
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
-            'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
-            'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
-            'Ï' => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
-            'Ø' => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
-            'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
-            'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
-            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
-            'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
-            'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
-            'ā' => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
-            'ć' => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
-            'č' => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
-            'ē' => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
-            'ę' => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
-            'ğ' => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
-            'ĥ' => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
-            'ī' => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
-            'ı' => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
-            'ķ' => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
-            'Ľ' => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
-            'Ń' => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
-            'ŉ' => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
-            'ŏ' => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
-            'ŕ' => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
-            'ś' => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
-            'š' => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
-            'ŧ' => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
-            'ŭ' => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
-            'ų' => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
-            'Ź' => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
-            'ſ' => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
-            'ư' => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
-            'ǒ' => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
-            'ǘ' => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
-            'ǻ' => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
-            'Ё' => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
-            'В' => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
-            'И' => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
-            'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
-            'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
-            'Ъ' => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
-            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
-            'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
-            'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
-            'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
-            'ш' => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
-            'ю' => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
-            'Ґ' => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
-            'ה' => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
-            'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
-            'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
-            'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
-            'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
-            'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd',
-            'ظ' => 'z', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's',
-            'ض' => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q',
-            'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'v',
-            'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
+            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+            'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
+            'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
+            'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
+            'ß'     => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
+            'æ'     => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+            'ì'     => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
+            'ô'     => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
+            'û'     => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
+            'ā'     => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
+            'ć'     => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
+            'č'     => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
+            'ē'     => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
+            'ę'     => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
+            'ğ'     => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
+            'ĥ'     => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
+            'ī'     => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
+            'ı'     => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
+            'ķ'     => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
+            'Ľ'     => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
+            'Ń'     => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
+            'ŉ'     => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
+            'ŏ'     => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
+            'ŕ'     => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
+            'ś'     => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
+            'š'     => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
+            'ŧ'     => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
+            'ŭ'     => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
+            'ų'     => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
+            'Ź'     => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
+            'ſ'     => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
+            'ư'     => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
+            'ǒ'     => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
+            'ǘ'     => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
+            'ǻ'     => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
+            'Ё'     => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
+            'В'     => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
+            'И'     => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
+            'О'     => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
+            'Ф'     => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
+            'Ъ'     => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
+            'а'     => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
+            'ж'     => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
+            'м'     => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
+            'т'     => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+            'ш'     => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
+            'ю'     => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
+            'Ґ'     => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
+            'ה'     => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
+            'ך'     => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
+            'נ'     => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
+            'צ'     => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
+            'ء'     => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
+            'ث'     => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd',
+            'ظ'     => 'z', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's',
+            'ض'     => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q',
+            'ک'     => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'v',
+            'و'     => 'w', 'ه' => 'h', 'ی' => 'y ',
         );
         $string = strtr($string, $table);
 
@@ -743,15 +769,12 @@ abstract class RewriteDriver {
      *
      */
     protected function handle_non_seo_url() {
-
         $loop_count = 0;
-
         foreach ($this->path_search_regex as $field => $searchRegex) {
 
             foreach ($searchRegex as $key => $search) {
 
                 $search_pattern = $this->pattern_search[$field][$key];
-
                 $replace_pattern = $this->pattern_replace[$field][$key];
 
                 // Resets
@@ -770,7 +793,7 @@ abstract class RewriteDriver {
 
                     if (empty($output_matches[0]) && !empty($_POST)) {
                         preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches,
-                                       PREG_PATTERN_ORDER);
+                            PREG_PATTERN_ORDER);
                     }
 
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
@@ -859,9 +882,9 @@ abstract class RewriteDriver {
                         for ($i = 0; $i < count($output_matches[0]); $i++) {
 
                             $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
-                                                                    $statements[$i]["search"]);
+                                $statements[$i]["search"]);
                             $statements[$i]["replace"] = str_replace($regexTag, $tag_replacement[$i],
-                                                                     $statements[$i]["replace"]);
+                                $statements[$i]["replace"]);
                             $loop_count++;
                         }
                         $loop_count++;
@@ -873,14 +896,14 @@ abstract class RewriteDriver {
                     }
 
                     $output_capture_buffer = array(
-                        "search" => $search,
-                        "output_matches" => $output_matches[0],
+                        "search"          => $search,
+                        "output_matches"  => $output_matches[0],
                         "replace_matches" => $replace_matches[0],
-                        "seach_pattern" => $search_pattern,
-                        "replace_patern" => $replace_pattern,
-                        "tag_values" => $tag_values,
-                        "statements" => $statements,
-                        "loop_counter" => $loop_count,
+                        "seach_pattern"   => $search_pattern,
+                        "replace_patern"  => $replace_pattern,
+                        "tag_values"      => $tag_values,
+                        "statements"      => $statements,
+                        "loop_counter"    => $loop_count,
                     );
 
                 } else {
@@ -888,22 +911,24 @@ abstract class RewriteDriver {
                     preg_match_all("~$search~i", $this->output, $match);
 
                     $this->regex_statements['failed'][$field][] = array(
-                        "search" => $search,
-                        "status" => "No matching content or failed regex matches",
+                        "search"  => $search,
+                        "status"  => "No matching content or failed regex matches",
                         "results" => $match
                     );
                 }
             }
         }
-
     }
 
     /**
      * Redirect 301 : Moved Permanently Redirect
      * This function invoked to prevent of caching any kinds of Non SEO URL on render.
      * Let search engine mark as 301 permanently
-     * @param string $target The Target URL
-     * @access protected
+     *
+     * @param      $target The target URL
+     * @param bool $debug
+     *
+*@access protected
      */
     protected static function redirect_301($target, $debug = FALSE) {
         if ($debug) {
@@ -926,11 +951,13 @@ abstract class RewriteDriver {
      * This function will replace all the Tags in the Pattern with their suitable found
      * matches. All the Information is passed to the function and it will replace the
      * Tags with their respective matches.
-     * @param string $type Type of Pattern
-     * @param string $search specific Search Pattern
-     * @param string $replace specific Replace Pattern
-     * @param array  $matches Array of the Matches found for a specific pattern
+     *
+     * @param string $type     Type of Pattern
+     * @param string $search   specific Search Pattern
+     * @param string $replace  specific Replace Pattern
+     * @param array  $matches  Array of the Matches found for a specific pattern
      * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     *
      * @return string
      */
     protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
@@ -963,9 +990,12 @@ abstract class RewriteDriver {
      * This function will calculate the position of a given Tag in a given pattern.
      * Example: %id% is at 2 position in articles-%title%-%id%
      *
-     * @param string $pattern The Pattern string in which particular Tag will be searched.
+*@param string $pattern The Pattern string in which particular Tag will be searched.
      * @param string $search The Tag which will be searched.
-     * @access protected
+     *
+*@access protected
+     *
+     * @return int
      */
     protected function getTagPosition($pattern, $search) {
         if (preg_match_all("#%([a-zA-Z0-9_]+)%#i", $pattern, $matches)) {
@@ -985,9 +1015,11 @@ abstract class RewriteDriver {
      * Example: For news, unique ID should be news_id
      * So it will return %news_id% because of array("%%news_id" => "news_id")
      *
-     * @param string $type Type or Handler name
-     * @access protected
-     * @todo: Roadmap 9.1 to have this read seperately
+*@param string $type Type or Handler name
+     *
+*@access       protected
+     * @return string
+     * @todo   : Roadmap 9.1 to have this read seperately
      */
     protected function getUniqueIDtag($type) {
         $tag = "";
@@ -1006,9 +1038,11 @@ abstract class RewriteDriver {
      * search patterns.
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
-     * @param array  $regex Array of Tags to be added.
-     * @param string $type Type or Handler name
+     * @param array  $pattern Array of Tags to be added.
+     * @param string $type    Type or Handler name
+     *
      * @access protected
+     * @return string
      */
     protected function makeSearchRegex($pattern, $type) {
         $regex = $pattern;
@@ -1030,6 +1064,8 @@ abstract class RewriteDriver {
      * Entrance to Permalink from PHP Buffer
      * This function prepares HTML codes to be preg_matched against Permalink Driver
      * Decode everything
+     *
+     * @param $output
      */
     protected function HTML_In($output) {
 
@@ -1049,6 +1085,7 @@ abstract class RewriteDriver {
     /**
      * Exit from Permalink to PHP Buffer
      * This function prepares HTML codes to be viewed by browser
+     *
      * @param $output
      */
     protected function HTML_Out($output) {
@@ -1056,12 +1093,15 @@ abstract class RewriteDriver {
         //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
     }
 
-
     /**
      * Clean the URI String for MATCH/AGAINST in MySQL
      *
      * This function will Clean the string and removes any unwanted characters from it.
-     * @access protected
+     *
+     * @param $mystr - string
+     *
+* @access protected
+     * @return string
      */
     protected function cleanString($mystr = "") {
         $search = array("", "\"", "'", "\\", "\'", "<", ">");

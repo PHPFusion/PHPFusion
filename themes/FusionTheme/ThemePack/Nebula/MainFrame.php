@@ -53,6 +53,7 @@ class MainFrame extends Core {
         $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
         echo "<header ".$headerBg.">\n";
         echo "<div class='headerInner'>\n";
+
         echo "<div class='container'>\n";
 		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
 		echo "<div class='col-xs-12 col-sm-3 center'>\n";
@@ -72,10 +73,10 @@ class MainFrame extends Core {
             echo "<li><a href='".BASEDIR."login.php'>".fusion_get_locale('login')."</a></li>\n";
         endif;
         echo "</ul>\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        echo "</div>\n";
+        echo "</div>\n"; // navbar-right
+        echo "</div>\n"; // col-sm-9
+        echo "</div>\n"; // row
+        echo "</div>\n"; // container
 
         $menu_config = [
             'container' => TRUE,
@@ -101,12 +102,19 @@ class MainFrame extends Core {
 			})
 		");
 
-        if (AU_CENTER || ($this->getParam('header_content'))) :
-            echo "<div class='nebulaHeader'>\n";
-			echo ($this->getParam('header_content') ?: "");
+        if ((AU_CENTER || ($this->getParam('upper_content')) && $this->getParam('upper'))) :
+            echo "<div class='showcase'>\n";
+            if ($this->getParam('upper_container')) {
+                echo "<div class='container'>\n";
+            }
+            echo($this->getParam('upper_content') ?: "");
             echo AU_CENTER;
+            if ($this->getParam('upper_container')) {
+                echo "</div>\n";
+            }
             echo "</div>\n";
         endif;
+
 		echo "</div>\n";
         echo "</header>\n";
     }
@@ -170,13 +178,13 @@ class MainFrame extends Core {
 			echo "</section>\n";
         endif;
 
-        if (L_CENTER && $this->getParam('body_lower')) :
+        if (L_CENTER && $this->getParam('l_center')) :
             echo "<section class='nebulaContentBottom'>\n";
-            if ($this->getParam('body_lower_container') === TRUE) :
+            if ($this->getParam('l_center_container') === TRUE) :
                 echo "<div class='container'>\n";
             endif;
             echo L_CENTER;
-            if ($this->getParam('body_lower_container') === TRUE) :
+            if ($this->getParam('l_center_container') === TRUE) :
                 echo "</div>\n";
             endif;
             echo "</section>\n";
@@ -186,13 +194,13 @@ class MainFrame extends Core {
 
     private function NebulaFooter() {
 
-        if (BL_CENTER && $this->getParam('lower')) :
+        if (BL_CENTER && $this->getParam('bl_lower')) :
             echo "<section class='nebulaBottom'>\n";
-            if ($this->getParam('lower_container') === TRUE) :
+            if ($this->getParam('bl_lower_container') === TRUE) :
                 echo "<div class='container'>\n";
             endif;
             echo BL_CENTER;
-            if ($this->getParam('lower_container') === TRUE) :
+            if ($this->getParam('bl_lower_container') === TRUE) :
                 echo "</div>\n";
             endif;
             echo "</section>\n";

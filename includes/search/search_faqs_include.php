@@ -16,8 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -33,29 +35,26 @@ if (db_exists(DB_FAQS)) {
         );
         $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY faq_id".$order_by[Search_Engine::get_param('order')] : '';
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
-                Search_Engine::search_column('faq_question', 0);
-                Search_Engine::search_column('faq_answer', 1);
-                Search_Engine::search_column('faq_cat_name', 2);
+                Search_Engine::search_column('faq_question', 'faqs');
+                Search_Engine::search_column('faq_answer', 'faqs');
+                Search_Engine::search_column('faq_cat_name', 'faqs');
                 break;
             case 1:
-                Search_Engine::search_column('faq_answer', 0);
-                Search_Engine::search_column('faq_cat_description', 1);
+                Search_Engine::search_column('faq_answer', 'faqs');
+                Search_Engine::search_column('faq_cat_description', 'faqs');
                 break;
             default:
-                Search_Engine::search_column('faq_question', 0);
+                Search_Engine::search_column('faq_question', 'faqs');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-
             $query = "SELECT fq.*, fc.*
             	FROM ".DB_FAQS." fq
 				LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
-			    ".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions().$sortby;
-
-            $result = dbquery($query,Search_Engine::get_param('search_param'));
-
+			    ".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
+            $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -63,25 +62,37 @@ if (db_exists(DB_FAQS)) {
 
         if ($rows != 0) {
             $item_count = "<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
-            $search_result = "<ul class='block spacer-xs'>\n";
+            $search_result = '';
+
             while ($data = dbarray($result)) {
                 $text_all = $data['faq_answer'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['faq_question']);
                 $text_c = Search_Engine::search_stringscount($data['faq_answer']);
-                $search_result .= "<li><a href='infusions/faq/faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_question']."</a>"."<br /><br />\n";
-                $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
-                $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span></li>\n";
+
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
+                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span>";
+
+                $search_result .= strtr(Search::render_search_item(), [
+                        '{%item_url%}'             => INFUSIONS."/faq/faq.php?cat_id=".$data['faq_cat_id']."&sref=search",
+                        '{%item_target%}'          => '',
+                        '{%item_image%}'           => '',
+                        '{%item_title%}'           => $data['faq_question'],
+                        '{%item_description%}'     => $data['faq_answer'],
+                        '{%item_search_criteria%}' => $criteria,
+                        '{%item_search_context%}'  => $context,
+                    ]
+                );
             }
-            $search_result .= "</ul>\n";
+
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}' => ImageRepo::getimage('ac_FQ'),
-                '{%icon_class%}' => "fa fa-question-circle fa-lg fa-fw",
-                '{%search_title%}' => $locale['fq400'],
-                '{%search_result%}' => $item_count,
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}'          => ImageRepo::getimage('ac_FQ'),
+                '{%icon_class%}'     => "fa fa-question-circle fa-lg fa-fw",
+                '{%search_title%}'   => $locale['fq400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

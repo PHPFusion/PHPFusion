@@ -469,15 +469,6 @@ abstract class Articles extends ArticlesServer {
 
             $article_subject = $data['article_subject'];
 
-            // Social Media
-            if (fusion_get_settings("create_og_tags")) {
-                add_to_head("<meta property='og:title' content='".$data['article_subject']."' />");
-                add_to_head("<meta property='og:description' content='".strip_tags($data['article_article'])."' />");
-                add_to_head("<meta property='og:site_name' content='".fusion_get_settings('sitename')."' />");
-                add_to_head("<meta property='og:type' content='article' />");
-                add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/articles/articles.php?article_id=".$_GET['article_id']."' />");
-            }
-
             $_GET['cat_id'] = $data['article_cat_id'];
 
             set_title($article_subject.self::$locale['global_200'].self::$locale['article_0005']);
@@ -518,7 +509,7 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("A", $data['article_id'], INFUSIONS."articles/articles.php?article_id=".$data['article_id']);
+            showratings("A", $data['article_id'], FUSION_SELF."?article_id=".$data['article_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -534,7 +525,7 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('comments_enabled') && $data['article_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], INFUSIONS."articles/articles.php?article=".$data['article_id'], $data['article_allow_ratings']);
+            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], FUSION_SELF."?article=".$data['article_id'], $data['article_allow_ratings']);
             $html = ob_get_contents();
             ob_end_clean();
         }

@@ -19,6 +19,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Rewrite;
 
+/**
+ * Class Permalinks
+ *
+ * @package PHPFusion\Rewrite
+ */
 class Permalinks extends RewriteDriver {
 
     public $debug_regex = TRUE;
@@ -33,7 +38,6 @@ class Permalinks extends RewriteDriver {
         if (self::$permalink_instance === NULL) {
             self::$permalink_instance = new static();
         }
-
         return self::$permalink_instance;
     }
 

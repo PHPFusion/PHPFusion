@@ -110,9 +110,9 @@ if (!function_exists("display_quickReply")) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
 
-        $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$info['thread_id'];
+        $form_url = FUSION_SELF."?thread_id=".$info['thread_id'];
         if (isset($_GET['pid']) && isnum($_GET['pid'])) {
-            $form_url = FORUM."forum/viewthread.php?thread_id=".$info['thread_id']."&&pid=".$info['pid'];
+            $form_url = FUSION_SELF."?thread_id=".$info['thread_id']."&amp;pid=".$info['pid'];
         }
 
         $html = "<!--sub_forum_thread-->\n";
