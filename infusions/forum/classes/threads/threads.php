@@ -371,7 +371,7 @@ class ForumThreads extends ForumServer {
                  * Thread moderation form template
                  */
                 $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
-                $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
+                $this->thread_info['form_action'] = FUSION_SELF."?thread_id=".intval($this->thread_data['thread_id']).$addition;
 
                 $this->thread_info['mod_options'] = array(
                     'renew' => $locale['forum_0207'],
