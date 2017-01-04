@@ -58,9 +58,10 @@ class Errors {
 
     public function __construct() {
         if (empty(self::$locale)) {
-            $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/errors.php");
-            $locale += fusion_get_locale('', LOCALE.LOCALESET."errors.php");
-            self::$locale += $locale;
+            self::$locale = fusion_get_locale('', array(
+                LOCALE.LOCALESET.'admin/errors.php',
+                LOCALE.LOCALESET.'errors.php'
+            ));
         }
 
         $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
