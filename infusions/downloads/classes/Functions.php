@@ -182,4 +182,28 @@ class Functions {
 
         return FALSE;
     }
+
+    public static function get_download_comments($data) {
+        $html = "";
+        if (fusion_get_settings('comments_enabled') && $data['download_allow_comments']) {
+            ob_start();
+            echo showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'], $data['download_allow_ratings']);
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
+    }
+
+    public static function get_download_ratings($data) {
+        $html = "";
+        if (fusion_get_settings('ratings_enabled') && $data['download_allow_ratings']) {
+            ob_start();
+            echo showratings("D", $data['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
+    }
 }

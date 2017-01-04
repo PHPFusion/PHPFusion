@@ -105,23 +105,9 @@ if (!function_exists('display_blog_item')) {
             echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
         }
         echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
-        if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
-            echo "<hr />\n";
-            \PHPFusion\Feedback\Comments::getInstance(
-                array(
-                    'comment_item_type' => "B",
-                    'comment_db' => DB_BLOG,
-                    'comment_col' => 'blog_id',
-                    'comment_item_id' => $_GET['readmore'],
-                    'clink' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
-                    'comment_echo' => TRUE,
-                    'comment_allow_ratings' => $data['blog_allow_ratings']
-                )
-            )->showComments();
-        }
-        if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
-            echo "<hr />  ".showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
-        }
+
+        echo $data['blog_allow_comments'] ? "<hr/>".$data['blog_show_comments'] : '';
+        echo $data['blog_allow_ratings'] ? "<hr/>".$data['blog_show_ratings'] : '';
         $str = ob_get_contents();
         ob_end_clean();
 

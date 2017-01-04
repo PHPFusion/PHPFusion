@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-
 class OpenGraphBlogs extends OpenGraph {
 	public static function ogBlog($blog_id = 0) {
 		$settings = fusion_get_settings();

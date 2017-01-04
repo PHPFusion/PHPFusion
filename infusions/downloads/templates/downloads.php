@@ -100,15 +100,9 @@ if (!function_exists('render_downloads')) {
                 echo "<p class='strong'>".$locale['download_1019']."</p>";
                 echo $data['download_description'];
             }
-            if (fusion_get_settings('comments_enabled') && $data['download_allow_comments']) {
-                showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'],
-                             INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id'], $data['download_allow_ratings']);
-            }
-            if (fusion_get_settings('ratings_enabled') && $data['download_allow_ratings']) {
-                echo "<a id='rate'>\n</a>\n"; // jumper target
-                showratings("D", $_GET['download_id'],
-                            INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
-            }
+
+            echo $data['download_show_comments'];
+            echo $data['download_allow_ratings'] ? "<a id='rate'>\n</a>\n".$data['download_show_ratings'] : '';
         } else {
             echo "<h3>".$info['download_title']."</h3>\n";
             if (!empty($info['download_cat_description'])) {

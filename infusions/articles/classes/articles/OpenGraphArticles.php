@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-
 class OpenGraphArticles extends OpenGraph {
 	public static function ogArticle($article_id = 0) {
 		$settings = fusion_get_settings();
