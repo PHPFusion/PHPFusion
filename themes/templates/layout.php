@@ -68,7 +68,7 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
 echo "</head>\n";
 
