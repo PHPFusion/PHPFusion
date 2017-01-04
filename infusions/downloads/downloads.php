@@ -33,6 +33,7 @@ if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
 
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
+require_once INFUSIONS."downloads/classes/OpenGraphDownloads.php";
 
 $dl_settings = get_settings("downloads");
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
@@ -180,6 +181,8 @@ if (isset($_GET['download_id'])) {
             }
             $data['download_link'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&download_id=".$data['download_id']."'>".$data['download_title']."</a>";
             $info['download_item'] = $data;
+
+	        \PHPFusion\OpenGraphDownloads::ogDownload($_GET['download_id']);
         } else {
             redirect(INFUSIONS."downloads/downloads.php");
         }

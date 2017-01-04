@@ -29,8 +29,8 @@ function replaceDir($output = "") {
         function replaceHTMLTags($m) {
             $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
             $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/") - 1);
-            $actualDepth = ($pathDepth ? str_repeat("../", ($pathDepth >=0) ? $pathDepth : 0 ) : '');
-            $replace = $m[1]."=".$m[2].($actualDepth).$m[3];
+            $actualDepth = ($pathDepth ? str_repeat("../", ($pathDepth >=0) ? $pathDepth : 0) : '');
+            $replace = $m[1]."=".$m[2]."../".($actualDepth).$m[3];
             return $replace;
         }
     }
