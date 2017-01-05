@@ -162,6 +162,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 );
             }
         }
+
+        $data['photo_show_comments'] = get_photo_comments($data);
+        $data['photo_show_ratings'] = get_photo_ratings($data);
+
         $info += $data;
         render_photo($info);
     } else {
@@ -277,6 +281,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 )
                             );
                         }
+
                         $info['item'][] = $data;
                     }
                 }
@@ -482,4 +487,28 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
     }
 
     return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
+}
+
+function get_photo_comments($data) {
+    $html = "";
+    if (fusion_get_settings('comments_enabled') && $data['photo_allow_comments']) {
+        ob_start();
+        showcomments("P", DB_PHOTOS, "photo_id", $data['photo_id'], FUSION_SELF."?photo_id=".$data['photo_id'], $data['photo_allow_ratings']);
+        $html = ob_get_contents();
+        ob_end_clean();
+    }
+
+    return (string)$html;
+}
+
+function get_photo_ratings($data) {
+    $html = "";
+    if (fusion_get_settings('ratings_enabled') && $data['photo_allow_ratings']) {
+        ob_start();
+        showratings("P", $data['photo_id'], FUSION_SELF."?photo_id=".$data['photo_id']);
+        $html = ob_get_contents();
+        ob_end_clean();
+    }
+
+    return (string)$html;
 }

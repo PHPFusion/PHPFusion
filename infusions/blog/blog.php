@@ -260,6 +260,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $info['blog_title'] = $item['blog_subject'];
             $info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 
+            $item['blog_show_comments'] = \PHPFusion\Blog\Functions::get_blog_comments($item);
+            $item['blog_show_ratings'] = \PHPFusion\Blog\Functions::get_blog_ratings($item);
+
 
             $info['blog_item'] = $item;
 

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: OpenGraphBlogs.php
+| Filename: OpenGraphDownloads.php
 | Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-
 
 class OpenGraphDownloads extends OpenGraph {
 	public static function ogDownload($download_id = 0) {

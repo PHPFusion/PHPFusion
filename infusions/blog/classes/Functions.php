@@ -166,4 +166,38 @@ class Functions {
 
         return FALSE;
     }
+
+    public static function get_blog_comments($data) {
+        $html = "";
+        if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
+            ob_start();
+            \PHPFusion\Feedback\Comments::getInstance(
+                array(
+                    'comment_item_type' => "B",
+                    'comment_db' => DB_BLOG,
+                    'comment_col' => 'blog_id',
+                    'comment_item_id' => $_GET['readmore'],
+                    'clink' => FUSION_SELF."?readmore=".$data['blog_id'],
+                    'comment_echo' => TRUE,
+                    'comment_allow_ratings' => $data['blog_allow_ratings']
+                )
+            )->showComments();
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
+    }
+
+    public static function get_blog_ratings($data) {
+        $html = "";
+        if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
+            ob_start();
+            echo showratings("B", $data['blog_id'], FUSION_SELF."?readmore=".$data['blog_id']);
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
+    }
 }
