@@ -481,11 +481,11 @@ class Errors {
                 e.preventDefault();
             });
             $('.change_status').hide();
-            $('a[href=#top]').click(function(){
+            $('#top').click(function(){
                 jQuery('html, body').animate({scrollTop:0}, 'slow');
                 return false;
             });
-            
+
             $('.move_error_log').bind('click', function() {
                 var form = $('#error_logform');
                 var data = {
@@ -510,7 +510,7 @@ class Errors {
                         }
                         else if (e.status == 'RMD') {
                              $('tr#rmd-'+e.fusion_error_id).remove();
-                             $('tr#err_rmd-'+e.fusion_error_id).remove();                             
+                             $('tr#err_rmd-'+e.fusion_error_id).remove();
                         }
                     },
                     error : function(e) {
