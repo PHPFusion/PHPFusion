@@ -378,6 +378,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
             $info['blog_rows'] = dbrows($result);
         }
+        \PHPFusion\OpenGraphBlogs::ogBlogCat($_GET['cat_id']);
     } // Front Page with Condition from Archive
     else {
 

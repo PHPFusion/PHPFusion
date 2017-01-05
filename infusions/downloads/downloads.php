@@ -265,6 +265,8 @@ if (isset($_GET['download_id'])) {
 
         }
 
+        \PHPFusion\OpenGraphDownloads::ogDownloadCat($_GET['cat_id']);
+
     } else {
 
         set_title($locale['download_1000']);

@@ -26,15 +26,33 @@ class OpenGraphDownloads extends OpenGraph {
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$download_id;
-			$info['keywords'] = $data['download_keywords'] ? $data['download_keywords'] : fusion_get_settings('keywords');
-			$info['title'] = $data['download_title'].' - '.fusion_get_settings('sitename');
+			$info['keywords'] = $data['download_keywords'] ? $data['download_keywords'] : $settings['keywords'];
+			$info['title'] = $data['download_title'].' - '.$settings['sitename'];
 			$info['description'] = $data['download_description_short'] ? fusion_first_words(strip_tags(html_entity_decode($data['download_description_short'])), 50) : $settings['description'];
 			$info['type'] = 'article';
-			if (!empty($data['blog_image_t1'])) {
+			if (!empty($data['download_image_thumb'])) {
 				$info['image'] = $settings['siteurl'].'infusions/downloads/images/' . $data['download_image_thumb'];
 			} else {
 				$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
 			}
+		}
+
+		OpenGraphDownloads::setValues($info);
+	}
+
+	public static function ogDownloadCat($cat_id = 0) {
+		$settings = fusion_get_settings();
+		$info = array();
+
+		$result = dbquery("SELECT `download_cat_name, `download_cat_description` FROM `" . DB_DOWNLOAD_CATS . "` WHERE `download_cat_id` = '$cat_id'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?cat_id='.$cat_id;
+			$info['keywords'] = $settings['keywords'];
+			$info['title'] = $data['download_cat_name'].' - '.$settings['sitename'];
+			$info['description'] = $data['download_cat_description'] ? fusion_first_words(strip_tags(html_entity_decode($data['download_cat_description'])), 50) : $settings['description'];
+			$info['type'] = 'website';
+			$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
 		}
 
 		OpenGraphDownloads::setValues($info);
