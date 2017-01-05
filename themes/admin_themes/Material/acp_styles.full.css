@@ -4078,3 +4078,6 @@ ol, ul {
 .forum.label > .detail {
   padding: .80em .60em;
 }
+.mce-content-body {
+  background-color: #fff !important;
+}
