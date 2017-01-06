@@ -675,7 +675,7 @@ main {
   position: fixed;
   right: 0;
   top: 100px;
-  z-index: 300;
+  z-index: 1;
   cursor: pointer;
   -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
