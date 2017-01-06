@@ -60,6 +60,34 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
+		case "FQ":
+            if (!db_exists(DB_FAQS)) {
+                redirect(BASEDIR."error.php?code=404");
+            }
+            $result = dbquery("
+			SELECT
+				ta.faq_question, ta.faq_answer, ta.faq_breaks, ta.faq_datestamp,
+				tu.user_id, tu.user_name, tu.user_status
+            FROM ".DB_FAQS." ta
+            LEFT JOIN ".DB_USERS." tu ON ta.faq_name=tu.user_id
+            WHERE ta.faq_id='".intval($item_id)."' AND ta.faq_status='1' AND ".groupaccess("ta.faq_visibility")."
+			LIMIT 0,1");
+            $res = FALSE;
+            if (dbrows($result)) {
+                $data = dbarray($result);
+				$res = TRUE;
+				$faq = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['faq_answer']));
+				if ($data['faq_breaks'] == "y") {
+					$faq = nl2br($faq);
+				}
+				echo "<strong>".$data['faq_question']."</strong><br />\n";
+				echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']))."</span>\n";
+				echo "<hr />".$faq."\n";
+            }
+            if (!$res) {
+                redirect($settings['opening_page']);
+            }
+            break;
 		case "A":
             if (!db_exists(DB_ARTICLES)) {
                 redirect(BASEDIR."error.php?code=404");
