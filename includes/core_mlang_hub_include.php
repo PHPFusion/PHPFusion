@@ -124,13 +124,12 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                                                          $matches) && multilang_table("FQ")
     ) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat_id
-									FROM ".DB_FAQ_CATS." fqc
-									LEFT JOIN ".DB_FAQS." fq ON fqc.faq_cat_id = fq.faq_cat_id
-									WHERE fq.faq_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
-									GROUP BY fq.faq_cat_id"));
-            if ($data['faq_cat_language']." != ".LANGUAGE) {
-                echo set_language($data['faq_cat_language']);
+            $data = dbarray(dbquery("SELECT fq.faq_id, fq.faq_cat_id, fq.faq_language
+									FROM ".DB_FAQS." fq
+									WHERE fq.faq_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
+									GROUP BY fq.faq_id"));
+            if ($data['faq_language']." != ".LANGUAGE) {
+                echo set_language($data['faq_language']);
             }
         }
     } // Forum threads
