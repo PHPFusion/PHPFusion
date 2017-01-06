@@ -29,7 +29,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
-$inf_image = "shout.png";
+$inf_image = "shouts.png";
 
 //Administration panel
 $inf_adminpanel[] = array(

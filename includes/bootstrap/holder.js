@@ -1,8 +1,8 @@
 /*!
 
 Holder - client side image placeholders
-Version 2.9.4+cabil
-© 2016 Ivan Malopinsky - http://imsky.co
+ Version 2.9.0+f2dkw
+ © 2015 Ivan Malopinsky - http://imsky.co
 
 Site:     http://holderjs.com
 Issues:   https://github.com/imsky/holder/issues
@@ -210,32 +210,36 @@ License:  MIT
 
   //requestAnimationFrame polyfill for older Firefox/Chrome versions
   if (!window.requestAnimationFrame) {
-    if (window.webkitRequestAnimationFrame && window.webkitCancelAnimationFrame) {
+      if (window.webkitRequestAnimationFrame) {
     //https://github.com/Financial-Times/polyfill-service/blob/master/polyfills/requestAnimationFrame/polyfill-webkit.js
     (function (global) {
+        // window.requestAnimationFrame
       global.requestAnimationFrame = function (callback) {
         return webkitRequestAnimationFrame(function () {
           callback(global.performance.now());
         });
       };
 
-      global.cancelAnimationFrame = global.webkitCancelAnimationFrame;
+        // window.cancelAnimationFrame
+        global.cancelAnimationFrame = webkitCancelAnimationFrame;
     }(window));
-    } else if (window.mozRequestAnimationFrame && window.mozCancelAnimationFrame) {
+      } else if (window.mozRequestAnimationFrame) {
       //https://github.com/Financial-Times/polyfill-service/blob/master/polyfills/requestAnimationFrame/polyfill-moz.js
     (function (global) {
+        // window.requestAnimationFrame
       global.requestAnimationFrame = function (callback) {
         return mozRequestAnimationFrame(function () {
           callback(global.performance.now());
         });
       };
 
-      global.cancelAnimationFrame = global.mozCancelAnimationFrame;
+        // window.cancelAnimationFrame
+        global.cancelAnimationFrame = mozCancelAnimationFrame;
     }(window));
     } else {
     (function (global) {
       global.requestAnimationFrame = function (callback) {
-        return global.setTimeout(callback, 1000 / 60);
+          return global.setTimeout(callback, 1000 / 60);
       };
 
       global.cancelAnimationFrame = global.clearTimeout;
@@ -314,7 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
 	Holder.js - client side image placeholders
-	(c) 2012-2016 Ivan Malopinsky - http://imsky.co
+         (c) 2012-2015 Ivan Malopinsky - http://imsky.co
 	*/
 
 	//Libraries and functions
@@ -413,8 +417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        engineSettings.stylesheets = [];
 	        engineSettings.svgXMLStylesheet = true;
-	        engineSettings.noFontFallback = !!options.noFontFallback;
-	        engineSettings.noBackgroundSize = !!options.noBackgroundSize;
+            engineSettings.noFontFallback = options.noFontFallback ? options.noFontFallback : false;
 
 	        stylenodes.forEach(function (styleNode) {
 	            if (styleNode.attributes.rel && styleNode.attributes.href && styleNode.attributes.rel.value == 'stylesheet') {
@@ -451,7 +454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 
-	            if (holderURL) {
+                if (holderURL != null) {
 	                var holderFlags = parseURL(holderURL, options);
 	                if (holderFlags) {
 	                    prepareDOMElement({
@@ -599,13 +602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        instanceOptions: instanceOptions
 	    };
 
-	    var firstQuestionMark = url.indexOf('?');
-	    var parts = [url];
-
-	    if (firstQuestionMark !== -1) {
-	        parts = [url.slice(0, firstQuestionMark), url.slice(firstQuestionMark + 1)];
-	    }
-
+        var parts = url.split('?');
 	    var basics = parts[0].split('/');
 
 	    holder.holderURL = url;
@@ -624,22 +621,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (parts.length === 2) {
 	        var options = querystring.parse(parts[1]);
-
-	        // Dimensions
-
-	        if (utils.truthy(options.ratio)) {
-	            holder.fluid = true;
-	            var ratioWidth = parseFloat(holder.dimensions.width.replace('%', ''));
-	            var ratioHeight = parseFloat(holder.dimensions.height.replace('%', ''));
-
-	            ratioHeight = Math.floor(100 * (ratioHeight / ratioWidth));
-	            ratioWidth = 100;
-
-	            holder.dimensions.width = ratioWidth + '%';
-	            holder.dimensions.height = ratioHeight + '%';
-	        }
-
-	        holder.auto = utils.truthy(options.auto);
 
 	        // Colors
 
@@ -689,6 +670,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        holder.nowrap = utils.truthy(options.nowrap);
 
 	        // Miscellaneous
+
+            holder.auto = utils.truthy(options.auto);
 
 	        holder.outline = utils.truthy(options.outline);
 
@@ -813,7 +796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        if (engineSettings.renderer == 'html') {
-	            el.style.backgroundColor = theme.bg;
+                el.style.backgroundColor = theme.background;
 	        } else {
 	            render(renderSettings);
 
@@ -845,7 +828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        setInitialDimensions(el);
 
 	        if (engineSettings.renderer == 'html') {
-	            el.style.backgroundColor = theme.bg;
+                el.style.backgroundColor = theme.background;
 	        } else {
 	            App.vars.resizableImages.push(el);
 	            updateResizableElements(el);
@@ -912,10 +895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //todo: add <object> canvas rendering
 	    if (mode == 'background') {
 	        el.style.backgroundImage = 'url(' + image + ')';
-
-	        if (!engineSettings.noBackgroundSize) {
-	            el.style.backgroundSize = scene.width + 'px ' + scene.height + 'px';
-	        }
+            el.style.backgroundSize = scene.width + 'px ' + scene.height + 'px';
 	    } else {
 	        if (el.nodeName.toLowerCase() === 'img') {
 	            DOM.setAttr(el, {
@@ -1829,24 +1809,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (val !== val) return 'nan';
 	  if (val && val.nodeType === 1) return 'element';
 
-	  if (isBuffer(val)) return 'buffer';
-
 	  val = val.valueOf
 	    ? val.valueOf()
-	    : Object.prototype.valueOf.apply(val);
+          : Object.prototype.valueOf.apply(val)
 
 	  return typeof val;
 	};
-
-	// code borrowed from https://github.com/feross/is-buffer/blob/master/index.js
-	function isBuffer(obj) {
-	  return !!(obj != null &&
-	    (obj._isBuffer || // For Safari 5-7 (missing Object.prototype.constructor)
-	      (obj.constructor &&
-	      typeof obj.constructor.isBuffer === 'function' &&
-	      obj.constructor.isBuffer(obj))
-	    ))
-	}
 
 
 /***/ },
@@ -2537,7 +2505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	module.exports = {
-	  'version': '2.9.4',
+        'version': '2.9.0',
 	  'svg_ns': 'http://www.w3.org/2000/svg'
 	};
 
@@ -2712,12 +2680,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		'use strict'
 
-		var i = 1
-		var doesEscape = true
-		var HTMLString
-		var attributeKey
-		var callback
-		var key
+        var i = 1,
+            doesEscape = true,
+            HTMLString,
+            attributeKey,
+            callback,
+            key
 
 
 		returnObject = returnObject || {}
@@ -2725,15 +2693,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		function createElement (sugarString) {
 
-			var tags = sugarString.match(/^[\w-]+/)
-			var element = {
-				tag: tags ? tags[0] : 'div',
-				attr: {},
-				children: []
-			}
-			var id = sugarString.match(/#([\w-]+)/)
-			var reference = sugarString.match(/\$([\w-]+)/)
-			var classNames = sugarString.match(/\.[\w-]+/g)
+            var tags = sugarString.match(/^\w+/),
+                element = {
+                    tag: tags ? tags[0] : 'div',
+                    attr: {},
+                    children: []
+                },
+                id = sugarString.match(/#([\w-]+)/),
+                reference = sugarString.match(/\$([\w-]+)/),
+                classNames = sugarString.match(/\.[\w-]+/g)
 
 
 			// Assign id if is set
@@ -2768,11 +2736,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		function escapeAttribute (string) {
-			return (string || string === 0) ?
-				String(string)
-					.replace(/&/g, '&amp;')
-					.replace(/"/g, '&quot;') :
-				''
+            return String(string)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
 		}
 
 		function escapeHTML (string) {
@@ -2875,7 +2841,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			for (key in array[0].attr)
 				if (array[0].attr.hasOwnProperty(key))
 					HTMLString += ' ' + key + '="' +
-						escapeAttribute(array[0].attr[key]) + '"'
+                        escapeAttribute(array[0].attr[key] || '') + '"'
 
 			HTMLString += '>'
 
@@ -2906,19 +2872,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/*!
 	 * escape-html
 	 * Copyright(c) 2012-2013 TJ Holowaychuk
-	 * Copyright(c) 2015 Andreas Lubbe
-	 * Copyright(c) 2015 Tiancheng "Timothy" Gu
 	 * MIT Licensed
 	 */
-
-	'use strict';
-
-	/**
-	 * Module variables.
-	 * @private
-	 */
-
-	var matchHtmlRegExp = /["'&<>]/;
 
 	/**
 	 * Module exports.
@@ -2930,56 +2885,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Escape special characters in the given string of html.
 	 *
-	 * @param  {string} string The string to escape for inserting into HTML
+     * @param  {string} str The string to escape for inserting into HTML
 	 * @return {string}
 	 * @public
 	 */
 
-	function escapeHtml(string) {
-	  var str = '' + string;
-	  var match = matchHtmlRegExp.exec(str);
-
-	  if (!match) {
-	    return str;
-	  }
-
-	  var escape;
-	  var html = '';
-	  var index = 0;
-	  var lastIndex = 0;
-
-	  for (index = match.index; index < str.length; index++) {
-	    switch (str.charCodeAt(index)) {
-	      case 34: // "
-	        escape = '&quot;';
-	        break;
-	      case 38: // &
-	        escape = '&amp;';
-	        break;
-	      case 39: // '
-	        escape = '&#39;';
-	        break;
-	      case 60: // <
-	        escape = '&lt;';
-	        break;
-	      case 62: // >
-	        escape = '&gt;';
-	        break;
-	      default:
-	        continue;
-	    }
-
-	    if (lastIndex !== index) {
-	      html += str.substring(lastIndex, index);
-	    }
-
-	    lastIndex = index + 1;
-	    html += escape;
-	  }
-
-	  return lastIndex !== index
-	    ? html + str.substring(lastIndex, index)
-	    : html;
+    function escapeHtml(html) {
+        return String(html)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
 	}
 
 

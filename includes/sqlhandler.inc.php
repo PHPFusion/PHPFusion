@@ -162,12 +162,15 @@ class SqlHandler {
 // Hierarchy Type 1 - key to index method
 
 /**
- * Hierarchy Id to Category Output
+ * Hierarchy ID to Category Output
  * Returns cat-id relationships
- * @param      $db
- * @param      $id_col
- * @param      $cat_col
- * @param bool $filter
+ *
+ * @param        $db            - Table Name
+ * @param        $id_col        - ID column
+ * @param        $cat_col       - Category Column
+ * @param bool   $filter        - Conditions
+ * @param string $query_replace - Replace the entire query
+ *
  * @return array
  */
 function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {

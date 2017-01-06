@@ -129,7 +129,7 @@ class Members_Admin {
             redirect(self::$exit_link);
         }
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['400']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['ME_400']]);
 
         if (isset($_GET['ref'])) {
             switch ($_GET['ref']) {

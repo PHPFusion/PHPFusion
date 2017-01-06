@@ -142,12 +142,28 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     if ($options['password_strength'] == TRUE) {
         $locale = fusion_get_locale("password_strength", LOCALE.LOCALESET."global.php");
-        $locale_path = DYNAMICS."assets/password/lang/$locale.js";
-        if (!empty($locale) && file_exists($locale_path)) {
-            \PHPFusion\OutputHandler::addToFooter("<script src='$locale_path'></script>");
+        $path = DYNAMICS."assets/password/lang/$locale.js";
+        if (file_exists($path)) {
+            $path = DYNAMICS."assets/password/lang/$locale.js";
+        } else {
+            $path = DYNAMICS."assets/password/lang/en.js";
         }
 
-        add_to_footer("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
+        PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
+        PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
+
+        PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
+            jQuery(document).ready(function() {
+                var options = {};
+                options.ui = {
+                    showVerdictsInsideProgressBar: true,
+                    viewports: {
+                        progress: ".pwstrength_viewport_progress"
+                    }
+                };
+                $("#'.$options['input_id'].'").pwstrength(options);
+            });
+        ').'</script>');
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";

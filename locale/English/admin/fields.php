@@ -64,6 +64,7 @@ $locale['fields_0433'] = "Category Order";
 $locale['fields_0434'] = "Primary Table (%s)";
 $locale['fields_0435'] = "Primary Table User Column";
 $locale['fields_0436'] = "Icon Class";
+$locale['fields_0437'] = "icon for tabs";
 
 $locale['fields_0450'] = "Select Category";
 $locale['fields_0451'] = "Field Title";
@@ -101,6 +102,7 @@ $locale['fields_0483'] = "Field Log";
 $locale['fields_0484'] = "Field Order";
 $locale['fields_0485'] = "Field Registration";
 $locale['fields_0488'] = "Save Field";
+$locale['fields_0489'] = "Images Only";
 
 $locale['fields_0490'] = "Bytes (bytes)";
 $locale['fields_0491'] = "KB (Kilobytes)";

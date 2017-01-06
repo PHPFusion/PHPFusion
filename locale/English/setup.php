@@ -305,6 +305,7 @@ $locale['setup_3323'] = "Unsolved Questions";
 $locale['setup_3324'] = "Start a New Thread";
 $locale['setup_3325'] = "Latest Articles";
 $locale['setup_3326'] = "Latest Downloads"; 
+$locale['setup_3327'] = "Submit FAQ";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";

@@ -37,6 +37,7 @@ class ArticlesView extends Articles {
         } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_ArticlesCatInfo($_GET['cat_id']);
             display_main_articles($info);
+	        OpenGraphArticles::ogArticleCat($_GET['cat_id']);
 
 		// Display Overview
         } else {

@@ -5,27 +5,6 @@
  * Copyright (c) 2013 Alejandro Blanco
  * Dual licensed under the MIT and GPL licenses.
  */
-
-jQuery(document).ready(function() {
-  "use strict";
-  var options = {};
-  options.ui = {
-    container: "#pwd-container",
-    showVerdictsInsideProgressBar: true,
-    viewports: {
-      progress: ".pwstrength_viewport_progress"
-    }
-  };
-  options.common = {
-    debug: true,
-    onLoad: function() {
-      $('#messages').text(locale['start-typing']);
-    }
-  };
-  $(':password').pwstrength(options);
-});
-
-
 (function (jQuery) {
 
 var rulesEngine = {};

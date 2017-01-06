@@ -1,5 +1,4 @@
 var locale = new Array();
-locale['start-typing'] = 'Start typing password';
 locale['wordLength'] = 'Your password is too short';
 locale['wordNotEmail'] = 'Do not use your email as your password';
 locale['wordSimilarToUsername'] = 'Your password cannot contain your username';
