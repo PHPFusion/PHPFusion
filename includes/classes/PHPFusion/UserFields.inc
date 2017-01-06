@@ -657,7 +657,7 @@ class UserFields extends QuantumFields {
                 $this->info['admin'] = self::renderAdminOptions();
 
                 $this->info['buttons'][] = array(
-                    'link' => ADMIN."members.php".$aidlink."&amp;step=log&amp;user_id=".$this->userData['user_id'],
+                    'link' => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id'],
                     'name' => $locale['u054']
                 );
 
