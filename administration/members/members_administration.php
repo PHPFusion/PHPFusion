@@ -134,7 +134,7 @@ class Members_Admin {
         if (isset($_GET['ref'])) {
             switch ($_GET['ref']) {
                 case 'log': // Show Logs
-                    if (self::$is_admin) {
+                    if (!self::$is_admin) {
                         display_suspend_log(self::$user_id, "all", self::$rowstart);
                     }
                     break;
