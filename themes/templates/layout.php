@@ -58,7 +58,7 @@ if (fusion_get_settings('fontawesome')) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
+    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 
 echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
