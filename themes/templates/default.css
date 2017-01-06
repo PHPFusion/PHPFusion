@@ -113,6 +113,21 @@
     margin: 0 auto;
 }
 
+/**
+Grids
+ */
+/** adding .flexbox class to .row will equalize all child column height */
+.row.flexbox {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+}
+
+/** adding .flexbox and .auto_width to .row will euqalize all child column height AND clumn width **/
+.row.flexbox.auto_width > div {
+    flex: 1;
+}
 /** Need to used inside a block type div and height width specify **/
 .center-y {
     position: relative;
