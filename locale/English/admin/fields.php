@@ -101,6 +101,7 @@ $locale['fields_0483'] = "Field Log";
 $locale['fields_0484'] = "Field Order";
 $locale['fields_0485'] = "Field Registration";
 $locale['fields_0488'] = "Save Field";
+$locale['fields_0489'] = "Images Only";
 
 $locale['fields_0490'] = "Bytes (bytes)";
 $locale['fields_0491'] = "KB (Kilobytes)";
