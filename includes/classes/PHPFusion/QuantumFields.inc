@@ -1731,7 +1731,7 @@ class QuantumFields extends \SqlHandler {
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
         $html .= form_text('field_cat_class', $this->locale['fields_0436'], $this->field_cat_data['field_cat_class'],
             array(
-                'placeholder' => 'icon for tabs',
+                'placeholder' => $this->locale['fields_0437'],
                 "inline"      => FALSE
             ));
         $html .= form_hidden('add_cat', '', 'add_cat');
