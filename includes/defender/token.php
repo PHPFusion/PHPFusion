@@ -100,13 +100,9 @@ class Token extends \defender {
         if ($error) {
             self::$tokenIsValid = FALSE;
             self::stop();
-            print_p($error);
-
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $error);
-            } else {
-                notify($error);
             }
         }
     }
