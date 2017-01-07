@@ -95,9 +95,9 @@ if (!defined('BASEDIR')) {
 
 require_once __DIR__.'/core_functions_include.php';
 require_once __DIR__.'/core_constants_include.php';
-require_once __DIR__."/notify/notify.inc.php";
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
+require_once __DIR__."/notify.inc";
 //require_once __DIR__.'/theme_functions_include.php';
 //require_once __DIR__.'/db_handlers/all_functions_include.php';

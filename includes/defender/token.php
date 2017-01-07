@@ -64,8 +64,8 @@ class Token extends \defender {
                 // Check if the token exists in storage
             } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
-            } elseif (!self::verify_token()) {
-                $error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
+            } elseif ($error = self::verify_token()) {
+                //$error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
             }
 
             // If you allow repost, token will be valid since it is not being consumed.
@@ -98,11 +98,15 @@ class Token extends \defender {
         }
 
         if ($error) {
-            self::$tokenIsValid = TRUE;
+            self::$tokenIsValid = FALSE;
             self::stop();
+            print_p($error);
+
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $error);
+            } else {
+                notify($error);
             }
         }
     }
@@ -123,9 +127,11 @@ class Token extends \defender {
         $error = FALSE;
         $settings = fusion_get_settings();
         $token_data = explode('.', stripinput($_POST['fusion_token']));
-        if (!$post_time) {
-            $post_time = $settings['flood_interval'];
-        }
+
+        //if (!$post_time) {
+        //  $post_time = $settings['flood_interval'];
+        //}
+
         // check if the token has the correct format
         if (count($token_data) == 3) {
             list($tuser_id, $token_time, $hash) = $token_data;
@@ -142,8 +148,12 @@ class Token extends \defender {
             } elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
                 $error = $locale['token_error_7'];
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-            } elseif ((TIME - $token_time) < $post_time && !iADMIN) {
-                $error = $locale['token_error_6'];
+                /*
+                 * Disable this because we have flood_control. Either implement flood control here for checks, and increment API altogether
+                 * or remove this.
+                 */
+                // } elseif ((TIME - $token_time) < $post_time && !iADMIN) {
+                // $error = $locale['token_error_6'];
             }
         } else {
             // token format is incorrect
@@ -151,12 +161,12 @@ class Token extends \defender {
         }
 
         if ($error) {
-            return FALSE;
+            return $error;
         } elseif (self::$debug) {
             addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
         }
 
-        return TRUE;
+        return FALSE;
     }
 
     /**
