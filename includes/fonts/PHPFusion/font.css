@@ -18,15 +18,8 @@
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-    /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 26px;
-    margin-top: -4px;
-    display: block;
-    margin-bottom: -20px;
-    margin-right: 9px;
-    text-decoration: none;
 }
 
 .php-fusion:before {
