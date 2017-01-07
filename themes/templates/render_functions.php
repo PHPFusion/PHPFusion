@@ -285,7 +285,7 @@ if (!function_exists("render_comments_form")) {
             }
             $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
 
-            if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
+            if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings'] && $options['comment_allow_vote']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(
                                                   'input_id' => $prefix.'-comment_rating',

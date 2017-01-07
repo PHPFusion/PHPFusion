@@ -423,9 +423,14 @@ class defender {
     /**
      * Send an Unsafe Signal acorss all PHP-Fusion Components
      * This will automatically halt on all important execution without exiting.
+     *
+     * @param $notice - Show custom notice message on validation errors
      */
-    static function stop() {
+    static function stop($notice = '') {
         if (!defined('FUSION_NULL')) {
+            if ($notice) {
+                echo alert($notice);
+            }
             addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
             define('FUSION_NULL', TRUE);
             if (self::$debug) {
@@ -438,7 +443,6 @@ class defender {
     /*
      * Highlight the form field as error
      */
-
     public static function setInputError($input_name) {
         self::$input_errors[$input_name] = TRUE;
     }

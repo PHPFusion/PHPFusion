@@ -418,7 +418,7 @@ abstract class News extends NewsServer {
 
             set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'news/news.php',
                                'title' => SiteLinks::get_current_SiteLinks("", "link_name")
                            ]);
@@ -463,7 +463,7 @@ abstract class News extends NewsServer {
             if ($max_news_rows) {
                 // apply filter.
                 $result = dbquery($this->get_NewsQuery( array('condition' => 'news_cat=0')));
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                BreadCrumbs::getInstance()->addBreadCrumb([
                                    'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
                                    'title' => self::$locale['news_0006']
                                ]);
