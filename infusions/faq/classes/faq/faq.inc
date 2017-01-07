@@ -70,7 +70,7 @@ abstract class Faq extends FaqServer {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT faq_id, faq_question, faq_cat_id FROM ".DB_FAQS." WHERE faq_id='".$id."' AND faq_status='1' AND ".groupaccess("faq_visibility").""));
                 $crumb = array(
-                    "link" => INFUSIONS."faq/faq.php?cat_id=".$_name['cat_id'],
+                    "link" => INFUSIONS."faq/faq.php?cat_id=".$_name['faq_id'],
                     "title" => $_name['faq_question']
                 );
                 if (isset($index[get_parent($index, $id)])) {
