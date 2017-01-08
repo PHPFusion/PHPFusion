@@ -434,7 +434,7 @@ class Atom {
             'button_id' => 'save_theme',
             'static' => 1
         ));
-        echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
+        echo "<div class='pull-left m-r-20'><i class='fa fa-magic fa-3x'></i></div>\n";
         echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
         echo closemodal();
         // how come my multiple preset missing now?
