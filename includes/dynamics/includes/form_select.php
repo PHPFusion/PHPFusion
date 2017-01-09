@@ -23,12 +23,14 @@
  * Note on Tags Support
  * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array(TRUE,'2','3');
  * For tagging - set both tags and multiple to TRUE
+ *
  * @param       $label
  * @param       $input_name
  * @param       $options ['input_id']
  * @param array $options
  * @param bool  $input_value
  * @param array $options
+ *
  * @return string
  *
  * @package dynamics/select2
@@ -43,30 +45,30 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
-        'options' => array(),
-        'required' => FALSE,
-        'regex' => '',
-        'input_id' => $input_name,
-        'placeholder' => $locale['choose'],
-        'deactivate' => FALSE,
-        'safemode' => FALSE,
-        'allowclear' => FALSE,
-        'multiple' => FALSE,
-        'width' => '',
-        'inner_width' => '250px',
-        'keyflip' => FALSE,
-        'tags' => FALSE,
-        'jsonmode' => FALSE,
-        'chainable' => FALSE,
-        'max_select' => FALSE,
-        'error_text' => $locale['error_input_default'],
-        'class' => '',
-        'inline' => FALSE,
-        'tip' => '',
-        'ext_tip' => '',
-        'delimiter' => ',',
+        'options'        => array(),
+        'required'       => FALSE,
+        'regex'          => '',
+        'input_id'       => $input_name,
+        'placeholder'    => $locale['choose'],
+        'deactivate'     => FALSE,
+        'safemode'       => FALSE,
+        'allowclear'     => FALSE,
+        'multiple'       => FALSE,
+        'width'          => '',
+        'inner_width'    => '250px',
+        'keyflip'        => FALSE,
+        'tags'           => FALSE,
+        'jsonmode'       => FALSE,
+        'chainable'      => FALSE,
+        'max_select'     => FALSE,
+        'error_text'     => $locale['error_input_default'],
+        'class'          => '',
+        'inline'         => FALSE,
+        'tip'            => '',
+        'ext_tip'        => '',
+        'delimiter'      => ',',
         'callback_check' => '',
-        "stacked" => "",
+        "stacked"        => "",
     );
 
     $options += $default_options;
@@ -153,17 +155,17 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
     $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'title' => trim($title, '[]'),
-                                     'id' => $options['input_id'],
-                                     'type' => 'dropdown',
-                                     'regex' => $options['regex'],
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text'],
-                                     'callback_check' => $options['callback_check'],
-                                     'delimiter' => $options['delimiter'],
-                                 ));
+        'input_name'     => $input_name,
+        'title'          => trim($title, '[]'),
+        'id'             => $options['input_id'],
+        'type'           => 'dropdown',
+        'regex'          => $options['regex'],
+        'required'       => $options['required'],
+        'safemode'       => $options['safemode'],
+        'error_text'     => $options['error_text'],
+        'callback_check' => $options['callback_check'],
+        'delimiter'      => $options['delimiter'],
+    ));
     // Initialize Select2
     // Select 2 Multiple requires hidden DOM.
     if ($options['jsonmode'] == FALSE) {
@@ -225,16 +227,19 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $encoded = json_encode($select_array);
         add_to_jquery("$('#".$options['input_id']."').select2('data', $encoded);"); */
     }
+
     // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
     return $html;
 }
 
 /**
  * Selector for registered user
+ *
  * @param        $input_name
  * @param string $label
  * @param bool   $input_value - user id
  * @param array  $options
+ *
  * @return string
  */
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
@@ -242,28 +247,28 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
-        'required' => FALSE,
-        'regex' => '',
-        'input_id' => $input_name,
-        'placeholder' => $locale['sel_user'],
-        'deactivate' => FALSE,
-        'safemode' => FALSE,
-        'allowclear' => FALSE,
-        'multiple' => FALSE,
-        'inner_width' => '250px',
-        'width' => '100%',
-        'keyflip' => FALSE,
-        'tags' => FALSE,
-        'jsonmode' => FALSE,
-        'chainable' => FALSE,
-        'max_select' => 1,
-        'error_text' => '',
-        'class' => '',
-        'inline' => FALSE,
-        'tip' => '',
-        'delimiter' => ',',
+        'required'       => FALSE,
+        'regex'          => '',
+        'input_id'       => $input_name,
+        'placeholder'    => $locale['sel_user'],
+        'deactivate'     => FALSE,
+        'safemode'       => FALSE,
+        'allowclear'     => FALSE,
+        'multiple'       => FALSE,
+        'inner_width'    => '250px',
+        'width'          => '100%',
+        'keyflip'        => FALSE,
+        'tags'           => FALSE,
+        'jsonmode'       => FALSE,
+        'chainable'      => FALSE,
+        'max_select'     => 1,
+        'error_text'     => '',
+        'class'          => '',
+        'inline'         => FALSE,
+        'tip'            => '',
+        'delimiter'      => ',',
         'callback_check' => '',
-        'file' => '',
+        'file'           => '',
     );
     $options += $default_options;
     if (!$options['width']) {
@@ -306,14 +311,14 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         $encoded = json_encode(array());
     }
     defender::getInstance()->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'title' => $title,
-                                     'id' => $options['input_id'],
-                                     'type' => 'dropdown',
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text']
-                                 ));
+        'input_name' => $input_name,
+        'title'      => $title,
+        'id'         => $options['input_id'],
+        'type'       => 'dropdown',
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text']
+    ));
     \PHPFusion\OutputHandler::addToJQuery("
 		function avatar(item) {
 			if(!item.id) {return item.text;}
@@ -359,10 +364,10 @@ function user_search($user_id) {
             $user_name = $udata['user_name'];
             $user_level = getuserlevel($udata['user_level']);
             $user_opts[] = array(
-                'id' => "$user_id",
-                'text' => "$user_name",
+                'id'     => "$user_id",
+                'text'   => "$user_name",
                 'avatar' => "$user_avatar",
-                "level" => "$user_level"
+                "level"  => "$user_level"
             );
         }
         if (!isset($user_opts)) {
@@ -377,56 +382,58 @@ function user_search($user_id) {
 /**
  * Select2 hierarchy
  * Returns a full hierarchy nested dropdown.
+ *
  * @param        $input_name
  * @param string $label
  * @param bool   $input_value
  * @param array  $options
- * @param        $db - your db
+ * @param        $db       - your db
  * @param        $name_col - the option text to show
- * @param        $id_col - unique id
- * @param        $cat_col - parent id
+ * @param        $id_col   - unique id
+ * @param        $cat_col  - parent id
  *                         ## The rest of the Params are used by the function itself -- no need to handle ##
- * @param bool   $self_id - not required
- * @param bool   $id - not required
- * @param bool   $level - not required
- * @param bool   $index - not required
- * @param bool   $data - not required
+ * @param bool   $self_id  - not required
+ * @param bool   $id       - not required
+ * @param bool   $level    - not required
+ * @param bool   $index    - not required
+ * @param bool   $data     - not required
+ *
  * @return string
  */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
-    global $defender, $locale;
-
+    $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
-        'required' => FALSE,
-        'regex' => '',
-        'input_id' => $input_name,
-        'placeholder' => $locale['choose'],
-        'deactivate' => FALSE,
-        'safemode' => FALSE,
-        'allowclear' => FALSE,
-        'multiple' => FALSE,
-        'width' => '',
-        'inner_width' => '250px',
-        'keyflip' => FALSE,
-        'tags' => FALSE,
-        'jsonmode' => FALSE,
-        'chainable' => FALSE,
-        'max_select' => FALSE,
-        'error_text' => $locale['error_input_default'],
-        'class' => '',
-        'inline' => FALSE,
-        'tip' => '',
-        'delimiter' => ',',
-        'callback_check' => '',
-        'file' => '',
-        'parent_value' => $locale['root'],
+        'required'        => FALSE,
+        'regex'           => '',
+        'input_id'        => $input_name,
+        'placeholder'     => $locale['choose'],
+        'deactivate'      => FALSE,
+        'safemode'        => FALSE,
+        'allowclear'      => FALSE,
+        'multiple'        => FALSE,
+        'width'           => '',
+        'inner_width'     => '250px',
+        'keyflip'         => FALSE,
+        'tags'            => FALSE,
+        'jsonmode'        => FALSE,
+        'chainable'       => FALSE,
+        'max_select'      => FALSE,
+        'error_text'      => $locale['error_input_default'],
+        'class'           => '',
+        'inline'          => FALSE,
+        'tip'             => '',
+        'delimiter'       => ',',
+        'callback_check'  => '',
+        'file'            => '',
+        'parent_value'    => $locale['root'],
         'add_parent_opts' => FALSE,
-        'disable_opts' => '',
-        'hide_disabled' => FALSE,
-        'no_root' => FALSE,
-        'show_current' => FALSE,
-        'query' => '',
+        'disable_opts'    => '',
+        'hide_disabled'   => FALSE,
+        'no_root'         => FALSE,
+        'show_current'    => FALSE,
+        'query'           => '',
+        'full_query'      => '',
     );
     $options += $default_options;
     $options['input_id'] = trim($options['input_id'], "[]");
@@ -454,11 +461,11 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             $index[$id] = array('0' => $locale['no_opts']);
         }
 
-        $error_class = "";
-        if ($defender->inputHasError($input_name)) {
+        $error_class = '';
+        if (\defender::inputHasError($input_name)) {
             $error_class = "has-error ";
             if (!empty($options['error_text'])) {
-                $new_error_text = $defender->getErrorText($input_name);
+                $new_error_text = \defender::getErrorText($input_name);
                 if (!empty($new_error_text)) {
                     $options['error_text'] = $new_error_text;
                 }
@@ -478,7 +485,6 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$allowclear
 		});
 		");
-
         if (is_array($input_value) && $options['multiple']) { // stores as value;
             $vals = '';
             foreach ($input_value as $arr => $val) {
@@ -498,53 +504,78 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             }
             $html .= ($options['add_parent_opts'] == TRUE) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
         }
-        $index = dbquery_tree($db, $id_col, $cat_col, $options['query']);
-        $data = dbquery_tree_data($db, $id_col, $cat_col, $options['query']);
+
+        $index = dbquery_tree($db, $id_col, $cat_col, $options['query'], $options['full_query']);
+        $data = dropdown_select($db, $id_col, $name_col, $cat_col, implode(',', flatten_array($index)), $options['query'], $options['full_query']);
+
     }
+
     if (!$id) {
         $id = 0;
     }
+
     if (isset($index[$id])) {
         foreach ($index[$id] as $key => $value) {
+            // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
             $html = &$html;
             $name = $data[$value][$name_col];
+            //print_p($data[$value]);
+
             $name = PHPFusion\QuantumFields::parse_label($name);
             $select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
             $disabled = $disable_opts && in_array($value, $disable_opts) ? TRUE : FALSE;
             $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
             // do a disable for filter_opts item.
-            $html .= (!$hide) ? "<option value='$value' ".$select." ".($disable_opts && in_array($value,
-                                                                                                 $disable_opts) ? 'disabled' : '')." >$opt_pattern $name ".($options['show_current'] && $self_id == $value ? '(Current Item)' : '')."</option>\n" : '';
+            $html .= (!$hide) ? "<option value='$value' ".$select." ".($disable_opts && in_array($value, $disable_opts) ? 'disabled' : '')." >$opt_pattern $name ".($options['show_current'] && $self_id == $value ? '(Current Item)' : '')."</option>\n" : '';
             if (isset($index[$value]) && (!$hide)) {
-                $html .= form_select_tree($input_name, $label, $input_value, $options, $db, $name_col, $id_col,
-                                          $cat_col, $self_id, $value, $level + TRUE, $index, $data);
+                $html .= form_select_tree($input_name, $label, $input_value, $options, $db, $name_col, $id_col, $cat_col, $self_id, $value, $level + TRUE, $index, $data);
             }
         }
     }
     if (!$level) {
         $html = &$html;
         $html .= "</select>\n";
-        $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+        $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';
         $html .= "</div>\n";
         if ($options['required']) {
             $html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck
         }
         $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-        $defender->add_field_session(array(
-                                         'input_name' => $input_name,
-                                         'title' => trim($title, '[]'),
-                                         'id' => $options['input_id'],
-                                         'type' => 'dropdown',
-                                         'regex' => $options['regex'],
-                                         'required' => $options['required'],
-                                         'safemode' => $options['safemode'],
-                                         'error_text' => $options['error_text'],
-                                         'callback_check' => $options['callback_check'],
-                                         'delimiter' => $options['delimiter'],
-                                     ));
+        \defender::add_field_session(
+            array(
+                'input_name'     => $input_name,
+                'title'          => trim($title, '[]'),
+                'id'             => $options['input_id'],
+                'type'           => 'dropdown',
+                'regex'          => $options['regex'],
+                'required'       => $options['required'],
+                'safemode'       => $options['safemode'],
+                'error_text'     => $options['error_text'],
+                'callback_check' => $options['callback_check'],
+                'delimiter'      => $options['delimiter'],
+            )
+        );
     }
 
     return $html;
+}
+
+/*
+ * Optimized performance by adding a self param to implode to fetch only certain rows
+ */
+function dropdown_select($db, $id_col, $name_col, $cat_col, $index_values, $filter = '', $query_replace = '') {
+    $data = array();
+    $query = "SELECT $id_col, $name_col, $cat_col FROM ".$db." ".($filter ? $filter." AND " : 'WHERE')." $id_col IN ($index_values) ORDER BY $name_col ASC";
+    if (!empty($query_replace)) {
+        $query = $query_replace;
+    }
+    $result = dbquery($query);
+    while ($row = dbarray($result)) {
+        $id = $row[$id_col];
+        $data[$id] = $row;
+    }
+
+    return $data;
 }
