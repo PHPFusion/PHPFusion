@@ -428,11 +428,15 @@ class defender {
      */
     static function stop($notice = '') {
         if (!defined('FUSION_NULL')) {
+            define('FUSION_NULL', TRUE);
             if ($notice) {
-                echo alert($notice);
+                if (function_exists('alert')) {
+                    echo alert($notice);
+                } else {
+                    addNotice("danger", $notice);
+                }
             }
             addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
-            define('FUSION_NULL', TRUE);
             if (self::$debug) {
                 debug_print_backtrace();
                 define("STOP_REDIRECT", TRUE);

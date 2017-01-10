@@ -99,7 +99,7 @@ class Token extends \defender {
 
         if ($error) {
             self::$tokenIsValid = FALSE;
-            self::stop();
+            self::stop($error);
             if (self::$debug === TRUE) {
                 addNotice('danger', $_SERVER['PHP_SELF']);
                 addNotice('danger', $error);
@@ -117,17 +117,14 @@ class Token extends \defender {
      * @return bool
      */
     private static function verify_token($post_time = 0) {
-
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $error = FALSE;
         $settings = fusion_get_settings();
         $token_data = explode('.', stripinput($_POST['fusion_token']));
-
         //if (!$post_time) {
         //  $post_time = $settings['flood_interval'];
         //}
-
         // check if the token has the correct format
         if (count($token_data) == 3) {
             list($tuser_id, $token_time, $hash) = $token_data;
@@ -141,7 +138,7 @@ class Token extends \defender {
             } elseif (!isnum($token_time)) {
                 $error = $locale['token_error_5'];
                 // check if the hash is valid
-            } elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
+            } elseif ($hash !== hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
                 $error = $locale['token_error_7'];
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
                 /*
@@ -183,7 +180,6 @@ class Token extends \defender {
         if ($user_id == 0) $max_tokens = 1;
 
         // Only generate new tokens when token is less than max allowed tokens
-
         if (!isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) || count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) < $max_tokens) {
 
             $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
@@ -192,14 +188,11 @@ class Token extends \defender {
             $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
             $key = $user_id.$token_time.$form_id.$secret_key;
             $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
-
             // generate a new token
-            $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
+            $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
             // Store into session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
-
         } else {
-
             // randomize token output
             $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
             $ring = array_rand($token_ring, 1);
