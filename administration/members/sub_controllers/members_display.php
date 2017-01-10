@@ -156,7 +156,7 @@ class Members_Display extends Members_Admin {
                 $search_cond = 'AND (';
                 $i = 0;
                 foreach (array_values($field_to_search) as $key) {
-                    $search_cond .= "$key=:text_$i".($i == count($field_to_search) - 1 ? '' : ' OR ');
+                    $search_cond .= "$key LIKE :text_$i".($i == count($field_to_search) - 1 ? '' : ' OR ');
                     $search_bind[':text_'.$i] = '%'.$search_text.'%';
                     $i++;
                 }
