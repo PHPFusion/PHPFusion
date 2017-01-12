@@ -99,7 +99,7 @@ if (!function_exists("render_comments")) {
          * Get ratings information
          */
         $ratings_html = '';
-        if (!empty($c_info['ratings_count'])) {
+        if (!empty($c_info['ratings_count']) && fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
             $ratings_html = "<ul class='well clearfix p-15'>\n";
             $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
             for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
@@ -148,11 +148,12 @@ if (!function_exists("render_comments")) {
 
                     foreach ($c_data[$index] as $comments_id => $data) {
                         $comments_html .= "<!---comment-".$data['comment_id']."--->\n<li id='c".$data['comment_id']."' class='m-b-15'>\n";
-                        $comments_html .= "<div class='pull-left text-center m-r-15'>\n";
-                        $comments_html .= $data['user_avatar'];
-                        $comments_html .= "</div>\n";
+                        if (fusion_get_settings('comments_avatar')) {
+                            $comments_html .= "<div class='pull-left text-center m-r-15'>\n";
+                            $comments_html .= $data['user_avatar'];
+                            $comments_html .= "</div>\n";
+                        }
                         $comments_html .= "<div class='overflow-hide'>\n";
-
                         $comments_html .= "<div class='comment_name display-inline-block m-r-10'>\n";
                         $comments_html .= $data['comment_name'];
                         $comments_html .= "<span class='comment_status text-lighter'>".$data['user']['groups']."</span> <small class='comment_date'>".$data['comment_datestamp']."</small>";
@@ -199,7 +200,7 @@ if (!function_exists("render_comments")) {
                 }
             }
 
-            $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
+            $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class='text-left'>".$c_info['c_makepagenav']."</div>\n" : "";
             $comments_html .= "<ul class='comments clearfix'>\n";
             $comments_html .= display_all_comments($c_data, 0, $options);
             $comments_html .= $c_makepagenav;
@@ -344,12 +345,14 @@ if (!function_exists("render_comments_form")) {
         // Comments form
         $html = "<div class='comments-form-panel'>\n";
         $html .= "<div class='comments-form-header'>\n";
-        $html .= ($options['comment_form_title'] ? $options['comment_form_title'] : "<h4><i class='fa fa-commenting-o m-r-15'></i>".$locale['c111']."</h4>");
+        $html .= ($options['comment_form_title'] ? $options['comment_form_title'] : "<h4>".$locale['c111']."</h4>");
         $html .= "</div>\n";
         $html .= "<div class='comments-form'>\n";
-        $html .= "<div class='pull-left m-r-15'>\n";
-        $html .= display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
-        $html .= "</div>\n";
+        if (fusion_get_settings('comments_avatar')) {
+            $html .= "<div class='pull-left m-r-15'>\n";
+            $html .= display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+            $html .= "</div>\n";
+        }
         $html .= "<div class='overflow-hide p-5'>\n";
         $html .= "<a id='".$prefix."_edit_comment' name='edit_comment'></a>\n";
         $html .= $comments_form;
