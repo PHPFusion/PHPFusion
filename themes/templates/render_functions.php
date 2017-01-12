@@ -250,7 +250,7 @@ if (!function_exists("render_comments_form")) {
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
         $locale = fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
-        $prefix = $comment_type."-".$comment_item_id;
+        $prefix = $options['comment_key'];
         $edata = [
             'comment_cat' => 0,
             'comment_subject' => '',
@@ -347,7 +347,7 @@ if (!function_exists("render_comments_form")) {
         // Comments form
         $html = "<div class='comments-form-panel'>\n";
         $html .= "<div class='comments-form-header'>\n";
-        $html .= ($options['comment_form_title'] ? $options['comment_form_title'] : "<h2><i class='fa fa-commenting-o m-r-15'></i>".$locale['c111']."</h2>");
+        $html .= ($options['comment_form_title'] ? $options['comment_form_title'] : "<h4><i class='fa fa-commenting-o m-r-15'></i>".$locale['c111']."</h4>");
         $html .= "</div>\n";
         $html .= "<div class='comments-form'>\n";
         $html .= "<div class='pull-left m-r-15'>\n";

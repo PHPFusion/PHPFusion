@@ -147,15 +147,16 @@ class Comments {
         if ($this->settings['comments_enabled'] == TRUE) {
             $comments_template = $this->getParams('comment_template');
             $comments_form_template = $this->getParams('comment_form_template');
+
             $html = "<div id='comments'>\n";
-            $html .= "<div id='".$this->getParams('comment_item_type')."-".$this->getParams('comment_item_id')."-fusion_comments' name='comments'>\n";
+            $html .= "<div id='".$this->getParams('comment_key')."' name='comments'>\n";
             if (is_callable($comments_template)) {
                 $html .= $comments_template($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
             } else {
                 trigger_error('function '.$this->getParams('comment_template').' not found or declared too late. Is defined in your theme?');
             }
             if ($this->getParams('comment_allow_post')) {
-                $html .= "<a id='".$this->getParams('comment_item_type')."-".$this->getParams('comment_item_id')."-comments_form' name='comments_form'></a>\n";
+                $html .= "<a id='".$this->getParams('comment_key')."-comments_form' name='comments_form'></a>\n";
                 if (is_callable($comments_form_template)) {
                     $html .= $comments_form_template(
                         $this->getParams('comment_item_type'),
@@ -500,8 +501,7 @@ class Comments {
                         data : sendData,
                         success: function(result){
                             if (result) {
-                                var prefix = formData.comment_item_type+'-'+formData.comment_item;
-                                $('#'+prefix+'-fusion_comments').html(result);
+                                $('#".$this->getParams('comment_key')."').html(result);
                             }
                         },
                         error: function(result) {
@@ -527,16 +527,15 @@ class Comments {
                     data : sendData,
                     success: function(e){
                         if (e) {
-                            var item_id = (e.comment_options.comment_item_id);
-                            var item_type = (e.comment_options.comment_item_type);
-                            $('#'+item_type+'-'+item_id+'-comment_cat').val(e.comment_cat);
-                            $('#'+item_type+'-'+item_id+'-comment_title').val(e.comment_title);
-                            $('#'+item_type+'-'+item_id+'-comment_ratings').val(e.comment_ratings);
-                            $('#'+item_type+'-'+item_id+'-comment_name').val(decodeEntities(e.comment_name));
-                            $('#'+item_type+'-'+item_id+'-comment_subject').val(decodeEntities(e.comment_subject));
-                            $('#'+item_type+'-'+item_id+'-comment_message').val(decodeEntities(e.comment_message));
-                            $('#'+item_type+'-'+item_id+'-comment_id').val(e.comment_id);
-                            scrollTo(item_type+'-'+item_id+'-comment_subject');
+                            var containerID = '".$this->getParams('comment_key')."';
+                            $('#'+containerID+'-comment_cat').val(e.comment_cat);
+                            $('#'+containerID+'-comment_title').val(e.comment_title);
+                            $('#'+containerID+'-comment_ratings').val(e.comment_ratings);
+                            $('#'+containerID+'-comment_name').val(decodeEntities(e.comment_name));
+                            $('#'+containerID+'-comment_subject').val(decodeEntities(e.comment_subject));
+                            $('#'+containerID+'-comment_message').val(decodeEntities(e.comment_message));
+                            $('#'+containerID+'-comment_id').val(e.comment_id);
+                            scrollTo(containerID+'-comment_subject');
                         }
                     },
                     error: function(result) {
@@ -563,10 +562,8 @@ class Comments {
                 type: 'POST',
                 dataType: 'html',
                 data: sendData,
-                success: function (result) {
-                    //console.log(result);
-                    var prefix = values['comment_item_type']+'-'+values['comment_item_id'];
-                    $('#'+prefix+'-fusion_comments').html(result);
+                success: function (result) {                                                            
+                    $('#".$this->getParams('comment_key')."').html(result);
                 },
                 error: function (result) {
                 }
@@ -638,15 +635,14 @@ class Comments {
             $this->c_arr['c_info']['ratings_remove_form'] = '';
 
             if ($this->getParams('comment_allow_ratings') && !$this->getParams('comment_allow_vote')) {
-                $prefix = $this->getParams('comment_item_type')."-".$this->getParams('comment_item_id');
                 $ratings_html = openform('remove_ratings_frm', 'post', $this->getParams('clink'), array(
                         'class'   => 'text-right',
-                        'form_id' => $prefix."-remove_ratings_frm",
+                        'form_id' => $this->getParams('comment_key')."-remove_ratings_frm",
                     )
                 );
                 $ratings_html .= form_hidden('comment_type', '', $this->getParams('comment_item_type'));
                 $ratings_html .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'));
-                $ratings_html .= form_button('remove_ratings_vote', $this->locale['r102'], 'remove_ratings_vote', ['input_id' => $prefix."-remove_ratings_vote", 'class' => 'btn-default btn-rmRatings']);
+                $ratings_html .= form_button('remove_ratings_vote', $this->locale['r102'], 'remove_ratings_vote', ['input_id' => $this->getParams('comment_key')."-remove_ratings_vote", 'class' => 'btn-default btn-rmRatings']);
                 $ratings_html .= closeform();
                 $this->c_arr['c_info']['ratings_remove_form'] = $ratings_html;
             }

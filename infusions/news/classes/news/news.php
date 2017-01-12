@@ -533,14 +533,14 @@ abstract class News extends NewsServer {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

@@ -36,6 +36,5 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
             'clink'                 => $clink,
             'comment_echo'          => TRUE,
             'comment_allow_ratings' => $ratings
-        )
-    )->showComments();
+        ), '_'.$comment_type.$comment_item_id)->showComments();
 }

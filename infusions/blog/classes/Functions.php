@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Blog;
+
+use PHPFusion\Feedback\Comments;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -78,7 +81,7 @@ class Functions {
      */
     public static function get_blogCatsData() {
         $data = dbquery_tree_full(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent',
-                                  "".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : '')."");
+            "".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : '')."");
         foreach ($data as $index => $cat_data) {
             foreach ($cat_data as $blog_cat_id => $cat) {
                 $data[$index][$blog_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat['blog_cat_id']."'>".$cat['blog_cat_name']."</a>";
@@ -171,16 +174,16 @@ class Functions {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
             ob_start();
-            \PHPFusion\Feedback\Comments::getInstance(
+            Comments::getInstance(
                 array(
-                    'comment_item_type' => "B",
-                    'comment_db' => DB_BLOG,
-                    'comment_col' => 'blog_id',
-                    'comment_item_id' => $_GET['readmore'],
-                    'clink' => FUSION_SELF."?readmore=".$data['blog_id'],
-                    'comment_echo' => TRUE,
+                    'comment_item_type'     => "B",
+                    'comment_db'            => DB_BLOG,
+                    'comment_col'           => 'blog_id',
+                    'comment_item_id'       => $data['blog_id'],
+                    'clink'                 => FUSION_SELF."?readmore=".$data['blog_id'],
+                    'comment_echo'          => TRUE,
                     'comment_allow_ratings' => $data['blog_allow_ratings']
-                )
+                ), '_B'.$data['blog_id']
             )->showComments();
             $html = ob_get_contents();
             ob_end_clean();

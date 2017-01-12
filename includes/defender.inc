@@ -190,10 +190,10 @@ class defender {
      *
      * @return mixed
      */
-    protected static function set_sessionUserID() {
+    public static function set_sessionUserID() {
         $userdata = fusion_get_userdata();
 
-        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
+        return !empty($userdata['user_id']) && !isset($_POST['login']) ? (int)fusion_get_userdata('user_id') : str_replace('.', '-', USER_IP);
     }
 
     /**
