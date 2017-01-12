@@ -680,6 +680,7 @@ class Comments {
             }
 
             $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
+            $this->c_arr['c_info']['total_comments'] = 0;
 
             $c_rows = dbcount("('comment_id')", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat=:comment_cat",
                 [
