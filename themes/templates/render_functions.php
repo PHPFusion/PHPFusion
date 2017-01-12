@@ -218,13 +218,11 @@ if (!function_exists("render_comments")) {
         $html .= "<div class='comments-header'>\n";
         $html .= $options['comment_title'].($options['comment_count'] ? $c_info['comments_count'] : '');
         $html .= "</div>\n";
-
         if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
             $html .= "<div class='ratings overflow-hide m-b-20'>\n";
             $html .= $ratings_html;
             $html .= "</div>\n";
         }
-
         $html .= "<div class='comments overflow-hide'>\n";
         $html .= $comments_html;
         $html .= "</div>\n";
@@ -274,17 +272,17 @@ if (!function_exists("render_comments_form")) {
         // Comments form
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
             $comments_form = openform('inputform', 'post', $clink,
-                                      array(
+                [
                                           'form_id' => $prefix."-inputform",
                                           'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
-                                      ));
+                ]
+            );
             $comments_form .= form_hidden("comment_id", '', '', ['input_id'=>$prefix."-comment_id"]);
             $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id'=>$prefix."-comment_cat"]);
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id'=>$prefix."-comment_name"]);
             }
-            $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
-
+            $comments_form .= $options['comment_allow_subject'] ? form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $prefix."-comment_subject"]) : '';
             if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings'] && $options['comment_allow_vote']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(
@@ -299,7 +297,6 @@ if (!function_exists("render_comments_form")) {
                                               )
                 );
             }
-
             $comments_form .= form_textarea('comment_message', '', $edata['comment_message'],
                                             array(
                                                 'input_id' => $prefix."-comment_message",
