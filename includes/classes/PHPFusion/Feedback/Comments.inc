@@ -122,7 +122,7 @@ class Comments {
      * @param array  $params
      * @param string $key
      *
-     * @return object
+     * @return static
      */
     public static function getInstance(array $params = array(), $key = 'Default') {
         if (!isset(self::$instances[$key])) {
@@ -136,11 +136,14 @@ class Comments {
             self::$instances[$key]->checkPermissions();
             self::$instances[$key]->execute_CommentUpdate();
         }
-
-        self::$instances[$key]->checkPermissions();
+        //self::$instances[$key]->checkPermissions();
         self::$instances[$key]->get_Comments();
 
-        return (object)self::$instances[$key];
+        return self::$instances[$key];
+    }
+
+    private function getCommentIndex() {
+        return dbquery_tree(DB_COMMENTS, 'comment_id', 'comment_cat', "WHERE comment_item_id='".$this->getParams('comment_item_id')."' AND comment_type='".$this->getParams('comment_item_type')."' AND comment_hidden=0");
     }
 
     /**
@@ -183,12 +186,17 @@ class Comments {
              * Original ajax script to be removed to prevent event bubbling
              */
             if ($this->jquery_enabled === TRUE) {
-                $jquery_tags = OutputHandler::$jqueryTags;
-                $comment_js = str_replace(array("<script>", "</script>"), array(), $this->buildJavascript());
-                $jquery_tags = str_replace($comment_js, '', $jquery_tags);
-                echo "<script type='text/javascript'>\n";
-                echo "$(function() { $jquery_tags });";
-                echo "</script>\n";
+                if (!defined("COMMENTS_JQUERY_SCRIPT")) {
+                    define("COMMENTS_JQUERY_SCRIPT", TRUE);
+                    if (!$this->getParams('comment_custom_script')) {
+                        $jquery_tags = OutputHandler::$jqueryTags;
+                        $comment_js = str_replace(array("<script>", "</script>"), array(), $this->buildJavascript());
+                        $jquery_tags = str_replace($comment_js, '', $jquery_tags);
+                        echo "<script type='text/javascript'>\n";
+                        echo "$(function() { $jquery_tags });";
+                        echo "</script>\n";
+                    }
+                }
             }
         }
 
@@ -282,7 +290,7 @@ class Comments {
         if ($this->jquery_enabled === TRUE) {
             if (!defined("COMMENTS_JQUERY_SCRIPT")) {
                 define("COMMENTS_JQUERY_SCRIPT", TRUE);
-                if ($this->getParams('comment_custom_script') === FALSE) {
+                if (!$this->getParams('comment_custom_script')) {
                     $comment_js = str_replace(array("<script>", "</script>"), array(), $this->buildJavascript());
                     add_to_jquery($comment_js);
                 }
@@ -480,7 +488,7 @@ class Comments {
 
     private function buildJavascript() {
         return "
-        <script>
+        <script>        
         InitComment();
         function InitComment() {
             PostComments();
