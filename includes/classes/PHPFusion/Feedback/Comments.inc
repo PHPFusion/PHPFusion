@@ -577,7 +577,8 @@ class Comments {
                 type: 'POST',
                 dataType: 'html',
                 data: sendData,
-                success: function (result) {                                                            
+                success: function (result) {
+                    console.log(result);                                                                            
                     $('#".$this->getParams('comment_key')."').html(result);
                 },
                 error: function (result) {
@@ -615,6 +616,7 @@ class Comments {
     private static $clink = [];
 
     private static function format_clink($clink) {
+
         if (!empty(self::$clink[$clink])) {
             $fusion_query = array();
             $url = $url = ((array)parse_url(htmlspecialchars_decode($clink))) + array(
@@ -639,6 +641,7 @@ class Comments {
     private function get_Comments() {
 
         if (fusion_get_settings('comments_enabled')) {
+
             $actions = [
                 "edit_dell"   => '',
                 "edit_link"   => '',
@@ -693,8 +696,9 @@ class Comments {
 
             if ($c_rows) {
 
-                $c_start = isset($_GET['c_start']) && isnum($_GET['c_start']) ? $_GET['c_start'] : 0;
-                if (!isset($_GET['c_start']) && $c_rows > $this->cpp) {
+                $c_start = isset($_GET['c_start_'.$this->getParams('comment_key')]) && isnum($_GET['c_start_'.$this->getParams('comment_key')]) ? $_GET['c_start_'.$this->getParams('comment_key')] : 0;
+
+                if (!isset($_GET['c_start_'.$this->getParams('comment_key')]) && $c_rows > $this->cpp) {
                     $c_start = (ceil($c_rows / $this->cpp) - 1) * $this->cpp;
                 }
 
@@ -726,8 +730,7 @@ class Comments {
                     $i = ($this->settings['comments_sorting'] == "ASC" ? $c_start + 1 : $c_rows - $c_start);
 
                     if ($c_rows > $this->cpp) {
-                        $this->c_arr['c_info']['c_makepagenav'] = makepagenav($c_start, $this->cpp, $c_rows, 3, $this->getParams('clink')."&amp;",
-                            "c_start");
+                        $this->c_arr['c_info']['c_makepagenav'] = makepagenav($c_start, $this->cpp, $c_rows, 3, $this->getParams('clink').(stristr($this->getParams('clink'), '?') ? "&amp;" : '?'), "c_start_".$this->getParams('comment_key'));
                     }
 
                     if (iADMIN && checkrights('C')) {
@@ -763,6 +766,7 @@ class Comments {
                                 $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
                                 $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' ".(isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id'] ? "" : "style='display:none;'").">";
                             }
+
                             $reply_form .= openform("comments_reply_frm-".$row['comment_id'], "post", FUSION_REQUEST,
                                 [
                                     "class"      => "comments_reply_form m-t-20 m-b-20",
