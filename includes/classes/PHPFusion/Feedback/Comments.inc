@@ -931,8 +931,11 @@ class Comments {
 
                 $c_start = isset($_GET['c_start_'.$this->getParams('comment_key')]) && isnum($_GET['c_start_'.$this->getParams('comment_key')]) ? $_GET['c_start_'.$this->getParams('comment_key')] : 0;
 
-                if (!isset($_GET['c_start_'.$this->getParams('comment_key')]) && $c_rows > $this->cpp) {
-                    $c_start = (ceil($c_rows / $this->cpp) - 1) * $this->cpp;
+                // Only applicable if sorting is Ascending. If descending, the default $c_start is always 0 as latest.
+                if (fusion_get_settings('comments_sorting') == 'ASC') {
+                    if (!isset($_GET['c_start_'.$this->getParams('comment_key')]) && $c_rows > $this->cpp) {
+                        $c_start = (ceil($c_rows / $this->cpp) - 1) * $this->cpp;
+                    }
                 }
 
                 $comment_query = "
