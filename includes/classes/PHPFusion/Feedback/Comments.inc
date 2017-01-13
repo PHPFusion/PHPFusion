@@ -200,12 +200,12 @@ class Comments {
 
                     if ($can_post) {
 
-                        $html .= form_hidden("comment_id", '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
-                        $html .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
-                        $html .= form_hidden("comment_key", '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
-                        $html .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
-                        $html .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
-                        $html .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
+                        $comments_form .= form_hidden("comment_id", '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
+                        $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
+                        $comments_form .= form_hidden("comment_key", '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
+                        $comments_form .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
+                        $comments_form .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
+                        $comments_form .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
 
                         /*
                          * Ratings Selector
