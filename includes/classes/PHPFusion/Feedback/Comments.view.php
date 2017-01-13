@@ -15,11 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+if (!function_exists('display_comments_ui')) {
+    function display_comments_ui() {
+        ?>
+        <div id='comments'>
+            <div id='{%comment_container_id%}' name='comments'>
+                {%comments_listing%}
+                <a id='{%comment_form_container_id%}'></a>
+                {%comments_form%}
+            </div>
+        </div>
+        <?php
+    }
+}
 /**
  * Comments UI
- *
- * @todo: Find and FIX HTML. Missing 2 </div> somewhere
  */
 if (!function_exists("display_comments_section")) {
     /**

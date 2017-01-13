@@ -63,6 +63,7 @@ class Comments {
         'comment_title'                    => '',
         'comment_form_title'               => '',
         'comment_count'                    => TRUE,
+        'comment_ui_template'              => 'display_comments_ui',
         'comment_template'                 => 'display_comments_section',
         'comment_form_template'            => 'display_comments_form',
         'comment_custom_script'            => FALSE,
@@ -146,88 +147,19 @@ class Comments {
      * Displays Comments
      */
     public function showComments() {
-        $html = '';
+        $comments_listing = '';
+        $comments_form = '';
         if ($this->settings['comments_enabled'] == TRUE) {
+            $settings = fusion_get_settings();
+
+            $comments_ui_template = $this->getParams('comment_ui_template');
             $comments_template = $this->getParams('comment_template');
             $comments_form_template = $this->getParams('comment_form_template');
-
-            $html = "<div id='comments'>\n";
-            $html .= "<div id='".$this->getParams('comment_key')."' name='comments'>\n";
-
-            if (is_callable($comments_template)) {
-                // @todo: to template
-                $ratings_html = '';
-                if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
-                    if (!empty($c_info['ratings_count'])) {
-                        $ratings_html = "<ul class='well clearfix p-15'>\n";
-                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
-                        for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
-                            $ratings_html .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
-                        }
-                        $ratings_html .= "<span class='text-lighter m-l-5'>".format_word($c_info['ratings_count']['total'], "review|reviews")."</span>\n";
-                        $ratings_html .= "</li>\n";
-                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
-                        for ($i = 5; $i >= 1; $i--) {
-                            $bal = 5 - $i;
-                            $ratings_html .= "<div class='row'>\n";
-                            $ratings_html .= "<div class='display-inline-block m-r-5'>\n";
-                            for ($x = 1; $x <= $i; $x++) {
-                                $ratings_html .= "<i class='fa fa-star text-warning'></i>\n";
-                            }
-                            for ($b = 1; $b <= $bal; $b++) {
-                                $ratings_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
-                            }
-                            $ratings_html .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
-                            $ratings_html .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
-                            $progress_num = $c_info['ratings_count'][$i] > 0 ? floor($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100 : 0;
-                            $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
-                            $ratings_html .= "</div>\n";
-                            $ratings_html .= "</div>\n";
-                        }
-                        $ratings_html .= "</li>\n";
-                        $ratings_html .= "</ul>\n";
-                        $ratings_html .= ($c_info['ratings_remove_form'] ?: '');
-                    }
-
-                    $html .= "<div class='ratings overflow-hide m-b-10'>\n";
-                    $html .= $ratings_html;
-                    $html .= "</div>\n";
-                }
-
-                // Display comments
-                ob_start();
-                display_comments_listing();
-                $comments = strtr(ob_get_clean(), [
-                        '{%comments_page%}'       => ($this->c_arr['c_info']['c_makepagenav'] ? "<div class='text-left'>".$this->c_arr['c_info']['c_makepagenav']."</div>\n" : ''),
-                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->display_all_comments($this->c_arr['c_con'], 0, $this->getParams()) : $this->locale['c101']),
-                        '{%comments_admin_link%}' => $this->c_arr['c_info']['admin_link'],
-                    ]
-                );
-
-                ob_start();
-                $comments_template($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
-                $html .= strtr(ob_get_clean(), [
-                        '{%comment_title%}'   => $this->getParams('comment_title'),
-                        '{%comment_count%}'   => ($this->getParams('comment_count') ? $this->c_arr['c_info']['comments_count'] : ''),
-                        '{%comment_ratings%}' => $ratings_html,
-                        '{%comments%}'        => $comments,
-                    ]
-                );
-
-            } else {
-                trigger_error('function '.$this->getParams('comment_template').' not found or declared too late. Is defined in your theme?');
-            }
-
             /**
              * Forms
              */
             if ($this->getParams('comment_allow_post')) {
-
-                $html .= "<a id='".$this->getParams('comment_key')."-comments_form' name='comments_form'></a>\n";
-
                 if (is_callable($comments_form_template)) {
-
-                    $settings = fusion_get_settings();
                     $edata = [
                         'comment_cat'     => 0,
                         'comment_subject' => '',
@@ -257,7 +189,7 @@ class Comments {
                     $can_post = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
 
                     // Comments form
-                    $html .= openform('inputform', 'post', $clink, [
+                    $comments_form = openform('inputform', 'post', $clink, [
                             'form_id'    => $this->getParams('comment_key').'-inputform',
                             'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                         ]
@@ -313,7 +245,7 @@ class Comments {
 
                     ob_start();
                     $comments_form_template($this->getParams('comment_item_type'), $this->getParams('clink'), $this->getParams('comment_item_id'), isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE, $this->getParams());
-                    $html .= strtr(ob_get_clean(), [
+                    $comments_form .= strtr(ob_get_clean(), [
                         '{%comment_form_title%}'     => ($this->getParams('comment_form_title') ?: $this->locale['c111']),
                         '{%comment_form_id%}'        => $this->getParams('comment_key').'_edit_comment',
                         '{%user_avatar%}'            => display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded"),
@@ -336,12 +268,92 @@ class Comments {
                             ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
                         )
                     ]);
-                    $html .= closeform();
+                    $comments_form .= closeform();
                 } else {
-                    trigger_error('function '.$this->getParams('comment_form_template').' not found or declared too late. Is defined in your theme?');
+                    trigger_error('function '.$comments_form_template.' not found or declared too late. Is defined in your theme?');
                 }
             }
-            $html .= "</div></div>\n";
+
+            /**
+             * Comments
+             */
+            if (is_callable($comments_template)) {
+                // @todo: to template
+                $ratings_html = '';
+                if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
+                    if (!empty($c_info['ratings_count'])) {
+                        $ratings_html = "<ul class='well clearfix p-15'>\n";
+                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+                        for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
+                            $ratings_html .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
+                        }
+                        $ratings_html .= "<span class='text-lighter m-l-5'>".format_word($c_info['ratings_count']['total'], "review|reviews")."</span>\n";
+                        $ratings_html .= "</li>\n";
+                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+                        for ($i = 5; $i >= 1; $i--) {
+                            $bal = 5 - $i;
+                            $ratings_html .= "<div class='row'>\n";
+                            $ratings_html .= "<div class='display-inline-block m-r-5'>\n";
+                            for ($x = 1; $x <= $i; $x++) {
+                                $ratings_html .= "<i class='fa fa-star text-warning'></i>\n";
+                            }
+                            for ($b = 1; $b <= $bal; $b++) {
+                                $ratings_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                            }
+                            $ratings_html .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
+                            $ratings_html .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
+                            $progress_num = $c_info['ratings_count'][$i] > 0 ? floor($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100 : 0;
+                            $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
+                            $ratings_html .= "</div>\n";
+                            $ratings_html .= "</div>\n";
+                        }
+                        $ratings_html .= "</li>\n";
+                        $ratings_html .= "</ul>\n";
+                        $ratings_html .= ($c_info['ratings_remove_form'] ?: '');
+                    }
+
+                    $html .= "<div class='ratings overflow-hide m-b-10'>\n";
+                    $html .= $ratings_html;
+                    $html .= "</div>\n";
+                }
+
+                // Display comments
+                ob_start();
+                display_comments_listing();
+                $comments = strtr(ob_get_clean(), [
+                        '{%comments_page%}'       => ($this->c_arr['c_info']['c_makepagenav'] ? "<div class='text-left'>".$this->c_arr['c_info']['c_makepagenav']."</div>\n" : ''),
+                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->display_all_comments($this->c_arr['c_con'], 0, $this->getParams()) : $this->locale['c101']),
+                        '{%comments_admin_link%}' => $this->c_arr['c_info']['admin_link'],
+                    ]
+                );
+
+                ob_start();
+                $comments_template($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
+                $comments_listing = strtr(ob_get_clean(), [
+                        '{%comment_title%}'   => $this->getParams('comment_title'),
+                        '{%comment_count%}'   => ($this->getParams('comment_count') ? $this->c_arr['c_info']['comments_count'] : ''),
+                        '{%comment_ratings%}' => $ratings_html,
+                        '{%comments%}'        => $comments,
+                        '{%comments_form%}'   => $comments_form
+                    ]
+                );
+            } else {
+                trigger_error('function '.$comments_template.' not found or declared too late. Is defined in your theme?');
+            }
+
+            if (is_callable($comments_ui_template)) {
+                ob_start();
+                $comments_ui_template();
+                $html .= strtr(ob_get_clean(), [
+                    '{%comment_container_id%}'      => $this->getParams('comment_key'),
+                    '{%comment_form_container_id%}' => $this->getParams('comment_key').'-comments_form',
+                    '{%comments_listing%}'          => $comments_listing,
+                    '{%comments_form%}'             => $comments_form,
+                ]);
+            } else {
+                trigger_error('function '.$comments_ui_template.' not found or declared too late. Is defined in your theme?');
+            }
+
         }
 
         if ($this->getParams('comment_echo')) {
