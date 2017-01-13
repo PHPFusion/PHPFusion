@@ -156,7 +156,7 @@ if (!function_exists("render_comments")) {
                         $comments_html .= "<div class='overflow-hide'>\n";
                         $comments_html .= "<div class='comment_name display-inline-block m-r-10'>\n";
                         $comments_html .= $data['comment_name'];
-                        $comments_html .= "<span class='comment_status text-lighter'>".$data['user']['groups']."</span> <small class='comment_date'>".$data['comment_datestamp']."</small>";
+                        $comments_html .= "<small class='comment_date'>".$data['comment_datestamp']."</small>";
                         $comments_html .= "</div>\n";
 
                         if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
@@ -181,8 +181,8 @@ if (!function_exists("render_comments")) {
                         }
 
                         $data_api = \defender::serialize($options);
-                        $comments_html .= ($data['edit_link'] ? "&middot;<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api'>".$data['edit_link']['name']."</a>" : "");
-                        $comments_html .= ($data['delete_link'] ? "&middot;<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."'>".$data['delete_link']['name']."</a>" : "");
+                        $comments_html .= ($data['edit_link'] ? "&middot;<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$options['comment_key']."'>".$data['edit_link']['name']."</a>" : "");
+                        $comments_html .= ($data['delete_link'] ? "&middot;<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$options['comment_key']."'>".$data['delete_link']['name']."</a>" : "");
                         $comments_html .= "</div>\n";
 
                         if (!empty($data['reply_form'])) {
@@ -280,6 +280,7 @@ if (!function_exists("render_comments_form")) {
             );
             $comments_form .= form_hidden("comment_id", '', '', ['input_id'=>$prefix."-comment_id"]);
             $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id'=>$prefix."-comment_cat"]);
+            $comments_form .= form_hidden("comment_key", '', $options['comment_key'], ['input_id' => $prefix."-comment_key"]);
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id'=>$prefix."-comment_name"]);
             }
@@ -363,6 +364,23 @@ if (!function_exists("render_comments_form")) {
         return $html;
     }
 }
+
+/*
+ * The comment reply form HTML
+ */
+if (!function_exists('render_comments_reply_form')) {
+    function render_comments_reply_form() {
+        ?>
+        <div class='comments_reply_form'>
+            {%comment_name%}
+            {%comment_message%}
+            {%comment_captcha%}
+            {%comment_post%}
+        </div>
+        <?php
+    }
+}
+
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
