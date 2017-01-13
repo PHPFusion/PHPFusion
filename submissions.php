@@ -26,7 +26,8 @@ $modules = array(
     'a' => db_exists(DB_ARTICLES),
     'd' => db_exists(DB_DOWNLOADS),
     'l' => db_exists(DB_WEBLINKS),
-    'b' => db_exists(DB_BLOG)
+    'b' => db_exists(DB_BLOG),
+    'q' => db_exists(DB_FAQS)
 );
 $sum = array_sum($modules);
 if (!$sum) {
@@ -40,6 +41,7 @@ $submission_types = array(
     DB_DOWNLOADS => array('link' => "submit.php?stype=d", 'title' => $locale['submit_0002']),
     DB_PHOTOS => array('link' => "submit.php?stype=p", 'title' => $locale['submit_0003']),
     DB_WEBLINKS => array('link' => "submit.php?stype=l", 'title' => $locale['submit_0004']),
+    DB_FAQS => array('link' => "submit.php?stype=q", 'title' => $locale['submit_0006']),
 );
 
 foreach ($submission_types as $db => $submit) {

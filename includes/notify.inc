@@ -15,57 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-/* Updated 2014/July - https://github.com/sciactive/pnotify */
-require_once __DIR__.'/../output_handling_include.php';
-/**
- * Pop up notification
- * @param       $title
- * @param       $text
- * @param array $options
- */
-
-function notify($title, $text, array $options = array()) {
-    // init library
-    $default_options = array(
-        "sticky" => TRUE,
-        "animation" => 1,
-        "icon" => "notify_icon n-attention"
-    );
-
-    $options += $default_options;
-
-    $sticky = ($options['sticky'] == TRUE) ? "hide:false," : "";
-
-    switch ($options['animation']) {
-        case 1:
-            $animation = "animation: 'show',";
-            break;
-        case 2:
-            $animation = "animation: 'fade',";
-            break;
-        case 3:
-            $animation = "animation: 'slide',";
-            break;
-        default:
-            $animation = "";
-    }
-
-    add_to_jquery("
-		$(function(){
-			new PNotify({
-				title: '$title',
-				text: '$text',
-				icon: '".$options['icon']."',
-				$animation
-				width: 'auto',
-				$sticky
-				delay: '4500'
-			});
-		});
-	");
-}
-
 /**
  * Renders notices
  * Formats and renders notices
@@ -199,33 +148,3 @@ function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
     $type = $removeAfterAccess ? 'once' : 'persist';
     $_SESSION['notices'][$type][$key] = array($status => array($value));
 }
-
-/*
- *	 var effect_in = $('#ui_effect_in').val(),
-	easing_in = $('#ui_easing_in').val(),
-	effect_out = $('#ui_effect_out').val(),
-	easing_out = $('#ui_easing_out').val(),
-	speed = $('#ui_speed').val();
-	if (effect_out == 'same') effect_out = effect_in;
-	if (easing_out == 'same') easing_out = easing_in;
-	if (speed.match(/^\d+$/)) speed = parseInt(speed);
-	var options_in = {
-	easing: easing_in
-	},
-	options_out = {
-	easing: easing_out
-	};
-	if (effect_in == 'scale') options_in.percent = 100;
-	if (effect_out == 'scale') options_out.percent = 0;
-	$.pnotify({
-	title: 'jQuery UI Effect',
-	text: 'I use an effect from jQuery UI.',
-	animate_speed: speed,
-	animation: {
-	'effect_in': effect_in,
-	'options_in': options_in,
-	'effect_out': effect_out,
-	'options_out': options_out
-	}
-	});
- */

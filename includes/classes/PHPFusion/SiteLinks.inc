@@ -476,7 +476,7 @@ class SiteLinks {
                         $res .= $language_opts;
                     }
                 }
-                self::setMenuParam('searchbar', TRUE);
+
                 if (self::getMenuParam('searchbar') == TRUE) {
                     $searchbar = "<li class='dropdown'>";
                     $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";

@@ -29,7 +29,8 @@ $modules = array(
     'a' => db_exists(DB_ARTICLES),
     'd' => db_exists(DB_DOWNLOADS),
     'l' => db_exists(DB_WEBLINKS),
-    'b' => db_exists(DB_BLOG)
+    'b' => db_exists(DB_BLOG),
+    'q' => db_exists(DB_FAQS)
 );
 
 $submit_types = array(
@@ -39,6 +40,7 @@ $submit_types = array(
     'd' => array('link' => INFUSIONS."downloads/download_submit.php"),
     'l' => array('link' => INFUSIONS."weblinks/weblink_submit.php"),
     'b' => array('link' => INFUSIONS."blog/blog_submit.php"),
+    'q' => array('link' => INFUSIONS."faq/faq_submit.php"),
 );
 
 

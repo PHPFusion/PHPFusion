@@ -190,10 +190,10 @@ class defender {
      *
      * @return mixed
      */
-    protected static function set_sessionUserID() {
+    public static function set_sessionUserID() {
         $userdata = fusion_get_userdata();
 
-        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
+        return !empty($userdata['user_id']) && !isset($_POST['login']) ? (int)fusion_get_userdata('user_id') : str_replace('.', '-', USER_IP);
     }
 
     /**
@@ -423,11 +423,20 @@ class defender {
     /**
      * Send an Unsafe Signal acorss all PHP-Fusion Components
      * This will automatically halt on all important execution without exiting.
+     *
+     * @param $notice - Show custom notice message on validation errors
      */
-    static function stop() {
+    static function stop($notice = '') {
         if (!defined('FUSION_NULL')) {
-            addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
             define('FUSION_NULL', TRUE);
+            if ($notice) {
+                if (function_exists('alert')) {
+                    echo alert($notice);
+                } else {
+                    addNotice("danger", $notice);
+                }
+            }
+            addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
             if (self::$debug) {
                 debug_print_backtrace();
                 define("STOP_REDIRECT", TRUE);
@@ -438,7 +447,6 @@ class defender {
     /*
      * Highlight the form field as error
      */
-
     public static function setInputError($input_name) {
         self::$input_errors[$input_name] = TRUE;
     }

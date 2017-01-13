@@ -40,7 +40,7 @@ if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET[
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
     $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$_GET['comment_id']."'");
-    addNotice('warning', $locale['411']);
+    addNotice('success', $locale['411']);
     redirect("comments.php".$aidlink."&ctype=".$_GET['ctype']."&comment_item_id=".$_GET['comment_item_id']);
 }
 

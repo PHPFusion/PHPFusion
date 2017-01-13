@@ -220,6 +220,7 @@ $locale['UM092'] = "Submit Article";
 $locale['UM093'] = "Submit Photo";
 $locale['UM094'] = "Submit Download";
 $locale['UM095'] = "Submit Blog";
+$locale['UM102'] = "Submit FAQ";
 // User Panel
 $locale['UM096'] = "Welcome: ";
 $locale['UM097'] = "Personal menu";

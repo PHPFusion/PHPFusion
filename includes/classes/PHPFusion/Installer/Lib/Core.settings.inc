@@ -1143,16 +1143,16 @@ function get_table_rows($table_name, $localeset = 'English') {
     $table_settings['site_links'] = [
         'insert' => [
             [
-                'link_name' => $locale['setup_3300'],
-                'link_cat' => '0',
-                'link_icon' => '',
-                'link_url' => 'index.php',
+                'link_name'       => $locale['setup_3300'],
+                'link_cat'        => '0',
+                'link_icon'       => 'php-fusion',
+                'link_url'        => 'index.php',
                 'link_visibility' => '0',
-                'link_position' => '2',
-                'link_status' => '1',
-                'link_window' => '0',
-                'link_order' => '1',
-                'link_language' => $localeset,
+                'link_position'   => '2',
+                'link_status'     => '1',
+                'link_window'     => '0',
+                'link_order'      => '1',
+                'link_language'   => $localeset,
             ],
             [
                 'link_name' => $locale['setup_3305'],

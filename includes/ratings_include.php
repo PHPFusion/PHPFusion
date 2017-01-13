@@ -61,7 +61,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
                                        $locale['r104']);
             }
             echo "<div class='text-center'>".$message."</div>\n";
-        } elseif (isset($d_rating['rating_vote'])) {
+        } elseif (!empty($d_rating['rating_vote'])) {
             echo "<div class='display-block'>\n";
             echo openform('removerating', 'post', $rating_link, array('class' => 'display-block text-center'));
             echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";

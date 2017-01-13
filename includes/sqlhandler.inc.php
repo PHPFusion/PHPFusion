@@ -175,7 +175,7 @@ class SqlHandler {
  */
 function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
     $index = array();
-    $query = "SELECT $id_col, $cat_col FROM ".$db." $filter";
+    $query = "SELECT $id_col, $cat_col FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
         $query = $query_replace;
     }
@@ -611,22 +611,6 @@ function tree_join_method_sql_deprecated($db, $id_col, $cat_col, $filter = FALSE
     $result = dbquery("SELECT $selector $column $conditions ORDER BY t1.$cat_col ASC, t1.$id_col ASC $filter_show", 1);
 
     return $result;
-}
-
-
-// Might move to Dynamics -- Used by form_select_tree(); only //
-/* Hierarchy Data - returns full data array -- used by select2 tree dropdown */
-function dbquery_tree_data($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE) {
-    $data = array();
-    $index = array();
-    $filter_order = ($filter_order) ? "ORDER BY $filter_order" : '';
-    $query = dbquery("SELECT * FROM ".$db." $filter $filter_order $filter_show"); // mysql_query("SELECT id, parent_id, name FROM categories ORDER BY name");
-    while ($row = dbarray($query)) {
-        $id = $row[$id_col];
-        $data[$id] = $row;
-    }
-
-    return $data;
 }
 
 // need dbquery_tree_data to function

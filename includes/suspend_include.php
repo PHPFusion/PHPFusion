@@ -136,7 +136,7 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
         }
         echo "</table>\n";
     } else {
-        echo "<div id='close-message'><div class='admin-message'>".$locale['susp110']."</div></div>\n";
+        echo "<div class='well text-center'>".$locale['susp110']."</div>\n";
     }
     closetable();
 }
@@ -161,5 +161,5 @@ function member_nav($second = "", $third = "") {
 function member_url($step, $user_id) {
     global $aidlink;
 
-    return FUSION_SELF.fusion_get_aidlink()."&amp;step=".$step.($user_id ? "&amp;user_id=$user_id" : "");
+    return FUSION_SELF.fusion_get_aidlink()."&amp;ref=".$step.($user_id ? "&amp;user_id=$user_id" : "");
 }

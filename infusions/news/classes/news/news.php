@@ -418,7 +418,7 @@ abstract class News extends NewsServer {
 
             set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'news/news.php',
                                'title' => SiteLinks::get_current_SiteLinks("", "link_name")
                            ]);
@@ -463,7 +463,7 @@ abstract class News extends NewsServer {
             if ($max_news_rows) {
                 // apply filter.
                 $result = dbquery($this->get_NewsQuery( array('condition' => 'news_cat=0')));
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                BreadCrumbs::getInstance()->addBreadCrumb([
                                    'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
                                    'title' => self::$locale['news_0006']
                                ]);
@@ -533,14 +533,14 @@ abstract class News extends NewsServer {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

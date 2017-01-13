@@ -93,7 +93,7 @@ function showcounter() {
 if (!function_exists("alert")) {
     function alert($title, array $options = array()) {
         $options += array(
-            "class" => !empty($options['class']) ? $options['class'] : "alert-info",
+            "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
             "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
         );
         if ($options['dismiss'] == TRUE) {

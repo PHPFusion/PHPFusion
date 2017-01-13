@@ -19,20 +19,20 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+// Enable ajax based flood control
 function flood_control($field, $table, $where, $debug = FALSE) {
     $userdata = fusion_get_userdata('user_id');
     $settings = fusion_get_settings();
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $flood = FALSE;
-    if ((!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) || $debug) {
-        $result = dbquery("SELECT MAX(".$field.") AS last_post FROM ".$table." WHERE ".$where);
+    if ((!iSUPERADMIN && !iADMIN && (!defined('iMOD') || !iMOD)) || $debug) {
+        $result = dbquery("SELECT MAX(".$field.") 'last_post' FROM ".$table." WHERE ".$where);
         if (dbrows($result)) {
-            $time = time();
+            $time = TIME;
             $data = dbarray($result);
             if (($time - $data['last_post']) < $settings['flood_interval']) {
-                \defender::stop();
-                addNotice('warning', sprintf($locale['flood'], countdown($settings['flood_interval'] - ($time - $data['last_post']))));
-                $flood = TRUE;
+                $flood = (sprintf($locale['flood'], countdown($settings['flood_interval'] - ($time - $data['last_post']))));
+                \defender::stop($flood);
                 dbquery("INSERT INTO ".DB_FLOOD_CONTROL." (flood_ip, flood_ip_type, flood_timestamp) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
                 // This should be in settings, "After how many flood offences take action" then a setting for what action to take
                 if (dbcount("(flood_ip)", DB_FLOOD_CONTROL, "flood_ip='".USER_IP."'") > 4) {
@@ -55,7 +55,7 @@ function flood_control($field, $table, $where, $debug = FALSE) {
                         }
                     } else {
                         addNotice('info',
-                                  "DEBUG MESSAGE: Triggered flood control action due to repeated offences. This could've resulted in a ban or suspenstion");
+                            "DEBUG MESSAGE: Triggered flood control action due to repeated offences. This could've resulted in a ban or suspension");
                     }
 
                 }

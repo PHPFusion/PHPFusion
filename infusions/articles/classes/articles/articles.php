@@ -503,6 +503,10 @@ abstract class Articles extends ArticlesServer {
 
     /**
      * Display Ratings on a Article
+     *
+     * @param $data
+     *
+     * @return string
      */
     private static function get_ArticlesRatings($data) {
         $html = "";
@@ -519,6 +523,10 @@ abstract class Articles extends ArticlesServer {
 
     /**
      * Display Comments on a Article
+     *
+     * @param $data
+     *
+     * @return string
      */
     private static function get_ArticlesComments($data) {
         $html = "";

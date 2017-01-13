@@ -29,7 +29,8 @@ $modules = array(
     'l' => array($locale['UM091'], DB_WEBLINKS),
     'a' => array($locale['UM092'], DB_ARTICLES),
     'p' => array($locale['UM093'], DB_PHOTO_ALBUMS),
-    'd' => array($locale['UM094'], DB_DOWNLOADS)
+    'd' => array($locale['UM094'], DB_DOWNLOADS),
+    'q' => array($locale['UM102'], DB_FAQS)
 );
 $installedModules = array();
 foreach ($modules as $k => $v) {
@@ -112,8 +113,8 @@ if (iMEMBER) {
     echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
     echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
     if ($installedModules) {
-        echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
-        echo "<li><ul id='ShowHide001' style='display:none'>\n";
+	echo "<a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'>".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a>";
+        echo "<li><ul id='collapse' class='panel-collapse collapse'>\n";
         foreach ($installedModules as $stype => $text) {
             echo "<li><a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a></li>\n";
         }
