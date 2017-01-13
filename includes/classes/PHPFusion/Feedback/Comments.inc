@@ -149,6 +149,7 @@ class Comments {
     public function showComments() {
         $comments_listing = '';
         $comments_form = '';
+        $html = '';
         if ($this->settings['comments_enabled'] == TRUE) {
             $settings = fusion_get_settings();
 
@@ -355,7 +356,6 @@ class Comments {
             }
 
         }
-
         if ($this->getParams('comment_echo')) {
             echo $html;
 
@@ -375,7 +375,6 @@ class Comments {
                 }
             }
         }
-
         return $html;
     }
 
