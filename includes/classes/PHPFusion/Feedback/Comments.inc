@@ -341,10 +341,10 @@ class Comments {
                     trigger_error('function '.$this->getParams('comment_form_template').' not found or declared too late. Is defined in your theme?');
                 }
             }
+            $html .= "</div></div>\n";
         }
 
         if ($this->getParams('comment_echo')) {
-
             echo $html;
 
             /*

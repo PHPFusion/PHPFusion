@@ -43,9 +43,6 @@ if (!function_exists("display_comments_section")) {
                 {%comments%}
             </div>
         </div><!---//comments-->
-
-        <!--- where these 2 belongs to? --->
-        </div></div>
         <?php
     }
 }
