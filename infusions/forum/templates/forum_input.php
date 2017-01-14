@@ -111,9 +111,6 @@ if (!function_exists("display_quickReply")) {
         $userdata = fusion_get_userdata();
 
         $form_url = FUSION_SELF."?thread_id=".$info['thread_id'];
-        if (isset($_GET['pid']) && isnum($_GET['pid'])) {
-            $form_url = FUSION_SELF."?thread_id=".$info['thread_id']."&amp;pid=".$info['pid'];
-        }
 
         $html = "<!--sub_forum_thread-->\n";
         $html .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
