@@ -39,21 +39,19 @@ if (db_exists(DB_FAQS)) {
             case 2:
                 Search_Engine::search_column('faq_question', 'faqs');
                 Search_Engine::search_column('faq_answer', 'faqs');
-                Search_Engine::search_column('faq_cat_name', 'faqs');
+                Search_Engine::search_column('faq_name', 'faqs');
                 break;
             case 1:
                 Search_Engine::search_column('faq_answer', 'faqs');
-                Search_Engine::search_column('faq_cat_description', 'faqs');
                 break;
             default:
                 Search_Engine::search_column('faq_question', 'faqs');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-            $query = "SELECT fq.*, fc.*
-            	FROM ".DB_FAQS." fq
-				LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
-			    ".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
+            $query = "SELECT faq_cat_id=faq_cat_id
+            	FROM ".DB_FAQS."
+			    ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
