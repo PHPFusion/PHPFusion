@@ -529,45 +529,47 @@ if (!function_exists('forum_filter')) {
             'ascending' => $locale['forum_0385']
         );
 
-        echo $locale['forum_0388'];
-        echo "<div class='forum-filter'>\n";
-        echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['time']) && in_array($_GET['time'],
-                                                                                                                                array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0387'])." <span class='caret'></span></button>\n";
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
-            echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+        if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
+            echo $locale['forum_0388'];
+            echo "<div class='forum-filter'>\n";
+            echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['time']) && in_array($_GET['time'],
+                                                                                                                                    array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0387'])." <span class='caret'></span></button>\n";
+            echo "<ul class='dropdown-menu'>\n";
+            foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
+                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+            }
+            echo "</ul>\n";
+            echo "</div>\n";
+            echo $locale['forum_0389'];
+            echo "<div class='forum-filter'>\n";
+            echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['type']) && in_array($_GET['type'],
+                                                                                                                                    array_flip($selector2)) ? $selector2[$_GET['type']] : $locale['forum_0390'])." <span class='caret'></span></button>\n";
+            echo "<ul class='dropdown-menu'>\n";
+            foreach ($info['filter']['type'] as $filter_locale => $filter_link) {
+                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+            }
+            echo "</ul>\n";
+            echo "</div>\n";
+            echo $locale['forum_0225'];
+            echo "<div class='forum-filter'>\n";
+            echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['sort']) && in_array($_GET['sort'],
+                                                                                                                                    array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0391'])." <span class='caret'></span></button>\n";
+            echo "<ul class='dropdown-menu'>\n";
+            foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
+                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+            }
+            echo "</ul>\n";
+            echo "</div>\n";
+            echo "<div class='forum-filter'>\n";
+            echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['order']) && in_array($_GET['order'],
+                                                                                                                                     array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0386'])." <span class='caret'></span></button>\n";
+            echo "<ul class='dropdown-menu'>\n";
+            foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
+                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+            }
+            echo "</ul>\n";
+            echo "</div>\n";
         }
-        echo "</ul>\n";
-        echo "</div>\n";
-        echo $locale['forum_0389'];
-        echo "<div class='forum-filter'>\n";
-        echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['type']) && in_array($_GET['type'],
-                                                                                                                                array_flip($selector2)) ? $selector2[$_GET['type']] : $locale['forum_0390'])." <span class='caret'></span></button>\n";
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($info['filter']['type'] as $filter_locale => $filter_link) {
-            echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
-        }
-        echo "</ul>\n";
-        echo "</div>\n";
-        echo $locale['forum_0225'];
-        echo "<div class='forum-filter'>\n";
-        echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['sort']) && in_array($_GET['sort'],
-                                                                                                                                array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0391'])." <span class='caret'></span></button>\n";
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
-            echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
-        }
-        echo "</ul>\n";
-        echo "</div>\n";
-        echo "<div class='forum-filter'>\n";
-        echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['order']) && in_array($_GET['order'],
-                                                                                                                                 array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0386'])." <span class='caret'></span></button>\n";
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
-            echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
-        }
-        echo "</ul>\n";
-        echo "</div>\n";
     }
 
 }

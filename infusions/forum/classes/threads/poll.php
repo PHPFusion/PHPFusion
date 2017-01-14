@@ -258,7 +258,7 @@ class Poll {
                     }
 
                     // how to make sure values containing options votes
-                    $poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
+                    $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
                     $poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
                     $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'],
                                                           array(
@@ -335,7 +335,7 @@ class Poll {
                 }
 
                 // blank poll - no poll on edit or new thread
-                $poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
+                $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
                 $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255,
                                                                                                                                   'placeholder' => $locale['forum_0604a'],
                                                                                                                                   'inline' => TRUE,
