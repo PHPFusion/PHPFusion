@@ -97,7 +97,7 @@ echo openform('testQuantum', 'post', FUSION_REQUEST);
 echo \PHPFusion\QuantumFields::quantum_multilocale_fields(
     'weblink_description', 'Weblink Description', $weblink_value,
     [
-        'type' => 'textarea', // text
+        'textarea' => 1, // text
         'required' => true,
         'class' => 'm-t-10',
     ]
