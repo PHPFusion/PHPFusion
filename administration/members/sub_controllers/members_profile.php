@@ -226,7 +226,7 @@ class Members_Profile extends Members_Admin {
         }
         echo "<h2>".self::$locale['ME_454']."</h2>";
         echo "<p>".sprintf(self::$locale['ME_455'], "<strong>".self::$user_data['user_name']."</strong>")."</p>\n";
-        echo openform('mod_form', 'post', FUSION_SELF.fusion_get_aidlink());
+        echo openform('mod_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;ref=delete&amp;lookup=".self::$user_id."");
         echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], array('class' => 'btn-primary m-r-10'));
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
         echo closeform();
