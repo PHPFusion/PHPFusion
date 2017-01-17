@@ -72,11 +72,8 @@ $locale['ME_555'] = 'cancelled';
 $locale['ME_556'] = 'anonymized';
 $locale['ME_557'] = 'permanently deleted';
 
-
-
-
-
-
+$locale['ME_560'] = "Display Results";
+$locale['ME_561'] = "Display User With Status";
 
 /*--------------------------------------------------------------------------
 These are old locale. They are MOST LIKELY not being used by the new member center.
