@@ -173,7 +173,8 @@ class Token extends \defender {
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '') {
         // resets remote file every callback
-        self::$remote_file = ($file ? $file : '');
+        $remote_file = ($file ? $file : '');
+        \defender::getInstance()->set_RemoteFile($remote_file);
 
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);

@@ -39,7 +39,7 @@ function openform($form_name, $method, $action_url, array $options = array()) {
     );
     $options += $default_options;
 
-    $class = "";
+    $class = '';
     if (!\defender::safe()) {
         $class .= "warning ".$options['class'];
     } elseif (!empty($options['class'])) {
