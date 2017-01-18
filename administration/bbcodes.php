@@ -179,7 +179,7 @@ if ($_GET['page'] == 1) {
         echo "</tr>\n</thead>\n<tbody>\n";
         $xx = 0;
         foreach ($available_bbcodes as $available_bbcode) {
-            $__BBCODE__ = "";
+            $__BBCODE__ = array();
             if (!in_array($available_bbcode, $enabled_bbcodes)) {
                 if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".png")) {
                     $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".png' alt='".$available_bbcode."' style='border:1px solid black' />\n";
