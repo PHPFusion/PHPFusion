@@ -27,13 +27,10 @@ function replaceDir($output = "") {
     $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
     if (!function_exists("replaceHTMLTags")) {
         function replaceHTMLTags($m) {
-            $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
-            $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/") - 1);
-            $actualDepth = ($pathDepth ? str_repeat("../", ($pathDepth >=0) ? $pathDepth : 0) : '');
-            $replace = $m[1]."=".$m[2]."../".($actualDepth).$m[3];
-            return $replace;
+            return $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
         }
     }
+
     return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
 add_handler("replaceDir");
