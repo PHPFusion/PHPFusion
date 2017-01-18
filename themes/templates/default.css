@@ -1426,3 +1426,8 @@ ul > li.divider {
 ul.navbar-nav li.no-link {
     position: relative;
 }
+
+ul.dropdown-menu,
+ul.dropdown-menu > li > ul {
+    list-style: none;
+}
