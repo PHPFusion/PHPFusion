@@ -64,6 +64,10 @@ class defender {
         return self::$defender_instance;
     }
 
+    public static function set_remoteFile($file) {
+        self::$remote_file = $file;
+    }
+
     /**
      * Request whether safe to proceed at all times
      *
@@ -139,12 +143,20 @@ class defender {
         } else {
             $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
             if (!empty($file)) {
+                // file needs to take out the request string.
+                if (stristr($file, '?')) {
+                    $file_arr = explode('?', $file);
+                    $file = $file_arr[0];
+                }
                 $hash = $encrypt ? md5($file) : $file;
             } elseif (!empty($_POST['file'])) {
-                $hash = $encrypt ? md5($_POST['file']) : $_POST['file'];
+                if (stristr($_POST['file'], '?')) {
+                    $file_arr = explode('?', $_POST['file']);
+                    $file = $file_arr[0];
+                }
+                $hash = $encrypt ? md5($file) : $file;
             }
         }
-
         return (string)$hash;
     }
 
