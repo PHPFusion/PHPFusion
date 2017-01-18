@@ -441,14 +441,14 @@ class SiteLinks {
             $res .= "<ul $class>\n";
             $res .= "<!--Menu Item Start-->\n";
         }
-
         // Show primary links
         $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
+        $res .= "<!--Menu Item End-->\n";
+        $res .= "</ul>\n";
+
         $res .= self::getMenuParam('html_content');
 
         if (empty($id)) {
-            $res .= "<!--Menu Item End-->\n";
-            $res .= "</ul>\n";
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
                 $class = (fusion_get_settings("bootstrap") ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
                 if (self::getMenuParam('additional_nav_class')) {
