@@ -49,7 +49,7 @@ if (db_exists(DB_FAQS)) {
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-            $query = "SELECT faq_cat_id=faq_cat_id
+            $query = "SELECT faq_question, faq_answer, faq_cat_id
             	FROM ".DB_FAQS."
 			    ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
@@ -87,7 +87,7 @@ if (db_exists(DB_FAQS)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => ImageRepo::getimage('ac_FQ'),
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_FQ')."' alt='".$locale['fq400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-question-circle fa-lg fa-fw",
                 '{%search_title%}'   => $locale['fq400'],
                 '{%search_result%}'  => $item_count,

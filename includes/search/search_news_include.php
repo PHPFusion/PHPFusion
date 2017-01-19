@@ -44,7 +44,7 @@ if (db_exists(DB_NEWS)) {
         );
 
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
-        $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '0,3');
+        $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND news_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
         switch (Search_Engine::get_param('fields')) {
@@ -64,7 +64,7 @@ if (db_exists(DB_NEWS)) {
         if (!empty(Search_Engine::get_param('search_param'))) {
 
             $rows = dbcount("(news_id)", DB_NEWS,
-                (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND 
+                (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND
                             ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW())
                             ".$date_search,
                 Search_Engine::get_param('search_param')
@@ -131,6 +131,5 @@ if (db_exists(DB_NEWS)) {
         Search_Engine::search_navigation($rows);
         Search_Engine::search_globalarray($formatted_result);
         Search_Engine::append_item_count($item_count);
-
     }
 }
