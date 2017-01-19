@@ -269,6 +269,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'delimiter'      => ',',
         'callback_check' => '',
         'file'           => '',
+        'allow_self'     => FALSE,
     );
     $options += $default_options;
     if (!$options['width']) {
@@ -302,8 +303,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= (defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '');
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
-    $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : "";
-    $path = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."search/users.json.php";
+    $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : '';
+    $path = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
     if (!empty($input_value)) {
         // json mode.
         $encoded = $options['file'] ? $options['file'] : user_search($input_value);
@@ -356,7 +357,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 function user_search($user_id) {
     $encoded = json_encode(array());
     $user_id = stripinput($user_id);
-    $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status='0' AND user_id='$user_id'");
+    $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
     if (dbrows($result) > 0) {
         while ($udata = dbarray($result)) {
             $user_id = $udata['user_id'];
@@ -364,10 +365,10 @@ function user_search($user_id) {
             $user_name = $udata['user_name'];
             $user_level = getuserlevel($udata['user_level']);
             $user_opts[] = array(
-                'id'     => "$user_id",
-                'text'   => "$user_name",
-                'avatar' => "$user_avatar",
-                "level"  => "$user_level"
+                'id'     => $user_id,
+                'text'   => $user_name,
+                'avatar' => $user_avatar,
+                "level"  => $user_level
             );
         }
         if (!isset($user_opts)) {
