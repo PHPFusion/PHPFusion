@@ -161,26 +161,28 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         $snippetSettings = array(
-            "required" => TRUE,
-            "preview" => TRUE,
-            "html" => TRUE,
-            "autosize" => TRUE,
+            "required"    => TRUE,
+            "preview"     => TRUE,
+            "html"        => TRUE,
+            'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
+            "autosize"    => TRUE,
             "placeholder" => $this->locale['news_0203a'],
-            "form_name" => "news_form",
-            "wordcount" => TRUE
+            "form_name"   => "news_form",
+            "wordcount"   => TRUE
         );
         if (fusion_get_settings("tinymce_enabled")) {
-            $snippetSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced");
+            $snippetSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
         }
 
         if (!fusion_get_settings("tinymce_enabled")) {
             $extendedSettings = array(
-                "preview" => TRUE,
-                "html" => TRUE,
-                "autosize" => TRUE,
+                "preview"     => TRUE,
+                "html"        => TRUE,
+                "autosize"    => TRUE,
                 "placeholder" => $this->locale['news_0203b'],
-                "form_name" => "news_form",
-                "wordcount" => TRUE,
+                "form_name"   => "news_form",
+                'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
+                "wordcount"   => TRUE,
             );
         } else {
             $extendedSettings = array("type" => "tinymce", "tinymce" => "advanced");

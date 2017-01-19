@@ -84,7 +84,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
         if ($colors) {
             $res .= "<div class='btn-group'>\n";
-            $res .= "<button title='".$locale['html_017']."' class='dropdown-toggle btn btn-sm btn-default button' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
+            $res .= "<button title='".$locale['html_017']."' class='btn btn-sm btn-default m-b-10 button dropdown-toggle' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
             $res .= "<ul class='dropdown-menu' role='text-color' style='width:190px;'>\n";
             $res .= "<li>\n";
             $res .= "<div class='display-block p-l-10 p-r-5 p-t-5 p-b-0' style='width:100%'>\n";
@@ -157,8 +157,29 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "</div>\n";
 
         if ($images && $folder) {
-            $options = makefilelist($folder, '.|..|index.php', TRUE);
-            $options = array_combine(array_values($options), array_values($options));
+            if (is_array($folder)) {
+                $options = array();
+                foreach ($folder as $dir) {
+                    if (file_exists($dir)) {
+                        $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+                        if (!empty($file_list)) {
+                            foreach ($file_list as $file) {
+                                $options[str_replace('../', '', $dir).$file] = $file;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (file_exists($folder)) {
+                    $file_list = makefilelist($folder, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
+                    if (!empty($file_list)) {
+                        foreach ($file_list as $file) {
+                            $options[str_replace('../', '', $folder).$file] = $file;
+                        }
+                    }
+                }
+            }
+
             $res .= form_select($textarea.'-insertimage', '', '',
                                 array(
                                     'options' => $options,
@@ -169,7 +190,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
             );
             add_to_jquery("
             $('#$textarea-insertimage').bind('change', function(e){
-                insertText('$textarea', '<img src=\"".fusion_get_settings('site_path').str_replace('../', '', $folder)."'+$(this).val()+'\" alt=\"\" style=\"margin:5px\"/>', '$formname');
+                insertText('$textarea', '<img src=\"".fusion_get_settings('site_path')."'+$(this).val()+'\" alt=\"\" style=\"margin:5px\"/>', '$formname');
                 $(this).select2('val', '');
             });
             ");
