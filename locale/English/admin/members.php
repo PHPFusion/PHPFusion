@@ -38,9 +38,9 @@ $locale['ME_451'] = '%s\'s Profile';
 $locale['ME_452'] = 'Edit %s\'s Profile';
 $locale['ME_453'] = 'Delete User %s';
 $locale['ME_454'] = "Warning!";
-$locale['ME_455'] = "You are about to delete user %s!\nThe contents posted by this user on this site will be deleted if you proceed.\n
-Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n
-Are you sure you want to delete this user?\n";
+$locale['ME_455'] = "You are about to delete user %s!\n\r\n\rThe contents posted by this user on this site will be deleted if you proceed.\n\r
+Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n\r
+Are you sure you want to delete this user?\n\r";
 $locale['ME_456'] = 'Delete User';
 
 $locale['ME_460'] = 'There are no users to be deactivated';

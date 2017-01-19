@@ -654,7 +654,7 @@ Grids
     border: 1px solid;
 }
 
-ul.block {
+ul.block, ul.error-list {
     list-style: none outside none;
 }
 
