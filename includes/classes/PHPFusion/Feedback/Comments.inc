@@ -978,7 +978,9 @@ class Comments {
      * Parse Comment Results
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
-
+        if (empty($row)) {
+            $row = array();
+        }
         $row += fusion_get_user($row['comment_name']);
         $actions = array();
         if ((iADMIN && checkrights("C")) || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))) {
