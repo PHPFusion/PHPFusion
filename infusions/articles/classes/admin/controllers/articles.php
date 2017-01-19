@@ -29,6 +29,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
+
         return self::$instance;
     }
 
@@ -95,18 +96,18 @@ class ArticlesAdmin extends ArticlesAdminModel {
             }
 
             $this->article_data = array(
-                "article_id" => form_sanitizer($_POST['article_id'], 0, "article_id"),
-                "article_subject" => form_sanitizer($_POST['article_subject'], "", "article_subject"),
-                "article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
-                "article_snippet" => form_sanitizer($article_snippet, "", "article_snippet"),
-                "article_article" => form_sanitizer($article_article, "", "article_article"),
-                "article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
-                "article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
-                "article_visibility" => form_sanitizer($_POST['article_visibility'], 0, "article_visibility"),
-                "article_draft" => isset($_POST['article_draft']) ? "1" : "0",
+                "article_id"             => form_sanitizer($_POST['article_id'], 0, "article_id"),
+                "article_subject"        => form_sanitizer($_POST['article_subject'], "", "article_subject"),
+                "article_cat"            => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
+                "article_snippet"        => form_sanitizer($article_snippet, "", "article_snippet"),
+                "article_article"        => form_sanitizer($article_article, "", "article_article"),
+                "article_keywords"       => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
+                "article_datestamp"      => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
+                "article_visibility"     => form_sanitizer($_POST['article_visibility'], 0, "article_visibility"),
+                "article_draft"          => isset($_POST['article_draft']) ? "1" : "0",
                 "article_allow_comments" => isset($_POST['article_allow_comments']) ? "1" : "0",
-                "article_allow_ratings" => isset($_POST['article_allow_ratings']) ? "1" : "0",
-                "article_language" => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
+                "article_allow_ratings"  => isset($_POST['article_allow_ratings']) ? "1" : "0",
+                "article_language"       => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
             );
 
             // Line Breaks
@@ -123,7 +124,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     dbquery_insert(DB_ARTICLES, $this->article_data, "update");
                     addNotice("success", $this->locale['article_0031']);
 
-                // Create
+                    // Create
                 } else {
                     $this->data['article_name'] = fusion_get_userdata("user_id");
                     $this->article_data['article_id'] = dbquery_insert(DB_ARTICLES, $this->article_data, "save");
@@ -148,16 +149,18 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = array(
-                "required" => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0251a'], 
-                "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true
+                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0251a'],
+                "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true,
+                'path'       => [IMAGES, IMAGES_A]
             );
             $articleExtendedSettings = array(
-                "required" => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0252a'], 
-                "error_text" => $this->locale['article_0272'], "form_name" => "articleform", "wordcount" => true
+                "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0252a'],
+                "error_text" => $this->locale['article_0272'], "form_name" => "articleform", "wordcount" => true,
+                'path'       => [IMAGES, IMAGES_A]
             );
         } else {
-            $articleSnippetSettings  = array("required" => true, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0271']);
-            $articleExtendedSettings = array("required" => ($this->articleSettings['article_extended_required'] ? true : false), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0272']);
+            $articleSnippetSettings = array("required" => true, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0271'], 'path' => [IMAGES, IMAGES_A]);
+            $articleExtendedSettings = array("required" => ($this->articleSettings['article_extended_required'] ? true : false), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['article_0272'], 'path' => [IMAGES, IMAGES_A]);
         }
 
         // Start Form
@@ -190,9 +193,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 openside($this->locale['article_0261']);
 
                 echo form_select_tree("article_cat", $this->locale['article_0253'], $this->article_data['article_cat'], array(
-                        "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
-                        "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
-                    ),
+                    "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
+                    "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+                ),
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
                 );
 
@@ -220,19 +223,19 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     "class" => "m-b-5", "reverse_label" => TRUE
                 ));
 
-                 if (fusion_get_settings("tinymce_enabled") != 1) {
+                if (fusion_get_settings("tinymce_enabled") != 1) {
                     echo form_checkbox("article_breaks", $this->locale['article_0257'], $this->article_data['article_breaks'], array(
                         "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
                     ));
                 }
 
                 echo form_checkbox("article_allow_comments", $this->locale['article_0258'], $this->article_data['article_allow_comments'], array(
-                    "class" => "m-b-5", "reverse_label" => TRUE,
+                    "class"   => "m-b-5", "reverse_label" => TRUE,
                     "ext_tip" => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
                 ));
 
                 echo form_checkbox("article_allow_ratings", $this->locale['article_0259'], $this->article_data['article_allow_ratings'], array(
-                    "class" => "m-b-5", "reverse_label" => TRUE,
+                    "class"   => "m-b-5", "reverse_label" => TRUE,
                     "ext_tip" => (!fusion_get_settings("ratings_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
                 ));
 
@@ -248,16 +251,18 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
     /**
      * Generate sets of push buttons for article Content form
+     *
      * @param $unique_id
      */
     private function display_articleButtons($unique_id, $breaker = true) {
         ?>
         <div class="m-t-20">
-          <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id."")); ?>
-          <?php echo form_button("save", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id."")); ?>
-          <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-r-10", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id."")); ?>
+            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id."")); ?>
+            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id."")); ?>
+            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-r-10", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id."")); ?>
         </div>
-        <?php if ($breaker) { ?><hr /><?php } ?>
+        <?php if ($breaker) { ?>
+            <hr/><?php } ?>
         <?php
     }
 
@@ -385,12 +390,12 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
         // Filters
         $filter_values = array(
-            "article_text" => !empty($_POST['article_text']) ? form_sanitizer($_POST['article_text'], "", "article_text") : "",
-            "article_status" => !empty($_POST['article_status']) ? form_sanitizer($_POST['article_status'], "", "article_status") : "",
-            "article_category" => !empty($_POST['article_category']) ? form_sanitizer($_POST['article_category'], "", "article_category") : "",
+            "article_text"       => !empty($_POST['article_text']) ? form_sanitizer($_POST['article_text'], "", "article_text") : "",
+            "article_status"     => !empty($_POST['article_status']) ? form_sanitizer($_POST['article_status'], "", "article_status") : "",
+            "article_category"   => !empty($_POST['article_category']) ? form_sanitizer($_POST['article_category'], "", "article_category") : "",
             "article_visibility" => !empty($_POST['article_visibility']) ? form_sanitizer($_POST['article_visibility'], "", "article_visibility") : "",
-            "article_language" => !empty($_POST['article_language']) ? form_sanitizer($_POST['article_language'], "", "article_language") : "",
-            "article_author" => !empty($_POST['article_author']) ? form_sanitizer($_POST['article_author'], "", "article_author") : "",
+            "article_language"   => !empty($_POST['article_language']) ? form_sanitizer($_POST['article_language'], "", "article_language") : "",
+            "article_author"     => !empty($_POST['article_author']) ? form_sanitizer($_POST['article_author'], "", "article_author") : "",
         );
 
         $filter_empty = TRUE;
@@ -408,70 +413,77 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($article_cats) { ?>
-                        <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=article_form", array("ref"), false); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0110']; ?></a>
+                        <a class="btn btn-success btn-sm m-r-10"
+                           href="<?php echo clean_request("ref=article_form", array("ref"), false); ?>"><i
+                                    class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0110']; ?></a>
                     <?php } ?>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
-                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
-                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
+                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i
+                                class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
+                    <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('unpublish');"><i
+                                class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></a>
+                    <a class="btn btn-danger btn-sm m-r-10" onclick="run_admin('delete');"><i
+                                class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></a>
                 </div>
 
                 <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
-                <?php echo form_text("article_text", "", $filter_values['article_text'], array(
-                    "placeholder" => $this->locale['article_0120'],
-                    "append_button" => TRUE,
-                    "append_value" => "<i class='fa fa-search'></i>",
-                    "append_form_value" => "search_article",
-                    "width" => "250px",
-                    "group_size" => "sm"
-                )); ?>
+                    <?php echo form_text("article_text", "", $filter_values['article_text'], array(
+                        "placeholder"       => $this->locale['article_0120'],
+                        "append_button"     => TRUE,
+                        "append_value"      => "<i class='fa fa-search'></i>",
+                        "append_form_value" => "search_article",
+                        "width"             => "250px",
+                        "group_size"        => "sm"
+                    )); ?>
                 </div>
 
                 <div class="display-inline-block" style="vertical-align: top;">
-                  <a class="btn btn-sm m-r-15 <?php echo ($filter_empty ? "btn-default" : "btn-info"); ?>" id="toggle_options" href="#">
-                    <?php echo $this->locale['article_0121']; ?>
-                    <span id="filter_caret" class="fa fa-fw <?php echo ($filter_empty ? "fa-caret-down" : "fa-caret-up"); ?>"></span>
-                  </a>
-                  <?php echo form_button("article_clear", $this->locale['article_0122'], "clear", array("class" => "btn-default btn-sm")); ?>
+                    <a class="btn btn-sm m-r-15 <?php echo($filter_empty ? "btn-default" : "btn-info"); ?>"
+                       id="toggle_options" href="#">
+                        <?php echo $this->locale['article_0121']; ?>
+                        <span id="filter_caret"
+                              class="fa fa-fw <?php echo($filter_empty ? "fa-caret-down" : "fa-caret-up"); ?>"></span>
+                    </a>
+                    <?php echo form_button("article_clear", $this->locale['article_0122'], "clear", array("class" => "btn-default btn-sm")); ?>
                 </div>
             </div>
 
             <!-- Display Filters -->
-            <div id="article_filter_options"<?php echo ($filter_empty ? " style='display: none;'" : ""); ?>>
-              <div class="display-inline-block">
-                <?php
+            <div id="article_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
+                <div class="display-inline-block">
+                    <?php
                     echo form_select("article_status", "", $filter_values['article_status'], array(
                         "allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0123']." -", "options" => array(0 => $this->locale['article_0124'], 1 => $this->locale['draft'])
                     ));
-                ?>
-              </div>
-              <div class="display-inline-block">
-                <?php
+                    ?>
+                </div>
+                <div class="display-inline-block">
+                    <?php
                     echo form_select("article_visibility", "", $filter_values['article_visibility'], array(
                         "allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0125']." -", "options" => fusion_get_groups()
                     ));
-                ?>
-              </div>
-              <div class="display-inline-block">
-                <?php
-                echo form_select_tree("article_category", "", $filter_values['article_category'], array(
-                        "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_id ASC",
+                    ?>
+                </div>
+                <div class="display-inline-block">
+                    <?php
+                    echo form_select_tree("article_category", "", $filter_values['article_category'], array(
+                        "query"        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_id ASC",
                         "parent_value" => $this->locale['article_0127'],
-                        "placeholder" => "- ".$this->locale['article_0126']." -",
-                        "allowclear" => TRUE
+                        "placeholder"  => "- ".$this->locale['article_0126']." -",
+                        "allowclear"   => TRUE
                     ), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
-                ?>
-              </div>
-              <div class="display-inline-block">
-                <?php
+                    ?>
+                </div>
+                <div class="display-inline-block">
+                    <?php
                     $language_opts = array(0 => $this->locale['article_0129']);
                     $language_opts += fusion_get_enabled_languages();
                     echo form_select("article_language", "", $filter_values['article_language'], array(
                         "allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0128']." -", "options" => $language_opts
                     ));
-                ?>
-              </div>
-              <div class="display-inline-block">
-                <?php
+                    ?>
+                </div>
+                <div class="display-inline-block">
+                    <?php
                     $author_opts = array(0 => $this->locale['article_0131']);
                     $result = dbquery("
                         SELECT n.article_name, u.user_id, u.user_name, u.user_status
@@ -488,11 +500,11 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     echo form_select("article_author", "", $filter_values['article_author'], array(
                         "allowclear" => TRUE, "placeholder" => "- ".$this->locale['article_0130']." -", "options" => $author_opts
                     ));
-                ?>
-              </div>
+                    ?>
+                </div>
             </div>
 
-           <?php echo closeform(); ?>
+            <?php echo closeform(); ?>
         </div>
 
         <?php echo openform("article_table", "post", FUSION_REQUEST); ?>
@@ -502,9 +514,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
         <div class="display-block">
             <div class="display-inline-block">
                 <?php
-                    echo form_select("article_display", $this->locale['article_0132'], $limit, array(
-                        "width" => "100px", "options" => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100)
-                    ));
+                echo form_select("article_display", $this->locale['article_0132'], $limit, array(
+                    "width" => "100px", "options" => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100)
+                ));
                 ?>
             </div>
             <?php if ($max_rows > $article_rows) : ?>
@@ -534,9 +546,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <?php if (dbrows($result2) > 0) :
                 while ($data = dbarray($result2)) : ?>
                     <?php
-                    $cat_edit_link = clean_request("section=article_category&ref=article_cat_form&action=edit&cat_id=".$data['article_cat_id'], array("section", "ref", "action", "cat_id"),     FALSE);
-                    $edit_link     = clean_request("section=article&ref=article_form&action=edit&article_id=".$data['article_id'],              array("section", "ref", "action", "article_id"), FALSE);
-                    $delete_link   = clean_request("section=article&ref=article_form&action=delete&article_id=".$data['article_id'],            array("section", "ref", "action", "article_id"), FALSE);
+                    $cat_edit_link = clean_request("section=article_category&ref=article_cat_form&action=edit&cat_id=".$data['article_cat_id'], array("section", "ref", "action", "cat_id"), FALSE);
+                    $edit_link = clean_request("section=article&ref=article_form&action=edit&article_id=".$data['article_id'], array("section", "ref", "action", "article_id"), FALSE);
+                    $delete_link = clean_request("section=article&ref=article_form&action=delete&article_id=".$data['article_id'], array("section", "ref", "action", "article_id"), FALSE);
                     ?>
                     <tr data-id="<?php echo $data['article_id']; ?>">
                         <td><?php echo form_checkbox("article_id[]", "", "", array("value" => $data['article_id'], "class" => "m-0")) ?></td>
@@ -549,8 +561,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         <td>
                             <span class="badge"><?php echo $data['article_draft'] ? $this->locale['yes'] : $this->locale['no']; ?></span>
                         </td>
-                        <td><?php echo ($data['article_allow_comments'] ? format_word($data['comments_count'], $this->locale['fmt_comment']) : $this->locale['disable']); ?></td>
-                        <td><?php echo ($data['article_allow_ratings']  ? format_word($data['ratings_count'], $this->locale['fmt_rating'])   : $this->locale['disable']); ?></td>
+                        <td><?php echo($data['article_allow_comments'] ? format_word($data['comments_count'], $this->locale['fmt_comment']) : $this->locale['disable']); ?></td>
+                        <td><?php echo($data['article_allow_ratings'] ? format_word($data['ratings_count'], $this->locale['fmt_rating']) : $this->locale['disable']); ?></td>
                         <td>
                             <div class="pull-left"><?php echo display_avatar($data, "20px", "", FALSE, "img-rounded m-r-5"); ?></div>
                             <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']); ?></div>
@@ -558,15 +570,18 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         <td><span class="badge"><?php echo getgroupname($data['article_visibility']); ?></span></td>
                         <td><?php echo $data['article_language'] ?></td>
                         <td>
-                            <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-                            <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['article_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                            <a href="<?php echo $edit_link; ?>"
+                               title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                            <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>"
+                               onclick="return confirm('<?php echo $this->locale['article_0111']; ?>')"><?php echo $this->locale['delete']; ?></a>
                         </td>
                     </tr>
                     <?php
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="9" class="text-center"><?php echo ($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
+                    <td colspan="9"
+                        class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
                 </tr>
             <?php endif; ?>
             </tbody>

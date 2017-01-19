@@ -238,29 +238,31 @@ echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array('clas
 closeside();
 echo "</div>\n</div>\n";
 $snippetSettings = array(
-    "required" => TRUE,
-    "preview" => TRUE,
-    "html" => TRUE,
-    "autosize" => TRUE,
-    "placeholder" => $locale['blog_0425a'],
-    "form_name" => "inputform"
+    'required'    => TRUE,
+    'preview'     => TRUE,
+    'html'        => TRUE,
+    'autosize'    => TRUE,
+    'placeholder' => $locale['blog_0425a'],
+    'form_name'   => 'inputform',
+    'path'        => [IMAGES, IMAGES_B, IMAGES_BC]
 );
-if (fusion_get_settings("tinymce_enabled")) {
-    $snippetSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced");
+if (fusion_get_settings('tinymce_enabled')) {
+    $snippetSettings = array('required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced');
 }
 echo form_textarea('blog_blog', $locale['blog_0425'], $data['blog_blog'], $snippetSettings);
 
 $extendedSettings = array();
-if (!fusion_get_settings("tinymce_enabled")) {
+if (!fusion_get_settings('tinymce_enabled')) {
     $extendedSettings = array(
-        "preview" => TRUE,
-        "html" => TRUE,
-        "autosize" => TRUE,
-        "placeholder" => $locale['blog_0426b'],
-        "form_name" => "inputform"
+        'preview'     => TRUE,
+        'html'        => TRUE,
+        'autosize'    => TRUE,
+        'placeholder' => $locale['blog_0426b'],
+        'form_name'   => 'inputform',
+        'path'        => [IMAGES, IMAGES_B, IMAGES_BC]
     );
 } else {
-    $extendedSettings = array("type" => "tinymce", "tinymce" => "advanced");
+    $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'path' => [IMAGES, IMAGES_B, IMAGES_BC]);
 }
 echo form_textarea('blog_extended', $locale['blog_0426'], $data['blog_extended'], $extendedSettings);
 echo "<div class='row'>\n";
