@@ -512,15 +512,16 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
 
         $index = dbquery_tree($db, $id_col, $cat_col, $options['query'], $options['full_query']);
-        $data = dropdown_select($db, $id_col, $name_col, $cat_col, implode(',', flatten_array($index)), $options['query'], $options['full_query']);
-
+        if (!empty($index)) {
+            $data = dropdown_select($db, $id_col, $name_col, $cat_col, implode(',', flatten_array($index)), $options['query'], $options['full_query']);
+        }
     }
 
     if (!$id) {
         $id = 0;
     }
 
-    if (isset($index[$id])) {
+    if (isset($index[$id]) && !empty($data)) {
         foreach ($index[$id] as $key => $value) {
             // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
