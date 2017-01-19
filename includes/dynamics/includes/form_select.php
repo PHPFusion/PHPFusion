@@ -266,6 +266,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'class'          => '',
         'inline'         => FALSE,
         'tip'            => '',
+        'ext_tip'        => '',
         'delimiter'      => ',',
         'callback_check' => '',
         'file'           => '',
@@ -301,7 +302,11 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
     $html .= (defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '');
+
+    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
+
     $html .= $options['inline'] ? "</div>\n" : '';
+
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : '';
     $path = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");

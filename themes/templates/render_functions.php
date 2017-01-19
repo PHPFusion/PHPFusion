@@ -67,11 +67,11 @@ function close_side($title = '') {
     static $closeside = '';
     if (empty($closeside)) {
         ob_start();
-        openside($title);
+        closeside($title);
         $closeside = ob_get_contents();
         ob_end_clean();
         if (empty($closeside)) {
-            $closeside = openside($title);
+            $closeside = closeside($title);
         }
     }
     return $closeside;
