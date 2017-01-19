@@ -578,7 +578,7 @@ $result = self::FaqData($criteria);
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="7" class="text-center">
                     <?php echo $this->locale['faq_0112']; ?>
                 </td>
             </tr>

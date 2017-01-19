@@ -491,7 +491,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="7" class="text-center">
                     <?php echo $this->locale['article_0162']; ?>
                 </td>
             </tr>

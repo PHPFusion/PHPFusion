@@ -580,7 +580,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="9"
+                    <td colspan="10"
                         class="text-center"><?php echo($article_cats ? ($filter_empty ? $this->locale['article_0112'] : $this->locale['article_0113']) : $this->locale['article_0114']); ?></td>
                 </tr>
             <?php endif; ?>

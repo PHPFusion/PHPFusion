@@ -455,7 +455,6 @@ class WeblinksAdmin extends WeblinksAdminModel {
         <table class="table table-responsive table-striped">
             <thead>
             <tr>
-                <td></td>
                 <td class="strong col-xs-4"><?php echo $this->locale['WLS_0100'] ?></td>
                 <td class="strong"><?php echo $this->locale['WLS_0101'] ?></td>
                 <td class="strong"><?php echo $this->locale['WLS_0102'] ?></td>
@@ -494,7 +493,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="9" class="text-center"><?php echo ($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
+                    <td colspan="6" class="text-center"><?php echo ($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
                 </tr>
             <?php endif; ?>
             </tbody>
