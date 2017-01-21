@@ -24,6 +24,19 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
+$country = \PHPFusion\Geomap::getCountryResource();
+//print_p($country);
+foreach ($country as $object) {
+    print_p($object);
+    $currency = \PHPFusion\Geomap::get_Currency($object->currency[0]);
+    print_p($currency);
+}
+
+// Currency List
+$currency = \PHPFusion\Geomap::get_Currency();
+print_p($currency);
+
+
 opentable('MimeCheck');
 echo openform('post', 'post', BASEDIR.'testDefender.php', array('enctype'=>TRUE));
 if (isset($_POST['upload_file'])) {
