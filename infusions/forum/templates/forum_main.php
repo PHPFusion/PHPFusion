@@ -260,9 +260,7 @@ if (!function_exists('forum_viewforum')) {
             echo "<!--pre_forum-->\n";
             echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
 
-            echo "<div class='filter'>\n";
             forum_filter($info);
-            echo "</div>\n";
 
             echo "<div id='forumThreads'>\n";
             render_forum_threads($info);
@@ -529,7 +527,9 @@ if (!function_exists('forum_filter')) {
             'ascending' => $locale['forum_0385']
         );
 
-        if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
+        if (isset($_GET['tag_id']) && isnum($_GET['tag_id']) || isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
+            echo "<div class='filter'>\n";
+
             echo $locale['forum_0388'];
             echo "<div class='forum-filter'>\n";
             echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['time']) && in_array($_GET['time'],
@@ -569,6 +569,7 @@ if (!function_exists('forum_filter')) {
             }
             echo "</ul>\n";
             echo "</div>\n";
+            echo "</div>\n"; // .filter
         }
     }
 
