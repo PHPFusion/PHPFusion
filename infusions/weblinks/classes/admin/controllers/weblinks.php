@@ -409,7 +409,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 			  <div class="display-inline-block">
 			    <?php
 				echo form_select_tree("weblink_cat", "", $filter_values['weblink_cat'], array(
-						"query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_id ASC",
+						"query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : ""),
 						"parent_value" => $this->locale['WLS_0127'],
 						"placeholder" => "- ".$this->locale['WLS_0126']." -",
 						"allowclear" => TRUE

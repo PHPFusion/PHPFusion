@@ -466,7 +466,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 <div class="display-inline-block">
                     <?php
                     echo form_select_tree("article_category", "", $filter_values['article_category'], array(
-                        "query"        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_id ASC",
+                        "query"        => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : ""),
                         "parent_value" => $this->locale['article_0127'],
                         "placeholder"  => "- ".$this->locale['article_0126']." -",
                         "allowclear"   => TRUE
