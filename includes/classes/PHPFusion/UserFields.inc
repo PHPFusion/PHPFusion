@@ -147,6 +147,7 @@ class UserFields extends QuantumFields {
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
+            $this->info['user_id'] = form_hidden('user_id', '', isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : 0);
 
             if (iADMIN || $this->_userNameChange) {
                 $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, array(
@@ -367,6 +368,7 @@ class UserFields extends QuantumFields {
         echo strtr(ob_get_clean(), [
                 '{%tab_header%}'                => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '',
                 '{%open_form%}'                 => $this->info['openform'],
+                '{%user_id%}'                   => $this->info['user_id'],
                 '{%user_name_field%}'           => $this->info['user_name'],
                 '{%user_email_field%}'          => $this->info['user_email'],
                 '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
