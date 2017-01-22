@@ -20,7 +20,11 @@ $locale['424'] = "PHP";
 $locale['425'] = "Lower Center";
 $locale['426'] = "Below header";
 $locale['427'] = "Above footer";
-// Panel Options
+$locale['428a'] = "User 1";
+$locale['428b'] = "User 2";
+$locale['428c'] = "User 3";
+$locale['428d'] = "User 4";
+// Panel Options1
 $locale['430'] = "Move to left";
 $locale['431'] = "Move to right";
 $locale['432'] = "Move up";

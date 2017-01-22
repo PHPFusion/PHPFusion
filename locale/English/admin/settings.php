@@ -54,6 +54,10 @@ $locale['439'] = "Normalize Friendly URLs:";
 $locale['440'] = "Enable SEO Debug Mode:";
 $locale['441'] = "Enable Entypo";
 $locale['442'] = "Enable Font-Awesome";
+$locale['443a'] = "Exclude User 1 Panels";
+$locale['443b'] = "Exclude User 2 Panels";
+$locale['443c'] = "Exclude User 3 Panels";
+$locale['443d'] = "Exclude User 4 Panels";
 
 // Time & Date Settings
 $locale['450'] = "Time and Date";

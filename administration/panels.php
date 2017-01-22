@@ -113,7 +113,11 @@ class fusion_panel_admin {
             3 => self::$locale['425'],
             4 => self::$locale['422'],
             5 => self::$locale['426'],
-            6 => self::$locale['427']
+	        6 => self::$locale['427'],
+            11 => self::$locale['428a'],
+            12 => self::$locale['428b'],
+            13 => self::$locale['428c'],
+            14 => self::$locale['428d']
         );
     }
 
@@ -372,6 +376,14 @@ class fusion_panel_admin {
         echo self::panel_reactor(4);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
         echo self::panel_reactor(6);
+	    echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+	    echo self::panel_reactor(11);
+	    echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+	    echo self::panel_reactor(12);
+	    echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+	    echo self::panel_reactor(13);
+	    echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+	    echo self::panel_reactor(14);
         echo "</div>\n</div>\n";
         echo "</div>\n";
         //Unused Panels in the directory

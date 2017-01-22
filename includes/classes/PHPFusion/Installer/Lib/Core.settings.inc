@@ -164,6 +164,22 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => ''
             ],
             [
+                'settings_name' => 'exclude_user1',
+                'settings_value' => ''
+            ],
+            [
+                'settings_name' => 'exclude_user2',
+                'settings_value' => ''
+            ],
+            [
+                'settings_name' => 'exclude_user3',
+                'settings_value' => ''
+            ],
+            [
+                'settings_name' => 'exclude_user4',
+                'settings_value' => ''
+            ],
+            [
                 'settings_name' => 'shortdate',
                 'settings_value' => $locale['setup_3700'],
             ],
