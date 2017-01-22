@@ -37,6 +37,7 @@ if (!function_exists('display_register_form')) {
         <!--editprofile_pre_idx-->
         <div id='register_form' class='row m-t-20'><div class='col-xs-12 col-sm-12'>
                {%open_form%}
+               {%user_id%}
                {%user_name_field%}
                {%user_email_field%}
                {%user_hide_email_field%}
