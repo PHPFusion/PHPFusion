@@ -16,9 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
-
-use PHPFusion\Search;
-
+/**
+ * Class Search_Model
+ *
+ * @package PHPFusion\Search
+ */
 abstract class Search_Model {
 
     protected static $available_modules = array();
