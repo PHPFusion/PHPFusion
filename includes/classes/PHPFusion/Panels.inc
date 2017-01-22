@@ -25,6 +25,10 @@ class Panels {
     const PANEL_RIGHT = 4;
     const PANEL_AU_CENTER = 5;
     const PANEL_BL_CENTER = 6;
+	const PANEL_USER1 = 11;
+	const PANEL_USER2 = 12;
+	const PANEL_USER3 = 13;
+	const PANEL_USER4 = 14;
     private static $panel_instance = NULL;
     private static $panel_name = array(
         array('name' => 'LEFT', 'side' => 'left'),
@@ -32,7 +36,11 @@ class Panels {
         array('name' => 'L_CENTER', 'side' => 'lower'),
         array('name' => 'RIGHT', 'side' => 'right'),
         array('name' => 'AU_CENTER', 'side' => 'aupper'),
-        array('name' => 'BL_CENTER', 'side' => 'blower')
+	    array('name' => 'BL_CENTER', 'side' => 'blower'),
+        array('name' => 'USER1', 'side' => 'user1'),
+        array('name' => 'USER2', 'side' => 'user2'),
+        array('name' => 'USER3', 'side' => 'user3'),
+        array('name' => 'USER4', 'side' => 'user4')
     );
 
     private static $panel_excluded = array();
@@ -180,7 +188,7 @@ class Panels {
 
     /**
      * Hides panel
-     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER'
+     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
      */
     public function hide_panel($side) {
         foreach (self::$panel_name as $p_key => $p_side) {
@@ -351,9 +359,25 @@ class Panels {
                 $exclude_list = explode("\r\n", $settings['exclude_blower']);
             }
         } elseif ($side == "right") {
-            if ($settings['exclude_right'] != "") {
-                $exclude_list = explode("\r\n", $settings['exclude_right']);
-            }
+	        if ($settings['exclude_right'] != "") {
+		        $exclude_list = explode("\r\n", $settings['exclude_right']);
+	        }
+        } elseif ($side == "user1") {
+	        if ($settings['exclude_user1'] != "") {
+		        $exclude_list = explode("\r\n", $settings['exclude_user1']);
+	        }
+        } elseif ($side == "user2") {
+	        if ($settings['exclude_user2'] != "") {
+		        $exclude_list = explode("\r\n", $settings['exclude_user2']);
+	        }
+        } elseif ($side == "user3") {
+	        if ($settings['exclude_user3'] != "") {
+		        $exclude_list = explode("\r\n", $settings['exclude_user3']);
+	        }
+        } elseif ($side == "user4") {
+	        if ($settings['exclude_user4'] != "") {
+		        $exclude_list = explode("\r\n", $settings['exclude_user4']);
+	        }
         }
 
         if (is_array($exclude_list)) {

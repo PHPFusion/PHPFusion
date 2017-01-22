@@ -98,7 +98,11 @@ $settings_main = array(
     'exclude_aupper' => fusion_get_settings('exclude_aupper'),
     'exclude_lower' => fusion_get_settings('exclude_lower'),
     'exclude_blower' => fusion_get_settings('exclude_blower'),
-    'exclude_right' => fusion_get_settings('exclude_right'),
+	'exclude_right' => fusion_get_settings('exclude_right'),
+	'exclude_user1' => fusion_get_settings('exclude_user1'),
+	'exclude_user2' => fusion_get_settings('exclude_user2'),
+	'exclude_user3' => fusion_get_settings('exclude_user3'),
+	'exclude_user4' => fusion_get_settings('exclude_user4'),
     'logoposition_xs' => fusion_get_settings('logoposition_xs'),
     'logoposition_sm' => fusion_get_settings('logoposition_sm'),
     'logoposition_md' => fusion_get_settings('logoposition_md'),
@@ -128,7 +132,11 @@ if (isset($_POST['savesettings'])) {
         'exclude_aupper' => form_sanitizer($_POST['exclude_aupper'], '', 'exclude_aupper'),
         'exclude_lower' => form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower'),
         'exclude_blower' => form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower'),
-        'exclude_right' => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
+	    'exclude_right' => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
+	    'exclude_user1' => form_sanitizer($_POST['exclude_user1'], '', 'exclude_user1'),
+	    'exclude_user2' => form_sanitizer($_POST['exclude_user2'], '', 'exclude_user2'),
+	    'exclude_user3' => form_sanitizer($_POST['exclude_user3'], '', 'exclude_user3'),
+	    'exclude_user4' => form_sanitizer($_POST['exclude_user4'], '', 'exclude_user4'),
         'logoposition_xs' => form_sanitizer($_POST['logoposition_xs'], '', 'logoposition_xs'),
         'logoposition_sm' => form_sanitizer($_POST['logoposition_sm'], '', 'logoposition_sm'),
         'logoposition_md' => form_sanitizer($_POST['logoposition_md'], '', 'logoposition_md'),
@@ -307,6 +315,10 @@ echo form_textarea('exclude_aupper', $locale['435'], $settings_main['exclude_aup
 echo form_textarea('exclude_lower', $locale['422'], $settings_main['exclude_lower'], array('autosize' => TRUE));
 echo form_textarea('exclude_blower', $locale['436'], $settings_main['exclude_blower'], array('autosize' => TRUE));
 echo form_textarea('exclude_right', $locale['423'], $settings_main['exclude_right'], array('autosize' => TRUE));
+echo form_textarea('exclude_user1', $locale['443a'], $settings_main['exclude_user1'], array('autosize' => TRUE));
+echo form_textarea('exclude_user2', $locale['443b'], $settings_main['exclude_user2'], array('autosize' => TRUE));
+echo form_textarea('exclude_user3', $locale['443c'], $settings_main['exclude_user3'], array('autosize' => TRUE));
+echo form_textarea('exclude_user4', $locale['443d'], $settings_main['exclude_user4'], array('autosize' => TRUE));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
