@@ -1507,7 +1507,7 @@ function showdate($format, $val) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
-        return strftime($format, $offset);
+	return showdate($format, $offset);
     } else {
         $offset = intval($val) + $offset;
 
