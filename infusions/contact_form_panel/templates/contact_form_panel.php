@@ -29,7 +29,9 @@ if (!function_exists('render_contact_panel')) {
             echo '{%email_field%}';
             echo '{%subject_field%}';
             echo '{%message_field%}';
-            include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+            if (!iADMIN) {
+                include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+            }
             echo '{%captcha%}';
             echo '{%send_button%}';
             echo '{%close_form%}';
