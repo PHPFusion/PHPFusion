@@ -308,7 +308,6 @@ class adminDashboard extends resource {
                                     $review_link = INFUSIONS."faq/faq_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
                                     break;
                                 default:
-                                    // @todo: add admin class API to use infusion_db.php to register submission link
                                     $review_link = "";
                             }
                             echo "<!--Start Submissions Item-->\n";

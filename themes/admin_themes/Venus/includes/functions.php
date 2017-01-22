@@ -336,8 +336,10 @@ function render_dashboard() {
                             case "l":
                                 $review_link = INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
                                 break;
+                            case "q":
+                                $review_link = INFUSIONS."faq/faq_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
+                                break;
                             default:
-                                // @todo: add admin class API to use infusion_db.php to register submission link
                                 $review_link = "";
                         }
                         echo "<!--Start Submissions Item-->\n";
