@@ -21,9 +21,8 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_contact_panel')) {
     function render_contact_panel(array $info = array()) {
-        $locale = fusion_get_locale('', LOCALE.LOCALESET.'contact.php');
 
-        echo openside($locale['400']);
+        echo openside('{%tablename%}');
             echo '{%prmessages%}';
             echo '{%open_form%}';
             echo '{%mail_name_field%}';
