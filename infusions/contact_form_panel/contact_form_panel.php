@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'contact.php');
 $settings = fusion_get_settings();
+
 $input = [
     'mailname'     => '',
     'email'        => '',
@@ -87,7 +88,6 @@ if (isset($_POST['sendmessage'])) {
             addNotice('warning', $locale['425']);
             redirect(FUSION_SELF);
         }
-
     }
 }
 
@@ -97,12 +97,13 @@ if (!iADMIN) {
         $captcha = form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
     }
 }
+
 $message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['401']);
 $message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
 
 $info = [
     'tablename'    => $locale['400'],
-    'prmessages'   => "<div class='text-center well'>".$message."</div>\n",
+    'prmessages'   => $message,
     'openform'     => openform('contactform', 'post', FUSION_SELF, ['max_tokens' => 1]),
     'mail_name'    => form_text('mailname', $locale['402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64]),
     'email'        => form_text('email', $locale['403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64]),

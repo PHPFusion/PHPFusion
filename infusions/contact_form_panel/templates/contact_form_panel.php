@@ -21,9 +21,8 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_contact_panel')) {
     function render_contact_panel(array $info = array()) {
-
         echo openside('{%tablename%}');
-            echo '{%prmessages%}';
+            echo '<div class="text-center well">{%prmessages%}</div>';
             echo '{%open_form%}';
             echo '{%mail_name_field%}';
             echo '{%email_field%}';
