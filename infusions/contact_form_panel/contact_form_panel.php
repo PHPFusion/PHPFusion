@@ -93,7 +93,6 @@ if (isset($_POST['sendmessage'])) {
 
 $captcha = '';
 if (!iADMIN) {
-    include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
         $captcha = form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
     }
