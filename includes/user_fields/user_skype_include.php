@@ -31,5 +31,5 @@ if ($profile_method == 'input') {
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 // Display user field input
 } elseif ($profile_method == 'display') {
-    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: "");
 }
