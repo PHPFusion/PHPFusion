@@ -24,6 +24,6 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_name_middle', $locale['uf_name_middle'], $field_value, $options);
 } elseif ($profile_method == "display") {
 
-    $user_fields = array('title' => $locale['uf_name_middle'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_name_middle'], 'value' => $field_value ?: "");
 
 }
