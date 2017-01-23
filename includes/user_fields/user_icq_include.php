@@ -31,5 +31,5 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_icq'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_icq'], 'value' => $field_value ?: "");
 }
