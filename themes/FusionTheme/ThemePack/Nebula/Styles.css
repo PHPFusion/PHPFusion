@@ -44,6 +44,10 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
+ul > li {
+    list-style: none;
+}
+
 .headerBg {
     background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
     background-size: cover;
