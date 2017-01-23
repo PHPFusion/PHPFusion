@@ -23,5 +23,5 @@ if ($profile_method == "input") {
     $options += array('inline' => TRUE, 'max_length' => 20);
     $user_fields = form_text('user_name_first', $locale['uf_name_first'], $field_value, $options);
 } elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_name_first'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_name_first'], 'value' => $field_value ?: "");
 }
