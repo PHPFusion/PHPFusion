@@ -25,10 +25,10 @@ class Panels {
     const PANEL_RIGHT = 4;
     const PANEL_AU_CENTER = 5;
     const PANEL_BL_CENTER = 6;
-	const PANEL_USER1 = 11;
-	const PANEL_USER2 = 12;
-	const PANEL_USER3 = 13;
-	const PANEL_USER4 = 14;
+	const PANEL_USER1 = 7;
+	const PANEL_USER2 = 8;
+	const PANEL_USER3 = 9;
+	const PANEL_USER4 = 10;
     private static $panel_instance = NULL;
     private static $panel_name = array(
         array('name' => 'LEFT', 'side' => 'left'),
