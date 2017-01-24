@@ -209,6 +209,25 @@ class MainFrame extends Core {
 
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
+
+        echo "<div class='row'>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER1') && USER1 ? USER1 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER2') && USER2 ? USER2 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER3') && USER3 ? USER3 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER4') && USER4 ? USER4 : '';
+            echo "</div>\n";
+        echo "</div>\n";
+
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         echo "<div class='about_theme' style='margin-bottom: 60px;'>\n";

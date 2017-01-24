@@ -392,6 +392,25 @@ class SeptenaryComponents {
         $settings = fusion_get_settings();
 
         $this->open_grid('footer', TRUE);
+
+        echo "<div class='row m-b-20'>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER1') && USER1 ? USER1 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER2') && USER2 ? USER2 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER3') && USER3 ? USER3 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER4') && USER4 ? USER4 : '';
+            echo "</div>\n";
+        echo "</div>\n";
+
         echo "<div class='footer-row row'>\n";
         echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3'>\n";
         echo "<img style='width:80%;' alt='".$locale['sept_011']."' class='img-responsive' src='".THEME."images/htmlcss.jpg' />";

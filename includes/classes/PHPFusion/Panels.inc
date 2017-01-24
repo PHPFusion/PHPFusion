@@ -18,17 +18,16 @@
 namespace PHPFusion;
 
 class Panels {
-
     const PANEL_LEFT = 1;
     const PANEL_U_CENTER = 2;
     const PANEL_L_CENTER = 3;
     const PANEL_RIGHT = 4;
     const PANEL_AU_CENTER = 5;
     const PANEL_BL_CENTER = 6;
-	const PANEL_USER1 = 7;
-	const PANEL_USER2 = 8;
-	const PANEL_USER3 = 9;
-	const PANEL_USER4 = 10;
+    const PANEL_USER1 = 7;
+    const PANEL_USER2 = 8;
+    const PANEL_USER3 = 9;
+    const PANEL_USER4 = 10;
     private static $panel_instance = NULL;
     private static $panel_name = array(
         array('name' => 'LEFT', 'side' => 'left'),
@@ -36,7 +35,7 @@ class Panels {
         array('name' => 'L_CENTER', 'side' => 'lower'),
         array('name' => 'RIGHT', 'side' => 'right'),
         array('name' => 'AU_CENTER', 'side' => 'aupper'),
-	    array('name' => 'BL_CENTER', 'side' => 'blower'),
+        array('name' => 'BL_CENTER', 'side' => 'blower'),
         array('name' => 'USER1', 'side' => 'user1'),
         array('name' => 'USER2', 'side' => 'user2'),
         array('name' => 'USER3', 'side' => 'user3'),
@@ -67,8 +66,6 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-
-        //if (empty(self::$panels_cache)) {
         $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
         $p_result = dbquery($panel_query);
         if (multilang_table("PN")) {
@@ -85,8 +82,6 @@ class Panels {
                 }
             }
         }
-
-        //}
 
         return (array)self::$panels_cache;
     }
@@ -309,7 +304,6 @@ class Panels {
 
                 $html = "<div class='content".ucfirst($p_side['side'])."'>";
                 $html .= $content;
-                //$html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
                 $html .= "</div>\n";
 
                 define($p_side['name'], (!empty($content) ? $html : ''));
@@ -359,25 +353,25 @@ class Panels {
                 $exclude_list = explode("\r\n", $settings['exclude_blower']);
             }
         } elseif ($side == "right") {
-	        if ($settings['exclude_right'] != "") {
-		        $exclude_list = explode("\r\n", $settings['exclude_right']);
-	        }
+            if ($settings['exclude_right'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_right']);
+            }
         } elseif ($side == "user1") {
-	        if ($settings['exclude_user1'] != "") {
-		        $exclude_list = explode("\r\n", $settings['exclude_user1']);
-	        }
+            if ($settings['exclude_user1'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user1']);
+            }
         } elseif ($side == "user2") {
-	        if ($settings['exclude_user2'] != "") {
-		        $exclude_list = explode("\r\n", $settings['exclude_user2']);
-	        }
+            if ($settings['exclude_user2'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user2']);
+            }
         } elseif ($side == "user3") {
-	        if ($settings['exclude_user3'] != "") {
-		        $exclude_list = explode("\r\n", $settings['exclude_user3']);
-	        }
+            if ($settings['exclude_user3'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user3']);
+            }
         } elseif ($side == "user4") {
-	        if ($settings['exclude_user4'] != "") {
-		        $exclude_list = explode("\r\n", $settings['exclude_user4']);
-	        }
+            if ($settings['exclude_user4'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user4']);
+            }
         }
 
         if (is_array($exclude_list)) {
@@ -393,10 +387,6 @@ class Panels {
             // exclude list is an array
             // current url.
             return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
-            //if (stristr($exclude_list, '?')) {
-              //  return (in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list) ? FALSE : TRUE);
-            //} else {
-            //}
         } else {
             return TRUE;
         }

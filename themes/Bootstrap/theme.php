@@ -139,6 +139,25 @@ function render_page($license = FALSE) {
     if (defined('BL_CENTER') && BL_CENTER) {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".BL_CENTER."</div>\n</div>";
     }
+
+    echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER1') && USER1 ? USER1 : '';
+        echo "</div>\n";
+
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER2') && USER2 ? USER2 : '';
+        echo "</div>\n";
+
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER3') && USER3 ? USER3 : '';
+        echo "</div>\n";
+
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER4') && USER4 ? USER4 : '';
+        echo "</div>\n";
+    echo "</div>\n";
+
     // footer
     echo "<hr>\n";
     echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
