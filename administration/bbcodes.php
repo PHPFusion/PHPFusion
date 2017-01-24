@@ -49,7 +49,7 @@ if ($_GET['page'] == 1) {
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$data['bbcode_id']."'");
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
         redirect(FUSION_SELF.$aidlink);
-    } elseif (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){2,50}$/i",
+    } elseif (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){1,50}$/i",
                                                    $_GET['enable']) && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include_var.php") && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include.php")
     ) {
         if (substr($_GET['enable'], 0, 1) != '!') {
