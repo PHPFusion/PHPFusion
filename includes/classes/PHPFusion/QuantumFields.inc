@@ -1161,7 +1161,11 @@ class QuantumFields extends \SqlHandler {
                 // can access options vars
                 $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
                 include $options['plugin_folder'].$data['field_name']."_include.php";
-                if (isset($user_fields) && !empty($user_fields['value'])) {
+                if ($method == 'input') {
+                	if (isset($user_fields)) {
+	                    return $user_fields;
+	                }
+                } elseif ($method == 'display' && !empty($user_fields['value'])) {
                     return $user_fields;
                 }
                 break;
