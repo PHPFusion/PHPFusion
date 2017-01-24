@@ -24,7 +24,7 @@ if ($profile_method == 'input') {
         'inline'     => TRUE,
         'max_length' => 32,
         // TODO: Also accept MS accounts which are email addresses
-        'regex'      => '[a-z0-9]{5,31}',
+        'regex'      => '[a-z.0-9]{5,31}',
         // TODO: Change the error text in case a value was entered but is not valid
         'error_text' => $locale['uf_skype_error']
     );
