@@ -337,6 +337,10 @@ $check_array = [
     // Site settings panel exclusions for the new positons
     'exclude_aupper' => '',
     'exclude_blower' => '',
+    'exclude_user1' => '',
+    'exclude_user2' => '',
+    'exclude_user3' => '',
+    'exclude_user4' => '',
     // New administration theme
     'admin_theme' => 'Artemis',
     // Enable bootstrap framework
