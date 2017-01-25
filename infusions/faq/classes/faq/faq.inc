@@ -20,14 +20,21 @@ namespace PHPFusion\FAQ;
 use PHPFusion\SiteLinks;
 use \PHPFusion\BreadCrumbs;
 
+/**
+ * Class Faq
+ *
+ * @package PHPFusion\FAQ
+ */
 abstract class Faq extends FaqServer {
 
     private static $locale = array();
     public $info = array();
 
-
     /**
      * Executes main page information
+     *
+     * @param int $category
+     *
      * @return array
      */
     public function set_FaqInfo($category = 0) {
@@ -59,7 +66,8 @@ abstract class Faq extends FaqServer {
 
     /**
      * Articles Category Breadcrumbs Generator
-     * @param $article_cat_index - hierarchy array
+     *
+     * @param $faq_cat_index
      */
     private function faq_cat_breadcrumbs($faq_cat_index) {
         $locale = fusion_get_locale("", FAQ_LOCALE);
@@ -107,7 +115,10 @@ abstract class Faq extends FaqServer {
 
     /**
      * Outputs category variables
-     * @return mixed
+     *
+     * @param int $cat
+     *
+     * @return array
      */
     protected static function get_FaqData($cat = 0) {
 
@@ -136,7 +147,10 @@ abstract class Faq extends FaqServer {
     }
 
     /**
-     * Display Ratings
+     *  Display Ratings
+     * @param $data
+     *
+     * @return string
      */
     private static function get_FaqRatings($data) {
         $html = "";
@@ -153,6 +167,10 @@ abstract class Faq extends FaqServer {
 
     /**
      * Display Comments
+     *
+     * @param $data
+     *
+     * @return string
      */
     private static function get_FaqComments($data) {
         $html = "";

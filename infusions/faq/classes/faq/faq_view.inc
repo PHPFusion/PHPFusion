@@ -21,17 +21,17 @@ namespace PHPFusion\FAQ;
 /**
  * Controller package for if/else
  * Class ArticlesView
+ *
  * @package PHPFusion\Articles
  */
 class FaqView extends Faq {
-    public function display_faq() {
 
-		// Display Article
-if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+    public function display_faq() {
+        // Display Article
+        if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_FaqInfo($_GET['cat_id']);
             display_main_faq($info);
-
-		// Display Overview
+            // Display Overview
         } else {
             $info = $this->set_FaqInfo();
             display_main_faq($info);

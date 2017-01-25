@@ -22,30 +22,30 @@ class FaqAdminModel extends FaqServer {
     private static $admin_locale = array();
 
     protected $default_data = array(
-        "faq_id" => 0,
-        "faq_cat_id" => 0,
-		"faq_question" => "",
-        "faq_answer" => "",
-        "faq_datestamp" => TIME,
-        "faq_name" => 0,
-        "faq_breaks" => "n",
-        "faq_visibility" => 0,
-        "faq_status" => 1,
-        "faq_language" => LANGUAGE
+        'faq_id'         => 0,
+        'faq_cat_id'     => 0,
+        'faq_question'   => '',
+        'faq_answer'     => '',
+        'faq_datestamp'  => TIME,
+        'faq_name'       => 0,
+        'faq_breaks'     => 'n',
+        'faq_visibility' => 0,
+        'faq_status'     => 1,
+        'faq_language'   => LANGUAGE
     );
 
     public function __construct() {
-   		self::$faq_settings = get_settings("faq");
+        self::$faq_settings = get_settings("faq");
     }
 
     public static function get_faqAdminLocale() {
         if (empty(self::$admin_locale)) {
-            $admin_locale_path = LOCALE."English/admin/settings.php";
-            if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-                $admin_locale_path = LOCALE.LOCALESET."admin/settings.php";
+            $admin_locale_path = LOCALE.'English/admin/settings.php';
+            if (file_exists(LOCALE.LOCALESET.'admin/settings.php')) {
+                $admin_locale_path = LOCALE.LOCALESET.'admin/settings.php';
             }
-            $locale = fusion_get_locale("", FAQ_ADMIN_LOCALE);
-            $locale += fusion_get_locale("", $admin_locale_path);
+            $locale = fusion_get_locale('', FAQ_ADMIN_LOCALE);
+            $locale += fusion_get_locale('', $admin_locale_path);
             self::$admin_locale = $locale;
         }
 

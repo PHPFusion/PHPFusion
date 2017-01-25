@@ -20,15 +20,15 @@ require_once INCLUDES."infusions_include.php";
 spl_autoload_register(function ($className) {
 
     $autoload_register_paths = array(
-        "PHPFusion\\FAQ\\FaqServer" => FAQ_CLASS."/server.inc",
-        "PHPFusion\\FAQ\\FaqAdminModel" => FAQ_CLASS."/admin/faq_admin_model.inc",
-        "PHPFusion\\FAQ\\FaqAdminView" => FAQ_CLASS."/admin/faq_admin_view.inc",
-        "PHPFusion\\FAQ\\FaqSettingsAdmin" => FAQ_CLASS."/admin/controllers/faq_settings.inc",
+        "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASS."/server.inc",
+        "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASS."/admin/faq_admin_model.inc",
+        "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASS."/admin/faq_admin_view.inc",
+        "PHPFusion\\FAQ\\FaqSettingsAdmin"    => FAQ_CLASS."/admin/controllers/faq_settings.inc",
         "PHPFusion\\FAQ\\FaqSubmissionsAdmin" => FAQ_CLASS."/admin/controllers/faq_submissions.inc",
         "PHPFusion\\FAQ\\FaqSubmissions"      => FAQ_CLASS."/faq/faq_submissions.inc",
-        "PHPFusion\\FAQ\\FaqAdmin" => FAQ_CLASS."/admin/controllers/faq.inc",
-        "PHPFusion\\FAQ\\FaqView" => FAQ_CLASS."/faq/faq_view.inc",
-        "PHPFusion\\FAQ\\Faq" => FAQ_CLASS."/faq/faq.inc"
+        "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASS."/admin/controllers/faq.inc",
+        "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASS."/faq/faq_view.inc",
+        "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASS."/faq/faq.inc"
     );
 
     if (isset($autoload_register_paths[$className])) {
@@ -37,6 +37,5 @@ spl_autoload_register(function ($className) {
             require $fullPath;
         }
     }
-
 
 });
