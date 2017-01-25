@@ -66,7 +66,8 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
+
+        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages, panel_order FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
         $p_result = dbquery($panel_query);
         if (multilang_table("PN")) {
             while ($panel_data = dbarray($p_result)) {
@@ -83,17 +84,26 @@ class Panels {
             }
         }
 
+        // sort the panels
+        ksort(self::$panels_cache);
+        foreach (self::$panels_cache as $_side => $_panels) {
+            self::$panels_cache[$_side] = sort_tree($_panels, 'panel_order');
+        }
+
         return (array)self::$panels_cache;
     }
 
     /**
      * Add Panel to List of Panels to be cached
-     * @param $panel_name
+     *
+*@param $panel_name
      * @param $panel_content
      * @param $panel_side
      * @param $panel_access
+     * @param $panel_order
      */
-    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access) {
+    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
+
         self::$panels_cache[$panel_side][] = [
             'panel_id' => str_replace(" ", "_", $panel_name).'-'.$panel_side,
             'panel_content' => $panel_content,
@@ -105,7 +115,8 @@ class Panels {
             'panel_display' => 1,
             'panel_url_list' => '',
             'panel_restriction' => 3,
-            'panel_languages' => implode('.', fusion_get_enabled_languages())
+            'panel_languages' => implode('.', fusion_get_enabled_languages()),
+            'panel_order' => $panel_order,
         ];
     }
 
@@ -201,6 +212,7 @@ class Panels {
         if (empty(self::$panels_cache)) {
             self::cachePanels();
         }
+
         $settings = \fusion_get_settings();
         $locale = \fusion_get_locale('', LOCALE.LOCALESET."global.php");
 
