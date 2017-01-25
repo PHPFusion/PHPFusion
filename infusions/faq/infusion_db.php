@@ -37,14 +37,10 @@ if (!defined("FAQ_ADMIN_LOCALE")) {
 }
 
 // Paths
-if (!defined("FAQ_CLASS")) {
-    define("FAQ_CLASS", INFUSIONS."faq/classes/");
-}
-
+if (!defined('FAQ_CLASS')) define('FAQ_CLASS', INFUSIONS.'faq/classes/');
 // Database
-if (!defined("DB_FAQS")) {
-	define("DB_FAQS", DB_PREFIX."faqs");
-}
+if (!defined('DB_FAQS')) define('DB_FAQS', DB_PREFIX.'faqs');
+if (!defined('DB_FAQ_CATS')) define('DB_FAQ_CATS', DB_PREFIX.'faq_cats');
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType("FQ", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
