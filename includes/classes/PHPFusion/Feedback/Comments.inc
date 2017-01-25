@@ -979,10 +979,9 @@ class Comments {
      * Parse Comment Results
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
-        if (empty($row)) {
-            $row = array();
-        }
-        $row += fusion_get_user($row['comment_name']);
+
+        $row = array_merge_recursive($row, fusion_get_user($row['comment_name']));
+
         $actions = array(
             'edit_link'   => '',
             'delete_link' => '',
