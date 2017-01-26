@@ -10,6 +10,8 @@ $locale['faq_0005'] = "Submissions";
 $locale['faq_0006'] = "Settings";
 $locale['faq_0007'] = "Add FAQ Category";
 $locale['faq_0008'] = "Edit FAQ Category";
+$locale['faq_0009'] = "FAQ Category";
+$locale['faq_0010'] = "Uncategorized";
 
 // Messages - Faq
 $locale['faq_0030'] = "FAQ successfully created";
@@ -25,6 +27,7 @@ $locale['faq_0038'] = "FAQ publishing deleted";
 $locale['faq_0039'] = "FAQ Category created";
 $locale['faq_0040'] = "FAQ Category updated";
 $locale['faq_0041'] = "FAQ Category deleted";
+$locale['faq_0042'] = "FAQ Category name must be unique";
 
 // Messages - Submissions
 $locale['faq_0060'] = "Submission successfully published";
