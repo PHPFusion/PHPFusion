@@ -19,6 +19,11 @@ namespace PHPFusion;
 
 class Locale {
 
+    /*
+     * Cache to omit inclusion if there is a repeated request
+     */
+    //private static $locale_cache = array();
+
     /**
      * Get Locale
      *
@@ -31,15 +36,18 @@ class Locale {
     public static function getLocale($key = NULL, $include_file = "") {
         global $locale;
         $is_sanitized = TRUE;
+        //if (!in_array($include_file, self::$locale_cache) && $include_file) {
         if ($include_file) {
             if (is_array($include_file)) {
                 foreach ($include_file as $file) {
                     if (is_file($file)) {
+                        //self::$locale_cache[] = $file;
                         include $file;
                     }
                 }
             } else {
                 if (is_file($include_file)) {
+                    //self::$locale_cache[] = $include_file;
                     include $include_file;
                 }
             }

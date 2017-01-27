@@ -45,7 +45,11 @@ class Admin {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
     }
 
-    /** The Theme Editor - Manage UI */
+    /**
+     * The Theme Editor - Manage UI
+     *
+     * @param $theme_name
+     */
     public static function display_theme_editor($theme_name) {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -54,6 +58,7 @@ class Admin {
         if (!$theme_name) {
             redirect(clean_request("", array("aid"), TRUE));
         }
+
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
@@ -69,7 +74,7 @@ class Admin {
         }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "dashboard";
         $tab_active = $_GET['section'];
-        $atom = new \PHPFusion\Atom\Atom();
+        $atom = new Atom();
         $atom->target_folder = $theme_name;
         $atom->theme_name = $theme_name;
         echo opentab($tab, $tab_active, "theme_admin", TRUE);

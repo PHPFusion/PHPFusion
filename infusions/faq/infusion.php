@@ -54,6 +54,14 @@ $inf_newtable[] = DB_FAQS." (
 	KEY faq_datestamp (faq_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
+$inf_newtable[] = DB_FAQ_CATS." (
+faq_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+faq_cat_name VARCHAR(200) NOT NULL DEFAULT '',
+faq_cat_description VARCHAR(250) NOT NULL DEFAULT '',
+faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+PRIMARY KEY(faq_cat_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
     "image" => $inf_image,

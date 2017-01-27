@@ -304,7 +304,7 @@ class PageList extends PageAdmin {
             echo "</tbody>\n";
         } else {
             echo "<tr>\n";
-            echo "<td colspan='8' class='text-center'>\n<div class='well'>\n".$locale['page_0440']."</div>\n</td>\n";
+            echo "<td colspan='9' class='text-center'>\n<div class='well'>\n".$locale['page_0440']."</div>\n</td>\n";
             echo "</tr>\n";
         }
         echo "</table>\n";

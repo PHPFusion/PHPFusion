@@ -109,7 +109,7 @@ if (db_exists(DB_ARTICLES)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => ImageRepo::getimage('ac_A'),
+                '{%image%}' => "<img src='".ImageRepo::getimage('ac_A')."' alt='".$locale['a400']."' style='width:32px;'/>",
                 '{%icon_class%}' => "fa fa-book fa-lg fa-fw",
                 '{%search_title%}' => $locale['a400'],
                 '{%search_result%}' => $item_count,

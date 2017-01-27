@@ -80,11 +80,11 @@ if (db_exists(DB_WEBLINKS)) {
 
             $search_result = '';
             while ($data = dbarray($result)) {
+                $new = "";
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['w403']."</span>";
-                } else {
-                    $new = "";
                 }
+
                 $text_all = $data['weblink_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
@@ -107,14 +107,13 @@ if (db_exists(DB_WEBLINKS)) {
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}'          => ImageRepo::getimage('ac_W'),
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_W')."' alt='".$locale['w400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-link fa-lg fa-fw",
                 '{%search_title%}'   => $locale['w400'],
                 '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
-
         }
 
         Search_Engine::search_navigation($rows);

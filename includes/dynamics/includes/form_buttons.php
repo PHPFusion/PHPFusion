@@ -34,18 +34,22 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'data' => [],
     );
 
-    $options += $default_options;
+    $options = $options + $default_options;
 
     if ($options['block']) {
         $options['class'] = $options['class']." btn-block";
     }
 
+    array_walk($options['data'], function ($a, $b) use (&$options_data) {
+        $options_data[] = "data-$b='$a'";
+    }, $options_data);
+
     if ($options['type'] == 'link') {
-        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</a>";
+        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</a>";
     } elseif ($options['type'] == 'button') {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
     } else {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit'".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
     }
 
     return $html;

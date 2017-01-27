@@ -9,9 +9,11 @@ $locale['GRP_406'] = "There are users assigned to this group";
 $locale['GRP_407'] = "User Group deleted";
 $locale['GRP_408'] = "No Selected User or Group.";
 $locale['GRP_409'] = " Add a user group.";
-$locale['GRP_410'] = " A member of the user group.";
-$locale['GRP_411'] = " User Deleted from the group.";
-$locale['GRP_412'] = " User is not a member of the group.";
+
+$locale['GRP_410'] = "User \"%s\" added to group \"%s\"";
+$locale['GRP_411'] = "User \"%s\" removed from group \"%s\"";
+$locale['GRP_412'] = "\"%s\" users removed from group \"%s\"";
+
 // Edit/Delete Options
 $locale['GRP_420'] = "User Groups";
 $locale['GRP_421'] = "Edit Group";
@@ -22,6 +24,7 @@ $locale['GRP_425'] = "Delete this user group?";
 $locale['GRP_426'] = "Default Group";
 $locale['GRP_427'] = "Currently %d displaying %d members.";
 $locale['GRP_428'] = "Add Group";
+$locale['GRP_430'] = "added to Group %s";
 // Edit/Add User Group
 $locale['GRP_432'] = "Group Name";
 $locale['GRP_433'] = "Group Description";

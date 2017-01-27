@@ -122,7 +122,7 @@ if (db_exists(DB_DOWNLOADS)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => ImageRepo::getimage('ac_D'),
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_D')."' alt='".$locale['d400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-cloud-download fa-lg fa-fw",
                 '{%search_title%}'   => $locale['d400'],
                 '{%search_result%}'  => $item_count,

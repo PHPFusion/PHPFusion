@@ -24,12 +24,12 @@ if ($profile_method == 'input') {
         'inline'     => TRUE,
         'max_length' => 32,
         // TODO: Also accept MS accounts which are email addresses
-        'regex'      => '[a-z0-9]{5,31}',
+        'regex'      => '[a-z.0-9]{5,31}',
         // TODO: Change the error text in case a value was entered but is not valid
         'error_text' => $locale['uf_skype_error']
     );
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 // Display user field input
 } elseif ($profile_method == 'display') {
-    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: "");
 }

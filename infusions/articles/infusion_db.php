@@ -52,8 +52,8 @@ if (!defined("DB_ARTICLES")) {
 }
 
 // Admin Settings
-\PHPFusion\Admins::getInstance() -> setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance() -> setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance() -> setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance() -> setSubmitType("a", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance() -> setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
+\PHPFusion\Admins::getInstance()->setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setSubmitType("a", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");

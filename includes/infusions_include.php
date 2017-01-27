@@ -32,9 +32,11 @@ if (!function_exists('random_filename')) {
 if (!function_exists('filename_exists')) {
     /**
      * Creates an unique filename if file already exists
-     * @param string $file path of file if basename is empty. Otherwise path of parent directory
-     * @param string $basename The name of file if $file is a directory. Otherwise leave it empty.
+     *
+     * @param string $file       path of file if basename is empty. Otherwise path of parent directory
+     * @param string $basename   The name of file if $file is a directory. Otherwise leave it empty.
      * @param string $dateFormat If you want date in directory path
+     *
      * @return string  New unique filepath
      * @options array -
      *                           $options['dateformat'] d,m,y, php date format constant
@@ -42,10 +44,10 @@ if (!function_exists('filename_exists')) {
      */
     function filename_exists($directory, $file = '', $options = FALSE) {
         $parts = pathinfo($directory.$file) + array(
-                'dirname' => '',
-                'basename' => '',
+                'dirname'   => '',
+                'basename'  => '',
                 'extension' => '',
-                'filename' => ''
+                'filename'  => ''
             );
         if ($parts['extension']) {
             //check if filename starts with dot
@@ -129,16 +131,15 @@ if (!function_exists('get_settings')) {
     }
 }
 
-
 if (!function_exists('send_pm')) {
     /**
      * Send PM to a user or group
      *
-     * @param        $to - Recepient Either group_id or user_id
-     * @param        $from - Sender's user id
-     * @param        $subject - Message subject
-     * @param        $message - Message body
-     * @param string $smileys - use smileys or not
+     * @param        $to       - Recepient Either group_id or user_id
+     * @param        $from     - Sender's user id
+     * @param        $subject  - Message subject
+     * @param        $message  - Message body
+     * @param string $smileys  - use smileys or not
      * @param bool   $to_group - set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
@@ -170,15 +171,15 @@ if (!function_exists('upload_file')) {
             $file_ext = strtolower(strrchr($file['name'], "."));
             $file_dest = $target_folder;
             $upload_file = array(
-                "source_file" => $source_file,
-                "source_size" => $file['size'],
-                "source_ext" => $file_ext,
-                "target_file" => $target_file.$file_ext,
+                "source_file"   => $source_file,
+                "source_size"   => $file['size'],
+                "source_ext"    => $file_ext,
+                "target_file"   => $target_file.$file_ext,
                 "target_folder" => $target_folder,
-                "valid_ext" => $valid_ext,
-                "max_size" => $max_size,
-                "query" => $query,
-                "error" => 0
+                "valid_ext"     => $valid_ext,
+                "max_size"      => $max_size,
+                "query"         => $query,
+                "error"         => 0
             );
             if ($file['size'] > $max_size) {
                 // Maximum file size exceeded
@@ -207,6 +208,7 @@ if (!function_exists('upload_file')) {
             // File not uploaded
             $upload_file = array("error" => 4);
         }
+
         return $upload_file;
     }
 }
@@ -215,9 +217,14 @@ if (!function_exists('upload_file')) {
 if (!function_exists('upload_image')) {
 
     function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "") {
+
+        print_p($source_image);
+
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
         }
+        print_p($_FILES[$source_image]['tmp_name']);
+
         if (is_uploaded_file($_FILES[$source_image]['tmp_name'])) {
             $image = $_FILES[$source_image];
             if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
@@ -227,21 +234,21 @@ if (!function_exists('upload_image')) {
             }
             $image_ext = strtolower(strrchr($image['name'], "."));
             // need to run file_exist. @ supress will not work anymore.
-            if (filesize($image['tmp_name']) > 10 && @getimagesize($image['tmp_name'])) {
+            if ($image['size']) {
                 $image_res = @getimagesize($image['tmp_name']);
                 $image_info = array(
-                    "image" => FALSE,
-                    "image_name" => $image_name.$image_ext,
-                    "image_ext" => $image_ext,
-                    "image_size" => $image['size'],
-                    "image_width" => $image_res[0],
-                    "image_height" => $image_res[1],
-                    "thumb1" => FALSE,
-                    "thumb1_name" => "",
-                    "thumb2" => FALSE,
-                    "thumb2_name" => "",
-                    "error" => 0,
-                    "query" => $query
+                    'image'        => FALSE,
+                    'image_name'   => $image_name.$image_ext,
+                    'image_ext'    => $image_ext,
+                    'image_size'   => $image['size'],
+                    'image_width'  => $image_res[0],
+                    'image_height' => $image_res[1],
+                    'thumb1'       => FALSE,
+                    'thumb1_name'  => '',
+                    'thumb2'       => FALSE,
+                    'thumb2_name'  => '',
+                    'error'        => 0,
+                    'query'        => $query
                 );
                 if ($image_ext == ".gif") {
                     $filetype = 1;
@@ -255,10 +262,10 @@ if (!function_exists('upload_image')) {
                 if ($image['size'] > $max_size) {
                     // Invalid file size
                     $image_info['error'] = 1;
-                } elseif (!$filetype || !verify_image($image['tmp_name'])) {
+                } elseif (!verify_image($image['tmp_name'])) {
                     // Unsupported image type
                     $image_info['error'] = 2;
-                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, array('.jpg', '.jpeg', '.png','.png','.svg','.gif','.bmp')) === FALSE) {
+                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp')) === FALSE) {
                     $image_info['error'] = 5;
                 } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                     // Invalid image resolution
@@ -296,7 +303,7 @@ if (!function_exists('upload_image')) {
                                 $image_info['thumb1'] = TRUE;
                                 if ($thumb1_ratio == 0) {
                                     createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width,
-                                                    $thumb1_height);
+                                        $thumb1_height);
                                 } else {
                                     createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
                                 }
@@ -316,7 +323,7 @@ if (!function_exists('upload_image')) {
                                 $image_info['thumb2'] = TRUE;
                                 if ($thumb2_ratio == 0) {
                                     createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width,
-                                                    $thumb2_height);
+                                        $thumb2_height);
                                 } else {
                                     createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
                                 }

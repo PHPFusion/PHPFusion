@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
     $defender = defender::getInstance();
-
-    $locale = array();
     $locale = fusion_get_locale('', [
         LOCALE.LOCALESET."admin/html_buttons.php",
         LOCALE.LOCALESET."error.php"
@@ -38,35 +36,35 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $default_options = array(
-        'input_id' => $input_name,
-        'type' => '',
-        'inline_editing' => FALSE,
-        'required' => FALSE,
+        'input_id'            => $input_name,
+        'type'                => '',
+        'inline_editing'      => FALSE,
+        'required'            => FALSE,
         'tinymce_forced_root' => TRUE,
-        'placeholder' => '',
-        'deactivate' => FALSE,
-        'width' => '',
-        'inner_width' => '100%',
-        'height' => '80px',
-        'class' => '',
-        'inner_class' => '',
-        'inline' => FALSE,
-        'length' => 200,
-        'error_text' => $locale['error_input_default'],
-        'safemode' => FALSE,
-        'form_name' => 'input_form',
-        'tinymce' => 'simple',
-        'tinymce_css' => '',
-        'no_resize' => FALSE,
-        'autosize' => FALSE,
-        'preview' => FALSE,
-        'path' => IMAGES,
-        'maxlength' => '',
-        'tip' => '',
-        'ext_tip' => '',
-        'input_bbcode' => '',
-        'wordcount' => FALSE,
-        'tinymce_theme' => 'modern'
+        'placeholder'         => '',
+        'deactivate'          => FALSE,
+        'width'               => '',
+        'inner_width'         => '100%',
+        'height'              => '80px',
+        'class'               => '',
+        'inner_class'         => '',
+        'inline'              => FALSE,
+        'length'              => 200,
+        'error_text'          => $locale['error_input_default'],
+        'safemode'            => FALSE,
+        'form_name'           => 'input_form',
+        'tinymce'             => 'simple',
+        'tinymce_css'         => '',
+        'no_resize'           => FALSE,
+        'autosize'            => FALSE,
+        'preview'             => FALSE,
+        'path'                => IMAGES,
+        'maxlength'           => '',
+        'tip'                 => '',
+        'ext_tip'             => '',
+        'input_bbcode'        => '',
+        'wordcount'           => FALSE,
+        'tinymce_theme'       => 'modern',
     );
 
     $options += $default_options;
@@ -74,15 +72,24 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['type'] == "tinymce") {
 
         $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'],
-                                                                      array(TRUE, 'simple', 'advanced')) ? $options['tinymce'] : "simple";
+            array(TRUE, 'simple', 'advanced')) ? $options['tinymce'] : "simple";
 
         $default_tinymce_css = (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css");
 
         $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
 
         $tinymce_list = array();
-        if (!empty($options['path']) && file_exists($options['path'])) {
-            $image_list = makefilelist($options['path'], ".|..|");
+        if (!empty($options['path'])) {
+            $image_list = [];
+            if (is_array($options['path'])) {
+                foreach ($options['path'] as $dir) {
+                    if (file_exists($dir)) {
+                        $image_list = array_merge(makefilelist($dir, ".|..|"), $image_list);
+                    }
+                }
+            } else {
+                $image_list = makefilelist($options['path'], '.|..|');
+            }
             $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
             foreach ($image_list as $image_name) {
                 $image_1 = explode('.', $image_name);
@@ -281,7 +288,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0 p-r-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
-    $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9 p-r-0' : '')."'>\n" : '';
+    $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9' : '')."'>\n" : '';
     $tab_active = 0;
     $tab_title = array();
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
@@ -321,7 +328,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['inline_editing'] == TRUE) {
         $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." ": '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."' ".($options['deactivate'] ? ' readonly' : '').($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."' ".($options['deactivate'] ? ' readonly' : '').($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
@@ -401,14 +408,14 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= "</div>\n";
 
     $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type' => 'textarea',
-                                     'title' => $label,
-                                     'id' => $options['input_id'],
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text']
-                                 ));
+        'input_name' => $input_name,
+        'type'       => 'textarea',
+        'title'      => $label,
+        'id'         => $options['input_id'],
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text']
+    ));
 
     return $html;
 }

@@ -300,8 +300,9 @@ class Admins {
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
+                add_to_jquery('$("[data-toggle=collapse]").click(function(){$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});');
 
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
 

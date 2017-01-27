@@ -43,7 +43,7 @@ class OpenGraphArticles extends OpenGraph {
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['url'] = $settings['siteurl'].'infusions/articles/articles.php?cat_id='.$cat_id;
-			$info['keywords'] = settings['keywords'];
+			$info['keywords'] = $settings['keywords'];
 			$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
 			$info['title'] = $data['article_cat_name'].' - '.$settings['sitename'];
 			$info['description'] = $data['article_cat_description'] ? fusion_first_words(strip_tags(html_entity_decode($data['article_cat_description'])), 50) : $settings['description'];

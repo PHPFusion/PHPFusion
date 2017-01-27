@@ -654,7 +654,7 @@ Grids
     border: 1px solid;
 }
 
-ul.block {
+ul.block, ul.error-list {
     list-style: none outside none;
 }
 
@@ -1425,4 +1425,9 @@ ul > li.divider {
 /*Navbar*/
 ul.navbar-nav li.no-link {
     position: relative;
+}
+
+ul.dropdown-menu,
+ul.dropdown-menu > li > ul {
+    list-style: none;
 }

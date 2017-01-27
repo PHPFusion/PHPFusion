@@ -8,6 +8,10 @@ $locale['faq_0003'] = "Add FAQ";
 $locale['faq_0004'] = "Edit FAQ";
 $locale['faq_0005'] = "Submissions";
 $locale['faq_0006'] = "Settings";
+$locale['faq_0007'] = "Add FAQ Category";
+$locale['faq_0008'] = "Edit FAQ Category";
+$locale['faq_0009'] = "FAQ Category";
+$locale['faq_0010'] = "Uncategorized";
 
 // Messages - Faq
 $locale['faq_0030'] = "FAQ successfully created";
@@ -19,6 +23,11 @@ $locale['faq_0035'] = "FAQ cannot be deleted";
 $locale['faq_0036'] = "There are FAQs or Subcategories in the Category";
 $locale['faq_0037'] = "FAQ successfully published";
 $locale['faq_0038'] = "FAQ publishing deleted";
+
+$locale['faq_0039'] = "FAQ Category created";
+$locale['faq_0040'] = "FAQ Category updated";
+$locale['faq_0041'] = "FAQ Category deleted";
+$locale['faq_0042'] = "FAQ Category name must be unique";
 
 // Messages - Submissions
 $locale['faq_0060'] = "Submission successfully published";
@@ -39,6 +48,11 @@ $locale['faq_0111'] = "Delete this FAQ?";
 $locale['faq_0112'] = "There are no FAQ defined.";
 $locale['faq_0113'] = "There are no FAQ, which match with the Searchoptions.";
 $locale['faq_0114'] = "Before you can create a FAQ, you must create a FAQ.";
+
+$locale['faq_0115'] = "Category Name";
+$locale['faq_0116'] = "Category Description";
+$locale['faq_0117'] = "Language";
+$locale['faq_0118'] = "Save Category";
 
 // Table - Faq - Sorting
 $locale['faq_0120'] = "Search";

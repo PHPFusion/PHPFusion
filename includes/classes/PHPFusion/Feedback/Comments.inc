@@ -375,6 +375,7 @@ class Comments {
                 }
             }
         }
+
         return $html;
     }
 
@@ -979,8 +980,13 @@ class Comments {
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
 
-        $row += fusion_get_user($row['comment_name']);
+        $row = array_merge_recursive($row, fusion_get_user($row['comment_name']));
 
+        $actions = array(
+            'edit_link'   => '',
+            'delete_link' => '',
+            'edit_dell'   => ''
+        );
         if ((iADMIN && checkrights("C")) || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))) {
             $edit_link = $this->getParams('clink')."&amp;c_action=edit&amp;comment_id=".$row['comment_id']."#edit_comment"; //clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),FALSE)."#edit_comment";
             $delete_link = $this->getParams('clink')."&amp;c_action=delete&amp;comment_id=".$row['comment_id']; //clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);

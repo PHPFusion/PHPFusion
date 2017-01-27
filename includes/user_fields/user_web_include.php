@@ -38,6 +38,6 @@ if ($profile_method == "input") {
     }
     $user_fields = array(
         'title' => $locale['uf_web'],
-        'value' => $field_value ?: fusion_get_locale('na')
+        'value' => $field_value ?: ""
     );
 }

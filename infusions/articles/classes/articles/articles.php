@@ -217,13 +217,13 @@ abstract class Articles extends ArticlesServer {
             $pagecount = 1;
 
             // Article Texts
-            $data['article_snippet'] = parse_textarea($data['article_snippet']);
-            $data['article_article'] = parse_textarea($data['article_article']);
-            $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['article_breaks'] == "y" ? nl2br(parse_textarea($data['article_snippet'])) : parse_textarea($data['article_snippet'])));
+            $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
             // Handle Text
             if (isset($_GET['article_id'])) {
-                $articleText = $data['article_article'] ? parse_textarea("<p>".$data['article_snippet']."</p><p>".$data['article_article']."</p>") : parse_textarea("<p>".$data['article_snippet']."</p>");
+                $articleText = $data['article_article'] ? "<p>".$data['article_snippet']."</p><p>".$data['article_article']."</p>" : "<p>".$data['article_snippet']."</p>";
 
                 // Handle Pages
                 $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['article_breaks'] == "y" ? nl2br($articleText) : $articleText);

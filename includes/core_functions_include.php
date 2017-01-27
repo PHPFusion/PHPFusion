@@ -640,7 +640,7 @@ function parsesmileys($message) {
         }
     }
 
-    return parseUser($message);
+    return fusion_parse_user($message);
 }
 
 /**
@@ -668,14 +668,17 @@ function displaysmileys($textarea, $form = "inputform") {
 /**
  * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  *
- * @param string $user_name
+ * @param $user_name
+ *
+ * @return mixed
  */
-function parseUser($user_name) {
+function fusion_parse_user($user_name) {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
     $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
+        $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
+
         return render_user_tags($user_name);
     }, $user_name);
-
     return $text;
 }
 
@@ -1504,7 +1507,7 @@ function showdate($format, $val) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
-        return strftime($format, $offset);
+	return showdate($format, $offset);
     } else {
         $offset = intval($val) + $offset;
 

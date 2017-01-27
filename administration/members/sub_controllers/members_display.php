@@ -204,13 +204,12 @@ class Members_Display extends Members_Admin {
                         case 'user_lastvisit':
                             $data[$data_key] = date('d-M-Y', $data[$data_key]);
                             break;
-
                         case 'user_groups':
                             if (!empty($data[$data_key])) {
-                                $group = explode('.', $data[$data_key]);
-                                $groups = "<ul>";
+                                $group = array_filter(explode('.', $data[$data_key]));
+                                $groups = "<ul class='block'>";
                                 foreach ($group as $group_id) {
-                                    $groups .= "<li><a href='".BASEDIR."profile.php?group_id='".$group_id."'>".getgroupname($group_id)."</a></li>>\n";
+                                    $groups .= "<li><a href='".BASEDIR."profile.php?group_id='".$group_id."'>".getgroupname($group_id)."</a></li>\n";
                                 }
                                 $groups .= "</ul>\n";
                                 $data[$data_key] = $groups;

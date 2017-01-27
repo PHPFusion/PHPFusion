@@ -192,6 +192,7 @@ class Upload extends \Defender\Validation {
         $locale = fusion_get_locale();
 
         if (self::$inputConfig['multiple']) {
+
             $target_folder = self::$inputConfig['path'];
             $target_width = self::$inputConfig['max_width'];
             $target_height = self::$inputConfig['max_height'];
@@ -212,8 +213,11 @@ class Upload extends \Defender\Validation {
             $query = '';
 
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][0]) && \defender::safe()) {
+
                 $result = array();
+
                 for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
+
                     if (is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][$i])) {
                         $image = $_FILES[self::$inputConfig['input_name']];
                         $target_name = $_FILES[self::$inputConfig['input_name']]['name'][$i];
@@ -372,8 +376,11 @@ class Upload extends \Defender\Validation {
                 return array();
             }
         } else {
+
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
-                $upload = upload_image(self::$inputConfig['input_name'],
+
+                $upload = upload_image(
+                    self::$inputConfig['input_name'],
                     $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'],
                     self::$inputConfig['max_width'], self::$inputConfig['max_height'],
                     self::$inputConfig['max_byte'], self::$inputConfig['delete_original'],
@@ -383,7 +390,9 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['thumbnail_h'], 0,
                     self::$inputConfig['path'].self::$inputConfig['thumbnail_folder']."/",
                     self::$inputConfig['thumbnail2_suffix'], self::$inputConfig['thumbnail2_w'],
-                    self::$inputConfig['thumbnail2_h']);
+                    self::$inputConfig['thumbnail2_h']
+                );
+
                 if ($upload['error'] != 0) {
                     \defender::stop();
                     switch ($upload['error']) {

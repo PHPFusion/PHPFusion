@@ -39,21 +39,19 @@ if (db_exists(DB_FAQS)) {
             case 2:
                 Search_Engine::search_column('faq_question', 'faqs');
                 Search_Engine::search_column('faq_answer', 'faqs');
-                Search_Engine::search_column('faq_cat_name', 'faqs');
+                Search_Engine::search_column('faq_name', 'faqs');
                 break;
             case 1:
                 Search_Engine::search_column('faq_answer', 'faqs');
-                Search_Engine::search_column('faq_cat_description', 'faqs');
                 break;
             default:
                 Search_Engine::search_column('faq_question', 'faqs');
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-            $query = "SELECT fq.*, fc.*
-            	FROM ".DB_FAQS." fq
-				LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
-			    ".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
+            $query = "SELECT faq_question, faq_answer, faq_cat_id
+            	FROM ".DB_FAQS."
+			    ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
@@ -89,7 +87,7 @@ if (db_exists(DB_FAQS)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => ImageRepo::getimage('ac_FQ'),
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_FQ')."' alt='".$locale['fq400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-question-circle fa-lg fa-fw",
                 '{%search_title%}'   => $locale['fq400'],
                 '{%search_result%}'  => $item_count,

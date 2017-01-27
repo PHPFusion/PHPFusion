@@ -388,7 +388,7 @@ main {
 }
 .sidebar .admin-vertical-link li > a {
   list-style-type: none;
-  padding: 13px 13px;
+  padding: 13px 10px 13px 13px;
   color: #ecf0f1;
   display: block;
   white-space: nowrap;
@@ -413,7 +413,7 @@ main {
   margin-right: 7px;
 }
 .sidebar .admin-vertical-link .admin-submenu li:first-child {
-	margin-top: 0;
+  margin-top: 0;
 }
 .sidebar .admin-vertical-link .admin-submenu li > a {
   display: block;

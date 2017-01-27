@@ -18,7 +18,7 @@
 require_once "../maincore.php";
 pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
 
 $settings2 = array(
@@ -67,7 +67,7 @@ if (isset($_POST['savesettings'])) {
 
 opentable($locale['user_settings']);
 echo "<div class='well'>".$locale['user_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
+echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');

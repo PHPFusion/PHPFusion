@@ -20,15 +20,11 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
 
 $settings = fusion_get_settings();
-
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
-
     require_once THEMES."templates/global/profile.php";
-
     if (!iMEMBER && $settings['hide_userprofiles'] == 1) {
         redirect(BASEDIR."index.php");
     }
-
     $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
     if (iADMIN) {
         $user_status = "";
@@ -63,7 +59,6 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $userFields->plugin_folder = INCLUDES."user_fields/";
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
-    //render_userprofile($info);
 
 	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
 

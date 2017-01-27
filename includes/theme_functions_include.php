@@ -364,7 +364,24 @@ if (!function_exists("check_panel_status")) {
             if ($settings['exclude_right'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
+        } elseif ($side == "user1") {
+            if ($settings['exclude_user1'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user1']);
+            }
+        } elseif ($side == "user2") {
+            if ($settings['exclude_user2'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user2']);
+            }
+        } elseif ($side == "user3") {
+            if ($settings['exclude_user3'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user3']);
+            }
+        } elseif ($side == "user4") {
+            if ($settings['exclude_user4'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user4']);
+            }
         }
+
         if (is_array($exclude_list)) {
             $script_url = explode("/", $_SERVER['PHP_SELF']);
             $url_count = count($script_url);

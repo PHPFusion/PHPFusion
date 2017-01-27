@@ -93,23 +93,7 @@ if (isset($_POST['savesettings'])) {
     }
     redirect(FUSION_SELF.fusion_get_aidlink());
 }
-/**
- * Temporary Upgrade Patch
- * Upgrade for Beta Testers, will remove this on Stable version.
- * This is just a convenience for beta testers
- */
-$recaptcha_upgrade = dbcount("(settings_name)", DB_SETTINGS, "settings_name = 'recaptcha_type'");
-if (!$recaptcha_upgrade) {
-    $newSettings = array(
-        "settings_name" => "recaptcha_type",
-        "settings_value" => "text",
-    );
-    dbquery_insert(DB_SETTINGS, $newSettings, "save", array("primary_key" => "settings_name", "keep_session" => TRUE));
-    addNotice("success", "System reCaptcha is now upgraded to v2");
-}
-/**
- * end of upgrade
- */
+
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());

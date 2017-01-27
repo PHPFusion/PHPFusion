@@ -24,6 +24,6 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_phone_mobile', $locale['uf_phone_mobile'], $field_value, $options);
 } elseif ($profile_method == "display") {
 
-    $user_fields = array('title' => $locale['uf_phone_mobile'], 'value' => $field_value ?: $locale['na']);
+    $user_fields = array('title' => $locale['uf_phone_mobile'], 'value' => $field_value ?: "");
 
 }

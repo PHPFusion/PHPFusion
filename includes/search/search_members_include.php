@@ -74,14 +74,15 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
             }
 
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_M')."' alt='".$locale['user1']."' style='width:32px;'/>",
-                '{%icon_class%}' => 'fa fa-user-circle fa-lg fa-fw',
-                '{%search_title%}' => $locale['user1'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_M')."' alt='".$locale['user1']."' style='width:32px;'/>",
+                '{%icon_class%}'     => 'fa fa-user-circle fa-lg fa-fw',
+                '{%search_title%}'   => $locale['user1'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }
     }
+
     Search_Engine::search_navigation($rows);
     Search_Engine::search_globalarray($formatted_result);
     Search_Engine::append_item_count($item_count);

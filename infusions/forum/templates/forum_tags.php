@@ -33,9 +33,7 @@ if (!function_exists("display_forum_tags")) {
             echo "<!--pre_forum-->\n";
             echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
 
-            echo "<div class='filter'>\n";
             forum_filter($info);
-            echo "</div>\n";
 
             if (!empty($info['threads']['pagenav'])) {
                 echo "<div class='text-right'>\n";

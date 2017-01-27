@@ -18,13 +18,16 @@
 namespace PHPFusion;
 
 class Panels {
-
     const PANEL_LEFT = 1;
     const PANEL_U_CENTER = 2;
     const PANEL_L_CENTER = 3;
     const PANEL_RIGHT = 4;
     const PANEL_AU_CENTER = 5;
     const PANEL_BL_CENTER = 6;
+    const PANEL_USER1 = 7;
+    const PANEL_USER2 = 8;
+    const PANEL_USER3 = 9;
+    const PANEL_USER4 = 10;
     private static $panel_instance = NULL;
     private static $panel_name = array(
         array('name' => 'LEFT', 'side' => 'left'),
@@ -32,7 +35,11 @@ class Panels {
         array('name' => 'L_CENTER', 'side' => 'lower'),
         array('name' => 'RIGHT', 'side' => 'right'),
         array('name' => 'AU_CENTER', 'side' => 'aupper'),
-        array('name' => 'BL_CENTER', 'side' => 'blower')
+        array('name' => 'BL_CENTER', 'side' => 'blower'),
+        array('name' => 'USER1', 'side' => 'user1'),
+        array('name' => 'USER2', 'side' => 'user2'),
+        array('name' => 'USER3', 'side' => 'user3'),
+        array('name' => 'USER4', 'side' => 'user4')
     );
 
     private static $panel_excluded = array();
@@ -60,8 +67,7 @@ class Panels {
      */
     public static function cachePanels() {
 
-        //if (empty(self::$panels_cache)) {
-        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
+        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages, panel_order FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
         $p_result = dbquery($panel_query);
         if (multilang_table("PN")) {
             while ($panel_data = dbarray($p_result)) {
@@ -78,19 +84,26 @@ class Panels {
             }
         }
 
-        //}
+        // sort the panels
+        ksort(self::$panels_cache);
+        foreach (self::$panels_cache as $_side => $_panels) {
+            self::$panels_cache[$_side] = sort_tree($_panels, 'panel_order');
+        }
 
         return (array)self::$panels_cache;
     }
 
     /**
      * Add Panel to List of Panels to be cached
-     * @param $panel_name
+     *
+*@param $panel_name
      * @param $panel_content
      * @param $panel_side
      * @param $panel_access
+     * @param $panel_order
      */
-    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access) {
+    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
+
         self::$panels_cache[$panel_side][] = [
             'panel_id' => str_replace(" ", "_", $panel_name).'-'.$panel_side,
             'panel_content' => $panel_content,
@@ -102,7 +115,8 @@ class Panels {
             'panel_display' => 1,
             'panel_url_list' => '',
             'panel_restriction' => 3,
-            'panel_languages' => implode('.', fusion_get_enabled_languages())
+            'panel_languages' => implode('.', fusion_get_enabled_languages()),
+            'panel_order' => $panel_order,
         ];
     }
 
@@ -180,7 +194,7 @@ class Panels {
 
     /**
      * Hides panel
-     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER'
+     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
      */
     public function hide_panel($side) {
         foreach (self::$panel_name as $p_key => $p_side) {
@@ -198,6 +212,7 @@ class Panels {
         if (empty(self::$panels_cache)) {
             self::cachePanels();
         }
+
         $settings = \fusion_get_settings();
         $locale = \fusion_get_locale('', LOCALE.LOCALESET."global.php");
 
@@ -301,7 +316,6 @@ class Panels {
 
                 $html = "<div class='content".ucfirst($p_side['side'])."'>";
                 $html .= $content;
-                //$html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
                 $html .= "</div>\n";
 
                 define($p_side['name'], (!empty($content) ? $html : ''));
@@ -354,6 +368,22 @@ class Panels {
             if ($settings['exclude_right'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
+        } elseif ($side == "user1") {
+            if ($settings['exclude_user1'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user1']);
+            }
+        } elseif ($side == "user2") {
+            if ($settings['exclude_user2'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user2']);
+            }
+        } elseif ($side == "user3") {
+            if ($settings['exclude_user3'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user3']);
+            }
+        } elseif ($side == "user4") {
+            if ($settings['exclude_user4'] != "") {
+                $exclude_list = explode("\r\n", $settings['exclude_user4']);
+            }
         }
 
         if (is_array($exclude_list)) {
@@ -369,10 +399,6 @@ class Panels {
             // exclude list is an array
             // current url.
             return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
-            //if (stristr($exclude_list, '?')) {
-              //  return (in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list) ? FALSE : TRUE);
-            //} else {
-            //}
         } else {
             return TRUE;
         }

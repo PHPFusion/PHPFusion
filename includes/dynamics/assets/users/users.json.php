@@ -16,15 +16,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'../../../maincore.php';
+
+require_once dirname(__FILE__).'../../../../../maincore.php';
 if (!defined("IN_FUSION")) {die("Access Denied");}
 
-$q = $_GET['q'];
+$q = stripinput($_GET['q']);
 // since search is on user_name.
-$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status='0' AND
-    user_name LIKE '$q%' AND user_id !='".$userdata['user_id']."'
-    ORDER BY user_level DESC, user_name ASC");
-if (dbrows($result) > 0) {
+$result = dbquery("SELECT user_id, user_name, user_avatar, user_level 
+    FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status=:status AND
+    user_name LIKE :Q ".(!isset($_GET['allow_self']) ? "AND user_id !='".fusion_get_userdata('user_id')."'" : "")."
+    ORDER BY user_level DESC, user_name ASC", [
+    ':status' => 0,
+    ':Q'      => "$q%"
+]);
+
+if (dbrows($result)) {
 	while ($udata = dbarray($result)) {
 		$user_id = $udata['user_id'];
 		$user_text = $udata['user_name'];
@@ -37,4 +43,3 @@ if (dbrows($result) > 0) {
 	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');
 }
 echo json_encode($user_opts);
-

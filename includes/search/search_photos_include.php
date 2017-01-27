@@ -132,9 +132,9 @@ if (db_exists(DB_PHOTOS)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}'          => ImageRepo::getimage('ac_A'),
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_PG')."' alt='".$locale['p400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-retro-camera fa-lg fa-fw",
-                '{%search_title%}'   => $locale['a400'],
+                '{%search_title%}'   => $locale['p400'],
                 '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
