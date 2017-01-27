@@ -320,14 +320,10 @@ function check_admin_pass($password) {
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
     if (!defined('STOP_REDIRECT')) {
-
         if (isnum($delay)) {
-
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
-
         } else {
-
             if ($script == FALSE) {
                 header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
@@ -335,7 +331,6 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
                 exit;
             }
-
         }
     } else {
         debug_print_backtrace();
