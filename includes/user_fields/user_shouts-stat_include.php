@@ -32,6 +32,6 @@ if ($profile_method == "input") {
     if (db_exists(DB_SHOUTBOX)) {
 		$user_fields = array(
 			'title' => $locale['uf_shouts-stat'],
-			'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval(isset($_GET['lookup']))."'")));
+			'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'")));
 	}
 }
