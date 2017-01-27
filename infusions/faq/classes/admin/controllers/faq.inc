@@ -213,6 +213,7 @@ class FaqAdmin extends FaqAdminModel {
                 $options = [];
                 $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
+                    $options[0] = $this->locale['faq_0010'];
                     while ($faq_data = dbarray($faq_result)) {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }

@@ -102,11 +102,12 @@ abstract class Faq extends FaqServer {
             LEFT JOIN ".DB_RATINGS." AS ar ON ar.rating_item_id=ac.faq_id AND ar.rating_type='FQ'
             LEFT JOIN ".DB_COMMENTS." AS ad ON ad.comment_item_id=ac.faq_id AND ad.comment_type='FQ' AND ad.comment_hidden='0'
             WHERE ac.faq_status='1' AND ".groupaccess("ac.faq_visibility").
-            (multilang_table('FQ') ? " AND ac.faq_language='".LANGUAGE."'" : '').($cat ? " AND faq_cat_id='$cat'" : '')."
+            (multilang_table('FQ') ? " AND ac.faq_language='".LANGUAGE."'" : '').($cat ? " AND faq_cat_id='$cat'" : ' AND faq_cat_id=0')."
             GROUP BY ac.faq_id ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC
         ");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
+                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, IMAGES, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
                 $info['faq_items'][$data['faq_id']] = $data;
             }
         }
