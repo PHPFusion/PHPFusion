@@ -456,7 +456,7 @@ class FaqAdmin extends FaqAdminModel {
         }
 
         $criteria = array(
-            'criteria' => "ac.*, IF(a.faq_cat_name, a.faq_cat_name, '".$this->locale['faq_0010']."') 'faq_cat_name', u.user_id, u.user_name, u.user_status, u.user_avatar",
+            'criteria' => "ac.*, IF(a.faq_cat_name != '', a.faq_cat_name, '".$this->locale['faq_0010']."') 'faq_cat_name', u.user_id, u.user_name, u.user_status, u.user_avatar",
             'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name 
             LEFT JOIN ".DB_FAQ_CATS." a ON a.faq_cat_id=ac.faq_cat_id",
             'where'    => (multilang_table("FQ") ? "ac.faq_language='".LANGUAGE."'" : "").$sql_condition,
@@ -570,7 +570,6 @@ class FaqAdmin extends FaqAdminModel {
         echo "<div class='display-block'>\n";
 
         // Category Management
-
         $cat_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '')."ORDER BY faq_cat_name ASC");
         if (dbrows($cat_result)) {
             echo "<div class='display-inline-block well'>\n";
@@ -597,6 +596,7 @@ class FaqAdmin extends FaqAdminModel {
         if (dbrows($result) > 0) {
             $_trash = ['section', 'ref', 'action', 'cat_id', 'faq_id', 'faq_cat_id'];
             while ($cdata = dbarray($result)) {
+
                 $edit_link = clean_request("section=faq&ref=faq_form&action=edit&faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $delete_link = clean_request("section=faq&ref=faq_form&action=delete&faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
@@ -617,8 +617,7 @@ class FaqAdmin extends FaqAdminModel {
                         </td></tr>\n";
             }
         } else {
-            echo "
-                <tr>
+            echo "<tr>
                     <td colspan='7' class='text-center'>
                         ".$this->locale['faq_0112']."
                     </td>
@@ -653,7 +652,6 @@ class FaqAdmin extends FaqAdminModel {
                     $(this).removeClass('btn-info').addClass('btn-default');
                 }
             });
-
             // Select Change
             $('#faq_status, #faq_visibility, #faq_language, #faq_name, #faq_display').bind('change', function(e){
                 $(this).closest('form').submit();
