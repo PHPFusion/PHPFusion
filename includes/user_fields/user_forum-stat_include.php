@@ -29,6 +29,6 @@ if ($profile_method == "input") {
     if (db_exists(DB_FORUM_POSTS)) {
     	$user_fields = array(
     		'title' => $locale['uf_forum-stat'],
-    		'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".intval(isset($_GET['lookup']))."'"))."");
+    		'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".intval($_GET['lookup'])."'"))."");
 	}
 }
