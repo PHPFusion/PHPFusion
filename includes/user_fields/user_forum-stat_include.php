@@ -26,5 +26,7 @@ if ($profile_method == "input") {
         $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
     }
 } elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_forum-stat'], 'value' => $user_data['user_posts']);
+    $user_fields = array(
+    	'title' => $locale['uf_forum-stat'],
+    	'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".$_GET['lookup']."'"))."");
 }
