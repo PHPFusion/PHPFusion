@@ -466,14 +466,9 @@ function phpentities($text) {
  * @return string
  */
 function trimlink($text, $length) {
-    $dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
-    $enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-    $text = str_replace($enc, $dec, $text);
     if (strlen($text) > $length) {
         $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
     }
-    $text = str_replace($dec, $enc, $text);
-
     return $text;
 }
 
