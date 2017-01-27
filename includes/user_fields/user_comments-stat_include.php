@@ -27,6 +27,6 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
     $user_fields = array(
         'title' => $locale['uf_comments-stat'],
-        'value' => number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".intval(isset($_GET['lookup']))."'")).""
+        'value' => number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".intval($_GET['lookup'])."'")).""
     );
 }
