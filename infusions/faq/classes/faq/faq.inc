@@ -93,14 +93,9 @@ abstract class Faq extends FaqServer {
 
         // Get Items
         $result = dbquery("SELECT ac.*, 
-            au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined,
-            SUM(ar.rating_vote) AS sum_rating,
-            COUNT(ar.rating_item_id) AS count_votes,
-            COUNT(ad.comment_item_id) AS count_comment
+            au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined
             FROM ".DB_FAQS." ac
             LEFT JOIN ".DB_USERS." AS au ON ac.faq_name=au.user_id
-            LEFT JOIN ".DB_RATINGS." AS ar ON ar.rating_item_id=ac.faq_id AND ar.rating_type='FQ'
-            LEFT JOIN ".DB_COMMENTS." AS ad ON ad.comment_item_id=ac.faq_id AND ad.comment_type='FQ' AND ad.comment_hidden='0'
             WHERE ac.faq_status='1' AND ".groupaccess("ac.faq_visibility").
             (multilang_table('FQ') ? " AND ac.faq_language='".LANGUAGE."'" : '').($cat ? " AND faq_cat_id='$cat'" : ' AND faq_cat_id=0')."
             GROUP BY ac.faq_id ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC

@@ -20,7 +20,8 @@ namespace PHPFusion\FAQ;
 class FaqSubmissionsAdmin extends FaqAdminModel {
 
     private static $instance = NULL;
-
+    private $locale = [];
+    private $inputArray = [];
     private static $defArray = array(
         "faq_breaks" => "y",
         "faq_visibility" => 0,
@@ -45,21 +46,20 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             }
 
             $SaveinputArray = array(
-                "faq_question" => form_sanitizer($_POST['faq_question'], "", "faq_question"),
-                "faq_cat_id" => form_sanitizer($_POST['faq_cat_id'], 0, "faq_cat_id"),
-                "faq_visibility" => form_sanitizer($_POST['faq_visibility'], 0, "faq_visibility"),
-                "faq_datestamp" => form_sanitizer($_POST['faq_datestamp'], time(), "faq_datestamp"),
-                "faq_name" => form_sanitizer($_POST['faq_name'], 0, "faq_name"),
-                "faq_answer" => form_sanitizer($faq_answer, "", "faq_answer"),
-                "faq_status" => isset($_POST['faq_status']) ? "1" : "0",
-                "faq_language" => form_sanitizer($_POST['faq_language'], LANGUAGE, "faq_language")
+                'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
+                'faq_cat_id'     => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
+                'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
+                'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], time(), 'faq_datestamp'),
+                'faq_name'       => form_sanitizer($_POST['faq_name'], 0, 'faq_name'),
+                'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
+                'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
+                'faq_breaks'     => 'n',
+                'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language')
             );
 
             // Line Breaks
             if (fusion_get_settings("tinymce_enabled") != 1) {
                 $SaveinputArray['faq_breaks'] = isset($_POST['faq_breaks']) ? "y" : "n";
-            } else {
-                $SaveinputArray['faq_breaks'] = "n";
             }
 
             // Handle
@@ -145,41 +145,46 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 <?php
 
                 openside($this->locale['faq_0259']);
-
-                echo form_select_tree("faq_cat_id", $this->locale['faq_0252'], $this->inputArray['faq_cat_id'], array(
-                        "error_text" => $this->locale['faq_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
-                        "query" => (multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."'" : "")
-                    ),
-                    DB_FAQS, "faq_question", "faq_id", "faq_cat_id"
-                );
-
-                echo form_select("faq_visibility", $this->locale['faq_0253'], $this->inputArray['faq_visibility'], array(
-                    "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                $options = [];
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
+                if (dbrows($faq_result)) {
+                    $options[0] = $this->locale['faq_0010'];
+                    while ($faq_data = dbarray($faq_result)) {
+                        $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
+                    }
+                }
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], array(
+                    'inner_width' => '100%',
+                    'inline'      => TRUE,
+                    'options'     => $options,
+                ));
+                echo form_select('faq_visibility', $this->locale['faq_0253'], $this->inputArray['faq_visibility'], array(
+                    'options' => fusion_get_groups(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%', 'inline' => TRUE,
                 ));
 
-                if (multilang_table("FQ")) {
-                    echo form_select("faq_language", $this->locale['language'], $this->inputArray['faq_language'], array(
-                        "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                if (multilang_table('FQ')) {
+                    echo form_select('faq_language', $this->locale['language'], $this->inputArray['faq_language'], array(
+                        'options' => fusion_get_enabled_languages(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%', 'inline' => TRUE,
                     ));
                 } else {
-                    echo form_hidden("faq_language", "", $this->inputArray['faq_language']);
+                    echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
                 }
 
-                echo form_datepicker("faq_datestamp", $this->locale['faq_0254'], $this->inputArray['submit_datestamp'], array(
-                    "inline" => TRUE, "inner_width" => "100%"
+                echo form_datepicker('faq_datestamp', $this->locale['faq_0254'], $this->inputArray['submit_datestamp'], array(
+                    'inline' => TRUE, 'inner_width' => '100%'
                 ));
 
                 closeside();
 
                 openside($this->locale['faq_0259']);
 
-                echo form_checkbox("faq_status", $this->locale['faq_0255'], $this->inputArray['faq_status'], array(
-                    "class" => "m-b-5", "reverse_label" => TRUE
+                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->inputArray['faq_status'], array(
+                    'class' => 'm-b-5', 'reverse_label' => TRUE
                 ));
 
-                 if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox("faq_breaks", $this->locale['faq_0256'], $this->inputArray['faq_breaks'], array(
-                        "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
+                if (fusion_get_settings('tinymce_enabled') != 1) {
+                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->inputArray['faq_breaks'], array(
+                        'value' => 'y', 'class' => 'm-b-5', 'reverse_label' => TRUE
                     ));
                 }
 
@@ -194,7 +199,10 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     }
 
     /**
-     * Display Buttons for Form
+     *  Display Buttons for Form
+     *
+     * @param      $unique_id
+     * @param bool $breaker
      */
     private function displayFormButtons($unique_id, $breaker = true) {
         ?>

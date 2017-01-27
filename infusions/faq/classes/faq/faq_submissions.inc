@@ -55,11 +55,11 @@ class FaqSubmissions extends FaqServer {
     private function display_submission_form() {
 
         $criteriaArray = array(
-            "faq_id"       => 0,
-            "faq_cat_id"   => 0,
-            "faq_answer"   => "",
-            "faq_question" => "",
-            "faq_language" => LANGUAGE,
+            'faq_id'       => 0,
+            'faq_cat_id'   => 0,
+            'faq_answer'   => "",
+            'faq_question' => "",
+            'faq_language' => LANGUAGE,
         );
 
         // Cancel Form
@@ -125,11 +125,19 @@ class FaqSubmissions extends FaqServer {
 
                 echo form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'], $textArea_opts);
 
-                echo form_select_tree('faq_cat_id', $this->locale['faq_0252'], $criteriaArray['faq_cat_id'], array(
-                    'no_root'     => TRUE,
-                    'placeholder' => $this->locale['choose'],
-                    'query'       => (multilang_table('FQ') ? "WHERE faq_language='".LANGUAGE."'" : '')
-                ), DB_FAQS, 'faq_question', 'faq_id', 'faq_cat_id');
+                $options = [];
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
+                if (dbrows($faq_result)) {
+                    $options[0] = $this->locale['faq_0010'];
+                    while ($faq_data = dbarray($faq_result)) {
+                        $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
+                    }
+                }
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], array(
+                    'inner_width' => '100%',
+                    'inline'      => TRUE,
+                    'options'     => $options,
+                ));
 
                 if (multilang_table('FQ')) {
                     echo form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'], array(
