@@ -33,13 +33,10 @@ if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
 }
 
-
 opentable($locale['400']);
-
 echo "<div class='text-right'>\n";
 echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 echo "</div>\n";
-
 $temp = opendir(INFUSIONS);
 $infs = array();
 while ($folder = readdir($temp)) {
@@ -78,7 +75,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
                                             array(
                                                 'class' => 'btn-default m-t-5 defuse', 'icon' => 'entypo trash', 'input_id' => 'defuse_'.$i
                                             ));
-            }
+                }
             } else {
                 $content .= form_button('infuse', $locale['401'], $inf['folder'],
                                         array('class' => 'btn-primary m-t-5 infuse', 'icon' => 'entypo install', 'input_id' => 'infuse_'.$i));
@@ -100,7 +97,5 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
     $content .= "</div>\n";
     echo $content;
 }
-
 closetable();
-
 require_once THEMES."templates/footer.php";
