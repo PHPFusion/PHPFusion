@@ -60,3 +60,9 @@ function opentable($title, $class = NULL) {
 function closetable() {
     Material\Main::CloseTable();
 }
+
+function replace_meta($output = '') {
+    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#1e2c3c"/>', $output);
+}
+
+add_handler('replace_meta');
