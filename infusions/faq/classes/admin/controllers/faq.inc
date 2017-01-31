@@ -528,7 +528,7 @@ class FaqAdmin extends FaqAdminModel {
                 'options'     => array(0 => $this->locale['faq_0124'], 1 => $this->locale['draft'])
             ])."
         </div>
-        <div class='display-inline-block'>                    
+        <div class='display-inline-block'>
         ".form_select('faq_visibility', '', $filter_values['faq_visibility'], [
                 'allowclear'  => TRUE,
                 'placeholder' => '- '.$this->locale['faq_0125'].' -',
@@ -573,13 +573,19 @@ class FaqAdmin extends FaqAdminModel {
         // Category Management
         $cat_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '')."ORDER BY faq_cat_name ASC");
         if (dbrows($cat_result)) {
-            echo "<div class='display-inline-block well'>\n";
+            echo "<div class='well'>\n";
             while ($cat_data = dbarray($cat_result)) {
                 $cat_options[$cat_data['faq_cat_id']] = $cat_data['faq_cat_name'];
             }
-            $button = form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit']);
-            $button .= form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger']);
-            echo form_select('faq_cat_id', $this->locale['faq_0009'], '', array('inline' => FALSE, 'options' => $cat_options, 'stacked' => $button, 'class' => 'm-b-0'));
+
+                echo "<div class='row'>\n";
+                    echo "<div class='col-xs-12 col-sm-6'>\n";
+                    echo form_select('faq_cat_id', $this->locale['faq_0009'], '', array('inline' => TRUE, 'options' => $cat_options, 'class' => 'm-b-0'));
+                    echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
+                    echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit']);
+                    echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger']);
+                    echo "</div>\n";
+                echo "</div>\n";
             echo "</div>\n";
         }
 
@@ -603,7 +609,7 @@ class FaqAdmin extends FaqAdminModel {
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
                         <td>".form_checkbox("faq_id[]", "", "", array("value" => $cdata['faq_id'], "class" => "m-0"))."</td>
-                        <td><a href='$edit_link'>".$cdata['faq_question']."</a></td>                        
+                        <td><a href='$edit_link'>".$cdata['faq_question']."</a></td>
                         <td>".($cdata['faq_status'] ? $this->locale['no'] : $this->locale['yes'])."</td>
                         <td>".($cdata['faq_cat_id'] ? "<a href='$cat_edit_link'>" : "").$cdata['faq_cat_name'].($cdata['faq_cat_id'] ? "</a>" : "")."</td>
                         <td>
@@ -619,7 +625,7 @@ class FaqAdmin extends FaqAdminModel {
             }
         } else {
             echo "<tr>
-                    <td colspan='7' class='text-center'>
+                    <td colspan='8' class='text-center'>
                         ".$this->locale['faq_0112']."
                     </td>
                 </tr>
@@ -627,13 +633,13 @@ class FaqAdmin extends FaqAdminModel {
         }
         echo "</tbody>\n</table>\n";
         echo "<div class='display-inline-block'>\n
-        ".form_select('faq_display', $this->locale['faq_0132'], $data['limit'], array(
+        ".form_select('faq_display', $this->locale['faq_0132'], $info['limit'], array(
                 'width'       => '70px',
                 'inner_width' => '70px',
                 'options'     => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50)))."
         </div>";
-        if ($data['max_rows'] > $data['faq_rows']) {
-            echo "<div class='display-inline-block pull-right'>".makepagenav($data['rowstart'], $data['limit'], $data['max_rows'], 3, FUSION_SELF.fusion_get_aidlink().'&amp;faq_display='.$data['limit'].'&amp;')."</div>";
+        if ($info['max_rows'] > $info['faq_rows']) {
+            echo "<div class='display-inline-block pull-right'>".makepagenav($info['rowstart'], $info['limit'], $info['max_rows'], 3, FUSION_SELF.fusion_get_aidlink().'&amp;faq_display='.$info['limit'].'&amp;')."</div>";
         }
         echo "</div>\n";
         echo closeform();

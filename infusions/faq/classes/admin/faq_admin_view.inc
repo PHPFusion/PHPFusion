@@ -74,12 +74,15 @@ class FaqAdminView extends FaqAdminModel {
 
         $master_title['title'][] = $faqTitle;
         $master_title['id'][] = 'faq';
+        $master_title['icon'][] = 'fa fa-question-circle';
 
         $master_title['title'][] = $this->locale['faq_0005'].'&nbsp;<span class=\'badge\'>'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'").'</span>';
         $master_title['id'][] = 'submissions';
+        $master_title['icon'][] = 'fa fa-inbox';
 
         $master_title['title'][] = $this->locale['faq_0006'];
         $master_title['id'][] = 'settings';
+        $master_title['icon'][] = 'fa fa-cogs';
 
         // Display Content
         opentable($this->locale['faq_0000']);
