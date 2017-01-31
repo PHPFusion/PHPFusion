@@ -24,6 +24,24 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
+echo form_textarea("figure_accessories", 'Accessories', $data['figure_accessories'], [
+    "type"      => 'tinymce',
+    "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+    "autosize"  => true,
+    "required"  => false,
+    "form_name" => "inputform"
+]);
+
+// Formfield "Description"
+echo form_textarea("figure_description", 'Description', $data['figure_description'], [
+    "type"      => 'tinymce',
+    "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+    "autosize"  => true,
+    "required"  => false,
+    "form_name" => "inputform"
+]);
+
+
 $country = \PHPFusion\Geomap::getCountryResource();
 //print_p($country);
 foreach ($country as $object) {

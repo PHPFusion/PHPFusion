@@ -23,6 +23,7 @@
  * @param bool|FALSE $input_value
  * @param array      $options
  * if media is true, defender will check if any file uploaded. If no, select from media selection
+ *
  * @return string
  */
 function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
@@ -34,43 +35,43 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $template_choices = array('classic', 'modern', 'thumbnail');
 
     $default_options = array(
-        "input_id" => $input_name,
-        "upload_path" => IMAGES,
-        "required" => FALSE,
-        "safemode" => FALSE,
-        "deactivate" => FALSE,
-        "preview_off" => FALSE,
-        "type" => "image", //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
-        "width" => "100%",
-        "label" => $locale['browse'],
-        "inline" => TRUE,
-        "class" => "",
-        "tip" => "",
-        "ext_tip" => "",
-        "error_text" => $locale['error_input_file'],
-        "btn_class" => "btn-default",
-        "icon" => "fa fa-upload",
-        "jsonurl" => FALSE,
-        "valid_ext" => ".jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP",
-        "thumbnail" => FALSE,
-        "thumbnail_w" => 300,
-        "thumbnail_h" => 300,
-        "thumbnail_folder" => "",
-        "thumbnail_ratio" => 0,
-        "thumbnail_suffix" => "_t1",
-        "thumbnail2" => FALSE,
-        "thumbnail2_w" => 600,
-        "thumbnail2_h" => 400,
-        "thumbnail2_suffix" => "_t2",
-        "thumbnail2_ratio" => 0,
-        "delete_original" => FALSE,
-        "max_width" => 1800,
-        "max_height" => 1600,
-        "max_byte" => 1500000,
-        "max_count" => 1,
-        "multiple" => FALSE,
-        "template" => "classic",
-        "media" => FALSE,
+        'input_id'          => $input_name,
+        'upload_path'       => IMAGES,
+        'required'          => FALSE,
+        'safemode'          => FALSE,
+        'deactivate'        => FALSE,
+        'preview_off'       => FALSE,
+        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        'width'             => '100%',
+        'label'             => $locale['browse'],
+        'inline'            => TRUE,
+        'class'             => "",
+        'tip'               => "",
+        'ext_tip'           => "",
+        'error_text'        => $locale['error_input_file'],
+        'btn_class'         => 'btn-default',
+        'icon'              => 'fa fa-upload',
+        'jsonurl'           => FALSE,
+        'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
+        'thumbnail'         => FALSE,
+        'thumbnail_w'       => 300,
+        'thumbnail_h'       => 300,
+        'thumbnail_folder'  => "",
+        'thumbnail_ratio'   => 0,
+        'thumbnail_suffix'  => '_t1',
+        'thumbnail2'        => FALSE,
+        'thumbnail2_w'      => 600,
+        'thumbnail2_h'      => 400,
+        'thumbnail2_suffix' => '_t2',
+        'thumbnail2_ratio'  => 0,
+        'delete_original'   => FALSE,
+        'max_width'         => 1800,
+        'max_height'        => 1600,
+        'max_byte'          => 1500000,
+        'max_count'         => 1,
+        'multiple'          => FALSE,
+        'template'          => 'classic',
+        'media'             => FALSE,
     );
 
     $options += $default_options;
@@ -157,7 +158,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= "<h5>".$locale['global_901']."</h5>";
         if (!empty($files_list)) {
             $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
-                                 array('input_id' => $options['input_id']."-mediaSelector"));
+                array('input_id' => $options['input_id']."-mediaSelector"));
             $html .= "<hr/>";
             $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
             foreach ($files_list as $files) {
@@ -193,32 +194,32 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     \defender::getInstance()->add_field_session(
         array(
-            'input_name' => trim($input_name, '[]'),
-            'type' => ((array)$options['type'] == array('image') ? 'image' : 'file'),
-            'title' => $title,
-            'id' => $options['input_id'],
-            'required' => $options['required'],
-            'safemode' => $options['safemode'],
-            'error_text' => $options['error_text'],
-            'path' => $options['upload_path'],
-            'thumbnail_folder' => $options['thumbnail_folder'],
-            'thumbnail' => $options['thumbnail'],
-            'thumbnail_suffix' => $options['thumbnail_suffix'],
-            'thumbnail_w' => $options['thumbnail_w'],
-            'thumbnail_h' => $options['thumbnail_h'],
-            'thumbnail_ratio' => $options['thumbnail_ratio'],
-            'thumbnail2' => $options['thumbnail2'],
-            'thumbnail2_w' => $options['thumbnail2_w'],
-            'thumbnail2_h' => $options['thumbnail2_h'],
+            'input_name'        => trim($input_name, '[]'),
+            'type'              => ((array)$options['type'] == array('image') ? 'image' : 'file'),
+            'title'             => $title,
+            'id'                => $options['input_id'],
+            'required'          => $options['required'],
+            'safemode'          => $options['safemode'],
+            'error_text'        => $options['error_text'],
+            'path'              => $options['upload_path'],
+            'thumbnail_folder'  => $options['thumbnail_folder'],
+            'thumbnail'         => $options['thumbnail'],
+            'thumbnail_suffix'  => $options['thumbnail_suffix'],
+            'thumbnail_w'       => $options['thumbnail_w'],
+            'thumbnail_h'       => $options['thumbnail_h'],
+            'thumbnail_ratio'   => $options['thumbnail_ratio'],
+            'thumbnail2'        => $options['thumbnail2'],
+            'thumbnail2_w'      => $options['thumbnail2_w'],
+            'thumbnail2_h'      => $options['thumbnail2_h'],
             'thumbnail2_suffix' => $options['thumbnail2_suffix'],
-            'thumbnail2_ratio' => $options['thumbnail2_ratio'],
-            'delete_original' => $options['delete_original'],
-            'max_width' => $options['max_width'],
-            'max_height' => $options['max_height'],
-            'max_count' => $options['max_count'],
-            'max_byte' => $options['max_byte'],
-            'multiple' => $options['multiple'],
-            'valid_ext' => $options['valid_ext'],
+            'thumbnail2_ratio'  => $options['thumbnail2_ratio'],
+            'delete_original'   => $options['delete_original'],
+            'max_width'         => $options['max_width'],
+            'max_height'        => $options['max_height'],
+            'max_count'         => $options['max_count'],
+            'max_byte'          => $options['max_byte'],
+            'multiple'          => $options['multiple'],
+            'valid_ext'         => $options['valid_ext'],
         )
     );
 
@@ -226,16 +227,15 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         \defender::getInstance()->add_field_session(
             array(
                 'input_name' => $input_name."-mediaSelector",
-                'title' => trim($title, '[]'),
-                'id' => $options['input_id']."-mediaSelector",
-                'type' => 'mediaSelect',
-                'path' => $options['upload_path'],
-                'required' => $options['required'],
-                'safemode' => $options['safemode'],
+                'title'      => trim($title, '[]'),
+                'id'         => $options['input_id']."-mediaSelector",
+                'type'       => 'mediaSelect',
+                'path'       => $options['upload_path'],
+                'required'   => $options['required'],
+                'safemode'   => $options['safemode'],
             )
         );
     }
-
 
     switch ($options['template']) {
         case "classic":
