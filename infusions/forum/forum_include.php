@@ -19,12 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-/**
- * Developer tools for template implementations
- * I will keep it here, but these are not necessary
- * since you can use them as the return statements indicates.
- */
-
 function attach_exists($file) {
     return \PHPFusion\Forums\Functions::attach_exists($file);
 }

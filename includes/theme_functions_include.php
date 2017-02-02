@@ -965,7 +965,7 @@ if (!function_exists("tab_active")
 
             $link_url = '#';
             if ($link) {
-                $link_url = $link."?$getname=".$tab_id; // keep all request except GET array
+                $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                 if ($link === TRUE) {
                     $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
                 }
