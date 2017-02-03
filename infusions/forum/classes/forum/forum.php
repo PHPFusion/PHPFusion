@@ -66,19 +66,17 @@ class Forum extends ForumServer {
 
         // Xss sanitization
         $this->forum_info = [
-            'forum_id' => isset($_GET['forum_id']) ? $_GET['forum_id'] : 0,
-            'new_thread_link' => '',
-            'lastvisited' => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : time(),
-            'posts_per_page' => $forum_settings['posts_per_page'],
+            'forum_id'         => isset($_GET['forum_id']) ? $_GET['forum_id'] : 0,
+            'new_thread_link'  => '',
+            'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : time(),
+            'posts_per_page'   => $forum_settings['posts_per_page'],
             'threads_per_page' => $forum_settings['threads_per_page'],
-            'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), // waste resources here.
-            'threads' => array(),
-            'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
+            'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
+            'threads'          => array(),
+            'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
         ];
-        $this->forum_info['parent_id'] = dbresult(dbquery("SELECT forum_cat FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"),
-                                                  0);
-        $this->forum_info['forum_branch'] = dbresult(dbquery("SELECT forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"),
-                                                     0);
+        $this->forum_info['parent_id'] = dbresult(dbquery("SELECT forum_cat FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"), 0);
+        $this->forum_info['forum_branch'] = dbresult(dbquery("SELECT forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"), 0);
 
         // Set Max Rows -- XSS
         $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')."

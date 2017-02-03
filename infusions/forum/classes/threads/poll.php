@@ -20,19 +20,223 @@ namespace PHPFusion\Forums\Threads;
 
 /**
  * Class Poll
+ *
  * @package PHPFusion\Forums\Threads
  */
 class Poll {
 
     /**
      * Permissions for Forum Poll
+     *
      * @var array
      */
     private static $permissions = array();
     private static $data = array();
 
     /**
+     * Displays HTML Poll Form
+     *
+     * @param bool|FALSE $edit
+     * Template: function display_forum_pollform
+     */
+    public static function render_poll_form($edit = false) {
+
+        $locale = fusion_get_locale("", FORUM_LOCALE);
+
+        $poll_field = '';
+
+        if ($edit ? self::get_poll_permissions("can_edit_poll") : self::get_poll_permissions("can_create_poll")) { // if permitted to create new poll.
+
+            $poll_data = array(
+                'thread_id'         => self::$data['thread_id'],
+                'forum_poll_title'  => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
+                'forum_poll_start'  => time(), // time poll started
+                'forum_poll_length' => 2, // how many poll options we have
+                'forum_poll_votes'  => 0, // how many vote this poll has
+            );
+
+            // counter of lengths
+            $option_data[1] = "";
+            $option_data[2] = "";
+            // calculate poll lengths
+            if (isset($_POST['poll_options'])) {
+                // callback on post.
+                foreach ($_POST['poll_options'] as $i => $value) {
+                    $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+                }
+                // reindex the whole array with blank values.
+                if (\defender::safe()) {
+                    $option_data = array_values(array_filter($option_data));
+                    array_unshift($option_data, NULL);
+                    unset($option_data[0]);
+                    $poll_data['forum_poll_length'] = count($option_data);
+                }
+            }
+            // add a Blank Poll option
+            if (isset($_POST['add_poll_option']) && \defender::safe()) {
+                array_push($option_data, '');
+            }
+            if ($edit) {
+                $result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".self::$data['thread_id']."'");
+                if (dbrows($result) > 0) {
+                    if (isset($_POST['update_poll']) || isset($_POST['add_poll_option'])) {
+                        $load = FALSE;
+                        $poll_data += dbarray($result); // append if not available.
+                    } else {
+                        $load = TRUE;
+                        $poll_data = dbarray($result); // call
+                    }
+                    if (isset($_POST['update_poll'])) {
+                        $poll_data = array(
+                            'thread_id'         => self::$data['thread_id'],
+                            'forum_poll_title'  => form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title'),
+                            'forum_poll_start'  => $poll_data['forum_poll_start'], // time poll started
+                            'forum_poll_length' => $poll_data['forum_poll_length'], // how many poll options we have
+                        );
+                        dbquery_insert(DB_FORUM_POLLS, $poll_data, 'update', array('primary_key' => 'thread_id', 'no_unique' => TRUE));
+                        $i = 1;
+                        // populate data for matches
+                        $poll_result = dbquery("SELECT forum_poll_option_id FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."'");
+                        while ($_data = dbarray($poll_result)) {
+                            $_poll[$_data['forum_poll_option_id']] = $_data;
+                            // Prune the emptied fields AND field is not required.
+                            if (empty($option_data[$_data['forum_poll_option_id']]) && \defender::safe()) {
+                                dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
+                            }
+                        }
+                        foreach ($option_data as $option_text) {
+                            if ($option_text) {
+
+                                if (\defender::safe()) {
+                                    if (isset($_poll[$i])) { // has record
+                                        dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$i."'");
+                                    } else { // no record - create
+                                        $array = array('thread_id'               => self::$data['thread_id'],
+                                                       'forum_poll_option_id'    => $i,
+                                                       'forum_poll_option_text'  => $option_text,
+                                                       'forum_poll_option_votes' => 0,);
+                                        dbquery_insert(DB_FORUM_POLL_OPTIONS, $array, 'save');
+                                    }
+                                }
+                                $i++;
+                            }
+                        }
+                        if (\defender::safe()) {
+                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                        }
+                    }
+                    // how to make sure values containing options votes
+                    $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
+                    $poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
+                    $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'],
+                        array(
+                            'max_length'  => 255,
+                            'placeholder' => $locale['forum_0604a'],
+                            'inline'      => TRUE,
+                            'required'    => TRUE
+                        )
+                    );
+                    if ($load == FALSE) {
+                        for ($i = 1; $i <= count($option_data); $i++) {
+                            $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i],
+                                array(
+                                    'max_length'  => 255,
+                                    'placeholder' => $locale['forum_0605'],
+                                    'inline'      => TRUE,
+                                    'required'    => $i <= 2 ? TRUE : FALSE
+                                )
+                            );
+                        }
+                    } else {
+                        $poll_query = "
+                        SELECT forum_poll_option_text, forum_poll_option_votes
+                        FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".intval(self::$data['thread_id'])."' ORDER BY forum_poll_option_id ASC
+                        ";
+                        $result = dbquery($poll_query);
+                        $i = 1;
+                        while ($_pData = dbarray($result)) {
+                            $poll_field['poll_field'] .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pData['forum_poll_option_text'],
+                                array(
+                                    'max_length'  => 255,
+                                    'placeholder' => 'Poll Options',
+                                    'inline'      => 1,
+                                    'required'    => $i <= 2 or $_pData['forum_poll_option_votes'] ? TRUE : FALSE
+                                )
+                            );
+                            $i++;
+                        }
+                    }
+                    $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
+                    $poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
+                    $poll_field['poll_field'] .= "</div>\n";
+                    $poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-default'));
+                    $poll_field['closeform'] = closeform();
+                } else {
+                    redirect(FORUM."index.php"); // redirect because the poll id is not available.
+                }
+            } else {
+                // Save New Poll
+                if (isset($_POST['add_poll'])) {
+                    dbquery_insert(DB_FORUM_POLLS, $poll_data, 'save');
+                    $poll_data['forum_poll_id'] = dblastid();
+                    $i = 1;
+                    foreach ($option_data as $option_text) {
+                        if ($option_text) {
+                            $poll_data['forum_poll_option_id'] = $i;
+                            $poll_data['forum_poll_option_text'] = $option_text;
+                            $poll_data['forum_poll_option_votes'] = 0;
+                            dbquery_insert(DB_FORUM_POLL_OPTIONS, $poll_data, 'save');
+                            $i++;
+                        }
+                    }
+                    if (\defender::safe()) {
+                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'");
+                        redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                    }
+
+                }
+                // blank poll - no poll on edit or new thread
+                $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
+                $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'],
+                    array(
+                        'max_length'  => 255,
+                        'placeholder' => $locale['forum_0604a'],
+                        'inline'      => TRUE,
+                        'required'    => TRUE
+                    )
+                );
+                for ($i = 1; $i <= count($option_data); $i++) {
+                    $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i],
+                        array(
+                            'max_length'  => 255,
+                            'placeholder' => $locale['forum_0605'],
+                            'inline'      => 1,
+                            'required'    => $i <= 2 ? TRUE : FALSE
+                        )
+                    );
+                }
+                $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
+                $poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
+                $poll_field['poll_field'] .= "</div>\n";
+                $poll_field['poll_button'] = form_button('add_poll', $locale['forum_2011'], $locale['forum_2011'], array('class' => 'btn-success btn-md'));
+                $poll_field['closeform'] = closeform();
+            }
+
+            $info = array(
+                'title'       => $locale['forum_0366'],
+                'description' => $locale['forum_2000'].self::$data['thread_subject'],
+                'field'       => $poll_field,);
+
+            display_forum_pollform($info);
+
+        } else {
+            redirect(FORUM."index.php");
+        }
+    }
+
+    /**
      * Object
+     *
      * @param array $thread_info
      */
     public function __construct(array $thread_info) {
@@ -40,12 +244,13 @@ class Poll {
         self::set_thread_data($thread_info['thread']);
     }
 
-    private static function set_thread_data( array $thread_data ) {
+    private static function set_thread_data(array $thread_data) {
         self::$data = $thread_data;
     }
 
     /**
      * Set Permissions Settings
+     *
      * @param array $thread_info
      */
     private static function set_poll_permissions(array $thread_info) {
@@ -54,19 +259,23 @@ class Poll {
 
     /**
      * Fetches Permissions Settings
+     *
      * @param $key
+     *
      * @return bool
      */
-    private static function get_poll_permissions( $key ) {
+    private static function get_poll_permissions($key) {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 
     /**
      * Generate Poll HTML
+     *
      * @param array $thread_data
+     *
      * @return string
      */
-    public static function generate_poll( array $thread_data) {
+    public static function generate_poll(array $thread_data) {
 
         $locale = fusion_get_locale();
         $html = "";
@@ -122,9 +331,9 @@ class Poll {
 
                 if (self::get_poll_permissions("can_vote_poll")) {
                     $poll_start = openform("poll_vote_form", "post",
-                                           INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
+                        INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
                     $poll_end = form_button('vote', $locale['forum_2010'], 'vote',
-                                            array('class' => 'btn btn-sm btn-primary m-l-20 '));
+                        array('class' => 'btn btn-sm btn-primary m-l-20 '));
                     $poll_end .= closeform();
                 }
 
@@ -152,7 +361,7 @@ class Poll {
                             } else {
                                 $option_votes = ($poll['forum_poll_votes'] ? number_format(100 / $poll['forum_poll_votes'] * $poll_option['forum_poll_option_votes']) : 0);
                                 $html .= progress_bar($option_votes, $poll_option['forum_poll_option_text'], '',
-                                                      '10px');
+                                    '10px');
                             }
                             $i++;
                         }
@@ -162,208 +371,8 @@ class Poll {
                 }
             }
         }
-        return (string) $html;
-    }
 
-    /**
-     * Displays HTML Poll Form
-     * @param bool|FALSE $edit
-     */
-    public static function render_poll_form($edit = false) {
-
-        $locale = fusion_get_locale("", FORUM_LOCALE);
-
-        $poll_field = '';
-
-        if ($edit ? self::get_poll_permissions("can_edit_poll") : self::get_poll_permissions("can_create_poll")) { // if permitted to create new poll.
-
-            $poll_data = array(
-                'thread_id' => self::$data['thread_id'],
-                'forum_poll_title' => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
-                'forum_poll_start' => time(), // time poll started
-                'forum_poll_length' => 2, // how many poll options we have
-                'forum_poll_votes' => 0, // how many vote this poll has
-            );
-
-            // counter of lengths
-            $option_data[1] = "";
-            $option_data[2] = "";
-            // calculate poll lengths
-            if (isset($_POST['poll_options'])) {
-                // callback on post.
-                foreach ($_POST['poll_options'] as $i => $value) {
-                    $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
-                }
-                // reindex the whole array with blank values.
-                if (\defender::safe()) {
-                    $option_data = array_values(array_filter($option_data));
-                    array_unshift($option_data, NULL);
-                    unset($option_data[0]);
-                    $poll_data['forum_poll_length'] = count($option_data);
-                }
-            }
-            // add a Blank Poll option
-            if (isset($_POST['add_poll_option']) && \defender::safe()) {
-                array_push($option_data, '');
-            }
-            if ($edit) {
-                $result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".self::$data['thread_id']."'");
-                if (dbrows($result) > 0) {
-                    if (isset($_POST['update_poll']) || isset($_POST['add_poll_option'])) {
-                        $load = FALSE;
-                        $poll_data += dbarray($result); // append if not available.
-                    } else {
-                        $load = TRUE;
-                        $poll_data = dbarray($result); // call
-                    }
-                    if (isset($_POST['update_poll'])) {
-                        $poll_data = array(
-                            'thread_id' => self::$data['thread_id'],
-                            'forum_poll_title' => form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title'),
-                            'forum_poll_start' => $poll_data['forum_poll_start'], // time poll started
-                            'forum_poll_length' => $poll_data['forum_poll_length'], // how many poll options we have
-                        );
-                        dbquery_insert(DB_FORUM_POLLS, $poll_data, 'update', array('primary_key' => 'thread_id',
-                                                                              'no_unique' => TRUE));
-                        $i = 1;
-                        // populate data for matches
-                        $poll_result = dbquery("SELECT forum_poll_option_id FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."'");
-                        while ($_data = dbarray($poll_result)) {
-                            $_poll[$_data['forum_poll_option_id']] = $_data;
-                            // Prune the emptied fields AND field is not required.
-                            if (empty($option_data[$_data['forum_poll_option_id']]) && \defender::safe()) {
-                                dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
-                            }
-                        }
-                        foreach ($option_data as $option_text) {
-                            if ($option_text) {
-
-                                if (\defender::safe()) {
-                                    if (isset($_poll[$i])) { // has record
-                                        dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$i."'");
-                                    } else { // no record - create
-                                        $array = array('thread_id' => self::$data['thread_id'],
-                                                       'forum_poll_option_id' => $i,
-                                                       'forum_poll_option_text' => $option_text,
-                                                       'forum_poll_option_votes' => 0,);
-                                        dbquery_insert(DB_FORUM_POLL_OPTIONS, $array, 'save');
-                                    }
-                                }
-                                $i++;
-                            }
-                        }
-                        if (\defender::safe()) {
-                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
-                        }
-                    }
-
-                    // how to make sure values containing options votes
-                    $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
-                    $poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
-                    $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'],
-                                                          array(
-                                                              'max_length' => 255,
-                                                              'placeholder' => $locale['forum_0604a'],
-                                                              'inline' => TRUE,
-                                                              'required' => TRUE
-                                                          )
-                    );
-
-                    if ($load == FALSE) {
-                        for ($i = 1; $i <= count($option_data); $i++) {
-                            $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i],
-                                                                   array(
-                                                                       'max_length' => 255,
-                                                                       'placeholder' => $locale['forum_0605'],
-                                                                       'inline' => TRUE,
-                                                                       'required' => $i <= 2 ? TRUE : FALSE
-                                                                   )
-                            );
-                        }
-                    } else {
-
-                        $poll_query = "
-                        SELECT forum_poll_option_text, forum_poll_option_votes
-                        FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".intval(self::$data['thread_id'])."' ORDER BY forum_poll_option_id ASC
-                        ";
-
-                        $result = dbquery($poll_query);
-
-                        $i = 1;
-                        while ($_pData = dbarray($result)) {
-                            $poll_field['poll_field'] .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pData['forum_poll_option_text'],
-                                                                   array(
-                                                                       'max_length' => 255,
-                                                                       'placeholder' => 'Poll Options',
-                                                                       'inline' => 1,
-                                                                       'required' => $i <= 2 or $_pData['forum_poll_option_votes'] ? TRUE : FALSE
-                                                                   )
-                            );
-                            $i++;
-                        }
-                    }
-                    $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
-                    $poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
-                    $poll_field['poll_field'] .= "</div>\n";
-                    $poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-default'));
-                    $poll_field['closeform'] = closeform();
-                } else {
-                    redirect(FORUM."index.php"); // redirect because the poll id is not available.
-                }
-            } else {
-                // Save New Poll
-                if (isset($_POST['add_poll'])) {
-                    dbquery_insert(DB_FORUM_POLLS, $poll_data, 'save');
-                    $poll_data['forum_poll_id'] = dblastid();
-
-                    $i = 1;
-                    foreach ($option_data as $option_text) {
-                        if ($option_text) {
-                            $poll_data['forum_poll_option_id'] = $i;
-                            $poll_data['forum_poll_option_text'] = $option_text;
-                            $poll_data['forum_poll_option_votes'] = 0;
-                            dbquery_insert(DB_FORUM_POLL_OPTIONS, $poll_data, 'save');
-                            $i++;
-                        }
-                    }
-
-                    if (\defender::safe()) {
-                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'");
-                        redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
-                    }
-
-                }
-
-                // blank poll - no poll on edit or new thread
-                $poll_field['openform'] = openform('pollform', 'post', FUSION_SELF.'?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
-                $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255,
-                                                                                                                                  'placeholder' => $locale['forum_0604a'],
-                                                                                                                                  'inline' => TRUE,
-                                                                                                                                  'required' => TRUE
-                ));
-                for ($i = 1; $i <= count($option_data); $i++) {
-                    $poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
-                                                                                                                                           'placeholder' => $locale['forum_0605'],
-                                                                                                                                           'inline' => 1,
-                                                                                                                                           'required' => $i <= 2 ? TRUE : FALSE));
-                }
-                $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
-                $poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
-                $poll_field['poll_field'] .= "</div>\n";
-                $poll_field['poll_button'] = form_button('add_poll', $locale['forum_2011'], $locale['forum_2011'], array('class' => 'btn-success btn-md'));
-                $poll_field['closeform'] = closeform();
-            }
-
-            $info = array(
-                'title' => $locale['forum_0366'],
-                'description' => $locale['forum_2000'].self::$data['thread_subject'],
-                'field' => $poll_field,);
-
-            display_forum_pollform($info);
-
-        } else {
-            redirect(FORUM."index.php");
-        }
+        return (string)$html;
     }
 
     /**
@@ -381,6 +390,5 @@ class Poll {
         }
         redirect(INFUSIONS."forum/viewthread.php?forum_id=".self::$data['forum_id']."&amp;thread_id=".self::$data['thread_id']);
     }
-
 
 }

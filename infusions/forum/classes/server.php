@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Post\NewThread;
 use PHPFusion\Forums\Threads\ForumMood;
 use PHPFusion\Forums\Threads\ThreadFilter;
@@ -62,19 +63,19 @@ abstract class ForumServer {
     public static $forum_mood_instance = NULL;
     protected static $forum_settings = array();
     static private $forum_icons = array(
-        'forum' => 'fa fa-folder fa-fw',
-        'thread' => 'fa fa-comments-o fa-fw',
-        'link' => 'fa fa-link fa-fw',
+        'forum'    => 'fa fa-folder fa-fw',
+        'thread'   => 'fa fa-comments-o fa-fw',
+        'link'     => 'fa fa-link fa-fw',
         'question' => 'fa fa-mortar-board fa-fw',
-        'new' => 'fa fa-lightbulb-o fa-fw',
-        'poll' => 'fa fa-pie-chart fa-fw',
-        'lock' => 'fa fa-lock fa-fw',
-        'image' => 'fa fa-file-picture-o fa-fw',
-        'file' => 'fa fa-file-zip-o fa-fw',
-        'tracked' => 'fa fa-bell-o fa-fw',
-        'hot' => 'fa fa-heartbeat fa-fw',
-        'sticky' => 'fa fa-thumb-tack fa-fw',
-        'reads' => 'fa fa-ticket fa-fw',
+        'new'      => 'fa fa-lightbulb-o fa-fw',
+        'poll'     => 'fa fa-pie-chart fa-fw',
+        'lock'     => 'fa fa-lock fa-fw',
+        'image'    => 'fa fa-file-picture-o fa-fw',
+        'file'     => 'fa fa-file-zip-o fa-fw',
+        'tracked'  => 'fa fa-bell-o fa-fw',
+        'hot'      => 'fa fa-heartbeat fa-fw',
+        'sticky'   => 'fa fa-thumb-tack fa-fw',
+        'reads'    => 'fa fa-ticket fa-fw',
     );
     /**
      * Get records of cached forum ranks
@@ -102,19 +103,19 @@ abstract class ForumServer {
      */
     public static function set_forumIcons(array $icons = array()) {
         self::$forum_icons = array(
-            'forum' => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
-            'thread' => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
-            'link' => !empty($icons['link']) ? $icons['link'] : 'fa fa-link fa-fw',
+            'forum'    => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
+            'thread'   => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
+            'link'     => !empty($icons['link']) ? $icons['link'] : 'fa fa-link fa-fw',
             'question' => !empty($icons['question']) ? $icons['question'] : 'fa fa-mortar-board fa-fw',
-            'new' => !empty($icons['new']) ? $icons['new'] : 'fa fa-lightbulb-o fa-fw',
-            'poll' => !empty($icons['poll']) ? $icons['poll'] : 'fa fa-pie-chart fa-fw',
-            'lock' => !empty($icons['lock']) ? $icons['lock'] : 'fa fa-lock fa-fw',
-            'image' => !empty($icons['image']) ? $icons['image'] : 'fa fa-file-picture-o fa-fw',
-            'file' => !empty($icons['file']) ? $icons['file'] : 'fa fa-file-zip-o fa-fw',
-            'tracked' => !empty($icons['tracked']) ? $icons['tracked'] : 'fa fa-bell-o fa-fw',
-            'hot' => !empty($icons['hot']) ? $icons['hot'] : 'fa fa-heartbeat fa-fw',
-            'sticky' => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
-            'reads' => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
+            'new'      => !empty($icons['new']) ? $icons['new'] : 'fa fa-lightbulb-o fa-fw',
+            'poll'     => !empty($icons['poll']) ? $icons['poll'] : 'fa fa-pie-chart fa-fw',
+            'lock'     => !empty($icons['lock']) ? $icons['lock'] : 'fa fa-lock fa-fw',
+            'image'    => !empty($icons['image']) ? $icons['image'] : 'fa fa-file-picture-o fa-fw',
+            'file'     => !empty($icons['file']) ? $icons['file'] : 'fa fa-file-zip-o fa-fw',
+            'tracked'  => !empty($icons['tracked']) ? $icons['tracked'] : 'fa fa-bell-o fa-fw',
+            'hot'      => !empty($icons['hot']) ? $icons['hot'] : 'fa fa-heartbeat fa-fw',
+            'sticky'   => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
+            'reads'    => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
         );
     }
 
@@ -220,7 +221,7 @@ abstract class ForumServer {
         foreach ($ranks as $rank) {
             if ($image) {
                 if (isset($rank['rank_title']) && isset($rank['rank_image'])) {
-                    $res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
+                    $res .= "<div class='rank_title'>".$rank['rank_title']."</div>\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' />";
                 }
             } else {
                 if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
@@ -260,8 +261,8 @@ abstract class ForumServer {
         if (self::$forum_rank_cache === NULL and $forum_settings['forum_ranks']) {
 
             self::$forum_rank_cache = array(
-                'post' => array(),
-                'mod' => array(),
+                'post'    => array(),
+                'mod'     => array(),
                 'special' => array(),
             );
 
@@ -314,9 +315,7 @@ abstract class ForumServer {
      * @return mixed
      */
     public static function get_recentTopics($forum_id = 0) {
-
         $forum_settings = self::get_forum_settings();
-
         $result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
 			u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
 			uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
@@ -454,7 +453,7 @@ abstract class ForumServer {
     /**
      * Forum Breadcrumbs Generator
      * @param array $forum_index - requires a dbquery_tree() output
-     * @param int   $forum_id
+     * @param int $forum_id
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
 
@@ -468,7 +467,7 @@ abstract class ForumServer {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
                 $crumb = array(
-                    'link' => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
+                    'link'  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
                     'title' => $_name['forum_name']
                 );
                 if (isset($index[get_parent($index, $id)])) {
@@ -492,15 +491,14 @@ abstract class ForumServer {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
-
 }

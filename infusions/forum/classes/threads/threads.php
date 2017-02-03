@@ -896,7 +896,10 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_message'] = $post_message;
 
-                // Reply notifications
+                // Who has replied to this post.
+                /**
+                 * This will drag the entire forum down with +1 query per forum post.
+                 */
                 $reply_result = dbquery("
                 SELECT p.post_id, p.post_datestamp, u.user_id, u.user_name, u.user_status
                 FROM ".DB_FORUM_POSTS." p
@@ -904,23 +907,29 @@ class ForumThreads extends ForumServer {
                 WHERE p.post_cat= ".intval($pdata['post_id'])."
                 GROUP BY u.user_id ORDER BY p.post_datestamp DESC
                 ");
-                if (dbrows($reply_result) > 0) {
+                if (dbrows($reply_result)) {
                     // who has replied
                     $reply_sender = "";
                     $last_datestamp = 0;
                     while ($r_data = dbarray($reply_result)) {
-                        $reply_sender[$r_data['post_id']] = "<a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n".
-                            profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE).
-                            "</a>";
+                        $reply_sender[$r_data['post_id']] = "
+                        <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
+                        ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
+                        </a>
+                        ";
                         $last_datestamp = $r_data['post_datestamp'];
                     }
                     $senders = implode(", ", $reply_sender);
-                    $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".
-                        sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
+                    $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
                 }
+
                 // Displays mood buttons
+                /**
+                 * This will drag the forum down with +1 query per post.
+                 */
                 $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
                 $pdata['post_mood_message'] = $this->mood()->get_mood_message();
+
                 /**
                  * User Stuffs, Sig, User Message, Web
                  */
@@ -957,17 +966,13 @@ class ForumThreads extends ForumServer {
                 // rank img
                 if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = self::show_forum_rank($pdata['user_posts'], $pdata['user_level'],
-                                                              $pdata['user_groups']); // in fact now is get forum rank
+                        $pdata['user_rank'] = self::show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
                     } else {
                         $pdata['user_rank'] = getuserlevel($pdata['user_level']);
                     }
                 } else {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = iMOD ? self::show_forum_rank($pdata['user_posts'], 104,
-                                                                     $pdata['user_groups']) : self::show_forum_rank($pdata['user_posts'],
-                                                                                                              $pdata['user_level'],
-                                                                                                              $pdata['user_groups']);
+                        $pdata['user_rank'] = iMOD ? self::show_forum_rank($pdata['user_posts'], 104, $pdata['user_groups']) : self::show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
                     } else {
                         $pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
                     }
@@ -1019,9 +1024,9 @@ class ForumThreads extends ForumServer {
                             "title" => $locale['forum_0265']
                         );
                         $pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='text-center vote_up' title='".$locale['forum_0510']."'>\n<i class='fa fa-angle-up fa-lg'></i></a>";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='text-center vote_up' title='".$locale['forum_0510']."'>\n<i class='fa fa-caret-up fa-2x'></i></a>";
                         $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='text-center vote_down' title='".$locale['forum_0511']."'>\n<i class='fa fa-angle-down fa-lg'></i></a>";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='text-center vote_down' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
                         $pdata['post_votebox'] .= "</div>\n";
                     } else {
                         $pdata['post_votebox'] = "<div class='text-center'>\n";
@@ -1032,9 +1037,7 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'],
-                                                                                                         $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate",
-                                                                                                                                                               $pdata['post_edittime'])." - ";
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
@@ -1043,7 +1046,6 @@ class ForumThreads extends ForumServer {
                     } else {
                         $edit_reason .= "</div>";
                     }
-
                     $pdata['post_edit_reason'] = $edit_reason;
                     //$this->edit_reason = TRUE;
                 }
