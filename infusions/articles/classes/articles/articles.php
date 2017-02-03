@@ -148,29 +148,26 @@ abstract class Articles extends ArticlesServer {
      * @return string
      */
     protected static function get_ArticlesQuery(array $filters = array()) {
-
         $article_settings = self::get_article_settings();
-
         return "
             SELECT
-                a.*, ac.*,
-                au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined,
-                SUM(ar.rating_vote) AS sum_rating,
-                COUNT(ar.rating_item_id) AS count_votes,
-                COUNT(ad.comment_item_id) AS count_comment
+            a.*, ac.*,
+            au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined,
+            SUM(ar.rating_vote) AS sum_rating,
+            COUNT(ar.rating_item_id) AS count_votes,
+            COUNT(ad.comment_item_id) AS count_comment
             FROM ".DB_ARTICLES." AS a
             LEFT JOIN ".DB_USERS." AS au ON a.article_name=au.user_id
             LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
             LEFT JOIN ".DB_RATINGS." AS ar ON ar.rating_item_id=a.article_id AND ar.rating_type='A'
             LEFT JOIN ".DB_COMMENTS." AS ad ON ad.comment_item_id=a.article_id AND ad.comment_type='A' AND ad.comment_hidden='0'
-            WHERE a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."
-            ".(multilang_table("AR") ? " AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
+            ".(multilang_table("AR") ? "WHERE a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")."
+             a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."            
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY a.article_id
             ORDER BY ".self::check_ArticlesFilter()."
             LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".$article_settings['article_pagination']."")."
         ";
-
     }
 
     /**
