@@ -169,13 +169,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 					), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
 					echo form_textarea("weblink_cat_description", $this->locale['WLS_0304'], $data['weblink_cat_description'], array(
-						"required" => TRUE,
 						"type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
 						"tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
 						"autosize" => TRUE,
 						"preview" => TRUE,
-						"form_name" => "catform",
-						"error_text" => $this->locale['WLS_0322']
+						"form_name" => "catform"
 					));
 					?>
 				</div>

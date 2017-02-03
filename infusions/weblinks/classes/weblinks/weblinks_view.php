@@ -25,7 +25,6 @@ namespace PHPFusion\Weblinks;
  */
 class WeblinksView extends Weblinks {
     public function display_weblink() {
-
 		// Display Weblink
         if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
             self::set_WeblinkCount($_GET['weblink_id']);
@@ -33,12 +32,12 @@ class WeblinksView extends Weblinks {
 		// Display Category
         	} elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_WeblinkCatInfo($_GET['cat_id']);
-            display_main_weblink($info);
+            render_weblinks_item($info);
 
 		// Display Overview
         } else {
             $info = $this->set_WeblinksInfo();
-            display_main_weblink($info);
+            display_main_weblinks($info);
         }
     }
 }
