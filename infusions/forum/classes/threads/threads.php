@@ -486,20 +486,23 @@ class ForumThreads extends ForumServer {
             /**
              * Generate Post Filters
              */
-            $this->thread_info['post-filters'][0] = array(
-                'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;section=oldest',
-                'locale' => $locale['forum_0180']
-            );
-            $this->thread_info['post-filters'][1] = array(
-                'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;section=latest',
-                'locale' => $locale['forum_0181']
-            );
-            if ($this->getThreadPermission("can_rate") == TRUE) {
+            $this->thread_info['post-filters'] = [
+                0 => [
+                    'value'  => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;section=oldest',
+                    'locale' => $locale['forum_0180']
+                ],
+                1 => [
+                    'value'  => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_data['thread_id'].'&amp;section=latest',
+                    'locale' => $locale['forum_0181']
+                ]
+            ];
+
+            if ($this->getThreadPermission('can_rate') == TRUE) {
                 $this->thread_info['allowed-post-filters'][2] = 'high';
-                $this->thread_info['post-filters'][2] = array(
-                    'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high',
+                $this->thread_info['post-filters'][2] = [
+                    'value'  => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high',
                     'locale' => $locale['forum_0182']
-                );
+                ];
             }
 
             $this->handle_quick_reply();

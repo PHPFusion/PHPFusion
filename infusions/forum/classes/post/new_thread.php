@@ -129,7 +129,7 @@ class NewThread extends ForumServer {
                             }
                             array_push($option_data, '');
                         }
-                        $poll_field = '';
+                        $poll_field = array();
                         $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'],
                                                               $pollData['forum_poll_title'], array(
                                                                   'max_length' => 255,
