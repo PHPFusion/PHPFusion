@@ -22,7 +22,6 @@ if (!defined("IN_FUSION")) {
  * Forum Page Control Layout
  */
 if (!function_exists('render_forum')) {
-    add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
     function render_forum($info) {
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
@@ -54,13 +53,11 @@ if (!function_exists('render_forum_main')) {
      * @param int   $id - counter nth
      */
     function render_forum_main(array $info, $id = 0) {
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         require_once FORUM_CLASS."autoloader.php";
-
         $locale = fusion_get_locale();
-
         echo render_breadcrumbs();
         echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
-
         $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
         if (!empty($threadTags['tags'])) : ?>
             <!--Forum Tags-->
@@ -78,7 +75,6 @@ if (!function_exists('render_forum_main')) {
             </ul>
             <!--//Forum Tags-->
         <?php endif;
-
         if (!empty($info['forums'][$id])) {
             $forums = $info['forums'][$id];
             $x = 1;
@@ -256,18 +252,13 @@ if (!function_exists('forum_viewforum')) {
         }
 
         if ($info['forum_type'] > 1) {
-
             echo "<!--pre_forum-->\n";
             echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
-
             forum_filter($info);
-
             echo "<div id='forumThreads'>\n";
             render_forum_threads($info);
             echo "</div>\n";
-
         }
-
         echo "
 		<div class='list-group-item m-t-20'>
 			<span>".sprintf($locale['forum_perm_access'],
