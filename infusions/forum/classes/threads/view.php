@@ -367,7 +367,8 @@ class ViewThread extends ForumServer {
                         'no_resize'  => TRUE,
                         'preview'    => TRUE,
                         'form_name'  => 'input_form',
-                        'bbcode'     => TRUE
+                        'bbcode'     => TRUE,
+                        'height'     => '300px',
                     )),
                 // happens only in EDIT
                 'delete_field'      => '',
