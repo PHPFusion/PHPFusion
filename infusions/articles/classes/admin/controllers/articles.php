@@ -312,7 +312,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Search
-        $sql_condition = "";
+        $sql_condition = multilang_table("AR") ? "article_language='".LANGUAGE."'" : "";
         $search_string = array();
         if (isset($_POST['p-submit-article_text'])) {
             $search_string['article_subject'] = array(
@@ -350,7 +350,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if ($sql_condition) $sql_condition .= " AND ";
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -378,8 +379,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=a.article_id AND c.comment_type='A'
             LEFT JOIN ".DB_RATINGS." r ON r.rating_item_id=a.article_id AND r.rating_type='A'
             INNER JOIN ".DB_USERS." u on u.user_id=a.article_name
-            WHERE ".(multilang_table("AR") ? "article_language='".LANGUAGE."'" : "")."
-            $sql_condition
+            ".($sql_condition ? " WHERE ".$sql_condition : "")."
             GROUP BY a.article_id
             ORDER BY article_draft DESC, article_datestamp DESC
             LIMIT $rowstart, $limit
