@@ -703,7 +703,7 @@ class NewsAdmin extends NewsAdminModel {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
         $news_query = "SELECT n.*, nc.*,
-        IF(nc.news_cat_name, nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
+        IF(nc.news_cat_name !='', nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
         count(c.comment_id) 'comments_count', count(ni.news_image_id) 'image_count',
         u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_NEWS." n
@@ -725,17 +725,14 @@ class NewsAdmin extends NewsAdminModel {
             <?php
             echo openform("news_filter", "post", FUSION_REQUEST);
             echo "<div class='row clearfix'>\n";
-
             echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
-            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"),
-                                                                                 FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['news_0002']."</a>";
+            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"), FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['news_0002']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$this->locale['sticky']."</a>";
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$this->locale['unsticky']."</a>";
             echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
             echo "</div>\n";
-
             ?>
             <script>
                 function run_admin(action) {
@@ -743,7 +740,6 @@ class NewsAdmin extends NewsAdminModel {
                     $('#news_table').submit();
                 }
             </script>
-
             <?php
             $filter_values = array(
                 "news_text" => !empty($_POST['news_text']) ? form_sanitizer($_POST['news_text'], "", "news_text") : "",
@@ -761,7 +757,6 @@ class NewsAdmin extends NewsAdminModel {
                     break;
                 }
             }
-
             echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
             echo form_text("news_text", "", $filter_values['news_text'], array(
                 "placeholder" => $this->locale['news_0200'],
@@ -773,16 +768,13 @@ class NewsAdmin extends NewsAdminModel {
             ));
             echo "</div>\n";
             echo "</div>\n";
-
             echo "<div class='row m-b-20'>\n";
             echo "<div class='col-xs-6 vt'>\n";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
             <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("news_clear", $this->locale['news_0243'], "clear", array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
-
             echo "</div>\n";
-
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
@@ -796,7 +788,6 @@ class NewsAdmin extends NewsAdminModel {
                     $(this).removeClass('btn-info').addClass('btn-default');
                 }
             });
-
             // Select change
             $('#news_status, #news_visibility, #news_category, #news_language, #news_author, #news_display').bind('change', function(e){
                 $(this).closest('form').submit();
@@ -1012,6 +1003,4 @@ class NewsAdmin extends NewsAdminModel {
             }
         }
     }
-
-
 }
