@@ -116,7 +116,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $tab_title['icon'][] = "";
     $tab_active = tab_active($tab_title, isset($_GET['cat_view']) ? 1 : 0);
 
-    echo opentab($tab_title, $tab_active, 'dcategory', FALSE, "nav-tabs m-t-20");
+    echo opentab($tab_title, $tab_active, 'dcategory', FALSE, "nav-tabs");
     echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
     echo openform('addcat', 'post', FUSION_REQUEST, array('class' => 'm-t-20'));
     echo "<div class='row'>\n";
@@ -131,7 +131,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         'resize' => 0,
         'autosize' => TRUE,
     ));
-    echo "<div class='clearfix'>\n";
     echo form_select('download_cat_sort_by', $locale['download_0302'], $data['download_cat_sort_by'], array(
         'options' => array(
             '1' => $locale['download_0303'],
@@ -143,10 +142,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     ));
     echo form_select('download_cat_sort_order', '', $data['download_cat_sort_order'], array(
         'options' => array('ASC' => $locale['download_0306'], 'DESC' => $locale['download_0307']),
-        'class' => 'pull-left',
         'width' => '200px'
     ));
-    echo "</div>\n";
     closeside();
     echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
     openside('');

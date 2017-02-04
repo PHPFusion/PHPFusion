@@ -142,15 +142,14 @@ function download_listing() {
     echo "<span class='pull-right m-t-10'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
-        echo "<div class='pull-left m-t-5 m-r-10'>".$locale['download_0010']."</div>\n";
-        echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
-        echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+        echo "<div class='dropdown'>\n";
+        echo "<a class='btn btn-default dropdown-toggle ' style='width: 200px;' data-toggle='dropdown'>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {
             echo $locale['download_0011'];
         }
-        echo " <span class='caret'></span></strong>\n</a>\n";
+        echo " <span class='caret'></span></a>\n";
         echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
