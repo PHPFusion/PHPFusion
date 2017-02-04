@@ -68,7 +68,9 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
+echo "<script type='text/javascript'>!window.jQuery && document.write('<script src=\'".INCLUDES."jquery/jquery.min.js\'><\/script>');</script>\n";
+
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
 echo "</head>\n";
 
@@ -142,6 +144,6 @@ if (fusion_get_settings('bootstrap')) {
 //Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
-echo "</html>\n";
+echo "</html>";
 
 PHPFusion\OpenGraph::ogDefault();
