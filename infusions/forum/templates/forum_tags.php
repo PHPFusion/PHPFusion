@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("display_forum_tags")) {
 
     function display_forum_tags($info) {
-
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
 
         echo render_breadcrumbs();

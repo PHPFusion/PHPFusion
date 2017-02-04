@@ -102,10 +102,10 @@ if (!function_exists("display_forum_pollform")) {
 
 }
 
-
 if (!function_exists("display_quickReply")) {
 
     function display_quickReply($info) {
+
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
