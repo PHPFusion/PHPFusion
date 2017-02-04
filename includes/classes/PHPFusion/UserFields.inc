@@ -269,8 +269,8 @@ class UserFields extends QuantumFields {
 
                 if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
                     $this->info['user_avatar'] = "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />
-											</label>\n<br />\n
-											".form_checkbox("delAvatar", $locale['u187'], "", array("reverse_label" => TRUE)
+                                            </label>\n<br />\n
+                                            ".form_checkbox("delAvatar", $locale['u187'], "", array("reverse_label" => TRUE)
                         );
                 } else {
                     $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', array(
@@ -290,7 +290,7 @@ class UserFields extends QuantumFields {
                         )
                     );
                     $this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'>
-					".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')),
+                    ".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')),
                             fusion_get_settings('avatar_width'),
                             fusion_get_settings('avatar_height'))."</div>\n";
                 }
@@ -427,25 +427,40 @@ class UserFields extends QuantumFields {
     private function renderTerms() {
         $locale = fusion_get_locale();
         $agreement = strtr($locale['u193'], [
-                '[LINK]'  => "<a href='".BASEDIR."print.php?type=T' target='_blank'><strong>",
+                '[LINK]'  => "<a href='".BASEDIR."print.php?type=T' id='license_agreement'><strong>",
                 '[/LINK]' => "</strong></a>"
             ]
         );
+
+        $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
+        $modal .= parse_textarea(fusion_get_settings('license_agreement'));
+        $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
+        $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
+        $modal .= modalfooter($modal_content, TRUE);
+        $modal .= closemodal();
+        add_to_footer($modal);
+        add_to_jquery('
+            $("#agree").on("click", function() {
+                $("#register").attr("disabled", false).removeClass("disabled");
+                $("#agreement").attr("checked", true);
+            });
+        ');
+
         $html = "<div class='form-group clearfix'>";
         $html .= "<label class='control-label col-xs-12 col-sm-3 p-l-0'>".$locale['u192']."</label>";
         $html .= "<div class='col-xs-12 col-sm-9'>\n";
         $html .= form_checkbox('agreement', $agreement, '', array("required" => TRUE, "reverse_label" => TRUE));
         $html .= "</div>\n</div>\n";
         add_to_jquery("
-		$('#agreement').bind('click', function() {
-		    var regBtn = $('#register');
-		    if ($(this).is(':checked')) {
-		        regBtn.attr('disabled', false).removeClass('disabled');
-		    } else {
+        $('#agreement').bind('click', function() {
+            var regBtn = $('#register');
+            if ($(this).is(':checked')) {
+                regBtn.attr('disabled', false).removeClass('disabled');
+            } else {
                 regBtn.attr('disabled', true).addClass('disabled');
-		    }
-		});
-		");
+            }
+        });
+        ");
 
         return $html;
     }

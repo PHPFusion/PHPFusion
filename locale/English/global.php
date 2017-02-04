@@ -241,6 +241,7 @@ $locale['global_172'] = "Render time: %s seconds";
 $locale['global_173'] = "Queries";
 $locale['global_174'] = "Memory used";
 $locale['global_175'] = "Average: %s seconds";
+$locale['global_176'] = "Privacy Policy";
 // Admin Navigation
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
