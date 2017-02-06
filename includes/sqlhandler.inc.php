@@ -880,17 +880,20 @@ function db_exists($table, $updateCache = FALSE) {
  * @return bool
  */
 function column_exists($table, $column, $add_prefix = TRUE) {
+
+    static $table_config = array();
+
     if ($add_prefix === TRUE) {
         if (strpos($table, DB_PREFIX) === FALSE) {
             $table = DB_PREFIX.$table;
         }
     }
-    $sql = "SHOW COLUMNS FROM `$table` LIKE '$column'";
-    $result = dbquery($sql);
-    if (dbrows($result)) {
-        return TRUE;
+
+    if (empty($table_config[$table])) {
+        $table_config[$table] = array_flip(fieldgenerator($table));
     }
-    return FALSE;
+
+    return (isset($table_config[$table][$column]) ? TRUE : FALSE);
 }
 
 
