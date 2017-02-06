@@ -501,5 +501,6 @@ $locale['fmt_views'] = "view|views";
 $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
+$locale['fmt_points'] = "point|points";
 // include Defender locales
 include __DIR__."/defender.php";

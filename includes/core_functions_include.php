@@ -1075,6 +1075,32 @@ function checkgroup($group) {
 }
 
 /**
+ * Check access given a user level and user group
+ *
+ * @param $group
+ * @param $user_level
+ * @param $user_groups
+ *
+ * @return bool
+ */
+function checkusergroup($group, $user_level, $user_groups) {
+    if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == '-101' || $group == '-102')) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == '-101')) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+
+/**
  * Cache groups' data into an array
  *
  * @return array
