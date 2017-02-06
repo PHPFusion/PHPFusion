@@ -120,7 +120,7 @@ class Infusion_Core {
                                  *
                                  */
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
-                                if (version_compare($filename, $data['inf_version'], ">=")) {
+                                if (version_compare($filename, $data['inf_version'], ">")) {
                                     $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
                                     foreach ($upgrades as $callback_method => $statement_type) {
                                         $method = $callback_method."_infuse";
@@ -140,6 +140,7 @@ class Infusion_Core {
                                         ));
                                     }
                                 }
+
                             }
                         }
                     }
@@ -208,6 +209,7 @@ class Infusion_Core {
             include(INFUSIONS.$folder."/infusion.php");
 
             $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
+
             if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
                 $inf_image = INFUSIONS.$inf_folder."/".$inf_image;
             } else {
@@ -503,13 +505,10 @@ class Infusion_Core {
     protected function mlt_insertdbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
-
             foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-
                 if (isset($inf['mlt_insertdbrow'][$current_language])) {
                     $last_id = 0;
                     foreach ($inf['mlt_insertdbrow'][$current_language] as $insertdbrow) {
-
                         if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
                             $result = dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
                         } else {
