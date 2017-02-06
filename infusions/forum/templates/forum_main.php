@@ -23,6 +23,7 @@ if (!defined("IN_FUSION")) {
  */
 if (!function_exists('render_forum')) {
     function render_forum($info) {
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
@@ -53,7 +54,6 @@ if (!function_exists('render_forum_main')) {
      * @param int   $id - counter nth
      */
     function render_forum_main(array $info, $id = 0) {
-        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         require_once FORUM_CLASS."autoloader.php";
         $locale = fusion_get_locale();
         echo render_breadcrumbs();

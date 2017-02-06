@@ -102,6 +102,23 @@ if (!function_exists("display_forum_pollform")) {
 
 }
 
+if (!function_exists('display_form_bountyform')) {
+
+    function display_forum_bountyform($info) {
+        echo render_breadcrumbs();
+        opentable($info['title']);
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo "<!--pre_form-->\n";
+        echo $info['field']['openform'];
+        echo $info['field']['bounty_select'];
+        echo $info['field']['bounty_description'];
+        echo $info['field']['bounty_button'];
+        echo $info['field']['closeform'];
+        closetable();
+    }
+}
+
+
 if (!function_exists("display_quickReply")) {
 
     function display_quickReply($info) {

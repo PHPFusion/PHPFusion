@@ -19,6 +19,8 @@ namespace PHPFusion\Forums;
 
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Post\NewThread;
+use PHPFusion\Forums\Postify\Forum_Postify;
+use PHPFusion\Forums\Threads\Forum_Mood;
 use PHPFusion\Forums\Threads\ForumMood;
 use PHPFusion\Forums\Threads\ThreadFilter;
 
@@ -61,7 +63,11 @@ abstract class ForumServer {
      * @return object
      */
     public static $forum_mood_instance = NULL;
+
+    public static $postify_instance = NULL;
+
     protected static $forum_settings = array();
+
     static private $forum_icons = array(
         'forum'    => 'fa fa-folder fa-fw',
         'thread'   => 'fa fa-comments-o fa-fw',
@@ -130,6 +136,60 @@ abstract class ForumServer {
         }
 
         return FALSE;
+    }
+
+    private $forum_access = FALSE;
+
+    /**
+     * Check all forum access
+     *
+     * @param     $forum_index
+     * @param int $forum_id
+     * @param int $thread_id
+     * @param int $user_id - if provided with user_id, to check against that user
+     *
+     * Breaks the check and returns true for Super Administrator
+     * You need to define either forum id or thread id when accessing this function
+     * This function is non-dependent on GET against tampering (bot access)
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
+        if (iSUPERADMIN) {
+            $this->forum_access = TRUE;
+
+            return $this->forum_access;
+        }
+        if (!$forum_id or !isnum($forum_id)) {
+            if ($thread_id && isnum($thread_id)) {
+                $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
+            } else {
+                throw new \Exception('There are no forum ID or thread id defined. Please define either one.');
+            }
+        }
+        $list[] = $forum_id;
+        if ($ancestor = get_all_parent($forum_index, $forum_id)) {
+            $list = $list + $ancestor;
+        }
+        $list_sql = implode(',', $list);
+        $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
+        $result = dbquery($query);
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                if ($user_id) {
+                    $user = fusion_get_user($user_id);
+                    $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                } else {
+                    $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                }
+                if ($this->forum_access === FALSE) {
+                    break;
+                }
+            }
+        }
+
+        return (bool)$this->forum_access;
     }
 
     /**
@@ -234,15 +294,18 @@ abstract class ForumServer {
     }
 
     /**
-     * Forum Settings
-     * @return array
+     * Fetch Forum Settings
+     *
+     * @param null $key
+     *
+     * @return array|bool|mixed|null
      */
-    public static function get_forum_settings() {
+    public static function get_forum_settings($key = NULL) {
         if (empty(self::$forum_settings)) {
             self::$forum_settings = get_settings('forum');
         }
 
-        return (array)self::$forum_settings;
+        return $key === NULL ? self::$forum_settings : (isset(self::$forum_settings[$key]) ? self::$forum_settings[$key] : NULL);
     }
 
     /**
@@ -444,11 +507,20 @@ abstract class ForumServer {
      */
     public static function mood() {
         if (self::$forum_mood_instance === NULL) {
-            self::$forum_mood_instance = new ForumMood();
+            self::$forum_mood_instance = new Forum_Mood();
         }
-
         return self::$forum_mood_instance;
     }
+
+    public static function postify() {
+        if (self::$postify_instance === NULL) {
+            self::$postify_instance = new Forum_Postify();
+        }
+
+        return self::$postify_instance;
+    }
+
+
 
     /**
      * Forum Breadcrumbs Generator

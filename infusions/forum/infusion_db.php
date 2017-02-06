@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 define("FORUM", INFUSIONS."forum/");
 define("RANKS", FORUM."ranks/");
+
 define("DB_FORUM_ATTACHMENTS", DB_PREFIX."forum_attachments");
 define("DB_FORUM_POLL_OPTIONS", DB_PREFIX."forum_poll_options");
 define("DB_FORUM_POLL_VOTERS", DB_PREFIX."forum_poll_voters");
@@ -29,7 +30,9 @@ define("DB_FORUM_RANKS", DB_PREFIX."forum_ranks");
 define("DB_FORUM_THREAD_NOTIFY", DB_PREFIX."forum_thread_notify");
 define("DB_FORUM_THREADS", DB_PREFIX."forum_threads");
 define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
+define("DB_FORUM_USER_REP", DB_PREFIX."forum_user_reputation");
 define("DB_FORUMS", DB_PREFIX."forums");
+
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
 

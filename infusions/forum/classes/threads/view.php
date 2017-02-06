@@ -31,19 +31,20 @@ class ViewThread extends ForumServer {
 
         if (isset($_GET['action'])) {
 
-            $poll = new Poll($info);
-
             switch ($_GET['action']) {
                 case 'editpoll':
                     // Template
+                    $poll = new Poll($info);
                     $poll->render_poll_form(true);
                     break;
                 case 'deletepoll':
                     // Action
+                    $poll = new Poll($info);
                     $poll->delete_poll();
                     break;
                 case 'newpoll':
                     // Template
+                    $poll = new Poll($info);
                     $poll->render_poll_form();
                     break;
                 case 'edit':
@@ -53,6 +54,20 @@ class ViewThread extends ForumServer {
                 case 'reply':
                     // Template
                     $this->render_reply_form();
+                    break;
+                case 'award':
+                    $bounty = new Forum_Bounty($info);
+                    $bounty->award_bounty();
+                    break;
+                case 'newbounty':
+                    // Template
+                    $bounty = new Forum_Bounty($info);
+                    $bounty->render_bounty_form();
+                    break;
+                case 'editbounty':
+                    // Template
+                    $bounty = new Forum_Bounty($info);
+                    $bounty->render_bounty_form(TRUE);
                     break;
                 default:
                     redirect(clean_request('', array('action'), false));
@@ -95,7 +110,6 @@ class ViewThread extends ForumServer {
             if (dbrows($result) > 0) {
 
                 $data = dbarray($result);
-
                 // Minus -1 post count on user
                 dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-1 WHERE user_id='".$data['post_author']."'");
                 // Delete the current post
@@ -169,7 +183,7 @@ class ViewThread extends ForumServer {
 
         $forum_settings = $this->get_forum_settings();
 
-        $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale = fusion_get_locale('', FORUM_LOCALE);
 
         $userdata = fusion_get_userdata();
 
@@ -387,7 +401,7 @@ class ViewThread extends ForumServer {
                         ))."
 								 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                     : "",
-                "poll_form"         => "",
+                "poll_form"         => '',
                 'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
                 'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
                 'sticky_field'      => '',
