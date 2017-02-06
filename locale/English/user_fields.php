@@ -145,6 +145,8 @@ $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
 $locale['u192'] = "Terms of Agreement";
 $locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
+$locale['u193a'] = "Updated";
+$locale['u193b'] = "I agree";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation

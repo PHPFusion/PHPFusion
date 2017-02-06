@@ -227,10 +227,11 @@ class Authenticate {
     // Checks or sets the lastvisit cookie
 
     public static function validateAuthAdmin($pass = "") {
-        global $userdata, $locale;
+        $userdata = fusion_get_userdata();
+        $locale = fusion_get_locale();
         if (iADMIN) {
             // Validate existing admin cookie
-            if ($pass == "" && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
+            if ($pass == '' && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
                 $cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
                 if (count($cookieDataArr) == 3) {
                     list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
@@ -313,7 +314,7 @@ class Authenticate {
     }
 
     public static function setAdminCookie($inputPassword) {
-        global $userdata;
+        $userdata = fusion_get_userdata();
         if (iADMIN) {
             // Initialize password auth
             $passAuth = new PasswordAuth();
@@ -323,14 +324,15 @@ class Authenticate {
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
             if ($passAuth->isValidCurrentPassword(TRUE)) {
-                $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
-                $userdata['user_admin_salt'] = $passAuth->getNewSalt();
-                $userdata['user_admin_password'] = $passAuth->getNewHash();
-                $result = dbquery("UPDATE ".DB_USERS."
+                if (fusion_get_settings('multiple_logins') != 1) {
+                    $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
+                    $userdata['user_admin_salt'] = $passAuth->getNewSalt();
+                    $userdata['user_admin_password'] = $passAuth->getNewHash();
+                    dbquery("UPDATE ".DB_USERS."
 					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
 					WHERE user_id='".$userdata['user_id']."'");
+                }
                 Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
-
                 return TRUE;
             }
         }

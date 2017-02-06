@@ -128,12 +128,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
 		// Textarea Settings
 		if (!fusion_get_settings("tinymce_enabled")) {
-			$articleExtendedSettings = array(
+			$ExtendedSettings = array(
 				"required" => ($this->weblinksSettings['links_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['WLS_0255'],
 				"error_text" => $this->locale['WLS_0270'], "form_name" => "weblinkform", "wordcount" => true
 			);
 		} else {
-			$articleExtendedSettings = array("required" => ($this->weblinksSettings['links_extended_required'] ? true : false), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['WLS_0270']);
+			$ExtendedSettings = array("required" => ($this->weblinksSettings['links_extended_required'] ? true : false), "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['WLS_0270']);
         }
 
 		// Start Form
@@ -156,7 +156,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 					"required" => TRUE, "type" => "url", "placeholder" => "http://"
 				));
 
-				echo form_textarea("weblink_description", $this->locale['WLS_0254'], $this->weblink_data['weblink_description'], $articleExtendedSettings);
+				echo form_textarea("weblink_description", $this->locale['WLS_0254'], $this->weblink_data['weblink_description'], $ExtendedSettings);
 				?>
 			</div>
 

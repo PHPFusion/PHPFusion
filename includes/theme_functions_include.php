@@ -83,6 +83,20 @@ function showcounter() {
     }
 }
 
+function showprivacypolicy() {
+    $html = '';
+
+    if (!empty(fusion_get_settings('privacy_policy'))) {
+        $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176', LOCALE.LOCALESET."global.php")."</a>";
+        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176', LOCALE.LOCALESET."global.php"), ['button_id' => 'privacy_policy']);
+        $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
+        $modal .= closemodal();
+        add_to_footer($modal);
+    }
+
+    return $html;
+}
+
 /**
  * Creates an alert bar
  * @param        $title
@@ -657,7 +671,7 @@ if (!function_exists('display_avatar')) {
         //$user_avatar = IMAGES.'avatars/'.$userdata['user_avatar'];
         //$user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-        $imgTpl = "<img class='img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+        $imgTpl = "<img class='img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
         $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
         return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }
@@ -965,7 +979,7 @@ if (!function_exists("tab_active")
 
             $link_url = '#';
             if ($link) {
-                $link_url = $link."?$getname=".$tab_id; // keep all request except GET array
+                $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                 if ($link === TRUE) {
                     $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
                 }

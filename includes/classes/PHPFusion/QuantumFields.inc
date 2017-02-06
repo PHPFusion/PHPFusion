@@ -1907,10 +1907,11 @@ class QuantumFields extends \SqlHandler {
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
 
             if ($this->field_data['field_type'] == 'upload') {
+
                 $max_b = isset($_POST['field_max_b']) ? form_sanitizer($_POST['field_max_b'], '', 'field_max_b') : 150000;
                 $calc = isset($_POST['field_calc']) ? form_sanitizer($_POST['field_calc'], '', 'field_calc') : 1;
                 $this->field_data['field_upload_type'] = isset($_POST['field_upload_type']) ? form_sanitizer($_POST['field_upload_type'], '', 'field_upload_type') : '';
-                if ($this->field_data['field_upload_type'] !== 'file' || $this->field_data['field_upload_type'] == 'image') {
+                if (!in_array($this->field_data['field_upload_type'], ['file', 'image'])) {
                     \defender::stop();
                     addNotice('danger', $this->locale['fields_0108']);
                 } else {
@@ -1923,13 +1924,13 @@ class QuantumFields extends \SqlHandler {
                         'field_image_max_w'        => isset($_POST['field_image_max_w']) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_w'], '', 'field_image_max_w') : '',
                         'field_image_max_h'        => isset($_POST['field_image_max_h']) && $this->field_data['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_h'], '', 'field_image_max_h') : '',
                         'field_thumbnail'          => isset($_POST['field_thumbnail']) ? form_sanitizer($_POST['field_thumbnail'], 0, 'field_thumbnail') : '',
-                        'field_thumb_upload_path'  => isset($_POST['field_thumb_upload_path']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_upload_path'], '', 'field_thumb_upload_path') : '',
-                        'field_thumb_w'            => isset($_POST['field_thumb_w']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_w'], '', 'field_thumb_w') : '',
-                        'field_thumb_h'            => isset($_POST['field_thumb_h']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_h'], '', 'field_thumb_h') : '',
+                        'field_thumb_upload_path'  => isset($_POST['field_thumb_upload_path']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail']) ? form_sanitizer($_POST['field_thumb_upload_path'], '', 'field_thumb_upload_path') : '',
+                        'field_thumb_w'            => isset($_POST['field_thumb_w']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail']) ? form_sanitizer($_POST['field_thumb_w'], '', 'field_thumb_w') : '',
+                        'field_thumb_h'            => isset($_POST['field_thumb_h']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail']) ? form_sanitizer($_POST['field_thumb_h'], '', 'field_thumb_h') : '',
                         'field_thumbnail_2'        => isset($_POST['field_thumbnail_2']) ? 1 : isset($_POST['field_id']) ? 0 : $this->field_data['field_thumbnail_2'],
-                        'field_thumb2_upload_path' => isset($_POST['field_thumb2_upload_path']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_upload_path'], '', 'field_thumb2_upload_path') : '',
-                        'field_thumb2_w'           => isset($_POST['field_thumb2_w']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_w'], '', 'field_thumb2_w') : '',
-                        'field_thumb2_h'           => isset($_POST['field_thumb2_h']) && $this->field_data['field_upload_type'] == 'image' && $this->field_data['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_h'], '', 'field_thumb2_h') : '',
+                        'field_thumb2_upload_path' => isset($_POST['field_thumb2_upload_path']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail_2']) ? form_sanitizer($_POST['field_thumb2_upload_path'], '', 'field_thumb2_upload_path') : '',
+                        'field_thumb2_w'           => isset($_POST['field_thumb2_w']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail_2']) ? form_sanitizer($_POST['field_thumb2_w'], '', 'field_thumb2_w') : '',
+                        'field_thumb2_h'           => isset($_POST['field_thumb2_h']) && $this->field_data['field_upload_type'] == 'image' && isset($this->field_data['field_thumbnail_2']) ? form_sanitizer($_POST['field_thumb2_h'], '', 'field_thumb2_h') : '',
                         'field_delete_original'    => isset($_POST['field_delete_original']) && $this->field_data['field_upload_type'] == 'image' ? 1 : 0
                     ];
                 }
@@ -1937,10 +1938,9 @@ class QuantumFields extends \SqlHandler {
 
             if (\defender::safe()) {
                 $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
-                $this->create_fields($this->field_data, 'dynamics');
+                $this->create_fields($this->field_data, 'dynamics'); // will redirect and refresh config
             }
 
-            print_p($this->field_data, 1);
         }
 
         echo "<div class='m-t-20'>\n";
@@ -1992,7 +1992,6 @@ class QuantumFields extends \SqlHandler {
             foreach (img_mimeTypes() as $file_ext => $occ) {
                 $file_image_list[] = '.'.$file_ext;
             }
-
             $calc_opts = array(
                 1       => $this->locale['fields_0490'],
                 1000    => $this->locale['fields_0491'],
@@ -2140,6 +2139,7 @@ class QuantumFields extends \SqlHandler {
                 echo form_text('field_default', $this->locale['fields_0480'], $this->field_data['field_default']);
             }
         }
+
         echo form_text('field_error', $this->locale['fields_0481'], $this->field_data['field_error']);
         echo form_checkbox('field_required', $this->locale['fields_0482'], $this->field_data['field_required'], array('reverse_label' => TRUE));
         echo form_checkbox('field_log', $this->locale['fields_0483'], $this->field_data['field_log'], array('reverse_label' => TRUE));

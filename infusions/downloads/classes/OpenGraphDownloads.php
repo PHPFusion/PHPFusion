@@ -43,8 +43,7 @@ class OpenGraphDownloads extends OpenGraph {
 	public static function ogDownloadCat($cat_id = 0) {
 		$settings = fusion_get_settings();
 		$info = array();
-
-		$result = dbquery("SELECT `download_cat_name, `download_cat_description` FROM `" . DB_DOWNLOAD_CATS . "` WHERE `download_cat_id` = '$cat_id'");
+        $result = dbquery("SELECT download_cat_name, download_cat_description FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id=:cat_id", [':cat_id' => $cat_id]);
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?cat_id='.$cat_id;
@@ -54,7 +53,6 @@ class OpenGraphDownloads extends OpenGraph {
 			$info['type'] = 'website';
 			$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
 		}
-
 		OpenGraphDownloads::setValues($info);
 	}
 }

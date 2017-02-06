@@ -320,14 +320,10 @@ function check_admin_pass($password) {
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
     if (!defined('STOP_REDIRECT')) {
-
         if (isnum($delay)) {
-
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
-
         } else {
-
             if ($script == FALSE) {
                 header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
@@ -335,7 +331,6 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
                 exit;
             }
-
         }
     } else {
         debug_print_backtrace();
@@ -466,14 +461,9 @@ function phpentities($text) {
  * @return string
  */
 function trimlink($text, $length) {
-    $dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
-    $enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-    $text = str_replace($enc, $dec, $text);
     if (strlen($text) > $length) {
         $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
     }
-    $text = str_replace($dec, $enc, $text);
-
     return $text;
 }
 
@@ -1085,6 +1075,32 @@ function checkgroup($group) {
 }
 
 /**
+ * Check access given a user level and user group
+ *
+ * @param $group
+ * @param $user_level
+ * @param $user_groups
+ *
+ * @return bool
+ */
+function checkusergroup($group, $user_level, $user_groups) {
+    if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == '-101' || $group == '-102')) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == '-101')) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
+        return TRUE;
+    } elseif ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+
+/**
  * Cache groups' data into an array
  *
  * @return array
@@ -1507,7 +1523,7 @@ function showdate($format, $val) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
-	return showdate($format, $offset);
+	return strftime($format, $offset);
     } else {
         $offset = intval($val) + $offset;
 
@@ -1738,8 +1754,8 @@ function user_pm_settings($user_id, $key = NULL) {
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
-    if (file_exists("install.php")) {
-        redirect("install.php");
+    if (file_exists("_install.php")) {
+        redirect("_install.php");
     } else {
         die("No config.php or install.php files were found");
     }

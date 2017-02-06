@@ -24,7 +24,7 @@ use PHPFusion\QuantumFields;
  * Class ForumMood
  * @package PHPFusion\Forums\Threads
  */
-class ForumMood extends ForumServer {
+class Forum_Mood extends ForumServer {
 
     private static $mood_cache = array();
     public $info = array();

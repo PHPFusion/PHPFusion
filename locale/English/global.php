@@ -241,6 +241,7 @@ $locale['global_172'] = "Render time: %s seconds";
 $locale['global_173'] = "Queries";
 $locale['global_174'] = "Memory used";
 $locale['global_175'] = "Average: %s seconds";
+$locale['global_176'] = "Privacy Policy";
 // Admin Navigation
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
@@ -500,5 +501,6 @@ $locale['fmt_views'] = "view|views";
 $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
+$locale['fmt_points'] = "point|points";
 // include Defender locales
 include __DIR__."/defender.php";

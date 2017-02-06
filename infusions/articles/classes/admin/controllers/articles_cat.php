@@ -281,7 +281,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         }
 
         // Search
-        $sql_condition = "";
+        $sql_condition = multilang_table("AR") ? "ac.article_cat_language='".LANGUAGE."'" : "";
         $search_string = array();
         if (isset($_POST['p-submit-article_cat_name'])) {
             $search_string['article_cat_name'] = array(
@@ -314,7 +314,8 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " AND `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+	            if ($sql_condition) $sql_condition .= " AND ";
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -323,8 +324,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             "SELECT ac.*, COUNT(a.article_id) AS article_count
             FROM ".DB_ARTICLE_CATS." ac
             LEFT JOIN ".DB_ARTICLES." AS a ON a.article_cat=ac.article_cat_id
-            WHERE ".(multilang_table("AR") ? "ac.article_cat_language='".LANGUAGE."'" : "")."
-            $sql_condition
+            ".($sql_condition ? " WHERE ".$sql_condition : "")."
             GROUP BY ac.article_cat_id
             ORDER BY ac.article_cat_parent ASC, ac.article_cat_id ASC"
         );

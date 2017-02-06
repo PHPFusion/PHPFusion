@@ -107,6 +107,14 @@ $locale['forum_113'] = '%s %s this post';
 $locale['forum_114'] = 'There are no forum mood available';
 $locale['forum_115'] = 'Mood Count';
 
+$locale['forum_130'] = 'Point Gain for Up Votes:';
+$locale['forum_131'] = 'Point Loss for Down Votes:';
+$locale['forum_132'] = 'Point Gain for Accepted Answer:';
+$locale['forum_133'] = 'Min. Points to Cast Up Vote:';
+$locale['forum_134'] = 'Min. Points to Cast Down Vote:';
+$locale['forum_135'] = 'Point(s)';
+$locale['forum_136'] = 'Forum User Point';
+
 /* Permissions */
 $locale['forum_desc_000'] = 'Post Permissions';
 $locale['forum_desc_001'] = 'Polls Permissions';
@@ -158,15 +166,12 @@ $locale['forum_admin_002'] = 'Forum Tags';
 $locale['forum_admin_003'] = 'Forum Settings';
 $locale['forum_admin_004'] = 'Forum Mood';
 
-
 /* Etc */
 $locale['delete_notice'] = 'Delete Forum? Note: This action is irreversible.';
 $locale['531'] = 'Off';
 $locale['560'] = "No Forum Categories defined";
 $locale['561'] = "No Forums defined";
 $locale['562'] = "Refresh Forum Ordering";
-
-
 // Forum Settings
 $locale['500'] = "Forum";
 $locale['501'] = "Latest active forum threads panel:";

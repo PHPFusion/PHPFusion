@@ -46,38 +46,38 @@ if (fusion_get_settings("enable_deactivation") == "1") {
                                    "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
 // Get Core Infusion´s stats
-if (db_exists(DB_FORUMS)) {
+if (db_exists(DB_PREFIX.'forums')) {
     $forum['count'] = dbcount("('forum_id')", DB_FORUMS);
     $forum['thread'] = dbcount("('post_id')", DB_FORUM_THREADS);
     $forum['post'] = dbcount("('post_id')", DB_FORUM_POSTS);
     $forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 }
-if (db_exists(DB_DOWNLOADS)) {
+if (db_exists(DB_PREFIX.'downloads')) {
     $download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
     $download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
     $download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 }
-if (db_exists(DB_ARTICLES)) {
+if (db_exists(DB_PREFIX.'articles')) {
     $articles['article'] = dbcount("('article_id')", DB_ARTICLES);
     $articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
     $articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
 }
-if (db_exists(DB_WEBLINKS)) {
+if (db_exists(DB_PREFIX.'weblinks')) {
     $weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
     $weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
     $weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
 }
-if (db_exists(DB_NEWS)) {
+if (db_exists(DB_PREFIX.'news')) {
     $news['news'] = dbcount("('news_id')", DB_NEWS);
     $news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
     $news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
 }
-if (db_exists(DB_BLOG)) {
+if (db_exists(DB_PREFIX.'blog')) {
     $blog['blog'] = dbcount("('blog_id')", DB_BLOG);
     $blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
     $blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
 }
-if (db_exists(DB_PHOTOS)) {
+if (db_exists(DB_PREFIX.'photos')) {
     $photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
     $photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
@@ -113,7 +113,7 @@ $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
 $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
 							FROM ".DB_COMMENTS." c LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
-							ORDER BY comment_datestamp DESC LIMIT ".$_GET['c_rowstart'].", ".$settings['comments_per_page']."
+							ORDER BY comment_datestamp DESC LIMIT 5
 							");
 if ($global_comments['rows'] > $settings['comments_per_page']) {
     $global_comments['nav'] = makepagenav($_GET['c_rowstart'], $settings['comments_per_page'], $global_comments['rows'], 2);
@@ -131,8 +131,7 @@ $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
 $_GET['r_rowstart'] = isset($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? $_GET['r_rowstart'] : 0;
 $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
 					FROM ".DB_RATINGS." r LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
-					ORDER BY rating_datestamp DESC LIMIT ".$_GET['r_rowstart'].", ".$settings['comments_per_page']."
-					");
+					ORDER BY rating_datestamp DESC LIMIT 5");
 $global_ratings['data'] = array();
 if (dbrows($result) > 0) {
     while ($_ratdata = dbarray($result)) {

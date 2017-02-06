@@ -33,10 +33,10 @@ if (iMEMBER) {
     dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata('user_id')."'");
 }
 
-echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
-echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n";
+echo "<!DOCTYPE html>\n";
+echo "<html lang='".$locale['xml_lang']."'>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
-echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
+echo "<meta charset=".$locale['charset']."' />\n";
 echo "<meta name='description' content='".$settings['description']."' />\n";
 echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
 echo "<style type='text/css'>
@@ -289,7 +289,7 @@ if (isset($_GET['type'])) {
 } else {
     redirect($settings['opening_page']);
 }
-echo "</body>\n</html>\n";
+echo "</body>\n</html>";
 
 if (ob_get_length() !== FALSE) {
     ob_end_flush();

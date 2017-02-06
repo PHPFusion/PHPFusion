@@ -102,29 +102,45 @@ if (!function_exists("display_forum_pollform")) {
 
 }
 
+if (!function_exists('display_form_bountyform')) {
+
+    function display_forum_bountyform($info) {
+        echo render_breadcrumbs();
+        opentable($info['title']);
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo "<!--pre_form-->\n";
+        echo $info['field']['openform'];
+        echo $info['field']['bounty_select'];
+        echo $info['field']['bounty_description'];
+        echo $info['field']['bounty_button'];
+        echo $info['field']['closeform'];
+        closetable();
+    }
+}
+
 
 if (!function_exists("display_quickReply")) {
 
     function display_quickReply($info) {
+
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
-
-        $form_url = FUSION_SELF."?thread_id=".$info['thread_id'];
-
         $html = "<!--sub_forum_thread-->\n";
-        $html .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
+        $html .= openform('quick_reply_form', 'post', FUSION_SELF."?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
         $html .= "<h4>".$locale['forum_0168']."</h4>\n";
-        $html .= form_textarea('post_message', $locale['forum_0601'], '',
+        $html .= form_textarea('post_message', '', '',
                                   array(
-                                      'bbcode' => TRUE,
-                                      'required' => TRUE,
-                                      'autosize' => TRUE,
-                                      'preview' => TRUE,
-                                      'form_name' => 'quick_reply_form'
+                                      'placeholder' => $locale['forum_0601']."...",
+                                      'bbcode'      => TRUE,
+                                      'required'    => TRUE,
+                                      'autosize'    => TRUE,
+                                      'preview'     => TRUE,
+                                      'form_name'   => 'quick_reply_form',
+                                      'height'      => '250px'
                                   ));
         $html .= "<div class='m-t-10 pull-right'>\n";
-        $html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
+        $html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary m-r-10'));
         $html .= "</div>\n";
         $html .= "<div class='overflow-hide'>\n";
         $html .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));

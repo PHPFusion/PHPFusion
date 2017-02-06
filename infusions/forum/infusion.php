@@ -30,7 +30,7 @@ $locale = fusion_get_locale("",
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '1.0.5';
+$inf_version = '1.0.6';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@php-fusion.co.uk';
 $inf_weburl = 'https://www.php-fusion.co.uk';
@@ -251,6 +251,11 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_rank_style', '0', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('upvote_points', '2', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('downvote_points', '1', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('answering_points', '15', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_upvote', '100', 'forum')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', 'forum')";
 
 // Insert Panels
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '0')";

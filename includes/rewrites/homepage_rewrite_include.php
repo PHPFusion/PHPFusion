@@ -26,8 +26,8 @@ $regex = array(
 );
 
 $pattern = array(
-    "home" => "index.php",
-    "homepage" => "home.php",
+    //"home" => "index.php", // Enable this if your main page is home.php
+    //"homepage" => "home.php", // Enable this if your main page is home.php
     "login-to-website" => "login.php",
     "maintenance" => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",

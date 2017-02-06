@@ -393,13 +393,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= $options['inline'] ? "</div>\n" : '';
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
-            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
             $html .= "</div>\n";
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
         } else {
             $html .= "</div>\n";
-            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
             $html .= "</div>\n";
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
         }
     }
