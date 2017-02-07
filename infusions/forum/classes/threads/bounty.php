@@ -101,21 +101,22 @@ class Forum_Bounty extends ForumServer {
         // via postify
         if (self::get_bounty_permissions('can_award_bounty')) {
             if (isset(self::$post_data['post_items'][$_GET['post_id']])) {
+                $post_data = self::$post_data['post_items'][$_GET['post_id']];
                 // give the user the points.
                 dbquery("UPDATE ".DB_USERS." SET user_reputation+:points WHERE user_id=:user_id",
                     [
                         ':points'  => self::$data['thread_bounty'],
-                        ':user_id' => self::$post_data['post_author'],
+                        ':user_id' => $post_data['post_author'],
                     ]
                 );
                 // log the points change
                 $d = [
-                    'post_id'     => self::$post_data['post_id'],
-                    'thread_id'   => self::$post_data['thread_id'],
-                    'forum_id'    => self::$post_data['forum_id'],
+                    'post_id'     => $post_data['post_id'],
+                    'thread_id'   => $post_data['thread_id'],
+                    'forum_id'    => $post_data['forum_id'],
                     'points_gain' => self::$data['thread_bounty'],
                     'voter_id'    => fusion_get_userdata('user_id'),
-                    'user_id'     => self::$post_data['post_author'],
+                    'user_id'     => $post_data['post_author'],
                 ];
                 dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
 
@@ -128,9 +129,9 @@ class Forum_Bounty extends ForumServer {
                         ':desc'      => '',
                         ':user'      => 0,
                         ':start'     => 0,
-                        ':thread_id' => self::$post_data['thread_id']
+                        ':thread_id' => $post_data['thread_id']
                     ]);
-                redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.self::$post_data['forum_id'].'&amp;thread_id='.self::$post_data['thread_id'].'&amp;post_id='.self::$post_data['post_Id']);
+                redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_Id']);
             }
         }
     }
