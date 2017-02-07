@@ -59,6 +59,10 @@ class Router extends RewriteDriver {
      */
     private $get_parameters = array();
 
+    public function get_FileParams() {
+        return $this->get_parameters;
+    }
+
     private static $router_instance = NULL;
 
     public function __construct() {
@@ -542,6 +546,13 @@ class Router extends RewriteDriver {
         return $this->pathtofile;
     }
 
+    /**
+     * Get the Current URL
+     * @return string
+     */
+    public function getCurrentURL() {
+        return $this->pathtofile.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
+    }
 
     /**
      * Show Warnings or Debugging Information
