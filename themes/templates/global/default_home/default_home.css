@@ -11,18 +11,18 @@
     width: 100%;
 }
 #support {
-    background: url(../templates/global/assets/images/bg04.jpg) fixed bottom;
+    background: url(images/bg04.jpg) fixed bottom;
     background-size: cover;
     height: 600px;
 }
 #home_parallax {
-    background: url(../templates/global/assets/images/bg02.jpg) fixed;
+    background: url(images/bg02.jpg) fixed;
     background-size: cover;
     height: 750px;
 }
 #home_parallax::before {
     position: absolute;
-    background: url(../templates/global/assets/images/developer.png) center bottom no-repeat;
+    background: url(images/developer.png) center bottom no-repeat;
     height: 750px;
     width: 100%;
     margin: auto;
@@ -71,7 +71,7 @@
     overflow: hidden;
 }
 #showcase:after {
-    background: url(../templates/global/assets/images/theme9.jpg) center top;
+    background: url(images/theme9.jpg) center top;
     display: block;
     width: 100%;
     position: absolute;
