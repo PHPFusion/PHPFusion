@@ -460,7 +460,7 @@ class ForumThreads extends ForumServer {
                 'quick_reply_form'     => $qr_form,
                 'thread_bounty'        => $bounty_display,
                 'poll_form'            => $poll_form,
-                'post-filters'         => '',
+                'post-filters'         => array(),
                 'mod_options'          => [],
                 'form_action'          => '',
                 'open_post_form'       => '',
