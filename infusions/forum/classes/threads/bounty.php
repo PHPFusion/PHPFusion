@@ -122,7 +122,7 @@ class Forum_Bounty extends ForumServer {
 
                 $title = self::$locale['forum_4105'];
                 $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
-                send_pm(self::$post_data['post_author'], 0, $title, $message);
+                send_pm($post_data['post_author'], 0, $title, $message);
                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
                     [
                         ':bounty'    => 0,
@@ -131,7 +131,7 @@ class Forum_Bounty extends ForumServer {
                         ':start'     => 0,
                         ':thread_id' => $post_data['thread_id']
                     ]);
-                redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_Id']);
+                redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
             }
         }
     }

@@ -197,3 +197,10 @@ PHP-Fusion 9 Core Template Forum CSS
 	display: block;
 	overflow: auto;
 }
+a.answer_unchecked {
+	color: #ddd;
+}
+a.answer_unchecked:hover,
+a.answer_unchecked:focus {
+    color: #ccc;
+}

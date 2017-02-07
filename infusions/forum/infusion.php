@@ -251,6 +251,9 @@ $inf_newtable[] = DB_POST_NOTIFY." (
 	KEY notify_datestamp (notify_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
+if (!column_exists('users', 'user_reputation')) {
+    $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
+}
 // Admin links
 $inf_adminpanel[] = array(
     "image" => $inf_image,
