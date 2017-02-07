@@ -113,12 +113,8 @@ class UserFieldsInput {
         if (\defender::safe()) {
 
             if ($this->emailVerification) {
-
-                // Quantum Data is OK
                 $this->_setEmailVerification();
-
             } else {
-
                 /**
                  * Create user
                  */
@@ -151,13 +147,9 @@ class UserFieldsInput {
 
             }
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
-
-            if (!defined("ADMIN_PANEL")) {
-                addNotice("success", $this->_completeMessage, 'all');
-            } else {
+            if ($this->_completeMessage) {
                 addNotice("success", $this->_completeMessage, 'all');
             }
-
             return TRUE;
         }
 
@@ -558,35 +550,23 @@ class UserFieldsInput {
         $message = str_replace("SITEUSERNAME", fusion_get_settings("siteusername"), $message);
         $message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
         $message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
-
         $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
-
-        if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
-
-            $userInfo = base64_encode(serialize($this->data));
-
-            if (\defender::safe()) {
-
-                dbquery("INSERT INTO ".DB_NEW_USERS."
+        if (!sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
+            $message = str_replace("[LINK]", "<a href='".BASEDIR."contact.php'><strong>", $locale['u154']);
+            $message = str_replace("[/LINK]", "</strong></a>", $message);
+            addNotice('warning', $locale['u153']."<br />".$message, 'all');
+        }
+        $userInfo = base64_encode(serialize($this->data));
+        if (\defender::safe()) {
+            dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
 					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', NOW(), '".$userInfo."')
 					");
 
-            }
-
-            $this->_completeMessage = $locale['u150'];
-
-        } else {
-
-            \defender::stop();
-            $message = str_replace("[LINK]", "<a href='".BASEDIR."contact.php'><strong>", $locale['u154']);
-            $message = str_replace("[/LINK]", "</strong></a>", $message);
-            addNotice('danger', $locale['u153']."<br />".$message);
-
         }
+        $this->_completeMessage = $locale['u150'];
     }
-
 
     /**
      * Update User Fields
@@ -603,7 +583,6 @@ class UserFieldsInput {
         //$this->data = $this->userData; // Turn off for Next
 
         $this->_settUserName();
-
         $this->_setPassword();
 
         if (!defined('ADMIN_PANEL')) {
@@ -611,7 +590,6 @@ class UserFieldsInput {
         }
 
         $this->_setUserEmail();
-
         if ($this->validation == 1) {
             $this->_setValidationError();
         }
