@@ -43,20 +43,20 @@ if (!column_exists('forum_threads', 'thread_bounty')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL AFTER thread_answered";
 }
 
-if (!column_exists('forum_posts', 'bounty_description')) {
-    $inf_altertable[] = $db_prefix."forum_posts ADD bounty_description TINYINT(4) NOT NULL AFTER thread_bounty_reason";
+if (!column_exists('forum_threads', 'thread_bounty_description')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_description TEXT NOT NULL AFTER thread_bounty";
 }
 
-if (!column_exists('forum_posts', 'thread_bounty_start')) {
-    $inf_altertable[] = $db_prefix."forum_posts ADD thread_bounty_start INT(10) UNSIGNED NOT NULL AFTER thread_bounty_reason";
+if (!column_exists('forum_threads', 'thread_bounty_start')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_start INT(10) UNSIGNED NOT NULL AFTER thread_bounty_description";
 }
 
-if (!column_exists('forum_posts', 'thread_bounty_user')) {
-    $inf_altertable[] = $db_prefix."forum_posts ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL AFTER thread_bounty_start";
+if (!column_exists('forum_threads', 'thread_bounty_user')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL AFTER thread_bounty_start";
 }
 
-if (!column_exists('forum_posts', 'post_answerid')) {
-    $inf_altertable[] = $db_prefix."forum_posts ADD post_answerid TINYINT(1) NOT NULL AFTER post_locked";
+if (!column_exists('forum_posts', 'post_answer')) {
+    $inf_altertable[] = $db_prefix."forum_posts ADD post_answer TINYINT(1) NOT NULL AFTER post_locked";
 }
 
 if (!column_exists('users', 'user_reputation')) {
