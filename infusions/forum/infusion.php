@@ -46,6 +46,7 @@ $inf_mlt[] = array(
     'title' => $locale['setup_3038'],
     'rights' => 'FR',
 );
+
 // Create tables
 $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
 	attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -57,14 +58,18 @@ $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
 	attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (attach_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_VOTES." (
+    vote_id MEDIUMINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
-	vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
+	vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (vote_id)	
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_RANKS." (
 	rank_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	rank_title VARCHAR(100) NOT NULL DEFAULT '',
@@ -75,6 +80,7 @@ $inf_newtable[] = DB_FORUM_RANKS." (
 	rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (rank_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
 	thread_id MEDIUMINT(8) unsigned NOT NULL,
 	forum_poll_option_id SMALLINT(5) UNSIGNED NOT NULL,
@@ -82,6 +88,7 @@ $inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
 	forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
 	KEY thread_id (thread_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
 	forum_vote_user_id MEDIUMINT(8) UNSIGNED NOT NULL,
@@ -157,6 +164,7 @@ $inf_newtable[] = DB_FORUM_POSTS." (
 	post_editreason TEXT NOT NULL,
 	post_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	post_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+	post_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (post_id),
 	KEY thread_id (thread_id),
 	KEY post_datestamp (post_datestamp)
@@ -178,6 +186,10 @@ $inf_newtable[] = DB_FORUM_THREADS." (
 	thread_poll TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	thread_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+	thread_bounty SMALLINT(8) NOT NULL,
+	thread_bounty_description TEXT NOT NULL,
+	thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
 	thread_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	thread_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (thread_id),
@@ -202,6 +214,20 @@ $inf_newtable[] = DB_FORUM_TAGS." (
 	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
 	tag_language VARCHAR(100) NOT NULL DEFAULT '',
 	PRIMARY KEY (tag_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_USER_REP." (
+    rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',	
+	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
+	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (rep_id),	
+	KEY post_id (post_id, user_id, voter_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_MOODS." (
@@ -328,6 +354,7 @@ $inf_droptable[] = DB_FORUM_RANKS;
 $inf_droptable[] = DB_FORUM_TAGS;
 $inf_droptable[] = DB_FORUM_MOODS;
 $inf_droptable[] = DB_POST_NOTIFY;
+$inf_droptable[] = DB_FORUM_USER_REP;
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";

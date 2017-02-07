@@ -40,7 +40,7 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', 'forum')";
 
 if (!column_exists('forum_threads', 'thread_bounty')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL AFTER thread_answered";
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL DEFAULT '0' AFTER thread_answered";
 }
 
 if (!column_exists('forum_threads', 'thread_bounty_description')) {
@@ -48,15 +48,15 @@ if (!column_exists('forum_threads', 'thread_bounty_description')) {
 }
 
 if (!column_exists('forum_threads', 'thread_bounty_start')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_start INT(10) UNSIGNED NOT NULL AFTER thread_bounty_description";
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_description";
 }
 
 if (!column_exists('forum_threads', 'thread_bounty_user')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL AFTER thread_bounty_start";
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_start";
 }
 
 if (!column_exists('forum_posts', 'post_answer')) {
-    $inf_altertable[] = $db_prefix."forum_posts ADD post_answer TINYINT(1) NOT NULL AFTER post_locked";
+    $inf_altertable[] = $db_prefix."forum_posts ADD post_answer TINYINT(1) NOT NULL DEFAULT '0' AFTER post_locked";
 }
 
 if (!column_exists('users', 'user_reputation')) {
@@ -72,9 +72,9 @@ if (!column_exists('forum_votes', 'vote_id')) {
 if (!db_exists($db_prefix."forum_user_reputation")) {
     $inf_newtable[] = $db_prefix."forum_user_reputation (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',	
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
