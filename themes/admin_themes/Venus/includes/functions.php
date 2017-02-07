@@ -96,7 +96,7 @@ function render_dashboard() {
 
         $desktop = '4';
         echo "<div class='row'>\n";
-            if (db_exists(DB_FORUMS)) {
+            if (db_exists(DB_PREFIX.'forums')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
@@ -123,7 +123,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_DOWNLOADS)) {
+            if (db_exists(DB_PREFIX.'downloads')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
@@ -146,7 +146,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_NEWS)) {
+            if (db_exists(DB_PREFIX.'news')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
@@ -169,7 +169,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_ARTICLES)) {
+            if (db_exists(DB_PREFIX.'articles')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
@@ -192,7 +192,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_WEBLINKS)) {
+            if (db_exists(DB_PREFIX.'weblinks')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                  openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
@@ -215,7 +215,7 @@ function render_dashboard() {
                 echo "</div>";
             }
 
-            if (db_exists(DB_PHOTOS)) {
+            if (db_exists(DB_PREFIX.'photos')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";

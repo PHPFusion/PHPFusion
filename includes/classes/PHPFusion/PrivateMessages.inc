@@ -601,6 +601,9 @@ class PrivateMessages {
         $group_name = getgroupname($to);
         $to = isnum($to) || !empty($group_name) ? $to : 0;
         $from = isnum($from) ? $from : 0;
+        if (!$from) {
+            $from = 1; // Always the super administrator
+        }
         $smileys = preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "n" : $smileys;
 
         if (!$to_group) {
@@ -622,7 +625,7 @@ class PrivateMessages {
                 if (dbrows($result) > 0) {
                     $data = dbarray($result);
                     $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".intval($from)."'");
-                    if (dbrows($result2) > 0) {
+                    if (dbrows($result2)) {
                         $userdata = dbarray($result2);
                         if ($to != $from) {
                             if ($data['user_id'] == 1 // recepient is SA

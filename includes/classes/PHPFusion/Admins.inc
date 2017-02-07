@@ -93,13 +93,12 @@ class Admins {
      *    Constructor class. No Params
      */
     private $current_page = '';
-    private $locale = '';
+    private static $locale = '';
     private $comment_type = array();
     private $submit_type = array();
     private $link_type = array();
 
-    private function __construct() {
-    }
+    private function __construct() {}
 
     // add a setter for icons
 
@@ -109,6 +108,7 @@ class Admins {
     public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
+            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
 
         return (object)self::$instance;
@@ -117,14 +117,13 @@ class Admins {
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
             $this->admin_pages = $this->getAdminPages();
-            $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
             $this->admin_sections = array(
-                0 => $GLOBALS['locale']['ac00'],
-                1 => $GLOBALS['locale']['ac01'],
-                2 => $GLOBALS['locale']['ac02'],
-                3 => $GLOBALS['locale']['ac03'],
-                4 => $GLOBALS['locale']['ac04'],
-                5 => $GLOBALS['locale']['ac05'],
+                0 => self::$locale['ac00'],
+                1 => self::$locale['ac01'],
+                2 => self::$locale['ac02'],
+                3 => self::$locale['ac03'],
+                4 => self::$locale['ac04'],
+                5 => self::$locale['ac05'],
             );
             $this->current_page = $this->_currentPage();
         }
@@ -178,16 +177,22 @@ class Admins {
         $this->admin_pages[$page] = array();
     }
 
+    public function getAdminLocale() {
+        if (empty(self::$locale)) {
+            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+        }
+    }
+
     public function setAdminBreadcrumbs() {
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
-            'title' => $GLOBALS['locale']['ac10']
+            'title' => self::$locale['ac10']
         ]);
         $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
         if ($acTab != 0 && $acTab <= 5) {
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab,
-                'title' => $GLOBALS['locale']['ac0'.$acTab]
+                'title' => self::$locale['ac0'.$acTab]
             ]);
         }
     }
@@ -310,7 +315,7 @@ class Admins {
 
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
-                        $title = isset($GLOBALS['locale'][$data['admin_rights']]) ? $GLOBALS['locale'][$data['admin_rights']] : $title;
+                        $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
                     $secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';

@@ -439,6 +439,8 @@ $locale['forum_4106'] = 'Congratulations for earning half of the total bounty po
 
 $locale['forum_4107'] = 'Award Bounty';
 $locale['forum_4108'] = 'The bounty has been awarded as requested.';
+$locale['forum_4109'] = 'Thread bounty not awarded';
+$locale['forum_4110'] = 'Thread bounty cannot be given to yourself.';
 
 // Notifications
 $locale['error-MP000'] = 'Move posts - error';

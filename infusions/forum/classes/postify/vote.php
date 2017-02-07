@@ -67,7 +67,7 @@ class Postify_Vote extends Forum_Postify {
                                         // Remove log points
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
                                         // remove points from the post author
-                                        dbquery("UPDATE ".DB_USERS." SET user_reputation-:points WHERE user_id=:post_author_id", [
+                                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['upvote_points']
                                         ]);
@@ -94,7 +94,7 @@ class Postify_Vote extends Forum_Postify {
                                         // Remove log points
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
                                         // remove points from the post author
-                                        dbquery("UPDATE ".DB_USERS." SET user_reputation+:points WHERE user_id=:post_author_id", [
+                                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
