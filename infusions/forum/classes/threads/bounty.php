@@ -200,18 +200,18 @@ class Forum_Bounty extends ForumServer {
                 if (dbrows($result)) {
                     $data = dbarray($result);
                     // with the post id, we give the post user.
-                    dbquery("UPDATE ".DB_USERS." SET user_reputation+:points WHERE user_id=:post_author", [
+                    dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author", [
                             ':points'      => floor(self::$data['thread_bounty'] / 2),
                             ':post_author' => $data['post_author']
                         ]
                     );
                     $subject = strtr(self::$locale['forum_4103'], ['{%user_name%}' => $data['user_name']]);
                     $message = strtr(self::$locale['forum_4014'], ['{%link_start%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>", '{%link_end%}' => "</a>"]);
-                    send_pm(self::$data['thread_bounty_user'], 0, $subject, $message);
+                    send_pm(self::$data['thread_bounty_user'], 0, $subject, stripinput($message));
 
                     $subject = self::$locale['forum_4105'];
                     $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
-                    send_pm($data['post_author'], 0, $subject, $message);
+                    send_pm($data['post_author'], 0, $subject, stripinput($message));
                 }
                 // consumes the bounty
                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty='', thread_bounty_description='', thread_bounty_start='0' WHERE thread_id=:thread_id",

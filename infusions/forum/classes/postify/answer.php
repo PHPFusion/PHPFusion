@@ -46,7 +46,7 @@ class Postify_Answer extends Forum_Postify {
                     // If post is an answer, remove the answer, and refund the points.
                     if ($thread_data['post_answer']) {
                         // Refunding points
-                        dbquery("UPDATE ".DB_USERS." SET user_reputation-:points WHERE user_id=:user_id", [
+                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:user_id", [
                             ':points'  => self::$forum_settings['answering_points'],
                             ':user_id' => $thread_data['post_author']
                         ]);
@@ -101,7 +101,7 @@ class Postify_Answer extends Forum_Postify {
                             if ($c_data['post_author'] !== fusion_get_userdata('user_id')) {
 
                                 // remove points from the previous user
-                                dbquery("UPDATE ".DB_USERS." SET user_reputation-:points WHERE user_id=:user_id", [
+                                dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:user_id", [
                                     ':points'  => self::$forum_settings['answering_points'],
                                     ':user_id' => $c_data['user_id']
                                 ]);
@@ -126,7 +126,7 @@ class Postify_Answer extends Forum_Postify {
 
                             // Give points to the current user if its not self.
                             if ($thread_data['post_author'] !== fusion_get_userdata('user_id')) {
-                                dbquery("UPDATE ".DB_USERS." SET user_reputation+:points WHERE user_id=:user_id", [
+                                dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id", [
                                     ':points'  => self::$forum_settings['answering_points'],
                                     ':user_id' => $thread_data['post_author']
                                 ]);
@@ -165,7 +165,7 @@ class Postify_Answer extends Forum_Postify {
                 } else {
 
                     if ($thread_data['post_author'] !== fusion_get_userdata('user_id')) {
-                        dbquery("UPDATE ".DB_USERS." SET user_reputation+:points WHERE user_id=:user_id", [
+                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id", [
                             ':points'  => self::$forum_settings['answering_points'],
                             ':user_id' => $thread_data['post_author']
                         ]);
