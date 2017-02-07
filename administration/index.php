@@ -47,38 +47,38 @@ if (fusion_get_settings("enable_deactivation") == "1") {
 }
 // Get Core Infusion´s stats
 if (db_exists(DB_PREFIX.'forums')) {
-    $forum['count'] = dbcount("('forum_id')", DB_FORUMS);
-    $forum['thread'] = dbcount("('post_id')", DB_FORUM_THREADS);
-    $forum['post'] = dbcount("('post_id')", DB_FORUM_POSTS);
+    $forum['count'] = dbcount("('forum_id')", DB_PREFIX.'forums');
+    $forum['thread'] = dbcount("('post_id')", DB_PREFIX.'forum_threads');
+    $forum['post'] = dbcount("('post_id')", DB_PREFIX.'forum_posts');
     $forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 }
 if (db_exists(DB_PREFIX.'downloads')) {
-    $download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
+    $download['download'] = dbcount("('download_id')", DB_PREFIX.'downloads');
     $download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
     $download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 }
 if (db_exists(DB_PREFIX.'articles')) {
-    $articles['article'] = dbcount("('article_id')", DB_ARTICLES);
+    $articles['article'] = dbcount("('article_id')", DB_PREFIX.'articles');
     $articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
     $articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
 }
 if (db_exists(DB_PREFIX.'weblinks')) {
-    $weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
+    $weblinks['weblink'] = dbcount("('weblink_id')", DB_PREFIX.'weblinks');
     $weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
     $weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
 }
 if (db_exists(DB_PREFIX.'news')) {
-    $news['news'] = dbcount("('news_id')", DB_NEWS);
+    $news['news'] = dbcount("('news_id')", DB_PREFIX.'news');
     $news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
     $news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
 }
 if (db_exists(DB_PREFIX.'blog')) {
-    $blog['blog'] = dbcount("('blog_id')", DB_BLOG);
+    $blog['blog'] = dbcount("('blog_id')", DB_PREFIX.'blog');
     $blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
     $blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
 }
 if (db_exists(DB_PREFIX.'photos')) {
-    $photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
+    $photos['photo'] = dbcount("('photo_id')", DB_PREFIX.'photos');
     $photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }

@@ -28,7 +28,6 @@ class adminDashboard extends resource {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $infusions_count, $global_infusions;
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
 
         $mobile = '12';
         $tablet = '6';
@@ -64,7 +63,7 @@ class adminDashboard extends resource {
 
             $desktop = '4';
             echo "<div class='row'>\n";
-                if (db_exists(DB_FORUMS)) {
+                if (db_exists(DB_PREFIX.'forums')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
@@ -91,7 +90,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (db_exists(DB_DOWNLOADS)) {
+                if (db_exists(DB_PREFIX.'downloads')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
@@ -114,7 +113,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (db_exists(DB_NEWS)) {
+                if (db_exists(DB_PREFIX.'news')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
@@ -137,7 +136,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (db_exists(DB_ARTICLES)) {
+                if (db_exists(DB_PREFIX.'articles')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
@@ -160,7 +159,7 @@ class adminDashboard extends resource {
                     echo "</div>\n";
                 }
 
-                if (db_exists(DB_WEBLINKS)) {
+                if (db_exists(DB_PREFIX.'weblinks')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                      openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
@@ -183,7 +182,7 @@ class adminDashboard extends resource {
                     echo "</div>";
                 }
 
-                if (db_exists(DB_PHOTOS)) {
+                if (db_exists(DB_PREFIX.'photos')) {
                     echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                     openside("", "well");
                         echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
