@@ -16,7 +16,7 @@ function menuToggle() {
         // close menu
         $('.admin-menu-icon').show();
         $('.admin-menu-item').hide();
-        menu_header.html('<h4 class=\"fa fa-connectdevelop\"></h4>');
+        menu_header.html('<h4 class=\"php-fusion text-white text-center fa fa-lg\"></h4>');
         $('.menu-action').html('<i class=\"fa fa-chevron-circle-right\"></i>');
         Cookies.set('acpState', 0);
     } else {
