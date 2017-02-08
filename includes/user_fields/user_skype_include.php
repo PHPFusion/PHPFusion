@@ -20,14 +20,15 @@ if (!defined("IN_FUSION")) {
 }
 // Display user field input
 if ($profile_method == 'input') {
-    $options += array(
-        'inline'           => TRUE,
-        'max_length'       => 32,
-        // TODO: Also accept MS accounts which are email addresses
-        'regex'            => '[a-z.0-9]{5,31}',
-        'regex_error_text' => $locale['uf_skype_error_1'],
-        'error_text'       => $locale['uf_skype_error']
-    );
+    $options = array(
+            'inline'           => TRUE,
+            'max_length'       => 32,
+            // TODO: Also accept MS accounts which are email addresses
+            'regex'            => '[a-z.0-9]{5,31}',
+            'regex_error_text' => $locale['uf_skype_error_1'],
+            'error_text'       => $locale['uf_skype_error'],
+            'placeholder'      => $locale['uf_skype_id'],
+        ) + $options;
     $user_fields = form_text('user_skype', "<img src='".IMAGES."user_fields/im/skype.png' class='m-r-5'>".$locale['uf_skype'], $field_value, $options);
 // Display user field input
 } elseif ($profile_method == 'display') {
