@@ -21,14 +21,15 @@ if (!defined("IN_FUSION")) {
 
 // Display user field input
 if ($profile_method == "input") {
-    $options += array(
-        'inline'     => TRUE,
-        'max_length' => 16,
-        'regex'      => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-        // TODO: Change the error text in case a value was entered but is not valid
-        'error_text' => $locale['uf_aim_error']
-    );
-    $user_fields = form_text('user_aim', $locale['uf_aim'], $field_value, $options);
+    $options = array(
+            'inline'           => TRUE,
+            'max_length'       => 16,
+            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+            'error_text'       => $locale['uf_aim_error'],
+            'regex_error_text' => $locale['uf_aim_error_1'],
+            'placeholder'      => $locale['uf_aim']
+        ) + $options;
+    $user_fields = form_text('user_aim', "<img src='".IMAGES."user_fields/im/aim.png' class='m-r-5'>".$locale['uf_aim'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
     $user_fields = array('title' => $locale['uf_aim'], 'value' => $field_value ?: "");

@@ -53,28 +53,29 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
-        'type' => 'text',
-        'required' => FALSE,
-        'safemode' => FALSE,
-        'regex' => '',
-        'callback_check' => FALSE,
-        'input_id' => $input_name,
-        'placeholder' => '',
-        'deactivate' => FALSE,
-        'width' => '',
-        'inner_width' => '',
-        'class' => '',
-        'inner_class' => '',
-        'inline' => FALSE,
-        'min_length' => 1,
-        'max_length' => 200,
-        'number_min' => 0,
-        'number_max' => 0,
-        'number_step' => 1,
-        'icon' => '',
+        'type'             => 'text',
+        'required'         => FALSE,
+        'safemode'         => FALSE,
+        'regex'            => '',
+        'regex_error_text' => '',
+        'callback_check'   => FALSE,
+        'input_id'         => $input_name,
+        'placeholder'      => '',
+        'deactivate'       => FALSE,
+        'width'            => '',
+        'inner_width'      => '',
+        'class'            => '',
+        'inner_class'      => '',
+        'inline'           => FALSE,
+        'min_length'       => 1,
+        'max_length'       => 200,
+        'number_min'       => 0,
+        'number_max'       => 0,
+        'number_step'      => 1,
+        'icon'             => '',
         'autocomplete_off' => FALSE,
-        'tip' => '',
-        'ext_tip' => '',
+        'tip'              => '',
+        'ext_tip'          => '',
         'append_button' => '',
         'append_value' => '',
         'append_form_value' => '',
@@ -259,6 +260,29 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
 		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
 		});\n");
+    }
+
+    // Live Regex Error Check
+    if ($options['regex'] && $options['regex_error_text']) {
+        add_to_jquery("
+        $('#".$options['input_id']."').blur(function(ev) {
+            var Inner_Object = $(this).parent('div').find('.label-danger');
+            var Outer_Object = $(this).parent('div').find('.input-error');            
+            if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
+                var ErrorText = '".$options['regex_error_text']."';
+                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';                        
+                if (Inner_Object.length > 0) {
+                    object.html(ErrorText);                
+                } else {
+                    $(this).after(function() {
+                        return ErrorDOM;
+                    });
+                }
+            } else {
+               Outer_Object.remove();
+            }
+        });
+        ");
     }
 
     return $html;
