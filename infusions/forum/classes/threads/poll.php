@@ -41,7 +41,7 @@ class Poll {
      */
     public static function render_poll_form($edit = false) {
         $locale = fusion_get_locale("", FORUM_LOCALE);
-        $poll_field = '';
+        $poll_field = array();
         if ($edit ? self::get_poll_permissions("can_edit_poll") : self::get_poll_permissions("can_create_poll")) { // if permitted to create new poll.
             $poll_data = array(
                 'thread_id'         => self::$data['thread_id'],
