@@ -24,13 +24,13 @@ $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
 
 $modules = array(
-    'n' => array($locale['UM090'], DB_NEWS),
-    'b' => array($locale['UM095'], DB_BLOG),
-    'l' => array($locale['UM091'], DB_WEBLINKS),
-    'a' => array($locale['UM092'], DB_ARTICLES),
-    'p' => array($locale['UM093'], DB_PHOTO_ALBUMS),
-    'd' => array($locale['UM094'], DB_DOWNLOADS),
-    'q' => array($locale['UM102'], DB_FAQS)
+    'n' => array($locale['UM090'], DB_PREFIX.'news'),
+    'b' => array($locale['UM095'], DB_PREFIX.'blog'),
+    'l' => array($locale['UM091'], DB_PREFIX.'weblinks'),
+    'a' => array($locale['UM092'], DB_PREFIX.'articles'),
+    'p' => array($locale['UM093'], DB_PREFIX.'photos'),
+    'd' => array($locale['UM094'], DB_PREFIX.'downloads'),
+    'q' => array($locale['UM102'], DB_PREFIX.'faqs')
 );
 $installedModules = array();
 foreach ($modules as $k => $v) {
@@ -50,7 +50,7 @@ if (iMEMBER) {
 	SUM(message_folder=2) AS archive_count,
 	SUM(message_read=0 AND message_folder=0) AS unread_count
 	FROM ".DB_MESSAGES."
-	WHERE message_to=:user_id", array(':user_id'=> $userdata['user_id']));
+	WHERE message_to=:user_id", array(':user_id' => $userdata['user_id']));
 
     $messages_count = dbarray($messages_count);
     $inbox_count = (int)$messages_count['inbox_count'];
@@ -64,6 +64,14 @@ if (iMEMBER) {
     echo "</div>\n";
     echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\n";
     echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
+
+    if (column_exists('users', 'user_reputation') && db_exists(DB_PREFIX.'forums')) {
+        echo "<p>\n";
+        echo "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n";
+        echo number_format($userdata['user_reputation']);
+        echo "</p>\n";
+    }
+
     echo "</div>\n";
     echo "<ul class='user-info-bar block'>\n";
     echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment' style='font-size: 30px;'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
@@ -73,30 +81,30 @@ if (iMEMBER) {
         $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
         $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
         echo progress_bar($inbox_percent, $locale['UM098'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
 
         $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
         $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
         echo progress_bar($outbox_percent, $locale['UM099'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
 
         $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
         $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
         echo progress_bar($archive_percent, $locale['UM100'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
     }
@@ -113,7 +121,7 @@ if (iMEMBER) {
     echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
     echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
     if ($installedModules) {
-	echo "<a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'>".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a>";
+        echo "<a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'>".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a>";
         echo "<li><ul id='collapse' class='panel-collapse collapse'>\n";
         foreach ($installedModules as $stype => $text) {
             echo "<li><a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a></li>\n";
@@ -151,21 +159,21 @@ if (iMEMBER) {
         }
         echo form_text('user_name', $locale['global_101'], '', array(
             'placeholder' => $placeholder,
-            'required' => 1
+            'required'    => 1
 
         ));
         echo form_text('user_pass', $locale['global_102'], '', array(
             'placeholder' => $locale['global_102'],
-            'type' => 'password',
-            'required' => 1
+            'type'        => 'password',
+            'required'    => 1
         ));
         echo "<label><input type='checkbox' name='remember_me' value='y' title='".$locale['global_103']."'/> ".$locale['global_103']."</label>\n";
         echo form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary'));
         echo closeform();
         if (fusion_get_settings('enable_registration')) {
             echo str_replace(array(
-                                 "[LINK]", "[/LINK]"
-                             ), array("<a href='".BASEDIR."register.php'>", "</a>"), $locale['global_105'])."
+                    "[LINK]", "[/LINK]"
+                ), array("<a href='".BASEDIR."register.php'>", "</a>"), $locale['global_105'])."
                                  <br /><br />\n";
         }
         echo str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."lostpassword.php'>", "</a>"), $locale['global_106'])."\n</div>\n";
