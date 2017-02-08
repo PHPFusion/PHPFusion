@@ -54,10 +54,15 @@
     font-weight: 300;
     line-height: 25px;
 }
-#store > div:first-child h3, #home_parallax h3, #home_feature h3, #support h3, #latest h3, #showcase h3 {
+
+#home_parallax h3, #home_feature h3, #support h3, #showcase h3 {
     font-size: 50px;
     font-weight: 600;
     text-transform: uppercase;
+}
+
+#latest {
+    padding-bottom: 100px;
 }
 #latest p {
     display: block;
