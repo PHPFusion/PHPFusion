@@ -128,6 +128,7 @@ class UserFields extends QuantumFields {
 
         $this->info = [
             'section'             => $this->getProfileSections(),
+            'user_id'             => form_hidden('user_id', '', isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : 0),
             'user_name'           => '',
             'user_email'          => '',
             'user_hide_email'     => '',
@@ -147,7 +148,6 @@ class UserFields extends QuantumFields {
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
-            $this->info['user_id'] = form_hidden('user_id', '', isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : 0);
 
             if (iADMIN || $this->_userNameChange) {
                 $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, array(
@@ -738,8 +738,8 @@ class UserFields extends QuantumFields {
         }
 
         //User Fields Module Information
+        $extended_info = '';
         if (!empty($this->info['user_field'])) {
-            $extended_info = '';
             foreach ($this->info['user_field'] as $catID => $fieldData) {
                 $user_fields = '';
                 if (!empty($fieldData['title'])) {
