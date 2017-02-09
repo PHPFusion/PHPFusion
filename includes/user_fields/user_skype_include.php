@@ -19,6 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 // Display user field input
+$icon = "<img src='".IMAGES."user_fields/im/skype.png'>";
 if ($profile_method == 'input') {
     $options = array(
             'inline'           => TRUE,
@@ -28,9 +29,10 @@ if ($profile_method == 'input') {
             'regex_error_text' => $locale['uf_skype_error_1'],
             'error_text'       => $locale['uf_skype_error'],
             'placeholder'      => $locale['uf_skype_id'],
+            'icon'             => $icon,
         ) + $options;
-    $user_fields = form_text('user_skype', "<img src='".IMAGES."user_fields/im/skype.png' class='m-r-5'>".$locale['uf_skype'], $field_value, $options);
+    $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 // Display user field input
 } elseif ($profile_method == 'display') {
-    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: "");
+    $user_fields = array('title' => $icon.$locale['uf_skype'], 'value' => $field_value ?: "");
 }

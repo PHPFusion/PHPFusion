@@ -47,7 +47,6 @@ a:hover, a:focus {
 ul > li {
     list-style: none;
 }
-
 .headerBg {
     background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
     background-size: cover;
@@ -288,6 +287,11 @@ header h1 {
 }
 .nebulaBody {
     padding: 3% 0;
+}
+
+.control-label > img {
+    margin-right: 5px;
+    width: 24px;
 }
 
 /******************

@@ -55,7 +55,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $default_options = array(
         'type'             => 'text',
         'required'         => FALSE,
-        'icon'             => '',
+        'label_icon'       => '',
+        'feedback_icon'    => '',
         'safemode'         => FALSE,
         'regex'            => '',
         'regex_error_text' => '',
@@ -167,25 +168,20 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             });
         ').'</script>');
     }
-    $icon = !empty($options['icon']) ? $options['icon'] : '';
+
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$icon.$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
-
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
     $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group ".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
 
     if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
-
         $html .= "<span class='input-group-btn'>\n";
         $html .= "<button id='".$options['input_id']."-prepend-btn' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
-
     } elseif ($options['prepend_value']) {
-
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
-
     }
 
     // min, max, step
@@ -225,7 +221,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
-    $html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : "";
+    $html .= ($options['feedback_icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : '';
 
     $html .= $options['stacked'];
 
@@ -265,6 +261,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     // Live Regex Error Check
     if ($options['regex'] && $options['regex_error_text']) {
+        /*
         add_to_jquery("
         $('#".$options['input_id']."').blur(function(ev) {
             var Inner_Object = $(this).parent('div').find('.label-danger');
@@ -284,6 +281,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             }
         });
         ");
+        */
     }
 
     return $html;

@@ -18,17 +18,22 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
+$icon = "<img src='".IMAGES."user_fields/social/deviantart.svg'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(
             'inline'      => TRUE,
-            'max_length'  => 16,
+            'max_length'  => 20,
             'error_text'  => $locale['uf_da_error'],
-            'placeholder' => $locale['uf_da_id']
+            'placeholder' => $locale['uf_da_id'],
+            'label_icon'  => $icon,
         ) + $options;
-    $user_fields = form_text('user_deviantart', "<img src='".IMAGES."user_fields/social/deviantart.svg' class='m-r-5' style='width:32px'>".$locale['uf_da'], $field_value, $options);
+    $user_fields = form_text('user_deviantart', $locale['uf_da'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_da'], 'value' => $field_value ?: '');
+    if ($field_value) {
+        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "http://".$field_value.".deviantart.com" : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_da_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+    }
+    $user_fields = array('title' => $icon.$locale['uf_da'], 'value' => $field_value ?: '');
 }
