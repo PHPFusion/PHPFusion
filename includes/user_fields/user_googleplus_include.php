@@ -23,18 +23,18 @@ if (!defined("IN_FUSION")) {
 if ($profile_method == "input") {
     $options = array(
             'inline'      => TRUE,
-            'max_length'  => 100,
-            'error_text'  => $locale['uf_youtube_error'],
-            'placeholder' => $locale['uf_youtube_id'],
-            'icon'        => "<img src='".IMAGES."user_fields/social/youtube.svg' class='m-r-5' style='width:32px'>"
+            'max_length'  => 50,
+            'error_text'  => $locale['uf_googleplus_error'],
+            'placeholder' => $locale['uf_googleplus_id'],
+            'icon'        => "<img src='".IMAGES."user_fields/social/googleplus.svg' class='m-r-5' style='width:32px'/>",
         ) + $options;
-    $user_fields = form_text('user_youtube', $locale['uf_youtube'], $field_value, $options);
+    $user_fields = form_text('user_googleplus', $locale['uf_googleplus'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
     if ($field_value) {
-        $icon = "<img src='".IMAGES."user_fields/social/youtube.svg' class='m-r-5' style='width:32px'/>";
-        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.youtube.com/user/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? '' : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? '' : "rel='nofollow' ")."target='_blank'>".$locale['uf_youtube']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $icon = "<img src='".IMAGES."user_fields/social/googleplus.svg' class='m-r-5' style='width:32px'/>";
+        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://plus.google.com/+".$field_value : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? '' : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_googleplus']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array('title' => $icon.$locale['uf_youtube'], 'value' => $field_value ?: '');
+    $user_fields = array('title' => $icon.$locale['uf_googleplus'], 'value' => $field_value ?: '');
 }

@@ -3,4 +3,3 @@ $locale['uf_youtube'] = "Youtube";
 $locale['uf_youtube_id'] = "Youtube Channel URL or Username";
 $locale['uf_youtube_desc'] = "Youtube Channel Account";
 $locale['uf_youtube_error'] = "Youtube Channel URL or Username can not be left empty.";
-$locale['uf_youtube_error_1'] = "Youtube Channel URL or Username is incorrect. Please use a valid Youtube URL or Username.";
