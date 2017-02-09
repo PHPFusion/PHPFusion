@@ -29,7 +29,7 @@ if ($profile_method == 'input') {
             'regex_error_text' => $locale['uf_skype_error_1'],
             'error_text'       => $locale['uf_skype_error'],
             'placeholder'      => $locale['uf_skype_id'],
-            'icon'             => $icon,
+            'label_icon'       => $icon,
         ) + $options;
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 // Display user field input
