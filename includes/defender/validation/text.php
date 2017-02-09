@@ -48,16 +48,12 @@ class Text extends \Defender\Validation  {
                         return self::$inputDefault;
                     }
                 }
-
-
                 $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
             $value = implode($delimiter, $vars);
-
         } else {
-
             if (self::$inputConfig['max_length']) {
                 if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", self::$inputValue)) {
                     \defender::stop();
@@ -65,7 +61,6 @@ class Text extends \Defender\Validation  {
                     return FALSE;
                 }
             }
-
             $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords(self::$inputValue))));
         }
         if (self::$inputConfig['required'] && !$value) {

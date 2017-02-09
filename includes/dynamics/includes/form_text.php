@@ -135,11 +135,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addNotice("danger", $options['error_text']);
         }
     }
 
@@ -154,7 +154,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
-
         PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
             jQuery(document).ready(function() {
                 var options = {};
@@ -229,7 +228,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
-    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
@@ -261,7 +260,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     // Live Regex Error Check
     if ($options['regex'] && $options['regex_error_text']) {
-        /*
+
         add_to_jquery("
         $('#".$options['input_id']."').blur(function(ev) {
             var Inner_Object = $(this).parent('div').find('.label-danger');
@@ -281,7 +280,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             }
         });
         ");
-        */
+
     }
 
     return $html;
