@@ -285,6 +285,7 @@ class ForumThreads extends ForumServer {
         $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 
         $this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
+
         if (!empty($this->thread_data) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
 
             // get post_count, lastpost_id, first_post_id.
