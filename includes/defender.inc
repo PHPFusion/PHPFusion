@@ -5,7 +5,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: defender.inc.php
+| Filename: defender.inc
 | Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
 | Version : 9.0.5 (please update every commit)

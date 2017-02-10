@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: vote.php
+| Author: Chan (Frederick MC Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
 use PHPFusion\Forums\Moderator;
@@ -16,11 +31,11 @@ class Postify_Vote extends Forum_Postify {
         // I'm voting. so i need the vote id.
         $thread_data = dbarray(dbquery("SELECT
               p.post_id, p.post_author,
-              t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, t.thread_locked, 
-              f.forum_lock, f.forum_post_ratings, f.forum_mods, f.forum_type            
-              FROM ".DB_FORUM_POSTS." p 
+              t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, t.thread_locked,
+              f.forum_lock, f.forum_post_ratings, f.forum_mods, f.forum_type
+              FROM ".DB_FORUM_POSTS." p
               INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-              INNER JOIN ".DB_FORUMS." f ON f.forum_id=p.forum_id AND f.forum_type=:forum_type              
+              INNER JOIN ".DB_FORUMS." f ON f.forum_id=p.forum_id AND f.forum_type=:forum_type
               WHERE p.post_id=:post_id AND p.thread_id=:thread_id",
             [
                 ':thread_id'  => $_GET['thread_id'],

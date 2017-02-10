@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_aim_include.php
-| Author: Digitanium
+| Filename: user_deviantart_include.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $icon = "<img src='".IMAGES."user_fields/social/deviantart.svg'/>";
 // Display user field input
 if ($profile_method == "input") {

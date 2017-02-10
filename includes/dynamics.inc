@@ -7,7 +7,7 @@
 | Project File: Dynamics Field Inputs
 | Filename: dynamics.inc
 | Author: Frederick MC Chan (Chan)
-| Version : 9.0
+| Version: 9.0
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

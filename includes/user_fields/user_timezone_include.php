@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 // Display user field input
 if ($profile_method == "input") {
     $timezones = timezone_abbreviations_list();
