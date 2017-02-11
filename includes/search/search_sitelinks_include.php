@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: search_custompages_include.php
+| Filename: search_sitelinks_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the

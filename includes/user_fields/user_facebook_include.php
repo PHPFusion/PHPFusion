@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 $icon = "<img src='".IMAGES."user_fields/social/facebook.svg'/>";
 // Display user field input
 if ($profile_method == "input") {

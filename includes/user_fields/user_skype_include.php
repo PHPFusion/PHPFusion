@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 // Display user field input
 $icon = "<img src='".IMAGES."user_fields/im/skype.png'>";
 if ($profile_method == 'input') {

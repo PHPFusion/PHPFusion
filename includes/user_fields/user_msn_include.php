@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_msn_include.php
-| Author: Digitanium
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 /**
  * Microsoft started to phase out MSN Messenger (also known as Windows Live Messenger) globally in April 2013 and it will be completely shut down on October 31st.
  * MSN Messenger is only available in mainland China until then. In an e-mail about the changes, Microsoft suggested that users switch to Skype.

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_facebook_include.php
+| Filename: user_facebook_include_var.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the

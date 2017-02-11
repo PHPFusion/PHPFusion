@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Forum.php
+| Filename: forum.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the

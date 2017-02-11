@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/admin/post.php
+| Filename: classes/admin/mood.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
