@@ -324,12 +324,19 @@ input[type=text]:focus {
     background-color: rgba(255, 255, 255, 0.4);
 }
 
-.avatar-row {
+/*
+User Info Panel CSS
+ */
+.uip_avatar {
     float: left;
     display: inline;
     width: auto !important;
     margin-right: 10px;
     margin-bottom: 20px;
+}
+
+.uip_username {
+    margin: 10px 0;
 }
 
 .header-nav {

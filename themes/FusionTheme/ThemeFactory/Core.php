@@ -35,6 +35,23 @@ class Core {
         'left'               => TRUE, // LEFT
         'left_pre_content'   => '',
         'left_post_content'  => '',
+
+        'user_1'           => TRUE,
+        'user_1_content'   => '',
+        'user_1_container' => TRUE,
+
+        'user_2'           => TRUE,
+        'user_2_content'   => '',
+        'user_2_container' => TRUE,
+
+        'user_3'           => TRUE,
+        'user_3_content'   => '',
+        'user_3_container' => TRUE,
+
+        'user_4' => TRUE,
+        'user_4_content' => '',
+        'user_4_container' => TRUE,
+
         /*
          * AU_UPPER
          */
