@@ -66,7 +66,7 @@ function showrendertime($queries = TRUE) {
                     $modal_body .= "<h5>SQL#$i : ".$sql[0]." seconds</h5>\n\r";
                     $modal_body .= "[code]".trim($sql[1]).trim($sql[2])."[/code]\n\r";
                     $modal_body .= "<div>\n";
-                    $modal_body .= "<kbd>".$sql[3][1]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][1]['line'].", ".$sql[3][1]['function']."</span>\n\r";
+                    $modal_body .= "<kbd>".$sql[3][2]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][2]['line'].", ".$sql[3][2]['function']."</span>\n\r";
                     $modal_body .= "</div>\n";
                     $modal_body .= "</div>\n";
                     $i++;
