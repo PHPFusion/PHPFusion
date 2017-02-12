@@ -87,6 +87,7 @@ class Core {
         'left_span'           => 2,
         'left_class'          => '',
         'main_span'           => '',
+        'main_class'         => '',
         'right_is_affix'      => FALSE, // @todo: auto affix
         'right_pre_content'   => '', // right side top content
         'right_post_content'  => '', // right side bottom content

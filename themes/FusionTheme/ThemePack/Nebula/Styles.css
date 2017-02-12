@@ -933,3 +933,11 @@ Editor Navs
     border-color: #b5b5b5;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
 }
+
+/***********************
+bbcode input
+ */
+.bbcode_input > div > input[type=image] {
+    width: 18px;
+    margin-right: 5px;
+}
