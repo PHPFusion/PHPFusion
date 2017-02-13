@@ -113,7 +113,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'width'       => '250px',
                     'inline'      => TRUE,
                 ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
-            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], array('max_length' => 320, 'inline' => TRUE, 'placeholder' => $locale['news_0205a'], 'width' => '100%', 'error_text' => $locale['news_0255'], 'tags' => TRUE, 'multiple' => TRUE)),
+            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], array('max_length' => 320, 'inline' => TRUE, 'placeholder' => $locale['news_0205a'], 'width' => '100%', 'inner_width' => '100%', 'error_text' => $locale['news_0255'], 'tags' => TRUE, 'multiple' => TRUE)),
             'news_cat_field'         => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'],
                 [
                     'width'        => '250px', 'inline' => TRUE,
@@ -132,7 +132,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     // set thumbnail 2 settings
                     'thumbnail2'   => 1, 'thumbnail2_w' => $news_settings['news_photo_w'],
                     'thumbnail2_h' => $news_settings['news_photo_h'], 'type' => 'image', 'inline' => TRUE,
-                    'ext_tip'      => sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))
+                    'ext_tip'      => sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b'])),
                 ]
             ) : ''),
             'news_image_align_field' => ($news_settings['news_allow_submission_files'] ? form_select('news_ialign', $locale['news_0218'], $criteriaArray['news_ialign'],
@@ -162,12 +162,12 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             ),
             'news_submit'            => form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o')),
             'preview_news'           => (fusion_get_settings('site_seo') ? '' : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('icon' => 'fa fa-eye'))),
-
+            'criteria_array'         => $criteriaArray,
         ];
 
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n", array("enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE));
 
-        echo strtr(display_news_submissions_form(), [
+        echo strtr(display_news_submissions_form($info), [
             '{%title%}'                  => $locale['news_0400'],
             '{%guidelines%}'             => $info['guidelines'],
             '{%news_subject_field%}'     => $info['news_subject_field'],

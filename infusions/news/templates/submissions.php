@@ -42,7 +42,7 @@ if (!function_exists('display_news_submissions_preview')) {
 }
 
 if (!function_exists('display_news_submissions_form')) {
-    function display_news_submissions_form() {
+    function display_news_submissions_form(array $info = array()) {
         return open_table('{%title%}')."<div class='well spacer-xs'>{%guidelines%}</div>
         {%news_subject_field%}
         {%news_language_field%}
