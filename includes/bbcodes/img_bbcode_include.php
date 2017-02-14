@@ -29,7 +29,7 @@ if (!function_exists("img_bbcode_callback")) {
                     "="
                 ),
                 "",
-                $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='forum-img' /></span>";
+                $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' /></span>";
         } else {
             return $matches[0];
         }

@@ -182,35 +182,33 @@ if (!function_exists('render_post_item')) {
         $template = "
         {%post_html_comment%}
         <div id='{%item_marker_id%}' class='clearfix post_items'>
-            <div class='forum_avatar text-center'>{%user_avatar%}{%user_avatar_rank%}</div>
-            <div class='pull-right m-l-10'>
-                <div class='clearfix'>
-                    <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
-                    <div class='btn-group'>
-                        {%quote_button%}{%reply_button%}{%edit_button%}
-                        <a class='dropdown-toggle btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
-                        <ul class='dropdown-menu'>
-                            {%li_user_ip%}
-                            {%li_user_post_count%}
-                            {%li_message%}
-                            {%li_web%}
-                            {%li_print%}
-                            {%li_quote%}
-                            {%li_edit%}
-                        </ul>
+            <div class='clearfix'>
+                <div class='forum_avatar text-center'>{%user_avatar%}{%user_avatar_rank%}</div>
+                <!--forum_thread_user_name-->
+                <div class='m-b-10 post_info'>
+                    {%user_online_status%} <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
+                    <div class='pull-right m-l-10'>
+                        <div class='clearfix'>
+                            <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
+                            <div class='btn-group'>
+                                {%quote_button%}{%reply_button%}{%edit_button%}
+                                <a class='dropdown-toggle btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
+                                <ul class='dropdown-menu'>
+                                    {%li_user_ip%}
+                                    {%li_user_post_count%}
+                                    {%li_message%}
+                                    {%li_web%}
+                                    {%li_print%}
+                                    {%li_quote%}
+                                    {%li_edit%}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <ul class='overflow-hide post_info post_stats hidden-xs m-t-15 p-0'>
-                    {%li_user_ip%}
-                    {%li_user_post_count%}
-                </ul>
             </div>
             <div class='overflow-hide'>
-		        <!--forum_thread_user_name-->
-		        <div class='m-b-10 post_info'>
-		            {%user_online_status%} <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
-		        </div>
-		        {%vote_form%}
+                {%vote_form%}
                 <div class='overflow-hide'>\n
                     <div class='post_message'>{%post_message%}</div>
                     {%user_signature%}
@@ -260,8 +258,8 @@ if (!function_exists('render_post_item')) {
                 '{%quote_button%}'       => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-xs quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : ''),
                 '{%reply_button%}'       => (isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-xs reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : ''),
                 '{%edit_button%}'        => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-xs edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : ""),
-                '{%li_user_ip%}'         => ($data['user_ip'] ? "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : ""),
-                '{%li_user_post_count%}' => "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>",
+                '{%li_user_ip%}'         => ($data['user_ip'] ? "<li><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : ""),
+                '{%li_user_post_count%}' => "<li><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>",
                 '{%li_message%}'         => ($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : ""),
                 '{%li_web%}'             => ($data['user_web']['link'] ? "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n" : ""),
                 '{%li_print%}'           => "<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n",
