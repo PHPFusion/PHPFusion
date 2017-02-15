@@ -134,7 +134,7 @@ function display_news_submissions_form(array $info = array()) {
     $theme->setParam('footer', FALSE);
     $theme->setParam('copyright', FALSE);
 
-    return ThemePack\PHPFusion\Templates\Submissions::display_news_submissions_form($info);
+    return ThemePack\Nebula\Templates\Submissions::display_news_submissions_form($info);
 }
 
 /*
