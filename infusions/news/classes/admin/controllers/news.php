@@ -754,14 +754,11 @@ class NewsAdmin extends NewsAdminModel {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
         $news_query = "SELECT n.*, nc.*,
-        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',
-        count(c.comment_id) 'comments_count', count(ni.news_image_id) 'image_count',
+        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',        
         u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_NEWS." n
-        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
-        LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=n.news_id AND c.comment_type='N'
-        LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=n.news_id
-        LEFT JOIN ".DB_USERS." u on u.user_id=n.news_name
+        INNER JOIN ".DB_USERS." u on u.user_id=n.news_name
+        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat               
         WHERE news_language=:language $sql_condition
         GROUP BY n.news_id
         ORDER BY n.news_draft DESC, n.news_sticky DESC, n.news_datestamp DESC
@@ -771,6 +768,24 @@ class NewsAdmin extends NewsAdminModel {
         $result2 = dbquery($news_query, $sql_params);
         $news_rows = dbrows($result2);
 
+        $image_rows = array();
+        $image_result = dbquery("SELECT news_id, count(news_image_id) 'image_count' FROM ".DB_NEWS_IMAGES." GROUP BY news_id ORDER BY news_id ASC");
+        if (dbrows($image_result)) {
+            while ($imgData = dbarray($image_result)) {
+                $image_rows[$imgData['news_id']] = $imgData['image_count'];
+            }
+        }
+
+        $comment_rows = array();
+        $comment_result = dbquery("SELECT comment_item_id, count(comment_id) 'comment_count' FROM ".DB_COMMENTS." WHERE comment_type=:comment_type GROUP BY comment_item_id ORDER BY comment_item_id ASC", [':comment_type' => 'N']);
+        if (dbrows($comment_result)) {
+            while ($comData = dbarray($comment_result)) {
+                $comment_rows[$comData['comment_item_id']] = $comData['comment_count'];
+            }
+        }
+
+        
+        
         ?>
         <div class="m-t-15">
             <?php
@@ -951,6 +966,7 @@ class NewsAdmin extends NewsAdminModel {
             <?php if (dbrows($result2) > 0) :
                 while ($data = dbarray($result2)) : ?>
                     <?php
+
                     $edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'];
                     $cat_edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
                     ?>
@@ -975,8 +991,8 @@ class NewsAdmin extends NewsAdminModel {
                         <td>
                             <span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
                         </td>
-                        <td><?php echo format_word($data['comments_count'], self::$locale['fmt_comment']) ?></td>
-                        <td><?php echo format_word($data['image_count'], self::$locale['fmt_photo']) ?></td>
+                        <td><?php echo format_word(isset($comment_rows[$data['news_id']]) ? $comment_rows[$data['news_id']] : 0, self::$locale['fmt_comment']) ?></td>
+                        <td><?php echo format_word(isset($image_rows[$data['news_id']]) ? $image_rows[$data['news_id']] : 0, self::$locale['fmt_photo']) ?></td>
                         <td>
                             <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'],
                                     $data['user_status']) ?></div>
