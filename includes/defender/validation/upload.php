@@ -233,17 +233,17 @@ class Upload extends \Defender\Validation {
                             $image_res = @getimagesize($image['tmp_name'][$i]);
                         }
                         $image_info = array(
-                            "image" => FALSE,
-                            "image_name" => $image_name.$image_ext,
-                            "image_ext" => $image_ext,
-                            "image_size" => $image['size'],
-                            "image_width" => $image_res[0],
-                            "image_height" => $image_res[1],
-                            "thumb1" => FALSE,
-                            "thumb1_name" => "",
-                            "thumb2" => FALSE,
-                            "thumb2_name" => "",
-                            "error" => 0,
+                            "image"        => FALSE,
+                            "image_name"   => $image_name.$image_ext,
+                            "image_ext"    => $image_ext,
+                            "image_size"   => $image['size'],
+                            "image_width"  => !empty($image_res[0]) ? $image_res[0] : '',
+                            "image_height" => !empty($image_res[1]) ? $image_res[1] : '',
+                            "thumb1"       => FALSE,
+                            "thumb1_name"  => "",
+                            "thumb2"       => FALSE,
+                            "thumb2_name"  => "",
+                            "error"        => 0,
                         );
                         if ($image_ext == ".gif") {
                             $filetype = 1;
