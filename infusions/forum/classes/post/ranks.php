@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Viewthread.php
+| Filename: ranks.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,9 +21,4 @@ namespace PHPFusion\Forums\Post;
 use PHPFusion\Forums\ForumServer;
 
 class ForumRanks extends ForumServer {
-
-
-
-
-
 }

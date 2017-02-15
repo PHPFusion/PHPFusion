@@ -122,6 +122,21 @@ function render_news($info) {
     ThemePack\Nebula\Templates\News::render_news($info);
 }
 
+function display_news_submissions_form(array $info = array()) {
+    \PHPFusion\OutputHandler::addToHead("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/submit.css' type='text/css' media='screen' />");
+    \PHPFusion\Panels::getInstance()->hide_panel('LEFT');
+    \PHPFusion\Panels::getInstance()->hide_panel('RIGHT');
+    $theme = \ThemeFactory\Core::getInstance();
+    $theme->setParam('body_class', 'fullform');
+    $theme->setParam('body_container', FALSE);
+    $theme->setParam('left', FALSE);
+    $theme->setParam('right', FALSE);
+    $theme->setParam('footer', FALSE);
+    $theme->setParam('copyright', FALSE);
+
+    return ThemePack\PHPFusion\Templates\Submissions::display_news_submissions_form($info);
+}
+
 /*
 function render_comments($c_data, $c_info, $index = 0) {
     ThemePack\Nebula\Templates\Comment::getInstance()->display_comment($c_data, $c_info, $index);

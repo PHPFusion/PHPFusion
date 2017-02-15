@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['news']['title'];
 $inf_description = $locale['news']['description'];
-$inf_version = "1.11";
+$inf_version = "1.12";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -59,8 +59,9 @@ $inf_newtable[1] = DB_NEWS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[2] = DB_NEWS_IMAGES." (
-    news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_image_id MEDIUMINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    news_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    submit_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
     news_image VARCHAR(100) NOT NULL DEFAULT '',
     news_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
     news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',

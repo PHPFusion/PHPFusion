@@ -35,9 +35,9 @@ if (!function_exists('display_main_news')) {
         $cookie_expiry = time() + 7 * 24 * 3600;
         if (empty($_COOKIE['fusion_news_view'])) {
             setcookie("fusion_news_view", 1, $cookie_expiry);
-        } elseif (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
-            setcookie("fusion_news_view", intval($_POST['switchview'] == 2 ? 2 : 1), $cookie_expiry);
-            redirect(FUSION_REQUEST);
+        } elseif (isset($_GET['switchview']) && isnum($_GET['switchview'])) {
+            setcookie("fusion_news_view", intval($_GET['switchview'] == 2 ? 2 : 1), $cookie_expiry);
+            redirect(INFUSIONS.'news/news.php');
         }
 
         opentable($locale['news_0004']);
@@ -56,7 +56,6 @@ if (!function_exists('display_main_news')) {
                     $carousel_active = $res == 0 ? 'active' : '';
                     $res++;
                     $carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$i' class='".$carousel_active."'></li>\n";
-
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
                     $carousel_item .= "<img class='img-responsive' style='position:absolute; width:100%;' src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>\n";
                     $carousel_item .= "
@@ -140,26 +139,12 @@ if (!function_exists('display_main_news')) {
 
         echo "<div class='row m-b-20 m-t-20'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-        echo openform('viewform', 'post', FUSION_REQUEST, array(
-            'max_tokens' => 1,
-            'class' => 'pull-right display-inline-block m-l-10'
-        ));
-        echo "<div class='btn-group'>\n";
 
         $active = isset($_COOKIE['fusion_news_view']) && isnum($_COOKIE['fusion_news_view']) && $_COOKIE['fusion_news_view'] == 2 ? 2 : 1;
-
-        echo form_button('switchview', '', '1', array(
-            'class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
-            'icon' => 'fa fa-th-large',
-            'alt' => $locale['news_0014']
-        ));
-        echo form_button('switchview', '', '2', array(
-            'class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",
-            'icon' => 'fa fa-bars',
-            'alt' => $locale['news_0015']
-        ));
+        echo "<div class='btn-group pull-right display-inline-block m-l-10'>\n";
+        echo "<a class='btn btn-default snv".($active == 1 ? ' active ' : '')."' href='".INFUSIONS."news/news.php?switchview=1'><i class='fa fa-th-large'></i>".$locale['news_0014']."</a>";
+        echo "<a class='btn btn-default snv".($active == 2 ? ' active ' : '')."' href='".INFUSIONS."news/news.php?switchview=2'><i class='fa fa-bars'></i>".$locale['news_0015']."</a>";
         echo "</div>\n";
-        echo closeform();
 
         // Filters
         echo "<div class='display-inline-block'>\n";

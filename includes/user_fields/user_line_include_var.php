@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: ebay_bbcode_include_var.php
-| Author: Wooya
+| Filename: user_line_include_var.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,7 +18,15 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$__BBCODE__[] = array(
-    "description" => $locale['bb_ebay_description'], "value" => "ebay", "bbcode_start" => "[ebay]",
-    "bbcode_end" => "[/ebay]", "usage" => "[ebay]".$locale['bb_ebay_usage']."[/ebay]"
-);
+
+// Version of the user fields api
+$user_field_api_version = "1.01.00";
+$user_field_name = $locale['uf_line'];
+$user_field_desc = $locale['uf_line_desc'];
+$user_field_dbname = "user_line";
+$user_field_group = 1;
+$user_field_dbinfo = "VARCHAR(16) NOT NULL DEFAULT ''";
+$user_field_default = '';
+$user_field_options = '';
+$user_field_error = '';
+$user_field_config = '';

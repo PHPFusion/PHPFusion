@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Forum.php
+| Filename: server.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -164,31 +164,30 @@ abstract class ForumServer {
         if (!$forum_id or !isnum($forum_id)) {
             if ($thread_id && isnum($thread_id)) {
                 $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
+                $list[] = $forum_id;
+                if ($ancestor = get_all_parent($forum_index, $forum_id)) {
+                    $list = $list + $ancestor;
+                }
+                $list_sql = implode(',', $list);
+                $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
+                $result = dbquery($query);
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        if ($user_id) {
+                            $user = fusion_get_user($user_id);
+                            $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                        } else {
+                            $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                        }
+                        if ($this->forum_access === FALSE) {
+                            break;
+                        }
+                    }
+                }
             } else {
                 throw new \Exception('There are no forum ID or thread id defined. Please define either one.');
             }
         }
-        $list[] = $forum_id;
-        if ($ancestor = get_all_parent($forum_index, $forum_id)) {
-            $list = $list + $ancestor;
-        }
-        $list_sql = implode(',', $list);
-        $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
-        $result = dbquery($query);
-        if (dbrows($result)) {
-            while ($data = dbarray($result)) {
-                if ($user_id) {
-                    $user = fusion_get_user($user_id);
-                    $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
-                } else {
-                    $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
-                }
-                if ($this->forum_access === FALSE) {
-                    break;
-                }
-            }
-        }
-
         return (bool)$this->forum_access;
     }
 

@@ -1754,8 +1754,8 @@ function user_pm_settings($user_id, $key = NULL) {
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
-    if (file_exists("_install.php")) {
-        redirect("_install.php");
+    if (file_exists("install.php")) {
+        redirect("install.php");
     } else {
         die("No config.php or install.php files were found");
     }

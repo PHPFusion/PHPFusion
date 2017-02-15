@@ -1,5 +1,5 @@
 @import url(../../includes/fonts/Lato/font.css);
-
+@import url(../templates/global/default_home/default_home.css);
 a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
     background: transparent;
     border: 0 none;
@@ -9,7 +9,6 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
     outline: 0;
     vertical-align: top;
 }
-
 h5 {
     margin: 20px 0;
     font-weight: 600;
@@ -325,12 +324,19 @@ input[type=text]:focus {
     background-color: rgba(255, 255, 255, 0.4);
 }
 
-.avatar-row {
+/*
+User Info Panel CSS
+ */
+.uip_avatar {
     float: left;
     display: inline;
     width: auto !important;
     margin-right: 10px;
     margin-bottom: 20px;
+}
+
+.uip_username {
+    margin: 10px 0;
 }
 
 .header-nav {

@@ -15,22 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-
+if (!defined("IN_FUSION")) die("Access Denied");
+require_once dirname(__FILE__).'/templates/default.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
-
 $modules = array(
-    'n' => array($locale['UM090'], DB_NEWS),
-    'b' => array($locale['UM095'], DB_BLOG),
-    'l' => array($locale['UM091'], DB_WEBLINKS),
-    'a' => array($locale['UM092'], DB_ARTICLES),
-    'p' => array($locale['UM093'], DB_PHOTO_ALBUMS),
-    'd' => array($locale['UM094'], DB_DOWNLOADS),
-    'q' => array($locale['UM102'], DB_FAQS)
+    'n' => array($locale['UM090'], DB_PREFIX.'news'),
+    'b' => array($locale['UM095'], DB_PREFIX.'blog'),
+    'l' => array($locale['UM091'], DB_PREFIX.'weblinks'),
+    'a' => array($locale['UM092'], DB_PREFIX.'articles'),
+    'p' => array($locale['UM093'], DB_PREFIX.'photos'),
+    'd' => array($locale['UM094'], DB_PREFIX.'downloads'),
+    'q' => array($locale['UM102'], DB_PREFIX.'faqs')
 );
 $installedModules = array();
 foreach ($modules as $k => $v) {
@@ -39,136 +36,161 @@ foreach ($modules as $k => $v) {
     }
 }
 if (iMEMBER) {
-    if (isset($_GET['aid'])) {
-        opensidex($locale['UM096'].$userdata['user_name'], "off");
-    } else {
-        openside($locale['UM096'].$userdata['user_name']);
-    }
+
     $messages_count = dbquery("SELECT
 	SUM(message_folder=0) AS inbox_count,
 	SUM(message_folder=1) AS outbox_count,
 	SUM(message_folder=2) AS archive_count,
 	SUM(message_read=0 AND message_folder=0) AS unread_count
 	FROM ".DB_MESSAGES."
-	WHERE message_to=:user_id", array(':user_id'=> $userdata['user_id']));
+	WHERE message_to=:user_id", array(':user_id' => $userdata['user_id']));
 
     $messages_count = dbarray($messages_count);
     $inbox_count = (int)$messages_count['inbox_count'];
     $outbox_count = (int)$messages_count['outbox_count'];
     $archive_count = (int)$messages_count['archive_count'];
     $msg_count = (int)$messages_count['unread_count'];
+    $forum_exists = db_exists(DB_PREFIX.'forums') ? TRUE : FALSE;
 
-    echo "<div class='clearfix'>\n";
-    echo "<div class='avatar-row text-center'>\n";
-    echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px', '', FALSE, 'img-rounded')."</div>\n";
-    echo "</div>\n";
-    echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\n";
-    echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
-    echo "</div>\n";
-    echo "<ul class='user-info-bar block'>\n";
-    echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment' style='font-size: 30px;'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
-    echo "</ul>\n";
-
+    $pm_progress = '';
     if (!iSUPERADMIN) {
         $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
         $inbox_percent = $inbox_cfg > 1 ? number_format(($inbox_count / $inbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        echo progress_bar($inbox_percent, $locale['UM098'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+        $pm_progress = progress_bar($inbox_percent, $locale['UM098'],
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
 
         $outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
         $outbox_percent = $outbox_cfg > 1 ? number_format(($outbox_count / $outbox_cfg) * 99, 0) : number_format(0 * 99, 0);
-        echo progress_bar($outbox_percent, $locale['UM099'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+        $pm_progress .= progress_bar($outbox_percent, $locale['UM099'],
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
 
         $archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
         $archive_percent = $archive_cfg > 1 ? number_format(($archive_count / $archive_cfg) * 99, 0) : number_format(0 * 99, 0);
-        echo progress_bar($archive_percent, $locale['UM100'],
-                          FALSE, // class
-                          FALSE,  // height
-                          FALSE,  // reverse
-                          TRUE,  // as percent
+        $pm_progress .= progress_bar($archive_percent, $locale['UM100'],
+            FALSE, // class
+            FALSE,  // height
+            FALSE,  // reverse
+            TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
     }
 
-    echo "<div id='navigation-user'>\n";
-    echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
-    echo "<hr class='side-hr'>\n";
-    echo "<ul class='block'>\n";
-    echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']." <i class='pull-right entypo suitcase'></i></a></li>\n";
-    echo "<li><a class='side' href='".BASEDIR."messages.php'>".$locale['UM081']." <i class='pull-right entypo mail'></i></a></li>\n";
-    if (db_exists(DB_FORUM_THREADS)) {
-        echo "<li><a class='side' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['UM088']." <i class='pull-right entypo eye'></i></a></li>\n";
-    }
-    echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
-    echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
-    if ($installedModules) {
-	echo "<a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'>".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a>";
-        echo "<li><ul id='collapse' class='panel-collapse collapse'>\n";
-        foreach ($installedModules as $stype => $text) {
-            echo "<li><a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a></li>\n";
+    $submissions_link_arr = [];
+    $submissions_link = '';
+    if (!empty($installedModules)) {
+        foreach ($installedModules as $stype => $title) {
+            $submissions_link_arr[] = [
+                'link'  => BASEDIR.'submit.php?stype='.$stype,
+                'title' => $title,
+            ];
         }
-        echo "</ul></li>\n";
     }
-    echo "</ul>\n";
-    echo "</div>\n";
-    echo "<div class='m-t-20'>\n";
-    echo "<a class='btn btn-block btn-primary' href='".BASEDIR."index.php?logout=yes'>".$locale['UM084']."</a>\n";
-    echo "</div>\n";
-    if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-        closesidex();
-    } else {
-        closeside();
-    }
+
+    $info = [
+            'forum_exists'         => $forum_exists,
+            'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
+            'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
+            'user_level'           => $userdata['user_level'],
+            'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : 0,
+            'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
+            'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
+            'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
+            'submissions'          => $submissions_link_arr,
+        ] + $userdata;
+
+    ob_start();
+    display_user_info_panel($info);
+    echo strtr(ob_get_clean(), [
+        '{%openside%}'             => open_side($locale['UM096'].$userdata['user_name']),
+        '{%closeside%}'            => close_side(),
+        '{%user_avatar%}'          => $info['user_avatar'],
+        '{%user_name%}'            => $info['user_name'],
+        '{%user_level%}'           => getuserlevel($info['user_level']),
+        '{%user_reputation_icon%}' => $info['user_reputation_icon'],
+        '{%user_reputation%}'      => $info['user_reputation'],
+        '{%user_pm_notice%}'       => ($msg_count ? "<a href='".$info['user_pm_link']."' title='".$info['user_pm_title']."'><i class='fa fa-envelope-o'></i> $msg_count</a>" : ''),
+        '{%user_pm_progressbar%}'  => $pm_progress,
+        '{%user_nav_title%}'       => $locale['UM097'],
+        '{%edit_profile_link%}'    => BASEDIR."edit_profile.php",
+        '{%edit_profile_title%}'   => $locale['UM080'],
+        '{%pm_link%}'              => BASEDIR."messages.php",
+        '{%pm_title%}'             => $locale['UM081'],
+        '{%track_link%}'           => $forum_exists ? INFUSIONS."forum_threads_list_panel/my_tracked_threads.php" : '',
+        '{%track_title%}'          => $forum_exists ? $locale['UM088'] : '',
+        '{%member_link%}'          => BASEDIR."members.php",
+        '{%member_title%}'         => $locale['UM082'],
+        '{%acp_link%}'             => (iADMIN ? ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0" : ''),
+        '{%acp_title%}'            => (iADMIN ? $locale['UM083'] : ''),
+        '{%logout_link%}'          => BASEDIR."index.php?logout=yes",
+        '{%logout_title%}'         => $locale['UM084'],
+    ]);
+
 } else {
     if (!preg_match('/login.php/i', FUSION_SELF)) {
+
         $action_url = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         if (isset($_GET['redirect']) && strstr($_GET['redirect'], "/")) {
             $action_url = cleanurl(urldecode($_GET['redirect']));
         }
-        openside($locale['global_100']);
-        echo "<div class='m-t-10'>\n";
-        echo openform('loginform', 'post', $action_url);
         switch (fusion_get_settings("login_method")) {
-            case "2" :
+            case 2 :
                 $placeholder = $locale['global_101c'];
                 break;
-            case "1" :
+            case 1 :
                 $placeholder = $locale['global_101b'];
                 break;
             default:
                 $placeholder = $locale['global_101a'];
         }
-        echo form_text('user_name', $locale['global_101'], '', array(
-            'placeholder' => $placeholder,
-            'required' => 1
 
-        ));
-        echo form_text('user_pass', $locale['global_102'], '', array(
-            'placeholder' => $locale['global_102'],
-            'type' => 'password',
-            'required' => 1
-        ));
-        echo "<label><input type='checkbox' name='remember_me' value='y' title='".$locale['global_103']."'/> ".$locale['global_103']."</label>\n";
-        echo form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary'));
-        echo closeform();
-        if (fusion_get_settings('enable_registration')) {
-            echo str_replace(array(
-                                 "[LINK]", "[/LINK]"
-                             ), array("<a href='".BASEDIR."register.php'>", "</a>"), $locale['global_105'])."
-                                 <br /><br />\n";
-        }
-        echo str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."lostpassword.php'>", "</a>"), $locale['global_106'])."\n</div>\n";
-        closeside();
+        $info = [
+            'title'                => $locale['global_100'],
+            'open_side'            => open_side($locale['global_100']),
+            'close_side'           => close_side(),
+            'login_openform'       => openform('loginform', 'post', $action_url),
+            'login_closeform'      => closeform(),
+            'login_name_field'     => form_text('user_name', $locale['global_101'], '', array(
+                'placeholder' => $placeholder,
+                'required'    => 1
+            )),
+            'login_pass_field'     => form_text('user_pass', $locale['global_102'], '', array(
+                'placeholder' => $locale['global_102'],
+                'type'        => 'password',
+                'required'    => 1
+            )),
+            'login_remember_field' => form_checkbox('remember_me', $locale['global_103'], '', ['value' => 'y']),
+            'login_submit'         => form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary')),
+            'registration_'        => (fusion_get_settings('enable_registration') ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>", '[/LINK]' => "</a>\n"]) : ''),
+            'lostpassword_'        => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."register.php'>".BASEDIR."lostpassword.php", '[/LINK]' => "</a>"])
+        ];
+
+        ob_start();
+
+        echo $info['login_openform'];
+        display_user_info_panel($info);
+        echo $info['login_closeform'];
+
+        echo strtr(ob_get_clean(),
+            [
+                '{%openside%}'             => $info['open_side'],
+                '{%closeside%}'            => $info['close_side'],
+                '{%login_name_field%}'     => $info['login_name_field'],
+                '{%login_pass_field%}'     => $info['login_pass_field'],
+                '{%login_remember_field%}' => $info['login_remember_field'],
+                '{%login_submit%}'         => $info['login_submit'],
+                '{%registration_%}'        => $info['registration_'],
+                '{%lostpassword_%}'        => $info['lostpassword_'],
+            ]
+        );
     }
 }

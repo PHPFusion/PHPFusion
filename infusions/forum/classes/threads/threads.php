@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: threads.php
+| Filename: threads/threads.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -285,6 +285,7 @@ class ForumThreads extends ForumServer {
         $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 
         $this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
+
         if (!empty($this->thread_data) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
 
             // get post_count, lastpost_id, first_post_id.
@@ -460,7 +461,7 @@ class ForumThreads extends ForumServer {
                 'quick_reply_form'     => $qr_form,
                 'thread_bounty'        => $bounty_display,
                 'poll_form'            => $poll_form,
-                'post-filters'         => '',
+                'post-filters'         => array(),
                 'mod_options'          => [],
                 'form_action'          => '',
                 'open_post_form'       => '',

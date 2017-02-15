@@ -5,7 +5,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: defender.inc.php
+| Filename: defender.inc
 | Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
 | Version : 9.0.5 (please update every commit)
@@ -311,47 +311,43 @@ class defender {
                 }
 
             } else {
-
-                // Make sure that the input was actually defined in code..
-                // AND there must be a value to worth the processing power expense!
+                // Make sure that the input was actually defined in code.. AND there must be a value to worth the processing power expense!
                 if (isset($_SESSION['form_fields'][self::pageHash()][$input_name])) {
                     $this->field_config = $_SESSION['form_fields'][self::pageHash()][$input_name];
                     $this->field_name = $input_name;
                     $this->field_value = $value;
                     $this->field_default = $default;
-                    // These two checks won't be neccesary after we add the options in all inputs
-                    // NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
-                    // everything is checked and sanitized already. The callback should only check
-                    // if certain conditions are met then return TRUE|FALSE and not do any alterations
-                    // the the value itself
+                    /*
+                     * These two checks won't be neccesary after we add the options in all inputs
+                     * NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
+                     * everything is checked and sanitized already. The callback should only check
+                     * if certain conditions are met then return TRUE|FALSE and not do any alterations
+                     * the the value itself
+                     */
                     $callback = isset($this->field_config['callback_check']) ? $this->field_config['callback_check'] : FALSE;
                     $regex = isset($this->field_config['regex']) ? $this->field_config['regex'] : FALSE;
                     $secured = $this->validate();
                     // If truly FALSE the check failed
                     if ($secured === FALSE || ($this->field_config['required'] == 1 && ($secured === FALSE || $secured == '')) ||
-                        ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i',
-                                $secured)) || // regex will fail for an imploded array, maybe move this check
+                        ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
-                        // Flag that something went wrong
                         $this->stop();
-                        $this->setInputError($input_name);
-
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            global $locale;
-                            addNotice("danger", sprintf($locale['regex_error'], $this->field_config['title']));
+                            $this->stop();
+                            addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
+                        } else {
+                            $this->setInputError($input_name);
                         }
                         // Add a notice
                         if (self::$debug) {
                             addNotice('warning',
                                 '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
-
                         // Return user's input for correction
                         return $this->field_value;
-
                     } else {
                         if (self::$debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));

@@ -20,13 +20,14 @@ require_once INCLUDES."infusions_include.php";
 spl_autoload_register(function ($className) {
 
     $autoload_register_paths = array(
-        "PHPFusion\\News\\NewsServer" => NEWS_CLASS."/server.php",
-        "PHPFusion\\News\\NewsView" => NEWS_CLASS."/news/news_view.php",
-        "PHPFusion\\News\\News" => NEWS_CLASS."/news/news.php",
-        "PHPFusion\\News\\NewsAdminView" => NEWS_CLASS."/admin/news_admin_view.php",
-        "PHPFusion\\News\\NewsAdminModel" => NEWS_CLASS."/admin/news_admin_model.php",
-        "PHPFusion\\News\\NewsCategoryAdmin" => NEWS_CLASS."/admin/controllers/news_cat.php",
-        "PHPFusion\\News\\NewsSettingsAdmin" => NEWS_CLASS."/admin/controllers/news_settings.php",
+        "PHPFusion\\News\\NewsServer"           => NEWS_CLASS."/server.php",
+        "PHPFusion\\News\\NewsView"             => NEWS_CLASS."/news/news_view.php",
+        "PHPFusion\\News\\News_Preview"         => NEWS_CLASS."/admin/controllers/news_preview.php",
+        "PHPFusion\\News\\News"                 => NEWS_CLASS."/news/news.php",
+        "PHPFusion\\News\\NewsAdminView"        => NEWS_CLASS."/admin/news_admin_view.php",
+        "PHPFusion\\News\\NewsAdminModel"       => NEWS_CLASS."/admin/news_admin_model.php",
+        "PHPFusion\\News\\NewsCategoryAdmin"    => NEWS_CLASS."/admin/controllers/news_cat.php",
+        "PHPFusion\\News\\NewsSettingsAdmin"    => NEWS_CLASS."/admin/controllers/news_settings.php",
         "PHPFusion\\News\\NewsSubmissionsAdmin" => NEWS_CLASS."/admin/controllers/news_submissions.php",
         "PHPFusion\\News\\NewsAdmin" => NEWS_CLASS."/admin/controllers/news.php",
         "PHPFusion\\OpenGraphNews" => NEWS_CLASS."/news/OpenGraphNews.php"

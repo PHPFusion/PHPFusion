@@ -159,20 +159,24 @@ class MainFrame extends Core {
 				});
 			");
 		endif;
+        echo "<section class='nebulaBody".($this->getParam('body_class') ? " ".$this->getParam('body_class') : "")."'>\n";
+
         if ($this->getParam('body_container') == TRUE) :
-			echo "<section class='nebulaBody'>\n";
             echo "<div class='container'>\n";
         endif;
-		echo "<div class='row'>\n";
+
+        echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
 		echo CONTENT;
 		echo "</div>\n";
+
         if ($this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
 			echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
 			echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
 			echo "</div>\n";
 		endif;
-		echo "</div>\n";
+
+        echo "</div>\n";
         if ($this->getParam('body_container') === TRUE) :
             echo "</div>\n";
 			echo "</section>\n";

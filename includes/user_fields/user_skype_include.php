@@ -18,18 +18,22 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 // Display user field input
+$icon = "<img src='".IMAGES."user_fields/im/skype.png'>";
 if ($profile_method == 'input') {
-    $options += array(
-        'inline'     => TRUE,
-        'max_length' => 32,
-        // TODO: Also accept MS accounts which are email addresses
-        'regex'      => '[a-z.0-9]{5,31}',
-        // TODO: Change the error text in case a value was entered but is not valid
-        'error_text' => $locale['uf_skype_error']
-    );
+    $options = array(
+            'inline'           => TRUE,
+            'max_length'       => 32,
+            // TODO: Also accept MS accounts which are email addresses
+            'regex'            => '[a-z.0-9]{5,31}',
+            'regex_error_text' => $locale['uf_skype_error_1'],
+            'error_text'       => $locale['uf_skype_error'],
+            'placeholder'      => $locale['uf_skype_id'],
+            'label_icon'       => $icon,
+        ) + $options;
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 // Display user field input
 } elseif ($profile_method == 'display') {
-    $user_fields = array('title' => $locale['uf_skype'], 'value' => $field_value ?: "");
+    $user_fields = array('title' => $icon.$locale['uf_skype'], 'value' => $field_value ?: "");
 }

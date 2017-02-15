@@ -46,3 +46,7 @@ Morphs Mobile Icons
     position: absolute;
     z-index: 1;
 }
+
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    z-index: 0;
+}

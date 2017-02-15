@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: notify.inc.php
+| Filename: notify.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -81,7 +81,9 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
             foreach ($key as $thiskey) {
                 if (isset($keys[$thiskey])) {
                     $notices = array_merge_recursive($notices, $keys[$thiskey]);
-                    if ($delete) $_SESSION['notices'][$type][$thiskey] = array();
+                    if (!fusion_get_settings('site_seo') && !defined('IN_PERMALINK')) {
+                        if ($delete) $_SESSION['notices'][$type][$thiskey] = array();
+                    }
                 }
             }
         }

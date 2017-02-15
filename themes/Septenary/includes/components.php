@@ -22,6 +22,7 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion;
+use PHPFusion\Rewrite\Router;
 
 /**
  * Class SeptenaryComponents
@@ -183,8 +184,7 @@ class SeptenaryComponents {
      * Septenary Header
      */
     public function displayHeader() {
-        global $aidlink;
-
+        $aidlink = fusion_get_aidlink();
         $userdata = fusion_get_userdata();
         $locale = self::$locale;
 
@@ -302,7 +302,14 @@ class SeptenaryComponents {
             echo self::$custom_header_html;
 
         } else {
-            if ($settings['opening_page'] == preg_replace('/^\//', '', FUSION_REQUEST)) {
+
+            $file_path = str_replace(ltrim(fusion_get_settings('site_path'),'/'), '', preg_replace('/^\//', '', FUSION_REQUEST));
+            if ($settings['site_seo'] && defined('IN_PERMALINK')) {
+                require_once CLASSES.'PHPFusion/Rewrite/Router.inc';
+                $file_path = Router::getRouterInstance()->getCurrentURL();
+            }
+
+            if ($settings['opening_page'] == $file_path) {
                 echo "<div class='text-center logo'>\n";
                 if ($settings['sitebanner']) {
                     echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
@@ -313,17 +320,17 @@ class SeptenaryComponents {
                 echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
                 //echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
                 $modules = array(
-                    DB_NEWS => db_exists(DB_NEWS),
-                    DB_PHOTO_ALBUMS => db_exists(DB_PHOTO_ALBUMS),
-                    DB_FORUMS => db_exists(DB_FORUMS),
-                    DB_DOWNLOADS => db_exists(DB_DOWNLOADS)
+                    DB_PREFIX.'news' => db_exists(DB_PREFIX.'news'),
+                    DB_PREFIX.'photos' => db_exists(DB_PREFIX.'photos'),
+                    DB_PREFIX.'forums' => db_exists(DB_PREFIX.'forums'),
+                    DB_PREFIX.'downloads' => db_exists(DB_PREFIX.'downloads')
                 );
                 $sum = array_sum($modules);
                 if ($sum) {
                     $size = 12 / $sum;
                     $sizeClasses = 'col-sm-'.$size.' col-md-'.$size.' col-lg-'.$size;
                     echo "<div class='section-2-row row'>\n";
-                    if ($modules[DB_NEWS]) {
+                    if ($modules[DB_PREFIX.'news']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."news/news.php'>\n";
                         echo "<i class='fa fa-newspaper-o fa-2x'></i>\n";
@@ -331,7 +338,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_PHOTO_ALBUMS]) {
+                    if ($modules[DB_PREFIX.'photos']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."gallery/gallery.php'>\n";
                         echo "<i class='fa fa-camera-retro fa-2x'></i>\n";
@@ -339,7 +346,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_FORUMS]) {
+                    if ($modules[DB_PREFIX.'forums']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."forum/index.php'>\n";
                         echo "<i class='fa fa-comments fa-2x'></i>\n";
@@ -347,7 +354,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_DOWNLOADS]) {
+                    if ($modules[DB_PREFIX.'downloads']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."downloads/downloads.php'>\n";
                         echo "<i class='fa fa-download fa-2x'></i>\n";

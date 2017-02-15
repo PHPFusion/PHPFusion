@@ -76,7 +76,7 @@ class PHP_Highlight {
      * @param   bool $inline If inline styles rather than colors are to be used
      * @param   bool $plaintext Do not format code outside PHP tags
      */
-    function PHP_Highlight($inline = FALSE) {
+    function __construct($inline = FALSE) {
         // Inline
         if ($inline === FALSE) {
             // Default colours from php.ini

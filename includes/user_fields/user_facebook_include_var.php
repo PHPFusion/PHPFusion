@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_facebook_include.php
+| Filename: user_facebook_include_var.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -25,7 +25,7 @@ $user_field_name = $locale['uf_facebook'];
 $user_field_desc = $locale['uf_facebook_desc'];
 $user_field_dbname = "user_facebook";
 $user_field_group = 3;
-$user_field_dbinfo = "VARCHAR(100) NOT NULL DEFAULT ''";
+$user_field_dbinfo = "VARCHAR(20) NOT NULL DEFAULT ''";
 $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';

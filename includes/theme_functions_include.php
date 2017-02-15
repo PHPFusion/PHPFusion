@@ -48,7 +48,34 @@ function showrendertime($queries = TRUE) {
         }
 
         $res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
-        $res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
+        $res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : '');
+
+        /*
+         * Turn this on if you want to see all the SQL.
+         * This debugging is for core engineers only. No need for translations.
+         */
+        $sql_log = FALSE;
+        if ($sql_log) {
+            $query_log = $db->getQueryLog();
+            $modal = openmodal('querylogsModal', 'SQL Run Time Analysis');
+            $modal_body = '';
+            $i = 0;
+            if (!empty($query_log)) {
+                foreach ($query_log as $connectionID => $sql) {
+                    $modal_body .= "<div class='spacer-xs'>\n";
+                    $modal_body .= "<h5>SQL#$i : ".$sql[0]." seconds</h5>\n\r";
+                    $modal_body .= "[code]".trim($sql[1]).trim($sql[2])."[/code]\n\r";
+                    $modal_body .= "<div>\n";
+                    $modal_body .= "<kbd>".$sql[3][2]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][2]['line'].", ".$sql[3][2]['function']."</span>\n\r";
+                    $modal_body .= "</div>\n";
+                    $modal_body .= "</div>\n";
+                    $i++;
+                }
+            }
+            $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
+            $modal .= closemodal();
+            add_to_footer($modal);
+        }
 
         return $res;
     } else {

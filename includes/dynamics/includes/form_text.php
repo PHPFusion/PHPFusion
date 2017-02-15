@@ -53,28 +53,31 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
-        'type' => 'text',
-        'required' => FALSE,
-        'safemode' => FALSE,
-        'regex' => '',
-        'callback_check' => FALSE,
-        'input_id' => $input_name,
-        'placeholder' => '',
-        'deactivate' => FALSE,
-        'width' => '',
-        'inner_width' => '',
-        'class' => '',
-        'inner_class' => '',
-        'inline' => FALSE,
-        'min_length' => 1,
-        'max_length' => 200,
-        'number_min' => 0,
-        'number_max' => 0,
-        'number_step' => 1,
-        'icon' => '',
+        'type'             => 'text',
+        'required'         => FALSE,
+        'label_icon'       => '',
+        'feedback_icon'    => '',
+        'safemode'         => FALSE,
+        'regex'            => '',
+        'regex_error_text' => '',
+        'callback_check'   => FALSE,
+        'input_id'         => $input_name,
+        'placeholder'      => '',
+        'deactivate'       => FALSE,
+        'width'            => '',
+        'inner_width'      => '',
+        'class'            => '',
+        'inner_class'      => '',
+        'inline'           => FALSE,
+        'min_length'       => 1,
+        'max_length'       => 200,
+        'number_min'       => 0,
+        'number_max'       => 0,
+        'number_step'      => 1,
+        'icon'             => '',
         'autocomplete_off' => FALSE,
-        'tip' => '',
-        'ext_tip' => '',
+        'tip'              => '',
+        'ext_tip'          => '',
         'append_button' => '',
         'append_value' => '',
         'append_form_value' => '',
@@ -132,11 +135,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addNotice("danger", $options['error_text']);
         }
     }
 
@@ -151,7 +154,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
         PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
-
         PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
             jQuery(document).ready(function() {
                 var options = {};
@@ -166,24 +168,19 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ').'</script>');
     }
 
+
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
-
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
     $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group ".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
 
     if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
-
         $html .= "<span class='input-group-btn'>\n";
         $html .= "<button id='".$options['input_id']."-prepend-btn' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
-
     } elseif ($options['prepend_value']) {
-
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
-
     }
 
     // min, max, step
@@ -223,7 +220,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
-    $html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : "";
+    $html .= ($options['feedback_icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : '';
 
     $html .= $options['stacked'];
 
@@ -231,7 +228,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
-    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
@@ -259,6 +256,31 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
 		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
 		});\n");
+    }
+
+    // Live Regex Error Check
+    if ($options['regex'] && $options['regex_error_text']) {
+
+        add_to_jquery("
+        $('#".$options['input_id']."').blur(function(ev) {
+            var Inner_Object = $(this).parent('div').find('.label-danger');
+            var Outer_Object = $(this).parent('div').find('.input-error');            
+            if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
+                var ErrorText = '".$options['regex_error_text']."';
+                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';                        
+                if (Inner_Object.length > 0) {
+                    object.html(ErrorText);                
+                } else {
+                    $(this).after(function() {
+                        return ErrorDOM;
+                    });
+                }
+            } else {
+               Outer_Object.remove();
+            }
+        });
+        ");
+
     }
 
     return $html;

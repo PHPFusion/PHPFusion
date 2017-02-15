@@ -19,10 +19,8 @@ require_once "maincore.php";
 if (!iMEMBER) {
     redirect("index.php");
 }
-
 require_once THEMES."templates/header.php";
 include_once INCLUDES."infusions_include.php";
-
 $modules = array(
     'n' => db_exists(DB_NEWS),
     'p' => db_exists(DB_PHOTO_ALBUMS),
@@ -32,7 +30,6 @@ $modules = array(
     'b' => db_exists(DB_BLOG),
     'q' => db_exists(DB_FAQS)
 );
-
 $submit_types = array(
     'n' => array('link' => INFUSIONS."news/news_submit.php"),
     'p' => array('link' => INFUSIONS."gallery/photo_submit.php"),
@@ -42,15 +39,11 @@ $submit_types = array(
     'b' => array('link' => INFUSIONS."blog/blog_submit.php"),
     'q' => array('link' => INFUSIONS."faq/faq_submit.php"),
 );
-
-
 $_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) && isset($submit_types[$_GET['stype']]) ? $_GET['stype'] : "";
-
 $sum = array_sum($modules);
-
 if ($sum && $_GET['stype']) {
    require_once $submit_types[$_GET['stype']]['link'];
 } else {
-    redirect("index.php");
+    redirect('index.php');
 }
 require_once THEMES."templates/footer.php";

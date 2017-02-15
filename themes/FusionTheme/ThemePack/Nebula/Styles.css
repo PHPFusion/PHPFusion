@@ -47,7 +47,6 @@ a:hover, a:focus {
 ul > li {
     list-style: none;
 }
-
 .headerBg {
     background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
     background-size: cover;
@@ -288,6 +287,11 @@ header h1 {
 }
 .nebulaBody {
     padding: 3% 0;
+}
+
+.control-label > img {
+    margin-right: 5px;
+    width: 24px;
 }
 
 /******************
@@ -928,4 +932,12 @@ Editor Navs
     background-image: none;
     border-color: #b5b5b5;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/***********************
+bbcode input
+ */
+.bbcode_input > div > input[type=image] {
+    width: 18px;
+    margin-right: 5px;
 }

@@ -1,0 +1,143 @@
+.fullform {
+    background: #fff;
+    padding: 0;
+}
+
+.fullform input[type=text] {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    font-size: 32px;
+    padding: 0;
+}
+
+.fullform textarea {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    padding: 0 !important;
+    font-size: 17px;
+    margin-top: 50px !important;
+}
+
+.fullform #submit_header .panel-body {
+    background: #1e2327;
+    border: 0;
+    overflow: visible;
+}
+
+.fullform #submit_header {
+    border: 0;
+    margin-bottom: 0;
+}
+
+.fullform #submit_header h3 {
+    color: #fff;
+    font-weight: 300;
+}
+
+.fullform #toolbar {
+    margin-bottom: 5px;
+}
+
+.fullform #toolbar.affix {
+    top: 148px;
+    z-index: 5;
+    width: 100%;
+}
+
+.fullform #submit_header.affix {
+    top: 83px;
+    z-index: 5;
+    width: 100%;
+}
+
+.fullform #toolbar > .panel-body {
+    overflow: visible;
+}
+
+.fullform .submit_imageWrapper {
+    padding: 30px;
+    background-color: #F3F6F8;
+}
+
+.fullform .submit_body {
+    padding: 30px;
+    min-height: 60vh;
+}
+
+.fullform button.btn-default {
+    border: 0;
+    font-size: 14px;
+}
+
+.fullform .submit_attr {
+    margin: 0;
+    position: fixed;
+    z-index: 3;
+    bottom: 0;
+    width: 100%;
+}
+
+.fullform .submit_attr > .panel-group {
+    margin: 0;
+}
+
+.fullform .panel-group span {
+    text-align: center;
+    display: block !important;
+    text-decoration: none;
+}
+
+.fullform .panel-group span > a {
+    text-decoration: none;
+    color: #444;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.fullform .tool {
+    height: 30px;
+}
+
+.fullform .panel-group > .panel > .panel-heading span > a:before {
+    content: '\f107';
+    font-family: FontAwesome;
+    display: inline-block;
+    padding-top: 5px;
+    font-size: 30px;
+    position: absolute;
+    text-align: center;
+    width: 65px;
+    margin-top: -50px;
+    background-color: #E4E4E4;
+    background-image: -moz-linear-gradient(top, #F7F7F7, #E4E4E4);
+    background-image: -webkit-linear-gradient(top, #F7F7F7, #E4E4E4);
+    background-image: linear, to bottom, #F7F7F7, #E4E4E4;
+    background-repeat: repeat-x;
+    height: 40px;
+    transform: translateX(-50%);
+    left: 50%;
+    border-radius: 6px 6px 0 0;
+}
+
+.fullform .panel-group > .panel > .panel-heading span > a.collapsed:before {
+    content: '\f106';
+    font-family: FontAwesome;
+}
+
+.fullform .panel-group > .panel > .panel-heading {
+    font-size: 22px;
+    line-height: 32px;
+    display: block;
+    border-radius: 4px 4px 0 0;
+    background-color: #B8B8B8;
+    background-image: -moz-linear-gradient(top, #E4E4E4, #B8B8B8);
+    background-image: -webkit-linear-gradient(top, #E4E4E4, #B8B8B8);
+    background-image: linear, to bottom, #E4E4E4, #B8B8B8;
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFE4E4E4', endColorstr='#FFB8B8B8', GradientType=0);
+    border-bottom: 1px solid #999999;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+    color: #484848;
+}

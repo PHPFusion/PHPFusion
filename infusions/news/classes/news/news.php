@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: news/classes/news/news.php
 | Author: PHP-Fusion Development Team
+| Version: 1.12
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,7 +23,7 @@ use PHPFusion\SiteLinks;
 
 abstract class News extends NewsServer {
 
-    private static $locale = array();
+    protected static $locale = array();
     public $info = array();
 
     protected function __construct() {
@@ -67,7 +68,7 @@ abstract class News extends NewsServer {
      * Outputs core filters variables
      * @return array
      */
-    private function get_NewsFilter() {
+    protected static function get_NewsFilter() {
         $array['allowed_filters'] = array(
             'recent' => self::$locale['news_0011'],
             'comment' => self::$locale['news_0012'],
@@ -86,7 +87,7 @@ abstract class News extends NewsServer {
      * Outputs category variables
      * @return mixed
      */
-    protected function get_NewsCategory() {
+    protected static function get_NewsCategory() {
         /* News Category */
         $array['news_categories'][0] = array(
             'link' => INFUSIONS."news/news.php?cat_id=0",
@@ -95,10 +96,10 @@ abstract class News extends NewsServer {
         $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS."
         ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
         if (dbrows($result) > 0) {
-            while ($cdata = dbarray($result)) {
-                $array['news_categories'][$cdata['news_cat_id']] = array(
-                    'link' => INFUSIONS.'news/news.php?cat_id='.$cdata['news_cat_id'],
-                    'name' => $cdata['news_cat_name']
+            while ($data = dbarray($result)) {
+                $array['news_categories'][$data['news_cat_id']] = array(
+                    'link' => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
+                    'name' => $data['news_cat_name']
                 );
             }
         }
@@ -180,7 +181,7 @@ abstract class News extends NewsServer {
      * most recent news
      * most rated
      */
-    private static function check_NewsFilter() {
+    protected static function check_NewsFilter() {
 
         /* Filter Construct */
         $filter = array('recent', 'comment', 'rating');
@@ -248,7 +249,7 @@ abstract class News extends NewsServer {
      * @param array $data - dbarray of newsQuery()
      * @return array
      */
-    private static function get_NewsData(array $data) {
+    protected static function get_NewsData(array $data) {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
@@ -262,11 +263,10 @@ abstract class News extends NewsServer {
 
             $imageSource = IMAGES_N."news_default.jpg";
             $imageRaw = '';
-            if ($data['news_cat_image']) {
+            if (!empty($data['news_cat_image'])) {
                 $imageSource = get_image("nc_".$data['news_cat_name']);
                 $imageRaw = $imageSource;
             }
-
             if (!$news_settings['news_image_frontpage']) {
                 if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
                     $imageSource = IMAGES_N.$data['news_image'];
@@ -356,25 +356,21 @@ abstract class News extends NewsServer {
                 "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                 "news_cat_image" => $news_cat_image,
                 "news_image" => $news_image, // image with news link enclosed
-                'news_image_src' => $imageRaw, // raw full image
-                "news_image_optimized" => $imageSource, // optimized image
-                "news_ext" => $data['news_extended'] ? "y" : "n",
-                "news_reads" => $data['news_reads'],
-                "news_comments" => $data['count_comment'],
-                'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-                'news_count_votes' => $data['count_votes'],
-                "news_allow_comments" => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'],
-                                                                                           INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments",
-                                                                                           '', 2) : '',
-
-                "news_allow_ratings" => $data['news_allow_ratings'],
-                "news_display_ratings" => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
-
-                'news_pagenav' => $news_pagenav,
-                'news_admin_actions' => $admin_actions,
-                "news_sticky" => $data['news_sticky'],
-                "print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
+                'news_image_src'        => $imageRaw, // raw full image
+                "news_image_optimized"  => $imageSource, // optimized image
+                "news_ext"              => $data['news_extended'] ? "y" : "n",
+                "news_reads"            => $data['news_reads'],
+                "news_comments"         => $data['count_comment'],
+                'news_sum_rating'       => $data['sum_rating'] ? $data['sum_rating'] : 0,
+                'news_count_votes'      => $data['count_votes'],
+                "news_allow_comments"   => $data['news_allow_comments'],
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 2) : '',
+                "news_allow_ratings"    => $data['news_allow_ratings'],
+                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
+                'news_pagenav'          => $news_pagenav,
+                'news_admin_actions'    => $admin_actions,
+                "news_sticky"           => $data['news_sticky'],
+                "print_link"            => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
             );
             $info += $data;
 
@@ -431,7 +427,7 @@ abstract class News extends NewsServer {
             $info['news_cat_id'] = $data['news_cat_id'];
             $info['news_cat_name'] = $data['news_cat_name'];
             $info['news_cat_image_src'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : "";
-            $info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" : "<img class='img-responsive' src='holder.js/80x80/text:".$locale['no_image']."/grey' />";
+            $info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" : "<img class='img-responsive' src='holder.js/80x80/text:".self::$locale['no_image']."/grey' />";
             $info['news_cat_language'] = $data['news_cat_language'];
 
             $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND
@@ -551,7 +547,6 @@ abstract class News extends NewsServer {
     public function set_NewsItemInfo($news_id) {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
-        $settings = fusion_get_settings();
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
@@ -608,8 +603,8 @@ abstract class News extends NewsServer {
 
             $newsData = self::get_NewsData($data);
 
-            $newsData['news_show_ratings'] = self::get_NewsRatings($data);
-            $newsData['news_show_comments'] = self::get_NewsComments($data);
+            $newsData['news_show_ratings'] = self::get_NewsRatings($data, $data['news_id']);
+            $newsData['news_show_comments'] = self::get_NewsComments($data, $data['news_id']);
             $newsData['news_gallery'] = self::get_NewsGalleryData($data);
 
             $info['news_item'] = $newsData;
@@ -622,12 +617,12 @@ abstract class News extends NewsServer {
 
     }
 
-    private static function get_NewsRatings($data) {
+    protected static function get_NewsRatings($data, $item_id) {
         $html = '';
         if (fusion_get_settings('ratings_enabled') && $data['news_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("N", $_GET['readmore'], FUSION_SELF."?readmore=".$_GET['readmore']);
+            showratings("N", $item_id, FUSION_SELF."?readmore=".$item_id);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -635,12 +630,12 @@ abstract class News extends NewsServer {
         return (string)$html;
     }
 
-    private static function get_NewsComments($data) {
+    protected static function get_NewsComments($data, $item_id) {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['news_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], FUSION_SELF."?readmore=".$data['news_id'], $data['news_allow_ratings']);
+            showcomments("N", DB_NEWS, "news_id", $item_id, FUSION_SELF."?readmore=".$item_id, $data['news_allow_ratings']);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -648,7 +643,7 @@ abstract class News extends NewsServer {
         return (string)$html;
     }
 
-    private static function get_NewsGalleryData($data) {
+    protected static function get_NewsGalleryData($data) {
         $row = array();
         $result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_id='".$data['news_id']."'");
         if (dbrows($result) > 0) {

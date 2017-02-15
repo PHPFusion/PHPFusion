@@ -1,5 +1,6 @@
 .panel.panel-home {
     border: 0;
+    -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
 }
 
 .panel.panel-home > .panel-heading {
@@ -12,7 +13,10 @@
     -moz-border-radius: 0;
     border-radius: 0;
 }
-
+img, figure img {
+    width: 100%;
+    height: auto;
+}
 .panel.panel-home > figure {
     display: block;
     overflow: hidden;
