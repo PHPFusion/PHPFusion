@@ -65,6 +65,7 @@ class News_Preview extends News {
 
     public static function get_PreviewInfo() {
         $data = $_GET;
+
         if (empty($data)) {
             die();
         } else {

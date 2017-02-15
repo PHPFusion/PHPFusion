@@ -56,6 +56,7 @@ class NewsAdmin extends NewsAdminModel {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
+
         $this->default_news_data['news_name'] = fusion_get_userdata('user_id');
         $this->news_data['news_breaks'] = (fusion_get_settings("tinymce_enabled") ? 'n' : 'y');
         $this->news_data += $this->default_news_data;
@@ -64,7 +65,7 @@ class NewsAdmin extends NewsAdminModel {
 
     private function execute_NewsUpdate() {
 
-        if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
+        if ((isset($_POST['save'])) or (isset($_POST['save_and_close'])) or (isset($_POST['preview']))) {
 
             $news_news = '';
             if ($_POST['news_news']) {
@@ -104,10 +105,6 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             if (\defender::safe()) {
-                // reset other sticky
-                if ($this->news_data['news_sticky'] == 1) {
-                    dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
-                }
 
                 if ($this->news_data['news_id']) {
 
@@ -147,22 +144,47 @@ class NewsAdmin extends NewsAdminModel {
                     }
                 }
 
-                if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
-                    dbquery_insert(DB_NEWS, $this->news_data, 'update');
+                if (isset($_POST['preview'])) {
 
-                    addNotice('success', self::$locale['news_0101']);
+                    $preview = new News_Preview();
+                    $preview->set_PreviewData($this->news_data);
+                    $preview->display_preview();
+
+                    if (isset($this->news_data['news_id'])) {
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update');
+                    }
+
                 } else {
-                    $this->data['news_name'] = fusion_get_userdata('user_id');
-                    $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
+                    // reset other sticky
+                    if ($this->news_data['news_sticky'] == 1) {
+                        dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
+                    }
 
-                    addNotice('success', self::$locale['news_0100']);
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update');
+
+                        addNotice('success', self::$locale['news_0101']);
+                    } else {
+                        $this->data['news_name'] = fusion_get_userdata('user_id');
+                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
+
+                        addNotice('success', self::$locale['news_0100']);
+                    }
+
+                    if (isset($_POST['save_and_close'])) {
+                        redirect(clean_request("", array('ref', 'action', 'news_id'), FALSE));
+                    } else {
+                        redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', array('ref'), FALSE));
+                    }
+
                 }
 
-                if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request("", array('ref', 'action', 'news_id'), FALSE));
-                } else {
-                    redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', array('ref'), FALSE));
-                }
+
+
+
+
+
+
             }
         }
     }
@@ -402,6 +424,7 @@ class NewsAdmin extends NewsAdminModel {
      */
     private function display_newsButtons($unique_id) {
         echo "<div class='m-t-20'>\n";
+        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
             array('class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times'));
         echo form_button('save', self::$locale['news_0241'], self::$locale['news_0241'],
