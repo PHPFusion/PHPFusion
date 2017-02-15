@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 // Display user field input
-$icon = "<img src='".IMAGES."user_fields/im/skype.png'>";
+$icon = "<img src='".IMAGES."user_fields/social/skype.svg'>";
 if ($profile_method == 'input') {
     $options = array(
             'inline'           => TRUE,
