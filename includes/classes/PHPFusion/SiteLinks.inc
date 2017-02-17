@@ -382,6 +382,7 @@ class SiteLinks {
                     $more_index = 9 * 10000000;
                     $base_data = $callback_data[0];
                     $data[$more_index] = array_slice($base_data, self::getMenuParam('links_per_page'), 9, TRUE);
+
                     $data[0] = array_slice($base_data, 0, self::getMenuParam('links_per_page'), TRUE);
                     $more[$more_index] = array(
                         "link_id"         => $more_index,
@@ -395,7 +396,8 @@ class SiteLinks {
                         "link_order"      => self::getMenuParam('links_per_page'),
                         "link_language"   => LANGUAGE
                     );
-                    $data[0] += $more;
+                    $data[0] = $data[0] + $more;
+                    $data = $data + $callback_data;
                     self::replaceMenuParam('callback_data', $data);
                 }
             }
@@ -404,6 +406,7 @@ class SiteLinks {
 
     public function showSubLinks($id = 0) {
         $locale = self::getMenuParam('locale');
+        $res = '';
         if (empty($id)) {
             self::setLinks();
             $res = "<div id='".self::getMenuParam('id')."' class='navbar ".self::getMenuParam('navbar_class')."' role='navigation'>\n";
@@ -564,8 +567,7 @@ class SiteLinks {
     private function showMenuLinks($id, $data) {
 
         $res = &$res;
-
-        if (!empty($data)) {
+        if (!empty($data[$id])) {
             $i = 0;
 
             $default_link_data = array(
@@ -582,7 +584,6 @@ class SiteLinks {
             );
 
             foreach ($data[$id] as $link_id => $link_data) {
-
                 $li_class = [];
                 $link_data += $default_link_data;
 
@@ -729,7 +730,6 @@ class SiteLinks {
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
-
                     if ($has_child) {
                         $res .= "\n<ul id='menu-".$link_data['link_id']."'".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
@@ -740,7 +740,6 @@ class SiteLinks {
                             $res .= ($itemlink ? "\n</a>\n" : '');
                             $res .= "</li>\n";
                         }
-
                         $res .= $this->showMenuLinks($link_data['link_id'], $data);
                         $res .= "</ul>\n";
                     }

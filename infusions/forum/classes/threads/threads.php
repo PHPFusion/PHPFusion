@@ -994,7 +994,7 @@ class ForumThreads extends ForumServer {
                 }
 
                 // Website
-                if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
+                if (isset($pdata['user_web']) && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
                     $user_web_url = !preg_match("@^http(s)?\:\/\/@i", $pdata['user_web']) ? "http://".$pdata['user_web'] : $pdata['user_web'];
                     $pdata['user_web'] = array(
                         'link'  => $user_web_url,
