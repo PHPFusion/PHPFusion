@@ -455,12 +455,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
         <table class="table table-responsive table-striped">
             <thead>
             <tr>
-                <td class="strong col-xs-4"><?php echo $this->locale['WLS_0100'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0101'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0102'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0103'] ?></td>
-                <td class="strong"><?php echo $this->locale['language'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0104'] ?></td>
+                <th></th>
+                <th class="strong"><?php echo $this->locale['WLS_0100'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0103'] ?></th>
+                <th class="strong"><?php echo $this->locale['language'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0104'] ?></th>
             </tr>
             </thead>
             <tbody>

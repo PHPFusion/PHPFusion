@@ -38,7 +38,7 @@ $locale['WLS_0061'] = "Submission successfully deleted";
 $locale['WLS_0062'] = "There are no new Submissions.";
 
 // Table - Web Link
-$locale['WLS_0100'] = "Subject";
+$locale['WLS_0100'] = "Name";
 $locale['WLS_0101'] = "Category";
 $locale['WLS_0102'] = "Status";
 $locale['WLS_0103'] = "Visibility";
@@ -72,6 +72,7 @@ $locale['WLS_0150'] = "Name";
 $locale['WLS_0151'] = "Web Link";
 $locale['WLS_0152'] = "Status";
 $locale['WLS_0153'] = "Visibility";
+$locale['WLS_0154'] = "Actions";
 
 // Table - Web Link - Misc
 $locale['WLS_0160'] = "Add Category";
