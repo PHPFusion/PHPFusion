@@ -22,19 +22,20 @@ class Core {
      * readme.md
      */
     private static $options = array(
-        'header'             => TRUE, // has header
-        'header_content'     => '', // content in the header
-        'headerBg'           => TRUE, // use header_background
-        'headerBg_class'     => '', // use custom header background class
-        'subheader_content'  => '',
+        'header'              => TRUE, // has header
+        'header_content'      => '', // content in the header
+        'headerBg'            => TRUE, // use header_background
+        'headerBg_class'      => '', // use custom header background class
+        'subheader_content'   => '',
         'subheader_container' => TRUE,
-        'body_class'         => '', // set body section class
-        'body_container'     => TRUE, // whether is a container or full grid
-        'breadcrumbs'        => FALSE, // show breadcrumbs
-        'right'              => TRUE, // RIGHT
-        'left'               => TRUE, // LEFT
-        'left_pre_content'   => '',
-        'left_post_content'  => '',
+        'subheader_class'     => '', // sets the class to the subheader
+        'body_class'          => '', // set body section class
+        'body_container'      => TRUE, // whether is a container or full grid
+        'breadcrumbs'         => FALSE, // show breadcrumbs
+        'right'               => TRUE, // RIGHT
+        'left'                => TRUE, // LEFT
+        'left_pre_content'    => '',
+        'left_post_content'   => '',
 
         'user_1'           => TRUE,
         'user_1_content'   => '',
