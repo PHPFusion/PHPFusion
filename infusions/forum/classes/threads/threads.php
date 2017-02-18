@@ -268,8 +268,10 @@ class ForumThreads extends ForumServer {
      */
     public function set_threadInfo() {
 
-        // Sanitize forum_id, thread_id, parent_id
-        if ((!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) || (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) || (isset($_GET['parent_id']) && !isnum($_GET['parent_id']))) {
+        if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id'])) {
+            redirect(FORUM.'index.php');
+        }
+        if (!isset($_GET['forum_id']) or !isnum($_GET['forum_id'])) {
             redirect(FORUM.'index.php');
         }
 
