@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use PHPFusion\Rewrite\Router;
+
 class Panels {
     const PANEL_LEFT = 1;
     const PANEL_U_CENTER = 2;
@@ -105,18 +107,18 @@ class Panels {
     public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
 
         self::$panels_cache[$panel_side][] = [
-            'panel_id' => str_replace(" ", "_", $panel_name).'-'.$panel_side,
-            'panel_content' => $panel_content,
-            'panel_side' => $panel_side,
-            'panel_filename' => '',
-            'panel_type' => 'custom',
-            'panel_access' => $panel_access,
-            'panel_status' => 1,
-            'panel_display' => 1,
-            'panel_url_list' => '',
+            'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
+            'panel_content'     => $panel_content,
+            'panel_side'        => $panel_side,
+            'panel_filename'    => '',
+            'panel_type'        => 'custom',
+            'panel_access'      => $panel_access,
+            'panel_status'      => 1,
+            'panel_display'     => 1,
+            'panel_url_list'    => '',
             'panel_restriction' => 3,
-            'panel_languages' => implode('.', fusion_get_enabled_languages()),
-            'panel_order' => $panel_order,
+            'panel_languages'   => implode('.', fusion_get_enabled_languages()),
+            'panel_order'       => $panel_order,
         ];
     }
 
@@ -145,6 +147,7 @@ class Panels {
                     }
                     $html = ob_get_contents();
                     ob_end_clean();
+
                     return $html;
                 }
             }
@@ -387,7 +390,13 @@ class Panels {
         }
 
         if (is_array($exclude_list)) {
-            $script_url = explode("/", $_SERVER['PHP_SELF']);
+            if (fusion_get_settings('site_seo')) {
+                $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $script_url = explode("/", $file_path);
+            } else {
+                $script_url = explode("/", FUSION_REQUEST);
+            }
             $url_count = count($script_url);
             $base_url_count = substr_count(BASEDIR, "/") + 1;
             $match_url = "";
@@ -396,8 +405,7 @@ class Panels {
                 $match_url .= "/".$script_url[$current];
                 $base_url_count--;
             }
-            // exclude list is an array
-            // current url.
+
             return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
         } else {
             return TRUE;
