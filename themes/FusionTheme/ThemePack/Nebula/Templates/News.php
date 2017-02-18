@@ -59,6 +59,8 @@ class News extends Core {
             foreach ($info['news_items'] as $news_id => $data) {
                 self::render_news($data);
             }
+        } else {
+            echo "<div class='well text-center'>".fusion_get_locale('news_0005')."</div>\n";
         }
 
         // Send categories to the right panel
