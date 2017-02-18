@@ -30,6 +30,7 @@ define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setSubmitType('n', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setSubmitLink('n', INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 
 if (!defined("NEWS_LOCALE")) {

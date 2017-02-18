@@ -52,7 +52,9 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $infusions_count, $global_infusions;
+    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
+        $global_ratings, $global_submissions, $link_type, $submit_type, $submit_link,
+        $comments_type, $infusions_count, $global_infusions;
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $settings = fusion_get_settings();
@@ -312,31 +314,7 @@ function render_dashboard() {
                 openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
                 if (count($global_submissions['data']) > 0) {
                     foreach ($global_submissions['data'] as $i => $submit_data) {
-                        switch ($submit_data['submit_type']) {
-                            case "n":
-                                $review_link = INFUSIONS."news/news_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "a":
-                                $review_link = INFUSIONS."articles/articles_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "p":
-                                $review_link = INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "b":
-                                $review_link = INFUSIONS."blog/blog_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "d":
-                                $review_link = INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "l":
-                                $review_link = INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "q":
-                                $review_link = INFUSIONS."faq/faq_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            default:
-                                $review_link = "";
-                        }
+                        $review_link = sprintf($submit_link[$submit_data['submit_type']], $submit_data['submit_id']);
                         echo "<!--Start Submissions Item-->\n";
                         echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
                         echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";

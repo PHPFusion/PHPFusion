@@ -27,5 +27,6 @@ define("DB_PHOTOS", DB_PREFIX."photos");
 \PHPFusion\Admins::getInstance()->setCommentType('P', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setCommentType('PH', fusion_get_locale('261', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setSubmitType('p', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setSubmitLink('p', INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('PH', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");

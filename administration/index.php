@@ -89,8 +89,10 @@ $comments_type = array(
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
 
 $submit_type = array();
-
 $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
+
+$submit_link = array();
+$submit_link += \PHPFusion\Admins::getInstance()->getSubmitLink();
 
 $link_type = array(
     'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
