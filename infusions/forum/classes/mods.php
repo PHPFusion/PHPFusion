@@ -221,7 +221,8 @@ class Moderator {
      * Modal pop up confirmation of thread being `removed`
      */
     private function mod_delete_thread() {
-        global $locale;
+        $locale = fusion_get_locale();
+
         if (iMOD) {
             ob_start();
             echo openmodal('deletethread', $locale['forum_0700'], array('class' => 'modal-center'));
@@ -251,7 +252,7 @@ class Moderator {
                     echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
                     echo "<a href='index.php'>".$locale['forum_0703']."</a><br /><br />\n";
                 } else {
-                    echo "Unable to remove thread because thread does not exist";
+                    echo $locale['forum_0705'];
                 }
             }
             echo "</div>\n";

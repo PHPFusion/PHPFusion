@@ -65,7 +65,6 @@ class ForumAdminSettings extends ForumAdminInterface {
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='numofthreads' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$threads_num' WHERE settings_name='threads_per_page' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$posts_num' WHERE settings_name='posts_per_page'  AND settings_inf='forum'");
-                //".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ips' WHERE settings_name='forum_ips' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='forum_attachmax' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'");
@@ -192,7 +191,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         openside('');
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+        $calc_opts = array(1 => self::$locale['540'], 1000 => self::$locale['541'], 1000000 => self::$locale['542']);
         $calc_c = self::calculate_byte($forum_settings['forum_attachmax']);
         $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
         require_once INCLUDES."mimetypes_include.php";
@@ -289,7 +288,7 @@ class ForumAdminSettings extends ForumAdminInterface {
      * @return int|string
      */
     protected static function calculate_byte($download_max_b) {
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+        $calc_opts = array(1 => self::$locale['540'], 1000 => self::$locale['541'], 1000000 => self::$locale['542']);
         foreach ($calc_opts as $byte => $val) {
             if ($download_max_b / $byte <= 999) {
                 return $byte;

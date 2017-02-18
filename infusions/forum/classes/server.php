@@ -185,7 +185,7 @@ abstract class ForumServer {
                     }
                 }
             } else {
-                throw new \Exception('There are no forum ID or thread id defined. Please define either one.');
+                throw new \Exception(fusion_get_locale('forum_4120'));
             }
         }
         return (bool)$this->forum_access;
