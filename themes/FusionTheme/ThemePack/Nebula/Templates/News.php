@@ -66,7 +66,7 @@ class News extends Core {
         openside(fusion_get_locale('news_0009'));
         ?>
         <ul>
-            <?php foreach ($info['news_categories'] as $category_id => $category) : ?>
+            <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
                 <li class="list-group-item">
                     <a href="<?php echo $category['link'] ?>">
                         <h5 class="text-uppercase m-0 p-t-10 p-b-5">
