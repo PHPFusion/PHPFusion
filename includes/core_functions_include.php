@@ -480,7 +480,7 @@ function trimlink($text, $length) {
 function fusion_first_words($text, $limit, $suffix = '&hellip;') {
     return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])
 				[[:punct:]]\s*
-		))\b(.+)$~isxu', '$1'.$suffix, $text);
+		))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
 }
 
 /**
