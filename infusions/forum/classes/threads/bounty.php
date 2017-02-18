@@ -81,9 +81,9 @@ class Forum_Bounty extends ForumServer {
 
             $bounty_field['openform'] = openform('set_bountyfrm', 'post', FUSION_REQUEST, ['class' => 'spacer-xs']);
             $bounty_field['closeform'] = closeform();
-            $bounty_field['bounty_description'] = form_textarea('bounty_description', 'Bounty Description', $bounty_description, ['type' => 'bbcode']);
-            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', 'Set Bounty', $bounty_points, ['options' => $points]) : '');
-            $bounty_field['bounty_button'] = form_button('save_bounty', 'Start Bounty', 'Start Bounty', ['class' => 'btn-primary']);
+            $bounty_field['bounty_description'] = form_textarea('bounty_description', $locale['forum_2016'], $bounty_description, ['type' => 'bbcode']);
+            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'] , $bounty_points, ['options' => $points]) : '');
+            $bounty_field['bounty_button'] = form_button('save_bounty', $locale['forum_2018'], $locale['forum_2018'], ['class' => 'btn-primary']);
             $info = array(
                 'title'       => $locale['forum_2014'],
                 'description' => $locale['forum_2000'].self::$data['thread_subject'],

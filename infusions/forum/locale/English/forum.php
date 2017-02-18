@@ -381,6 +381,9 @@ $locale['forum_2012'] = 'Edit Poll';
 $locale['forum_2013'] = 'Update Poll';
 $locale['forum_2014'] = 'Set a Bounty';
 $locale['forum_2015'] = 'Point|Points';
+$locale['forum_2016'] = 'Bounty Description';
+$locale['forum_2017'] = 'Set Bounty';
+$locale['forum_2018'] = 'Start Bounty';
 
 /* Filters in viewforum */
 $locale['forum_3000'] = 'All Topics';
