@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Block/block_admin.php
+| Filename: File/file_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 /**
- * Class blockWidgetAdmin
+ * Class fileWidgetAdmin
  */
 class fileWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
