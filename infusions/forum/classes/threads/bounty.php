@@ -46,7 +46,6 @@ class Forum_Bounty extends ForumServer {
             }
             if (isset($_POST['save_bounty'])) {
                 $bounty_description = form_sanitizer($_POST['bounty_description'], '', 'bounty_description');
-                $bounty_points = form_sanitizer($_POST['bounty_points'], $default, 'bounty_points');
                 if (\defender::safe()) {
                     if ($edit) {
                         dbquery('UPDATE '.DB_FORUM_THREADS.' SET thread_bounty_description=:thread_bounty_description WHERE thread_id=:thread_id',
@@ -56,6 +55,7 @@ class Forum_Bounty extends ForumServer {
                             ]
                         );
                     } else {
+                        $bounty_points = form_sanitizer($_POST['bounty_points'], $default, 'bounty_points');
                         $point_bal = fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
