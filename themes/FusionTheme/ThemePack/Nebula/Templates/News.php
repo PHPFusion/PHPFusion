@@ -59,6 +59,8 @@ class News extends Core {
             foreach ($info['news_items'] as $news_id => $data) {
                 self::render_news($data);
             }
+        } else {
+            echo "<div class='well text-center'>".fusion_get_locale('news_0005')."</div>\n";
         }
 
         // Send categories to the right panel
@@ -66,7 +68,7 @@ class News extends Core {
         openside(fusion_get_locale('news_0009'));
         ?>
         <ul>
-            <?php foreach ($info['news_categories'] as $category_id => $category) : ?>
+            <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
                 <li class="list-group-item">
                     <a href="<?php echo $category['link'] ?>">
                         <h5 class="text-uppercase m-0 p-t-10 p-b-5">

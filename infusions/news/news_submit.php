@@ -173,7 +173,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'inline'  => TRUE
                 ]
             ) : ''),
-            'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'],
+            'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'],
                 [
                     'required'  => TRUE,
                     'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',

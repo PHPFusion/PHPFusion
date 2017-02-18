@@ -230,10 +230,6 @@ $locale['forum_0518'] = 'You have downvoted';
 $locale['forum_0519'] = 'You do not have not earned enough privileges to {%action%}. You need to earn at least {%points%}';
 $locale['forum_0529a'] = 'You do not have sufficient permissions to vote';
 
-
-
-
-
 // Post Preview
 $locale['forum_0520'] = 'No Message, Post will be rejected if you do not include a Message';
 $locale['forum_0521'] = 'Posts:';
@@ -342,6 +338,7 @@ $locale['forum_0701'] = 'The Thread has been deleted.';
 $locale['forum_0702'] = 'Return to Forum';
 $locale['forum_0703'] = 'Return to Forum Index';
 $locale['forum_0704'] = 'Are you sure you want to delete this Thread?';
+$locale['forum_0705'] = 'Unable to remove thread because thread does not exist';
 
 // Lock Thread
 $locale['forum_0710'] = 'Lock Thread';
@@ -382,6 +379,11 @@ $locale['forum_2010'] = 'Cast Vote';
 $locale['forum_2011'] = 'Create Poll';
 $locale['forum_2012'] = 'Edit Poll';
 $locale['forum_2013'] = 'Update Poll';
+$locale['forum_2014'] = 'Set a Bounty';
+$locale['forum_2015'] = 'Point|Points';
+$locale['forum_2016'] = 'Bounty Description';
+$locale['forum_2017'] = 'Set Bounty';
+$locale['forum_2018'] = 'Start Bounty';
 
 /* Filters in viewforum */
 $locale['forum_3000'] = 'All Topics';
@@ -442,6 +444,8 @@ $locale['forum_4107'] = 'Award Bounty';
 $locale['forum_4108'] = 'The bounty has been awarded as requested.';
 $locale['forum_4109'] = 'Thread bounty not awarded';
 $locale['forum_4110'] = 'Thread bounty cannot be given to yourself.';
+
+$locale['forum_4120'] = 'There are no forum ID or thread id defined. Please define either one.';
 
 // Notifications
 $locale['error-MP000'] = 'Move posts - error';

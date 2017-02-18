@@ -96,11 +96,10 @@ class Admins {
     private static $locale = '';
     private $comment_type = array();
     private $submit_type = array();
+    private $submit_link = array();
     private $link_type = array();
 
     private function __construct() {}
-
-    // add a setter for icons
 
     /**
      * @return object
@@ -255,6 +254,17 @@ class Admins {
      */
     public function setSubmitType($type, $title) {
         $this->submit_type[$type] = $title;
+    }
+
+    /**
+     * @param $link - admin submission url
+     */
+    public function setSubmitLink($type, $link) {
+        $this->submit_link[$type] = $link;
+    }
+
+    public function getSubmitLink($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
     }
 
     public function getCommentType($type = NULL) {

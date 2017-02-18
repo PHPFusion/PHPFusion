@@ -112,7 +112,7 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
     box-sizing: border-box;
     background: #F2F2F2;
     border-radius: 0;
-    top: 66px;
+    top: 64px;
     box-shadow: none;
     border-radius: 0;
 }
@@ -170,7 +170,7 @@ header .headerContent {
     left: 0;
     top: 0;
     margin: 0 auto;
-    height: 82px;
+    height: 79px;
     z-index: 701;
     background: #fff;
     opacity: .97;
@@ -287,6 +287,7 @@ header h1 {
 }
 .nebulaBody {
     padding: 3% 0;
+    padding-bottom: 0;
 }
 
 .control-label > img {

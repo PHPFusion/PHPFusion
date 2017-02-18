@@ -140,7 +140,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
 
             echo form_select_tree("article_cat", $locale['article_0253'], $criteriaArray['article_cat'], array(
                     "required" => TRUE, "error_text" => $locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $locale['choose'],
-                    "query" => "WHERE article_cat_status='1' AND ".groupaccess("article_cat_visibility").(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_id ASC"
+                    "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                 ),
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );

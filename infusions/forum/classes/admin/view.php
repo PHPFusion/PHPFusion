@@ -886,7 +886,7 @@ class ForumAdminView extends ForumAdminInterface {
             closeside();
 
         } else {
-            openside('Forum Image');
+            openside(self::$locale['forum_028a']);
             echo "<div class='row spacer-xs'>\n";
             echo "<div class='col-xs-12 col-sm-4' style='border-right:1px solid #ddd'>\n";
             echo form_fileinput('forum_image', '', '', [
@@ -1043,66 +1043,11 @@ class ForumAdminView extends ForumAdminInterface {
             "delimiter" => ".",
             "inline"    => TRUE
         ));
-        /*
-        echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_003']."</span><br/>\n";
-        $mod_groups = getusergroups();
-        $mods1_user_id = array();
-        $mods1_user_name = array();
-        while (list($key, $mod_group) = each($mod_groups)) {
-            if ($mod_group['0'] != USER_LEVEL_PUBLIC && $mod_group['0'] != USER_LEVEL_MEMBER && $mod_group['0'] != USER_LEVEL_SUPER_ADMIN) {
-                if (!preg_match("(^{$mod_group['0']}$|^{$mod_group['0']}\.|\.{$mod_group['0']}\.|\.{$mod_group['0']}$)", $data['forum_mods'])) {
-                    $mods1_user_id[] = $mod_group['0'];
-                    $mods1_user_name[] = $mod_group['1'];
-                } else {
-                    $mods2_user_id[] = $mod_group['0'];
-                    $mods2_user_name[] = $mod_group['1'];
-                }
-            }
-        }
-        echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<select multiple='multiple' size='10' name='modlist1' id='modlist1' class='form-control textbox m-r-10' onchange=\"addUser('modlist2','modlist1');\">\n";
-        for ($i = 0; $i < count($mods1_user_id); $i++) {
-            echo "<option value='".$mods1_user_id[$i]."'>".$mods1_user_name[$i]."</option>\n";
-        }
-        echo "</select>\n";
-        echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<select multiple='multiple' size='10' name='modlist2' id='modlist2' class='form-control textbox' onchange=\"addUser('modlist1','modlist2');\">\n";
-        if (isset($mods2_user_id) && is_array($mods2_user_id)) {
-            for ($i = 0; $i < count($mods2_user_id); $i++) {
-                echo "<option value='".$mods2_user_id[$i]."'>".$mods2_user_name[$i]."</option>\n";
-            }
-        }
-        echo "</select>\n";
-        //echo form_text('forum_mods', '', $data['forum_mods']);
 
-        echo "</div>\n</div>\n";
-        */
         closeside();
         echo form_button('save_permission', self::$locale['forum_042'], self::$locale['forum_042'],
             array('class' => 'btn-primary'));
-        /*
-        add_to_jquery(" $('#save').bind('click', function() { saveMods(); }); ");
-        echo "<script type='text/javascript'>\n"."function addUser(toGroup,fromGroup) {\n";
-        echo "var listLength = document.getElementById(toGroup).length;\n";
-        echo "var selItem = document.getElementById(fromGroup).selectedIndex;\n";
-        echo "var selText = document.getElementById(fromGroup).options[selItem].text;\n";
-        echo "var selValue = document.getElementById(fromGroup).options[selItem].value;\n";
-        echo "var i; var newItem = true;\n";
-        echo "for (i = 0; i < listLength; i++) {\n";
-        echo "if (document.getElementById(toGroup).options[i].text == selText) {\n";
-        echo "newItem = false; break;\n}\n}\n"."if (newItem) {\n";
-        echo "document.getElementById(toGroup).options[listLength] = new Option(selText, selValue);\n";
-        echo "document.getElementById(fromGroup).options[selItem] = null;\n}\n}\n";
-        echo "function saveMods() {\n"."var strValues = \"\";\n";
-        echo "var boxLength = document.getElementById('modlist2').length;\n";
-        echo "var count = 0;\n"."	if (boxLength != 0) {\n"."for (i = 0; i < boxLength; i++) {\n";
-        echo "if (count == 0) {\n"."strValues = document.getElementById('modlist2').options[i].value;\n";
-        echo "} else {\n"."strValues = strValues + \".\" + document.getElementById('modlist2').options[i].value;\n";
-        echo "}\n"."count++;\n}\n}\n";
-        echo "if (strValues.length == 0) {\n"."document.forms['inputform'].submit();\n";
-        echo "} else {\n"."document.forms['inputform'].forum_mods.value = strValues;\n";
-        echo "document.forms['inputform'].submit();\n}\n}\n</script>\n";
-        */
+
         closetable();
     }
 

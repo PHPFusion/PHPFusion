@@ -432,13 +432,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 			$('#weblink_cat_status, #weblink_cat_visibility, #weblink_cat_language').bind('change', function(e){
 				$(this).closest('form').submit();
 			});
-
-			// Actionbars
-			$('.actionbar').hide();
-			$('tr').hover(
-				function(e) { $('#ac-'+ $(this).data('id') +'-actions').show(); },
-				function(e) { $('#ac-'+ $(this).data('id') +'-actions').hide(); }
-			);
 		");
 
     }
@@ -456,11 +449,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             <thead>
             <tr>
                 <th></th>
-                <th class="col-xs-4"><?php echo $this->locale['WLS_0150'] ?></th>
+                <th><?php echo $this->locale['WLS_0150'] ?></th>
                 <th><?php echo $this->locale['WLS_0151'] ?></th>
                 <th><?php echo $this->locale['WLS_0152'] ?></th>
 				<th><?php echo $this->locale['WLS_0153'] ?></th>
                 <th><?php echo $this->locale['language'] ?></th>
+                <th><?php echo $this->locale['WLS_0154'] ?></th>
             </tr>
             </thead>
             <tbody>
@@ -472,18 +466,16 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 $delete_link = clean_request("section=weblinks_category&ref=weblink_cat_form&action=delete&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 ?>
                 <tr data-id="<?= $cat_id; ?>">
-                    <td><?php echo form_checkbox("weblink_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-b-0")) ?></td>
-                    <td>
-                        <span class="text-dark"><?php echo str_repeat("--", $level)." ".$cdata['weblink_cat_name']; ?></span>
-						<div class="actionbar text-smaller" id="ac-<?php echo $cat_id; ?>-actions">
-							<a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
-							<a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
-						</div>
-                    </td>
+                    <td><?php echo form_checkbox("weblink_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-0")) ?></td>
+                    <td><?php echo str_repeat("--", $level)." ".$cdata['weblink_cat_name']; ?></span></td>
 					<td><span class="badge"><?php echo format_word($cdata['weblink_count'], $this->locale['fmt_weblink']); ?></span></td>
                     <td><span class="badge"><?php echo ($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublish'] : $this->locale['publish']); ?></span></td>
                     <td><span class="badge"><?php echo getgroupname($cdata['weblink_cat_visibility']); ?></span></td>
                     <td><?php echo translate_lang_names($cdata['weblink_cat_language']) ?></td>
+                    <td>
+                        <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
+                        <a href="<?php echo $delete_link; ?>" title="<?php echo $this->locale['delete']; ?>" onclick="return confirm('<?php echo $this->locale['WLS_0161']; ?>')"><?php echo $this->locale['delete']; ?></a>
+                    </td>
                 </tr>
                 <?php
                 if (isset($data[$cdata['weblink_cat_id']])) {

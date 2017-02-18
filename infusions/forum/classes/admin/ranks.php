@@ -60,7 +60,6 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             switch ($_GET['ref']) {
                 case "rank_form" :
-                    // @todo: improvise rank from ui
                     echo $this->displayRanksForm();
                     break;
                 case "rank_list":
@@ -203,16 +202,6 @@ class ForumAdminRanks extends ForumAdminInterface {
             closeform();
 
         return $html;
-
-        /* echo "<td class='tbl'><strong>".self::$locale['429']."</strong></td>\n";
-        echo "<td class='tbl'>\n";
-        echo "<label><input type='radio' name='rank_type' value='2'".($rank_type == 2 ? " checked='checked'" : "")." /> ".self::$locale['429a']."</label>\n";
-        echo "<label><input type='radio' name='rank_type' value='1'".($rank_type == 1 ? " checked='checked'" : "")." /> ".self::$locale['429b']."</label>\n";
-        echo "<label><input type='radio' name='rank_type' value='0'".($rank_type == 0 ? " checked='checked'" : "")." /> ".self::$locale['429c']."</label>\n";
-        echo "</td>\n";
-        echo "</tr>\n<tr>\n";
-        */
-
     }
 
     protected function post_forum_ranks() {
@@ -316,7 +305,6 @@ class ForumAdminRanks extends ForumAdminInterface {
                 $html .= "<tr>\n".
                 "<td '>".$data['rank_title']."</td>\n".
                 "<td>".($data['rank_apply'] == -104 ? self::$locale['425'] : getgroupname($data['rank_apply']))."</td>\n".
-                //"<td class='col-xs-1'><img src='".RANKS.$data['rank_image']."' alt='' style='border:0;' /></td>\n".
                 "<td class='col-xs-2'>".ForumServer::show_forum_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
                 "<td>";
 
@@ -342,6 +330,4 @@ class ForumAdminRanks extends ForumAdminInterface {
         }
         return $html;
     }
-
-
 }

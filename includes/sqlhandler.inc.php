@@ -638,12 +638,13 @@ function display_parent_nodes($data, $id_col, $cat_col, $id) {
  * @return array
  */
 function fieldgenerator($db) {
-    static $col_names = [];
+    static $col_names = array();
+
     if (empty($col_names[$db])) {
         $cresult = dbquery("SHOW COLUMNS FROM $db");
         $col_names = array();
         while ($cdata = dbarray($cresult)) {
-            $col_names[] = $cdata['Field'];
+            $col_names[$db][] = $cdata['Field'];
         }
     }
 

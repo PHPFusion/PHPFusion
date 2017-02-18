@@ -27,4 +27,5 @@ define("DB_DOWNLOADS", DB_PREFIX."downloads");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setSubmitType('d', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setSubmitLink('d', INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
