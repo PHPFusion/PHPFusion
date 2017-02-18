@@ -19,6 +19,7 @@
 namespace PHPFusion\News;
 
 use PHPFusion\BreadCrumbs;
+use PHPFusion\Feedback\Comments;
 use PHPFusion\SiteLinks;
 
 abstract class News extends NewsServer {
@@ -89,21 +90,23 @@ abstract class News extends NewsServer {
      */
     protected static function get_NewsCategory() {
         /* News Category */
-        $array['news_categories'][0] = array(
+        $array = array();
+        $array['news_categories'][0][0] = array(
             'link' => INFUSIONS."news/news.php?cat_id=0",
             'name' => self::$locale['news_0006']
         );
-        $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS."
+        $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS."
         ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $array['news_categories'][$data['news_cat_id']] = array(
+                $id = $data['news_cat_id'];
+                $parent_id = $data['news_cat_parent'] === NULL ? "NULL" : $data['news_cat_parent'];
+                $array['news_categories'][$parent_id][$id] = array(
                     'link' => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
                     'name' => $data['news_cat_name']
                 );
             }
         }
-
         return $array;
     }
 
@@ -631,13 +634,27 @@ abstract class News extends NewsServer {
     }
 
     protected static function get_NewsComments($data, $item_id) {
-        $html = "";
+        $html = '';
         if (fusion_get_settings('comments_enabled') && $data['news_allow_comments'] == TRUE) {
-            ob_start();
-            require_once INCLUDES."comments_include.php";
-            showcomments("N", DB_NEWS, "news_id", $item_id, FUSION_SELF."?readmore=".$item_id, $data['news_allow_ratings']);
-            $html = ob_get_contents();
-            ob_end_clean();
+
+            $html .= Comments::getInstance(
+                array(
+                    'comment_item_type'   => 'N',
+                    'comment_db'          => DB_NEWS,
+                    'comment_col'         => 'news_id',
+                    'comment_item_id'     => $item_id,
+                    'clink'               => INFUSIONS.'news/news.php?readmore='.$item_id,
+                    'comment_count'       => TRUE,
+                    'comment_allow_reply' => TRUE,
+                    'comment_allow_post'  => TRUE,
+                    'comment_once'        => FALSE,
+                ), 'news_comments'
+            )->showComments();
+
+            //ob_start();
+            //require_once INCLUDES."comments_include.php";
+            //showcomments("N", DB_NEWS, "news_id", $item_id, FUSION_SELF."?readmore=".$item_id, $data['news_allow_ratings']);
+            //return ob_get_clean();
         }
 
         return (string)$html;
