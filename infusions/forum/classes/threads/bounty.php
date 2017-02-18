@@ -85,7 +85,7 @@ class Forum_Bounty extends ForumServer {
             $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', 'Set Bounty', $bounty_points, ['options' => $points]) : '');
             $bounty_field['bounty_button'] = form_button('save_bounty', 'Start Bounty', 'Start Bounty', ['class' => 'btn-primary']);
             $info = array(
-                'title'       => 'Set a Bounty',
+                'title'       => $locale['forum_2014'],
                 'description' => $locale['forum_2000'].self::$data['thread_subject'],
                 'field'       => $bounty_field
             );

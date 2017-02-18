@@ -382,6 +382,7 @@ $locale['forum_2010'] = 'Cast Vote';
 $locale['forum_2011'] = 'Create Poll';
 $locale['forum_2012'] = 'Edit Poll';
 $locale['forum_2013'] = 'Update Poll';
+$locale['forum_2014'] = 'Set a Bounty';
 
 /* Filters in viewforum */
 $locale['forum_3000'] = 'All Topics';
