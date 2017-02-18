@@ -271,12 +271,18 @@ class ForumThreads extends ForumServer {
         if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id'])) {
             redirect(FORUM.'index.php');
         }
-        if (!isset($_GET['forum_id']) or !isnum($_GET['forum_id'])) {
-            redirect(FORUM.'index.php');
-        }
 
         if (isset($_GET['forum_id'])) {
-            if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."' AND thread_id='".$_GET['thread_id']."'")) {
+            if (isnum($_GET['forum_id'])) {
+                if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id=:forum_id AND thread_id=:thread_id",
+                    [
+                        ':forum_id'  => $_GET['forum_id'],
+                        ':thread_id' => $_GET['thread_id']]
+                )
+                ) {
+                    redirect(FORUM.'index.php');
+                }
+            } else {
                 redirect(FORUM.'index.php');
             }
         }
