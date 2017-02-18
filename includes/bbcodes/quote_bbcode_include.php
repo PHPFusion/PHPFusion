@@ -18,6 +18,9 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
+$locale = fusion_get_locale();
+
 $before = "<div class='quote extended'><p class='citation'>";
 $endbefore = "</p><blockquote>";
 $after = "</blockquote></div>";
