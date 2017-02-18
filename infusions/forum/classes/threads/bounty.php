@@ -82,9 +82,7 @@ class Forum_Bounty extends ForumServer {
             $bounty_field['openform'] = openform('set_bountyfrm', 'post', FUSION_REQUEST, ['class' => 'spacer-xs']);
             $bounty_field['closeform'] = closeform();
             $bounty_field['bounty_description'] = form_textarea('bounty_description', 'Bounty Description', $bounty_description, ['type' => 'bbcode']);
-            if (!$edit) {
-                $bounty_field['bounty_select'] = form_select('bounty_points', 'Set Bounty', $bounty_points, ['options' => $points]);
-            }
+            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', 'Set Bounty', $bounty_points, ['options' => $points]) : '');
             $bounty_field['bounty_button'] = form_button('save_bounty', 'Start Bounty', 'Start Bounty', ['class' => 'btn-primary']);
             $info = array(
                 'title'       => 'Set a Bounty',
