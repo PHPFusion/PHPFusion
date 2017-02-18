@@ -61,7 +61,7 @@ if (isset($_GET['action']) && iMEMBER) {
                 // Refetch the query
                 $ajax_respond = \defender::unserialize($_POST['comment_options']);
                 $ajax_respond['comment_custom_script'] = TRUE;
-                PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
+                echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
             }
             exit;
         }
