@@ -153,7 +153,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], array(
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $faq_data['faq_cat_id'], array(
                     'inner_width' => '100%',
                     'inline'      => TRUE,
                     'options'     => $options,
