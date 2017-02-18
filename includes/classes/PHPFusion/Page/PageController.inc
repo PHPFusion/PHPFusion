@@ -68,6 +68,7 @@ class PageController extends PageModel {
         }
         $eval = ob_get_contents();
         ob_end_clean();
+        $htmlArray['pagenav'] = '';
         $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
         $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
         $htmlArray['count'] = count($htmlArray['body']);
@@ -75,10 +76,8 @@ class PageController extends PageModel {
             if ($htmlArray['rowstart'] > $htmlArray['count']) {
                 redirect(BASEDIR."viewpage.php?page_id=".intval($_GET['page_id']));
             }
-            $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1,
-                                                BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
+            $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1, BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
         }
-
         ob_start();
         display_page_content($htmlArray);
         $html = ob_get_contents();
