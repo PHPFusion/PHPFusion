@@ -101,7 +101,7 @@ if (iMEMBER) {
             'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
             'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
             'user_level'           => $userdata['user_level'],
-            'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : 0,
+            'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
             'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
             'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
             'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
