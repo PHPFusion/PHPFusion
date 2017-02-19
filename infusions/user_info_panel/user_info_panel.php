@@ -171,7 +171,7 @@ if (iMEMBER) {
             'login_remember_field' => form_checkbox('remember_me', $locale['global_103'], '', ['value' => 'y']),
             'login_submit'         => form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary')),
             'registration_'        => (fusion_get_settings('enable_registration') ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>", '[/LINK]' => "</a>\n"]) : ''),
-            'lostpassword_'        => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."register.php'>".BASEDIR."lostpassword.php", '[/LINK]' => "</a>"])
+            'lostpassword_'        => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>", '[/LINK]' => "</a>"])
         ];
 
         ob_start();
