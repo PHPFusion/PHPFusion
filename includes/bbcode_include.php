@@ -51,17 +51,16 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
     foreach ($__BBCODE__ as $bbdata) {
         if (file_exists($check_path.$bbdata['value'].".png")) {
             $type = "type='image' src='".$img_path.$bbdata['value'].".png'";
+        } else if (file_exists($check_path.$bbdata['value'].".gif")) {
+            $type = "type='image' src='".$img_path.$bbdata['value'].".gif'";
+        } else if (file_exists($check_path.$bbdata['value'].".jpg")) {
+            $type = "type='image' src='".$img_path.$bbdata['value'].".jpg'";
+        } else if (file_exists($check_path.$bbdata['value'].".svg")) {
+            $type = "type='image' style='width: 24px; height: 24px;' src='".$img_path.$bbdata['value'].".svg'";
         } else {
-            if (file_exists($check_path.$bbdata['value'].".gif")) {
-                $type = "type='image' src='".$img_path.$bbdata['value'].".gif'";
-            } else {
-                if (file_exists($check_path.$bbdata['value'].".jpg")) {
-                    $type = "type='image' src='".$img_path.$bbdata['value'].".jpg'";
-                } else {
-                    $type = "type='button' value='".$bbdata['value']."'";
-                }
-            }
+            $type = "type='button' value='".$bbdata['value']."'";
         }
+
         if (array_key_exists('onclick', $bbdata) && $bbdata['onclick'] != "") {
             $onclick = $bbdata['onclick'];
         } else {
