@@ -30,7 +30,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "articles";
-$inf_image = "articles.png";
+$inf_image = "articles.svg";
 
 // Tables
 $inf_newtable[] = DB_ARTICLES." (
