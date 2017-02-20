@@ -68,7 +68,7 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
 
 // Adminlink
 $inf_adminpanel[] = array(
-    "image" => "articles.png",
+    "image" => $inf_image,
     "page" => 1,
     "rights" => "A",
     "title" => $locale['setup_3002'],
