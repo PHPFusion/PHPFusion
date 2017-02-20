@@ -29,7 +29,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "faq";
-$inf_image = "faq.png";
+$inf_image = "faq.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -92,6 +92,7 @@ if (!empty($enabled_languages)) {
 }
 
 // Defuse cleaning
+$inf_droptable[] = DB_FAQ_CATS;
 $inf_droptable[] = DB_FAQS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FQ'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/faq/faq.php'";
