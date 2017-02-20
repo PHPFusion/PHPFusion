@@ -97,8 +97,9 @@ if (!function_exists('display_user_field')) {
     function display_user_field($info) {
         ?>
         <div id='{%field_id%}' class='row spacer-xs'>
-        <div class='col-xs-12 col-sm-3'><strong>{%field_title%}</strong></div>
+            <label class='col-xs-12 col-sm-3'><strong>{%field_title%}</strong></label>
         <div class='col-xs-12 col-sm-9'><span class='profile_text'>{%field_value%}</span></div>
+        </div>
         <?php
     }
 }
