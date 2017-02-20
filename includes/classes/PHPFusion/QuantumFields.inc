@@ -1937,7 +1937,9 @@ class QuantumFields extends \SqlHandler {
             }
 
             if (\defender::safe()) {
-                $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
+                if (!empty($this->field_data['field_config'])) {
+                    $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
+                }
                 $this->create_fields($this->field_data, 'dynamics'); // will redirect and refresh config
             }
 
