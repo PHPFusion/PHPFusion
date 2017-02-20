@@ -29,7 +29,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "downloads";
-$inf_image = "download.png";
+$inf_image = "download.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
