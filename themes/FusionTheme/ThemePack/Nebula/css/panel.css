@@ -14,7 +14,7 @@
     border-radius: 0;
 }
 img, figure img {
-    width: 100%;
+    width: auto;
     height: auto;
 }
 .panel.panel-home > figure {
