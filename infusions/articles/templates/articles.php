@@ -41,6 +41,8 @@ if (!function_exists("display_main_articles")) {
 
         opentable($locale['article_0000']);
         echo render_breadcrumbs();
+
+        if (is_array($info['article_categories']) && !empty($info['article_categories'])) {
 		?>
 
 		<div class="panel panel-default panel-articles-header">
@@ -72,15 +74,11 @@ if (!function_exists("display_main_articles")) {
 				<hr class="m-t-0 m-b-5">
 				<span class="display-inline-block m-b-10 strong text-smaller text-uppercase"><?php echo $locale['article_0003']; ?></span><br />
 				<?php
-					if (is_array($info['article_categories']) && !empty($info['article_categories'])) {
-						foreach ($info['article_categories'] as $cat_id => $cat_data) {
-							if (!isset($_GET['cat_id']) || $_GET['cat_id'] != $cat_id) {
-								echo "<a href='".INFUSIONS."articles/articles.php?cat_id=".$cat_id."' class='btn btn-sm btn-default m-5'>".$cat_data['name']."</a>";
-							}
-						}
-					} else {
-						echo "<div class='well text-center'>".$locale['article_0060']."</div>";
-					}
+    				foreach ($info['article_categories'] as $cat_id => $cat_data) {
+    					if (!isset($_GET['cat_id']) || $_GET['cat_id'] != $cat_id) {
+    						echo "<a href='".INFUSIONS."articles/articles.php?cat_id=".$cat_id."' class='btn btn-sm btn-default m-5'>".$cat_data['name']."</a>";
+    					}
+    				}
 				?>
 			  </li>
 			</ul>
@@ -141,7 +139,10 @@ if (!function_exists("display_main_articles")) {
         } else { ?>
 			<div class="well text-center"><?php echo (isset($_GET['cat_id']) ? $locale['article_0062'] : $locale['article_0061']); ?></div>
         <?php
-		}
+        }
+        } else {
+            echo "<div class='well text-center'>".$locale['article_0060']."</div>";
+        }
         closetable();
     }
 }
