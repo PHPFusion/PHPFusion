@@ -55,7 +55,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
             "article_cat_name" => "",
             "article_cat_parent" => 0,
             "article_cat_description" => "",
-            "article_cat_status" => 0,
+            "article_cat_status" => 1,
             "article_cat_visibility" => iGUEST,
             "article_cat_language" => LANGUAGE,
             "article_cat_hidden" => ""
