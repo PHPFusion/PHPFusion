@@ -13,10 +13,7 @@
     -moz-border-radius: 0;
     border-radius: 0;
 }
-img, figure img {
-    width: auto;
-    height: auto;
-}
+
 .panel.panel-home > figure {
     display: block;
     overflow: hidden;
