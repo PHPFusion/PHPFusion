@@ -42,7 +42,7 @@ class News_Preview extends News {
             add_to_head("
             <style>
             .modal-dialog.modal-lg.preview {
-            min-width:90%;        
+            min-width:90%;
             }
             .modal-dialog.modal-lg.preview > .modal-content > .modal-body {
             padding: 0;
@@ -71,7 +71,7 @@ class News_Preview extends News {
         } else {
             echo "<script>
             $('body').on('click', 'a', function(e) {
-               e.preventDefault(); 
+               e.preventDefault();
             });
             </script>";
         }
@@ -83,10 +83,14 @@ class News_Preview extends News {
         );
         $info = array_merge_recursive($default_info, self::get_NewsFilter());
         $info = array_merge_recursive($info, self::get_NewsCategory());
-        $photo_result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_image_id=:image_id", [':image_id' => $data['news_image_full_default']]);
-        if (dbrows($photo_result)) {
-            $data += dbarray($photo_result);
+
+        if (!empty($data['news_image_full_default'])) {
+            $photo_result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_image_id=:image_id", [':image_id' => $data['news_image_full_default']]);
+            if (dbrows($photo_result)) {
+                $data += dbarray($photo_result);
+            }
         }
+
         $category_result = dbquery("SELECT * FROM ".DB_NEWS_CATS." WHERE news_cat_id=:cat_id", [':cat_id' => $data['news_cat']]);
         if (dbrows($category_result)) {
             $data += dbarray($category_result);

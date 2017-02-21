@@ -271,14 +271,14 @@ abstract class News extends NewsServer {
                 $imageRaw = $imageSource;
             }
             if (!$news_settings['news_image_frontpage']) {
-                if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
+                if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
                     $imageSource = IMAGES_N.$data['news_image'];
                     $imageRaw = $imageSource;
                 }
-                if ($data['news_image_t2'] && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
                     $imageSource = IMAGES_N_T.$data['news_image_t2'];
                 }
-                if ($data['news_image_t1'] && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
                     $imageSource = IMAGES_N_T.$data['news_image_t1'];
                 }
             }
@@ -293,9 +293,9 @@ abstract class News extends NewsServer {
             }
 
             $news_cat_image = "<a href='".$info['news_link']."'>";
-            if ($data['news_image_t2'] && $news_settings['news_image_frontpage'] == 0) {
+            if (!empty($data['news_image_t2']) && $news_settings['news_image_frontpage'] == 0) {
                 $news_cat_image .= $image."</a>";
-            } elseif ($data['news_cat_image']) {
+            } elseif (!empty($data['news_cat_image'])) {
                 $news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
             }
 
