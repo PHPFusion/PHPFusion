@@ -1,25 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 21.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#ECF0F1;}
-	.st1{fill:#545E73;}
-	.st2{fill:#F3D55A;}
-	.st3{fill:#11A085;}
-	.st4{fill:#26B999;}
-</style>
 <g>
 	<g>
-		<rect x="0.9" y="6.6" class="st0" width="48.2" height="36.8"/>
-		<path class="st1" d="M50,44.3H0V5.7h50V44.3z M1.8,42.5h46.5V7.5H1.8V42.5z"/>
+		<rect fill="#ECF0F1" x="0.9" y="1.2" width="48.2" height="47.7"/>
+		<path fill="#545E73" d="M50,50H0V0h50V50z M1.8,47.7h46.5V2.3H1.8V47.7z"/>
 	</g>
 	<g>
-		<rect x="4.4" y="10.1" class="st1" width="41.2" height="29.8"/>
-		<path class="st0" d="M46.5,40.8h-43V9.2h43V40.8z M5.3,39h39.5V11H5.3V39z"/>
+		<rect fill="#545E73" x="4.4" y="5.7" width="41.2" height="38.6"/>
+		<path fill="#ECF0F1" d="M46.5,45.5h-43V4.5h43V45.5z M5.3,43.1h39.5V6.9H5.3V43.1z"/>
 	</g>
-	<circle class="st2" cx="13.2" cy="17.6" r="4"/>
-	<polygon class="st3" points="44.7,31.2 43.9,30.3 33.3,20.6 24.1,30.7 28.9,35.5 32.5,39 44.7,39 	"/>
-	<polygon class="st4" points="5.3,39 32.5,39 28.9,35.5 19.3,25.9 5.3,38.2 	"/>
+	<ellipse fill="#F3D55A" cx="13.2" cy="15.4" rx="4" ry="5.2"/>
+	<polygon fill="#11A085" points="44.7,33 43.9,31.9 33.3,19.3 24.1,32.4 28.9,38.6 32.5,43.1 44.7,43.1"/>
+	<polygon fill="#26B999" points="5.3,43.1 32.5,43.1 28.9,38.6 19.3,26.2 5.3,42.1"/>
 </g>
 </svg>
