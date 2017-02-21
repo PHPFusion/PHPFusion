@@ -14,9 +14,9 @@
     right: 0;
     position: absolute;
     top: 41%;
-    left: 721px;
     z-index: -1;
     opacity: 0;
+    margin-right: -30px;
 }
 
 #home_carousel .active .logo {
