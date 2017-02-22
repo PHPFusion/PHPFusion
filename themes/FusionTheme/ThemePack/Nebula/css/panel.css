@@ -14,6 +14,11 @@
     border-radius: 0;
 }
 
+figure img {
+    width: auto;
+    height: auto;
+}
+
 .panel.panel-home > figure {
     display: block;
     overflow: hidden;
