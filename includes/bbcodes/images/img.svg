@@ -1,0 +1,16 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<g>
+	<g>
+		<rect fill="#ECF0F1" x="0.9" y="1.2" width="48.2" height="47.7"/>
+		<path fill="#545E73" d="M50,50H0V0h50V50z M1.8,47.7h46.5V2.3H1.8V47.7z"/>
+	</g>
+	<g>
+		<rect fill="#545E73" x="4.4" y="5.7" width="41.2" height="38.6"/>
+		<path fill="#ECF0F1" d="M46.5,45.5h-43V4.5h43V45.5z M5.3,43.1h39.5V6.9H5.3V43.1z"/>
+	</g>
+	<ellipse fill="#F3D55A" cx="13.2" cy="15.4" rx="4" ry="5.2"/>
+	<polygon fill="#11A085" points="44.7,33 43.9,31.9 33.3,19.3 24.1,32.4 28.9,38.6 32.5,43.1 44.7,43.1"/>
+	<polygon fill="#26B999" points="5.3,43.1 32.5,43.1 28.9,38.6 19.3,26.2 5.3,42.1"/>
+</g>
+</svg>

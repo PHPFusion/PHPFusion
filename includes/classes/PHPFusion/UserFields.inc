@@ -599,7 +599,7 @@ class UserFields extends QuantumFields {
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
 
         if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
-            $this->userData['user_avatar'] = IMAGES."avatars/".$this->userData['user_avatar'];
+            $this->userData['user_avatar'] = $this->userData['user_avatar'];
         } else {
             $this->userData['user_avatar'] = get_image('noavatar');
         }

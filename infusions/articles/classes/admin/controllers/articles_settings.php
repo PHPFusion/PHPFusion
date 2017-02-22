@@ -63,7 +63,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         echo openform("settingsform", "post", FUSION_REQUEST);
         ?>
 
-        <div class="well m-b-0">
+        <div class="well m-b-0 spacer-xs">
             <?php echo $this->locale['article_0400']; ?>
         </div><?php
 

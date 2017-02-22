@@ -27,7 +27,7 @@ if ($profile_method == "input") {
         'placeholder' => $locale['uf_facebook_placeholder'],
         'error_text'  => $locale['uf_facebook_error'],
         'label_icon'  => $icon,
-                    ]);
+        ] + $options);
 // Display in profile
 } elseif ($profile_method == "display") {
     if ($field_value) {

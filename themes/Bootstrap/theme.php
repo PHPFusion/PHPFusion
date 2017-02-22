@@ -116,6 +116,7 @@ function render_page($license = FALSE) {
     <?php
 
     echo showsublinks('', 'navbar-default', array('logo' => $brand, 'show_header' => TRUE))."\n";
+    echo showbanners(1);
     // row 1 - go for max width
     if (defined('AU_CENTER') && AU_CENTER) {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".AU_CENTER."</div>\n</div>";
@@ -160,6 +161,7 @@ function render_page($license = FALSE) {
 
     // footer
     echo "<hr>\n";
+    echo showbanners(2);
     echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
     echo "<span>".stripslashes(strip_tags($settings['footer']))."</span><br/>\n";
     echo "<span>".showcopyright()."</span><br/>\n";
@@ -178,7 +180,3 @@ function render_page($license = FALSE) {
     echo "</div>\n</div>\n";
     echo "</div>\n";
 }
-
-
-
-

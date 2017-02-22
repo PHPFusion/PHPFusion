@@ -2141,3 +2141,11 @@ input[type=text] {
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
 }
+
+.dashboard-icon {
+    width: 50px;
+}
+
+.bootstrap-datetimepicker-widget table > thead th {
+    padding: 5px !important;
+}

@@ -61,7 +61,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
 
 		opentable("");
 		echo openform("settingsform", "post", FUSION_REQUEST);
-		echo "<div class='well m-b-0'>".$this->locale['WLS_0400']."</div>\n";
+		echo "<div class='well m-b-0 spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
 
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12'>\n";

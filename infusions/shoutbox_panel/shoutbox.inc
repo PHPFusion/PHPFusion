@@ -349,7 +349,7 @@ class Shoutbox {
         if (iGUEST) {
         echo self::sb_captha();
         }
-        if (iADMIN && multilang_table("SB")) {
+        if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
             echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
                 "inner_width" => "100%",
                 'required' => TRUE,

@@ -132,13 +132,17 @@ class MainFrame extends Core {
             echo "</div>\n";
             echo "</div>\n";
         endif;
-		if (U_CENTER) :
+
+        if (U_CENTER) :
             echo "<section class='nebulaContentTop'>\n";
-			echo "<div class='container'>\n";
-			echo U_CENTER;
+            echo "<div class='container'>\n";
+            echo U_CENTER;
 			echo "</div>\n";
             echo "</section>\n";
         endif;
+
+        echo showbanners(1);
+
         $side_span = 3;
         $main_span = 12;
         if (RIGHT) {
@@ -270,13 +274,12 @@ class MainFrame extends Core {
 		add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
         echo "</div>\n";
+        echo showbanners(2);
         echo "</section>\n";
-
 
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
         echo "<div class='col-xs-12 col-sm-4'><h4 class='text-white'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
-        echo "<div class='col-xs-12 col-sm-8'>".showbanners(1)."</div>\n";
 		echo "<p>\n";
 		if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
 			echo showrendertime();

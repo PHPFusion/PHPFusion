@@ -269,7 +269,7 @@ function render_dashboard() {
                         echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
                         echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
-                        echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
+                        echo "<span class='text-smaller text-lighter'>".trimlink(parse_textarea($comment_data['comment_message'], TRUE, FALSE), 70)."</span>\n";
                         echo "</div>\n";
                         echo "<!--End Comment Item-->\n";
                     }

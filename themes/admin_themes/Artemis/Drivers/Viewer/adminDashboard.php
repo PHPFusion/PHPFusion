@@ -248,7 +248,7 @@ class adminDashboard extends resource {
                             echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
                             echo "<span class='text-lighter'>".$locale['273']."</span> ".strtr($comment_item_url, ['{%item%}' => $comment_item_name]);
                             echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
-                            echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
+                            echo "<span class='text-smaller text-lighter'>".trimlink(parse_textarea($comment_data['comment_message'], TRUE, FALSE), 70)."</span>\n";
                             echo "</div>\n";
                         }
                         if (isset($global_comments['comments_nav'])) {

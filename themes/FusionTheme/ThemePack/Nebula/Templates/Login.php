@@ -53,7 +53,7 @@ class Login {
             }
             closetable();
         } else {
-
+            add_to_jquery('$(".nebulaBody").addClass("p-0");');
             ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-5 login-column">
