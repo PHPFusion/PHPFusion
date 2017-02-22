@@ -62,7 +62,7 @@ if (!function_exists("render_weblinks_item")) {
                         echo '<div class="panel-body">';
                             echo '<h4 class="weblink_title panel-title">';
                                 echo '<i class="fa fa-fw fa-link"></i>';
-                                echo '<a href="'.INFUSIONS.'weblinks/weblinks.php?weblink_id='.$info['weblink_id'].'" class="strong">'.$info['weblink_name'].'</a>';
+                                echo '<a target="_blank" href="'.INFUSIONS.'weblinks/weblinks.php?weblink_id='.$info['weblink_id'].'" class="strong">'.$info['weblink_name'].'</a>';
                             echo '</h4>';
                             echo $info['weblink_description'] ? '<div class="weblink_text m-t-5">'.trim_text(strip_tags($info['weblink_description']), 250).'</div>' : '';
                             echo '<div class="weblink-category m-t-5">';
