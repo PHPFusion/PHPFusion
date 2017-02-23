@@ -21,7 +21,6 @@ class adminApps {
 
     private $result = array();
 
-
     public function display_apps_result() {
         if (($this->result['status'] == 200 && !empty($this->result['data'])) && isset($_GET['mode'])) {
 

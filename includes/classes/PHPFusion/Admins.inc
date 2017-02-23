@@ -151,7 +151,7 @@ class Admins {
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
      */
-    private function _currentPage() {
+    public function _currentPage() {
         $path = $_SERVER['PHP_SELF'];
         if (defined('START_PAGE')) {
             $path_info = pathinfo(START_PAGE);
@@ -161,7 +161,6 @@ class Admins {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
-
         return $path;
     }
 
@@ -197,7 +196,9 @@ class Admins {
     }
 
     /**
-     * @return int|string
+     * Determine which section is currently active.
+     *
+*@return int|string
      */
     public function _isActive() {
         $active_key = 0;
@@ -208,7 +209,7 @@ class Admins {
                     $link[] = $admin_data['admin_link'];
                 }
                 $data_link = array_flip($link);
-                if (isset($data_link[$this->current_page])) {
+                if (isset($data_link[$this->_currentPage()])) {
                     return $key;
                 }
             }
@@ -328,7 +329,7 @@ class Admins {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
-                    $secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
+                    $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
 
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 

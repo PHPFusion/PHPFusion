@@ -148,8 +148,7 @@ $('#search_app').bind('keyup', function(e) {
                 }
                 ?>
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
-                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
-                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
                     </a>
                     <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
@@ -177,7 +176,7 @@ $('#search_app').bind('keyup', function(e) {
 
         $pages = Admins::getInstance()->getAdminPages();
 
-        $is_current_page = parent::getCurrentPage();
+        $is_current_page = parent::_currentPage();
 
         echo "<ul id=\"app_search_result\"  style=\"display:none;\"></ul>\n";
 
