@@ -60,7 +60,7 @@ class NewsAdmin extends NewsAdminModel {
 
         $this->default_news_data['news_name'] = fusion_get_userdata('user_id');
         $this->news_data['news_breaks'] = (fusion_get_settings("tinymce_enabled") ? 'n' : 'y');
-        $this->news_data += $this->default_news_data;
+        $this->news_data = $this->news_data + $this->default_news_data;
         self::newsContent_form();
     }
 
@@ -208,6 +208,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
+
         $news_cat_opts = [];
         $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
         $result = dbquery($query);
@@ -316,6 +317,7 @@ class NewsAdmin extends NewsAdminModel {
                 } else {
 
                     openside(self::$locale['news_0006']);
+
                     if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
                         // have an image id with 0
                         echo "<div class='list-group-item m-b-10'>\n";
@@ -345,7 +347,7 @@ class NewsAdmin extends NewsAdminModel {
                             )
                         );
                     }
-                    echo form_select('news_image_align', self::$locale['news_0218'], '', array(
+                    echo form_select('news_image_align', self::$locale['news_0218'], $this->news_data['news_image_align'], array(
                             'options'     => [
                                 'pull-left'       => self::$locale['left'],
                                 'news-img-center' => self::$locale['center'],
@@ -589,7 +591,7 @@ class NewsAdmin extends NewsAdminModel {
                         'options'     => $news_photo_opts
                     )
                 ).
-                form_select('news_image_align', self::$locale['news_0218'], '', array("options" => $alignOptions, 'inline' => FALSE, 'inner_width' => '100%'));
+                form_select('news_image_align', self::$locale['news_0218'], $this->news_data['news_image_align'], array("options" => $alignOptions, 'inline' => FALSE, 'inner_width' => '100%'));
         endif;
         closeside();
 
