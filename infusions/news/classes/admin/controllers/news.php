@@ -40,6 +40,7 @@ class NewsAdmin extends NewsAdminModel {
             $this->display_news_form();
         } else {
             $this->display_news_listing();
+            $this->clear_unattached_image();
         }
     }
 
@@ -65,7 +66,7 @@ class NewsAdmin extends NewsAdminModel {
 
     private function execute_NewsUpdate() {
 
-        if ((isset($_POST['save'])) or (isset($_POST['save_and_close'])) or (isset($_POST['preview']))) {
+        if ((isset($_POST['save'])) or (isset($_POST['save_and_close'])) or (isset($_POST['preview'])) or (isset($_POST['del_photo']))) {
 
             $news_news = '';
             if ($_POST['news_news']) {
@@ -90,12 +91,13 @@ class NewsAdmin extends NewsAdminModel {
                 'news_start'          => form_sanitizer($_POST['news_start'], 0, 'news_start'),
                 'news_end'            => form_sanitizer($_POST['news_end'], 0, 'news_end'),
                 'news_visibility'     => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
-                'news_draft'          => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
-                'news_sticky'         => isset($_POST['news_sticky']) ? "1" : "0",
-                'news_name'           => form_sanitizer($_POST['news_name'], 0, 'news_name'),
-                'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
-                'news_allow_ratings'  => isset($_POST['news_allow_ratings']) ? "1" : "0",
-                'news_language'       => form_sanitizer($_POST['news_language'], '', 'news_language'),
+                'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
+                'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name'                => form_sanitizer($_POST['news_name'], 0, 'news_name'),
+                'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
+                'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
+                'news_image_front_default' => 0,
             );
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
@@ -107,29 +109,25 @@ class NewsAdmin extends NewsAdminModel {
             if (\defender::safe()) {
 
                 if ($this->news_data['news_id']) {
-
                     // update news gallery default if exist
                     if (!empty($_POST['news_image_full_default'])) {
                         $this->news_data['news_image_full_default'] = form_sanitizer($_POST['news_image_full_default'], '', 'news_image_full_default');
                     }
-
                     if (!empty($_POST['news_image_front_default'])) {
                         $this->news_data['news_image_front_default'] = form_sanitizer($_POST['news_image_front_default'], '', 'news_image_front_default');
                     }
-
                     if (!empty($_POST['news_image_align'])) {
                         $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                     }
-
                 } else {
-                    // upload the image into a new gallery and prepare the gallery
+
                     if (!empty($_FILES['featured_image'])) { // when files is uploaded.
                         $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
                         if (!empty($upload)) {
                             if (!$upload['error']) {
                                 $data = array(
                                     'news_image_user'      => fusion_get_userdata('user_id'),
-                                    'news_id'              => dbnextid(DB_NEWS),
+                                    'news_id'              => 0,
                                     'news_image'           => $upload['image_name'],
                                     'news_image_t1'        => $upload['thumb1_name'],
                                     'news_image_t2'        => $upload['thumb2_name'],
@@ -138,53 +136,73 @@ class NewsAdmin extends NewsAdminModel {
                                 $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
                                 $this->news_data['news_image_full_default'] = $photo_id;
                                 $this->news_data['news_image_front_default'] = $photo_id;
-                                $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                             }
                         }
+                    } else {
+                        // load the photo
+                        $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+                        if (dbrows($photo_result)) {
+                            $photo_data = dbarray($photo_result);
+                            $this->news_data['news_image_full_default'] = $photo_data['news_image_id'];
+                            $this->news_data['news_image_front_default'] = $photo_data['news_image_id'];
+                        }
                     }
+                    $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                 }
 
-                if (isset($_POST['preview'])) {
-
+                if (isset($_POST['del_photo'])) {
+                    $this->clear_unattached_image();
+                } elseif (isset($_POST['preview'])) {
                     $preview = new News_Preview();
                     $preview->set_PreviewData($this->news_data);
                     $preview->display_preview();
-
                     if (isset($this->news_data['news_id'])) {
-                        dbquery_insert(DB_NEWS, $this->news_data, 'update');
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
                     }
-
                 } else {
                     // reset other sticky
                     if ($this->news_data['news_sticky'] == 1) {
                         dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     }
-
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
                         dbquery_insert(DB_NEWS, $this->news_data, 'update');
-
                         addNotice('success', self::$locale['news_0101']);
                     } else {
                         $this->data['news_name'] = fusion_get_userdata('user_id');
                         $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
-
+                        // update the last uploaded image to the news.
+                        $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
+                        if (dbrows($photo_result)) {
+                            $photo_data = dbarray($photo_result);
+                            dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_id=:news_id WHERE news_image_id=:news_image_id", [
+                                ':news_image_id' => $photo_data['news_image_id'],
+                                ':news_id'       => $this->news_data['news_id']
+                            ]);
+                        }
                         addNotice('success', self::$locale['news_0100']);
                     }
-
                     if (isset($_POST['save_and_close'])) {
                         redirect(clean_request("", array('ref', 'action', 'news_id'), FALSE));
                     } else {
                         redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', array('ref'), FALSE));
                     }
-
                 }
+            }
+        }
+    }
 
-
-
-
-
-
-
+    /**
+     * Check any news image record with image id 0 and clear it.
+     */
+    private function clear_unattached_image() {
+        if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
+            $photo_result = dbquery("SELECT news_image_id, news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+            if (dbrows($photo_result)) {
+                $photo_data = dbarray($photo_result);
+                if (file_exists(IMAGES_N.$photo_data['news_image'])) unlink(IMAGES_N.$photo_data['news_image']);
+                if (file_exists(IMAGES_N_T.$photo_data['news_image_t1'])) unlink(IMAGES_N_T.$photo_data['news_image_t1']);
+                if (file_exists(IMAGES_N_T.$photo_data['news_image_t2'])) unlink(IMAGES_N_T.$photo_data['news_image_t2']);
+                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
             }
         }
     }
@@ -290,34 +308,43 @@ class NewsAdmin extends NewsAdminModel {
                 } else {
                     echo form_hidden('news_language', '', $this->news_data['news_language']);
                 }
-
                 echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], array('inline' => TRUE, 'inner_width' => '100%'));
                 closeside();
 
                 if ($this->news_data['news_id']) {
                     $this->newsGallery();
                 } else {
-                    $news_settings = self::get_news_settings();
+
                     openside(self::$locale['news_0006']);
-                    echo form_fileinput('featured_image', self::$locale['news_0011'], '',
-                        array(
-                            'upload_path'      => IMAGES_N,
-                            'max_width'        => $news_settings['news_photo_max_w'],
-                            'max_height'       => $news_settings['news_photo_max_h'],
-                            'max_byte'         => $news_settings['news_photo_max_b'],
-                            'thumbnail'        => TRUE,
-                            'thumbnail_w'      => $news_settings['news_thumb_w'],
-                            'thumbnail_h'      => $news_settings['news_thumb_h'],
-                            'thumbnail_folder' => 'thumbs',
-                            'delete_original'  => 0,
-                            'thumbnail2'       => TRUE,
-                            'thumbnail2_w'     => $news_settings['news_photo_w'],
-                            'thumbnail2_h'     => $news_settings['news_photo_h'],
-                            'type'             => 'image',
-                            'class'            => 'm-b-0',
-                            'template'         => 'thumbnail'
-                        )
-                    );
+                    if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
+                        // have an image id with 0
+                        echo "<div class='list-group-item m-b-10'>\n";
+                        echo "<img src='".IMAGES_N.dbresult(dbquery("SELECT news_image FROM ".DB_NEWS_IMAGES." WHERE news_id=0"), 0)."' class='img-responsive'>\n";
+                        echo form_button('del_photo', self::$locale['news_0010'], self::$locale['news_0010'], ['class' => 'btn-danger btn-block spacer-xs']);
+                        echo "</div>\n";
+
+                    } else {
+                        $news_settings = self::get_news_settings();
+                        echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
+                            array(
+                                'upload_path'      => IMAGES_N,
+                                'max_width'        => $news_settings['news_photo_max_w'],
+                                'max_height'       => $news_settings['news_photo_max_h'],
+                                'max_byte'         => $news_settings['news_photo_max_b'],
+                                'thumbnail'        => TRUE,
+                                'thumbnail_w'      => $news_settings['news_thumb_w'],
+                                'thumbnail_h'      => $news_settings['news_thumb_h'],
+                                'thumbnail_folder' => 'thumbs',
+                                'delete_original'  => 0,
+                                'thumbnail2'       => TRUE,
+                                'thumbnail2_w'     => $news_settings['news_photo_w'],
+                                'thumbnail2_h'     => $news_settings['news_photo_h'],
+                                'type'             => 'image',
+                                'class'            => 'm-b-0',
+                                'template'         => 'thumbnail'
+                            )
+                        );
+                    }
                     echo form_select('news_image_align', self::$locale['news_0218'], '', array(
                             'options'     => [
                                 'pull-left'       => self::$locale['left'],
@@ -330,7 +357,6 @@ class NewsAdmin extends NewsAdminModel {
                     );
                     closeside();
                 }
-
                 openside('');
                 ?>
                 <div class="row">
@@ -540,7 +566,7 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         openside(self::$locale['news_0006']);
-        echo form_button('image_gallery', self::$locale['news_0007'], 'image_gallery', array('type' => 'button', 'class' => 'btn-default', 'deactivate' => $this->news_data['news_id'] ? FALSE : TRUE));
+        echo form_button('image_gallery', self::$locale['news_0007'], 'image_gallery', array('type' => 'button', 'class' => 'btn-default', 'deactivate' => !$this->news_data['news_id'] ? TRUE : FALSE));
         if (!empty($news_photo_opts)) :
             ?>
             <hr/>
