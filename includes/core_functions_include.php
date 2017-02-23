@@ -1441,10 +1441,11 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @param int    $rowstart      Current rowstart - $_GET['rowstart']
  * @param int    $total_count   The total rows - dbrows($result);
  * @param string $getname       Default is 'rowstart'
+ * @param string $additional_http_query '&section=some_section'
  *
  * @return string
  */
-function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart') {
+function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
     $script = "<script>                
     var count = $rowstart+1;
     $(window).scroll(function(){                
@@ -1460,7 +1461,7 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'r
        $.ajax({
               url: '$scroll_url', 
               type:'GET',
-              data: 'action=infinite_scroll&$getname='+ pageNumber,              
+              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',              
               success: function(html){
                   $('.infiniteLoader').hide();
                   $('#scroll_target').append(html);  // This will be the div where our content will be loaded                  
