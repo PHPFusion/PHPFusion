@@ -769,23 +769,6 @@ class UserFields extends QuantumFields {
             }
         }
 
-        // buttons
-        $admin_btns = '';
-        if (!empty($this->info['buttons'])) {
-            $admin_btns = "<div class='btn-group'>";
-            foreach ($this->info['buttons'] as $buttons) {
-                $admin_btns .= "<a class='btn btn-sm button btn-default' href='".$buttons['link']."'>".$buttons['name']."</a>";
-            }
-            $admin_btns .= "</div>\n";
-        }
-
-        /**
-         * What's this?
-         */
-        if (!empty($this->info['admin'])) {
-            //echo $this->info['admin'];
-        }
-
         /*
          * Template Output
          */
@@ -796,7 +779,7 @@ class UserFields extends QuantumFields {
                 '{%user_avatar%}'   => $user_avatar,
                 '{%user_name%}'     => $user_name,
                 '{%user_level%}'    => $user_level,
-                '{%admin_buttons%}' => $admin_btns,
+                '{%admin_buttons%}' => $this->info['admin'],
                 '{%basic_info%}'    => $basic_info,
                 '{%extended_info%}' => $extended_info,
                 '{%tab_footer%}'    => isset($tab_title) ? closetab() : ''
