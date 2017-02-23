@@ -63,13 +63,15 @@ if (function_exists("get_head_tags")) {
 }
 echo "</head>";
 echo "<body>";
-
+if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
+    addNotice("danger", fusion_get_locale('global_198'));
+}
 // Check if the user is logged in
 if (!check_admin_pass('')) {
     if (empty(fusion_get_userdata("user_admin_password"))) {
-	redirect(BASEDIR."edit_profile.php");
+        redirect(BASEDIR."edit_profile.php");
     } else {
-    render_admin_login();
+        render_admin_login();
     }
 } else {
     render_admin_panel();
