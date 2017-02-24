@@ -63,7 +63,7 @@ class InstallerDbSetup extends Install_Core {
                               array(
                                   'type'             => 'password',
                                   'inline'           => TRUE,
-                                  'required'         => TRUE,
+                                  'required'         => FALSE,
                                   'placeholder'      => self::$locale['setup_1222'],
                                   'autocomplete_off' => TRUE,
                               ));
