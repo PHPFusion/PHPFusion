@@ -18,10 +18,8 @@
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("IN_FUSION", TRUE);
 define("BASEDIR", "../");
-define("IMAGES", "../images/");
-define("INCLUDES", "../includes/");
-define("THEMES", "../themes/");
-define("DYNAMICS", "../includes/dynamics/");
+include dirname(__FILE__).'/../includes/autoloader.php';
+include dirname(__FILE__).'/../includes/classes/PHPFusion/Database/DatabaseFactory.inc';
 
 if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
     include "locale/".$_POST['localeset']."/setup.php";
@@ -242,9 +240,22 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
     }
 
     if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
-        $db_connect = @mysql_connect($db_host, $db_user, $db_pass);
+
+        \PHPFusion\Database\DatabaseFactory::setDefaultDriver(\PHPFusion\Database\DatabaseFactory::DRIVER_MYSQLi);
+        \PHPFusion\Database\DatabaseFactory::registerConfiguration(\PHPFusion\Database\DatabaseFactory::getDefaultConnectionID(), array(
+            'host'     => $db_host,
+            'user'     => $db_user,
+            'password' => $db_pass,
+            'database' => $db_name,
+            'debug'    => \PHPFusion\Database\DatabaseFactory::isDebug(\PHPFusion\Database\DatabaseFactory::getDefaultConnectionID())
+        ));
+        \PHPFusion\Database\DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
+        require_once DB_HANDLERS."all_functions_include.php";
+
+        $db_connect = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+        // Upgrade this to MYSQLi driver.
         if ($db_connect) {
-            $db_select = @mysql_select_db($db_name);
+            $db_select = $db_connect['dbselection_success'];
             if ($db_select) {
                 if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
                     $table_name = uniqid($db_prefix, FALSE);
@@ -1262,6 +1273,17 @@ if (isset($_POST['step']) && $_POST['step'] == "5") {
 
 if (isset($_POST['step']) && $_POST['step'] == "6") {
     require_once BASEDIR."config.php";
+    \PHPFusion\Database\DatabaseFactory::setDefaultDriver(\PHPFusion\Database\DatabaseFactory::DRIVER_MYSQLi);
+    \PHPFusion\Database\DatabaseFactory::registerConfiguration(\PHPFusion\Database\DatabaseFactory::getDefaultConnectionID(), array(
+        'host'     => $db_host,
+        'user'     => $db_user,
+        'password' => $db_pass,
+        'database' => $db_name,
+        'debug'    => \PHPFusion\Database\DatabaseFactory::isDebug(\PHPFusion\Database\DatabaseFactory::getDefaultConnectionID())
+    ));
+    \PHPFusion\Database\DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
+    require_once DB_HANDLERS."all_functions_include.php";
+
     $dbconnect = dbconnect($db_host, $db_user, $db_pass, $db_name);
 
     $error = "";
@@ -1665,101 +1687,6 @@ echo "<br />";
 
 echo "</body>\n</html>\n";
 
-// mySQL database functions
-function dbconnect($db_host, $db_user, $db_pass, $db_name) {
-    global $db_connect;
-
-    $db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-    $db_select = @mysql_select_db($db_name);
-    if (!$db_connect) {
-        return FALSE;
-    } else {
-        return TRUE;
-    }
-}
-
-function dbquery($query) {
-    $result = @mysql_query($query);
-    if (!$result) {
-        echo mysql_error();
-
-        return FALSE;
-    } else {
-        return $result;
-    }
-}
-
-function dbrows($query) {
-    $result = @mysql_num_rows($query);
-
-    return $result;
-}
-
-// Strip Input Function, prevents HTML in unwanted places
-function stripinput($text) {
-    if (ini_get('magic_quotes_gpc')) {
-        $text = stripslashes($text);
-    }
-    $search = array("\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
-    $replace = array("&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-    $text = str_replace($search, $replace, $text);
-
-    return $text;
-}
-
-// Validate numeric input
-function isnum($value) {
-    if (!is_array($value)) {
-        return (preg_match("/^[0-9]+$/", $value));
-    } else {
-        return FALSE;
-    }
-}
-
-// Create a list of files or folders and store them in an array
-function makefilelist($folder, $filter, $sort = TRUE, $type = "files") {
-    $res = array();
-    $filter = explode("|", $filter);
-    $temp = opendir($folder);
-    while ($file = readdir($temp)) {
-        if ($type == "files" && !in_array($file, $filter)) {
-            if (!is_dir($folder.$file)) {
-                $res[] = $file;
-            }
-        } elseif ($type == "folders" && !in_array($file, $filter)) {
-            if (is_dir($folder.$file)) {
-                $res[] = $file;
-            }
-        }
-    }
-    closedir($temp);
-    if ($sort) {
-        sort($res);
-    }
-
-    return $res;
-}
-
-// Create a selection list from an array created by makefilelist()
-function makefileopts($files, $selected = "") {
-    $res = "";
-    for ($i = 0; $i < count($files); $i++) {
-        $sel = ($selected == $files[$i] ? " selected='selected'" : "");
-        $res .= "<option value='".$files[$i]."'$sel>".$files[$i]."</option>\n";
-    }
-
-    return $res;
-}
-
-// Clean URL Function, prevents entities in server globals
-function cleanurl($url) {
-    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
-    $safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
-    $url = str_replace($bad_entities, $safe_entities, $url);
-
-    return $url;
-}
-
 // Get Current URL
 function getCurrentURL() {
     $s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
@@ -1771,8 +1698,4 @@ function getCurrentURL() {
 
 function strleft($s1, $s2) {
     return substr($s1, 0, strpos($s1, $s2));
-}
-
-if (isset($db_connect) && $db_connect != FALSE) {
-    mysql_close($db_connect);
 }
