@@ -280,7 +280,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             }
         });
         ");
+    }
 
+    if ($options['autocomplete_off']) {
+        // Delay by 20ms and reset values.
+        add_to_jquery("
+        $('#".$options['input_id']."').val(' ');        
+        setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
+        ");
     }
 
     return $html;
