@@ -139,7 +139,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            //addNotice("danger", $options['error_text']);
         }
     }
 
