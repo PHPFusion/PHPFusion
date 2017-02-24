@@ -18,11 +18,10 @@
 namespace PHPFusion\Installer;
 
 use PHPFusion\Infusion;
+use PHPFusion\Installer\Steps\InstallerPermissions;
 use PHPFusion\Locale;
 use PHPFusion\OutputHandler;
 use PHPFusion\Steps\InstallerAdminSetup;
-use PHPFusion\Installer\Steps\InstallerPermissions;
-use PHPFusion\Steps\InstallerComplete;
 use PHPFusion\Steps\InstallerDbSetup;
 use PHPFusion\Steps\InstallerInfusions;
 use PHPFusion\Steps\InstallerIntroduction;
@@ -36,11 +35,11 @@ class Install_Core extends Infusion_Core {
     const STEP_DB_SETTINGS_FORM = 3;
     const STEP_DB_SETTINGS_SAVE = 4;
     const STEP_PRIMARY_ADMIN_FORM = '5';   //must be between quotation marks because of implicit type conversion
-    const STEP_PRIMARY_ADMIN_SAVE = '6';
-    const STEP_INFUSIONS = 7;
-    const STEP_SETUP_COMPLETE = 8;
-    const STEP_EXIT = 9;
-    const STEP_TRANSFER = 10;
+    const STEP_PRIMARY_ADMIN_SAVE = '5';
+    const STEP_INFUSIONS = 6;
+    const STEP_SETUP_COMPLETE = 7;
+    const STEP_EXIT = 8;
+    const STEP_TRANSFER = 9;
     const BUILD_VERSION = 9.02;
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
@@ -57,28 +56,32 @@ class Install_Core extends Infusion_Core {
     );
 
     protected static $connection = [
-        'db_host' => '',
-        'db_user' => NULL,
-        'db_pass' => NULL,
-        'db_name' => NULL,
-        'db_prefix' => NULL,
-        'cookie_prefix' => NULL,
+        'db_host'         => '',
+        'db_user'         => NULL,
+        'db_pass'         => NULL,
+        'db_name'         => NULL,
+        'db_prefix'       => NULL,
+        'cookie_prefix'   => NULL,
         'secret_key_salt' => NULL,
-        'secret_key' => NULL,
-        'pdo_enabled' => NULL
+        'secret_key'      => NULL,
+        'pdo_enabled'     => NULL
     ];
 
     protected static $siteData = [
-        'sitename' => '',
-        'siteemail' => '',
+        'sitename'          => '',
+        'siteemail'         => '',
         'enabled_languages' => '',
-        'siteusername' => ''
+        'siteusername'      => ''
     ];
 
     protected static $userData = [
-        'user_name' => '',
-        'user_email' => '',
-        'user_timezone' => '',
+        'user_name'       => '',
+        'user_email'      => '',
+        'user_timezone'   => '',
+        'password1'       => '',
+        'password2'       => '',
+        'admin_password1' => '',
+        'admin_password2' => '',
     ];
 
     /*
@@ -276,7 +279,7 @@ class Install_Core extends Infusion_Core {
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
             default:
-            return InstallerIntroduction::servePage()->__view();
+                return InstallerIntroduction::servePage()->__view();
                 break;
             case self::STEP_PERMISSIONS:
                 return InstallerPermissions::servePage()->__view();
@@ -293,14 +296,21 @@ class Install_Core extends Infusion_Core {
             case self::STEP_TRANSFER:
                 return InstallerAdminSetup::servePage()->__view();
                 break;
-            case self::STEP_PRIMARY_ADMIN_SAVE:
+            case
+            self::STEP_PRIMARY_ADMIN_SAVE:
                 return InstallerAdminSetup::servePage()->__view();
                 break;
             case self::STEP_INFUSIONS:
                 return InstallerInfusions::servePage()->__view();
                 break;
             case self::STEP_SETUP_COMPLETE:
-                return InstallerComplete::servePage()->__view();
+                if (file_exists(BASEDIR.'config_temp.php')) {
+                    @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
+                    @chmod(BASEDIR.'config.php', 0644);
+                }
+                unset($_SESSION['step']);
+                redirect(BASEDIR.'index.php');
+                //return InstallerComplete::servePage()->__view(); // this page is requested to go poof.
                 break;
             case self::STEP_EXIT:
                 if (file_exists(BASEDIR.'config_temp.php')) {

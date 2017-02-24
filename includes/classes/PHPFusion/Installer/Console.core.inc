@@ -53,16 +53,15 @@ class Console_Core extends Install_Core {
         $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
 
         $html .= "<p class='text-right'>".self::$locale['setup_0010'].self::BUILD_VERSION."</p>";
-        $html .= renderNotices(getNotices());
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-3'>\n";
         $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".self::$locale['setup_0000']."</h2>\n";
         $html .= "<div class='list-group'>\n";
         foreach ($steps as $key => $value) {
-            $active = intval(INSTALLATION_STEP) === $key;
-            $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'],
-                                                                                                                                                $key,
-                                                                                                                                                $value) : $value)."</div>\n";
+            if ($key !== 4) {
+                $active = intval(INSTALLATION_STEP) === $key;
+                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+            }
         }
         $html .= "</div>\n";
         $html .= "</div>\n";
