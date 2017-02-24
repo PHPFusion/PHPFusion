@@ -99,6 +99,8 @@ class InstallerInfusions extends Install_Core {
             }
             closedir($temp);
             $content .= "<div>\n";
+            $content .= renderNotices(getNotices());
+
             if ($infs) {
                 $content .= "<div class='list-group'>\n";
                 $content .= "<div class='list-group-item hidden-xs'>\n";
@@ -127,8 +129,7 @@ class InstallerInfusions extends Install_Core {
                                                 array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
                     }
                     $content .= "</div>\n";
-                    $content .= "<div class='col-xs-6 col-sm-7 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
-                                                                                                                                   30)."</div>\n";
+                    $content .= "<div class='col-xs-6 col-sm-7 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";
                     $content .= "<div class='col-xs-3 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
                     $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
                     $content .= "<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
@@ -138,22 +139,25 @@ class InstallerInfusions extends Install_Core {
                 $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
             }
             $content .= "</div>\n</div>\n";
-            $content .= "<div class='well text-center m-t-10'>\n";
-            $content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-            $content .= "</div>\n";
+
+            // The URL will change. No need for this.
+            //$content .= "<div class='well text-center m-t-10'>\n";
+            //$content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+            //$content .= "</div>\n";
 
             self::$step = array(
                 1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_SETUP_COMPLETE
+                    'class' => 'pull-right btn-success',
+                    'name'  => 'step',
+                    'label' => self::$locale['setup_1019'],
+                    'value' => self::STEP_EXIT
                 ),
-                2 => array(
+                /*2 => array(
                     'name' => 'step',
                     'class' => 'm-l-15 btn-default',
                     'label' => self::$locale['setup_0124'],
                     'value' => self::STEP_INTRO
-                )
+                )*/
             );
         }
 

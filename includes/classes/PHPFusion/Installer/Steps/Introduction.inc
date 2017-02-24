@@ -120,8 +120,6 @@ class InstallerIntroduction extends Install_Core {
     private function __RecoveryConsole() {
 
         $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
-        $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
-        $content .= "<hr/>\n";
 
         if (isset($_POST['htaccess'])) {
             \PHPFusion\Installer\write_htaccess();
@@ -135,7 +133,6 @@ class InstallerIntroduction extends Install_Core {
             require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             $i = 0;
-
             foreach (array_keys($coretables) as $table) {
                 $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
                 if ($result) {
@@ -150,11 +147,14 @@ class InstallerIntroduction extends Install_Core {
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
             addNotice('danger', "<strong>".self::$locale['setup_0125']."</strong>");
+            $content .= renderNotices(getNotices());
             if ($i == count($coretables)) {
                 redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
             }
         } else {
             // Exit Installer
+            $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
+            $content .= "<hr/>\n";
             $content .= renderNotices(getNotices());
             $content .= form_hidden('localeset', '', LANGUAGE);
             $content .= "<h5><strong>".self::$locale['setup_1017']."</strong></h5>\n";
