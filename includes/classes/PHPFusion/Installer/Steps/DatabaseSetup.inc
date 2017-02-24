@@ -39,9 +39,9 @@ class InstallerDbSetup extends Install_Core {
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
         $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
                               array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => 'localhost'
+                                  'inline'      => TRUE,
+                                  'required'    => TRUE,
+                                  'placeholder' => 'e.g. localhost'
                               ));
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
                               array(
