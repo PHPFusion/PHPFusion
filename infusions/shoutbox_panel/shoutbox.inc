@@ -41,14 +41,13 @@ class Shoutbox {
     );
 
     public function __construct() {
-        include_once INFUSIONS."shoutbox_panel/infusion_db.php";
         require_once INCLUDES."infusions_include.php";
         self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
 
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
-        $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+        $this->postLink = clean_request(); ///BASEDIR.FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
         $this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
