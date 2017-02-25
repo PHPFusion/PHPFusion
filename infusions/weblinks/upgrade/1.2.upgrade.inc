@@ -19,15 +19,18 @@
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
-// Upgrade 1.2
+// Upgrade 1.2 --- why DROP Column weblink_cat_sorting? What about v7 data? Did we migrated data before dropping user's column?
 if (column_exists(DB_WEBLINK_CATS, "weblink_cat_sorting", FALSE)) {
-    $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_sorting";
+    /**
+     * I'm keeping this before we proceed further.
+     */
+    //$inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_sorting";
 }
 
 $check_wbl12 = [
-    'weblink_language' => " ADD weblink_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_count",
-    'weblink_status' => " ADD weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_visibility",
-
+    'weblink_language'   => " ADD weblink_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_count",
+    'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
+    'weblink_status'     => " ADD weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_visibility",
 ];
 
 foreach ($check_wbl12 as $key => $value) {
@@ -37,25 +40,15 @@ foreach ($check_wbl12 as $key => $value) {
 }
 
 $check_wblC12 = [
+    'weblink_cat_parent'     => " ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id",
+    'weblink_cat_language'   => " ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_cat_sorting",
     'weblink_cat_visibility' => " ADD weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER weblink_cat_description",
-    'weblink_cat_status' => " ADD weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_cat_description",
-
+    'weblink_cat_status'     => " ADD weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER weblink_cat_description",
 ];
 
 foreach ($check_wblC12 as $key => $value) {
     if (!column_exists(DB_WEBLINK_CATS, $key, FALSE)) {
         $inf_altertable[] = DB_WEBLINK_CATS.$value;
-    }
-}
-
-// Upgrade 1.1
-// Moving access level from weblinks categories to weblinks and create field for subcategories
-$check_array = [
-    'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
-];
-foreach ($check_array as $key => $value) {
-    if (!column_exists(DB_WEBLINKS, $key, FALSE)) {
-        $inf_altertable[] = DB_WEBLINKS.$value;
     }
 }
 
@@ -71,17 +64,6 @@ if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
 
 if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
     $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access";
-}
-
-$check_array = [
-    'weblink_cat_parent' => " ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id",
-    // Add multilocale support
-    'weblink_cat_language' => " ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_cat_sorting"
-];
-foreach ($check_array as $key => $value) {
-    if (!column_exists(DB_WEBLINK_CATS, $key, FALSE)) {
-        $inf_altertable[] = DB_WEBLINK_CATS.$value;
-    }
 }
 
 // Insert new and old settings tables to Infusions table

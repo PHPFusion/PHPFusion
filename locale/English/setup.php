@@ -1,6 +1,6 @@
 <?php
 // Index
-$locale['setup_0000'] = "PHP-Fusion Installer";
+$locale['setup_0000'] = "PHP-Fusion Install";
 $locale['setup_0001'] = "PHP-Fusion 9 Edition Setup";
 $locale['setup_0002'] = "Welcome to PHP-Fusion Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
@@ -11,6 +11,11 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
+
+$locale['setup_0020'] = "PHP-Fusion Upgrade";
+$locale['setup_0021'] = "PHP-Fusion 9 Edition Upgrade Service";
+$locale['setup_0022'] = "Welcome to PHP-Fusion Upgrading Service";
+$locale['setup_0023'] = "The upgrade service will guide you through the steps required to upgrade PHP-Fusion CMS on your server. Please follow these steps through and verify each information required.";
 
 $locale['setup_0050'] = "Web Server";
 $locale['setup_0051'] = "PHP Version";

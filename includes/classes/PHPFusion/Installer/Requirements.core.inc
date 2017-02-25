@@ -281,7 +281,7 @@ class Requirements extends Install_Core {
                 'elapsed' => microtime(TRUE) - $microtime
             ];
 
-            DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
+            DatabaseFactory::setDefaultDriver(intval(isset(self::$connection['pdo_enabled']) && self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 
             // There will be a connection issue present.
             $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],

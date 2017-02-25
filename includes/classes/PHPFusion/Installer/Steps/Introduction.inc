@@ -32,12 +32,7 @@ class InstallerIntroduction extends Install_Core {
 
     public function __recovery() {
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
-            if (empty(self::$connection['pdo_enabled'])) {
-                self::$connection['pdo_enabled'] = 1;
-            }
-            require(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
-            ini_set('display_errors', FALSE);
             if (!empty(fusion_get_settings('version'))) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
@@ -63,7 +58,6 @@ class InstallerIntroduction extends Install_Core {
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;
         $this->installer_step(self::STEP_INTRO);
-
         return $this->__Index();
     }
 
@@ -78,10 +72,26 @@ class InstallerIntroduction extends Install_Core {
             }
         }
 
-        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
-        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
+        $content = "<h4 class='strong'>".(isset($_GET['upgrade']) ? self::$locale['setup_0022'] : self::$locale['setup_0002'])."</h4>\n";
+        $content .= "<p>".(isset($_GET['upgrade']) ? self::$locale['setup_0023'] : self::$locale['setup_0003'])."</p>\n";
         $content .= "<p>".self::$locale['setup_1001']."</p>\n";
         $content .= "<hr/>";
+
+        /**
+         * Remove after testing phase.
+         */
+        if (!isset($_GET['upgrade'])) {
+            $content .= "<h4>Start your installation from Version 7.02</h4>\n";
+            $content .= "<a class='btn btn-warning btn-md m-b-20' href='./test/install.php'>Install Version 7.02 with mysqli</a>                        
+            <ul class='m-l-20 m-b-20'>
+            <li><strong>Note:</strong> Like Version 7 requirements - Your Database Must Exist and Empty</li>                                    
+            <li>Don't report any issues in Github with the v7 installer. If it doesn't work for you, try other method.</li>            
+            </ul>            
+            <br/>Complete source code for this can be found on <a href='https://github.com/php-fusion/PHP-Fusion/blob/7.02.07/setup.php' target='_blank'>Github</a>.
+            <hr/>";
+        }
+
+
         $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
         $content .= form_select('localeset', '', LANGUAGE,
                                 array(

@@ -31,7 +31,7 @@ class InstallerInfusions extends Install_Core {
 
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
 
-        require(INCLUDES.'multisite_include.php');
+        require_once(INCLUDES.'multisite_include.php');
 
         $validation = Requirements::get_system_validation();
 
@@ -118,15 +118,15 @@ class InstallerInfusions extends Install_Core {
                     $content .= "<div class='col-xs-3 col-sm-3 col-md-2 col-lg-2'>\n";
                     if ($inf['status'] > 0) {
                         if ($inf['status'] > 1) {
-                            $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                    array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
+                            $content .= form_button('infuse', $locale['416'], $inf['folder'],
+                                array('class' => 'btn-info m-t-5 btn-sm infuse', 'icon' => 'fa fa-cube'));
                         } else {
                             $content .= form_button('defuse', $locale['411'], $inf['folder'],
-                                                    array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
+                                array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'fa fa-trash'));
                         }
                     } else {
                         $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
+                            array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'fa fa-magnet'));
                     }
                     $content .= "</div>\n";
                     $content .= "<div class='col-xs-6 col-sm-7 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";

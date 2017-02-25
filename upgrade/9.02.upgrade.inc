@@ -66,6 +66,7 @@ if (!function_exists('rrmdir')) {
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
  */
+print_p('running once');
 ini_set('display_errors', FALSE);
 dbquery("SET NAMES 'utf8'");
 $result = dbquery("SHOW TABLES");
@@ -78,7 +79,8 @@ while ($row = dbarray($result)) {
         while ($column = dbarray($result2)) {
             if (column_exists($table, $column['Field'], FALSE)) {
                 // Fix on user_offset column
-                if ($column['Field'] !== 'user_offset') {
+                // Execution time can be more than 30 seconds ---- this is too slow.
+                /* if ($column['Field'] !== 'user_offset') {
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'ÃŸ','ß')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¤','ä')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¼','ü')";
@@ -235,7 +237,7 @@ while ($row = dbarray($result)) {
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&and;','∧')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&or;','∨')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&crarr;','↵')";
-                }
+                } */
             }
         }
     }
@@ -325,7 +327,8 @@ if (dbrows($result) > 0) {
 $enabled_languages = implode('.', fusion_get_detected_language());
 $check_array = [
     // Enabled languages array
-    'enabled_languages' => $_GET['localeset'],
+    //'enabled_languages' => $_GET['localeset'], // I'm not even sure which one is it.
+    'enabled_languages' => $enabled_languages, // I'm not even sure which one is it
     // Site settings for SEO / SEF
     'site_seo' => 0,
     'normalize_seo' => 0,
@@ -360,7 +363,6 @@ $check_array = [
     'index_url_bbcode' => 1,
     // Add index url userweb setting
     'index_url_userweb' => 1,
-    'enabled_languages' => $enabled_languages
 ];
 
 // Set a new default theme to prevent issues during upgrade
