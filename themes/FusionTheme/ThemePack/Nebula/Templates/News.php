@@ -167,7 +167,7 @@ class News extends Core {
         ?>
         <ul class='m-b-20'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo FUSION_SELF; ?>'><h6><?php echo fusion_get_locale('news_0018') ?></h6></a>
+                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h6><?php echo fusion_get_locale('news_0018') ?></h6></a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
