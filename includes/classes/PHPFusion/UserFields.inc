@@ -779,7 +779,7 @@ class UserFields extends QuantumFields {
                 '{%user_avatar%}'   => $user_avatar,
                 '{%user_name%}'     => $user_name,
                 '{%user_level%}'    => $user_level,
-                '{%admin_buttons%}' => $this->info['admin'],
+                '{%admin_buttons%}' => !empty($this->info['admin']) ? $this->info['admin'] : '',
                 '{%basic_info%}'    => $basic_info,
                 '{%extended_info%}' => $extended_info,
                 '{%tab_footer%}'    => isset($tab_title) ? closetab() : ''
