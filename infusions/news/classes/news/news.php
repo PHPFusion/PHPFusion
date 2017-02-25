@@ -119,28 +119,21 @@ abstract class News extends NewsServer {
 
         $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS,
                                            groupaccess('news_visibility')."
-                                           AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
+                                           AND (news_start='0'||news_start<='".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
 
         if ($info['news_total_rows']) {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
-
             $result = dbquery($this->get_NewsQuery($filter));
-
             $info['news_item_rows'] = dbrows($result);
             if ($info['news_item_rows'] > 0) {
                 $news_count = 0;
                 while ($data = dbarray($result)) {
-
                     $news_count++;
                     if ($news_count == 1) {
                         $info['news_last_updated'] = $data['news_datestamp'];
                     }
-
                     $newsData = self::get_NewsData($data);
-                    //$newsData['news_show_ratings'] = self::get_NewsRatings($data);
-                    //$newsData['news_show_comments'] = self::get_NewsComments($data);
                     $news_info[$news_count] = $newsData;
-
                 }
                 $info['news_items'] = $news_info;
             }
@@ -170,8 +163,8 @@ abstract class News extends NewsServer {
 				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
 				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
 				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")."
-				".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
-				AND (news_end='0'||news_end>=NOW()) AND news_draft='0'
+				".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+				AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
 				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : "")."
 				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
 				ORDER BY ".(!empty($filter['order']) ? $filters['order'] : "")." news_sticky DESC, ".self::check_NewsFilter()."
@@ -434,8 +427,8 @@ abstract class News extends NewsServer {
             $info['news_cat_language'] = $data['news_cat_language'];
 
             $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND
-			".groupaccess('news_visibility')." AND (news_start='0'||news_start<= NOW()) AND
-			(news_end='0'||news_end>=NOW()) AND news_draft='0'");
+			".groupaccess('news_visibility')." AND (news_start='0'||news_start<= '".TIME."') AND
+			(news_end='0'||news_end>='".TIME."') AND news_draft='0'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
 
@@ -453,8 +446,8 @@ abstract class News extends NewsServer {
 
         } elseif ($_GET['cat_id'] == 0) {
 
-            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
-			AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
+            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+			AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
 
