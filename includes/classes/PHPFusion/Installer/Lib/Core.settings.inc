@@ -1161,7 +1161,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'link_name'       => $locale['setup_3300'],
                 'link_cat'        => '0',
-                'link_icon'       => 'php-fusion m-r-5',
+                'link_icon'       => '',
                 'link_url'        => 'index.php',
                 'link_visibility' => '0',
                 'link_position'   => '2',
