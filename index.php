@@ -28,7 +28,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
     $filepath = $router->getFilePath();
 
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
-        //redirect(PERMALINK_CURRENT_PATH);
+        redirect(PERMALINK_CURRENT_PATH);
     } else {
         if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
             $lang = stripinput($_GET['lang']);
