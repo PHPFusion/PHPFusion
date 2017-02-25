@@ -493,7 +493,7 @@ function get_photo_comments($data) {
     $html = "";
     if (fusion_get_settings('comments_enabled') && $data['photo_allow_comments']) {
         ob_start();
-        showcomments("P", DB_PHOTOS, "photo_id", $data['photo_id'], FUSION_SELF."?photo_id=".$data['photo_id'], $data['photo_allow_ratings']);
+        showcomments("P", DB_PHOTOS, "photo_id", $data['photo_id'], BASEDIR."infusions/gallery/gallery.php?photo_id=".$data['photo_id'], FALSE);
         $html = ob_get_contents();
         ob_end_clean();
     }
@@ -505,7 +505,7 @@ function get_photo_ratings($data) {
     $html = "";
     if (fusion_get_settings('ratings_enabled') && $data['photo_allow_ratings']) {
         ob_start();
-        showratings("P", $data['photo_id'], FUSION_SELF."?photo_id=".$data['photo_id']);
+        showratings("P", $data['photo_id'], BASEDIR."infusions/gallery/gallery.php?photo_id=".$data['photo_id']);
         $html = ob_get_contents();
         ob_end_clean();
     }
