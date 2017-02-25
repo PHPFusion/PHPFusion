@@ -132,12 +132,12 @@ class InstallerIntroduction extends Install_Core {
         $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
 
         if (isset($_POST['htaccess'])) {
-            \PHPFusion\Installer\write_htaccess();
+            require_once(INCLUDES.'htaccess_include.php');
+            write_htaccess();
             addNotice('success', self::$locale['setup_1020']);
             $this->installer_step(self::STEP_INTRO);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
-
 
         if (isset($_POST['uninstall'])) {
             require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.inc'; // See below previous comment
