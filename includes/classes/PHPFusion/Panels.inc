@@ -300,7 +300,7 @@ class Panels {
                                         eval($panelContent);
 
                                     } else {
-                                        echo parse_textarea($p_data['panel_content']);
+                                        echo $p_data['panel_content'];
                                     }
                                 }
                             }
