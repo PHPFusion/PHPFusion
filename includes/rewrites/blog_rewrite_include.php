@@ -39,16 +39,14 @@ $regex = array(
 );
 
 $pattern = array(
-    "print/%stype%/%blog_id%/%blog_title%" => "print.php?type=%stype%&amp;item_id=%blog_id%",
-    "submit/%stype%/blogs"                 => "submit.php?stype=%stype%",
+    "print/%stype%/%blog_id%/%blog_title%"                         => "print.php?type=%stype%&amp;item_id=%blog_id%",
+    "submit/%stype%/blogs"                                         => "submit.php?stype=%stype%",
     "submit/%stype%/blogs/submitted-and-thank-you"                 => "submit.php?stype=%stype%&amp;submitted=b",
-
-    "blogs/%blog_id%/%blog_title%"                    => "infusions/blog/blog.php?readmore=%blog_id%",
-    "blogs/%blog_id%/%blog_title%#comments"           => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
-    "blogs/%blog_id%/%blog_title%#ratings"            => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
-    "blogs/comments-%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
+    "blogs/%blog_id%/%blog_title%"                                 => "infusions/blog/blog.php?readmore=%blog_id%",
+    "blogs/%blog_id%/%blog_title%#comments"                        => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
+    "blogs/%blog_id%/%blog_title%#ratings"                         => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
+    "blogs/comments-%c_start%/%blog_id%/%blog_title%"              => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
     "blogs/comments-%c_start%/%blog_id%/%blog_title%#%comment_id%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
-
     "blogs/filter/%filter_type%"                                   => "infusions/blog/blog.php?type=%filter_type%",
     "blogs/filter/uncategorized/%filter_type%"                     => "infusions/blog/blog.php?cat_id=0&amp;type=%filter_type%",
     "blogs/filter/category-%blog_cat_id%/%filter_type%"            => "infusions/blog/blog.php?cat_id=%blog_cat_id%&amp;type=%filter_type%",
