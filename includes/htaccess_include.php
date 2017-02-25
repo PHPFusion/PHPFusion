@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 function write_htaccess() {
     $site_path = fusion_get_settings('site_path');
-    $settings_seo = fusion_get_settings('settings_seo');
+    $settings_seo = dbresult(dbquery("SELECT settings_value FROM ".DB_PREFIX."settings WHERE settings_name=:settings_name", [':settings_name' => 'site_seo']), 0);
     if (!file_exists(BASEDIR.'.htaccess')) {
         if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
             @rename(BASEDIR."_htaccess", ".htaccess");
@@ -83,7 +83,7 @@ function write_htaccess() {
     $htc .= "   ForceType image/png".PHP_EOL;
     $htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
 
-    if ($settings_seo['site_seo'] == 1) {
+    if ($settings_seo == 1) {
         // Rewrite settings
         $htc .= "Options +SymLinksIfOwnerMatch".PHP_EOL;
         $htc .= "<IfModule mod_rewrite.c>".PHP_EOL;

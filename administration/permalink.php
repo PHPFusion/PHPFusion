@@ -53,9 +53,10 @@ if (isset($_POST['savesettings'])) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
         }
     }
-    require_once(INCLUDES.'htaccess_include.php');
-    write_htaccess();
+
     if (\defender::safe()) {
+        require_once(INCLUDES.'htaccess_include.php');
+        write_htaccess();
         addNotice("success", $locale['900']);
         redirect(FUSION_SELF.$aidlink."&amp;section=pls");
     }

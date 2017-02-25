@@ -1558,6 +1558,16 @@ table {
     padding-top: 8px;
 }
 
+.panel-txtarea .bbcode_input {
+    padding: 10px 0;
+}
+
+.panel-txtarea .bbcode_input input[type=image] {
+    width: 18px !important;
+    height: auto !important;
+    margin-right: 5px;
+}
+
 .form-group-lg input.form-control {
     font-size: 25px;
     font-family: serif;
