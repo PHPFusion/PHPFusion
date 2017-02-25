@@ -26,8 +26,6 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
     $router->rewritePage();
 
     $filepath = $router->getFilePath();
-    print_p($filepath);
-
 
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         //redirect(PERMALINK_CURRENT_PATH);
