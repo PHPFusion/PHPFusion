@@ -127,9 +127,11 @@ $('#search_app').bind('keyup', function(e) {
      */
     private function left_nav() {
         $aidlink = fusion_get_aidlink();
+        $locale = parent::get_locale();
+
         $sections = Admins::getInstance()->getAdminSections();
 
-        $sections[] = "Collapse Menu";
+        $sections[] = $locale['admin_collapse'];
         $this->admin_section_icons[] = "<i class='fa fa-chevron-circle-left'></i>\n";
 
         $pages = Admins::getInstance()->getAdminPages();
