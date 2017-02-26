@@ -21,21 +21,21 @@ if (!defined("IN_FUSION")) {
 }
 
 $regex = array(
-    "%time%" => "([0-9]+)",
+    "%time%"    => "([0-9]+)",
     "%section%" => "([0-9]+)",
-    "%logout%" => "(yes)"
+    "%logout%"  => "(yes)"
 );
 
 $pattern = array(
     //"home" => "index.php", // Enable this if your main page is home.php
     //"homepage" => "home.php", // Enable this if your main page is home.php
-    "login-to-website" => "login.php",
-    "maintenance" => "maintenance.php",
+    "login"                  => "login.php",
+    "logout/%logout%"        => "index.php?logout=%logout%",
+    "maintenance"            => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",
-    "edit-profile" => "edit_profile.php",
-    "website-members" => "members.php",
-    "logout-from-website/%logout%" => "index.php?logout=%logout%",
-    "create/ref=%time%" => "register.php?ref=%time%",
-    "contact" => "contact.php",
-    "registration" => "register.php",
+    "edit-profile"           => "edit_profile.php",
+    "website-members"        => "members.php",
+    "create/ref=%time%"      => "register.php?ref=%time%",
+    "contact"                => "contact.php",
+    "registration"           => "register.php",
 );

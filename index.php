@@ -38,11 +38,11 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
         } else {
             if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
                 $userdata = Authenticate::logOut();
-                redirect(BASEDIR."index.php");
+                redirect(BASEDIR.$settings['opening_page']);
             } else {
                 if (!empty($filepath)) {
                     if ($filepath == "index.php") {
-                        redirect($settings['opening_page']);
+                        redirect(BASEDIR.$settings['opening_page']);
                     } else {
                         require_once $filepath;
                     }
@@ -51,7 +51,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
                         or $_SERVER['REQUEST_URI'] == $settings['site_path']
                     ) {
-                        redirect($settings['opening_page']);
+                        redirect(BASEDIR.$settings['opening_page']);
                     } else {
                         $router->setPathtofile("error.php");
                         $params = array(
@@ -67,9 +67,12 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
         }
     }
 } else {
+    redirect(BASEDIR.$settings['opening_page']);
+    /*
     if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
         redirect('home.php');
     } else {
         redirect($settings['opening_page']);
     }
+    */
 }

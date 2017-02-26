@@ -151,7 +151,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
     redirect(FUSION_REQUEST);
 } elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-    redirect(BASEDIR."index.php");
+    redirect(BASEDIR.$settings['opening_page']);
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
