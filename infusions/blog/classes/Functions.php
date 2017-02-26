@@ -197,7 +197,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
             ob_start();
-            echo showratings("B", $data['blog_id'], INFUSIONS."blog/blog.php?readmore=".$data['blog_id']);
+            echo showratings("B", $data['blog_id'], BASEDIR."infusions/blog/blog.php?readmore=".$data['blog_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }

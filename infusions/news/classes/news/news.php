@@ -618,7 +618,7 @@ abstract class News extends NewsServer {
         if (fusion_get_settings('ratings_enabled') && $data['news_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("N", $item_id, FUSION_SELF."?readmore=".$item_id);
+            showratings("N", $item_id, BASEDIR."infusions/news/news.php?readmore=".$item_id);
             $html = ob_get_contents();
             ob_end_clean();
         }
