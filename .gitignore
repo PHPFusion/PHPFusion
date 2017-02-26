@@ -10,5 +10,5 @@ config.php
 config-copy.php
 *.db
 .htaccess
-install.php
 _install.php
+/install.php
