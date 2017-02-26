@@ -305,7 +305,8 @@ class InstallerDbSetup extends Install_Core {
                 $errors = Batch_Core::getInstance()->ProgressHasError();
                 if (!$errors) {
                     \PHPFusion\Installer\write_config(self::$connection);
-                    \PHPFusion\Installer\write_htaccess();
+		            require_once(INCLUDES.'htaccess_include.php');
+		            write_htaccess();
                     if (!empty($to_upgrade)) {
                         self::installer_step(self::STEP_INFUSIONS);
                     } else {
