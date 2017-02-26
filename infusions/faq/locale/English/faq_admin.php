@@ -53,6 +53,7 @@ $locale['faq_0115'] = "Category Name";
 $locale['faq_0116'] = "Category Description";
 $locale['faq_0117'] = "Language";
 $locale['faq_0118'] = "Save Category";
+$locale['faq_0119'] = "Add Category";
 
 // Table - Faq - Sorting
 $locale['faq_0120'] = "Search";
