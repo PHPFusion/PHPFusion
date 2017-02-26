@@ -28,11 +28,11 @@ $regex = array(
 );
 
 $pattern = array(
-    "submit/%stype%/faq" => "submit.php?stype=%stype%",
-    "submit/%stype%/faq/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=FQ",
-    "Frequently-asked-Questions" => "infusions/faq/faq.php",
-    "faq/category/%cat_id%" => "infusions/faq/faq.php?cat_id=%cat_id%",
-    "print/%type%/%cat_id%" => "print.php?type=%type%&amp;item_id=%cat_id%",
+    "print/%type%/%cat_id%"                            => "print.php?type=%type%&amp;item_id=%cat_id%",
+    "submit/%stype%/faq"                               => "submit.php?stype=%stype%",
+    "submit/%stype%/faq/submitted-and-thank-you"       => "submit.php?stype=%stype%&amp;submitted=FQ",
+    "Frequently-asked-Questions"                       => "infusions/faq/faq.php",
+    "Frequently-asked-Questions/category/%faq_cat_id%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
 );
 
 $pattern_tables["%cat_id%"] = array(
