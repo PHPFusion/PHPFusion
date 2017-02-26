@@ -196,16 +196,14 @@ if (!function_exists('display_download_menu')) {
         }
         // The layout calling the above function
         ob_start();
-        echo "<ul class='spacer-xs block'>\n";
+        echo "<ul class='spacer-sm block'>\n";
         echo "<li><a title='".$locale['download_1001']."' href='".DOWNLOADS."downloads.php'>".$locale['download_1001']."</a></li>\n";
-        echo "</ul>\n";
-        echo "<ul class='spacer-xs block'>\n";
         foreach ($info['download_filter'] as $filter_key => $filter) {
             echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
         }
         echo "</ul>\n";
         echo "<h4>".$locale['download_1003']."</h4>\n";
-        echo "<ul class='m-b-40 block'>\n";
+        echo "<ul class='block spacer-sm'>\n";
         $download_cat_menu = display_DownloadCats($info['download_categories']);
         if (!empty($download_cat_menu)) {
             echo $download_cat_menu;
@@ -214,7 +212,7 @@ if (!function_exists('display_download_menu')) {
         }
         echo "</ul>\n";
         echo "<h4>".$locale['download_1004']."</h4>\n";
-        echo "<ul class='m-b-40 block'>\n";
+        echo "<ul class='block spacer-sm'>\n";
         if (!empty($info['download_author'])) {
             foreach ($info['download_author'] as $author_id => $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
