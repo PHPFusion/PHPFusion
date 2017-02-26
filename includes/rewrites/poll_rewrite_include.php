@@ -4,8 +4,9 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: install.php
-| Author: Frederick MC Chan (Chan)
+| File Category: Core Rewrite Modules
+| Filename: photogallery_rewrite_include.php
+| Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,8 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-define('BASEDIR', '');
-define("IN_FUSION", true);
-require_once __DIR__.'/includes/autoloader.php';
-// Start the installer
-PHPFusion\Installer\Install_Core::getInstance()->install_phpfusion();
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+$pattern = ['poll-archive' => 'infusions/member_poll_panel/polls_archive.php'];
