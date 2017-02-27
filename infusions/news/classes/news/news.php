@@ -629,27 +629,21 @@ abstract class News extends NewsServer {
     protected static function get_NewsComments($data, $item_id) {
         $html = '';
         if (fusion_get_settings('comments_enabled') && $data['news_allow_comments'] == TRUE) {
-
             $html .= Comments::getInstance(
                 array(
-                    'comment_item_type'   => 'N',
-                    'comment_db'          => DB_NEWS,
-                    'comment_col'         => 'news_id',
-                    'comment_item_id'     => $item_id,
-                    'clink'               => INFUSIONS.'news/news.php?readmore='.$item_id,
-                    'comment_count'       => TRUE,
-                    'comment_allow_reply' => TRUE,
-                    'comment_allow_post'  => TRUE,
-                    'comment_once'        => FALSE,
+                    'comment_item_type'     => 'N',
+                    'comment_db'            => DB_NEWS,
+                    'comment_col'           => 'news_id',
+                    'comment_item_id'       => $item_id,
+                    'clink'                 => INFUSIONS.'news/news.php?readmore='.$item_id,
+                    'comment_count'         => TRUE,
+                    'comment_allow_subject' => FALSE,
+                    'comment_allow_reply'   => TRUE,
+                    'comment_allow_post'    => TRUE,
+                    'comment_once'          => FALSE,
                 ), 'news_comments'
             )->showComments();
-
-            //ob_start();
-            //require_once INCLUDES."comments_include.php";
-            //showcomments("N", DB_NEWS, "news_id", $item_id, FUSION_SELF."?readmore=".$item_id, $data['news_allow_ratings']);
-            //return ob_get_clean();
         }
-
         return (string)$html;
     }
 

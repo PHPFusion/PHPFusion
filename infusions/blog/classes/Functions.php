@@ -173,21 +173,21 @@ class Functions {
     public static function get_blog_comments($data) {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
-            ob_start();
-            Comments::getInstance(
+            $html = Comments::getInstance(
                 array(
-                    'comment_allow_subject' => FALSE,
-                    'comment_item_type'     => "B",
+                    'comment_item_type'     => 'B',
                     'comment_db'            => DB_BLOG,
                     'comment_col'           => 'blog_id',
                     'comment_item_id'       => $data['blog_id'],
                     'clink'                 => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
-                    'comment_echo'          => TRUE,
+                    'comment_count'         => TRUE,
+                    'comment_allow_subject' => FALSE,
+                    'comment_allow_reply'   => TRUE,
+                    'comment_allow_post'    => TRUE,
+                    'comment_once'          => FALSE,
                     'comment_allow_ratings' => FALSE,
-                ), '_B'.$data['blog_id']
+                ), 'blog_comments'
             )->showComments();
-            $html = ob_get_contents();
-            ob_end_clean();
         }
 
         return (string)$html;
