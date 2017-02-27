@@ -285,6 +285,23 @@ header h1 {
 .nebulaCanvas a:focus {
     color: #01ACDE;
 }
+
+.nebulaCanvas .contentLeft .panel,
+.nebulaCanvas .contentLeft .panel-default .panel-heading,
+.nebulaCanvas .contentLeft .panel-default .panel-body,
+.nebulaCanvas .contentLeft .panel-default .panel-footer {
+    background: transparent;
+}
+
+.nebulaCanvas .contentLeft .panel,
+.nebulaCanvas .contentLeft .panel-default .panel-heading,
+.nebulaCanvas .contentLeft .panel-footer {
+    color: #fff;
+    border-color: rgba(255, 255, 255, .1);
+}
+
+
+
 .nebulaBody {
     padding: 3% 0;
     padding-bottom: 0;
