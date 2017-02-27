@@ -563,9 +563,8 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('comments_enabled') && $data['article_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], BASEDIR."infusions/articles/articles.php?article=".$data['article_id'], FALSE);
-            $html = ob_get_contents();
-            ob_end_clean();
+            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id'], FALSE);
+            $html = ob_get_clean();
         }
 
         return (string)$html;
