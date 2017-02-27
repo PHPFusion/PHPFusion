@@ -127,7 +127,7 @@ if (!function_exists("display_quickReply")) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
         $html = "<!--sub_forum_thread-->\n";
-        $html .= openform('quick_reply_form', 'post', FUSION_SELF."?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
+        $html .= openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
         $html .= "<h4>".$locale['forum_0168']."</h4>\n";
         $html .= form_textarea('post_message', '', '',
                                   array(
