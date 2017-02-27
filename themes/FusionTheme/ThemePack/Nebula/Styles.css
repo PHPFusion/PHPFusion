@@ -307,7 +307,11 @@ Left
 Panels
 ********************/
 .panel {
-    border-width: 2px;
+    border-width: 1px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border-color: #EBEBEB;
     -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
 
@@ -366,11 +370,28 @@ Buttons
 }
 
 /* btn-primary */
-.btn-primary {
+.btn {
     font-weight: 600;
     border-width: 2px;
 }
 
+.form-control {
+    color: #626262;
+    background-color: rgba(255, 255, 255, 1);
+    border-color: #EBEBEB;
+    padding: 10px;
+    outline: none;
+    margin: 0;
+    max-width: 100%;
+    display: block;
+    margin-bottom: 20px;
+    font-size: 13px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 0;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
 /* btn-success */
 .btn.btn-success {
     color: rgb(255, 255, 255);
@@ -795,10 +816,14 @@ Comments
     border: 0;
     padding: 15px;
     font-size: 25px;
-    text-transform: uppercase;
     color: #3c3950;
+    font-weight: 600;
 }
 
+.comments-form-header {
+    padding-left: 0;
+    border-top: 1px solid #eee;
+}
 .comments-header:before {
     content: '\f036';
 }
@@ -886,6 +911,11 @@ Comments
     width: 40px;
     -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
     margin-top: 8px;
+}
+
+.comment_title {
+    font-weight: 600;
+    font-size: 17px;
 }
 /*********************
 Editor Navs
