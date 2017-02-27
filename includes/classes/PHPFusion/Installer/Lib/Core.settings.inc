@@ -356,16 +356,16 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'avatar_width',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_width',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_height',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_height',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_filesize',
-                'settings_value' => 50000
+                'settings_name'  => 'avatar_filesize',
+                'settings_value' => 150000
             ],
             [
                 'settings_name' => 'avatar_ratio',

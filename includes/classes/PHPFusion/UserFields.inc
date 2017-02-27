@@ -113,6 +113,7 @@ class UserFields extends QuantumFields {
                 $i++;
             }
         }
+
         return (array)$section;
     }
 
@@ -162,13 +163,13 @@ class UserFields extends QuantumFields {
 
             if ($this->registration || $this->admin_mode) {
                 $this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', array(
-                        'type'             => 'password',
-                        'autocomplete_off' => 1,
-                        'inline'           => 1,
-                        'max_length'       => 64,
-                        'error_text'       => $locale['u134'].$locale['u143a'],
-                        'required'         => $this->admin_mode ? FALSE : TRUE,
-                        'password_strength'=> TRUE
+                        'type'              => 'password',
+                        'autocomplete_off'  => 1,
+                        'inline'            => 1,
+                        'max_length'        => 64,
+                        'error_text'        => $locale['u134'].$locale['u143a'],
+                        'required'          => $this->admin_mode ? FALSE : TRUE,
+                        'password_strength' => TRUE
                     )
                 );
                 $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', array(
@@ -191,12 +192,12 @@ class UserFields extends QuantumFields {
                     )
                 );
                 $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', array(
-                        'type'             => 'password',
-                        'autocomplete_off' => 1,
-                        'inline'           => 1,
-                        'max_length'       => 64,
-                        'error_text'       => $locale['u133'],
-                        'password_strength'=> TRUE
+                        'type'              => 'password',
+                        'autocomplete_off'  => 1,
+                        'inline'            => 1,
+                        'max_length'        => 64,
+                        'error_text'        => $locale['u133'],
+                        'password_strength' => TRUE
                     )
                 );
                 $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', array(
@@ -268,10 +269,15 @@ class UserFields extends QuantumFields {
             if (!$this->registration) {
 
                 if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
-                    $this->info['user_avatar'] = "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />
-                                            </label>\n<br />\n
-                                            ".form_checkbox("delAvatar", $locale['u187'], "", array("reverse_label" => TRUE)
-                        );
+                    $this->info['user_avatar'] = "                    
+                    <div class='row'>\n
+                    <div class='col-xs-12 col-sm-3'><strong>".$locale['u185']."</strong></div>
+                    <div class='col-xs-12 col-sm-9'>
+                        <div class='p-l-10'>
+                        <label for='user_avatar_upload'>".display_avatar($this->userData, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $locale['u187'], '', array('reverse_label' => TRUE))."
+                        </div>                    
+                    </div></div>                    
+                    ";
                 } else {
                     $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', array(
                             'upload_path'     => IMAGES."avatars/",
@@ -287,12 +293,9 @@ class UserFields extends QuantumFields {
                             'class'           => 'm-t-10 m-b-0',
                             "error_text"      => $locale['u180'],
                             "template"        => "modern",
+                            'ext_tip'         => sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))
                         )
                     );
-                    $this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'>
-                    ".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')),
-                            fusion_get_settings('avatar_width'),
-                            fusion_get_settings('avatar_height'))."</div>\n";
                 }
             }
             $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, array(
@@ -513,8 +516,8 @@ class UserFields extends QuantumFields {
                   ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order
                   ";
         $bind = [
-            ':index00'        => $index_page_id,
-            ':index01'        => $index_page_id,
+            ':index00' => $index_page_id,
+            ':index01' => $index_page_id,
         ];
         $bind = $bind + $registration_bind;
         $result = dbquery($query, $bind);
