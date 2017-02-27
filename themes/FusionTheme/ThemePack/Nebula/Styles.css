@@ -938,7 +938,7 @@ Editor Navs
 /***********************
 bbcode input
  */
-.bbcode_input > div > input[type=image] {
-    width: 18px;
-    margin-right: 5px;
+.bbcode_input > div input[type=image] {
+    width: 18px !important;
+    margin-right: 8px;
 }
