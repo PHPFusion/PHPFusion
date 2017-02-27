@@ -272,7 +272,7 @@ class FaqAdmin extends FaqAdminModel {
         'faq_cat_id'          => 0,
         'faq_cat_name'        => '',
         'faq_cat_description' => '',
-        'faq_cat_language'    => '',
+        'faq_cat_language'    => LANGUAGE,
     ];
 
     private function display_faq_category_form() {
