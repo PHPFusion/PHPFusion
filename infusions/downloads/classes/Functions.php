@@ -69,7 +69,7 @@ class Functions {
      */
     public static function get_downloadCatsIndex() {
         return dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
-            "".(multilang_table("BL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
+            "".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
     }
 
     /**

@@ -60,7 +60,7 @@ class FaqSubmissions extends FaqServer {
         if (isset($_POST['cancel'])) {
             redirect(FUSION_REQUEST);
         }
-        if (dbcount("(faq_id)", DB_FAQS, (multilang_table("FQ") ? "faq_language='".LANGUAGE."' AND " : "")."faq_status=1 AND ".groupaccess("faq_visibility")."")) {
+        if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? "faq_cat_language='".LANGUAGE."'" : ""))) {
             // Save
             if (isset($_POST['submit_link'])) {
                 $submit_info['faq_question'] = parse_textarea($_POST['faq_question']);
@@ -120,7 +120,10 @@ class FaqSubmissions extends FaqServer {
 
                 if (multilang_table('FQ')) {
                     echo form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'], array(
-                        'options' => fusion_get_enabled_languages(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%',
+                        'options' => fusion_get_enabled_languages(),
+                        'inline' => TRUE,
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
                     ));
                 } else {
                     echo form_hidden('faq_language', '', $criteriaArray['faq_language']);
