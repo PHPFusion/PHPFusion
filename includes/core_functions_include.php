@@ -464,6 +464,7 @@ function trimlink($text, $length) {
     if (strlen($text) > $length) {
         $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
     }
+
     return $text;
 }
 
@@ -663,12 +664,13 @@ function displaysmileys($textarea, $form = "inputform") {
  * @return mixed
  */
 function fusion_parse_user($user_name) {
-    $user_regex = '@[-0-9A-Z_\.]{1,50}';
+    $user_regex = ' @[-0-9A-Z_\.]{1,50}';
     $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
         $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
 
         return render_user_tags($user_name);
     }, $user_name);
+
     return $text;
 }
 
@@ -1099,7 +1101,6 @@ function checkusergroup($group, $user_level, $user_groups) {
     return FALSE;
 }
 
-
 /**
  * Cache groups' data into an array
  *
@@ -1339,20 +1340,22 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  *
- * @global array $locale
+ * @global array  $locale
  *
- * @param int    $start       The number of the first listed item - $_GET['rowstart']
- * @param int    $count       The number of displayed items - LIMIT on sql
- * @param int    $total       The number of all items - a dbcount of total
- * @param int    $range       The number of links before and after the current page
- * @param string $link        The base url before the appended part
- * @param string $getname     the variable name in the query string which stores
+ * @param int     $start      The number of the first listed item - $_GET['rowstart']
+ * @param int     $count      The number of displayed items - LIMIT on sql
+ * @param int     $total      The number of all items - a dbcount of total
+ * @param int     $range      The number of links before and after the current page
+ * @param string  $link       The base url before the appended part
+ * @param string  $getname    the variable name in the query string which stores
  *                            the number of the current page
+ * @param boolean $button     Displays as button
  *
  * @return boolean|string FALSE if $count is invalid
  */
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $single_button = FALSE) {
-    global $locale;
+function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
+
+    $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
@@ -1373,7 +1376,8 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
         $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
     }
-    if ($link == "") {
+
+    if ($link == '') {
         $link = FUSION_SELF."?";
         if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
             global $filepath;
@@ -1389,7 +1393,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     }
     $idx_back = $start - $count;
     $idx_next = $start + $count;
-    if ($single_button == TRUE) {
+    if ($button == TRUE) {
         if ($idx_next >= $total) {
             return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
         } else {
@@ -1430,6 +1434,48 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     }
 
     return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+}
+
+/**
+ * @param        $scroll_url    The ajax script that loads the content
+ * @param int    $rowstart      Current rowstart - $_GET['rowstart']
+ * @param int    $total_count   The total rows - dbrows($result);
+ * @param string $getname       Default is 'rowstart'
+ * @param string $additional_http_query '&section=some_section'
+ *
+ * @return string
+ */
+function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
+    $script = "<script>                
+    var count = $rowstart+1;
+    $(window).scroll(function(){                
+      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {          
+        if (count <= '$total_count') {            
+            loadInfinityContent(count);
+            count++;    
+        }            
+      }
+    }); 
+   function loadInfinityContent(pageNumber){
+       $('.infiniteLoader').show('fast');
+       $.ajax({
+              url: '$scroll_url', 
+              type:'GET',
+              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',              
+              success: function(html){
+                  $('.infiniteLoader').hide();
+                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded                  
+              }
+          });
+      return false;
+    }
+    </script>";
+    add_to_jquery(str_replace(['<script>', '</script>'], '', $script));
+
+    return "   
+    <div id='scroll_target'></div>
+    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>Loading...</div></div>
+    ";
 }
 
 /**
@@ -1523,7 +1569,7 @@ function showdate($format, $val) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
-	return strftime($format, $offset);
+        return strftime($format, $offset);
     } else {
         $offset = intval($val) + $offset;
 
@@ -1602,6 +1648,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 
 /**
  * Variable dump printer for debugging purposes
+ *
  * @param      $array
  * @param bool $modal
  * @param bool $print
@@ -1619,6 +1666,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         $modal .= "</pre>\n";
         $modal .= closemodal();
         PHPFusion\OutputHandler::addToFooter($modal);
+
         return FALSE;
     }
     if ($print == TRUE) {
@@ -1626,6 +1674,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         echo $debug;
         echo "</pre>\n";
     }
+
     return $debug;
 }
 
@@ -1838,4 +1887,35 @@ function jsminify($code) {
     $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));
 
     return $min;
+}
+
+/**
+ * A wrapper function for file_put_contents with cache invalidation
+ *
+ * If opcache is enabled on the server, this function will write the file
+ * as the original file_put_contents and invalidate the cache of the file.
+ *
+ * It is needed when you create a file dynamically and want to include it
+ * before the cache is invalidated. Redirection does not matter.
+ *
+ * @todo Find a better place and/or name for this function
+ *
+ * @param string          $file file path
+ * @param string|string[] $data
+ * @param int             $flags
+ *
+ * @return int Number of written bytes
+ */
+function write_file($file, $data, $flags = NULL) {
+    $bytes = NULL;
+    if ($flags === NULL) {
+        $bytes = \file_put_contents($file, $data);
+    } else {
+        $bytes = \file_put_contents($file, $data, $flags);
+    }
+    if (function_exists('opcache_invalidate')) {
+        \opcache_invalidate($file, TRUE);
+    }
+
+    return $bytes;
 }

@@ -583,9 +583,12 @@ class Infusion_Core {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
-                $result = dbquery("CREATE TABLE ".$newtable);
-                if (!$result) {
-                    $error = TRUE;
+                $table_name = fusion_first_words($newtable, 1, '');
+                if (!db_exists($table_name)) {
+                    $result = dbquery("CREATE TABLE ".$newtable);
+                    if (!$result) {
+                        $error = TRUE;
+                    }
                 }
             }
         }
@@ -597,13 +600,16 @@ class Infusion_Core {
 
     protected function newcol_infuse($inf) {
         $error = FALSE;
+        static $table_schema = [];
         if (!empty($inf['newcol']) && is_array($inf['newcol'])) {
             foreach ($inf['newcol'] as $newCol) {
                 if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
-                    $columns = fieldgenerator($newCol['table']);
-                    $count = count($columns);
-                    if (!in_array($newCol['column'], $columns)) {
-                        $result = dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                    if (empty($table_schema[$newCol['table']])) {
+                        $table_schema[$newCol['table']] = fieldgenerator($newCol['table']);
+                    }
+                    $count = count($table_schema[$newCol['table']]);
+                    if (!in_array($newCol['column'], $table_schema[$newCol['table']])) {
+                        $result = dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$table_schema[$newCol['table']][$count - 1]);
                         if (!$result) {
                             $error = TRUE;
                         }

@@ -225,6 +225,9 @@ class MemberPoll {
         }
     }
 
+    /**
+     * Display the Polls Content
+     */
     public function _selectUserVote() {
         $data = $this->_renderpollOption();
         $info['vote'] = $this->_countPoll("");
@@ -242,7 +245,11 @@ class MemberPoll {
                     if ($i == 0) {
                         $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
                         $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
-                        $form_action = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+                        //$form_action = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+
+                        $form_action = clean_request();
+
+
                         $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, array('enctype' => TRUE));
                         $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
 
@@ -288,7 +295,6 @@ class MemberPoll {
                     $render['poll_arch'] = "<a class='btn btn-default btn-sm' href='".INFUSIONS."member_poll_panel/polls_archive.php'>".self::$locale['POLL_063']."</a>";
                 }
             }
-
             render_poll($render);
         }
     }
@@ -502,7 +508,7 @@ class MemberPoll {
                 addNotice('warning', "<i class='fa fa-close fa-lg m-r-10'></i>".self::$locale['POLL_014']);
             }
 
-            redirect(FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""));
+            redirect(clean_request());
         }
     }
 

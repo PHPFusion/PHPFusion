@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Downloads;
+
+use PHPFusion\BreadCrumbs;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -27,7 +30,7 @@ class Functions {
      */
     public static function get_downloadCats() {
         return dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
-                                 (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
+            (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
     }
 
     /**
@@ -66,7 +69,7 @@ class Functions {
      */
     public static function get_downloadCatsIndex() {
         return dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
-                            "".(multilang_table("BL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
+            "".(multilang_table("BL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
     }
 
     /**
@@ -80,9 +83,9 @@ class Functions {
                 $data[$index][$download_cat_id]['download_cat_link'] = "<a href='".DOWNLOADS."downloads.php?cat_id=".$cat['download_cat_id']."'>".$cat['download_cat_name']."</a>";
             }
         }
+
         return $data;
     }
-
 
     /**
      * Validate Download
@@ -109,7 +112,7 @@ class Functions {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
                 $crumb = array(
-                    'link' => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
+                    'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
                     'title' => $_name['download_cat_name']
                 );
                 if (isset($index[get_parent($index, $id)])) {
@@ -142,7 +145,7 @@ class Functions {
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             add_to_meta($crumb['title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 
@@ -183,7 +186,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['download_allow_comments']) {
             ob_start();
-            echo showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'], $data['download_allow_ratings']);
+            showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'], $data['download_allow_ratings']);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -195,7 +198,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('ratings_enabled') && $data['download_allow_ratings']) {
             ob_start();
-            echo showratings("D", $data['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
+            showratings("D", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }

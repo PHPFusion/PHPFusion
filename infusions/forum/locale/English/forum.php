@@ -79,6 +79,7 @@ $locale['forum_0186'] = 'You do not have permission to post in the selected foru
 $locale['forum_0187'] = 'Forum does not exist';
 $locale['forum_0188'] = 'Image not found';
 
+
 // Moderator Options
 $locale['forum_0200'] = 'Moderator Options';
 $locale['forum_0201'] = 'Delete Thread';
@@ -241,6 +242,7 @@ $locale['forum_0526'] = 'Latest %s posts';
 $locale['forum_0527'] = '%s has replied to this - %s';
 $locale['forum_0528'] = '%s %s %s to this - %s';
 $locale['forum_0529'] = 'reacted'; // for isset errors
+$locale['forum_0530'] = 'others';
 
 // Post Error/Success
 $locale['forum_0540'] = 'Attachment file type not allowed.';

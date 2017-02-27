@@ -52,10 +52,10 @@ if (!function_exists('display_user_info_panel')) {
                         <li><a href='{%acp_link%}'>{%acp_title%} <i class='fa fa-dashboard fa-pull-right'></i></a></li>
                     <?php endif; ?>
                 </ul>
+                <?php if (!empty($info['submissions'])) : ?>
                 <ul class='block'>
                     <li>
                         <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='pull-right entypo upload-cloud'></i></a>
-                        <?php if (!empty($info['submissions'])) : ?>
                             <ul id='collapse' class='panel-collapse collapse block'>
                                 <?php
                                 foreach ($info['submissions'] as $modules) {
@@ -67,9 +67,9 @@ if (!function_exists('display_user_info_panel')) {
                                 }
                                 ?>
                             </ul>
-                        <?php endif; ?>
                     </li>
                 </ul>
+                <?php endif; ?>
             </div>
             <div class='spacer-xs'><a class='btn btn-block btn-primary' href='{%logout_link%}'>{%logout_title%}</a></div>
             {%closeside%}

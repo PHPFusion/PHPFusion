@@ -498,7 +498,7 @@ class FaqAdmin extends FaqAdminModel {
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request('ref=faq_form', array('ref'), false)."'>
                         <i class='fa fa-fw fa-plus'></i>".$this->locale['faq_0110']."</a>\n";
         }
-        echo "<a class='btn btn-primary btn-sm m-r-10' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus fa-fw'></i> Add Category</a>
+        echo "<a class='btn btn-primary btn-sm m-r-10' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['faq_0119']."</a>
             <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin(' publish');\"><i class='fa fa-fw fa-check'></i>".$this->locale['publish']."</a>
             <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin(' unpublish');\"><i class='fa fa-fw fa-ban'></i>".$this->locale['unpublish']."</a>
             <a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin(' delete');\"><i class='fa fa-fw fa-trash-o'></i>".$this->locale['delete']."</a>

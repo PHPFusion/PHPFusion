@@ -632,14 +632,14 @@ class NewThread extends ForumServer {
                 }
 
                 $this->info = array(
-                    'title'             => self::$locale['forum_0057'],
-                    'description'       => '',
-                    'openform'          => openform('input_form', 'post', FUSION_SELF, array('enctype' => FALSE)),
-                    'closeform'         => closeform(),
-                    'forum_id_field'    => '',
-                    'thread_id_field'   => '',
+                    'title'           => self::$locale['forum_0057'],
+                    'description'     => '',
+                    'openform'        => openform('input_form', 'post', FORUM.'newthread.php', array('enctype' => FALSE)),
+                    'closeform'       => closeform(),
+                    'forum_id_field'  => '',
+                    'thread_id_field' => '',
                     // need to disable all parents
-                    'forum_field'       => form_select_tree("forum_id", self::$locale['forum_0395'], $thread_data['forum_id'],
+                    'forum_field'     => form_select_tree("forum_id", self::$locale['forum_0395'], $thread_data['forum_id'],
                         array(
                             "required"     => TRUE,
                             "width"        => "320px",

@@ -50,8 +50,9 @@ class News_Preview extends News {
             </style>
             ");
             $modal = openmodal('news_preview', 'Preview News', ['class' => 'modal-lg preview']);
+            $http_query = http_build_query($this->news_data).'&readmore='.$this->news_data['news_id'].'&rowstart=0';
             ob_start();
-            echo "<iframe src='".NEWS_CLASS."news/news_preview.php?".http_build_query($this->news_data)."' style='height:80vh; width:100%; border:0; margin-bottom:-5px'></iframe>";
+            echo "<iframe src='".NEWS_CLASS."news/news_preview.php?$http_query' style='height:80vh; width:100%; border:0; margin-bottom:-5px'></iframe>";
             $modal .= ob_get_clean();
             $modal .= closemodal();
             add_to_footer($modal);

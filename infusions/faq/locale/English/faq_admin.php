@@ -47,12 +47,13 @@ $locale['faq_0110'] = "Add FAQ";
 $locale['faq_0111'] = "Delete this FAQ?";
 $locale['faq_0112'] = "There are no FAQ defined.";
 $locale['faq_0113'] = "There are no FAQ, which match with the Searchoptions.";
-$locale['faq_0114'] = "Before you can create a FAQ, you must create a FAQ.";
+$locale['faq_0114'] = "Before you can create a FAQ, you must create a FAQ Category.";
 
 $locale['faq_0115'] = "Category Name";
 $locale['faq_0116'] = "Category Description";
 $locale['faq_0117'] = "Language";
 $locale['faq_0118'] = "Save Category";
+$locale['faq_0119'] = "Add Category";
 
 // Table - Faq - Sorting
 $locale['faq_0120'] = "Search";

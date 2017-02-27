@@ -20,7 +20,6 @@ if (!defined("IN_FUSION")) {
 }
 
 function display_bbcodes($width, $textarea_name = "message", $inputform_name = "inputform", $selected = "") {
-    global $p_data;
     $bbcode_cache = cache_bbcode();
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
@@ -90,7 +89,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
             $phpfunction = "";
         }
         $bbcodes .= substr($bbdata['value'], 0,
-                           1) != "!" ? "<input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />\n" : "";
+            1) != "!" ? "<input ".$type." class='bbcode' onclick=\"".$onclick."\" ".$onmouseover." ".$onmouseout." title='".$bbdata['description']."' />\n" : "";
         if (array_key_exists('html_start', $bbdata) && $bbdata['html_start'] != "") {
             $bbcodes .= $bbdata['html_start']."\n";
         }

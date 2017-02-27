@@ -32,12 +32,7 @@ class InstallerIntroduction extends Install_Core {
 
     public function __recovery() {
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
-            if (empty(self::$connection['pdo_enabled'])) {
-                self::$connection['pdo_enabled'] = 1;
-            }
-            require(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
-            ini_set('display_errors', FALSE);
             if (!empty(fusion_get_settings('version'))) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
@@ -63,7 +58,6 @@ class InstallerIntroduction extends Install_Core {
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;
         $this->installer_step(self::STEP_INTRO);
-
         return $this->__Index();
     }
 
@@ -78,10 +72,27 @@ class InstallerIntroduction extends Install_Core {
             }
         }
 
-        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
-        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
+        $content = "<h4 class='strong'>".(isset($_GET['upgrade']) ? self::$locale['setup_0022'] : self::$locale['setup_0002'])."</h4>\n";
+        $content .= "<p>".(isset($_GET['upgrade']) ? self::$locale['setup_0023'] : self::$locale['setup_0003'])."</p>\n";
         $content .= "<p>".self::$locale['setup_1001']."</p>\n";
         $content .= "<hr/>";
+
+        /**
+         * Remove after testing phase.
+         */
+        if (!isset($_GET['upgrade'])) {
+            $content .= "<h4>Start your installation from Version 7.02</h4>\n";
+            $content .= "<a class='btn btn-warning btn-md m-b-20' href='./test/install.php'>Install Version 7.02 with mysqli</a>                        
+            <ul class='m-l-20 m-b-20'>
+            <li><strong>Note:</strong> Like Version 7 requirements - Your Database Must Exist and Empty</li>                                    
+            <li>Don't report any issues in Github with the v7 installer (<strong>including this message</strong>). If it doesn't work for you, try other method.</li>            
+            <li>No need to translate this.</li>                        
+            </ul>            
+            <br/>Complete source code for this can be found on <a href='https://github.com/php-fusion/PHP-Fusion/blob/7.02.07/setup.php' target='_blank'>Github</a>.
+            <hr/>";
+        }
+
+
         $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
         $content .= form_select('localeset', '', LANGUAGE,
                                 array(
@@ -119,11 +130,20 @@ class InstallerIntroduction extends Install_Core {
 
     private function __RecoveryConsole() {
 
+        $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
+
+        if (isset($_POST['htaccess'])) {
+            require_once(INCLUDES.'htaccess_include.php');
+            write_htaccess();
+            addNotice('success', self::$locale['setup_1020']);
+            $this->installer_step(self::STEP_INTRO);
+            redirect(FUSION_SELF."?localeset=".LANGUAGE);
+        }
+
         if (isset($_POST['uninstall'])) {
             require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             $i = 0;
-
             foreach (array_keys($coretables) as $table) {
                 $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
                 if ($result) {
@@ -137,56 +157,45 @@ class InstallerIntroduction extends Install_Core {
             @unlink(BASEDIR.'.htaccess');
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
-            addNotice('success', self::$locale['setup_0125']);
+            addNotice('danger', "<strong>".self::$locale['setup_0125']."</strong>");
+            $content .= renderNotices(getNotices());
             if ($i == count($coretables)) {
                 redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
             }
-
-        }
-
-        if (isset($_POST['htaccess'])) {
-            \PHPFusion\Installer\write_htaccess();
-
-            addNotice('success', self::$locale['setup_1020']);
-            $this->installer_step(self::STEP_INTRO);
-            redirect(FUSION_SELF."?localeset=".LANGUAGE);
-        }
-
-        $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
-        $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
-
-        $content .= form_hidden('localeset', '', LANGUAGE);
-
-        $content .= "<hr/>\n";
-
-        // Exit Installer
-        $content .= "<h5><strong>".self::$locale['setup_1017']."</strong></h5>\n";
-        $content .= "<div class='m-b-20'>".self::$locale['setup_1018']."</div>\n";
-        $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success'));
-        $content .= "<hr/>\n";
-        // Change Primary Admin Details
-        $content .= "<h5><strong>".self::$locale['setup_1011']."</strong></h5>\n";
-        $content .= "<div class='m-b-20'>".self::$locale['setup_1012']."</div>\n";
-        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, array('class' => 'btn-primary'));
-        $content .= "<hr/>\n";
-        // Infusions Installer
-        $content .= "<h5><strong>".self::$locale['setup_1008']."</strong></h5>\n";
-        $content .= "<div class='m-b-20'>".self::$locale['setup_1009']."</div>\n";
-        $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary'));
-        $content .= "<hr/>\n";
-        // Build htaccess
-        if (isset(self::$connection['db_prefix'])) {
-            $content .= "<h5><strong>".self::$locale['setup_1014']."</strong></h5>\n";
-            $content .= "<div class='m-b-20'>".self::$locale['setup_1015']."</div>\n";
-            $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-default'));
+        } else {
+            // Exit Installer
+            $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
+            $content .= "<hr/>\n";
+            $content .= renderNotices(getNotices());
+            $content .= form_hidden('localeset', '', LANGUAGE);
+            $content .= "<h5><strong>".self::$locale['setup_1017']."</strong></h5>\n";
+            $content .= "<div class='m-b-20'>".self::$locale['setup_1018']."</div>\n";
+            $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success'));
+            $content .= "<hr/>\n";
+            // Change Primary Admin Details
+            $content .= "<h5><strong>".self::$locale['setup_1011']."</strong></h5>\n";
+            $content .= "<div class='m-b-20'>".self::$locale['setup_1012']."</div>\n";
+            $content .= form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, array('class' => 'btn-primary'));
+            $content .= "<hr/>\n";
+            // Infusions Installer
+            $content .= "<h5><strong>".self::$locale['setup_1008']."</strong></h5>\n";
+            $content .= "<div class='m-b-20'>".self::$locale['setup_1009']."</div>\n";
+            $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary'));
+            $content .= "<hr/>\n";
+            // Build htaccess
+            if (isset(self::$connection['db_prefix'])) {
+                $content .= "<h5><strong>".self::$locale['setup_1014']."</strong></h5>\n";
+                $content .= "<div class='m-b-20'>".self::$locale['setup_1015']."</div>\n";
+                $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-default'));
+                $content .= "<hr/>\n";
+            }
+            $content .= "<h5><strong>".self::$locale['setup_1004']."</strong></h5>\n";
+            $content .= "<div class='m-b-20'>".self::$locale['setup_1005']."<br/><br/><p class='text-danger strong'>".self::$locale['setup_1006']."</p></div>\n";
+            //$content .= "<div class='alert alert-danger strong'><p>".self::$locale['setup_1006']."</p>\n";
+            $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger'));
+            //$content .= "</div>\n";
             $content .= "<hr/>\n";
         }
-        $content .= "<h5><strong>".self::$locale['setup_1004']."</strong></h5>\n";
-        $content .= "<div class='m-b-20'>".self::$locale['setup_1005']."</div>\n";
-        $content .= "<div class='alert alert-danger strong'><p>".self::$locale['setup_1006']."</p>\n";
-        $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger m-t-20'));
-        $content .= "</div>\n";
-        $content .= "<hr/>\n";
 
         return $content;
     }

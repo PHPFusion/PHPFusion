@@ -35,32 +35,44 @@ class InstallerDbSetup extends Install_Core {
     }
 
     private function step_form() {
+        // Back button prevention
+        if (!empty(self::$connection)) {
+            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), "==")) {
+                $this->installer_step(self::STEP_INTRO);
+                redirect(FUSION_REQUEST);
+            }
+        }
         self::set_empty_prefix();
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
+        $content .= renderNotices(getNotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
                               array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => 'localhost'
+                                  'inline'           => TRUE,
+                                  'required'         => TRUE,
+                                  'placeholder'      => 'e.g. localhost',
+                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
                               ));
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
                               array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => self::$locale['setup_1220']
+                                  'inline'           => TRUE,
+                                  'required'         => TRUE,
+                                  'placeholder'      => self::$locale['setup_1220'],
+                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
                               ));
         $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'],
                               array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => self::$locale['setup_1221']
+                                  'inline'           => TRUE,
+                                  'required'         => TRUE,
+                                  'placeholder'      => self::$locale['setup_1221'],
+                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
                               ));
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'],
                               array(
-                                  'type' => 'password',
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => self::$locale['setup_1222']
+                                  'type'             => 'password',
+                                  'inline'           => TRUE,
+                                  'required'         => FALSE,
+                                  'placeholder'      => self::$locale['setup_1222'],
+                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
                               ));
         $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1092']."</h4>\n</div>\n";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'],
@@ -120,11 +132,10 @@ class InstallerDbSetup extends Install_Core {
                 'secret_key' => self::createRandomPrefix(32),
             ];
 
-            define('DB_PREFIX', self::$connection['db_prefix']);
-            define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
-            define('SECRET_KEY_SALT', self::createRandomPrefix(32));
-            define('SECRET_KEY', self::createRandomPrefix(32));
-
+            if (!defined('DB_PREFIX')) define('DB_PREFIX', self::$connection['db_prefix']);
+            if (!defined('COOKIE_PREFIX')) define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
+            if (!defined('SECRET_KEY_SALT')) define('SECRET_KEY_SALT', self::createRandomPrefix(32));
+            if (!defined('SECRET_KEY')) define('SECRET_KEY', self::createRandomPrefix(32));
 
         } else {
             $db_host = '';
@@ -162,13 +173,10 @@ class InstallerDbSetup extends Install_Core {
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
                 $final_message = self::$locale['setup_1210'];
-
                 // Go for point system differentiation
                 $current_count = 0;
                 if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
-
                     $final_message = self::$locale['setup_1211'];
-
                     /*
                      * Create missing new tables
                      */
@@ -183,7 +191,7 @@ class InstallerDbSetup extends Install_Core {
                             $message .= $table_name." created<br/>\n";
                             //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                         }
-                        addNotice("success", $message);
+                        //addNotice("success", $message);
                     }
 
                     /*
@@ -203,7 +211,7 @@ class InstallerDbSetup extends Install_Core {
                                     $message .= $table_name." altered<br/>\n";
                                 }
                             }
-                            addNotice("info", $message);
+                            //addNotice("info", $message);
                         }
                     }
 
@@ -222,12 +230,11 @@ class InstallerDbSetup extends Install_Core {
                                         $microtime = microtime(TRUE) - $microtime;
                                         $message .= $table_name." altered<br/>\n";
                                     }
-
                                     //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
                                 }
                             }
                         }
-                        addNotice("info", $message);
+                        //addNotice("info", $message);
                     }
 
                     /*
@@ -244,15 +251,13 @@ class InstallerDbSetup extends Install_Core {
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                             }
                         }
-                        addNotice("info", $message);
+                        //addNotice("info", $message);
                     }
 
                     $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
-
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
                         $message = "<strong>Building version upgrades...</strong>\n";
-
                         foreach ($to_upgrade as $filename => $file_upgrades) {
 
                             $current_count = $current_count + 1;
@@ -274,17 +279,17 @@ class InstallerDbSetup extends Install_Core {
                                 }
                             }
                             $microtime = microtime(TRUE) - $microtime;
-                            $message .= "Building version upgrades -".$filename;
+                            //$message .= "Building version upgrades -".$filename;
                             //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                         }
-                        addNotice('warning', $message);
+
                         if (!$error) {
                             $message = "<strong>Updating your OS to latest version.</strong>\n";
                             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
                                 ':version_value' => $filename,
                                 ':version_col' => 'version'
                             ));
-                            addNotice('warning', $message);
+                            //addNotice('warning', $message);
                         }
                     }
 
@@ -298,21 +303,27 @@ class InstallerDbSetup extends Install_Core {
                  * Generate final message
                  */
                 $errors = Batch_Core::getInstance()->ProgressHasError();
-
+                if (!$errors) {
+                    \PHPFusion\Installer\write_config(self::$connection);
+		            require_once(INCLUDES.'htaccess_include.php');
+		            write_htaccess();
+                    if (!empty($to_upgrade)) {
+                        self::installer_step(self::STEP_INFUSIONS);
+                    } else {
+                        self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                    }
+                    redirect(FUSION_REQUEST);
+                }
                 // Displays Output
+                /*
                 $content .= "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
                 $content .= "<div class='progress'>\n";
                 $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
                 $content .= "<span id='pcg'>0</span>\n";
                 $content .= "</div>\n</div>\n";
-                $content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
+                //$content .= "<p>Database Setup Completed!</p>";
+                //$content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
                 $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
-
-                \PHPFusion\Installer\write_config(self::$connection);
-
-                \PHPFusion\Installer\write_htaccess();
-
-
                 self::$step = array(
                     1 => array(
                         'name' => 'step',
@@ -320,7 +331,7 @@ class InstallerDbSetup extends Install_Core {
                         'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM // @check whether is update or not skip
                     )
                 );
-
+                */
             } else {
                 foreach ($validate as $validate_result) {
                     if (!$validate_result['result']) {

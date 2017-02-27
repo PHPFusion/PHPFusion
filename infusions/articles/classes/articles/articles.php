@@ -543,7 +543,7 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("A", $data['article_id'], FUSION_SELF."?article_id=".$data['article_id']);
+            showratings("A", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }
@@ -563,9 +563,8 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('comments_enabled') && $data['article_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], FUSION_SELF."?article=".$data['article_id'], $data['article_allow_ratings']);
-            $html = ob_get_contents();
-            ob_end_clean();
+            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id'], FALSE);
+            $html = ob_get_clean();
         }
 
         return (string)$html;

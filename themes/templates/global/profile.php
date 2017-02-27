@@ -71,7 +71,7 @@ if (!function_exists('display_user_profile')) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
         <!--userprofile_pre_idx-->
-        <section id='user-profile' class='spacer-sm'>
+        <section id='user-profile' class='spacer-sm overflow-hide'>
             {%tab_header%}
             <div class='container spacer-sm'>
                 <div class='clearfix p-15 p-t-0'>
@@ -82,7 +82,7 @@ if (!function_exists('display_user_profile')) {
                 <hr/>
                 <div class='clearfix'>{%basic_info%}</div>
                 <hr/>
-                <div class='clearifx'>{%extended_info%}</div>
+                <div class='clearfix'>{%extended_info%}</div>
             </div>
             {%tab_footer%}
         </section>

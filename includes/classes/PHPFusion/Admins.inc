@@ -84,7 +84,7 @@ class Admins {
      * @var array
      */
     private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
-    private $admin_pages = array();
+    private static $admin_pages = array();
     /**
      * @var array
      */
@@ -115,7 +115,7 @@ class Admins {
 
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
-            $this->admin_pages = $this->getAdminPages();
+            self::$admin_pages = $this->getAdminPages();
             $this->admin_sections = array(
                 0 => self::$locale['ac00'],
                 1 => self::$locale['ac01'],
@@ -132,26 +132,26 @@ class Admins {
      * @return array
      */
     public function getAdminPages() {
-        if (empty($this->admin_pages)) {
+        if (empty(self::$admin_pages)) {
             $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
                     if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
                         $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
-                        $this->admin_pages[$data['admin_page']][] = $data;
+                        self::$admin_pages[$data['admin_page']][] = $data;
                     }
                 }
             }
         }
 
-        return $this->admin_pages;
+        return self::$admin_pages;
     }
 
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
      */
-    private function _currentPage() {
+    public function _currentPage() {
         $path = $_SERVER['PHP_SELF'];
         if (defined('START_PAGE')) {
             $path_info = pathinfo(START_PAGE);
@@ -161,7 +161,6 @@ class Admins {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
-
         return $path;
     }
 
@@ -173,7 +172,7 @@ class Admins {
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
-        $this->admin_pages[$page] = array();
+        self::$admin_pages[$page] = array();
     }
 
     public function getAdminLocale() {
@@ -194,21 +193,25 @@ class Admins {
                 'title' => self::$locale['ac0'.$acTab]
             ]);
         }
+
     }
 
     /**
+     * Determine which section is currently active.
+     *
      * @return int|string
      */
     public function _isActive() {
         $active_key = 0;
-        if (empty($active_key) && !empty($this->admin_pages)) {
-            foreach ($this->admin_pages as $key => $data) {
+        self::$admin_pages = $this->getAdminPages();
+        if (empty($active_key) && !empty(self::$admin_pages)) {
+            foreach (self::$admin_pages as $key => $data) {
                 $link = array();
                 foreach ($data as $arr => $admin_data) {
                     $link[] = $admin_data['admin_link'];
                 }
                 $data_link = array_flip($link);
-                if (isset($data_link[$this->current_page])) {
+                if (isset($data_link[$this->_currentPage()])) {
                     return $key;
                 }
             }
@@ -244,6 +247,12 @@ class Admins {
         $this->link_type[$type] = $link;
     }
 
+    /**
+     * Get Submit Type
+     * @param null $type submit stype prefix
+     *
+     * @return array|mixed|null
+     */
     public function getSubmitType($type = NULL) {
         return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
     }
@@ -257,7 +266,8 @@ class Admins {
     }
 
     /**
-     * @param $link - admin submission url
+     * @param $link     Admin submission url
+     * @param $type     Submissions stype prefix
      */
     public function setSubmitLink($type, $link) {
         $this->submit_link[$type] = $link;
@@ -328,7 +338,7 @@ class Admins {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
-                    $secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
+                    $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
 
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 

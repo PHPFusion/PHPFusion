@@ -45,6 +45,12 @@ unset($db_host, $db_user, $db_pass);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 if (empty($settings)) {
+    if (file_exists(BASEDIR.'install.php')) {
+        if (file_exists(BASEDIR.'config.php')) {
+            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.TIME.'.php');
+        }
+        redirect(BASEDIR.'install.php');
+    }
     die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
@@ -145,7 +151,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
     redirect(FUSION_REQUEST);
 } elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-    redirect(BASEDIR."index.php");
+    redirect(BASEDIR.$settings['opening_page']);
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
