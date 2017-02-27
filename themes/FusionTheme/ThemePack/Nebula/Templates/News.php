@@ -18,6 +18,7 @@
 
 namespace ThemePack\Nebula\Templates;
 
+use PHPFusion\Panels;
 use ThemeFactory\Core;
 
 /**
@@ -41,9 +42,9 @@ class News extends Core {
         self::setParam('body_container', TRUE);
         ?>
 
-        <ul class='m-b-20'>
+        <ul class='m-b-20 list-group-item row'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h6><?php echo fusion_get_locale('news_0018') ?></h6></a>
+                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -51,9 +52,7 @@ class News extends Core {
             <?php foreach ($info['news_filter'] as $filter_link => $filter_name) : ?>
                 <li class='display-inline-block m-r-10'>
                     <a href='<?php echo $filter_link ?>'>
-                        <h6 class='text-uppercase m-0 p-t-10 p-b-5'>
-                            <strong><?php echo $filter_name ?></strong>
-                        </h6>
+                        <h5 class='m-0 p-t-10 p-b-5'><?php echo $filter_name ?></h5>
                     </a>
                 </li>
             <?php endforeach; ?>
@@ -165,9 +164,9 @@ class News extends Core {
             </div>";
         }
         ?>
-        <ul class='m-b-20'>
+        <ul class='m-b-20 list-group-item row'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h6><?php echo fusion_get_locale('news_0018') ?></h6></a>
+                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -175,9 +174,9 @@ class News extends Core {
             <?php foreach ($info['news_filter'] as $filter_link => $filter_name) : ?>
                 <li class='display-inline-block m-r-10'>
                     <a href='<?php echo $filter_link ?>'>
-                        <h6 class='text-uppercase m-0 p-t-10 p-b-5'>
-                            <strong><?php echo $filter_name ?></strong>
-                        </h6>
+                        <h5 class='m-0 p-t-10 p-b-5'>
+                            <?php echo $filter_name ?>
+                        </h5>
                     </a>
                 </li>
             <?php endforeach; ?>
@@ -255,6 +254,7 @@ class News extends Core {
             $ratings_html = ob_get_contents();
             ob_end_clean();
         }
+
         self::setParam('right_post_content', $ratings_html);
 
         // Send categories to the right panel
