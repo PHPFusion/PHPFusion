@@ -310,11 +310,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div class='bbcode_input'>\n";
-        $html .= display_bbcodes('100%', $input_name, $options['form_name'], $options['input_bbcode']);
+        $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div>\n";
-        $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
+        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
         $html .= $options['preview'] ? "</div>\n" : "";
     }
 
