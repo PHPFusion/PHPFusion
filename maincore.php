@@ -179,7 +179,7 @@ if (!defined('LANGUAGE') && !defined('LOCALESET')) {
         define('LOCALESET', $userdata['user_language'].'/');
     } else {
         $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-        if ($data['user_language']) {
+        if ($langData['user_language']) {
             define('LANGUAGE', $langData['user_language']);
             define('LOCALESET', $langData['user_language'].'/');
         } else {
