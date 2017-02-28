@@ -87,7 +87,7 @@ if ($gll_settings['gallery_allow_submission']) {
     if (isset($_GET['submitted']) && $_GET['submitted'] == "p") {
         echo "<div class='well text-center'><p><strong>".$locale['gallery_0101']."</strong></p>";
         echo "<p><a href='submit.php?stype=p'>".$locale['gallery_0102']."</a></p>";
-        echo "<p><a href='index.php'>".$locale['gallery_0113']."</a></p>\n";
+        echo "<p><a href='index.php'>".str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['gallery_0113'])."</a></p>\n";
         echo "</div>\n";
     } else {
         $result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_title");
@@ -97,7 +97,7 @@ if ($gll_settings['gallery_allow_submission']) {
                 $opts[$data['album_id']] = $data['album_title'];
             }
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
-            echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['gallery_0107']."</div>\n";
+            echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['gallery_0107'])."</div>\n";
             echo form_select('album_id', $locale['gallery_0103'], '', array("options" => $opts, "inline" => TRUE));
             echo form_text('photo_title', $locale['gallery_0104'], '', array('required' => TRUE, "inline" => TRUE));
             echo form_select('photo_keywords', $locale['gallery_0105'], $data['photo_keywords'], array(
