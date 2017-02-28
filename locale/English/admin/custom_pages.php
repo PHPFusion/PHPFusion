@@ -45,6 +45,7 @@ $locale['page_0316'] = "Link Position";
 $locale['page_0317'] = "Link Order";
 $locale['page_0318'] = "Link Icon";
 $locale['page_0319'] = "Link Category";
+$locale['page_0319a'] = "Link Status";
 $locale['page_0320'] = "Save Page"; // 430
 $locale['page_0321'] = "Save Link";
 $locale['page_0330'] = "Panel Attributes";
