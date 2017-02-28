@@ -41,7 +41,3 @@ if (column_exists(DB_FAQ_CATS, 'faq_cat_id', FALSE)) {
 	    }
 	}
 }
-
-if (column_exists(DB_FAQ_CATS, "faq_cat_id", FALSE)) {
-    dbquery("DROP TABLE ".DB_FAQ_CATS."");
-}
