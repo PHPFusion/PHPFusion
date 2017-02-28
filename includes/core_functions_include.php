@@ -88,44 +88,6 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
     return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
 }
 
-/**
- * Check if a given language is valid or if exists
- * Checks whether a language can be found in enabled languages array
- * Can also be used to check whether a language actually exists
- *
- * @param string $lang
- * @param bool   $file_check intended to be used when enabling languages in Admin Panel
- *
- * @return bool
- */
-function valid_language($lang, $file_check = FALSE) {
-    $enabled_languages = fusion_get_enabled_languages();
-    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
-            $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
-    ) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-// Set the requested language
-function set_language($lang) {
-    global $userdata;
-    if (iMEMBER) {
-        dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
-        $userdata['user_language'] = $lang;
-    } else {
-        $rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-        if ($rows != 0) {
-            dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
-        } else {
-            dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
-        }
-        // Sanitize guest sessions occasionally
-        dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time() - (86400 * 60))."'");
-    }
-}
 
 /**
  * Check if a given theme exists and is valid
@@ -186,104 +148,6 @@ function set_theme($theme) {
         die();
 
     }
-}
-
-/**
- * Create a selection list of possible languages in list
- *
- * @todo rename it from get_available_languages_list to a more proper name
- *
- * @param string $selected_language
- *
- * @return string
- */
-function get_available_languages_list($selected_language = "") {
-    $enabled_languages = fusion_get_enabled_languages();
-    $res = "";
-    foreach ($enabled_languages as $language) {
-        $sel = ($selected_language == $language ? " selected='selected'" : "");
-        $label = str_replace('_', ' ', $language);
-        $res .= "<option value='".$language."'$sel>".$label."</option>\n";
-    }
-
-    return $res;
-}
-
-/**
- * Get Language Switch Arrays
- *
- * @return array
- */
-function fusion_get_language_switch() {
-    static $language_switch = array();
-    if (empty($language_link)) {
-        $enabled_languages = fusion_get_enabled_languages();
-        foreach ($enabled_languages as $language => $language_name) {
-
-            $link = clean_request('lang='.$language, array('lang'), FALSE);
-
-            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
-                $link = str_replace(fusion_get_settings("site_path"), "", $link);
-            }
-            $language_switch[$language] = array(
-                "language_name"   => $language_name,
-                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
-                "language_icon"   => BASEDIR."locale/$language/$language.png",
-                "language_link"   => $link,
-            );
-        }
-    }
-
-    return (array)$language_switch;
-}
-
-/**
- * Language switcher function
- *
- * @param bool|TRUE $icon
- */
-function lang_switcher($icon = TRUE) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $enabled_languages = fusion_get_enabled_languages();
-    if (count($enabled_languages) <= 1) {
-        return;
-    }
-    openside($locale['global_ML102']);
-    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-    if ($icon) {
-        $language_switch = fusion_get_language_switch();
-        if (!empty($language_switch)) {
-            $row = 0;
-            foreach ($language_switch as $folder => $langData) {
-                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
-                if ($folder != LANGUAGE) {
-                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
-                }
-                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
-                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
-                $row++;
-            }
-        }
-    } else {
-        include_once INCLUDES."translate_include.php";
-        echo openform('lang_menu_form', 'post', FUSION_SELF);
-        echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
-        echo closeform();
-        add_to_jquery("
-			function showflag(item){
-				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
-			}
-			$('#lang_menu').select2({
-			placeholder: 'Switch Language',
-			formatSelection: showflag,
-			escapeMarkup: function(m) { return m; },
-			formatResult: showflag,
-			}).bind('change', function(item) {
-				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-			});
-		");
-    }
-    closeside();
 }
 
 /**
@@ -1739,7 +1603,7 @@ function fusion_get_userdata($key = NULL) {
     if (empty($userdata)) {
         $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
     }
-    $userdata += array(
+    $userdata = $userdata + array(
         "user_id"     => 0,
         "user_name"   => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
         "user_status" => 1,
@@ -1809,6 +1673,160 @@ function fusion_run_installer() {
         die("No config.php or install.php files were found");
     }
 }
+
+/*-------------------------
+ * Language Handling
+ +-------------------------/
+
+/**
+ * Define Site Language
+ * @param $lang
+ */
+function define_site_language($lang) {
+    if (valid_language($lang)) {
+        define('LANGUAGE', $lang);
+        define('LOCALESET', $lang);
+    }
+}
+
+// Set the requested language
+function set_language($lang) {
+    $userdata = fusion_get_userdata();
+    if (valid_language($lang)) {
+        if (iMEMBER) {
+            dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
+        } else {
+            $rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+            if ($rows != 0) {
+                dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
+            } else {
+                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".TIME."');");
+            }
+            // Sanitize guest sessions occasionally
+            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(TIME - (86400 * 60))."'");
+        }
+    }
+}
+
+/**
+ * Check if a given language is valid or if exists
+ * Checks whether a language can be found in enabled languages array
+ * Can also be used to check whether a language actually exists
+ *
+ * @param string $lang
+ * @param bool   $file_check intended to be used when enabling languages in Admin Panel
+ *
+ * @return bool
+ */
+function valid_language($lang, $file_check = FALSE) {
+    $enabled_languages = fusion_get_enabled_languages();
+    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
+            $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
+    ) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Create a selection list of possible languages in list
+ *
+ * @todo rename it from get_available_languages_list to a more proper name
+ *
+ * @param string $selected_language
+ *
+ * @return string
+ */
+function get_available_languages_list($selected_language = "") {
+    $enabled_languages = fusion_get_enabled_languages();
+    $res = "";
+    foreach ($enabled_languages as $language) {
+        $sel = ($selected_language == $language ? " selected='selected'" : "");
+        $label = str_replace('_', ' ', $language);
+        $res .= "<option value='".$language."'$sel>".$label."</option>\n";
+    }
+
+    return $res;
+}
+
+/**
+ * Get Language Switch Arrays
+ *
+ * @return array
+ */
+function fusion_get_language_switch() {
+    static $language_switch = array();
+    if (empty($language_link)) {
+        $enabled_languages = fusion_get_enabled_languages();
+        foreach ($enabled_languages as $language => $language_name) {
+
+            $link = clean_request('lang='.$language, array('lang'), FALSE);
+
+            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
+                $link = str_replace(fusion_get_settings("site_path"), "", $link);
+            }
+            $language_switch[$language] = array(
+                "language_name"   => $language_name,
+                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
+                "language_icon"   => BASEDIR."locale/$language/$language.png",
+                "language_link"   => $link,
+            );
+        }
+    }
+
+    return (array)$language_switch;
+}
+
+/**
+ * Language switcher function
+ *
+ * @param bool|TRUE $icon
+ */
+function lang_switcher($icon = TRUE) {
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $enabled_languages = fusion_get_enabled_languages();
+    if (count($enabled_languages) <= 1) {
+        return;
+    }
+    openside($locale['global_ML102']);
+    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
+    if ($icon) {
+        $language_switch = fusion_get_language_switch();
+        if (!empty($language_switch)) {
+            $row = 0;
+            foreach ($language_switch as $folder => $langData) {
+                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
+                if ($folder != LANGUAGE) {
+                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
+                }
+                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
+                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+                $row++;
+            }
+        }
+    } else {
+        include_once INCLUDES."translate_include.php";
+        echo openform('lang_menu_form', 'post', FUSION_SELF);
+        echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
+        echo closeform();
+        add_to_jquery("
+			function showflag(item){
+				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+			}
+			$('#lang_menu').select2({
+			placeholder: 'Switch Language',
+			formatSelection: showflag,
+			escapeMarkup: function(m) { return m; },
+			formatResult: showflag,
+			}).bind('change', function(item) {
+				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
+			});
+		");
+    }
+    closeside();
+}
+
 
 /**
  * Detect whether the system is installed and return the config file path
