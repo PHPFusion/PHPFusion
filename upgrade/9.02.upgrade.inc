@@ -387,6 +387,8 @@ $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE sett
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='serveroffset'";
 // Update opening page to contact since it is bound to be there
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='contact.php' WHERE settings_name='opening_page'";
+// Update securimage
+$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='securimage3' WHERE settings_name='captcha'";
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
