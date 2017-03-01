@@ -34,4 +34,4 @@ if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
 }
 
 // update new path for admin link
-$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/member_poll_panel/polls.png', `admin_link`='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='poll_admin.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.svg', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='poll_admin.php'";
