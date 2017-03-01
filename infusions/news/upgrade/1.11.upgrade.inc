@@ -139,4 +139,4 @@ if (file_exists(IMAGES_N_T)) {
 // Delete rows
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='news_cats.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_news.php'";
-$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/news/news_admin.php' WHERE admin_link='news.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/news/news.svg', admin_link='../infusions/news/news_admin.php' WHERE admin_link='news.php'";
