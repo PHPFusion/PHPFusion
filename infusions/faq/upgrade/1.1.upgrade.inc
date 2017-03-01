@@ -16,19 +16,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.1.5';
+$inf_version = '1.1';
 require_once (INCLUDES.'infusions_include.php');
 // Add multilingual support
+if (!column_exists(DB_FAQ_CATS, 'faq_cat_language', FALSE)) {
+    $inf_altertable[] = DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER faq_cat_description";
+}
+
 if (!column_exists(DB_FAQS, 'faq_breaks', FALSE)) {
     $inf_altertable[] = DB_FAQS." ADD faq_breaks CHAR(1) NOT NULL DEFAULT 'y' AFTER faq_answer";
 }
 
 if (!column_exists(DB_FAQS, 'faq_name', FALSE)) {
-    $inf_altertable[] = DB_FAQS." ADD faq_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1' AFTER faq_breaks";
+    $inf_altertable[] = DB_FAQS." ADD faq_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '".fusion_get_userdata('user_id')."' AFTER faq_breaks";
 }
 
 if (!column_exists(DB_FAQS, 'faq_datestamp', FALSE)) {
-    $inf_altertable[] = DB_FAQS." ADD faq_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER faq_name";
+    $inf_altertable[] = DB_FAQS." ADD faq_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '".time()."' AFTER faq_name";
 }
 
 if (!column_exists(DB_FAQS, 'faq_visibility', FALSE)) {
@@ -36,7 +40,7 @@ if (!column_exists(DB_FAQS, 'faq_visibility', FALSE)) {
 }
 
 if (!column_exists(DB_FAQS, 'faq_status', FALSE)) {
-    $inf_altertable[] = DB_FAQS." ADD faq_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER faq_visibility";
+    $inf_altertable[] = DB_FAQS." ADD faq_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER faq_visibility";
 }
 
 if (!column_exists(DB_FAQS, 'faq_language', FALSE)) {
@@ -57,4 +61,4 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3327']."', 'submit.php?stype=q', ".USER_LEVEL_MEMBER.", '1', '0', '13', '1', '".LANGUAGE."')";
 }
 
-$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/faq/faq_admin.php' WHERE admin_link='faq.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/faq/faq.svg', admin_link='../infusions/faq/faq_admin.php' WHERE admin_link='faq.php'";
