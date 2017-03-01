@@ -324,7 +324,20 @@ if (dbrows($result) > 0) {
 /*
  * Upgrade Settings Table
  */
-$enabled_languages = implode('.', fusion_get_detected_language());
+function fusion_get_detected_languages() {
+    static $detected_languages = NULL;
+    if ($detected_languages === NULL) {
+        $all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
+        foreach ($all_languages as $language_name) {
+            $detected_languages[$language_name] = $language_name;
+        }
+    }
+
+    return (array)$detected_languages;
+}
+
+$enabled_languages = implode('.', fusion_get_detected_languages());
+//$enabled_languages = implode('.', fusion_get_detected_language());
 $check_array = [
     // Enabled languages array
     //'enabled_languages' => $_GET['localeset'], // I'm not even sure which one is it.
@@ -441,19 +454,19 @@ $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='submissions.php'";
 $new_icon_array = array(
     'APWR' => 'adminpass.png',
     'AD' => 'administrator.png',
-    'A' => '../infusions/articles/articles.png',
+    'A' => '../infusions/articles/articles.svg',
     'SB' => 'banner.png',
     'BB' => 'bbcodes.png',
     'B' => 'blacklist.png',
-    'BLOG' => '../infusions/blog/blog.png',
+    'BLOG' => '../infusions/blog/blog.svg',
     'CP' => 'c-pages.png',
     'DB' => 'db_backup.png',
-    'D' => '../infusions/download/download.png',
+    'D' => '../infusions/download/download.svg',
     'MAIL' => 'email.png',
     'ERRO' => 'errors.png',
-    'FQ' => '../infusions/faq/faq.png',
-    'F' => '../infusions/forum/forums.png',
-    'PH' => '../infusions/gallery/gallery.png',
+    'FQ' => '../infusions/faq/faq.svg',
+    'F' => '../infusions/forum/forums.svg',
+    'PH' => '../infusions/gallery/gallery.svg',
     'IM' => 'images.png',
     'I' => 'infusions.png',
     'LANG' => 'language.png',
@@ -461,7 +474,7 @@ $new_icon_array = array(
     'M' => 'members.png',
     'MI' => 'migration.png',
     'S6' => 'misc.png',
-    'N' => '../infusions/news/news.png',
+    'N' => '../infusions/news/news.svg',
     'P' => 'panels.png',
     'PL' => 'permalink.png',
     'PI' => 'phpinfo.png',
@@ -470,7 +483,7 @@ $new_icon_array = array(
     'S4' => 'registration.png',
     'ROB' => 'robots.png',
     'S12' => 'security.png',
-    'S' => '../infusions/shoutbox/shout.png',
+    'S' => '../infusions/shoutbox/shout.svg',
     'SL' => 'sitelinks.png',
     'SM' => 'smileys.png',
     'TS' => 'theme.png',
@@ -481,7 +494,7 @@ $new_icon_array = array(
     'UG' => 'user_groups.png',
     'UL' => 'user_log.png',
     'S9' => 'user_settings.png',
-    'W' => '../infusions/weblinks/weblink.png',
+    'W' => '../infusions/weblinks/weblink.svg',
 );
 
 foreach ($new_icon_array as $admin_rights => $icon_file) {
