@@ -23,15 +23,7 @@ $locale = fusion_get_locale("",
     )
 );
 
-// Infusion general information
-$inf_title = $locale['forums']['title'];
-$inf_description = $locale['forums']['description'];
 $inf_version = '1.0.6';
-$inf_developer = 'PHP Fusion Development Team';
-$inf_email = 'info@php-fusion.co.uk';
-$inf_weburl = 'https://www.php-fusion.co.uk';
-$inf_folder = 'forum';
-$inf_image = 'forums.png';
 
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('upvote_points', '2', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('downvote_points', '1', 'forum')";
