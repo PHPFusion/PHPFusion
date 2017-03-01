@@ -1419,11 +1419,13 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 function showdate($format, $val) {
     $userdata = fusion_get_userdata();
     $tz_server = fusion_get_settings("serveroffset");
+	if (empty($tz_server)) $tz_server = 'Europe/London';
     if (!empty($userdata['user_timezone'])) {
         $tz_client = $userdata['user_timezone'];
     } else {
         $tz_client = fusion_get_settings("timeoffset");
     }
+	if (empty($tz_client)) $tz_client = 'Europe/London';
     $server_dtz = new DateTimeZone($tz_server);
     $client_dtz = new DateTimeZone($tz_client);
     $server_dt = new DateTime("now", $server_dtz);
