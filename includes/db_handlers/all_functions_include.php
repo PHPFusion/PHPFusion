@@ -231,8 +231,10 @@ function dblastid() {
 function dbconnection() {
     try {
         return DatabaseFactory::getConnection('default');
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         ## Do nothing to hide all errors
         ini_set('display_errors', FALSE);
+
+        return NULL;
     }
 }
