@@ -89,11 +89,6 @@ function display_registerform($info) {
     ThemePack\Nebula\Templates\Login::register_form($info);
 }
 
-function display_home($info) {
-    require_once(INFUSIONS.'home_panel/home_class.php');
-    ThemePack\Nebula\Templates\Panels\HomePanel::display_page($info);
-}
-
 function display_page($info) {
     ThemePack\Nebula\Templates\Page::display_page($info);
 }
@@ -136,9 +131,3 @@ function display_news_submissions_form(array $info = array()) {
 
     return ThemePack\Nebula\Templates\Submissions::display_news_submissions_form($info);
 }
-
-/*
-function render_comments($c_data, $c_info, $index = 0) {
-    ThemePack\Nebula\Templates\Comment::getInstance()->display_comment($c_data, $c_info, $index);
-}
-*/
