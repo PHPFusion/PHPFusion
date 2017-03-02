@@ -36,7 +36,6 @@ class Locale {
     public static function getLocale($key = NULL, $include_file = "") {
         global $locale;
         $is_sanitized = TRUE;
-        //if (!in_array($include_file, self::$locale_cache) && $include_file) {
         if ($include_file) {
             if (is_array($include_file)) {
                 foreach ($include_file as $file) {
@@ -54,7 +53,7 @@ class Locale {
         }
 
         if (!empty($locale) && $is_sanitized == TRUE) {
-            return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : $locale);
+            return empty($key) ? $locale : (isset($locale[$key]) ? $locale[$key] : array());
         }
 
         return NULL;
