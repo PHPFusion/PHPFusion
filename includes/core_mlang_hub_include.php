@@ -50,25 +50,26 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             }
         }
     } // Blog
-    elseif (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blogs/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                          $matches) && multilang_table("BL")
-    ) {
-        if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT blog_language FROM ".DB_PREFIX."blog WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+    elseif (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && multilang_table("BL")) {
+
+        preg_match('|/blogs/([0-9]+)/|', $_SERVER['REQUEST_URI'], $blog_matches);
+        preg_match('|/blogs/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $blog_cat_matches);
+
+        if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($blog_matches) && $blog_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT blog_language FROM ".DB_PREFIX."blog WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $blog_matches['1'])."'"));
             if ($data['blog_language'] != $userdata['user_language']) {
-                echo define_site_language($data['blog_language']);
+                define_site_language($data['blog_language']);
             }
         }
-    } // Blog Cats
-    elseif (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blogs/category/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                          $matches) && multilang_table("BL")
-    ) {
-        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_PREFIX."blog_cats WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+
+        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($blog_cat_matches) && $blog_cat_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_PREFIX."blog_cats WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $blog_cat_matches['1'])."'"));
             if ($data['blog_cat_language'] != $userdata['user_language']) {
+                print_p($data['blog_cat_language']);
                 echo define_site_language($data['blog_cat_language']);
             }
         }
+
     } // Custom Pages
     elseif (preg_match('/viewpage.php/i', $_SERVER['PHP_SELF']) || preg_match('|/pages/([0-9]+)/|', $_SERVER['REQUEST_URI'],
                                                                               $matches) && multilang_table("CP")
