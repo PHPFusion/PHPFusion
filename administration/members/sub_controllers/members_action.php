@@ -29,6 +29,7 @@ class Members_Action extends Members_Admin {
 
     private $action_user_id = array();
     private $action = 0;
+    private $users = array();
 
     /**
      * Setter of the class user_id
@@ -164,12 +165,6 @@ class Members_Action extends Members_Admin {
         return FALSE;
     }
 
-    public function get_locale_map($key) {
-        // Use comma to explode to fill up a sentence.
-
-    }
-
-    private $users = array();
 
     public function execute() {
         $form = '';

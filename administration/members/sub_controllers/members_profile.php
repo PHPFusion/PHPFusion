@@ -115,7 +115,7 @@ class Members_Profile extends Members_Admin {
         if (isset($_POST['delete_user'])) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
                 array(
-                    ':user_id' => self::$user_id,
+                    ':user_id'    => self::$user_id,
                     ':user_level' => USER_LEVEL_SUPER_ADMIN
                 )
             );
@@ -156,7 +156,7 @@ class Members_Profile extends Members_Admin {
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$user_id."'");
                 }
                 if (db_exists(DB_NEWS)) {
-                   dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
+                    dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
                 }
                 if (db_exists(DB_POLL_VOTES)) {
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$user_id."'");
