@@ -73,7 +73,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
     } // Custom Pages
     elseif (preg_match('/viewpage.php/i', $_SERVER['PHP_SELF']) || preg_match('|/pages/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                              $matches) && multilang_table("CP")
+            $matches) && multilang_table("CP")
     ) {
         if (isset($_GET['page_id']) && isnum($_GET['page_id']) || !empty($matches) && $matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT page_language FROM ".DB_CUSTOM_PAGES." WHERE page_id='".(isset($_GET['page_id']) ? $_GET['page_id'] : $matches['1'])."'"));
@@ -84,29 +84,29 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             }
         }
     } // Downloads
-    elseif (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/downloads/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                               $matches) && multilang_table("DL")
-    ) {
-        if (isset($_GET['download_id']) && isnum($_GET['download_id']) || !empty($matches) && $matches['1'] > 0) {
+    elseif (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) && multilang_table("DL")) {
+
+        preg_match('|/downloads/([0-9]+)/|', $_SERVER['REQUEST_URI'], $dl_matches);
+        preg_match('|/downloads/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $dlc_matches);
+
+        if (isset($_GET['download_id']) && isnum($_GET['download_id']) || !empty($dl_matches) && $dl_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, dl.download_id
 									FROM ".DB_PREFIX."download_cats dlc
 									LEFT JOIN ".DB_PREFIX."downloads dl ON dlc.download_cat_id = dl.download_cat
-									WHERE dl.download_id='".(isset($_GET['download_id']) ? $_GET['download_id'] : $matches['1'])."'
+									WHERE dl.download_id='".(isset($_GET['download_id']) ? $_GET['download_id'] : $dl_matches['1'])."'
 									GROUP BY dl.download_id"));
             if ($data['download_cat_language'] != $userdata['user_language']) {
                 echo define_site_language($data['download_cat_language']);
             }
         }
-    } // Download Cats
-    elseif (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/downloads/category/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                               $matches) && multilang_table("DL")
-    ) {
-        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_PREFIX."download_cats WHERE download_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+
+        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($dlc_matches) && $dlc_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_PREFIX."download_cats WHERE download_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $dlc_matches['1'])."'"));
             if ($data['download_cat_language'] != $userdata['user_language']) {
                 echo define_site_language($data['download_cat_language']);
             }
         }
+
     } // News
     elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/([0-9]+)/|', $_SERVER['REQUEST_URI'],
                                                                           $matches) && multilang_table("NS")
