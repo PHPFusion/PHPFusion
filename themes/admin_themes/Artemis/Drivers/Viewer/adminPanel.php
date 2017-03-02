@@ -174,6 +174,8 @@ $('#search_app').bind('keyup', function(e) {
 
         $aidlink = parent::get_aidlink();
 
+        $locale = parent::get_locale();
+
         $sections = Admins::getInstance()->getAdminSections();
 
         $pages = Admins::getInstance()->getAdminPages();
