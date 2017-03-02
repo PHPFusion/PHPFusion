@@ -108,24 +108,25 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
         }
 
     } // News
-    elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                          $matches) && multilang_table("NS")
-    ) {
-        if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT news_language FROM ".DB_PREFIX."news WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+    elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && multilang_table("NS")) {
+
+        preg_match('|/news/([0-9]+)/|', $_SERVER['REQUEST_URI'], $news_matches);
+        preg_match('|/news/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $nc_matches);
+
+        if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($news_matches) && $news_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT news_language FROM ".DB_PREFIX."news WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $news_matches['1'])."'"));
             if ($data['news_language'] != $userdata['user_language']) {
-                echo define_site_language($data['news_language']);
+                define_site_language($data['news_language']);
             }
         }
-    } // News Cats
-    elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("NS")
-    ) {
-        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_PREFIX."news_cats WHERE news_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+
+        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($nc_matches) && $nc_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_PREFIX."news_cats WHERE news_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $nc_matches['1'])."'"));
             if ($data['news_cat_language'] != $userdata['user_language']) {
-                echo define_site_language($data['news_cat_language']);
+                define_site_language($data['news_cat_language']);
             }
         }
+
     } // FaQ´s
     elseif (preg_match('/faq.php/i', $_SERVER['PHP_SELF']) || preg_match('|/faq/category/([0-9]+)/|', $_SERVER['REQUEST_URI'],
                                                                          $matches) && multilang_table("FQ")
