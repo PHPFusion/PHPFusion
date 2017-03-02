@@ -340,19 +340,14 @@ abstract class Articles extends ArticlesServer {
         $info = array_merge($info, self::get_ArticleCategories());
 
         // Filtered by Category ID.
-        $result = dbquery("
-            SELECT *
-            FROM ".DB_ARTICLE_CATS."
-            WHERE  ".(multilang_table("AR") ? "WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")." 
-            article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")."            
-        ", [
+        $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? "article_cat_language='".LANGUAGE."' AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
+        $bind = [
             ':cat_id' => intval($article_cat_id),
             ':status' => 1
-        ]);
-
-        if (dbrows($result) > 0) {
+        ];
+        $result = dbquery($select, $bind);
+        if (dbrows($result)) {
             $data = dbarray($result);
-
             set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",

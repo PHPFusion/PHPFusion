@@ -27,28 +27,29 @@ if (!defined("IN_FUSION")) {
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
     // Articles
-    if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'],
-                                                                          $matches) && multilang_table("AR")
-    ) {
-        if (isset($_GET['article_id']) && isnum($_GET['article_id']) || !empty($matches) && $matches['1'] > 0) {
+    if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && multilang_table("AR")) {
+
+        preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'], $article_matches);
+        preg_match('|/articles/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $article_cat_matches);
+
+        if (isset($_GET['article_id']) && isnum($_GET['article_id']) || !empty($article_matches) && $article_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
 									 FROM ".DB_PREFIX.'article_cats'." ac
 									 LEFT JOIN ".DB_PREFIX.'articles'." a ON ac.article_cat_id = a.article_cat
-									 WHERE a.article_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $matches['1'])."'
+									 WHERE a.article_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $article_matches['1'])."'
 									 GROUP BY a.article_id"));
             if ($data['article_cat_language'] != $userdata['user_language']) {
                 echo define_site_language($data['article_cat_language']);
             }
         }
-    } // Article Cats
-    elseif (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("AR")
-    ) {
-        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
-            $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_PREFIX."article_cats WHERE article_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+
+        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($article_cat_matches) && $article_cat_matches['1'] > 0) {
+            $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_PREFIX."article_cats WHERE article_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $article_cat_matches['1'])."'"));
             if ($data['article_cat_language'] != $userdata['user_language']) {
                 echo define_site_language($data['article_cat_language']);
             }
         }
+
     } // Blog
     elseif (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && multilang_table("BL")) {
 
