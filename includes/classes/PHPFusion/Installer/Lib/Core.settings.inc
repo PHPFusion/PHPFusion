@@ -108,8 +108,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => "<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>"
             ],
             [
-                'settings_name' => 'opening_page',
-                'settings_value' => 'viewpage.php?page_id=1'
+                'settings_name'  => 'opening_page',
+                'settings_value' => 'home.php'
             ],
             [
                 'settings_name' => 'locale',
@@ -120,8 +120,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'entypo',
-                'settings_value' => 1
+                'settings_name'  => 'entypo',
+                'settings_value' => 0
             ],
             [
                 'settings_name' => 'fontawesome',
@@ -772,6 +772,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ]
         ]
     ];
+    // if we're installing
     $table_settings['settings_theme'] = [
         'insert' => [
             [
