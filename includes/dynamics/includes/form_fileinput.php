@@ -72,7 +72,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'multiple'          => FALSE,
         'template'          => 'classic',
         'media'             => FALSE,
-        'placholder'        => '',
+        'placeholder'       => '',
     );
 
     $options += $default_options;
