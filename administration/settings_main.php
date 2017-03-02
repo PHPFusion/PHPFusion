@@ -73,7 +73,7 @@ function validate_default_search($value) {
  * @return bool
  */
 function validate_site_port($value) {
-    return ((isnum($value) || empty($value)) && in_array($value, array(0, 80, 443)) && $value < 65001) ? TRUE : FALSE;
+    return ((isnum($value) || empty($value)) && in_array($value, array(0, 80, 443)) or $value < 65001) ? TRUE : FALSE;
 }
 
 
