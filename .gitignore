@@ -10,5 +10,3 @@ config.php
 config-copy.php
 *.db
 .htaccess
-_install.php
-/install.php
