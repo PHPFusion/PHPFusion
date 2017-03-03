@@ -149,12 +149,12 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = array(
-                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0251a'],
+                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0254'],
                 "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true,
                 'path'       => [IMAGES, IMAGES_A]
             );
             $articleExtendedSettings = array(
-                "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0252a'],
+                "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0253'],
                 "error_text" => $this->locale['article_0272'], "form_name" => "articleform", "wordcount" => true,
                 'path'       => [IMAGES, IMAGES_A]
             );
@@ -174,7 +174,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text("article_subject", $this->locale['article_0250'], $this->article_data['article_subject'], array(
+                echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array(
                     "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
                 ));
                 echo form_select("article_keywords", $this->locale['article_0260'], $this->article_data['article_keywords'], array(
@@ -192,14 +192,14 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
                 openside($this->locale['article_0261']);
 
-                echo form_select_tree("article_cat", $this->locale['article_0253'], $this->article_data['article_cat'], array(
+                echo form_select_tree("article_cat", $this->locale['article_0101'], $this->article_data['article_cat'], array(
                     "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
                     "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                 ),
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
                 );
 
-                echo form_select("article_visibility", $this->locale['article_0254'], $this->article_data['article_visibility'], array(
+                echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], array(
                     "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
                 ));
 
@@ -211,7 +211,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     echo form_hidden("article_language", "", $this->article_data['article_language']);
                 }
 
-                echo form_datepicker("article_datestamp", $this->locale['article_0255'], $this->article_data['article_datestamp'], array(
+                echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->article_data['article_datestamp'], array(
                     "inline" => TRUE, "inner_width" => "100%"
                 ));
 
@@ -415,7 +415,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                     <?php if ($article_cats) { ?>
                         <a class="btn btn-success btn-sm m-r-10"
                            href="<?php echo clean_request("ref=article_form", array("ref"), false); ?>"><i
-                                    class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0110']; ?></a>
+                                    class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0002']; ?></a>
                     <?php } ?>
                     <a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i
                                 class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
@@ -427,7 +427,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
                 <div class="display-inline-block pull-left m-r-10" style="width: 300px;">
                     <?php echo form_text("article_text", "", $filter_values['article_text'], array(
-                        "placeholder"       => $this->locale['article_0120'],
+                        "placeholder"       => $this->locale['article_0100'],
                         "append_button"     => TRUE,
                         "append_value"      => "<i class='fa fa-search'></i>",
                         "append_form_value" => "search_article",
