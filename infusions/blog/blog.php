@@ -50,7 +50,7 @@ if ($settings['tinymce_enabled'] == 1) {
 $blog_settings = get_settings("blog");
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
-$_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : 0;
+$_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
 $info = array(
     'blog_title'            => $locale['blog_1000'],
@@ -319,12 +319,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
-    elseif (isset($_GET['cat_id']) && validate_blogCats($_GET['cat_id'])) {
+    elseif ($_GET['cat_id'] !== NULL && validate_blogCats($_GET['cat_id'])) {
 
         $catFilter = "and blog_cat =''";
-
         if (!empty($_GET['cat_id'])) {
-
             $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? "blog_cat_language='".LANGUAGE."' AND " : "")." blog_cat_id='".intval($_GET['cat_id'])."'"));
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
@@ -333,9 +331,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             add_to_title($locale['global_201'].$res['blog_cat_name']);
             $info['blog_title'] = $res['blog_cat_name'];
             $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
-
         } else {
-
             // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
@@ -344,7 +340,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             add_to_title($locale['global_201'].$locale['global_080']);
             $info['blog_title'] = $locale['global_080'];
         }
-
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id']."&amp;type=".$_GET['type'],
