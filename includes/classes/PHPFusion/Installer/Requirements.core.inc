@@ -284,13 +284,11 @@ class Requirements extends Install_Core {
             DatabaseFactory::setDefaultDriver(intval(isset(self::$connection['pdo_enabled']) && self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 
             // There will be a connection issue present.
-            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
-                                                       self::$connection['db_name'], FALSE);
+            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
 
             if ($db_connect) {
-
                 $validation[2] = [
                     'result' => 1,
                     'description' => self::$locale['setup_0138'],
@@ -304,8 +302,6 @@ class Requirements extends Install_Core {
                         'description' => self::$locale['setup_0139'],
                         'elapsed' => microtime(TRUE) - $microtime
                     ];
-
-
                     if (!check_table($system['db_prefix'])) {
                         $validation[4] = [
                             'result' => 1,

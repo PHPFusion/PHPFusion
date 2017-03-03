@@ -1555,7 +1555,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
 function fusion_get_settings($key = NULL) {
     // It is initialized only once because of 'static'
     static $settings = array();
-    if (empty($settings) and defined('DB_SETTINGS') and dbconnection()) {
+    if (empty($settings) and defined('DB_SETTINGS') and dbconnection() && db_exists('settings')) {
         $result = dbquery("SELECT * FROM ".DB_SETTINGS);
         while ($data = dbarray($result)) {
             $settings[$data['settings_name']] = $data['settings_value'];
