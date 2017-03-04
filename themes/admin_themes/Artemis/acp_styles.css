@@ -638,7 +638,6 @@ a:hover, a:focus {
 .btn, .btn-group .btn {
     display: inline-block;
     *display: inline;
-    padding: 6px 12px;
     margin-bottom: 0;
     *margin-left: .3em;
     font-size: 13px;
