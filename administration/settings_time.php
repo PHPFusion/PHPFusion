@@ -83,12 +83,14 @@ echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459']."):</strong></div>\n";
 echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460']."):</strong></div>\n";
 echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461']."):</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466']."):</strong></div>\n";
 echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], (time()) + ($settings_main['serveroffset'] * 3600))."</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time())."</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time() + (($settings_main['serveroffset'] + $settings_main['timeoffset']) * 3600))."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['serveroffset']))."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $userdata['user_timezone']))."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['timeoffset']))."</div>\n";
+echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['default_timezone']))."</div>\n";
 echo "</div>\n";
 echo "</div>\n";
 

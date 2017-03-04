@@ -1416,22 +1416,29 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  *
  * @return string
  */
-function showdate($format, $val) {
+function showdate($format, $val, $options = array()) {
     $userdata = fusion_get_userdata();
-    $tz_server = fusion_get_settings("serveroffset");
-	if (empty($tz_server)) $tz_server = 'Europe/London';
-    if (!empty($userdata['user_timezone'])) {
-        $tz_client = $userdata['user_timezone'];
-    } else {
-        $tz_client = fusion_get_settings("timeoffset");
-    }
+/*    $tz_server = fusion_get_settings("serveroffset");
+	if (empty($tz_server)) $tz_server = 'Europe/London';*/
+	if (isset($options['tz_override'])) {
+		$tz_client = $options['tz_override'];
+	} else {
+        if (!empty($userdata['user_timezone'])) {
+            $tz_client = $userdata['user_timezone'];
+        } else {
+            $tz_client = fusion_get_settings("timeoffset");
+        }
+	}
 	if (empty($tz_client)) $tz_client = 'Europe/London';
-    $server_dtz = new DateTimeZone($tz_server);
+//    $server_dtz = new DateTimeZone($tz_server);
     $client_dtz = new DateTimeZone($tz_client);
-    $server_dt = new DateTime("now", $server_dtz);
+//    $server_dt = new DateTime("now", $server_dtz);
     $client_dt = new DateTime("now", $client_dtz);
-    $offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
-    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
+    //$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
+    $offset = $client_dtz->getOffset($client_dt);
+
+//    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
+	if (in_array($format, array("shortdate", "longdate", "forumdate", "newsdate"))) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
