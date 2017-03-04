@@ -76,6 +76,7 @@ $locale['462'] = "Server offset";
 $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
+$locale['466'] = "Default for New Users";
 
 // Registration Settings
 $locale['550'] = "Registration";

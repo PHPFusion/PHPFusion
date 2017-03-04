@@ -55,7 +55,8 @@ if (empty($settings)) {
 }
 
 // Settings dependent functions
-date_default_timezone_set($settings['default_timezone']);
+date_default_timezone_set('UTC');
+//date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 
