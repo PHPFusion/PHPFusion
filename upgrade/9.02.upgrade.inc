@@ -62,6 +62,69 @@ if (!function_exists('rrmdir')) {
     }
 }
 
+if (empty(dbcount("(article_id)", DB_ARTICLES))) {
+
+$result = dbquery("DROP TABLE ".DB_ARTICLES);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'article_cats');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='articles.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='article_cats.php'");
+}
+
+if (empty(dbcount("(download_id)", DB_DOWNLOADS))) {
+$result = dbquery("DROP TABLE ".DB_DOWNLOADS);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'download_cats');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='downloads.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='download_cats.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_dl.php'");
+}
+
+if (empty(dbcount("(faq_id)", DB_FAQS))) {
+$result = dbquery("DROP TABLE ".DB_FAQS);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'faq_cats');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='faq.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='faq_cats.php'");
+}
+
+if (empty(dbcount("(forum_id)", DB_FORUMS))) {
+$result = dbquery("DROP TABLE ".DB_FORUMS);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'forum_attachments');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'forum_polls');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_options');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_voters');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'forum_ranks');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='forums.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='forum_ranks.php'");
+}
+
+if (empty(dbcount("(photo_id)", DB_PHOTOS))) {
+$result = dbquery("DROP TABLE ".DB_PHOTOS);
+}
+
+if (empty(dbcount("(album_id)", DB_PHOTO_ALBUMS))) {
+$result = dbquery("DROP TABLE ".DB_PHOTO_ALBUMS);
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='photoalbums.php'");
+}
+
+if (empty(dbcount("(news_id)", DB_NEWS))) {
+$result = dbquery("DROP TABLE ".DB_NEWS);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'news_cats');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='news.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='news_cats.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_news.php'");
+}
+
+if (empty(dbcount("(weblink_id)", DB_WEBLINKS))) {
+$result = dbquery("DROP TABLE ".DB_WEBLINKS);
+$result = dbquery("DROP TABLE ".DB_PREFIX.'weblink_cats');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='weblinks.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='weblink_cats.php'");
+}
+if (empty(dbcount("(poll_id)", DB_PREFIX.'polls'))) {
+$result = dbquery("DROP TABLE ".DB_PREFIX.'polls');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'poll_votes');
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='polls.php'");
+}
+
 /*
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
@@ -252,27 +315,29 @@ $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
         if ($data['user_level']) { // will omit 0
-            $inf_updatedbrow[] = DB_USERS." SET user_level ='-".$data['user_level']."' WHERE user_id='".$data['user_id']."'";
+			$result = dbquery("UPDATE ".DB_USERS." SET user_level='-".$data['user_level']."' WHERE user_id='".$data['user_id']."'");
         }
     }
 }
 
 // Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
-$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS);
+$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS);
 while ($data = dbarray($result)) {
     $new_rights = str_replace(".S13", "", $data['user_rights']);
+    $new_rights = str_replace(".AC", "", $new_rights);
+    $new_rights = str_replace(".DC", "", $new_rights);
+    $new_rights = str_replace(".NC", "", $new_rights);
+    $new_rights = str_replace(".WC", "", $new_rights);
     $new_rights = str_replace(".S5", "", $new_rights);
+    $new_rights = str_replace(".S8", "", $new_rights);
     $new_rights = str_replace(".S11", "", $new_rights);
     $new_rights = str_replace(".SU", "", $new_rights);
-    $inf_updatedbrow[] = DB_USERS." SET user_rights='".$new_rights."' WHERE user_id='".$data['user_id']."'";
-}
 
-$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='".USER_LEVEL_SUPER_ADMIN."'");
-if (dbrows($result) > 0) {
-
+    if ($data['user_level'] == USER_LEVEL_SUPER_ADMIN){
     $check_array = [
         // access rights to Permalink admin
         'PL' => TRUE,
+        'MI' => TRUE,
         // Access rights to Language admin
         'LANG' => TRUE,
         // Access rights to Theme admin
@@ -280,15 +345,14 @@ if (dbrows($result) > 0) {
         // Access rights to Email Templates
         'MAIL' => TRUE,
     ];
-
-    while ($data = dbarray($result)) {
         foreach ($check_array as $key => $value) {
-            if (!stristr($data['user_rights'], $key)) {
-                $data['user_rights'] = $data['user_rights'].".$key";
+            if (!stristr($new_rights, $key)) {
+                $new_rights = $new_rights.".$key";
             }
         }
-        $inf_updatedbrow[] = DB_USERS." SET user_rights='".$data['user_rights']."' WHERE user_id='".$data['user_id']."'";
     }
+    //$inf_updatedbrow[] = DB_USERS." SET user_rights='".$new_rights."' WHERE user_id='".$data['user_id']."'";
+	$result = dbquery("UPDATE ".DB_USERS." SET user_rights='".$new_rights."', user_theme ='Default' WHERE user_id='".$data['user_id']."'");
 }
 
 /*
@@ -305,14 +369,10 @@ foreach ($check_array as $key => $value) {
     }
 }
 
-// Set all users theme to Default
-$inf_updatedbrow[] = DB_USERS." SET user_theme ='Default'";
 // Remove user_offset which had been replaced with user_timezone
 if (column_exists(DB_USERS, 'user_offset')) {
     $inf_altertable[] = DB_USERS." DROP COLUMN user_offset";
 }
-// Drop if exists message options
-$inf_droptable[] = DB_PREFIX."message_options";
 // Perform data tally from 7.02.07
 $result = dbquery("SELECT * FROM ".DB_MESSAGES);
 if (dbrows($result) > 0) {
@@ -337,10 +397,7 @@ function fusion_get_detected_languages() {
 }
 
 $enabled_languages = implode('.', fusion_get_detected_languages());
-//$enabled_languages = implode('.', fusion_get_detected_language());
 $check_array = [
-    // Enabled languages array
-    //'enabled_languages' => $_GET['localeset'], // I'm not even sure which one is it.
     'enabled_languages' => $enabled_languages, // I'm not even sure which one is it
     // Site settings for SEO / SEF
     'site_seo' => 0,
@@ -376,19 +433,29 @@ $check_array = [
     'index_url_bbcode' => 1,
     // Add index url userweb setting
     'index_url_userweb' => 1,
+
+    'logoposition_xs' => 'logo-xs-left',
+    'logoposition_sm' => 'logo-sm-left',
+    'logoposition_md' => 'logo-md-left',
+    'logoposition_lg' => 'logo-lg-left',
+
 ];
 
-// Set a new default theme to prevent issues during upgrade
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='FusionTheme' WHERE settings_name='theme'";
-// Shut down render time to prevent errors from triggering after installation
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='0' WHERE settings_name='rendertime_enabled'";
-// Update server time offset´s to work with new function
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='timeoffset'";
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='serveroffset'";
-// Update opening page to contact since it is bound to be there
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='contact.php' WHERE settings_name='opening_page'";
-// Update securimage
-$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='securimage3' WHERE settings_name='captcha'";
+$check_up = [
+    'theme'              => 'FusionTheme',
+    'rendertime_enabled' => '0',
+    'timeoffset'         => 'Europe/London',
+    'serveroffset'       => 'Europe/London',
+    'opening_page'       => 'home.php',
+    'captcha'            => 'securimage3',
+];
+
+foreach ($check_up as $key => $value) {
+    if (isset($settings[$key])) {
+        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";;
+    }
+}
+
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
@@ -398,25 +465,43 @@ foreach ($check_array as $key => $value) {
 /*
  * Add Multi Language rights and status
  */
+$modules = [
+    'AR' => db_exists(DB_ARTICLES),
+    'CP' => TRUE,
+    'BL' => db_exists(DB_PREFIX.'blog'),
+    'DL' => db_exists(DB_DOWNLOADS),
+    'FQ' => db_exists(DB_FAQS),
+    'FO' => db_exists(DB_FORUMS),
+    'FR' => db_exists(DB_FORUMS) ? TRUE : FALSE,
+    'NS' => db_exists(DB_NEWS),
+    'PG' => db_exists(DB_PHOTOS),
+    'PO' => db_exists(DB_PREFIX.'polls'),
+    'ET' => TRUE,
+    'WL' => db_exists(DB_WEBLINKS),
+    'SL' => true,
+    'PN' => true,
+    'PA' => db_exists(DB_PHOTOS) ? TRUE : FALSE,
+];
 $mlt_array = [
-    'AR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['setup_3200']."', '1')",
-    'CP' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['setup_3201']."', '1')",
-    'BL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('BL', '".$locale['setup_3213']."', '1')",
-    'DL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('DL', '".$locale['setup_3202']."', '1')",
-    'FQ' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FQ', '".$locale['setup_3203']."', '1')",
-    'FO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FO', '".$locale['setup_3204']."', '1')",
-    'FR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FR', '".$locale['setup_3212']."', '1')",
-    'NS' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('NS', '".$locale['setup_3205']."', '1')",
-    'PG' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PG', '".$locale['setup_3206']."', '1')",
-    'PO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PO', '".$locale['setup_3207']."', '1')",
-    'ET' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('ET', '".$locale['setup_3208']."', '1')",
-    'WL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('WL', '".$locale['setup_3209']."', '1')",
-    'SL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['setup_3210']."', '1')",
-    'PN' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['setup_3211']."', '1')",
+    'AR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['setup_3200']."', '1')", //article
+    'CP' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['setup_3201']."', '1')", //egyedi oldalak
+    'BL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('BL', '".$locale['setup_3213']."', '1')",  //blog
+    'DL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('DL', '".$locale['setup_3202']."', '1')",  //dl
+    'FQ' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FQ', '".$locale['setup_3203']."', '1')",  //gyik
+    'FO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FO', '".$locale['setup_3204']."', '1')",  //forum
+    'FR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FR', '".$locale['setup_3212']."', '1')",  //forum rang
+    'NS' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('NS', '".$locale['setup_3205']."', '1')",  //hirek
+    'PG' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PG', '".$locale['setup_3206']."', '1')",  //galeria
+    'PO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PO', '".$locale['setup_3207']."', '1')",  //szavazas
+    'ET' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('ET', '".$locale['setup_3208']."', '1')",  //email sablon
+    'WL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('WL', '".$locale['setup_3209']."', '1')",  //weblink
+    'SL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['setup_3210']."', '1')",  //honlaplink
+    'PN' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['setup_3211']."', '1')",  //panelek
 ];
 foreach ($mlt_array as $key => $value) {
     $count = dbcount("('mlt_rights')", DB_LANGUAGE_TABLES, "mlt_rights='$key'");
-    if (empty($count)) {
+    $modul = $modules[$key];
+    if (empty($count) && !empty($modul)) {
         $inf_insertdbrow[] = $value;
     }
 }
@@ -427,6 +512,12 @@ foreach ($mlt_array as $key => $value) {
 $inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
 $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
 
+// Remove user field cats setting
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_photo.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_forum.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='user_field_cats.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_ipp.php'");
+dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='submissions.php'");
 /*
  * Admin Panel Upgrade
  */
@@ -436,39 +527,40 @@ $check_array = [
     // Add Permalinks Administration Page
     'PL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.png', '".$locale['setup_3052']."', 'permalink.php', '3')",
     // Add Theme Engine Administration Page
-    'S3' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'rocket.gif', '".$locale['setup_3058']."', 'settings_theme.php', '4')",
-    'TS' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')",
+    'S3' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'theme_settings.png', '".$locale['setup_3058']."', 'settings_theme.php', '4')",
+    'TS' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'theme.png', '".$locale['setup_3056']."', 'theme.php', '3')",
     // Add Email Administration Page
+    'MI' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MI', 'migration.png', '".$locale['setup_3057']."', 'migrate.php', '2')",
     'MAIL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['setup_3800']."', 'email.php', '3')",
 ];
+
 foreach ($check_array as $key => $value) {
-    if (!dbcount("(admin_rights)", DB_ADMIN, "admin_rights='$key'")) {
+    $count = dbcount("('admin_rights')", DB_ADMIN, "admin_rights='$key'");
+    if (empty($count)) {
         $inf_insertdbrow[] = $value;
     }
 }
-// Remove user field cats setting
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='user_field_cats.php'";
-//Remove settings_ipp from the Administration
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_ipp.php'";
-//Remove submissions from the Administration
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='submissions.php'";
 // Update new administration icons
-$new_icon_array = array(
+db_exists(DB_ARTICLES) ? $new_icon_array = ['A' => '../infusions/articles/articles.svg'] : '';
+db_exists(DB_DOWNLOADS) ? $new_icon_array = ['D' => '../infusions/download/download.svg'] : '';
+db_exists(DB_FAQS) ? $new_icon_array = ['FQ' => '../infusions/faq/faq.png'] : '';
+db_exists(DB_FORUMS) ? $new_icon_array = ['F' => '../infusions/forum/forums.svg'] : '';
+db_exists(DB_PHOTO_ALBUMS) ? $new_icon_array = ['PH' => '../infusions/gallery/gallery.svg'] : '';
+db_exists(DB_NEWS) ? $new_icon_array = ['N' => '../infusions/news/news.svg'] : '';
+db_exists(DB_WEBLINKS) ? $new_icon_array = ['W' => '../infusions/weblinks/weblink.png'] : '';
+db_exists(DB_PREFIX.'polls') ? $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.png'] : '';
+db_exists(DB_PREFIX.'shoutbox') ? $new_icon_array = ['S' => '../infusions/shoutbox/shout.png'] : '';
+
+$new_icon_array = [
     'APWR' => 'adminpass.png',
     'AD' => 'administrator.png',
-    'A' => '../infusions/articles/articles.svg',
     'SB' => 'banner.png',
     'BB' => 'bbcodes.png',
     'B' => 'blacklist.png',
-    'BLOG' => '../infusions/blog/blog.svg',
     'CP' => 'c-pages.png',
     'DB' => 'db_backup.png',
-    'D' => '../infusions/download/download.svg',
     'MAIL' => 'email.png',
     'ERRO' => 'errors.png',
-    'FQ' => '../infusions/faq/faq.svg',
-    'F' => '../infusions/forum/forums.svg',
-    'PH' => '../infusions/gallery/gallery.svg',
     'IM' => 'images.png',
     'I' => 'infusions.png',
     'LANG' => 'language.png',
@@ -476,16 +568,13 @@ $new_icon_array = array(
     'M' => 'members.png',
     'MI' => 'migration.png',
     'S6' => 'misc.png',
-    'N' => '../infusions/news/news.svg',
     'P' => 'panels.png',
     'PL' => 'permalink.png',
     'PI' => 'phpinfo.png',
-    'PO' => 'polls.png',
     'S7' => 'pm.png',
     'S4' => 'registration.png',
     'ROB' => 'robots.png',
     'S12' => 'security.png',
-    'S' => '../infusions/shoutbox/shout.svg',
     'SL' => 'sitelinks.png',
     'SM' => 'smileys.png',
     'TS' => 'theme.png',
@@ -496,8 +585,7 @@ $new_icon_array = array(
     'UG' => 'user_groups.png',
     'UL' => 'user_log.png',
     'S9' => 'user_settings.png',
-    'W' => '../infusions/weblinks/weblink.svg',
-);
+];
 
 foreach ($new_icon_array as $admin_rights => $icon_file) {
     $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
@@ -634,7 +722,7 @@ $check_infusions = [
     ]
 ];
 foreach ($check_infusions as $table_name => $value) {
-    if (!dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='".$value['check']."'")) {
+    if (!dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='".$value['check']."'") && db_exists($table_name)) {
         $inf_insertdbrow[] = $value['insert'];
     }
 }
@@ -719,3 +807,4 @@ if (dbrows($result) > 0) {
 
 //Remove the whole old photoalbum dir including rouge files
 rrmdir(IMAGES."photoalbum");
+
