@@ -181,12 +181,16 @@ class Locale {
     }
 
     /**
-     * Translate Locale Folder Name into Localized language
-     * @param $language
-     * @return mixed
+     * Attempt to translate Locale Folder Name into Localized language
+     * or return the locale folder name by default.
+     *
+     * If key is not set, return a full array
+     *
+     * @param null $key
+     *
+     * @return array|mixed|null
      */
-    public static function translate_lang_names($language) {
-        //https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    public static function translate_lang_names($key = NULL) {
         $translated_langs = array(
             "Chinese_Traditional" => "中文-繁体",
             "Chinese_Simplified" => "中文-简体",
@@ -209,10 +213,168 @@ class Locale {
             "Ukrainian" => "Українська",
             "Norwegian" => "Norsk"
         );
-        if (isset($translated_langs[$language])) {
-            return $translated_langs[$language];
+
+        return $key === NULL ? $translated_langs : (isset($translated_langs[$key]) ? $translated_langs[$key] : $key);
+    }
+
+    /**
+     * ISO-639 translator
+     *
+     * @param null $key
+     * @param bool $iso_to_lang set false to translate iso-folder, default folder-iso
+     *
+     * @return array|mixed|null
+     */
+    public static function get_iso($key = NULL, $iso_to_lang = TRUE) {
+        /**
+         * ISO 639-1 Language Codes
+         * References :
+         * 1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+         * 2. http://blog.xoundboy.com/?p=235
+         * 3. https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+         */
+        $language_codes = array(
+            'en' => 'English',
+            'aa' => 'Afar',
+            'ab' => 'Abkhazian',
+            'af' => 'Afrikaans',
+            'am' => 'Amharic',
+            'ar' => 'Arabic',
+            'as' => 'Assamese',
+            'ay' => 'Aymara',
+            'az' => 'Azerbaijani',
+            'ba' => 'Bashkir',
+            'be' => 'Byelorussian',
+            'bg' => 'Bulgarian',
+            'bh' => 'Bihari',
+            'bi' => 'Bislama',
+            'bn' => 'Bengali/Bangla',
+            'bo' => 'Tibetan',
+            'br' => 'Breton',
+            'ca' => 'Catalan',
+            'co' => 'Corsican',
+            'cs' => 'Czech',
+            'cy' => 'Welsh',
+            'da' => 'Danish',
+            'de' => 'German',
+            'dz' => 'Bhutani',
+            'el' => 'Greek',
+            'eo' => 'Esperanto',
+            'es' => 'Spanish',
+            'et' => 'Estonian',
+            'eu' => 'Basque',
+            'fa' => 'Persian',
+            'fi' => 'Finnish',
+            'fj' => 'Fiji',
+            'fo' => 'Faeroese',
+            'fr' => 'French',
+            'fy' => 'Frisian',
+            'ga' => 'Irish',
+            'gd' => 'Scots/Gaelic',
+            'gl' => 'Galician',
+            'gn' => 'Guarani',
+            'gu' => 'Gujarati',
+            'ha' => 'Hausa',
+            'hi' => 'Hindi',
+            'hr' => 'Croatian',
+            'hu' => 'Hungarian',
+            'hy' => 'Armenian',
+            'ia' => 'Interlingua',
+            'ie' => 'Interlingue',
+            'ik' => 'Inupiak',
+            'in' => 'Indonesian',
+            'is' => 'Icelandic',
+            'it' => 'Italian',
+            'iw' => 'Hebrew',
+            'ja' => 'Japanese',
+            'ji' => 'Yiddish',
+            'jw' => 'Javanese',
+            'ka' => 'Georgian',
+            'kk' => 'Kazakh',
+            'kl' => 'Greenlandic',
+            'km' => 'Cambodian',
+            'kn' => 'Kannada',
+            'ko' => 'Korean',
+            'ks' => 'Kashmiri',
+            'ku' => 'Kurdish',
+            'ky' => 'Kirghiz',
+            'la' => 'Latin',
+            'ln' => 'Lingala',
+            'lo' => 'Laothian',
+            'lt' => 'Lithuanian',
+            'lv' => 'Latvian/Lettish',
+            'mg' => 'Malagasy',
+            'mi' => 'Maori',
+            'mk' => 'Macedonian',
+            'ml' => 'Malayalam',
+            'mn' => 'Mongolian',
+            'mo' => 'Moldavian',
+            'mr' => 'Marathi',
+            'ms' => 'Malay',
+            'mt' => 'Maltese',
+            'my' => 'Burmese',
+            'na' => 'Nauru',
+            'ne' => 'Nepali',
+            'nl' => 'Dutch',
+            'no' => 'Norwegian',
+            'oc' => 'Occitan',
+            'om' => '(Afan)/Oromoor/Oriya',
+            'pa' => 'Punjabi',
+            'pl' => 'Polish',
+            'ps' => 'Pashto/Pushto',
+            'pt' => 'Portuguese',
+            'qu' => 'Quechua',
+            'rm' => 'Rhaeto-Romance',
+            'rn' => 'Kirundi',
+            'ro' => 'Romanian',
+            'ru' => 'Russian',
+            'rw' => 'Kinyarwanda',
+            'sa' => 'Sanskrit',
+            'sd' => 'Sindhi',
+            'sg' => 'Sangro',
+            'sh' => 'Serbo-Croatian',
+            'si' => 'Singhalese',
+            'sk' => 'Slovak',
+            'sl' => 'Slovenian',
+            'sm' => 'Samoan',
+            'sn' => 'Shona',
+            'so' => 'Somali',
+            'sq' => 'Albanian',
+            'sr' => 'Serbian',
+            'ss' => 'Siswati',
+            'st' => 'Sesotho',
+            'su' => 'Sundanese',
+            'sv' => 'Swedish',
+            'sw' => 'Swahili',
+            'ta' => 'Tamil',
+            'te' => 'Tegulu',
+            'tg' => 'Tajik',
+            'th' => 'Thai',
+            'ti' => 'Tigrinya',
+            'tk' => 'Turkmen',
+            'tl' => 'Tagalog',
+            'tn' => 'Setswana',
+            'to' => 'Tonga',
+            'tr' => 'Turkish',
+            'ts' => 'Tsonga',
+            'tt' => 'Tatar',
+            'tw' => 'Twi',
+            'uk' => 'Ukrainian',
+            'ur' => 'Urdu',
+            'uz' => 'Uzbek',
+            'vi' => 'Vietnamese',
+            'vo' => 'Volapuk',
+            'wo' => 'Wolof',
+            'xh' => 'Xhosa',
+            'yo' => 'Yoruba',
+            'zh' => 'Chinese',
+            'zu' => 'Zulu',
+        );
+        $iso_codes = array_flip($language_codes);
+        if ($iso_to_lang) {
+            return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translate_lang_names($language_codes[$key]) : NULL);
         }
 
-        return $language;
+        return $key === NULL ? array_flip($iso_codes) : (isset($iso_codes[$key]) ? $iso_codes[$key] : NULL);
     }
 }
