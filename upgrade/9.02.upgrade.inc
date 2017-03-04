@@ -547,7 +547,7 @@ db_exists(DB_FAQS) ? $new_icon_array = ['FQ' => '../infusions/faq/faq.png'] : ''
 db_exists(DB_FORUMS) ? $new_icon_array = ['F' => '../infusions/forum/forums.svg'] : '';
 db_exists(DB_PHOTO_ALBUMS) ? $new_icon_array = ['PH' => '../infusions/gallery/gallery.svg'] : '';
 db_exists(DB_NEWS) ? $new_icon_array = ['N' => '../infusions/news/news.svg'] : '';
-db_exists(DB_WEBLINKS) ? $new_icon_array = ['W' => '../infusions/weblinks/weblink.png'] : '';
+db_exists(DB_WEBLINKS) ? $new_icon_array = ['W' => '../infusions/weblinks/weblink.svg'] : '';
 db_exists(DB_PREFIX.'polls') ? $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.png'] : '';
 db_exists(DB_PREFIX.'shoutbox') ? $new_icon_array = ['S' => '../infusions/shoutbox/shout.png'] : '';
 
