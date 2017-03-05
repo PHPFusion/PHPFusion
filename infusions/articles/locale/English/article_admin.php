@@ -77,7 +77,6 @@ $locale['article_0273'] = "You must choose a Category.";
 $locale['article_0274'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
 $locale['article_0303'] = "Parent";
 $locale['article_0304'] = "Description";
-$locale['article_0307'] = "Status";
 $locale['article_0320'] = "You must specify a Name.";
 $locale['article_0321'] = "There exists a Category named this one.";
 $locale['article_0322'] = "You must specify a Description.";
