@@ -646,6 +646,9 @@ a:hover, a:focus {
     text-align: center;
 }
 
+.btn.btn-xs {
+    font-weight: 400;
+}
 .btn:hover,
 .btn:focus,
 .btn:active,
