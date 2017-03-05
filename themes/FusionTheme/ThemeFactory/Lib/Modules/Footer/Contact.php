@@ -48,7 +48,7 @@ class Contact {
                 }
             }
 
-            if (!iADMIN){
+            if (!iADMIN && $settings['display_validation']){
             $_CAPTCHA_IS_VALID = FALSE;
             include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
             if ($_CAPTCHA_IS_VALID == FALSE) {
@@ -105,7 +105,7 @@ class Contact {
                        array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
         echo form_text('subject', $locale['404'], $input['subject'], array('required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64));
         echo form_textarea('message', $locale['405'], $input['message'], array('required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128));
-        if (!iADMIN) {
+        if (!iADMIN && $settings['display_validation']) {
             include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
             if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
                 echo form_text('captcha_code', $locale['408'], '', array('required' => TRUE, 'autocomplete_off' => TRUE));
