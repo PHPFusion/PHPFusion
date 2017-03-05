@@ -46,15 +46,15 @@ abstract class News extends NewsServer {
             ]);
 
         $info = array(
-            'news_cat_id' => intval(0),
-            'news_cat_name' => self::$locale['news_0007'],
-            'news_cat_image' => '',
+            'news_cat_id'       => intval(0),
+            'news_cat_name'     => self::$locale['news_0004'],
+            'news_cat_image'    => '',
             'news_cat_language' => LANGUAGE,
-            'news_categories' => array(),
-            'news_image' => '',
-            'news_item_rows' => 0,
+            'news_categories'   => array(),
+            'news_image'        => '',
+            'news_item_rows'    => 0,
             'news_last_updated' => 0,
-            'news_items' => array()
+            'news_items'        => array()
         );
 
         $info = array_merge_recursive($info, self::get_NewsFilter());
@@ -386,15 +386,15 @@ abstract class News extends NewsServer {
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         $info = array(
-            'news_cat_id' => 0,
-            'news_cat_name' => self::$locale['news_0007'],
-            'news_cat_image' => '',
+            'news_cat_id'       => 0,
+            'news_cat_name'     => self::$locale['news_0004'],
+            'news_cat_image'    => '',
             'news_cat_language' => LANGUAGE,
-            'news_categories' => array(),
-            'news_image' => '',
-            'news_item_rows' => 0,
+            'news_categories'   => array(),
+            'news_image'        => '',
+            'news_item_rows'    => 0,
             'news_last_updated' => 0, //self::$locale['news_0008'],
-            'news_items' => array()
+            'news_items'        => array()
         );
 
         $info = array_merge_recursive($info, self::get_NewsFilter());

@@ -102,7 +102,7 @@ if (!function_exists('display_main_news')) {
         echo "<div class='panel panel-default panel-news-header'>\n";
         echo "<div class='panel-body'>\n";
         echo "<div class='pull-right'>\n";
-        echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='fa fa-desktop fa-fw'></i> ".$locale['news_0007']."</a>\n";
+        echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='fa fa-desktop fa-fw'></i> ".$locale['news_0004']."</a>\n";
         echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='fa fa-newspaper-o'></i> ".$locale['news_0009']."</button>\n";
         echo "</div>\n";
         echo "<div class='pull-left m-r-10' style='position:relative; margin-top:-30px;'>\n";

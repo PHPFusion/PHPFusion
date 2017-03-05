@@ -284,7 +284,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         'preview'     => TRUE,
                         'html'        => TRUE,
                         'autosize'    => TRUE,
-                        'placeholder' => self::$locale['news_0203b'],
+                        'placeholder' => self::$locale['news_0005'],
                         'form_name'   => 'news_form',
                         'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                         'wordcount'   => TRUE,
