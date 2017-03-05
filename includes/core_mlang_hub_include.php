@@ -161,7 +161,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             echo define_site_language($data['forum_language']);
         }
     } // Photo´s
-    elseif (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/photo/([0-9]+)/|', $_SERVER['REQUEST_URI'],
+    elseif (preg_match('/gallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/photo/([0-9]+)/|', $_SERVER['REQUEST_URI'],
                                                                                   $matches) && multilang_table("PG")
     ) {
         if (isset($_GET['photo_id']) && isnum($_GET['photo_id']) || !empty($matches) && $matches['1'] > 0) {
@@ -175,7 +175,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             }
         }
     } // Photo Albums
-    elseif (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/([0-9]+)/|', $_SERVER['REQUEST_URI'],
+    elseif (preg_match('/gallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/([0-9]+)/|', $_SERVER['REQUEST_URI'],
                                                                                   $matches) && multilang_table("PG")
     ) {
         if (isset($_GET['album_id']) && isnum($_GET['album_id']) || !empty($matches) && $matches['1'] > 0) {
