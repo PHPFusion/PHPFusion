@@ -46,7 +46,7 @@ if (isset($_POST['savesettings'])) {
         addNotice('danger', $locale['901']);
     }
 }
-$opts = array('0' => $locale['952'], '1' => $locale['953b']);
+$opts = array('0' => $locale['952'], '1' => $locale['953']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
 $calc_opts = array(1 => $locale['blog_0538'], 1000 => $locale['blog_0539'], 1000000 => $locale['blog_0540']);

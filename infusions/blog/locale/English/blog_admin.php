@@ -55,7 +55,6 @@ $locale['blog_0432'] = "Make this Blog item sticky";
 $locale['blog_0433'] = "Automatic Line-Breaks";
 $locale['blog_0434'] = "Enable Comments";
 $locale['blog_0435'] = "Enable Ratings";
-$locale['blog_0436'] = "Preview Blog";
 $locale['blog_0437'] = "Save Blog";
 $locale['blog_0438'] = "Draft";
 $locale['blog_0439'] = "Blog Image:";
@@ -67,7 +66,6 @@ $locale['blog_0444'] = "Hit enter after each keywords";
 // Blog Category
 // Blog Categories titles
 $locale['blog_0500'] = "Edit Blog Category";
-$locale['blog_0501'] = "Add Blog Category";
 $locale['blog_0502'] = "Categories";
 // Blog Categories messages
 $locale['blog_0520'] = "Blog Category added";
@@ -94,7 +92,6 @@ $locale['blog_0561'] = "This category already exists.";
 // Popup Error/Warning Messages
 $locale['blog_0450'] = "Please specify a subject";
 $locale['blog_0451'] = "Delete this Blog?";
-$locale['blog_0451b'] = "Delete this Blog category?";
 $locale['blog_0452'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
 $locale['blog_0456'] = 'There are no Blog in this category.';
 $locale['blog_0457'] = "Please specify keywords";
@@ -127,8 +124,7 @@ $locale['605'] = "Maximum file size (bytes):";
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";
 $locale['952'] = "Category";
-$locale['953'] = "News Item";
-$locale['953b'] = "Blog Item";
+$locale['953'] = "Blog Item";
 $locale['954'] = "Thumb ratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Square";
