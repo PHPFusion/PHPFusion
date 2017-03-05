@@ -42,7 +42,7 @@ abstract class Articles extends ArticlesServer {
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks('', 'link_name')
             )
         );
 
@@ -534,13 +534,12 @@ abstract class Articles extends ArticlesServer {
      * @return string
      */
     private static function get_ArticlesRatings($data) {
-        $html = "";
+        $html = '';
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
             showratings("A", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id']);
-            $html = ob_get_contents();
-            ob_end_clean();
+            $html = ob_get_clean();
         }
 
         return (string)$html;

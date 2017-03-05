@@ -22,9 +22,10 @@ use \PHPFusion\BreadCrumbs;
 class ArticlesAdminView extends ArticlesAdminModel {
 
     private $allowed_pages = array("article", "article_category", "article_form", "submissions", "settings");
+    private static $locale = [];
 
     public function display_admin() {
-        $this->locale = self::get_articleAdminLocale();
+        self::$locale = self::get_articleAdminLocale();
 
         // Back and Check Section
         if (isset($_GET['section']) && $_GET['section'] == "back") {
@@ -33,42 +34,42 @@ class ArticlesAdminView extends ArticlesAdminModel {
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
         // Sitetitle
-        add_to_title($this->locale['article_0000']);
+        add_to_title(self::$locale['article_0000']);
 
         // Handle Breadcrumbs and Titles
-        BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink(), "title" => $this->locale['article_0000']));
+        BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink(), "title" => self::$locale['article_0000']));
 
-        $articleTitle = $this->locale['article_0001'];
-        $articleCatTitle = $this->locale['article_0004'];
+        $articleTitle = self::$locale['article_0000'];
+        $articleCatTitle = self::$locale['article_0004'];
 
         if ($_GET['section'] == "article") {
             if (isset($_GET['ref']) && $_GET['ref'] == "article_form") {
                 if (!isset($_GET['article_id'])) {
-                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article&amp;ref=article_form", "title" => $this->locale['article_0002']));
-                    $articleTitle = $this->locale['article_0002'];
+                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article&amp;ref=article_form", "title" => self::$locale['article_0002']));
+                    $articleTitle = self::$locale['article_0002'];
                 } else {
-                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article&amp;ref=article_form", "title" => $this->locale['article_0003']));
-                    $articleTitle = $this->locale['article_0003'];
+                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article&amp;ref=article_form", "title" => self::$locale['article_0003']));
+                    $articleTitle = self::$locale['article_0003'];
                 }
             }
         }
 
         if ($_GET['section'] == "article_category") {
-            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category", "title" => $this->locale['article_0004']));
+            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category", "title" => self::$locale['article_0004']));
             if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
                 if (!isset($_GET['cat_id'])) {
-                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => $this->locale['article_0005']));
-                    $articleCatTitle = $this->locale['article_0005'];
+                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => self::$locale['article_0005']));
+                    $articleCatTitle = self::$locale['article_0005'];
                 } else {
-                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => $this->locale['article_0006']));
-                    $articleCatTitle = $this->locale['article_0006'];
+                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category&amp;ref=article_cat_form", "title" => self::$locale['article_0006']));
+                    $articleCatTitle = self::$locale['article_0006'];
                 }
             }
         }
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
-            $master_title['title'][] = $this->locale['back'];
+            $master_title['title'][] = self::$locale['back'];
             $master_title['id'][] = "back";
             $master_title['icon'][] = "fa fa-fw fa-arrow-left";
         }
@@ -78,15 +79,15 @@ class ArticlesAdminView extends ArticlesAdminModel {
         $master_title['title'][] = $articleCatTitle;
         $master_title['id'][] = "article_category";
         $master_title['icon'][] = "fa fa-fw fa-folder";
-        $master_title['title'][] = $this->locale['article_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'")."</span>";
+        $master_title['title'][] = self::$locale['article_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'")."</span>";
         $master_title['id'][] = "submissions";
         $master_title['icon'][] = "fa fa-fw fa-inbox";
-        $master_title['title'][] = $this->locale['article_0008'];
+        $master_title['title'][] = self::$locale['article_0008'];
         $master_title['id'][] = "settings";
         $master_title['icon'][] = "fa fa-fw fa-cogs";
 
         // Display Content
-        opentable($this->locale['article_0000']);
+        opentable(self::$locale['article_0000']);
 
         echo opentab($master_title, $_GET['section'], "articles_admin", TRUE, "", "section");
         switch ($_GET['section']) {
@@ -95,11 +96,11 @@ class ArticlesAdminView extends ArticlesAdminModel {
                 break;
             case "submissions":
                 ArticlesSubmissionsAdmin::getInstance()->displayArticlesAdmin();
-                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['article_0007']));
+                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => self::$locale['article_0007']));
                 break;
             case "settings":
                 ArticlesSettingsAdmin::getInstance()->displayArticlesAdmin();
-                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['article_0008']));
+                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => self::$locale['article_0008']));
                 break;
             default:
                 ArticlesAdmin::getInstance()->displayArticlesAdmin();
