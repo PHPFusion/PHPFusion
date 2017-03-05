@@ -119,7 +119,6 @@ $locale['605'] = "Maximum file size (bytes):";
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";
 $locale['953'] = "News Item";
-$locale['953b'] = "Blog Item";
 $locale['954'] = "Thumb ratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Square";
