@@ -62,27 +62,32 @@ if (!function_exists('rrmdir')) {
     }
 }
 
+$del_table = array();
 if (empty(dbcount("(article_id)", DB_ARTICLES))) {
-
 $result = dbquery("DROP TABLE ".DB_ARTICLES);
 $result = dbquery("DROP TABLE ".DB_PREFIX.'article_cats');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='articles.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='article_cats.php'");
+$del_table[] = 'articles.php';
+$del_table[] = 'article_cats.php';
+$del_array[] = 'articles.php';
+$del_array[] = 'submit.php?stype=a';
 }
 
 if (empty(dbcount("(download_id)", DB_DOWNLOADS))) {
 $result = dbquery("DROP TABLE ".DB_DOWNLOADS);
 $result = dbquery("DROP TABLE ".DB_PREFIX.'download_cats');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='downloads.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='download_cats.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_dl.php'");
+$del_table[] = 'downloads.php';
+$del_table[] = 'download_cats';
+$del_table[] = 'settings_dl.php';
+$del_array[] = 'downloads.php';
+$del_array[] = 'submit.php?stype=d';
 }
 
 if (empty(dbcount("(faq_id)", DB_FAQS))) {
 $result = dbquery("DROP TABLE ".DB_FAQS);
 $result = dbquery("DROP TABLE ".DB_PREFIX.'faq_cats');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='faq.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='faq_cats.php'");
+$del_table[] = 'faq.php';
+$del_table[] = 'faq_cats.php';
+$del_array[] = 'faq.php';
 }
 
 if (empty(dbcount("(forum_id)", DB_FORUMS))) {
@@ -92,8 +97,13 @@ $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_polls');
 $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_options');
 $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_voters');
 $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_ranks');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='forums.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='forum_ranks.php'");
+$result = dbquery("DROP TABLE ".DB_PREFIX.'posts');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'threads');
+$result = dbquery("DROP TABLE ".DB_PREFIX.'thread_notify');
+$del_table[] = 'forums.php';
+$del_table[] = 'forum_ranks.php';
+$del_table[] = 'forum/index.php';
+$del_array[] = 'forum/index.php';
 }
 
 if (empty(dbcount("(photo_id)", DB_PHOTOS))) {
@@ -102,27 +112,33 @@ $result = dbquery("DROP TABLE ".DB_PHOTOS);
 
 if (empty(dbcount("(album_id)", DB_PHOTO_ALBUMS))) {
 $result = dbquery("DROP TABLE ".DB_PHOTO_ALBUMS);
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='photoalbums.php'");
+$del_table[] = 'photoalbums.php';
+$del_table[] = 'photogallery.php';
+$del_array[] = 'photogallery.php';
+$del_array[] = 'submit.php?stype=p';
 }
 
 if (empty(dbcount("(news_id)", DB_NEWS))) {
 $result = dbquery("DROP TABLE ".DB_NEWS);
 $result = dbquery("DROP TABLE ".DB_PREFIX.'news_cats');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='news.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='news_cats.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_news.php'");
+$del_table[] = 'news.php';
+$del_table[] = 'news_cats.php';
+$del_table[] = 'settings_news.php';
+$del_array[] = 'submit.php?stype=n';
 }
 
 if (empty(dbcount("(weblink_id)", DB_WEBLINKS))) {
 $result = dbquery("DROP TABLE ".DB_WEBLINKS);
 $result = dbquery("DROP TABLE ".DB_PREFIX.'weblink_cats');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='weblinks.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='weblink_cats.php'");
+$del_table[] = 'weblinks.php';
+$del_table[] = 'weblink_cats.php';
+$del_array[] = 'weblinks.php';
+$del_array[] = 'submit.php?stype=l';
 }
 if (empty(dbcount("(poll_id)", DB_PREFIX.'polls'))) {
 $result = dbquery("DROP TABLE ".DB_PREFIX.'polls');
 $result = dbquery("DROP TABLE ".DB_PREFIX.'poll_votes');
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='polls.php'");
+$del_table[] = 'polls.php';
 }
 
 /*
@@ -335,14 +351,10 @@ while ($data = dbarray($result)) {
 
     if ($data['user_level'] == USER_LEVEL_SUPER_ADMIN){
     $check_array = [
-        // access rights to Permalink admin
         'PL' => TRUE,
         'MI' => TRUE,
-        // Access rights to Language admin
         'LANG' => TRUE,
-        // Access rights to Theme admin
         'TS' => TRUE,
-        // Access rights to Email Templates
         'MAIL' => TRUE,
     ];
         foreach ($check_array as $key => $value) {
@@ -351,7 +363,6 @@ while ($data = dbarray($result)) {
             }
         }
     }
-    //$inf_updatedbrow[] = DB_USERS." SET user_rights='".$new_rights."' WHERE user_id='".$data['user_id']."'";
 	$result = dbquery("UPDATE ".DB_USERS." SET user_rights='".$new_rights."', user_theme ='Default' WHERE user_id='".$data['user_id']."'");
 }
 
@@ -399,45 +410,31 @@ function fusion_get_detected_languages() {
 $enabled_languages = implode('.', fusion_get_detected_languages());
 $check_array = [
     'enabled_languages' => $enabled_languages, // I'm not even sure which one is it
-    // Site settings for SEO / SEF
-    'site_seo' => 0,
-    'normalize_seo' => 0,
-    'debug_seo' => 0,
-    // New login methods
-    'login_method' => 0,
-    // New controllable mime checks for upload files
-    'mime_check' => 0,
-    // Site settings panel exclusions for the new positons
-    'exclude_aupper' => '',
-    'exclude_blower' => '',
-    'exclude_user1' => '',
-    'exclude_user2' => '',
-    'exclude_user3' => '',
-    'exclude_user4' => '',
-    // New administration theme
-    'admin_theme' => 'Artemis',
-    // Enable bootstrap framework
-    'bootstrap' => 1,
-    // Enable svg icons
-    'entypo' => 1,
-    'fontawesome' => 1,
-    // Comments
-    'comments_jquery' => 1,
-    // Set a new default to PHP Execution
-    'allow_php_exe' => 0,
-    // Add privacy policy setting
-    'privacy_policy' => '',
-    // Add OG tags setting
-    'create_og_tags' => 1,
-    // Add index url bbcode setting
-    'index_url_bbcode' => 1,
-    // Add index url userweb setting
+    'site_seo'          => 0,
+    'normalize_seo'     => 0,
+    'debug_seo'         => 0,
+    'login_method'      => 0,
+    'mime_check'        => 0,
+    'exclude_aupper'    => '',
+    'exclude_blower'    => '',
+    'exclude_user1'     => '',
+    'exclude_user2'     => '',
+    'exclude_user3'     => '',
+    'exclude_user4'     => '',
+    'admin_theme'       => 'Artemis',
+    'bootstrap'         => 1,
+    'entypo'            => 1,
+    'fontawesome'       => 1,
+    'comments_jquery'   => 1,
+    'allow_php_exe'     => 0,
+    'privacy_policy'    => '',
+    'create_og_tags'    => 1,
+    'index_url_bbcode'  => 1,
     'index_url_userweb' => 1,
-
-    'logoposition_xs' => 'logo-xs-left',
-    'logoposition_sm' => 'logo-sm-left',
-    'logoposition_md' => 'logo-md-left',
-    'logoposition_lg' => 'logo-lg-left',
+    'logoposition_xs'   => 'logo-xs-left',
+    'logoposition_sm'   => 'logo-sm-left',
+    'logoposition_md'   => 'logo-md-left',
+    'logoposition_lg'   => 'logo-lg-left',
 
 ];
 
@@ -506,30 +503,24 @@ foreach ($mlt_array as $key => $value) {
     }
 }
 
-/*
- * Upgrade Panels Configurations
- */
-$inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
-$inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
-
 // Remove user field cats setting
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_photo.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_forum.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='user_field_cats.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='settings_ipp.php'");
-dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='submissions.php'");
+$del_table[] = 'settings_photo.php';
+$del_table[] = 'settings_forum.php';
+$del_table[] = 'user_field_cats.php';
+$del_table[] = 'settings_ipp.php';
+$del_table[] = 'submissions.php';
 /*
  * Admin Panel Upgrade
  */
+foreach ($del_table as $key => $value) {
+	$result = dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='$value'");
+}
+
 $check_array = [
-    // Add Language Administration Page
     'LANG' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'language.png', '".$locale['setup_3051']."', 'settings_languages.php', '4')",
-    // Add Permalinks Administration Page
     'PL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.png', '".$locale['setup_3052']."', 'permalink.php', '3')",
-    // Add Theme Engine Administration Page
     'S3' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'theme_settings.png', '".$locale['setup_3058']."', 'settings_theme.php', '4')",
     'TS' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'theme.png', '".$locale['setup_3056']."', 'theme.php', '3')",
-    // Add Email Administration Page
     'MI' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MI', 'migration.png', '".$locale['setup_3057']."', 'migrate.php', '2')",
     'MAIL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['setup_3800']."', 'email.php', '3')",
 ];
@@ -594,23 +585,43 @@ foreach ($new_icon_array as $admin_rights => $icon_file) {
 /*
  * Upgrade Site Links
  */
-$result = dbquery("SELECT link_id, link_visibility FROM ".DB_SITE_LINKS);
+db_exists(DB_ARTICLES) ? $up_array = ['articles.php' => 'infusions/articles/articles.php',] : '';
+db_exists(DB_DOWNLOADS) ? $up_array = ['downloads.php' => 'infusions/downloads/downloads.php',] : '';
+db_exists(DB_FAQS) ? $up_array = ['faq.php' => 'infusions/faq/faq.php',] : '';
+db_exists(DB_FORUMS) ? $up_array = ['forum/index.php' => 'infusions/forum/index.php',] : '';
+db_exists(DB_PHOTO_ALBUMS) ? $up_array = ['photogallery.php' => 'infusions/gallery/gallery.php',] : '';
+db_exists(DB_WEBLINKS) ? $up_array = ['weblinks.php' => 'infusions/weblinks/weblinks.php',] : '';
+$del_array[] = 'news_cats.php';
+/*
+ * Upgrade Panels Configurations
+ */
+foreach ($del_array as $key => $value) {
+	$result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url ='$value'");
+}
+
+foreach ($up_array as $keys => $values) {
+	$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_url='$values' WHERE link_url='$keys'");
+}
+
+if (!column_exists(DB_PANELS, 'panel_status', FALSE)) {
+    $inf_altertable[] = DB_PANELS." ADD panel_status tinyint(1) NOT NULL DEFAULT '1' AFTER panel_display";
+}
+
+$inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
+$inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
+
+$result = dbquery("SELECT link_id, link_visibility, link_status FROM ".DB_SITE_LINKS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
+
         if ($data['link_visibility']) {
-            $inf_updatedbrow[] = DB_SITE_LINKS." SET link_visibility ='-".$data['link_visibility']."' WHERE link_id='".$data['link_id']."'";
+            $inf_updatedbrow[] = DB_SITE_LINKS." SET link_visibility ='-".$data['link_visibility']."', link_status ='1' WHERE link_id='".$data['link_id']."'";
+        } else {
+            $inf_updatedbrow[] = DB_SITE_LINKS." SET link_status ='1' WHERE link_id='".$data['link_id']."'";
+
         }
     }
 }
-
-// Update all Core site links
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/articles/articles.php' WHERE link_url='articles.php'";
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/downloads/downloads.php' WHERE link_url='downloads.php'";
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/faq/faq.php' WHERE link_url='faq.php'";
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/forum/index.php' WHERE link_url='forum/index.php'";
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/weblinks/weblinks.php' WHERE link_url='weblinks.php'";
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url ='infusions/gallery/gallery.php' WHERE link_url='photogallery.php'";
-$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='news_cats.php'";
 
 /*
  * User Fields
@@ -807,4 +818,3 @@ if (dbrows($result) > 0) {
 
 //Remove the whole old photoalbum dir including rouge files
 rrmdir(IMAGES."photoalbum");
-

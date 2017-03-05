@@ -44,7 +44,7 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 
-    if (!iADMIN) {
+    if (!iADMIN && $settings['display_validation']) {
         $_CAPTCHA_IS_VALID = FALSE;
 
         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_check.php';
@@ -92,7 +92,7 @@ if (isset($_POST['sendmessage'])) {
 }
 
 $captcha = '';
-if (!iADMIN) {
+if (!iADMIN && $settings['display_validation']) {
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
         $captcha = form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
     }
