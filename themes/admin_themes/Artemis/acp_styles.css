@@ -1342,6 +1342,19 @@ input[type="submit"].btn.btn-mini {
     background-color: #2E87C1;
 }
 
+/* Alerts ! */
+.alert-warning {
+    color: #735c0f;
+    background-color: #ffea7f;
+    border-color: rgba(176, 136, 0, 0.3);
+}
+
+.alert-danger {
+    color: #fff;
+    background-color: #d73a49;
+    border: 1px solid #9e1c23;
+}
+
 .admin-message {
     width: 100%;
     position: fixed;
