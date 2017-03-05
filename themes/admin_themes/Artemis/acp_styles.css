@@ -1,8 +1,6 @@
-@import "../../../includes/fonts/Ubuntu/font.css";
-
 /* Globals */
 html, body, #tinymce body, .form-control {
-    font: 14px/16px "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
     overflow-x: hidden;
 }
 
@@ -23,8 +21,8 @@ html, body, #tinymce body, .form-control {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 800;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
 }
 
 .text-success {
@@ -1579,6 +1577,13 @@ table {
     margin-right: 5px;
 }
 
+.form-control {
+    background-color: #fafbfc;
+}
+
+.form-control:focus {
+    background-color: #fff;
+}
 .form-group-lg input.form-control {
     font-size: 25px;
     font-family: serif;
@@ -2179,4 +2184,18 @@ input[type=text] {
 
 .bootstrap-datetimepicker-widget table > thead th {
     padding: 5px !important;
+}
+
+.label {
+    display: inline-block;
+    padding: 8px 10px;
+    margin: 0 0.5em 0.5em 0;
+    white-space: nowrap;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.label.label-info {
+    background-color: #f1f8ff;
 }
