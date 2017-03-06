@@ -1825,6 +1825,9 @@ textarea.form-control {
     border: 0;
 }
 
+.editor-wrapper .btn-group {
+    margin-bottom: 10px;
+}
 nav ul {
     list-style: none;
     margin: 0;

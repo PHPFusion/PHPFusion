@@ -13,7 +13,6 @@ $locale['gallery_0012'] = "There are no Photo Albums defined. You must at least 
 $locale['gallery_0013'] = "Photo Actions";
 $locale['gallery_0014'] = "Move Photo Up";
 $locale['gallery_0015'] = "Move Photo Down";
-
 $locale['gallery_0017'] = "Delete Photo";
 $locale['gallery_0018'] = "Currently displaying %d of %d total album entries";
 $locale['gallery_0019'] = "Currently displaying %d of %d total photo entries";
@@ -42,7 +41,7 @@ $locale['album_0015'] = "Please enter an Album Name";
 $locale['album_0016'] = "Delete Album Thumbnail";
 
 // Gallery actions & front page (first tab)
-$locale['album_0020'] = "Album Actions";
+$locale['album_0020'] = "Actions";
 $locale['album_0021'] = "Move Up";
 $locale['album_0022'] = "Move Down";
 $locale['album_0023'] = "Delete Album";

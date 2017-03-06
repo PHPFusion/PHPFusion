@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-
 $phototab['title'][] = $locale['gallery_0009'];
 $phototab['id'][] = "single_photo";
 $phototab['icon'][] = "";
@@ -145,22 +144,12 @@ function photo_form() {
         echo form_hidden("photo_datestamp", "", $data['photo_datestamp']);
         echo form_hidden("photo_user", "", $data['photo_user']);
         echo form_text("photo_title", $locale['photo_0001'], $data['photo_title'], array(
-            "required" => TRUE,
+            "required"    => TRUE,
             "placeholder" => $locale['photo_0002'],
-            "inline" => TRUE
+            'class'       => 'form-group-lg'
         ));
-        echo form_select('photo_keywords', $locale['album_0005'], $data['photo_keywords'], array(
-            'placeholder' => $locale['album_0006'],
-            'inline' => TRUE,
-            'multiple' => TRUE,
-            "tags" => TRUE,
-            'width' => '100%',
-        ));
-        echo form_text('photo_order', $locale['photo_0013'], $data['photo_order'], array(
-            "type" => "number",
-            "inline" => TRUE,
-            "width" => "100px"
-        ));
+
+        openside('');
         if ($data['photo_filename'] || $data['photo_thumb1']) {
             echo "<div class='well col-sm-offset-3'>\n";
             $image = '';
@@ -199,23 +188,29 @@ function photo_form() {
                 'max_byte'          => $gll_settings['photo_max_b'],
                 'multiple'          => FALSE,
                 'delete_original'   => FALSE,
+                'inline'            => FALSE,
                 "template"          => "modern",
-                "inline"            => TRUE,
                 "error_text"        => $locale['photo_0014'],
                 "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"),
-                                     $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])
+                    $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])
             );
             echo form_fileinput('photo_image', $locale['photo_0004'], "", $upload_settings);
-
         }
+        closeside();
 
+        echo form_select('photo_keywords', $locale['album_0005'], $data['photo_keywords'], array(
+            'placeholder' => $locale['album_0006'],
+            'multiple'    => TRUE,
+            "tags"        => TRUE,
+            'width'       => '100%',
+            'inner_width' => '100%',
+        ));
         $snippetSettings = array(
             "required" => FALSE,
             "preview" => TRUE,
             "html" => TRUE,
             "autosize" => TRUE,
             "form_name" => "inputform",
-            "inline" => TRUE,
             'placeholder' => $locale['photo_0009'],
         );
         if (fusion_get_settings("tinymce_enabled")) {
@@ -223,12 +218,18 @@ function photo_form() {
         }
         echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], $snippetSettings);
 
+        echo form_text('photo_order', $locale['photo_0013'], $data['photo_order'], array(
+            "type"        => "number",
+            "inner_width" => "100px"
+        ));
+
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         echo form_select('album_id', $locale['photo_0003'], $data['album_id'], array(
-            "options" => get_albumOpts(),
-            "width" => "100%",
+            "options"     => get_albumOpts(),
+            "inner_width" => "100%",
         ));
+
         echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $data['photo_allow_comments']);
         echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $data['photo_allow_ratings']);
         echo "</div>\n</div>\n";
