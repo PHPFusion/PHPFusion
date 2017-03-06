@@ -79,7 +79,7 @@ abstract class Faq extends FaqServer {
             'faq_categories' => [
                 0 => [
                     'faq_cat_id'          => 0,
-                    'faq_cat_name'        => self::$locale['faqs_0003'],
+                    'faq_cat_name'        => self::$locale['faq_0003'],
                     'faq_cat_description' => ''
                 ]
             ],

@@ -58,7 +58,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
         echo openform("settingsform", "post", FUSION_REQUEST);
         echo "<div class='well m-b-0 spacer-xs'>".$this->locale['faq_0400']."</div>\n";
 
-            echo form_select('faq_allow_submission', $this->locale['faq_0401'], self::$faq_settings['faq_allow_submission'], array(
+        echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], array(
                 'inline' => TRUE, 'options' => array($this->locale['disable'], $this->locale['enable'])
             ));
 

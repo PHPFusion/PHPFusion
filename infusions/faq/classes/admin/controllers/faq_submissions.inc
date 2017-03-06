@@ -96,7 +96,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
       // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = array(
-                "required" => TRUE, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['faq_0251a'],
+                "required"   => TRUE, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['faq_0253'],
                 "error_text" => $this->locale['faq_0272'], "form_name" => "articleform", "wordcount" => true
             );
         } else {
@@ -132,7 +132,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text("faq_question", $this->locale['faq_0250'], $this->inputArray['faq_question'], array(
+                echo form_text("faq_question", $this->locale['faq_0100'], $this->inputArray['faq_question'], array(
                     "required" => true, "max_lenght" => 200, "error_text" => $this->locale['faq_0270']
                 ));
 
@@ -158,7 +158,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     'inline'      => TRUE,
                     'options'     => $options,
                 ));
-                echo form_select('faq_visibility', $this->locale['faq_0253'], $this->inputArray['faq_visibility'], array(
+                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->inputArray['faq_visibility'], array(
                     'options' => fusion_get_groups(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%', 'inline' => TRUE,
                 ));
 
@@ -170,7 +170,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
                 }
 
-                echo form_datepicker('faq_datestamp', $this->locale['faq_0254'], $this->inputArray['submit_datestamp'], array(
+                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'], array(
                     'inline' => TRUE, 'inner_width' => '100%'
                 ));
 
