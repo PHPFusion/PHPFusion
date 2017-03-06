@@ -18,25 +18,17 @@
 require_once "../../maincore.php";
 pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
-
-if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
-    include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
-} else {
-    include INFUSIONS."gallery/locale/English/gallery_admin.php";
-}
-
+$aidlink = fusion_get_aidlink();
 if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    include LOCALE.LOCALESET."admin/settings.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 } else {
-    include LOCALE."English/admin/settings.php";
+    $locale = fusion_get_locale('', LOCALE."English/admin/settings.php");
 }
-
+$locale = fusion_get_locale('', GALLERY_ADMIN_LOCALE) + $locale;
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
-
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
-
 $gll_settings = get_settings("gallery");
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
@@ -153,7 +145,7 @@ function gallery_photo_listing() {
                 echo "<div class='dropdown'>\n";
                 echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['gallery_0013']." <span class='caret'></span></button>\n";
                 echo "<ul class='dropdown-menu'>\n";
-                echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0016']."</a></li>\n";
+                echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0003']."</a></li>\n";
                 echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pu&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order'] - 1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['gallery_0014']."</a></li>\n" : "";
                 echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pd&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order'] + 1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['gallery_0015']."</a></li>\n" : "";
                 echo "<li class='divider'></li>\n";
@@ -242,7 +234,7 @@ function gallery_album_listing() {
                 echo "<div class='dropdown'>\n";
                 echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
                 echo "<ul class='dropdown-menu'>\n";
-                echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['album_0024']."</a></li>\n";
+                echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0005']."</a></li>\n";
                 echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order'] - 1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['album_0021']."</a></li>\n" : "";
                 echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order'] + 1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['album_0022']."</a></li>\n" : "";
                 echo "<li class='divider'></li>\n";

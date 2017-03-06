@@ -157,8 +157,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "placeholder" => $locale['photo_0002'],
                     "inline" => TRUE
                 ));
-                echo form_select('photo_keywords', $locale['photo_0006'], $callback_data['photo_keywords'], array(
-                    'placeholder' => $locale['photo_0007'],
+                echo form_select('photo_keywords', $locale['album_0005'], $callback_data['photo_keywords'], array(
+                    'placeholder' => $locale['album_0006'],
                     'inline' => TRUE,
                     'multiple' => TRUE,
                     "tags" => TRUE,

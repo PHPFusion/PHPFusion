@@ -18,10 +18,27 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+//  Define Paths
 define("IMAGES_G", INFUSIONS."gallery/photos/");
 define("IMAGES_G_T", INFUSIONS."gallery/photos/thumbs/");
+
+//  Define Tables
 define("DB_PHOTO_ALBUMS", DB_PREFIX."photo_albums");
 define("DB_PHOTOS", DB_PREFIX."photos");
+
+//  Define Locale
+if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
+    define('GALLERY_LOCALE', INFUSIONS."gallery/locale/".LOCALESET."gallery.php");
+} else {
+    define('GALLERY_LOCALE', INFUSIONS."gallery/locale/English/gallery.php");
+}
+if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
+    define('GALLERY_ADMIN_LOCALE', INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php");
+} else {
+    define('GALLERY_ADMIN_LOCALE', INFUSIONS."gallery/locale/English/gallery_admin.php");
+}
+
+//  Administration & Dashboard
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S5", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('P', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));

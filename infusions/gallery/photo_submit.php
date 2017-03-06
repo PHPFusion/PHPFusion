@@ -98,10 +98,10 @@ if ($gll_settings['gallery_allow_submission']) {
             }
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
             echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['gallery_0107'])."</div>\n";
-            echo form_select('album_id', $locale['gallery_0103'], '', array("options" => $opts, "inline" => TRUE));
-            echo form_text('photo_title', $locale['gallery_0104'], '', array('required' => TRUE, "inline" => TRUE));
-            echo form_select('photo_keywords', $locale['gallery_0105'], $data['photo_keywords'], array(
-                'placeholder' => $locale['photo_0007'],
+            echo form_select('album_id', $locale['photo_0003'], '', array("options" => $opts, "inline" => TRUE));
+            echo form_text('photo_title', $locale['photo_0001'], '', array('required' => TRUE, "inline" => TRUE));
+            echo form_select('photo_keywords', $locale['photo_0005'], $data['photo_keywords'], array(
+                'placeholder' => $locale['album_0006'],
                 'inline' => TRUE,
                 'multiple' => TRUE,
                 "tags" => TRUE,
@@ -116,29 +116,29 @@ if ($gll_settings['gallery_allow_submission']) {
                 "form_name" => "submit_form",
             );
 
-            echo form_textarea('photo_description', $locale['gallery_0106'], '', $textArea_opts);
+            echo form_textarea('photo_description', $locale['photo_0008'], '', $textArea_opts);
 
-            echo form_fileinput('photo_image', $locale['gallery_0109'], '', array(
-                "upload_path" => INFUSIONS."gallery/submissions/",
-                "required" => TRUE,
-                'thumbnail_folder' => 'thumbs',
-                'thumbnail' => TRUE,
-                'thumbnail_w' => $gll_settings['thumb_w'],
-                'thumbnail_h' => $gll_settings['thumb_h'],
-                'thumbnail_suffix' => '_t1',
-                'thumbnail2' => TRUE,
-                'thumbnail2_w' => $gll_settings['photo_w'],
-                'thumbnail2_h' => $gll_settings['photo_h'],
+            echo form_fileinput('photo_image', $locale['photo_0004'], '', array(
+                "upload_path"       => INFUSIONS."gallery/submissions/",
+                "required"          => TRUE,
+                'thumbnail_folder'  => 'thumbs',
+                'thumbnail'         => TRUE,
+                'thumbnail_w'       => $gll_settings['thumb_w'],
+                'thumbnail_h'       => $gll_settings['thumb_h'],
+                'thumbnail_suffix'  => '_t1',
+                'thumbnail2'        => TRUE,
+                'thumbnail2_w'      => $gll_settings['photo_w'],
+                'thumbnail2_h'      => $gll_settings['photo_h'],
                 'thumbnail2_suffix' => '_t2',
-                'max_width' => $gll_settings['photo_max_w'],
-                'max_height' => $gll_settings['photo_max_h'],
-                'max_byte' => $gll_settings['photo_max_b'],
-                'delete_original' => FALSE,
-                "multiple" => FALSE,
-                "inline" => TRUE,
-                "error_text" => $locale['gallery_0110'],
+                'max_width'         => $gll_settings['photo_max_w'],
+                'max_height'        => $gll_settings['photo_max_h'],
+                'max_byte'          => $gll_settings['photo_max_b'],
+                'delete_original'   => FALSE,
+                "multiple"          => FALSE,
+                "inline"            => TRUE,
+                "error_text"        => $locale['photo_0014'],
             ));
-            echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']),
+            echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']),
                                                                                    str_replace(',', ' ', ".jpg,.gif,.png"),
                                                                                    $gll_settings['photo_max_w'],
                                                                                    $gll_settings['photo_max_h'])."</div>\n";
