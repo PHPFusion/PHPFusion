@@ -13,7 +13,6 @@ $locale['faq_0010'] = "Uncategorized";
 $locale['faq_0030'] = "FAQ successfully created";
 $locale['faq_0031'] = "FAQ successfully updated";
 $locale['faq_0032'] = "FAQ successfully deleted";
-$locale['faq_0033'] = "FAQs successfully updated";
 $locale['faq_0034'] = "You must choose at least one FAQ.";
 $locale['faq_0035'] = "FAQ cannot be deleted";
 $locale['faq_0036'] = "There are FAQs or Subcategories in the Category";
