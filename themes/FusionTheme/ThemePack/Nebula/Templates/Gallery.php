@@ -151,8 +151,8 @@ class Gallery {
             $html .= "<div class='pull-right dropdown'>\n";
             $html .= "<a href='#' data-toggle='dropdown'><i class='fa fa-cog'></i></a>\n";
             $html .= "<ul class='dropdown-menu'>\n";
-            $html .= "<li><a href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n</li>";
-            $html .= "<li><a href='".$info['album_delete']['link']."' title='".$info['album_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a>\n</li>";
+            $html .= "<li><a href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i> ".$info['album_edit']['name']."</a>\n</li>";
+            $html .= "<li><a href='".$info['album_delete']['link']."' title='".$info['album_delete']['name']."'><i class='fa fa-trash fa-lg'></i> ".$info['album_delete']['name']."</a>\n</li>";
             $html .= "</ul>\n</div>\n";
         }
         $html .= "<div class='overflow-hide'>\n";
