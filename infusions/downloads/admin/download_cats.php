@@ -196,8 +196,10 @@ function showcatlist($parent = 0, $level = 0) {
 	ORDER BY d.download_cat_name
 	");
     if (dbrows($result) != 0) {
+        echo "<div class='row'>";
         while ($data = dbarray($result)) {
-            echo "<div class='list-group-item clearfix'>\n";
+            echo "<div class='col-xs-12 col-sm-6'>";
+            echo "<div class='well clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-5'>\n";
             echo "<a class='btn btn-sm btn-default' href='".clean_request("action=edit&cat_id=".$data['download_cat_id'], array(
                     "section",
@@ -215,8 +217,10 @@ function showcatlist($parent = 0, $level = 0) {
             }
             echo "</div>\n";
             echo "</div>\n";
+            echo "</div>";
             $row_num++;
             showcatlist($data['download_cat_id'], $level + 1);
         }
+        echo "</div>";
     }
 }
