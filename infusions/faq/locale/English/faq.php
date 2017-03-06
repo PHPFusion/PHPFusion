@@ -67,9 +67,7 @@ $locale['faq_0259'] = "More Informations";
 $locale['faq_0270'] = "You must specify a FAQs.";
 $locale['faq_0271'] = "You must specify a Question.";
 $locale['faq_0272'] = "You must specify a FAQ.";
-$locale['faq_0274'] = "%s are disabled for all items.
-
-This setting will only take effect when they are enabled again.";
+$locale['faq_0274'] = "%s are disabled for all items. This setting will only take effect when they are enabled again.";
 $locale['faq_0350'] = "The submission above was sent from {%SUBMISSION_AUTHOR%}.";
 $locale['faq_0351'] = "Submission Date: {%SUBMISSION_TIME%} - {%SUBMISSION_DATE%}.";
 $locale['faq_0400'] = "Settings for the FAQs System.";
