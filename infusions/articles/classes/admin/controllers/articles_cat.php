@@ -451,7 +451,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         if (!$id) :
             ?>
-            <table class="table table-responsive table-striped">
+            <table class="table table-responsive table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -471,8 +471,16 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 $edit_link = clean_request("section=article_category&ref=article_cat_form&action=edit&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 $delete_link = clean_request("section=article_category&ref=article_cat_form&action=delete&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 ?>
-                <tr data-id="<?= $cat_id; ?>">
-                    <td><?php echo form_checkbox("article_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-b-0")) ?></td>
+                <tr data-id="<?php echo $cat_id; ?>" id="cat<?php echo $cat_id; ?>">
+                    <td><?php echo form_checkbox("article_cat_id[]", "", "", array("value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-b-0"));
+                    add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
+                        if ($(this).prop("checked")) {
+                            $("#cat'.$cat_id.'").addClass("active");
+                        } else {
+                            $("#cat'.$cat_id.'").removeClass("active");
+                        }
+                    });');
+                     ?></td>
                     <td><span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span></td>
                     <td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
                     <td><span class="badge"><?php echo ($cdata['article_cat_status'] == 1 ? $this->locale['publish'] : $this->locale['unpublish']); ?></span></td>
