@@ -254,7 +254,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 
             echo "</div>\n</div>\n";
 
-            echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('submit_download', $locale['download_0041'], $locale['download_0041'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 
             echo closeform();
 

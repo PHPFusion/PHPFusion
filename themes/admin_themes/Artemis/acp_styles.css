@@ -1545,6 +1545,9 @@ label small {
     margin-bottom: 5px !important;
 }
 
+.label.label-danger {
+    color: #fff;
+}
 /* General table properties */
 table {
     border-collapse: collapse;
