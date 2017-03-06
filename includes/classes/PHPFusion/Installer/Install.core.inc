@@ -235,7 +235,7 @@ class Install_Core extends Infusion_Core {
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
-            $default_path = '';
+            $default_path = array();
             if (isset($db_host)) {
                 $default_path['db_host'] = $db_host;
             }
