@@ -33,14 +33,13 @@ if (!function_exists("render_gallery")) {
                 $locale = fusion_get_locale();
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='panel-heading'>\n";
-                echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'],
-                        18)."</strong>\n</a>\n";
+                echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'], 18)."</strong>\n</a>\n";
                 echo "</div>\n";
                 echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
                 echo $info['image'];
                 echo "</div>\n";
                 echo "<div class='panel-body'>\n";
-                echo "<span class='album_count'>".$info['photo_rows']." ".format_word($info['photo_rows'], $locale['461'])."</span>";
+                echo "<span class='album_count'>".format_word($info['photo_rows'], $locale['461'])."</span>";
                 echo "</div>\n";
                 echo "<div class='panel-footer'>\n";
                 echo "<abbr title='".$locale['464'].showdate("shortdate",
@@ -52,7 +51,6 @@ if (!function_exists("render_gallery")) {
                 }
                 echo "</div></div>\n";
             }
-
             echo "<div class='row m-t-20 m-b-20'>\n";
             foreach ($info['item'] as $data) {
                 echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
@@ -69,6 +67,7 @@ if (!function_exists("render_gallery")) {
         closetable();
     }
 }
+
 /* Photo Category Page */
 if (!function_exists('render_photo_album')) {
     function render_photo_album($info) {
@@ -147,6 +146,7 @@ if (!function_exists('render_photo_album')) {
         closetable();
     }
 }
+
 if (!function_exists('render_photo')) {
     function render_photo($info) {
         $locale = fusion_get_locale();
@@ -167,11 +167,9 @@ if (!function_exists('render_photo')) {
         echo "<div class='overflow-hide m-b-20'>\n";
         echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
         echo "</div>\n";
-
         if ($info['photo_description']) {
             echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
         }
-
         echo "<div class='list-group-item m-b-20'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
@@ -186,10 +184,8 @@ if (!function_exists('render_photo')) {
         echo "</div>\n</div>\n";
         echo "</div>\n</div>\n";
         echo "<!--sub_photo-->";
-
         echo $info['photo_show_comments'];
         echo $info['photo_show_ratings'];
-
         closetable();
     }
 }
