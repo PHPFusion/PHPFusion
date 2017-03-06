@@ -97,10 +97,10 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = array(
                 "required"   => TRUE, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['faq_0253'],
-                "error_text" => $this->locale['faq_0272'], "form_name" => "articleform", "wordcount" => true
+                "error_text" => $this->locale['faq_0270'], "form_name" => "articleform", "wordcount" => true
             );
         } else {
-            $faqExtendedSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['faq_0272']);
+            $faqExtendedSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['faq_0270']);
         }
 
         // Start Form

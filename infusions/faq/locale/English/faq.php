@@ -62,10 +62,9 @@ $locale['faq_0255'] = "Published";
 $locale['faq_0256'] = "Enable automatic Linebreaks";
 $locale['faq_0257'] = "Update Publication Date";
 $locale['faq_0258'] = "More Settings";
-$locale['faq_0259'] = "More Informations";
+$locale['faq_0259'] = "More Information";
 $locale['faq_0270'] = "You must specify a FAQs.";
 $locale['faq_0271'] = "You must specify a Question.";
-$locale['faq_0272'] = "You must specify a FAQ.";
 $locale['faq_0274'] = "%s are disabled for all items. This setting will only take effect when they are enabled again.";
 $locale['faq_0350'] = "The submission above was sent from {%SUBMISSION_AUTHOR%}.";
 $locale['faq_0351'] = "Submission Date: {%SUBMISSION_TIME%} - {%SUBMISSION_DATE%}.";
@@ -80,4 +79,4 @@ Administrator. [SITENAME] reserves the right to amend or edit any submission. FA
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['faq_0921'] = "You must login to submit a FAQ.";
 $locale['faq_0922'] = "We do not accept new FAQs Submissions at the Moment.";
-$locale['faq_0923'] = "You cannot submit a FAQ, because there are no FAQ defined.";
+$locale['faq_0923'] = "You cannot submit a FAQ, because there are no FAQ category defined.";
