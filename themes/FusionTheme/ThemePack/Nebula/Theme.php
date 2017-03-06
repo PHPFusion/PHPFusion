@@ -131,3 +131,29 @@ function display_news_submissions_form(array $info = array()) {
 
     return ThemePack\Nebula\Templates\Submissions::display_news_submissions_form($info);
 }
+
+/**
+ * Photo Gallery Template
+ *
+ * @param $info
+ */
+function render_gallery($info) {
+    $panel = \PHPFusion\Panels::getInstance();
+    $panel->hide_panel('RIGHT');
+    $panel->hide_panel('LEFT');
+    echo ThemePack\Nebula\Templates\Gallery::render_gallery($info);
+}
+
+function render_photo_album($info) {
+    $panel = \PHPFusion\Panels::getInstance();
+    $panel->hide_panel('RIGHT');
+    $panel->hide_panel('LEFT');
+    echo ThemePack\Nebula\Templates\Gallery::render_photo_album($info);
+}
+
+function render_photo($info) {
+    $panel = \PHPFusion\Panels::getInstance();
+    $panel->hide_panel('RIGHT');
+    $panel->hide_panel('LEFT');
+    echo ThemePack\Nebula\Templates\Gallery::render_photo($info);
+}
