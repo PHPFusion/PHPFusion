@@ -277,7 +277,6 @@ function gallery_album_listing() {
             $i = 1;
             while ($data = dbarray($result)) {
                 echo "<div class='col-xs-12' style='float:left; width:20%; padding:0 15px;'>\n";
-
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
                 echo "<div class='panel-image-wrapper'>\n";
@@ -315,12 +314,12 @@ function gallery_album_listing() {
             echo "</div>\n";
         } else {
             echo "<div class='well m-t-20 text-center'>\n";
-            echo $locale['gallery_0011'];
+            echo $locale['gallery_0024'];
             echo "</div>\n";
         }
     } else {
         echo "<div class='well m-t-20 text-center'>\n";
-        echo $locale['gallery_0011'];
+        echo $locale['gallery_0024'];
         echo "</div>\n";
     }
 }
