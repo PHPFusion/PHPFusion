@@ -30,8 +30,7 @@ if (!function_exists('render_downloads')) {
         $locale = fusion_get_locale();
 
         echo render_breadcrumbs();
-        echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-9'>\n";
+
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
@@ -162,9 +161,8 @@ if (!function_exists('render_downloads')) {
             echo "</div>\n";
             echo "<!--sub_download_cat-->";
         }
-        echo "</div><div class='col-xs-12 col-sm-3'>\n";
-        echo display_download_menu($info);
-        echo "</div>\n</div>\n";
+
+        \PHPFusion\Panels::addPanel('download_menu_panel', display_download_menu($info), \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
     }
 }
 

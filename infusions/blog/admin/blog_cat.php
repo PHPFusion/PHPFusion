@@ -120,12 +120,16 @@ echo form_select("blog_cat_image", $locale['blog_0531'], $data['blog_cat_image']
 echo form_button("save_cat", $locale['blog_0532'], $locale['blog_0532'], array("class" => "btn-success", "icon" => "fa fa-hdd-o"));
 closeside();
 echo "<hr/>\n";
+echo "<div class='overflow-hide'>";
 echo "<div class='pull-right'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesbc'>".$locale['blog_0536']."</a><br /><br />\n</div>\n";
 echo "<h4>".$locale['blog_0407']."</h4>\n";
+echo "</div>";
 $result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 $rows = dbrows($result);
 if ($rows != 0) {
+    echo "<div class='row'>";
     while ($data = dbarray($result)) {
+        echo "<div class='col-xs-12 col-sm-3'>";
         echo "<div class='well clearfix'>\n";
         echo "<div class='pull-left' style='width:70px;'>\n";
         echo thumbnail(get_image("bl_".$data['blog_cat_name']), '50px');
@@ -134,7 +138,9 @@ if ($rows != 0) {
         echo "<span><a href='".clean_request("action=edit&cat_id=".$data['blog_cat_id'], ['aid', 'section'], TRUE)."'>".$locale['edit']."</a> &middot; ";
         echo "<a href='".clean_request("action=delete&cat_id=".$data['blog_cat_id'], ['aid', 'section'], TRUE)."' onclick=\"return confirm('".$locale['blog_0550']."');\">".$locale['delete']."</a></span>\n";
         echo "</div>\n</div>\n";
+        echo "</div>";
     }
+    echo "</div>";
 } else {
     echo "<div class='well text-center'>".$locale['blog_0461']."</div>\n";
 }

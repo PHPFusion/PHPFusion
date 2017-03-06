@@ -445,7 +445,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         if (!$id) :
             ?>
-            <table class="table table-responsive table-striped">
+            <table class="table table-responsive table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -465,8 +465,16 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 $edit_link = clean_request("section=weblinks_category&ref=weblink_cat_form&action=edit&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 $delete_link = clean_request("section=weblinks_category&ref=weblink_cat_form&action=delete&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 ?>
-                <tr data-id="<?= $cat_id; ?>">
-                    <td><?php echo form_checkbox("weblink_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-0")) ?></td>
+                <tr data-id="<?php echo $cat_id; ?>" id="cat<?php echo $cat_id;?>">
+                    <td><?php echo form_checkbox("weblink_cat_id[]", "", "", array("value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-0"));
+                    add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
+                        if ($(this).prop("checked")) {
+                            $("#cat'.$cat_id.'").addClass("active");
+                        } else {
+                            $("#cat'.$cat_id.'").removeClass("active");
+                        }
+                    });');
+                     ?></td>
                     <td><?php echo str_repeat("--", $level)." ".$cdata['weblink_cat_name']; ?></span></td>
 					<td><span class="badge"><?php echo format_word($cdata['weblink_count'], $this->locale['fmt_weblink']); ?></span></td>
                     <td><span class="badge"><?php echo ($cdata['weblink_cat_status'] == 0 ? $this->locale['unpublish'] : $this->locale['publish']); ?></span></td>

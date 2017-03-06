@@ -376,7 +376,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             echo "<a class='btn".($filter_empty == FALSE ? " btn-info" : " btn-default'")."' id='toggle_options' href='#'>\n";
             echo self::$locale['news_0242']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span>\n";
             echo "</a>\n";
-            echo form_button("news_clear", self::$locale['news_0243'], "clear", array('class' => 'btn-default btn-sm'));
+            echo form_button("news_clear", self::$locale['news_0243'], "clear", array('class' => 'btn-default'));
             echo "</div>\n";
 
             echo "</div>\n";
@@ -454,7 +454,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 <th><?php echo self::$locale['sticky'] ?></th>
                 <th><?php echo self::$locale['news_0209'] ?></th>
                 <th><?php echo self::$locale['language'] ?></th>
-
                 <th>ID</th>
             </tr>
             </thead>
@@ -465,8 +464,16 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 $edit_link = clean_request("section=news_category&ref=news_cat_form&action=edit&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 $delete_link = clean_request("section=news_category&ref=news_cat_form&action=delete&cat_id=".$cat_id, array("section", "ref", "action", "cat_id"), FALSE);
                 ?>
-                <tr>
-                    <td><?php echo form_checkbox("news_cat_id[]", "", "", array("value" => $cat_id, "class" => "m-b-0")) ?></td>
+                <tr id="cat<?php echo $cat_id;?>">
+                    <td><?php echo form_checkbox("news_cat_id[]", "", "", array("value" => $cat_id, "input_id" => "checkbox".$cat_id, "class" => "m-b-0"));
+                    add_to_jquery('$("#checkbox'.$cat_id.'").click(function() {
+                        if ($(this).prop("checked")) {
+                            $("#cat'.$cat_id.'").addClass("active");
+                        } else {
+                            $("#cat'.$cat_id.'").removeClass("active");
+                        }
+                    });');
+                     ?></td>
                     <td>
                         <div class="btn-group m-0">
                             <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>">
