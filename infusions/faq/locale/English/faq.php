@@ -68,7 +68,6 @@ $locale['faq_0132'] = "Items per Page";
 
 // Table - Submissions
 $locale['faq_0200'] = "ID";
-$locale['faq_0201'] = "Question";
 $locale['faq_0202'] = "Submissioner";
 $locale['faq_0203'] = "Date";
 $locale['faq_0204'] = "Options";
@@ -78,7 +77,6 @@ $locale['faq_0205'] = "Review Submission";
 $locale['faq_0251'] = "Answer";
 $locale['faq_0252'] = "Category";
 $locale['faq_0253'] = "The FAQs self.";
-$locale['faq_0254'] = "Date";
 $locale['faq_0255'] = "Published";
 $locale['faq_0256'] = "Enable automatic Linebreaks";
 $locale['faq_0257'] = "Update Publication Date";
@@ -94,7 +92,6 @@ $locale['faq_0274'] = "%s are disabled for all items.\n\rThis setting will only 
 // Form - Submissions
 $locale['faq_0350'] = "The submission above was sent from {%SUBMISSION_AUTHOR%}.";
 $locale['faq_0351'] = "Submission Date: {%SUBMISSION_TIME%} - {%SUBMISSION_DATE%}.";
-$locale['faq_0352'] = "Published";
 
 // Settings
 $locale['faq_0400'] = "Settings for the FAQs System.";

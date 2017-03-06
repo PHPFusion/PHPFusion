@@ -208,7 +208,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         ?>
         <div class="m-t-20">
           <?php echo form_button("preview_submission", $this->locale['preview'], $this->locale['preview'], array("class" => "btn-default", "icon" => "fa fa-fw fa-eye", "input-id" => "preview_submission-".$unique_id."")); ?>
-          <?php echo form_button("publish_submission", $this->locale['faq_0352'], $this->locale['faq_0352'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "publish_submission-".$unique_id."")); ?>
+          <?php echo form_button("publish_submission", $this->locale['faq_0255'], $this->locale['faq_0255'], array("class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "publish_submission-".$unique_id."")); ?>
           <?php echo form_button("delete_submission", $this->locale['delete'], $this->locale['delete'], array("class" => "btn-danger", "icon" => "fa fa-fw fa-trash", "input-id" => "delete_submission-".$unique_id."")); ?>
         </div>
         <?php if ($breaker) { ?><hr /><?php } ?>
@@ -254,7 +254,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 		echo "<thead>\n";
 			echo "<tr>\n";
             	echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
-            	echo "<td class='strong col-xs-5'>".$this->locale['faq_0201']."</td>\n";
+        echo "<td class='strong col-xs-5'>".$this->locale['faq_0100']."</td>\n";
             	echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
             	echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
             	echo "<td class='strong'>".$this->locale['faq_0204']."</td>\n";
