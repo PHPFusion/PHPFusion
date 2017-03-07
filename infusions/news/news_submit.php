@@ -192,7 +192,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                 ]
             ),
             'news_submit'         => form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o')),
-            'preview_news'           => (fusion_get_settings('site_seo') ? '' : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('icon' => 'fa fa-eye'))),
+            'preview_news'           => (fusion_get_settings('site_seo') ? '' : form_button('preview_news', $locale['news_0141'], $locale['news_0141'], array('icon' => 'fa fa-eye'))),
             'criteria_array'         => $criteriaArray,
         ];
 
