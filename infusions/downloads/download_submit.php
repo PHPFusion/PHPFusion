@@ -65,7 +65,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
          */
         if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
-            if (!$upload['error']) {
+            if (empty($upload['error'])) {
                 // might be image, might be file
                 if (!empty($upload['image_name'])) {
                     $criteriaArray['download_file'] = $upload['image_name'];
@@ -85,7 +85,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         // Screenshot submissions
         if ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
-            if ($upload['error'] == 0) {
+            if (empty($upload['error'])) {
                 $criteriaArray['download_image'] = $upload['image_name'];
                 $criteriaArray['download_image_thumb'] = $upload['thumb1_name'];
                 unset($upload);

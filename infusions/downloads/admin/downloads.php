@@ -105,7 +105,7 @@ if (isset($_POST['save_download'])) {
     /** Bugs with having Link and File together -- File will take precedence **/
     if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
-        if ($upload['error'] == 0) {
+        if (empty($upload['error'])) {
             $data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['name'];
             if (isset($_POST['calc_upload'])) {
                 $data['download_filesize'] = parsebytesize($upload['source_size']);
@@ -136,7 +136,7 @@ if (isset($_POST['save_download'])) {
         $data['download_image_thumb'] = '';
     } elseif (defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
-        if ($upload['error'] == 0) {
+        if (empty($upload['error'])) {
             $data['download_image'] = $upload['image_name'];
             $data['download_image_thumb'] = $upload['thumb1_name'];
         }
