@@ -551,7 +551,7 @@ class MemberPoll {
             ));
             foreach ($this->data['poll_opt'] as $im1 => $data1) {
                 $nam = "poll_opt_$im1";
-                echo \PHPFusion\QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].$im1, $data1, array(
+                echo \PHPFusion\QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, array(
                     'required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['POLL_070'], 'inner_width'=>'250px'
                 ));
             }
