@@ -417,10 +417,10 @@ class Shoutbox {
                         echo '</div>';
                         echo '<div class="col-sm-3">';
                             echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
-                                echo "<a class='btn btn-default' href='".$this->postLink.fusion_get_aidlink()."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'>";
+                                echo "<a class='btn btn-default' href='".$this->postLink."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'>";
                                     echo "<i class='fa fa-edit fa-fw'></i> ".self::$locale['edit'];
                                 echo "</a>";
-                                echo "<a class='btn btn-danger' href='".$this->postLink.fusion_get_aidlink()."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\">";
+                                echo "<a class='btn btn-danger' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\">";
                                     echo "<i class='fa fa-trash fa-fw'></i> ".self::$locale['delete'];
                                 echo "</a>";
                             echo '</div>';
