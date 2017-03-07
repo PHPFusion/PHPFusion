@@ -36,8 +36,8 @@ class Shoutbox {
     );
     private static $default_params = array(
         'sbform_name' => '',
-        'sb_db' => '',
-        'sb_limit' => '',
+        'sb_db'       => '',
+        'sb_limit'    => ''
     );
 
     public function __construct() {
@@ -47,7 +47,7 @@ class Shoutbox {
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
-        $this->postLink = clean_request(); ///BASEDIR.FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+        $this->postLink = FUSION_REQUEST;
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
         $this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
@@ -83,11 +83,11 @@ class Shoutbox {
 
     private function setEmptyDay() {
         $this->day_data = array(
-            '90' => "90".self::$locale['SB_days'],
-            '60' => "60".self::$locale['SB_days'],
-            '30' => "30".self::$locale['SB_days'],
-            '20' => "20".self::$locale['SB_days'],
-            '10' => "10".self::$locale['SB_days'],
+            '90' => "90 ".self::$locale['SB_days'],
+            '60' => "60 ".self::$locale['SB_days'],
+            '30' => "30 ".self::$locale['SB_days'],
+            '20' => "20 ".self::$locale['SB_days'],
+            '10' => "10 ".self::$locale['SB_days']
         );
     }
 
@@ -204,9 +204,10 @@ class Shoutbox {
                 }
 
             }
-            addNotice('warning', $cnt." / ".$i.self::$locale['SB_shout_deleted']);
 
+            addNotice('warning', $cnt." / ".$i.' '.self::$locale['SB_shout_deleted']);
         }
+
         defined('ADMIN_PANEL') ?
             redirect(clean_request("section=shoutbox", array("", "aid"), TRUE)) :
             redirect($this->postLink);
@@ -217,10 +218,11 @@ class Shoutbox {
             if ((iADMIN && checkrights("S")) ||
             (iMEMBER && dbcount("(shout_id)", DB_SHOUTBOX, "shout_id='".$id."' AND shout_name='".fusion_get_userdata("user_id")."'".(multilang_table("SB") ? " AND shout_language='".LANGUAGE."'" : "")."")))
             {
-            return TRUE;
+                return TRUE;
             }
-        return FALSE;
+            return FALSE;
         }
+
         return FALSE;
     }
 
@@ -238,6 +240,7 @@ class Shoutbox {
             ORDER BY shout_datestamp DESC
             LIMIT ".intval($rows).", ".$min
         );
+
         return $result;
     }
 
@@ -247,6 +250,7 @@ class Shoutbox {
                 FROM ".DB_SHOUTBOX."
                 WHERE shout_id=".intval($ids).(multilang_table("SB") ? " AND shout_language='".LANGUAGE."'" : "")
             );
+
             if (dbrows($result) > 0) {
                 return $this->data = dbarray($result);
             }
@@ -266,7 +270,7 @@ class Shoutbox {
         $master_tab_title['id'][] = "shoutbox";
         $master_tab_title['icon'][] = "";
 
-        $master_tab_title['title'][] = $edit ? self::$locale['SB_edit'] : self::$locale['SB_add'];
+        $master_tab_title['title'][] = $edit ? self::$locale['edit'] : self::$locale['SB_add'];
         $master_tab_title['id'][] = "shoutbox_form";
         $master_tab_title['icon'][] = "";
 
@@ -277,7 +281,7 @@ class Shoutbox {
         echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE);
         switch ($_GET['section']) {
             case "shoutbox_form":
-                add_to_title(self::$locale['SB_edit']);
+                add_to_title(self::$locale['edit']);
                 $this->sb_AdminForm();
                 break;
             case "shoutbox_settings":
@@ -299,7 +303,7 @@ class Shoutbox {
         openside('');
         echo openform('shoutbox', 'post', $this->postLink);
         echo form_select('num_days', self::$locale['SB_delete_old'], '', array('inline' => TRUE, 'inner_width' => '300px', 'options' => $this->day_data));
-        echo form_button('sb_delete_old', self::$locale['SB_submit'], self::$locale['SB_submit'], array('class' => 'btn-primary'));
+        echo form_button('sb_delete_old', self::$locale['delete'], self::$locale['delete'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
         echo closeform();
         closeside();
 
@@ -311,7 +315,7 @@ class Shoutbox {
         $opts = array('1' => self::$locale['yes'], '0' => self::$locale['no'],);
         echo form_select('guest_shouts', self::$locale['SB_guest_shouts'], $sb_settings['guest_shouts'], array('inline' => TRUE, 'inner_width' => '100px', 'options' => $opts));
         echo form_select('hidden_shouts', self::$locale['SB_hidden_shouts'], $sb_settings['hidden_shouts'], array('inline' => TRUE, 'inner_width' => '100px', 'options' => $opts));
-        echo form_button('sb_settings', self::$locale['SB_submit'], self::$locale['SB_submit'], array('class' => 'btn-primary'));
+        echo form_button('sb_settings', self::$locale['save'], self::$locale['save'], array('class' => 'btn-success'));
         echo closeform();
         closeside();
     }
@@ -338,53 +342,50 @@ class Shoutbox {
         defined('ADMIN_PANEL') ? fusion_confirm_exit() : "";
         openside(self::$locale['SB_title']);
         if (iGUEST && empty(self::$sb_settings['hidden_shouts'])) {
-        echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
-
+            echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
-        echo openform(self::$default_params['sbform_name'], 'post', $this->postLink);
-        echo form_hidden('shout_id', '', $this->data['shout_id']);
-        echo form_hidden('shout_hidden', '', $this->data['shout_hidden']);
-        echo form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], array('required' => TRUE, "autosize" => TRUE, 'form_name' => self::$default_params['sbform_name'], 'wordcount' => TRUE, 'maxlength' => '200', 'type' => 'bbcode', 'input_bbcode' => 'smiley|b|u|url|color'));
-        if (iGUEST) {
-        echo self::sb_captha();
-        }
-        if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
-            echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
-                "inner_width" => "100%",
-                'required' => TRUE,
-                'options' => fusion_get_enabled_languages()
-            ));
-        } else {
-            echo form_hidden('shout_language', '', $this->data['shout_language']);
-        }
+            echo openform(self::$default_params['sbform_name'], 'post', $this->postLink);
+            echo form_hidden('shout_id', '', $this->data['shout_id']);
+            echo form_hidden('shout_hidden', '', $this->data['shout_hidden']);
+            echo form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], array('required' => TRUE, "autosize" => TRUE, 'form_name' => self::$default_params['sbform_name'], 'wordcount' => TRUE, 'maxlength' => '200', 'type' => 'bbcode', 'input_bbcode' => 'smiley|b|u|url|color'));
+            if (iGUEST) {
+                echo self::sb_captha();
+            }
+            if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
+                echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
+                    "inner_width" => "100%",
+                    'required' => TRUE,
+                    'options' => fusion_get_enabled_languages()
+                ));
+            } else {
+                echo form_hidden('shout_language', '', $this->data['shout_language']);
+            }
 
             if (iMEMBER && self::$sb_settings['hidden_shouts']) {
-        echo "<div class='btn-group dropup'>
-        ".form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary'))."
-        <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
-        echo "<span class='caret'></span>\n";
-        echo "</button>\n";
-        echo "<ul class='dropdown-menu'>\n";
-                foreach (fusion_get_groups() as $key => $glink) {
-                    if (!iADMIN && $key > 0) {
-                        echo users_groupaccess($key) ? "<li>".form_button($glink, $glink, $glink, array('class' => 'btn-primary'))."</li>\n": "";
-                    } else {
-                        echo "<li>".form_button($glink, $glink, $glink, array('class' => 'btn-primary'))."</li>\n";
+                echo "<div class='btn-group dropup'>
+                ".form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary'))."
+                <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
+                echo "<span class='caret'></span>\n";
+                echo "</button>\n";
+                echo "<ul class='dropdown-menu'>\n";
+                        foreach (fusion_get_groups() as $key => $glink) {
+                            if (!iADMIN && $key > 0) {
+                                echo users_groupaccess($key) ? "<li>".form_button($glink, $glink, $glink, array('class' => 'btn-primary'))."</li>\n": "";
+                            } else {
+                                echo "<li>".form_button($glink, $glink, $glink, array('class' => 'btn-primary'))."</li>\n";
+                            }
                     }
+                echo "</ul>\n";
+                echo "</div>\n";
+            } else {
+                echo form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary btn-block'));
             }
-        echo "</ul>\n";
-        echo "</div>\n";
 
-        } else {
-        echo form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary btn-block'));
-        }
-
-        echo closeform();
+            echo closeform();
         }
     }
 
     public function sb_listing() {
-
         $total_rows = $this->_countSB("");
         $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart, self::$limit);
@@ -396,28 +397,40 @@ class Shoutbox {
         echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
 
         if ($rows > 0) {
-            echo "<div class='list-group'>\n";
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
+            echo "<div class='list-group'>\n";
             while ($data = dbarray($result)) {
-                echo "<div class='list-group-item' style='min-height:100px;'>\n";
-                echo "<div class='pull-left m-r-10'>".display_avatar($data, '90px', '', TRUE, 'img-rounded')."</div>\n";
-                echo "<div class='comment-name'>";
-                echo $data['user_name'] ? "<span class='slink'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>" : $data['shout_name'];
-                echo "</span>\n</div>\n";
-                echo "<div class='m-t-5'>\n";
-                echo "<p><span class='small'>".self::$locale['SB_on_date'].showdate("longdate", $data['shout_datestamp'])."</p>";
-                echo self::$sb_settings['hidden_shouts'] ? self::$locale['SB_visbility'].getgroupname($data['shout_hidden'])."<br />" : "";
-                echo self::$locale['SB_lang'].translate_lang_names($data['shout_language'])."<br />";
-                echo self::$locale['SB_userip'].$data['shout_ip']."<br />\n";
-                echo "<div class='pull-right m-r-10 m-t-10'><small>".form_checkbox("rights[".$data['shout_id']."]", '', '', array("inline" => FALSE))." </div>";
-                echo "<a class='pull-right m-r-10 btn btn-danger btn-sm' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a>";
-                echo "<a class='pull-right m-r-10 btn btn-default btn-sm' href='".$this->postLink."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
-                echo "</small>\n</div>\n";
-                echo parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/");
+                echo "<div class='list-group-item clearfix'>\n";
+                    echo '<div class="row">';
+                        echo '<div class="col-sm-3">';
+                            echo display_avatar($data, '30px', '', TRUE, 'img-rounded pull-left m-r-10');
+                            echo "<div class='overflow-hide pull-left m-r-20'>";
+                                echo $data['user_name'] ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $data['shout_name'];
+                                echo ' '.self::$locale['SB_userip'].' '.$data['shout_ip'].'<br/>';;
+                                echo "<small>".showdate("longdate", $data['shout_datestamp'])."</small><br/>";
+                                echo self::$sb_settings['hidden_shouts'] ? self::$locale['SB_visbility'].': '.getgroupname($data['shout_hidden']).'<br/>' : '';
+                                echo self::$locale['SB_lang'].': '.translate_lang_names($data['shout_language']).'<br/>';
+                            echo "</div>\n";
+                        echo '</div>';
+                        echo '<div class="col-sm-6">';
+                            echo parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/");
+                        echo '</div>';
+                        echo '<div class="col-sm-3">';
+                            echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
+                                echo "<a class='btn btn-default' href='".$this->postLink."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'>";
+                                    echo "<i class='fa fa-edit fa-fw'></i> ".self::$locale['edit'];
+                                echo "</a>";
+                                echo "<a class='btn btn-danger' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\">";
+                                    echo "<i class='fa fa-trash fa-fw'></i> ".self::$locale['delete'];
+                                echo "</a>";
+                            echo '</div>';
+                            echo form_checkbox("rights[".$data['shout_id']."]", '', '');
+                        echo '</div>';
+                    echo '</div>';
                 echo "</div>\n";
             }
             echo "</div>\n";
-            echo form_button('sb_admins', self::$locale['SB_selected_shout'], self::$locale['SB_selected_shout'], array('class' => 'btn-primary'));
+            echo form_button('sb_admins', self::$locale['SB_selected_shout'], self::$locale['SB_selected_shout'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
             echo closeform();
         echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
         } else {
@@ -476,8 +489,8 @@ class Shoutbox {
                 echo "</div>\n";
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['SB_edit']."' href='".$this->postLink.$this->sep."s_action=edit&amp;shout_id=".$data['shout_id']."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['SB_delete']."' href='".$this->postLink.$this->sep."s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".$this->postLink.$this->sep."s_action=edit&amp;shout_id=".$data['shout_id']."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".$this->postLink.$this->sep."s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
                 echo "<div class='shoutboxname'>\n";
