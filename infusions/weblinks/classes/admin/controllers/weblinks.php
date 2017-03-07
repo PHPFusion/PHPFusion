@@ -148,8 +148,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
 			<!-- Display Left Column -->
 			<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
 				<?php
-				echo form_text("weblink_name", $this->locale['WLS_0250'], $this->weblink_data['weblink_name'], array(
-					"required" => true, "placeholder" =>  $this->locale['WLS_0251'], "error_text" => $this->locale['WLS_0252']
+                echo form_text("weblink_name", $this->locale['WLS_0201'], $this->weblink_data['weblink_name'], array(
+                    "required" => true, "placeholder" => $this->locale['WLS_0201'], "error_text" => $this->locale['WLS_0252']
 				));
 
 				echo form_text("weblink_url", $this->locale['WLS_0253'], $this->weblink_data['weblink_url'], array(
@@ -166,12 +166,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
 				openside($this->locale['WLS_0260']);
 
-				echo form_select_tree("weblink_cat", $this->locale['WLS_0256'], $this->weblink_data['weblink_cat'], array(
+                echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $this->weblink_data['weblink_cat'], array(
 						"required" => TRUE, "no_root" => TRUE, "placeholder" =>  $this->locale['choose'],
 				        "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
 					    ), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-				echo form_select("weblink_visibility", $this->locale['WLS_0257'], $this->weblink_data['weblink_visibility'], array(
+                echo form_select("weblink_visibility", $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], array(
 					"options" => fusion_get_groups(), "placeholder" => $this->locale['choose']
 				));
 
@@ -362,7 +362,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 			<div class="clearfix">
 				<div class="pull-right">
 					<?php if ($weblink_cats) { ?>
-						<a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", array("ref"), false); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0110']; ?></a>
+                        <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", array("ref"), false); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
 					<?php } ?>
 					<a class="btn btn-default btn-sm m-r-10" onclick="run_admin('verify');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></a>
 					<a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>

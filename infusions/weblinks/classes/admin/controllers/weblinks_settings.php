@@ -66,11 +66,11 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12'>\n";
 
-		echo form_text("links_per_page", $this->locale['WLS_0401'], $weblink_settings['links_per_page'], array(
-				"max_lenght" => 4, "inner_width" => "250px", "type" => "number"
+        echo form_text("links_per_page", $this->locale['WLS_0132'], $weblink_settings['links_per_page'], array(
+            "max_length" => 4, "inner_width" => "250px", "type" => "number"
 			));
 
-		echo form_select("links_allow_submission", $this->locale['WLS_0402'], $weblink_settings['links_allow_submission'], array(
+        echo form_select("links_allow_submission", $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], array(
 				"options" => array($this->locale['disable'], $this->locale['enable'])
 			));
 

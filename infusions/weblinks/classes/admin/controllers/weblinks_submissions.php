@@ -155,8 +155,8 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 			<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
 				<?php
 
-				echo form_text("weblink_name", $this->locale['WLS_0250'], $this->inputArray['weblink_name'], array(
-					"required" => true, "placeholder" => $this->locale['WLS_0251'], "error_text" => $this->locale['WLS_0252']
+                echo form_text("weblink_name", $this->locale['WLS_0201'], $this->inputArray['weblink_name'], array(
+                    "required" => true, "placeholder" => $this->locale['WLS_0201'], "error_text" => $this->locale['WLS_0252']
 				));
 
 				echo form_text("weblink_url", $this->locale['WLS_0253'], $this->inputArray['weblink_url'], array(
@@ -174,14 +174,14 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
 				openside($this->locale['WLS_0260']);
 
-                echo form_select_tree("weblink_cat", $this->locale['WLS_0256'], $this->inputArray['weblink_cat'], array(
+                echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $this->inputArray['weblink_cat'], array(
                     "no_root" => TRUE,
                     "inner_width" => "100%",
                     "placeholder" => $this->locale['choose'],
                     "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
                 ), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-                echo form_select('weblink_visibility',  $this->locale['WLS_0257'], $this->inputArray['weblink_visibility'], array(
+                echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->inputArray['weblink_visibility'], array(
 					"options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%",
                 ));
 
@@ -193,7 +193,8 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 					echo form_hidden("article_language", "", $this->inputArray['article_language']);
 				}
 
-/**/				echo form_datepicker("weblink_datestamp", $this->locale['WLS_0258'], $this->inputArray['weblink_datestamp'], array(
+                /**/
+                echo form_datepicker("weblink_datestamp", $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp'], array(
 					"inner_width" => "100%"
 				));
                 self::displayFormButtons("formstart", FALSE);
