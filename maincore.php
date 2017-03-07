@@ -166,29 +166,21 @@ define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
 // Main language detection procedure
-// Language detection hub for multilingual content, detect, set correct language if it is not set
-// Get enabled language settings
+static $current_user_language = [];
+if (iMEMBER && valid_language($userdata['user_language'])) {
+    $current_user_language = $userdata['user_language'];
+} else {
+    $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
+    $current_user_language = ($langData['user_language'] ?: fusion_get_settings('locale'));
+}
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
-//print_p($enabled_languages);
 if (count($enabled_languages) > 1) {
     require __DIR__.'/includes/core_mlang_hub_include.php';
 }
 if (!defined('LANGUAGE') && !defined('LOCALESET')) {
-    if (iMEMBER && valid_language($userdata['user_language'])) {
-        define('LANGUAGE', $userdata['user_language']);
-        define('LOCALESET', $userdata['user_language'].'/');
-    } else {
-        $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
-        if ($langData['user_language']) {
-            define('LANGUAGE', $langData['user_language']);
-            define('LOCALESET', $langData['user_language'].'/');
-        } else {
-            define('LANGUAGE', $settings['locale']);
-            define('LOCALESET', $settings['locale'].'/');
-        }
-        unset($langData);
-    }
+    define('LANGUAGE', $current_user_language);
+    define('LOCALESET', $current_user_language.'/');
 }
 
 // If language change is initiated and if the selected language is valid
