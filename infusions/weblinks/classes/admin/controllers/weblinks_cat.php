@@ -168,7 +168,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 						"query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
 					), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-					echo form_textarea("weblink_cat_description", $this->locale['WLS_0304'], $data['weblink_cat_description'], array(
+                    echo form_textarea("weblink_cat_description", $this->locale['WLS_0254'], $data['weblink_cat_description'], array(
 						"type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
 						"tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
 						"autosize" => TRUE,
@@ -256,7 +256,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 					addNotice("warning", $this->locale['WLS_0042']);
                                 } else {
                                     addNotice("warning", $this->locale['WLS_0046']);
-									addNotice("warning", $this->locale['WLS_0047']);
+                                    addNotice("warning", $this->locale['WLS_0044']);
                                 }
                                 break;
                             default:
