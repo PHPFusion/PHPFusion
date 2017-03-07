@@ -239,7 +239,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                 echo openform('publish_news', 'post', FUSION_REQUEST);
                 echo "<div class='spacer-sm'>\n";
-                echo form_button('preview', self::$locale['news_0240'], self::$locale['news_0240'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
+                echo form_button('preview', self::$locale['news_0141'], self::$locale['news_0141'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
                 echo form_button('publish', self::$locale['news_0134'], self::$locale['news_0134'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
                 echo form_button('delete', self::$locale['news_0135'], self::$locale['news_0135'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
                 echo "</div>\n";
