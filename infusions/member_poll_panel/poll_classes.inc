@@ -55,7 +55,7 @@ class MemberPoll {
 
         self::set_polldb();
         if (defined('ADMIN_PANEL')){
-            add_to_title(self::$locale['POLL_000']);
+            add_to_title(self::$locale['POLL_001']);
             self::set_admin_polldb();
         }
     }
@@ -273,14 +273,14 @@ class MemberPoll {
                                 $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
                                 $opt_votes = ($num_votes ? number_format(($num_votes / $info_t['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
                                 $info_t['poll_table'][$key]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
-                                $info_t['poll_table'][$key]['poll_option'][] =  $opt_votes."% [".(empty($num_votes) ? 0 : $num_votes).($num_votes == 1 ? self::$locale['POLL_040'] : self::$locale['POLL_041'])."]";
+                                $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
                             }
 
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_060'].$info_t['poll_table'][$key]['max_vote'];
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_061'].showdate("shortdate", $dat['poll_started']);
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048'].":".$info_t['poll_table'][$key]['max_vote'];
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].":".showdate("shortdate", $dat['poll_started']);
 
                             if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
-                                $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_062'].showdate("shortdate", $dat['poll_ended']);
+                                $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].":".showdate("shortdate", $dat['poll_ended']);
                             }
 
                             $ii++;
@@ -309,15 +309,15 @@ class MemberPoll {
 
     public function display_admin() {
         $aidlink = fusion_get_aidlink();
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_000']]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_001']]);
 
         $allowed_section = array("poll", "poll_vote");
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
         $_GET['poll_id'] = isset($_GET['poll_id']) && isnum($_GET['poll_id']) ? $_GET['poll_id'] : 0;
 
-        opentable(self::$locale['POLL_000']);
-            $master_tab_title['title'][] = self::$locale['POLL_000'];
+        opentable(self::$locale['POLL_001']);
+        $master_tab_title['title'][] = self::$locale['POLL_001'];
             $master_tab_title['id'][] = "poll";
             $master_tab_title['icon'][] = "fa fa-bar-chart";
             $master_tab_title['title'][] = $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043'];
@@ -358,7 +358,7 @@ class MemberPoll {
                     $title = unserialize($data['poll_title']);
                     $poll_opt = unserialize($data['poll_opt']);
                     echo "<div class='col-xs-12 col-sm-3'>\n";
-                    echo "<p class='display-inline-block badge'>".self::$locale['POLL_044'].getgroupname($data['poll_visibility'])."</p>\n";
+                    echo "<p class='display-inline-block badge'>".self::$locale['POLL_044']." ".getgroupname($data['poll_visibility'])."</p>\n";
                     echo "<div class='panel panel-default'>\n";
                         echo "<div class='panel-heading text-left'>\n";
                             foreach ($title as $key => $info) {
@@ -376,13 +376,13 @@ class MemberPoll {
                                 $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
                                 $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
                                 echo progress_bar($opt_votes, $text, FALSE, FALSE, FALSE, TRUE, FALSE);
-                                echo "<p><strong>".$opt_votes."% [".(empty($num_votes) ? 0 : $num_votes).($num_votes == 1 ? self::$locale['POLL_040'] : self::$locale['POLL_041'])."]</strong></p>\n";
+                                echo "<p><strong>".$opt_votes."% [".(format_word($num_votes, self::$locale['POLL_040']))."]</strong></p>\n";
                             }
                             echo "<p><strong>".self::$locale['POLL_060'].$db_info."</strong></p>\n";
-                            echo "<p>".self::$locale['POLL_061'].showdate("shortdate", $data['poll_started'])."</p>\n";
-                            echo "<p class='display-inline-block badge'>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_066'] : self::$locale['POLL_067']))."</p>\n";
+                    echo "<p>".self::$locale['POLL_048'].":".showdate("shortdate", $data['poll_started'])."</p>\n";
+                    echo "<p class='display-inline-block badge'>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
                             if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-                                echo "<p>".self::$locale['POLL_068'].showdate("shortdate", $data['poll_ended'])."</p>\n";
+                                echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
                             }
                         echo "</div>\n";
 
@@ -453,17 +453,17 @@ class MemberPoll {
                                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
                                     $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
                                     echo progress_bar($opt_votes,  $text, FALSE, FALSE, FALSE, TRUE, FALSE);
-                                    echo "<p><strong>".$opt_votes."% [".(empty($num_votes) ? 0 : $num_votes).($num_votes == 1 ? self::$locale['POLL_040'] : self::$locale['POLL_041'])."]</strong></p>\n";
+                                    echo "<p><strong>".$opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]</strong></p>\n";
                                 }
                             echo "</div>\n";
 
                             echo "<div class='panel-footer'>\n";
                                 echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].$db_info."</strong></p>\n";
-                                echo "<p class='m-b-0'>".self::$locale['POLL_061'].showdate("shortdate", $data['poll_started'])."</p>\n";
-                                echo "<p class='display-inline-block badge class='m-b-0''>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_066'] : self::$locale['POLL_067']))."</p>\n";
+                        echo "<p class='m-b-0'>".self::$locale['POLL_048'].":".showdate("shortdate", $data['poll_started'])."</p>\n";
+                        echo "<p class='display-inline-block badge class='m-b-0''>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
 
                                 if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-                                    echo "<p>".self::$locale['POLL_068'].showdate("shortdate", $data['poll_ended'])."</p>\n";
+                                    echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
                                 }
                             echo "</div>\n";
                         echo "</div>\n";
@@ -556,7 +556,7 @@ class MemberPoll {
                 ));
             }
 
-            echo form_select('poll_visibility', self::$locale['POLL_047'], $this->data['poll_visibility'], array(
+        echo form_select('poll_visibility', self::$locale['POLL_044'], $this->data['poll_visibility'], array(
                 "inline" => TRUE,
                 'options' => fusion_get_groups()
             ));
