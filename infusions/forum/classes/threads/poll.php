@@ -337,7 +337,7 @@ class Poll {
 
                 if (!empty($poll)) {
                     $html .= $poll_start;
-                    $html .= "<h2 class='strong m-t-0 m-b-10'><i class='fa fa-fw fa-pie-chart fa-lg'></i>".$locale['forum_0377'].": \"".$poll['forum_poll_title']."\"</h2>\n";
+                    $html .= "<h2 class='strong m-t-0 m-b-10'><i class='fa fa-fw fa-pie-chart fa-lg'></i>".$locale['forum_0314'].": \"".$poll['forum_poll_title']."\"</h2>\n";
                     $html .= "<ul class='p-l-20 p-t-0 block'>\n";
                     if (!empty($poll['forum_poll_options'])) {
                         $i = 1;

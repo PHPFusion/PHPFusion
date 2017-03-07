@@ -19,7 +19,7 @@ $locale['forum_0014'] = 'Reputation';
 // View Forum
 $locale['forum_0050'] = 'View Forum';
 $locale['forum_0051'] = 'Subject';
-$locale['forum_0052'] = 'Author';
+
 $locale['forum_0053'] = 'Views';
 $locale['forum_0054'] = 'Replies';
 $locale['forum_0055'] = 'Page: ';
@@ -40,7 +40,7 @@ $locale['forum_0103'] = 'Sticky';
 
 // View Thread
 $locale['forum_0150'] = 'Forum - Thread Subject : ';
-$locale['forum_0151'] = 'Posts';
+//$locale['forum_0151'] = 'Posts';
 $locale['forum_0152'] = 'Location:';
 $locale['forum_0153'] = 'Joined:';
 $locale['forum_0154'] = ' attached the following ';
@@ -103,7 +103,6 @@ $locale['forum_0223'] = 'Attachments';
 $locale['forum_0224'] = 'Polls';
 $locale['forum_0225'] = 'Sort by';
 $locale['forum_0226'] = 'Date - last update';
-$locale['forum_0227'] = 'Replies';
 $locale['forum_0228'] = 'Title';
 $locale['forum_0229'] = 'Order';
 $locale['forum_0230'] = 'Descending';
@@ -131,11 +130,9 @@ $locale['forum_0270'] = 'No post found.';
 $locale['forum_0271'] = 'There are no post in this thread anymore. Please return to the <a href=\''.FORUM.'index.php\'>Forum Index</a>';
 
 // Move Posts
-$locale['forum_0300'] = 'Move posts';
 $locale['forum_0301'] = 'Select new forum';
 $locale['forum_0302'] = 'Next';
 $locale['forum_0303'] = 'Select new thread';
-$locale['forum_0304'] = 'Move posts';
 $locale['forum_0305'] = 'You are trying to move the first post in this thread!<br />The first post <strong>will not be moved</strong> and has been removed from list because there are still posts left in the thread.';
 $locale['forum_0306'] = 'You are trying to move the first post in this thread!<br />The first post <strong>will be moved</strong> and thread will be deleted.';
 $locale['forum_0307'] = 'No posts to move.';
@@ -154,7 +151,7 @@ $locale['forum_0326'] = 'or Start a Thread';
 $locale['forum_0327'] = 'There are no forums defined under this category';
 $locale['forum_0328'] = 'There are no forums defined.';
 $locale['forum_0340'] = 'Questions';
-$locale['forum_0341'] = 'Threads';
+
 $locale['forum_0350'] = ' Forum Rules:';
 $locale['forum_0351'] = 'Subforums';
 $locale['forum_0352'] = 'Announcements';
@@ -165,28 +162,18 @@ $locale['forum_0363'] = 'Last updated on ';
 $locale['forum_0364'] = ' User Website';
 $locale['forum_0365'] = ' Responses';
 $locale['forum_0366'] = ' Add Poll';
-$locale['forum_0370'] = 'Views';
-$locale['forum_0371'] = 'Posts';
 $locale['forum_0372'] = 'Ratings';
 $locale['forum_0373'] = 'Last replied by: ';
 $locale['forum_0374'] = 'Any Topics';
-$locale['forum_0375'] = 'Discussions';
-$locale['forum_0376'] = 'Attachments';
-$locale['forum_0377'] = 'Poll';
 $locale['forum_0378'] = 'Solved';
 $locale['forum_0379'] = 'Unsolved';
 $locale['forum_0380'] = 'Author';
 $locale['forum_0381'] = 'Post Time';
-$locale['forum_0382'] = 'Subject';
-$locale['forum_0383'] = 'Replies';
-$locale['forum_0384'] = 'Views';
-$locale['forum_0385'] = 'Ascending';
-$locale['forum_0386'] = 'Descending';
-$locale['forum_0387'] = 'All Time';
+
 $locale['forum_0388'] = 'Display topics from';
 $locale['forum_0389'] = 'of type';
 $locale['forum_0390'] = 'All Topics';
-$locale['forum_0391'] = 'Post Time';
+
 $locale['forum_0395'] = 'Select Forum';
 $locale['forum_0396'] = 'Confirm Forum Selection';
 $locale['forum_0397'] = 'There are no forum defined.';
@@ -209,9 +196,7 @@ $locale['forum_perm_bounty'] = 'You %s set up a bounty in this discussion thread
 // Post Titles
 $locale['forum_0500'] = 'Preview Thread';
 $locale['forum_0501'] = 'Post Thread';
-$locale['forum_0502'] = 'Preview Reply';
-$locale['forum_0503'] = 'Reply to Thread';
-$locale['forum_0504'] = 'Post Reply';
+
 $locale['forum_0505'] = 'Preview Changes';
 $locale['forum_0506'] = 'Delete Post';
 $locale['forum_0507'] = 'Edit Post';
@@ -234,8 +219,6 @@ $locale['forum_0529a'] = 'You do not have sufficient permissions to vote';
 // Post Preview
 $locale['forum_0520'] = 'No Message, Post will be rejected if you do not include a Message';
 $locale['forum_0521'] = 'Posts:';
-$locale['forum_0522'] = 'Location:';
-$locale['forum_0523'] = 'Joined:';
 $locale['forum_0524'] = 'Posted ';
 $locale['forum_0525'] = 'Latest Post';
 $locale['forum_0526'] = 'Latest %s posts';
@@ -286,7 +269,6 @@ $locale['forum_0593'] = 'Flush Attachments';
 $locale['forum_0595'] = 'Flush Poll';
 
 // Post Form
-$locale['forum_0600'] = 'Subject';
 $locale['forum_0601'] = 'Message';
 $locale['forum_0602'] = 'Options';
 $locale['forum_0603'] = 'Edit Poll';
@@ -310,10 +292,9 @@ $locale['forum_0617'] = 'Warning: You are not eligible to cast a vote in the pol
 $locale['forum_0620'] = 'Make this Thread Sticky';
 $locale['forum_0621'] = 'Lock this Thread';
 $locale['forum_0622'] = 'Disable Smileys in this Post';
-$locale['forum_0623'] = 'Show My Signature in this Post';
 $locale['forum_0624'] = 'Delete this Post';
 $locale['forum_0625'] = 'Delete attachment -';
-$locale['forum_0626'] = 'Notify me when a reply is posted';
+
 $locale['forum_0627'] = 'Hide Edit';
 $locale['forum_0628'] = 'Lock Post';
 $locale['forum_0630'] = 'Poll will only be created when thread is added';
@@ -335,15 +316,14 @@ Regards,
 ';
 
 // Delete Thread
-$locale['forum_0700'] = 'Delete Thread';
+
 $locale['forum_0701'] = 'The Thread has been deleted.';
-$locale['forum_0702'] = 'Return to Forum';
-$locale['forum_0703'] = 'Return to Forum Index';
+
 $locale['forum_0704'] = 'Are you sure you want to delete this Thread?';
 $locale['forum_0705'] = 'Unable to remove thread because thread does not exist';
 
 // Lock Thread
-$locale['forum_0710'] = 'Lock Thread';
+
 $locale['forum_0711'] = 'The Thread has been locked.';
 
 // Unlock Thread
@@ -351,20 +331,16 @@ $locale['forum_0720'] = 'Unlock Thread';
 $locale['forum_0721'] = 'The Thread has been unlocked.';
 
 // Make Thread Sticky
-$locale['forum_0730'] = 'Make Thread Sticky';
 $locale['forum_0731'] = 'The Thread has been made sticky.';
 
 // Make Thread Non-Sticky
-$locale['forum_0740'] = 'Make Thread Non-Sticky';
 $locale['forum_0741'] = 'The Thread has been made non-sticky.';
 
 // Move Thread
-$locale['forum_0750'] = 'Move Thread';
 $locale['forum_0751'] = 'Move Thread to:';
 $locale['forum_0752'] = 'The Thread has been moved successfully.';
 
 // Renew Thread
-$locale['forum_0758'] = 'Renew Thread';
 $locale['forum_0759'] = 'The Thread has been renewed.';
 
 // Post vote errors
@@ -379,7 +355,7 @@ $locale['forum_2001'] = 'What is on your mind?';
 $locale['forum_2002'] = 'Re: ';
 $locale['forum_2010'] = 'Cast Vote';
 $locale['forum_2011'] = 'Create Poll';
-$locale['forum_2012'] = 'Edit Poll';
+
 $locale['forum_2013'] = 'Update Poll';
 $locale['forum_2014'] = 'Set a Bounty';
 $locale['forum_2015'] = 'Point|Points';
@@ -388,14 +364,6 @@ $locale['forum_2017'] = 'Set Bounty';
 $locale['forum_2018'] = 'Start Bounty';
 
 /* Filters in viewforum */
-$locale['forum_3000'] = 'All Topics';
-$locale['forum_3001'] = 'Discussions';
-$locale['forum_3002'] = 'Attachments';
-$locale['forum_3003'] = 'Polls';
-$locale['forum_3004'] = 'Solved';
-$locale['forum_3005'] = 'Unsolved';
-$locale['forum_3006'] = 'All Time';
-$locale['forum_3007'] = 'Today';
 $locale['forum_3008'] = 'Two Days';
 $locale['forum_3009'] = 'One Week ';
 $locale['forum_3010'] = 'Two Weeks';
@@ -404,16 +372,7 @@ $locale['forum_3012'] = 'Two Months';
 $locale['forum_3013'] = 'Three Months';
 $locale['forum_3014'] = 'Six Months';
 $locale['forum_3015'] = '1 Year';
-$locale['forum_3016'] = 'Author';
-$locale['forum_3017'] = 'Post Time';
-$locale['forum_3018'] = 'Subject';
-$locale['forum_3019'] = 'Replies';
-$locale['forum_3020'] = 'Views';
-$locale['forum_3021'] = 'Descending';
-$locale['forum_3022'] = 'Ascending';
 
-// Period for search & filter
-$locale['forum_p000'] = 'Today';
 $locale['forum_p001'] = '1 Day';
 $locale['forum_p002'] = '2 Days';
 $locale['forum_p007'] = '1 Week';
@@ -422,7 +381,6 @@ $locale['forum_p030'] = '1 Month';
 $locale['forum_p060'] = '2 Months';
 $locale['forum_p090'] = '3 Months';
 $locale['forum_p180'] = '6 Months';
-$locale['forum_p365'] = '1 Year';
 $locale['forum_p999'] = 'All Results';
 
 $locale['forum_4001'] = 'Thread Answering';
@@ -453,7 +411,7 @@ $locale['forum_4120'] = 'There are no forum ID or thread id defined. Please defi
 $locale['error-MP000'] = 'Move posts - error';
 $locale['error-MP001'] = 'New thread doesn\'t exist.';
 $locale['error-MP002'] = 'Posts which you\'re marked to move do not exists or someone else already moved them.';
-$locale['error-MP003'] = 'No posts to move.';
+
 $locale['success-DP001'] = 'Post removed successfully';
 $locale['success-DP002'] = 'All Post deleted. Forum threads have been removed because it no longer contains any post.';
 $locale['error-DP001'] = 'No posts to be removed.';

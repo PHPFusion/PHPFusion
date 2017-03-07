@@ -253,7 +253,7 @@ if (!function_exists('forum_viewforum')) {
 
         if ($info['forum_type'] > 1) {
             echo "<!--pre_forum-->\n";
-            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0002']."</div>\n";
             forum_filter($info);
             echo "<div id='forumThreads'>\n";
             render_forum_threads($info);
@@ -406,14 +406,14 @@ if (!function_exists("render_laft")) {
         }
 
         $opts = array(
-            '0' => $locale['forum_p999'],
-            '1' => $locale['forum_p001'],
-            '7' => $locale['forum_p007'],
-            '14' => $locale['forum_p014'],
-            '30' => $locale['forum_p030'],
-            '90' => $locale['forum_p090'],
+            '0'   => $locale['forum_p999'],
+            '1'   => $locale['forum_p001'],
+            '7'   => $locale['forum_p007'],
+            '14'  => $locale['forum_p014'],
+            '30'  => $locale['forum_p030'],
+            '90'  => $locale['forum_p090'],
             '180' => $locale['forum_p180'],
-            '365' => $locale['forum_p365']
+            '365' => $locale['forum_3015']
         );
 
         echo "<hr/>\n";
@@ -488,34 +488,34 @@ if (!function_exists('forum_filter')) {
         $locale = fusion_get_locale();
 
         $selector = array(
-            'today' => $locale['forum_p000'],
-            '2days' => $locale['forum_p002'],
-            '1week' => $locale['forum_p007'],
-            '2week' => $locale['forum_p014'],
+            'today'  => $locale['forum_0212'],
+            '2days'  => $locale['forum_p002'],
+            '1week'  => $locale['forum_p007'],
+            '2week'  => $locale['forum_p014'],
             '1month' => $locale['forum_p030'],
             '2month' => $locale['forum_p060'],
             '3month' => $locale['forum_p090'],
             '6month' => $locale['forum_p180'],
-            '1year' => $locale['forum_p365']
+            '1year'  => $locale['forum_3015']
         );
         $selector2 = array(
-            'all' => $locale['forum_0374'],
-            'discussions' => $locale['forum_0375'],
-            'attachments' => $locale['forum_0376'],
-            'poll' => $locale['forum_0377'],
-            'solved' => $locale['forum_0378'],
-            'unsolved' => $locale['forum_0379'],
+            'all'         => $locale['forum_0374'],
+            'discussions' => $locale['forum_0222'],
+            'attachments' => $locale['forum_0223'],
+            'poll'        => $locale['forum_0314'],
+            'solved'      => $locale['forum_0378'],
+            'unsolved'    => $locale['forum_0379'],
         );
         $selector3 = array(
-            'author' => $locale['forum_0380'],
-            'time' => $locale['forum_0381'],
-            'subject' => $locale['forum_0382'],
-            'reply' => $locale['forum_0383'],
-            'view' => $locale['forum_0384'],
+            'author'  => $locale['forum_0380'],
+            'time'    => $locale['forum_0381'],
+            'subject' => $locale['forum_0051'],
+            'reply'   => $locale['forum_0354'],
+            'view'    => $locale['forum_0353'],
         );
         $selector4 = array(
-            'descending' => $locale['forum_0386'],
-            'ascending' => $locale['forum_0385']
+            'descending' => $locale['forum_0230'],
+            'ascending'  => $locale['forum_0231']
         );
 
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id']) || isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
@@ -524,7 +524,7 @@ if (!function_exists('forum_filter')) {
             echo $locale['forum_0388'];
             echo "<div class='forum-filter'>\n";
             echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['time']) && in_array($_GET['time'],
-                                                                                                                                    array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0387'])." <span class='caret'></span></button>\n";
+                    array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211'])." <span class='caret'></span></button>\n";
             echo "<ul class='dropdown-menu'>\n";
             foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
@@ -544,7 +544,7 @@ if (!function_exists('forum_filter')) {
             echo $locale['forum_0225'];
             echo "<div class='forum-filter'>\n";
             echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['sort']) && in_array($_GET['sort'],
-                                                                                                                                    array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0391'])." <span class='caret'></span></button>\n";
+                    array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381'])." <span class='caret'></span></button>\n";
             echo "<ul class='dropdown-menu'>\n";
             foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
@@ -553,7 +553,7 @@ if (!function_exists('forum_filter')) {
             echo "</div>\n";
             echo "<div class='forum-filter'>\n";
             echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['order']) && in_array($_GET['order'],
-                                                                                                                                     array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0386'])." <span class='caret'></span></button>\n";
+                    array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230'])." <span class='caret'></span></button>\n";
             echo "<ul class='dropdown-menu'>\n";
             foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
