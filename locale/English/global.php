@@ -254,9 +254,7 @@ $locale['global_193'] = "Could not set document cookie. Please make sure you hav
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
-
 $locale['global_197'] = "Please wait while we transfer you...\n\n[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
-
 $locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE INSTALL-PHP FILE IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
 //Titles
@@ -312,14 +310,12 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
 Regards,\n[SITEUSERNAME]";
-
 $locale['global_456'] = "New password notification for [SITENAME]";
 $locale['global_457'] = "Hi USER_NAME,
 \n\nA new password has been set for your account at [SITENAME]. Please find the enclosed new login details:\n\n
 Username: USER_NAME\nPassword: [PASSWORD]\n\nRegards,\n[SITEUSERNAME]";
 $locale['global_458'] = "New password has been set for USER_NAME";
 $locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
-
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
@@ -332,7 +328,6 @@ $locale['global_500'] = "You are being redirected to %s, please wait. If you're 
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
 $locale['global_601'] = "You must enter a correct validation code";
-
 $locale['recaptcha'] = "en";
 // Site links
 $locale['global_700'] = "Show More";
@@ -404,7 +399,6 @@ $locale['promote'] = "Promote";
 $locale['show'] = "Show";
 $locale['actions'] = "Actions";
 $locale['language'] = "Language";
-
 // Persons & Identifiers
 $locale['you'] = "You";
 $locale['me'] = "Me";
@@ -414,7 +408,6 @@ $locale['us'] = "Us";
 $locale['he'] = "He";
 $locale['she'] = "She";
 $locale['it'] = "It";
-
 //Tables
 $locale['status'] = "Status";
 $locale['order'] = "Order";
