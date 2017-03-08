@@ -277,8 +277,10 @@ if (!function_exists("render_article_item")) {
 		    <h2 class="text-left"><?php echo $data['article_subject']; ?></h2>
 
 			<div class="article-article text-dark m-t-20 m-b-20">
-			  <?php echo $data['article_article']; ?>
-			</div>
+                <p>
+			        <?php echo $data['article_article']; ?>
+                </p>
+            </div>
 
 			<div class="text-center">
 			  <?php echo $data['article_pagenav']; ?>

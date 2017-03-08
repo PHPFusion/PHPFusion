@@ -62,6 +62,8 @@ $locale['465'] = "Include on these pages only";
 $locale['466'] = "Panel Language:";
 $locale['467'] = "Display on Opening Page only";
 $locale['468'] = "Panel Type";
+$locale['469'] = "None";
+$locale['470'] = "Content";
 // Update/Add new Panel Errors
 $locale['470'] = "Panel name not defined";
 $locale['471'] = "Panel name in use";

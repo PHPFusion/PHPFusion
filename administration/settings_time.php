@@ -69,10 +69,10 @@ foreach ($timezones as $zones) {
 unset($dummy);
 unset($timezones);
 $weekdayslist = explode("|", $locale['weekdays']);
-$timestamp = time() + ($settings_main['timeoffset'] * 3600);
+
 $date_opts = array();
 foreach ($locale['dateformats'] as $dateformat) {
-    $date_opts[$dateformat] = showdate($dateformat, $timestamp);
+    $date_opts[$dateformat] = showdate($dateformat, time());
 }
 unset($dateformat);
 opentable($locale['time_settings']);
