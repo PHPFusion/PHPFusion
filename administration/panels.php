@@ -217,9 +217,9 @@ class fusion_panel_admin {
                 $this->data['panel_type'] = "php";
                 $this->data['panel_content'] = isset($_POST['panel_content']) ? addslashes($_POST['panel_content']) : '';
                 if (!$this->data['panel_content']) {
-                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"Content\";\n"."closetable();";
+                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"".$locale['470']."\";\n"."closetable();";
                     if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"Content\";\n"."closeside();";
+                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"".$locale['470']."\";\n"."closeside();";
                     }
                 }
             } else {

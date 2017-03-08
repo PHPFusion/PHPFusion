@@ -173,7 +173,7 @@ class Panels {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
-            self::$available_panels['none'] = "None";
+            self::$available_panels['none'] = fusion_get_locale('469');
             while ($folder = readdir($temp)) {
                 if (!in_array($folder, array(
                         ".",
