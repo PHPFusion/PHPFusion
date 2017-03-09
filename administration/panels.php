@@ -398,7 +398,7 @@ class fusion_panel_admin {
             echo "<div style='float:left;'>".$panel."</div>\n";
             echo "<div style='float:right; width:250px;'>";
             echo "</div>\n";
-            echo "<div style='float:right; width:10%;'>".$locale['607']."</div>\n";
+            echo "<div style='float:right; width:10%;'>".self::$locale['607']."</div>\n";
             echo "<div style='clear:both;'></div>\n";
         }
         echo "</div>\n</div>\n";
