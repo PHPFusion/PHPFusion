@@ -217,9 +217,9 @@ class fusion_panel_admin {
                 $this->data['panel_type'] = "php";
                 $this->data['panel_content'] = isset($_POST['panel_content']) ? addslashes($_POST['panel_content']) : '';
                 if (!$this->data['panel_content']) {
-                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"".$locale['470']."\";\n"."closetable();";
+                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"".$locale['469a']."\";\n"."closetable();";
                     if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"".$locale['470']."\";\n"."closeside();";
+                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"".$locale['469a']."\";\n"."closeside();";
                     }
                 }
             } else {
@@ -398,7 +398,7 @@ class fusion_panel_admin {
             echo "<div style='float:left;'>".$panel."</div>\n";
             echo "<div style='float:right; width:250px;'>";
             echo "</div>\n";
-            echo "<div style='float:right; width:10%;'>File</div>\n";
+            echo "<div style='float:right; width:10%;'>".$locale['607']."</div>\n";
             echo "<div style='clear:both;'></div>\n";
         }
         echo "</div>\n</div>\n";
