@@ -1310,25 +1310,25 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @return string
  */
 function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
-    $script = "<script>                
+    $script = "<script>
     var count = $rowstart+1;
-    $(window).scroll(function(){                
-      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {          
-        if (count <= '$total_count') {            
+    $(window).scroll(function(){
+      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+        if (count <= '$total_count') {
             loadInfinityContent(count);
-            count++;    
-        }            
+            count++;
+        }
       }
-    }); 
+    });
    function loadInfinityContent(pageNumber){
        $('.infiniteLoader').show('fast');
        $.ajax({
-              url: '$scroll_url', 
+              url: '$scroll_url',
               type:'GET',
-              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',              
+              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
               success: function(html){
                   $('.infiniteLoader').hide();
-                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded                  
+                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded
               }
           });
       return false;
@@ -1336,7 +1336,7 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'r
     </script>";
     add_to_jquery(str_replace(['<script>', '</script>'], '', $script));
 
-    return "   
+    return "
     <div id='scroll_target'></div>
     <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>Loading...</div></div>
     ";
@@ -1824,7 +1824,7 @@ function lang_switcher($icon = TRUE) {
 				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
 			}
 			$('#lang_menu').select2({
-			placeholder: 'Switch Language',
+			placeholder: '".$locale['global_ML103']."',
 			formatSelection: showflag,
 			escapeMarkup: function(m) { return m; },
 			formatResult: showflag,

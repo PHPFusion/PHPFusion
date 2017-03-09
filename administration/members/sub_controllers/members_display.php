@@ -182,7 +182,7 @@ class Members_Display extends Members_Admin {
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
-        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')." 
+        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')."
                   FROM ".DB_USERS.$status_cond.$search_cond." LIMIT $rowstart, $limit
                   ";
         $result = dbquery($query, $query_bind);
@@ -274,8 +274,6 @@ class Members_Display extends Members_Admin {
                                                                                     'class'              => 'm-b-0'
                 )),
                 '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', array('icon' => 'caret')),
-                //form_button('email', 'Send Email', 'email', array('icon' => 'fa fa-paper-plane-o', 'class' => 'btn-link')) .
-                //form_button('pm', 'Send PM', 'pm', array('icon' => 'fa fa-envelope-open-o', 'class' => 'btn-link')),
                 '{%action_button%}'       => "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>\n",
                 '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
                 '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",

@@ -22,10 +22,10 @@ pageAccess('MI');
 require_once THEMES."templates/admin_header.php";
 
 if (isset($_POST['user_primary']) && !isnum($_POST['user_primary'])) {
-    die("Denied");
+    die("Access Denied");
 }
 if (isset($_POST['user_migrate']) && !isnum($_POST['user_migrate'])) {
-    die("Denied");
+    die("Access Denied");
 }
 
 include LOCALE.LOCALESET."admin/migrate.php";

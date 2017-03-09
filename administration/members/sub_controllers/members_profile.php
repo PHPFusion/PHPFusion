@@ -171,7 +171,7 @@ class Members_Profile extends Members_Admin {
                         while ($thread = dbarray($threads)) {
                             // Update thread last post author, date and id
                             $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
-                            dbquery("UPDATE ".DB_FORUM_THREADS." SET	
+                            dbquery("UPDATE ".DB_FORUM_THREADS." SET
                             thread_lastpost='".$last_thread_post['post_datestamp']."',
 							thread_lastpostid='".$last_thread_post['post_id']."',
 							thread_lastuser='".$last_thread_post['post_author']."'
@@ -235,5 +235,4 @@ class Members_Profile extends Members_Admin {
         echo closeform();
         echo "</div>\n";
     }
-
 }

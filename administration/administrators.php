@@ -136,10 +136,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             if ($counter != 0 && ($counter % $columns == 0)) {
                 echo "</tr>\n<tr>\n";
             }
-            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'><input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'],
-                                                                                                                                                                              $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'],
-                                                                                                                                                                                                                                   $user_rights) ? " checked='checked'" : "")." /> ".$data2['admin_title']."</label>".(in_array($data2['admin_rights'],
-                                                                                                                                                                                                                                                                                                                                $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
+            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'>";
+                echo "<input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'], $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'], $user_rights) ? " checked='checked'" : "")." /> ";
+                echo $data2['admin_title']."</label>".(in_array($data2['admin_rights'], $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
             $counter++;
         }
         echo "</tr>\n";
