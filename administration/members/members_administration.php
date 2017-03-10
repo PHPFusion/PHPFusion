@@ -220,8 +220,8 @@ class Members_Admin {
                         $query = "SELECT u.*, s.suspend_reason
                                 FROM ".DB_USERS." u
                                 LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-                                WHERE u.user_id=:user_id GROUP BY u.user_id 
-                                ORDER BY s.suspend_date DESC                                
+                                WHERE u.user_id=:user_id GROUP BY u.user_id
+                                ORDER BY s.suspend_date DESC
                                 ";
                         $bind = array(
                             ':user_id' => self::$user_id

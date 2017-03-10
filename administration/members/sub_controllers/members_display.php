@@ -236,13 +236,13 @@ class Members_Display extends Members_Admin {
         // Render table header and table result
         $table_head = "<tr><th></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
 
-        $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>>";
+        $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
 
         foreach ($selected_fields as $column) {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', '', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', self::$locale['ME_414'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
 
         if (!empty($list)) {
@@ -300,15 +300,26 @@ class Members_Display extends Members_Admin {
      * Render Listing Functions
      */
     protected static function list_func($user_id, $list, $selected_fields) {
-        $html = "<tr>\n
+        $html = "<tr id='user-".$user_id."'>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
                 <td class='col-xs-2'>".$list[$user_id]['user_name']."</td>\n
                 <td class='no-break'>".$list[$user_id]['user_actions']."</td>
                 <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
                 <td>\n".$list[$user_id]['user_email']."</td>\n";
+
+        add_to_jquery('$("#user_id_'.$user_id.'").click(function() {
+            if ($(this).prop("checked")) {
+                $("#user-'.$user_id.'").addClass("active");
+            } else {
+                $("#user-'.$user_id.'").removeClass("active");
+            }
+        });');
+
         foreach ($selected_fields as $column) {
             $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
         }
+
+        $html .= "</tr>\n";
 
         return $html;
     }
