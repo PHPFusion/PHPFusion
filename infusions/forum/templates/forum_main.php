@@ -507,11 +507,11 @@ if (!function_exists('forum_filter')) {
             'unsolved'    => $locale['forum_0379'],
         );
         $selector3 = array(
-            'author'  => $locale['forum_0380'],
+            'author'  => $locale['forum_0052'],
             'time'    => $locale['forum_0381'],
             'subject' => $locale['forum_0051'],
-            'reply'   => $locale['forum_0354'],
-            'view'    => $locale['forum_0353'],
+            'reply'   => $locale['forum_0054'],
+            'view'    => $locale['forum_0053'],
         );
         $selector4 = array(
             'descending' => $locale['forum_0230'],
