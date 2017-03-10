@@ -47,8 +47,12 @@ if (!column_exists('forum_threads', 'thread_bounty_user')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_start";
 }
 
-if (!column_exists('forum_posts', 'post_answer')) {
+if (!column_exists('forum_posts', 'post_cat')) {
     $inf_altertable[] = $db_prefix."forum_posts ADD post_answer TINYINT(1) NOT NULL DEFAULT '0' AFTER post_locked";
+}
+
+if (!column_exists('forum_posts', 'post_answer')) {
+    $inf_altertable[] = $db_prefix."forum_posts ADD post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER post_id";
 }
 
 if (!column_exists('users', 'user_reputation')) {
