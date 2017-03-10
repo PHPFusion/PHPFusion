@@ -94,7 +94,7 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
         opentable($locale['440']);
         echo "<div style='text-align:center'><br />\n";
         $image_ext = strrchr($afolder.stripinput($_GET['view']), ".");
-        if (in_array($image_ext, array(".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", "SVG"))) {
+        if (in_array($image_ext, array(".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", ".SVG"))) {
             echo "<img class='img-responsive img-thumbnail' src='".$afolder.stripinput($_GET['view'])."' alt='".stripinput($_GET['view'])."' /><br /><br />\n";
         } else {
             echo "<strong>".$locale['441']."</strong><br /><br />\n";
