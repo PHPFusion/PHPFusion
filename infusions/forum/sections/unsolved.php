@@ -103,7 +103,7 @@ if (dbrows($result) > 0) {
                 'file' => $threads['attach_files'] > 0 ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                 'icon' => $icon,
             ),
-            "thread_starter" => $locale['forum_0006'].timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
+            "thread_starter" => $locale['forum_0006'].' '.timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
                                                                                                                            $author['user_name'],
                                                                                                                            $author['user_status'])."</span>",
             "thread_author" => $author,
