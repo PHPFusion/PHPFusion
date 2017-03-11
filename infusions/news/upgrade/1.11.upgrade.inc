@@ -114,6 +114,15 @@ if (!db_exists(DB_NEWS_IMAGES)) {
             '".$data['news_image_datestamp']."'
             )";
         }
+	    if (file_exists(IMAGES."news/".$data['news_image'])) {
+    		rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
+    	}
+	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
+        	rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
+    	}
+	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
+        	rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
+    	}
     }
 }
 
