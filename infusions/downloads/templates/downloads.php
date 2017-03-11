@@ -105,7 +105,9 @@ if (!function_exists('render_downloads')) {
             if ($data['download_description']) {
                 echo "<h4>".$locale['download_1019']."</h4>";
                 echo "<div class='well'>\n";
+                echo "<div class='overflow-hide'>\n";
                 echo $data['download_description'];
+                echo "</div>\n";
                 echo "</div>\n";
             }
 
