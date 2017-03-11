@@ -127,11 +127,16 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             );
         }
         $info += array(
-            "photo_description" => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'])) : '',
-            "photo_byte" => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
-            "photo_comment" => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
-            "photo_ratings" => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0',
+            "photo_description" => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, FALSE, TRUE, FALSE)) : '',
+            "photo_byte"        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
+            "photo_comment"     => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
+            "photo_ratings"     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0',
         );
+
+        if (defined('IN_PERMALINK')) {
+            $info['photo_description'] = strtr($info['photo_description'], [fusion_get_settings('site_path') => '']);
+        }
+
         if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
             if (isset($prev) && isset($first)) {
                 $info['nav']['first'] = array(
