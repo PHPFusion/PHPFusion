@@ -233,16 +233,8 @@ abstract class Articles extends ArticlesServer {
             $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             if (defined('IN_PERMALINK')) {
-                $data['article_snippet'] = strtr($data['article_snippet'], [
-                        fusion_get_settings('site_path').'images/'                    => IMAGES,
-                        fusion_get_settings('site_path').'infusions/articles/images/' => IMAGES_A,
-                    ]
-                );
-                $data['article_article'] = strtr($data['article_article'], [
-                        fusion_get_settings('site_path').'images/'                    => IMAGES,
-                        fusion_get_settings('site_path').'infusions/articles/images/' => IMAGES_A,
-                    ]
-                );
+                $data['article_snippet'] = strtr($data['article_snippet'], [fusion_get_settings('site_path') => '']);
+                $data['article_article'] = strtr($data['article_article'], [fusion_get_settings('site_path') => '']);
             }
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 

@@ -177,20 +177,8 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
             $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
             if (defined('IN_PERMALINK')) {
-                $item['blog_blog'] = strtr($item['blog_blog'], [
-                        fusion_get_settings('site_path').'images/'                       => IMAGES,
-                        fusion_get_settings('site_path').'infusions/blog/blog_cats/'     => IMAGES_BC,
-                        fusion_get_settings('site_path').'infusions/blog/images/'        => IMAGES_B,
-                        fusion_get_settings('site_path').'infusions/blog/images/thumbs/' => IMAGES_B_T,
-                    ]
-                );
-                $item['blog_extended'] = strtr($item['blog_extended'], [
-                        fusion_get_settings('site_path').'images/'                       => IMAGES,
-                        fusion_get_settings('site_path').'infusions/blog/blog_cats/'     => IMAGES_BC,
-                        fusion_get_settings('site_path').'infusions/blog/images/'        => IMAGES_B,
-                        fusion_get_settings('site_path').'infusions/blog/images/thumbs/' => IMAGES_B_T,
-                    ]
-                );
+                $item['blog_blog'] = strtr($item['blog_blog'], [fusion_get_settings('site_path') => '']);
+                $item['blog_extended'] = strtr($item['blog_extended'], [fusion_get_settings('site_path') => '']);
             }
 
             $item['blog_image_link'] = '';
@@ -469,20 +457,8 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
             $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
             if (defined('IN_PERMALINK')) {
-                $blog_blog = strtr($blog_blog, [
-                        fusion_get_settings('site_path').'images/'                       => IMAGES,
-                        fusion_get_settings('site_path').'infusions/blog/blog_cats/'     => IMAGES_BC,
-                        fusion_get_settings('site_path').'infusions/blog/images/'        => IMAGES_B,
-                        fusion_get_settings('site_path').'infusions/blog/images/thumbs/' => IMAGES_B_T,
-                    ]
-                );
-                $blog_extended = strtr($blog_extended, [
-                        fusion_get_settings('site_path').'images/'                       => IMAGES,
-                        fusion_get_settings('site_path').'infusions/blog/blog_cats/'     => IMAGES_BC,
-                        fusion_get_settings('site_path').'infusions/blog/images/'        => IMAGES_B,
-                        fusion_get_settings('site_path').'infusions/blog/images/thumbs/' => IMAGES_B_T,
-                    ]
-                );
+                $blog_blog = strtr($blog_blog, [fusion_get_settings('site_path') => '']);
+                $blog_extended = strtr($blog_extended, [fusion_get_settings('site_path') => '']);
             }
 
             $cdata = array(
