@@ -588,7 +588,9 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $smileys ? parsesmileys($text) : $text;
     $text = $bbcode ? parseubb($text) : $text;
     $text = $add_line_breaks ? nl2br($text) : $text;
-
+    if (defined('IN_PERMALINK')) {
+        $text = strtr($text, [fusion_get_settings('site_path') => '']);
+    }
     return (string)$text;
 }
 
