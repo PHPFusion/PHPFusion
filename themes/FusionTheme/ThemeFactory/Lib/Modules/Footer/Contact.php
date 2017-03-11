@@ -30,7 +30,7 @@ class Contact {
             'captcha_code' => '',
         );
 
-        if (isset($_POST['sendmessage'])) {
+        if (isset($_POST['sendmessages'])) {
             foreach ($input as $key => $value) {
                 if (isset($_POST[$key])) {
                     // Subject needs 'special' treatment
@@ -111,7 +111,7 @@ class Contact {
                 echo form_text('captcha_code', $locale['408'], '', array('required' => TRUE, 'autocomplete_off' => TRUE));
             }
         }
-        echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary'));
+        echo form_button('sendmessages', $locale['406'], $locale['406'], array('class' => 'btn-primary'));
         echo closeform();
         echo "<!--contact_sub_idx-->";
     }
