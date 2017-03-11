@@ -168,19 +168,21 @@ abstract class ForumServer {
                 if ($ancestor = get_all_parent($forum_index, $forum_id)) {
                     $list = $list + $ancestor;
                 }
-                $list_sql = implode(',', $list);
-                $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
-                $result = dbquery($query);
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        if ($user_id) {
-                            $user = fusion_get_user($user_id);
-                            $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
-                        } else {
-                            $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
-                        }
-                        if ($this->forum_access === FALSE) {
-                            break;
+                if (!empty($list)) {
+                    $list_sql = implode(',', $list);
+                    $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
+                    $result = dbquery($query);
+                    if (dbrows($result)) {
+                        while ($data = dbarray($result)) {
+                            if ($user_id) {
+                                $user = fusion_get_user($user_id);
+                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                            } else {
+                                $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                            }
+                            if ($this->forum_access === FALSE) {
+                                break;
+                            }
                         }
                     }
                 }
