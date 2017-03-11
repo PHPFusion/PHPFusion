@@ -23,13 +23,13 @@ class admin_reset_admin {
     private static $locale = array();
 
     private $data = array(
-        'reset_id' => 0,
-        'reset_admin_id' => "",
-        'reset_timestamp' => "",
-        'reset_sucess' => "",
-        'reset_failed' => "",
-        'reset_admins' => "",
-        'reset_reason' => "",
+        'reset_id'        => 0,
+        'reset_admin_id'  => '',
+        'reset_timestamp' => '',
+        'reset_sucess'    => '',
+        'reset_failed'    => '',
+        'reset_admins'    => '',
+        'reset_reason'    => ''
     );
 
     public function __construct() {
@@ -169,13 +169,13 @@ class admin_reset_admin {
                 add_to_footer($preview_html);
 
                 $this->data = array(
-                    'reset_id' => 0,
-                    'reset_admin_id' => $userdata['user_id'],
+                    'reset_id'        => 0,
+                    'reset_admin_id'  => $userdata['user_id'],
                     'reset_timestamp' => time(),
-                    'reset_sucess' => $sucess_ids,
-                    'reset_failed' => $failed_ids,
-                    'reset_admins' => $reset_admin,
-                    'reset_reason' => $reset_message,
+                    'reset_sucess'    => $sucess_ids,
+                    'reset_failed'    => $failed_ids,
+                    'reset_admins'    => $reset_admin,
+                    'reset_reason'    => $reset_message
                 );
 
                 dbquery_insert(DB_ADMIN_RESETLOG, $this->data, 'save');

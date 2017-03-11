@@ -2,6 +2,10 @@ PHP-Fusion 9.02
 ==================
 Developers Only Copy: This copy has commits that might led to instability of your copies, please do not update until further notice.
 
+Important Announcements:
+=============
+02/Mar/2017(GMT+8) 17:50hr - https://www.php-fusion.co.uk/forum/viewthread.php?thread_id=38308
+
 
 Change Logs for RC5 .. so far:
 ===============================

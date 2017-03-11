@@ -292,12 +292,6 @@ class InstallerDbSetup extends Install_Core {
                             //addNotice('warning', $message);
                         }
                     }
-
-                    if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
-                        require_once CLASSES."PHPFusion/Installer/Lib/Home.inc";
-                        new HomeInstall();
-                    }
-
                 }
                 /*
                  * Generate final message
@@ -314,24 +308,6 @@ class InstallerDbSetup extends Install_Core {
                     }
                     redirect(FUSION_REQUEST);
                 }
-                // Displays Output
-                /*
-                $content .= "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
-                $content .= "<div class='progress'>\n";
-                $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
-                $content .= "<span id='pcg'>0</span>\n";
-                $content .= "</div>\n</div>\n";
-                //$content .= "<p>Database Setup Completed!</p>";
-                //$content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
-                $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
-                self::$step = array(
-                    1 => array(
-                        'name' => 'step',
-                        'label' => self::$locale['setup_0121'],
-                        'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM // @check whether is update or not skip
-                    )
-                );
-                */
             } else {
                 foreach ($validate as $validate_result) {
                     if (!$validate_result['result']) {

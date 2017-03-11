@@ -235,7 +235,6 @@ class UserFieldsInput {
      * Handle User Password Input and Validation
      */
     private function _setPassword() {
-        global $defender;
 
         $locale = fusion_get_locale();
 
@@ -269,31 +268,31 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // New Password equal old password
-                        $defender->stop();
-                        $defender->setInputError('user_password2');
-                        $defender->setInputError('user_password2');
-                        $defender->setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
-                        $defender->setErrorText('user_password2', $locale['u134'].$locale['u146'].$locale['u133']);
+                        \defender::stop();
+                        \defender::setInputError('user_password2');
+                        \defender::setInputError('user_password2');
+                        \defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
+                        \defender::setErrorText('user_password2', $locale['u134'].$locale['u146'].$locale['u133']);
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        $defender->stop();
-                        $defender->setInputError('user_password1');
-                        $defender->setInputError('user_password2');
-                        $defender->setErrorText('user_password1', $locale['u148']);
-                        $defender->setErrorText('user_password2', $locale['u148']);
+                        \defender::stop();
+                        \defender::setInputError('user_password1');
+                        \defender::setInputError('user_password2');
+                        \defender::setErrorText('user_password1', $locale['u148']);
+                        \defender::setErrorText('user_password2', $locale['u148']);
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        $defender->stop();
-                        $defender->setInputError('user_password1');
-                        $defender->setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+                        \defender::stop();
+                        \defender::setInputError('user_password1');
+                        \defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
                         break;
                 }
             } else {
-                $defender->stop();
-                $defender->setInputError('user_password1');
-                $defender->setErrorText('user_password1', $locale['u134'].$locale['u143a']);
+                \defender::stop();
+                \defender::setInputError('user_password1');
+                \defender::setErrorText('user_password1', $locale['u134'].$locale['u143a']);
             }
 
         } elseif ($this->_method == 'validate_update') {
@@ -304,7 +303,7 @@ class UserFieldsInput {
 
             $this->_newUserPassword2 = self::_getPasswordInput('user_password2');
 
-            if ($this->_userPassword) {
+            if ($this->isAdminPanel or $this->_userPassword) {
 
                 /**
                  * Validation of Password
@@ -317,7 +316,7 @@ class UserFieldsInput {
                 $passAuth->currentAlgo = $this->userData['user_algo'];
                 $passAuth->currentSalt = $this->userData['user_salt'];
 
-                if ($passAuth->isValidCurrentPassword()) {
+                if ($this->isAdminPanel or $passAuth->isValidCurrentPassword()) {
 
                     // Just for validation purposes for example email change
                     $this->_isValidCurrentPassword = 1;
@@ -342,32 +341,32 @@ class UserFieldsInput {
                                 break;
                             case '1':
                                 // New Password equal old password
-                                $defender->stop();
-                                $defender->setInputError('user_password');
-                                $defender->setInputError('user_password1');
-                                $defender->setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
-                                $defender->setErrorText('user_password1', $locale['u134'].$locale['u146'].$locale['u133']);
+                                \defender::stop();
+                                \defender::setInputError('user_password');
+                                \defender::setInputError('user_password1');
+                                \defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
+                                \defender::setErrorText('user_password1', $locale['u134'].$locale['u146'].$locale['u133']);
                                 break;
                             case '2':
                                 // The two new passwords are not identical
-                                $defender->stop();
-                                $defender->setInputError('user_password1');
-                                $defender->setInputError('user_password2');
-                                $defender->setErrorText('user_password1', $locale['u148']);
-                                $defender->setErrorText('user_password2', $locale['u148']);
+                                \defender::stop();
+                                \defender::setInputError('user_password1');
+                                \defender::setInputError('user_password2');
+                                \defender::setErrorText('user_password1', $locale['u148']);
+                                \defender::setErrorText('user_password2', $locale['u148']);
                                 break;
                             case '3':
                                 // New password contains invalid chars / symbols
-                                $defender->stop();
-                                $defender->setInputError('user_password1');
-                                $defender->setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+                                \defender::stop();
+                                \defender::setInputError('user_password1');
+                                \defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
                                 break;
                         }
                     }
                 } else {
-                    $defender->stop();
-                    $defender->setInputError('user_password');
-                    $defender->setErrorText('user_password', $locale['u149']);
+                    \defender::stop();
+                    \defender::setInputError('user_password');
+                    \defender::setErrorText('user_password', $locale['u149']);
                 }
             }
         }
@@ -381,9 +380,6 @@ class UserFieldsInput {
      * Handle User Email Input and Validation
      */
     private function _setUserEmail() {
-
-        global $defender;
-
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
@@ -411,9 +407,9 @@ class UserFieldsInput {
                                 array(':email' => $this->_userEmail))) {
 
                         // this email blacklisted.
-                        $defender->stop();
-                        $defender->setInputError('user_email');
-                        $defender->setErrorText('user_email', $locale['u124']);
+                        \defender::stop();
+                        \defender::setInputError('user_email');
+                        \defender::setErrorText('user_email', $locale['u124']);
 
                     } else {
 
@@ -433,22 +429,22 @@ class UserFieldsInput {
                             }
                         } else {
                             // email taken
-                            $defender->stop();
-                            $defender->setInputError('user_email');
-                            $defender->setErrorText('user_email', $locale['u125']);
+                            \defender::stop();
+                            \defender::setInputError('user_email');
+                            \defender::setErrorText('user_email', $locale['u125']);
                         }
                     }
                 } else {
                     // invalid email address
-                    $defender->stop();
-                    $defender->setInputError('user_email');
-                    $defender->setErrorText('user_email', $locale['u123']); // once refresh, text lost.
+                    \defender::stop();
+                    \defender::setInputError('user_email');
+                    \defender::setErrorText('user_email', $locale['u123']); // once refresh, text lost.
                 }
             } else {
                 // must have a valid password to change email
-                $defender->stop();
-                $defender->setInputError('user_email');
-                $defender->setErrorText('user_email', $locale['u156']);
+                \defender::stop();
+                \defender::setInputError('user_email');
+                \defender::setErrorText('user_email', $locale['u156']);
             }
         }
     }
@@ -458,7 +454,6 @@ class UserFieldsInput {
      * Changing Email address
      */
     private function verify_password() {
-        global $defender;
         $locale = fusion_get_locale();
         // Validation of password using user_password_verify field
         $_userPassword = self::_getPasswordInput('user_password_verify');
@@ -473,14 +468,14 @@ class UserFieldsInput {
             if ($passAuth->isValidCurrentPassword()) {
                 $this->_isValidCurrentPassword = 1;
             } else {
-                $defender->stop();
-                $defender->setInputError('user_password_verify');
-                $defender->setErrorText('user_password_verify', $locale['u149']);
+                \defender::stop();
+                \defender::setInputError('user_password_verify');
+                \defender::setErrorText('user_password_verify', $locale['u149']);
             }
         } else {
-            $defender->stop();
-            $defender->setInputError('user_password_verify');
-            $defender->setErrorText('user_password_verify', $locale['u149']);
+            \defender::stop();
+            \defender::setInputError('user_password_verify');
+            \defender::setErrorText('user_password_verify', $locale['u149']);
         }
     }
 
@@ -523,8 +518,8 @@ class UserFieldsInput {
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
         if ($_CAPTCHA_IS_VALID == FALSE) {
-            $defender->stop();
-            $defender->setInputError('user_captcha');
+            \defender::stop();
+            \defender::setInputError('user_captcha');
             addNotice('danger', $locale['u194']);
         }
     }
@@ -575,25 +570,18 @@ class UserFieldsInput {
     public function saveUpdate() {
 
         $locale = fusion_get_locale();
-
         $settings = fusion_get_settings();
 
         $this->_method = "validate_update";
-
-        //$this->data = $this->userData; // Turn off for Next
-
         $this->_settUserName();
         $this->_setPassword();
-
         if (!defined('ADMIN_PANEL')) {
             $this->_setAdminPassword();
         }
-
         $this->_setUserEmail();
         if ($this->validation == 1) {
             $this->_setValidationError();
         }
-
         $this->_setUserAvatar();
 
         $quantum = new QuantumFields();
@@ -715,31 +703,31 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // new password is old password
-                        $defender->stop();
-                        $defender->setInputError('user_admin_password');
-                        $defender->setInputError('user_admin_password1');
-                        $defender->setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
-                        $defender->setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password');
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        $defender->stop();
-                        $defender->setInputError('user_admin_password1');
-                        $defender->setInputError('user_admin_password2');
-                        $defender->setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
-                        $defender->setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setInputError('user_admin_password2');
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
+                        \defender::setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        $defender->stop();
-                        $defender->setInputError('user_admin_password1');
-                        $defender->setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
                         break;
                 }
             } else {
-                $defender->stop();
-                $defender->setInputError('user_admin_password');
-                $defender->setErrorText('user_admin_password', $locale['u149a']);
+                \defender::stop();
+                \defender::setInputError('user_admin_password');
+                \defender::setErrorText('user_admin_password', $locale['u149a']);
             }
         } else { // check db only - admin cannot save profile page without password
 
@@ -747,9 +735,9 @@ class UserFieldsInput {
                 $require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
                 if (!$require_valid_password) {
                     // 149 for admin
-                    $defender->stop();
-                    $defender->setInputError('user_admin_password');
-                    $defender->setErrorText('user_admin_password', $locale['u149a']);
+                    \defender::stop();
+                    \defender::setInputError('user_admin_password');
+                    \defender::setErrorText('user_admin_password', $locale['u149a']);
                 }
             }
         }

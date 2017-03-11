@@ -21,6 +21,15 @@
  */
 class Upload extends \Defender\Validation {
 
+    private function in_array_insensitive($needle, $haystack) {
+        $needle = strtolower($needle);
+        foreach ($haystack as $k => $v) {
+            $haystack[$k] = strtolower($v);
+        }
+
+        return in_array($needle, $haystack);
+    }
+
     /** @noinspection PhpInconsistentReturnPointsInspection */
     protected function verify_file_upload() {
         global $locale;
@@ -83,7 +92,7 @@ class Upload extends \Defender\Validation {
                             if ($file['size'][$i] > $max_size) {
                                 // Maximum file size exceeded
                                 $upload['error'] = 1;
-                            } elseif (!in_array($file_ext, $valid_ext)) {
+                            } elseif (!$this->in_array_insensitive($file_ext, $valid_ext)) {
                                 // Invalid file extension or mimetypes
                                 $upload['error'] = 2;
                             } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'][$i], $file_ext, $valid_ext) === FALSE) {
@@ -224,8 +233,7 @@ class Upload extends \Defender\Validation {
                         if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
                             $image_name = $target_name;
                         } else {
-                            $image_name = stripfilename(substr($image['name'][$i], 0,
-                                strrpos($image['name'][$i], ".")));
+                            $image_name = stripfilename(substr($image['name'][$i], 0, strrpos($image['name'][$i], ".")));
                         }
                         $image_ext = strtolower(strrchr($image['name'][$i], "."));
                         $image_res = array();
@@ -295,17 +303,13 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb1_folder)) {
                                             mkdir($thumb1_folder, 0755, TRUE);
                                         }
-                                        $image_name_t1 = filename_exists($thumb1_folder,
-                                            $image_name.$thumb1_suffix.$image_ext);
+                                        $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
                                         $image_info['thumb1_name'] = $image_name_t1;
                                         $image_info['thumb1'] = TRUE;
                                         if ($thumb1_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full,
-                                                $thumb1_folder.$image_name_t1, $thumb1_width,
-                                                $thumb1_height);
+                                            createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width, $thumb1_height);
                                         } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full,
-                                                $thumb1_folder.$image_name_t1, $thumb1_width);
+                                            createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
                                         }
                                     }
                                 }
@@ -318,17 +322,13 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb2_folder)) {
                                             mkdir($thumb2_folder, 0755, TRUE);
                                         }
-                                        $image_name_t2 = filename_exists($thumb2_folder,
-                                            $image_name.$thumb2_suffix.$image_ext);
+                                        $image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
                                         $image_info['thumb2_name'] = $image_name_t2;
                                         $image_info['thumb2'] = TRUE;
                                         if ($thumb2_ratio == 0) {
-                                            createthumbnail($filetype, $target_folder.$image_name_full,
-                                                $thumb2_folder.$image_name_t2, $thumb2_width,
-                                                $thumb2_height);
+                                            createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width, $thumb2_height);
                                         } else {
-                                            createsquarethumbnail($filetype, $target_folder.$image_name_full,
-                                                $thumb2_folder.$image_name_t2, $thumb2_width);
+                                            createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
                                         }
                                     }
                                 }

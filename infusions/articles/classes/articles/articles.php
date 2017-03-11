@@ -42,7 +42,7 @@ abstract class Articles extends ArticlesServer {
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks('', 'link_name')
             )
         );
 
@@ -232,11 +232,15 @@ abstract class Articles extends ArticlesServer {
             // Article Texts
             $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            if (defined('IN_PERMALINK')) {
+                $data['article_snippet'] = strtr($data['article_snippet'], [fusion_get_settings('site_path') => '']);
+                $data['article_article'] = strtr($data['article_article'], [fusion_get_settings('site_path') => '']);
+            }
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
             // Handle Text
             if (isset($_GET['article_id'])) {
-                $articleText = $data['article_article'] ? "<p>".$data['article_snippet']."</p><p>".$data['article_article']."</p>" : "<p>".$data['article_snippet']."</p>";
+                $articleText = $data['article_article'] ? $data['article_article'] : $data['article_snippet'];
 
                 // Handle Pages
                 $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['article_breaks'] == "y" ? nl2br($articleText) : $articleText);
@@ -340,19 +344,14 @@ abstract class Articles extends ArticlesServer {
         $info = array_merge($info, self::get_ArticleCategories());
 
         // Filtered by Category ID.
-        $result = dbquery("
-            SELECT *
-            FROM ".DB_ARTICLE_CATS."
-            WHERE  ".(multilang_table("AR") ? "WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")." 
-            article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")."            
-        ", [
+        $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? "article_cat_language='".LANGUAGE."' AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
+        $bind = [
             ':cat_id' => intval($article_cat_id),
             ':status' => 1
-        ]);
-
-        if (dbrows($result) > 0) {
+        ];
+        $result = dbquery($select, $bind);
+        if (dbrows($result)) {
             $data = dbarray($result);
-
             set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
@@ -539,13 +538,12 @@ abstract class Articles extends ArticlesServer {
      * @return string
      */
     private static function get_ArticlesRatings($data) {
-        $html = "";
+        $html = '';
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
             showratings("A", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id']);
-            $html = ob_get_contents();
-            ob_end_clean();
+            $html = ob_get_clean();
         }
 
         return (string)$html;

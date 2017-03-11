@@ -235,7 +235,7 @@ class Install_Core extends Infusion_Core {
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
-            $default_path = '';
+            $default_path = array();
             if (isset($db_host)) {
                 $default_path['db_host'] = $db_host;
             }
@@ -291,9 +291,10 @@ class Install_Core extends Infusion_Core {
             }
             require_once(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
-            if (!empty(fusion_get_settings('version'))) {
+            $version = fusion_get_settings('version');
+            if (!empty($version)) {
                 if (isset($validation[3])) {
-                    if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+                    if (version_compare(self::BUILD_VERSION, $version, ">")) {
                         $_GET['upgrade'] = TRUE;
                         if (!defined('COOKIE_PREFIX') && !empty(self::$connection['COOKIE_PREFIX'])) {
                             define('COOKIE_PREFIX', self::$connection['COOKIE_PREFIX']);

@@ -192,7 +192,7 @@ class ForumThreads extends ForumServer {
                             'file'   => $threads['attach_files'] > 0 ? "<i class='".self::get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ),
-                        "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
+                        "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
                                 $author['user_name'],
                                 $author['user_status'])."</span>",
                         "thread_author"  => $author,
@@ -294,7 +294,7 @@ class ForumThreads extends ForumServer {
 
         $this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
 
-        if (!empty($this->thread_data) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
+        if (!empty($this->thread_data) && !empty($_GET['thread_id']) && isnum($_GET['thread_id']) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
 
             // get post_count, lastpost_id, first_post_id.
             $thread_stat = self::get_thread_stats($_GET['thread_id']);

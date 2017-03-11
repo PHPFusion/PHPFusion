@@ -31,7 +31,7 @@ if (!function_exists("display_forum_tags")) {
 
             // thread design
             echo "<!--pre_forum-->\n";
-            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0002']."</div>\n";
 
             forum_filter($info);
 

@@ -1,8 +1,6 @@
-@import "../../../includes/fonts/Ubuntu/font.css";
-
 /* Globals */
 html, body, #tinymce body, .form-control {
-    font: 14px/16px "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
     overflow-x: hidden;
 }
 
@@ -23,8 +21,8 @@ html, body, #tinymce body, .form-control {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 800;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
 }
 
 .text-success {
@@ -638,14 +636,17 @@ a:hover, a:focus {
 .btn, .btn-group .btn {
     display: inline-block;
     *display: inline;
-    padding: 6px 12px;
     margin-bottom: 0;
     *margin-left: .3em;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
     line-height: 20px;
     text-align: center;
 }
 
+.btn.btn-xs {
+    font-weight: 400;
+}
 .btn:hover,
 .btn:focus,
 .btn:active,
@@ -1047,6 +1048,7 @@ input[type="submit"].btn.btn-mini {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    outline: none !important;
 }
 
 .btn-link:hover,
@@ -1054,6 +1056,12 @@ input[type="submit"].btn.btn-mini {
     color: #005580;
     text-decoration: underline;
     background-color: transparent;
+    outline: none;
+}
+
+.btn-link:active {
+    outline: none;
+    border-color: transparent;
 }
 
 .btn-link[disabled]:hover,
@@ -1070,6 +1078,7 @@ input[type="submit"].btn.btn-mini {
     white-space: nowrap;
     vertical-align: middle;
     zoom: 1;
+    height: 25px;
     margin-bottom: 10px;
 }
 
@@ -1333,6 +1342,19 @@ input[type="submit"].btn.btn-mini {
     background-color: #2E87C1;
 }
 
+/* Alerts ! */
+.alert-warning {
+    color: #735c0f;
+    background-color: #ffea7f;
+    border-color: rgba(176, 136, 0, 0.3);
+}
+
+.alert-danger {
+    color: #fff;
+    background-color: #d73a49;
+    border: 1px solid #9e1c23;
+}
+
 .admin-message {
     width: 100%;
     position: fixed;
@@ -1523,6 +1545,9 @@ label small {
     margin-bottom: 5px !important;
 }
 
+.label.label-danger {
+    color: #fff;
+}
 /* General table properties */
 table {
     border-collapse: collapse;
@@ -1568,6 +1593,13 @@ table {
     margin-right: 5px;
 }
 
+.form-control {
+    background-color: #fafbfc;
+}
+
+.form-control:focus {
+    background-color: #fff;
+}
 .form-group-lg input.form-control {
     font-size: 25px;
     font-family: serif;
@@ -1793,6 +1825,9 @@ textarea.form-control {
     border: 0;
 }
 
+.editor-wrapper .btn-group {
+    margin-bottom: 10px;
+}
 nav ul {
     list-style: none;
     margin: 0;
@@ -2168,4 +2203,18 @@ input[type=text] {
 
 .bootstrap-datetimepicker-widget table > thead th {
     padding: 5px !important;
+}
+
+.label {
+    display: inline-block;
+    padding: 8px 10px;
+    margin: 0 0.5em 0.5em 0;
+    white-space: nowrap;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.label.label-info {
+    background-color: #f1f8ff;
 }

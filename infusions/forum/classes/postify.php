@@ -25,12 +25,13 @@ class Forum_Postify extends ForumServer {
     protected static $locale = [];
     protected static $default_redirect_link = '';
     protected static $postify_uri = [];
-
+    protected static $settings = [];
     private $postify_action;
 
     public function __construct() {
 
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
+        self::$settings = fusion_get_settings();
         self::get_forum_settings();
 
         if (!isset($_GET['forum_id'])) throw new \Exception(self::$locale['forum_0587']);

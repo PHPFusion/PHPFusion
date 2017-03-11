@@ -55,7 +55,8 @@ if (empty($settings)) {
 }
 
 // Settings dependent functions
-date_default_timezone_set($settings['default_timezone']);
+date_default_timezone_set('UTC');
+//date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 
@@ -138,8 +139,7 @@ while ($base_url_count != 0) {
 
 // Set TRUE_PHP_SELF and START_PAGE
 define("TRUE_PHP_SELF", $current_page);
-define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "",
-                                         TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
+define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
 
 /**
  * Login / Logout / Revalidate
@@ -165,33 +165,29 @@ define("iUSER", $userdata['user_level']);
 define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
-// Get enabled language settings
+// Main language detection procedure
+static $current_user_language = [];
+if (iMEMBER && valid_language($userdata['user_language'])) {
+    $current_user_language = $userdata['user_language'];
+} else {
+    $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
+    $current_user_language = ($langData['user_language'] ?: fusion_get_settings('locale'));
+}
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
+if (count($enabled_languages) > 1) {
+    require __DIR__.'/includes/core_mlang_hub_include.php';
+}
+if (!defined('LANGUAGE') && !defined('LOCALESET')) {
+    define('LANGUAGE', $current_user_language);
+    define('LOCALESET', $current_user_language.'/');
+}
+
 // If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+if (isset($_GET['lang'])) {
     $lang = stripinput($_GET['lang']);
     set_language($lang);
-    $redirectPath = clean_request("", array("lang"), FALSE);
-    redirect($redirectPath);
-}
-
-// Main language detection procedure
-if (iMEMBER && valid_language($userdata['user_language'])) {
-    define("LANGUAGE", $userdata['user_language']);
-    define("LOCALESET", $userdata['user_language']."/");
-} else {
-    $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-    if ($data['user_language']) {
-        define("LANGUAGE", $data['user_language']);
-        define("LOCALESET", $data['user_language']."/");
-    }
-}
-
-// Check if definitions have been set, if not set the default language to system language
-if (!defined("LANGUAGE")) {
-    define("LANGUAGE", $settings['locale']);
-    define("LOCALESET", $settings['locale']."/");
+    redirect(clean_request('', ['lang'], FALSE));
 }
 
 // IP address functions
@@ -200,16 +196,11 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-// USE HTACCESS.
-// Redirects to the index if the URL is invalid (eg. file.php/folder/)
-//if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
-//  redirect($settings['siteurl']);
-//}
-
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
 
 $defender = defender::getInstance();
+
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();
 }
@@ -217,9 +208,7 @@ if (!defined('FUSION_ALLOW_REMOTE')) {
 
 // Define aidlink
 if (iADMIN) {
-
     //@todo: to remove this part for non-global approach
-
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
@@ -228,7 +217,6 @@ if (iADMIN) {
     $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
     $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
     $_SESSION['aid'] = $userdata['user_id'].".".$token_time.".".hash_hmac($algo, $key, $salt);
-
 }
 
 // PHP-Fusion user cookie functions
@@ -262,7 +250,3 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
 \PHPFusion\Installer\Infusion_core::load_Configuration();
-// Language detection hub for multilingual content, detect, set correct language if it is not set
-if (count($enabled_languages) > 1) {
-    require __DIR__.'/includes/core_mlang_hub_include.php';
-}

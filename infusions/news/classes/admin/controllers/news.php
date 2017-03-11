@@ -31,6 +31,7 @@ class NewsAdmin extends NewsAdminModel {
             self::$instance = new static();
         }
         self::$locale = self::get_newsAdminLocale();
+
         return self::$instance;
     }
 
@@ -91,12 +92,12 @@ class NewsAdmin extends NewsAdminModel {
                 'news_start'          => form_sanitizer($_POST['news_start'], 0, 'news_start'),
                 'news_end'            => form_sanitizer($_POST['news_end'], 0, 'news_end'),
                 'news_visibility'     => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
-                'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
-                'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
-                'news_name'                => form_sanitizer($_POST['news_name'], 0, 'news_name'),
-                'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
-                'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
-                'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
+                'news_draft'          => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
+                'news_sticky'         => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name'           => form_sanitizer($_POST['news_name'], 0, 'news_name'),
+                'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
+                'news_allow_ratings'  => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                'news_language'       => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
             );
 
@@ -239,7 +240,7 @@ class NewsAdmin extends NewsAdminModel {
                 'preview'     => TRUE,
                 'html'        => TRUE,
                 'autosize'    => TRUE,
-                'placeholder' => self::$locale['news_0203b'],
+                'placeholder' => self::$locale['news_0005'],
                 'form_name'   => 'news_form',
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                 'wordcount'   => TRUE,
@@ -835,20 +836,18 @@ class NewsAdmin extends NewsAdminModel {
             }
         }
 
-        
-        
         ?>
         <div class="m-t-15">
             <?php
             echo openform("news_filter", "post", FUSION_REQUEST);
             echo "<div class='row clearfix'>\n";
             echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
-            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"), FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
-            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
+            echo "<a class='btn btn-success m-r-10' href='".clean_request("ref=news_form", array("ref"), FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
+            echo "<a class='btn btn-danger m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
             echo "</div>\n";
             ?>
             <script>
@@ -878,10 +877,9 @@ class NewsAdmin extends NewsAdminModel {
             echo form_text('news_text', '', $filter_values['news_text'], array(
                 'placeholder'       => self::$locale['news_0200'],
                 'append_button'     => TRUE,
-                'append_value'      => "<i class='fa fa-search'></i>",
+                'append_value'      => "<i class='fa fa-search'></i> ".self::$locale['search'],
                 'append_form_value' => 'search_news',
                 'inner_width'       => '250px',
-                'group_size'        => 'sm'
             ));
             echo "</div>\n";
             echo "</div>\n";
@@ -1007,7 +1005,7 @@ class NewsAdmin extends NewsAdminModel {
                 <td class="strong min"><?php echo self::$locale['sticky'] ?></td>
                 <td class="strong min"><?php echo self::$locale['draft'] ?></td>
                 <td class="strong"><?php echo self::$locale['global_073'] ?></td>
-                <td class="strong"><?php echo self::$locale['news_0216'] ?></td>
+                <td class="strong"><?php echo self::$locale['news_0009'] ?></td>
                 <td class="strong"><?php echo self::$locale['news_0142'] ?></td>
                 <td class="strong"><?php echo self::$locale['actions'] ?></td>
                 <td class="strong min">ID</td>

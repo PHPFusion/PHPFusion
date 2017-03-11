@@ -13,6 +13,9 @@ $locale['ME_410'] = 'User';
 $locale['ME_411'] = 'User Level';
 $locale['ME_412'] = 'Email Address';
 $locale['ME_413'] = ' User Account';
+$locale['ME_414'] = 'Select All';
+$locale['ME_415'] = 'Hidden';
+$locale['ME_416'] = 'Shown';
 
 // Core Fields Filter
 $locale['ME_420'] = 'Email Hidden?';

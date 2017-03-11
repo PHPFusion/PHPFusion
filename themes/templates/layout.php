@@ -70,7 +70,6 @@ if (function_exists("get_head_tags")) {
 
 echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
 echo "<script type='text/javascript'>!window.jQuery && document.write('<script src=\'".INCLUDES."jquery/jquery.min.js\'><\/script>');</script>\n";
-
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
 echo "</head>\n";
 
@@ -98,7 +97,7 @@ if (!defined("THEME_BODY")) {
 
 if (iADMIN) {
     if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-        addNotice("danger", fusion_get_locale('global_198'), 'all');
+        //addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
         addNotice("warning", fusion_get_locale('global_190'), 'all');
@@ -111,10 +110,8 @@ if (iADMIN) {
 if (function_exists("render_page")) {
     render_page(); // by here, header and footer already closed
 }
-
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-
 if (!empty($footerError)) {
     echo "<div class='admin-message container'>".$footerError."</div>\n";
 }

@@ -20,18 +20,12 @@ require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
 
-if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
-    $locale = fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
-} else {
-    $locale = fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads_admin.php");
-}
-if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/settings.php");
-} else {
-    $locale = fusion_get_locale("", LOCALE."English/admin/settings.php");
-}
+$downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
+$settings_locale = file_exists(LOCALE.LOCALESET."admin/settings.php") ? LOCALE.LOCALESET."admin/settings.php" : LOCALE."English/admin/settings.php";
+$locale = fusion_get_locale('', [$downloads_locale, $settings_locale]);
 
 require_once INCLUDES."infusions_include.php";
+
 $dl_settings = get_settings("downloads");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'downloads/downloads_admin.php'.$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
@@ -71,7 +65,7 @@ switch ($_GET['section']) {
             include "admin/downloads.php";
         } else {
             echo "<div class='well text-center'>\n";
-            echo "".$locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
+            echo $locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
             echo "<a href='".INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=download_category'>".$locale['download_0253']."</a>".$locale['download_0254'];
             echo "</div>\n";
         }
@@ -167,7 +161,7 @@ function download_listing() {
     }
     echo "</div>\n";
 
-    echo "<ul class='list-group m-10'>\n";
+    echo "<ul class='list-group spacer-xs block'>\n";
     if ($rows > 0) {
         while ($data2 = dbarray($result)) {
             $download_url = '';

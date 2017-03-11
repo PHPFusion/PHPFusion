@@ -66,6 +66,7 @@ class ComposeSettings extends PageAdmin {
                             'link_position' => 1,
                             'link_window' => 0,
                             'link_position_id' => 0,
+                            'link_status' => 1
                         );
 
                         if ($has_link) {
@@ -89,7 +90,8 @@ class ComposeSettings extends PageAdmin {
                                     "link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
                                     "link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0,
                                                                     0,
-                                                                    'link_window')
+                                                                    'link_window'),
+                                    "link_status" => form_sanitizer($_POST['link_status'] , 0 , 'link_status')
                                 );
                                 if ($data['link_position'] > 3) {
                                     $data['link_position'] = form_sanitizer($_POST['link_position_id'], 3,
@@ -174,6 +176,8 @@ class ComposeSettings extends PageAdmin {
                                           array('type' => 'number', 'width' => '150px', 'inline' => TRUE)).
                                 form_text('link_icon', self::$locale['page_0318'], $data['link_icon'],
                                           array('width' => '150px', 'inline' => TRUE)).
+                                form_select('link_status', self::$locale['page_0319a'], $data['link_status'],
+                                    ['inline' => TRUE, 'options' => [0 => self::$locale['unpublish'], 1 => self::$locale['publish']]]).
                                 form_select_tree('link_cat', self::$locale['page_0319'], $data['link_cat'], array(
                                     "parent_value" => self::$locale['parent'],
                                     'inline' => TRUE,

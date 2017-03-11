@@ -38,6 +38,7 @@ class News_Preview extends News {
     }
 
     public function display_preview() {
+        self::$locale = fusion_get_locale('', NEWS_ADMIN_LOCALE);
         if (!empty($this->news_data)) {
             add_to_head("
             <style>
@@ -49,7 +50,7 @@ class News_Preview extends News {
             }
             </style>
             ");
-            $modal = openmodal('news_preview', 'Preview News', ['class' => 'modal-lg preview']);
+            $modal = openmodal('news_preview', self::$locale['news_0141'], ['class' => 'modal-lg preview']);
             $http_query = http_build_query($this->news_data).'&readmore='.$this->news_data['news_id'].'&rowstart=0';
             ob_start();
             echo "<iframe src='".NEWS_CLASS."news/news_preview.php?$http_query' style='height:80vh; width:100%; border:0; margin-bottom:-5px'></iframe>";

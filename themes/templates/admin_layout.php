@@ -64,7 +64,7 @@ if (function_exists("get_head_tags")) {
 echo "</head>";
 echo "<body>";
 if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-    addNotice("danger", fusion_get_locale('global_198'));
+    //addNotice("danger", fusion_get_locale('global_198'));
 }
 // Check if the user is logged in
 if (!check_admin_pass('')) {

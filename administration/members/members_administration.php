@@ -95,19 +95,20 @@ class Members_Admin {
             self::USER_CANCEL       => $base_url."&amp;status=".self::USER_CANCEL,
             self::USER_ANON         => $base_url."&amp;status=".self::USER_ANON,
             self::USER_DEACTIVATE   => $base_url."&amp;status=".self::USER_DEACTIVATE,
-            'add_user' =>  $base_url.'&amp;ref=add',
-            'view' =>  $base_url.'&amp;ref=view&amp;lookup=',
-            'edit' =>  $base_url.'&amp;ref=edit&amp;lookup=',
-            'delete' =>  $base_url.'&amp;ref=delete&amp;lookup=',
-            'inactive' =>  $base_url.'&amp;ref=inactive',
+            'add_user'              => $base_url.'&amp;ref=add',
+            'view'                  => $base_url.'&amp;ref=view&amp;lookup=',
+            'edit'                  => $base_url.'&amp;ref=edit&amp;lookup=',
+            'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
+            'inactive'              => $base_url.'&amp;ref=inactive',
         );
 
-        self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id'=>isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
+        self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
 
         if (dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", array(
                 ':user_id'    => self::$user_id,
                 ':user_level' => USER_LEVEL_MEMBER,
-            )) > 0) {
+            )) > 0
+        ) {
             self::$is_admin = TRUE;
         } else {
             self::$is_admin = FALSE;
@@ -144,7 +145,7 @@ class Members_Admin {
                             "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit <:last_visited AND user_actiontime=:action_time",
                             [
                                 ':last_visited' => self::$time_overdue,
-                                ':action_time' => 0,
+                                ':action_time'  => 0,
                             ]
                         );
                         $button = self::$locale['ME_502'].format_word($inactive, self::$locale['fmt_user']);
@@ -163,11 +164,11 @@ class Members_Admin {
                             if ($rows != '0') {
                                 while ($data = dbarray($result)) {
                                     $message = strtr(self::$locale['email_deactivate_message'], array(
-                                            '[CODE]' => md5(self::$response_required.$data['user_password']),
-                                            '[SITENAME]' => self::$settings['sitename'],
+                                            '[CODE]'         => md5(self::$response_required.$data['user_password']),
+                                            '[SITENAME]'     => self::$settings['sitename'],
                                             '[SITEUSERNAME]' => self::$settings['siteusername'],
-                                            '[USER_NAME]' => $data['user_name'],
-                                            '[USER_ID]' => $data['user_id'],
+                                            '[USER_NAME]'    => $data['user_name'],
+                                            '[USER_ID]'      => $data['user_id'],
                                         )
                                     );
                                     if (sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], self::$locale['email_deactivate_subject'], $message)) {
@@ -189,7 +190,7 @@ class Members_Admin {
                         echo "<div>";
                         $action = fusion_get_settings('deactivation_action') == 0 ? self::$locale['ME_556'] : self::$locale['ME_557'];
                         $text = sprintf(self::$locale['ME_464'], $inactive, self::$settings['deactivation_period'], self::$settings['deactivation_response'], $action);
-                        echo str_replace(   array("[strong]", "[/strong]"), array("<strong>", "</strong>"),
+                        echo str_replace(array("[strong]", "[/strong]"), array("<strong>", "</strong>"),
                             $text
                         );
                         if (self::$settings['deactivation_action'] == 1) {
@@ -208,7 +209,6 @@ class Members_Admin {
                         closetable();
                     }
                     break;
-
                 case 'add':
                     BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
                     opentable(self::$locale['ME_450']);
@@ -220,8 +220,8 @@ class Members_Admin {
                         $query = "SELECT u.*, s.suspend_reason
                                 FROM ".DB_USERS." u
                                 LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-                                WHERE u.user_id=:user_id GROUP BY u.user_id 
-                                ORDER BY s.suspend_date DESC                                
+                                WHERE u.user_id=:user_id GROUP BY u.user_id
+                                ORDER BY s.suspend_date DESC
                                 ";
                         $bind = array(
                             ':user_id' => self::$user_id
@@ -284,4 +284,4 @@ require_once(ADMIN.'members/members_view.php');
 require_once(ADMIN.'members/sub_controllers/members_display.php');
 require_once(ADMIN.'members/sub_controllers/members_action.php');
 require_once(ADMIN.'members/sub_controllers/members_profile.php');
-require_once (INCLUDES.'suspend_include.php');
+require_once(INCLUDES.'suspend_include.php');

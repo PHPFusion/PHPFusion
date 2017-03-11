@@ -133,8 +133,8 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'width'       => '250px',
                     'inline'      => TRUE,
                 ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
-            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], array('max_length' => 320, 'inline' => TRUE, 'placeholder' => $locale['news_0205a'], 'width' => '100%', 'inner_width' => '100%', 'error_text' => $locale['news_0255'], 'tags' => TRUE, 'multiple' => TRUE)),
-            'news_cat_field'         => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'],
+            'news_keywords_field' => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], array('max_length' => 320, 'inline' => TRUE, 'placeholder' => $locale['news_0205a'], 'width' => '100%', 'inner_width' => '100%', 'error_text' => $locale['news_0255'], 'tags' => TRUE, 'multiple' => TRUE)),
+            'news_cat_field'      => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'],
                 [
                     'width'        => '250px', 'inline' => TRUE,
                     'parent_value' => $locale['news_0202'],
@@ -142,7 +142,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                 ],
                 DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent"
             ),
-            'news_image_field'       => ($news_settings['news_allow_submission_files'] ? form_fileinput('news_image', $locale['news_0216'], '',
+            'news_image_field'    => ($news_settings['news_allow_submission_files'] ? form_fileinput('news_image', $locale['news_0009'], '',
                 [
                     'upload_path'      => IMAGES_N,
                     'max_width'        => $news_settings['news_photo_max_w'],
@@ -173,7 +173,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'inline'  => TRUE
                 ]
             ) : ''),
-            'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'],
+            'news_news_field'     => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'],
                 [
                     'required'  => TRUE,
                     'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
@@ -182,7 +182,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'form_name' => 'submit_form',
                 ]
             ),
-            'news_body_field'        => form_textarea('news_extended', $locale['news_0203b'], $criteriaArray['news_extended'],
+            'news_body_field' => form_textarea('news_extended', $locale['news_0005'], $criteriaArray['news_extended'],
                 [
                     'required'  => $news_settings['news_extended_required'] ? TRUE : FALSE,
                     'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
@@ -191,9 +191,9 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'form_name' => 'submit_form',
                 ]
             ),
-            'news_submit'            => form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o')),
-            'preview_news'           => (fusion_get_settings('site_seo') ? '' : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('icon' => 'fa fa-eye'))),
-            'criteria_array'         => $criteriaArray,
+            'news_submit'     => form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o')),
+            'preview_news'    => (fusion_get_settings('site_seo') ? '' : form_button('preview_news', $locale['news_0141'], $locale['news_0141'], array('icon' => 'fa fa-eye'))),
+            'criteria_array'  => $criteriaArray,
         ];
 
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n", array("enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE));

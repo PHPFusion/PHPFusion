@@ -236,6 +236,7 @@ abstract class Weblinks extends WeblinksServer {
                 "page_count" => $pagecount,
                 "weblink_pagenav" => $articlePagenav
             );
+            $data['weblink_description'] = parse_textarea($data['weblink_description'], FALSE, FALSE, TRUE);
             $info += $data;
 
             return (array) $info;

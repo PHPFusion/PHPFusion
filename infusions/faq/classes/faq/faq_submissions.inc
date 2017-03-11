@@ -33,7 +33,7 @@ class FaqSubmissions extends FaqServer {
 
     public function displayFaq() {
 
-        $this->locale = fusion_get_locale("", FAQ_ADMIN_LOCALE);
+        $this->locale = fusion_get_locale("", FAQ_LOCALE);
         add_to_title($this->locale['faq_0900']);
         opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['faq_0900']);
         if (self::$faq_settings['faq_allow_submission']) {
@@ -92,7 +92,7 @@ class FaqSubmissions extends FaqServer {
             } else {
                 echo "<div class='alert alert-info m-b-20 submission-guidelines text-center'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920'])."</div>\n";
                 echo openform('submit_form', 'post', BASEDIR."submit.php?stype=q");
-                echo form_text('faq_question', $this->locale['faq_0250'], $criteriaArray['faq_question'], array(
+                echo form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'], array(
                     "error_text" => $this->locale['faq_0271'],
                     'required'   => TRUE
                 ));

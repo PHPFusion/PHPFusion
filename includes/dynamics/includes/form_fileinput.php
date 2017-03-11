@@ -72,6 +72,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'multiple'          => FALSE,
         'template'          => 'classic',
         'media'             => FALSE,
+        'placeholder'       => '',
     );
 
     $options += $default_options;
@@ -98,7 +99,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
-    $browseLabel = $locale['df_300'];
+    $browseLabel = $options['placeholder'] ?: $locale['df_300'];
     // file type if single filter, if not will accept as object if left empty.
     $type_for_js = NULL;
     if ($options['type']) {

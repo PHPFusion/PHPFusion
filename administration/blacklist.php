@@ -25,13 +25,13 @@ class Blaclist {
     private static $limit = 20;
 
     private $data = array(
-        'blacklist_id' => 0,
-        'blacklist_user_id' => '',
-        'blacklist_ip' => '',
-        'blacklist_ip_type' => '4',
-        'blacklist_email' => '',
-        'blacklist_reason' => '',
-        'blacklist_datestamp' => '',
+        'blacklist_id'        => 0,
+        'blacklist_user_id'   => '',
+        'blacklist_ip'        => '',
+        'blacklist_ip_type'   => '4',
+        'blacklist_email'     => '',
+        'blacklist_reason'    => '',
+        'blacklist_datestamp' => ''
     );
 
     public function __construct() {
@@ -77,13 +77,13 @@ class Blaclist {
             }
 
             $this->data = array(
-                'blacklist_id' => form_sanitizer($_POST['blacklist_id'], 0, "blacklist_id"),
-                'blacklist_user_id' => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : "",
-                'blacklist_ip' => form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip'),
-                'blacklist_ip_type' => $blacklist_ip_type,
-                'blacklist_email' => !empty($_POST['blacklist_email']) ? form_sanitizer($_POST['blacklist_email'], '', 'blacklist_email') : '',
-                'blacklist_reason' => form_sanitizer($_POST['blacklist_reason'], '', 'blacklist_reason'),
-                'blacklist_datestamp' => empty($_POST['blacklist_datestamp']) ? time() : $_POST['blacklist_datestamp'],
+                'blacklist_id'        => form_sanitizer($_POST['blacklist_id'], 0, "blacklist_id"),
+                'blacklist_user_id'   => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : "",
+                'blacklist_ip'        => form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip'),
+                'blacklist_ip_type'   => $blacklist_ip_type,
+                'blacklist_email'     => !empty($_POST['blacklist_email']) ? form_sanitizer($_POST['blacklist_email'], '', 'blacklist_email') : '',
+                'blacklist_reason'    => form_sanitizer($_POST['blacklist_reason'], '', 'blacklist_reason'),
+                'blacklist_datestamp' => empty($_POST['blacklist_datestamp']) ? time() : $_POST['blacklist_datestamp']
             );
 
             if (\defender::safe()) {

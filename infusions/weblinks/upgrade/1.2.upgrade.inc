@@ -81,4 +81,4 @@ foreach ($check_array as $key => $value) {
 
 // Remove old cats link and update new path for admin link
 $inf_deldbrow[] = DB_PREFIX."admin WHERE admin_link='weblink_cats.php'";
-$inf_updatedbrow[] = DB_PREFIX."admin SET `admin_image`='../infusions/weblinks/weblink.png', `admin_link`='../infusions/weblinks/weblinks_admin.php' WHERE admin_link='weblinks.php'";
+$inf_updatedbrow[] = DB_PREFIX."admin SET admin_image='../infusions/weblinks/weblink.png', admin_link='../infusions/weblinks/weblinks_admin.php' WHERE admin_link='weblinks.php'";

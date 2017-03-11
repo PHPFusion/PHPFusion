@@ -101,7 +101,7 @@ class ComposeEngine extends PageAdmin {
 
                             dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
 
-                            addNotice("success", "Column Deleted");
+                            addNotice("success", self::$locale['page_0409a']);
                         }
                     }
                     redirect(clean_request('', self::$composer_exclude, FALSE));
@@ -130,7 +130,7 @@ class ComposeEngine extends PageAdmin {
                 $_isContent = FALSE;
                 if (!empty($columns)) {
                     foreach ($columns as $column_data) {
-                        if ($column_data['page_content_type'] == 'Content') {
+                        if ($column_data['page_content_type'] == 'content') {
                             $_isContent = TRUE;
                         }
                     }
@@ -478,7 +478,7 @@ class ComposeEngine extends PageAdmin {
                 }
                 ?>
             </div>
-            <?php echo form_text('page_content_order', 'Widget Order', self::$colData['page_content_order'], [
+            <?php echo form_text('page_content_order', self::$locale['page_0355a'], self::$colData['page_content_order'], [
                 'type' => 'number',
                 'required' => FALSE,
                 'inline' => TRUE,
@@ -547,9 +547,13 @@ class ComposeEngine extends PageAdmin {
 
             <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
                 <div class="list-group-item m-t-10 text-center" style="border:1px solid #ddd; background: #fff;">
-                    <h5>
-                        <?php echo ucfirst($colData['page_content_type']) ?>
-                    </h5>
+                    <h5><?php
+                        if ($colData['page_content_type'] == 'content') {
+                            echo self::$locale['page_0441'];
+                        } else {
+                            ucfirst($colData['page_content_type']);
+                        }
+                    ?></h5>
                     <?php if (!empty($colData['page_widget'])) : ?>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-default" href="<?php echo $edit_link ?>" title="<?php echo self::$locale['page_0356'] ?>"><i

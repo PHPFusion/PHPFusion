@@ -21,13 +21,13 @@ if (!defined("IN_FUSION")) {
 }
 
 $regex = array(
-    "%news_id%"       => "([0-9]+)",
+    "%news_id%"       => "([1-9]{1}[0-9]*)",
     "%news_title%"    => "([0-9a-zA-Z._\W]+)",
     "%news_step%"     => "([0-9]+)",
     "%news_rowstart%" => "([0-9]+)",
     "%c_start%"       => "([0-9]+)",
     "%type%"          => "(B)",
-    "%news_cat_id%"   => "([0-9]+)",
+    "%news_cat_id%"   => "([1-9]{1}[0-9]*)",
     "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%stype%"         => "(n)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
@@ -42,7 +42,8 @@ $pattern = array(
     "news/comments-%c_start%/%news_id%/%news_title%"              => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%",
     "news/comments-%c_start%/%news_id%/%news_title%#%comment_id%" => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
     "news/filter/%filter_type%"                                   => "infusions/news/news.php?type=%filter_type%",
-    "news/category/uncategorized"                                 => "infusions/news/news.php?cat_id=0&amp;filter=false",
+    "news/category/uncategorized"                                 => "infusions/news/news.php?cat_id=0",
+    "news/category/filter/uncategorized"                          => "infusions/news/news.php?cat_id=0&amp;filter=false",
     "news/category/%news_cat_id%/%news_cat_name%"                 => "infusions/news/news.php?cat_id=%news_cat_id%",
     "news"                                                        => "infusions/news/news.php",
 );

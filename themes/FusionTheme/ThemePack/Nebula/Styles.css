@@ -14,7 +14,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-@import url('../../../../includes/fonts/Ubuntu/font.css');
 @import url('css/carousel.css');
 @import url('css/panel.css');
 /*@import url('Nebula/css/table.css');*/
@@ -24,7 +23,7 @@
 
 body {
     position: relative;
-    font: 14px/150% "Ubuntu", Helvetica, Arial, sans-serif;
+    font: 14px/150% "Segoe UI", Helvetica, Arial, sans-serif;
     color: #676767;
     overflow-x: hidden;
 }
@@ -100,7 +99,7 @@ header .navbar-default .navbar-nav > li.open > a:focus {
 }
 
 header .navbar-default .navbar-nav > li > a {
-    font: 600 15px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 600 15px/150% 'Segoe UI', Helvetica, Arial, sans-serif;
     text-transform: uppercase;
     color: #444;
     border-right: 1px solid rgba(0, 0, 0, .05) !important;
@@ -118,7 +117,7 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
 }
 
 header .navbar-default .navbar-nav > li > .dropdown-menu > li > a {
-    font: 14px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 14px/150% 'Segoe UI', Helvetica, Arial, sans-serif;
     color: #5f5f5f;
     text-decoration: none;
     padding: 10px 20px;
@@ -182,7 +181,7 @@ header .headerContent {
 }
 
 header h1 {
-    font: 700 70px/90px 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 700 70px/90px 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 .nebulaSubheader {

@@ -94,4 +94,4 @@ if (dbrows($result) > 0) {
     }
 }
 
-$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/gallery/gallery.png', `admin_link`='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/gallery/gallery.svg', admin_link='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";

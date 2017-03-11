@@ -139,4 +139,32 @@ if (file_exists(IMAGES_N_T)) {
 // Delete rows
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='news_cats.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_news.php'";
-$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/news/news_admin.php' WHERE admin_link='news.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/news/news.svg', admin_link='../infusions/news/news_admin.php' WHERE admin_link='news.php'";
+
+/*
+ * Alter news category image
+ */
+$result = dbquery("SELECT * FROM ".DB_NEWS_CATS);
+if (dbrows($result)) {
+    $arr_defaults = [
+        'bugs.gif'       => 'bugs.svg',
+        'downloads.gif'  => 'downloads.svg',
+        'games.gif'      => 'games.svg',
+        'graphics.gif'   => 'graphics.svg',
+        'hardware.gif'   => 'hardware.svg',
+        'journal.gif'    => 'journal.svg',
+        'members.gif'    => 'members.svg',
+        'mods.gif'       => 'members.svg',
+        'network.gif'    => 'members.svg',
+        'news.gif'       => 'news.svg',
+        'php-fusion.gif' => 'php-fusion.svg',
+        'security.gif'   => 'security.svg',
+        'software.gif'   => 'software.svg',
+        'themes.gif'     => 'themes.svg',
+        'windows.gif'    => 'windows.svg',
+    ];
+    while ($data = dbarray($result)) {
+        $data['news_image'] = strtr($data['news_image'], $arr_defaults);
+        dbquery_insert(DB_NEWS_CATS, $data, 'update', ['keep_session' => TRUE]);
+    }
+}

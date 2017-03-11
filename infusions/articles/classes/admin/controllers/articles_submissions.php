@@ -151,11 +151,11 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = array(
-                "required" => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0251a'], 
+                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0254'],
                 "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true
             );
             $articleExtendedSettings = array(
-                "required" => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0252a'], 
+                "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0253'],
                 "error_text" => $this->locale['article_0272'], "form_name" => "articleform", "wordcount" => true
             );
         } else {
@@ -192,7 +192,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text("article_subject", $this->locale['article_0250'], $this->inputArray['article_subject'], array(
+                echo form_text("article_subject", $this->locale['article_0100'], $this->inputArray['article_subject'], array(
                     "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
                 ));
 
@@ -212,14 +212,14 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
                 openside($this->locale['article_0261']);
 
-                echo form_select_tree("article_cat", $this->locale['article_0253'], $this->inputArray['article_cat'], array(
+                echo form_select_tree("article_cat", $this->locale['article_0101'], $this->inputArray['article_cat'], array(
                         "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'], 
                         "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                     ),
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
                 );
 
-                echo form_select("article_visibility", $this->locale['article_0254'], $this->inputArray['article_visibility'], array(
+                echo form_select("article_visibility", $this->locale['article_0106'], $this->inputArray['article_visibility'], array(
                     "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
                 ));
 
@@ -231,7 +231,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     echo form_hidden("article_language", "", $this->inputArray['article_language']);
                 }
 
-                echo form_datepicker("article_datestamp", $this->locale['article_0255'], $this->inputArray['article_datestamp'], array(
+                echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->inputArray['article_datestamp'], array(
                     "inline" => TRUE, "inner_width" => "100%"
                 ));
 
@@ -301,7 +301,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             <thead>
             <tr>
                 <td class="strong"><?php echo $this->locale['article_0200']; ?></td>
-                <td class="strong col-xs-5"><?php echo $this->locale['article_0201'] ?></td>
+                <td class="strong col-xs-5"><?php echo $this->locale['article_0100'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0202'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0203'] ?></td>
                 <td class="strong"><?php echo $this->locale['article_0204'] ?></td>

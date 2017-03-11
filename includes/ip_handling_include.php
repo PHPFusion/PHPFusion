@@ -18,18 +18,19 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
 // Uncompress an IPv6 address
-function uncompressIPv6($ip, $count = 7) {
-    if (strpos($ip, "::") !== FALSE) {
-        $ip = str_replace("::", str_repeat(":", $count + 2 - substr_count($ip, ":")), $ip);
-    }
-    $tmp_ip = explode(":", $ip);
-    foreach ($tmp_ip as &$value) {
-        $value = str_pad($value, 4, '0', STR_PAD_LEFT);
-    }
+if (!function_exists('uncompressIPv6')) {
+    function uncompressIPv6($ip, $count = 7) {
+        if (strpos($ip, "::") !== FALSE) {
+            $ip = str_replace("::", str_repeat(":", $count + 2 - substr_count($ip, ":")), $ip);
+        }
+        $tmp_ip = explode(":", $ip);
+        foreach ($tmp_ip as &$value) {
+            $value = str_pad($value, 4, '0', STR_PAD_LEFT);
+        }
 
-    return implode(":", $tmp_ip);
+        return implode(":", $tmp_ip);
+    }
 }
 
 // Check if users full or partial ip is blacklisted and set USER_IP and USER_IP_TYPE

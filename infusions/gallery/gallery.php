@@ -21,11 +21,7 @@ if (!db_exists(DB_PHOTO_ALBUMS)) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";
-if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
-    include INFUSIONS."gallery/locale/".LOCALESET."gallery.php";
-} else {
-    include INFUSIONS."gallery/locale/English/gallery.php";
-}
+$locale = fusion_get_locale('', GALLERY_LOCALE);
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
@@ -131,11 +127,16 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             );
         }
         $info += array(
-            "photo_description" => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'])) : '',
-            "photo_byte" => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
-            "photo_comment" => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
-            "photo_ratings" => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0',
+            "photo_description" => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, FALSE, TRUE, FALSE)) : '',
+            "photo_byte"        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
+            "photo_comment"     => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
+            "photo_ratings"     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0',
         );
+
+        if (defined('IN_PERMALINK')) {
+            $info['photo_description'] = strtr($info['photo_description'], [fusion_get_settings('site_path') => '']);
+        }
+
         if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
             if (isset($prev) && isset($first)) {
                 $info['nav']['first'] = array(
@@ -358,13 +359,13 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     }
 }
 function photo_thumbnail($data) {
-    global $locale, $gallery_settings;
+    $locale = fusion_get_locale();
     echo "<div class='panel panel-default tbl-border'>\n";
     echo "<div class='p-0'>\n";
     echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
     echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
     $thumb_img = ($data['photo_thumb1'] && file_exists(IMAGES_G.$data['photo_thumb1'])) ? IMAGES_G.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
-    $title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['432'];
+    $title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['402'];
     echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
     echo "</a>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";
@@ -372,15 +373,12 @@ function photo_thumbnail($data) {
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<!--photogallery_album_photo_info-->\n";
     echo "<span class='display-inline-block'>\n";
-    echo($data['photo_allow_ratings'] ? $locale['437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>",
-                                                                                              ceil($data['sum_rating'] / $data['count_votes'])) : $locale['438'])."<br />\n" : "");
+    echo($data['photo_allow_ratings'] ? $locale['437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>", ceil($data['sum_rating'] / $data['count_votes'])) : $locale['438'])."<br />\n" : "");
     echo "</span>\n<br/>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<span> ".$locale['434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span class='m-r-10'><abbr title='".$locale['433'].showdate("shortdate",
-                                                                      $data['photo_datestamp'])."'><i title='".$locale['433'].showdate("shortdate",
-                                                                                                                                       $data['photo_datestamp'])."' class='entypo calendar text-lighter'></i></abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='entypo calendar text-lighter'></i></abbr></span>";
     $photo_comments = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P' AND comment_item_id='".$data['photo_id']."'");
     $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['436b'] : $locale['436']).$photo_comments : "");
     echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='entypo icomment text-lighter'></i></abbr> $photo_comments</abbr></span>";
@@ -390,6 +388,7 @@ function photo_thumbnail($data) {
 }
 
 require_once THEMES."templates/footer.php";
+
 /**
  * Displays the Album Image
  * @param $album_image
@@ -506,8 +505,7 @@ function get_photo_ratings($data) {
     if (fusion_get_settings('ratings_enabled') && $data['photo_allow_ratings']) {
         ob_start();
         showratings("P", $data['photo_id'], BASEDIR."infusions/gallery/gallery.php?photo_id=".$data['photo_id']);
-        $html = ob_get_contents();
-        ob_end_clean();
+        $html = ob_get_clean();
     }
 
     return (string)$html;

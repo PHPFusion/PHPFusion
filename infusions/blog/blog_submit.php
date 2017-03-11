@@ -208,7 +208,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 
         echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
 
-        echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0436'], $locale['blog_0436'],
+        echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0141'], $locale['blog_0141'],
                                                                 array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-eye'));
         echo closeform();
 

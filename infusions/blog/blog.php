@@ -50,7 +50,7 @@ if ($settings['tinymce_enabled'] == 1) {
 $blog_settings = get_settings("blog");
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
-$_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : '';
+$_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
 $info = array(
     'blog_title'            => $locale['blog_1000'],
@@ -87,7 +87,6 @@ foreach ($info['allowed_filters'] as $type => $filter_name) {
      * Dynamic array filtration
      */
     $preserved_keys = array();
-
     if (!empty($_GET['cat_id'])) {
         $preserved_keys[] = "cat_id";
     }
@@ -125,7 +124,8 @@ switch ($_GET['type']) {
         $filter_condition = 'blog_datestamp DESC';
 }
 
-if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
+if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
+
     if (validate_blog($_GET['readmore'])) {
         $result = dbquery("SELECT tn.*, tu.*,
 					SUM(tr.rating_vote) AS sum_rating,
@@ -174,9 +174,12 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             } else {
                 $_GET['rowstart'] = 0;
             }
-
             $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
             $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
+            if (defined('IN_PERMALINK')) {
+                $item['blog_blog'] = strtr($item['blog_blog'], [fusion_get_settings('site_path') => '']);
+                $item['blog_extended'] = strtr($item['blog_extended'], [fusion_get_settings('site_path') => '']);
+            }
 
             $item['blog_image_link'] = '';
             $item['blog_thumb_1_link'] = '';
@@ -277,9 +280,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
     }
 
 } else {
-
     set_title($locale['blog_1000']);
-
     if (isset($_GET['author']) && isnum($_GET['author'])) {
         $info['blog_max_rows'] = dbcount("(blog_id)", DB_BLOG,
             (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
@@ -320,11 +321,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
-    elseif (isset($_GET['cat_id']) && validate_blogCats($_GET['cat_id'])) {
+    elseif ($_GET['cat_id'] !== NULL && validate_blogCats($_GET['cat_id'])) {
 
         $catFilter = "and blog_cat =''";
-        if ($_GET['cat_id'] > 0) {
-            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
+        if (!empty($_GET['cat_id'])) {
+            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? "blog_cat_language='".LANGUAGE."' AND " : "")." blog_cat_id='".intval($_GET['cat_id'])."'"));
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
                 'title' => $res['blog_cat_name']
@@ -333,6 +334,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $info['blog_title'] = $res['blog_cat_name'];
             $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
         } else {
+            // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
                 'title' => $locale['global_080']
@@ -340,7 +342,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             add_to_title($locale['global_201'].$locale['global_080']);
             $info['blog_title'] = $locale['global_080'];
         }
-
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id']."&amp;type=".$_GET['type'],
@@ -353,6 +354,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
 			".$catFilter."
 			"));
+
         //xss
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
@@ -437,14 +439,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
         }
     }
     // End Queries Type : $result and $info['blog_rows']
-
-    // Start Item based on $result and $info['blog_rows']
     if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
         $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
     }
-
     if (!empty($info['blog_rows'])) {
-
         while ($data = dbarray($result)) {
             // remove category image binding on item. each item is capable of housing hundreds of category.
             $blog_image = '';
@@ -458,6 +456,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
             $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
             $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+            if (defined('IN_PERMALINK')) {
+                $blog_blog = strtr($blog_blog, [fusion_get_settings('site_path') => '']);
+                $blog_extended = strtr($blog_extended, [fusion_get_settings('site_path') => '']);
+            }
 
             $cdata = array(
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
