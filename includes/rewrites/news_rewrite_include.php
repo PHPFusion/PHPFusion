@@ -21,13 +21,13 @@ if (!defined("IN_FUSION")) {
 }
 
 $regex = array(
-    "%news_id%"       => "([1-9]+)",
+    "%news_id%"       => "([1-9]{1}[0-9]*)",
     "%news_title%"    => "([0-9a-zA-Z._\W]+)",
     "%news_step%"     => "([0-9]+)",
     "%news_rowstart%" => "([0-9]+)",
     "%c_start%"       => "([0-9]+)",
     "%type%"          => "(B)",
-    "%news_cat_id%"   => "([1-9]+)",
+    "%news_cat_id%"   => "([1-9]{1}[0-9]*)",
     "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%stype%"         => "(n)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",

@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
 $regex = array(
     "%blog_title%"    => "([0-9a-zA-Z._\W]+)",
     "%blog_cat_name%" => "([0-9a-zA-Z._\W]+)",
-    "%blog_id%"       => "([1-9]+)",
+    "%blog_id%"       => "([1-9]{1}[0-9]*)",
     "%comment_id%"    => "([0-9]+)",
     "%blog_step%"     => "([0-9]+)",
     "%blog_rowstart%" => "([0-9]+)",
@@ -32,7 +32,7 @@ $regex = array(
     "%blog_month%"    => "([0-9]+)",
     "%author%"        => "([0-9]+)",
     "%type%"          => "(B)",
-    "%blog_cat_id%"   => "([1-9]+)",
+    "%blog_cat_id%"   => "([1-9]{1}[0-9]*)",
     "%hash_stop%"     => "\#(?=\s*|)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
     "%stype%"         => "(b)",
