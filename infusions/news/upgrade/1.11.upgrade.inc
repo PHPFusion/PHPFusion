@@ -164,7 +164,7 @@ if (dbrows($result)) {
         'windows.gif'    => 'windows.svg',
     ];
     while ($data = dbarray($result)) {
-        $data['news_image'] = strtr($data['news_image'], $arr_defaults);
+        $data['news_cat_image'] = strtr($data['news_cat_image'], $arr_defaults);
         dbquery_insert(DB_NEWS_CATS, $data, 'update', ['keep_session' => TRUE]);
     }
 }
