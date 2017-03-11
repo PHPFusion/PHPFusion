@@ -297,6 +297,20 @@ abstract class News extends NewsServer {
 
             $data['news_news'] = parse_textarea($data['news_news'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
             $data['news_extended'] = parse_textarea($data['news_extended'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+            if (defined('IN_PERMALINK')) {
+                $data['news_news'] = strtr($data['news_news'], [
+                    fusion_get_settings('site_path').'images'                        => IMAGES,
+                    fusion_get_settings('site_path').'infusions/news/images'         => IMAGES_N,
+                    fusion_get_settings('site_path').'infusions/news/images/thumbs/' => IMAGES_N_T,
+                    fusion_get_settings('site_path').'infusions/news/news_cats/'     => IMAGES_NC,
+                ]);
+                $data['news_extended'] = strtr($data['news_extended'], [
+                    fusion_get_settings('site_path').'images'                        => IMAGES,
+                    fusion_get_settings('site_path').'infusions/news/images'         => IMAGES_N,
+                    fusion_get_settings('site_path').'infusions/news/images/thumbs/' => IMAGES_N_T,
+                    fusion_get_settings('site_path').'infusions/news/news_cats/'     => IMAGES_NC,
+                ]);
+            }
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
 
