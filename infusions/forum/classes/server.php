@@ -158,10 +158,9 @@ abstract class ForumServer {
     protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
         if (iSUPERADMIN) {
             $this->forum_access = TRUE;
-
             return $this->forum_access;
         }
-        if (!$forum_id or !isnum($forum_id)) {
+        if (!$forum_id or isnum($forum_id)) {
             if ($thread_id && isnum($thread_id)) {
                 $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
                 $list[] = $forum_id;
