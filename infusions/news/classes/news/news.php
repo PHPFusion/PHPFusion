@@ -166,8 +166,6 @@ abstract class News extends NewsServer {
 				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
 				ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".self::check_NewsFilter()."
 				LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
-        print_p($query);
-
         return $query;
     }
 
