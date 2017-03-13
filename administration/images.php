@@ -141,7 +141,15 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
     echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
     echo "<div class='m-t-20'>\n";
         echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE));
-        echo form_fileinput("myfile", $locale['421'], "", array('upload_path' => $afolder, 'type' => 'image','required' => TRUE));
+    echo form_fileinput("myfile", $locale['421'], "", array(
+        'upload_path' => $afolder,
+        'type'        => 'image',
+        'valid_ext'   => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP|.svg|.SVG|.JPG|.tiff|.TIFF',
+        'max_width'   => 9999999999999999999999999999999999999999999,
+        'max_height'  => 999999999999999999999999999999999999999999,
+        'max_byte'    => 99999999999999999999999999999999999999999999, // 8gb
+        'required'    => TRUE
+    ));
         echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
     echo closeform();
     echo "</div>\n";
