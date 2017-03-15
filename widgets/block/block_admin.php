@@ -19,7 +19,7 @@
 /**
  * Class blockWidgetAdmin
  */
-class blockWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $instance = NULL;
     private static $widget_data = array();
@@ -73,34 +73,34 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
             self::$widget_data = \defender::unserialize(self::$colData['page_content']);
         }
 
-        echo form_text('block_title', $widget_locale['0200'], self::$widget_data['block_title'], array('inline' => TRUE));
-        echo form_textarea('block_description', $widget_locale['0201'], self::$widget_data['block_description'], array('inline' => TRUE));
-        echo form_select('block_align', $widget_locale['0202'], self::$widget_data['block_align'],
+        echo form_text('block_title', $widget_locale['BLKW_0200'], self::$widget_data['block_title'], array('inline' => TRUE));
+        echo form_textarea('block_description', $widget_locale['BLKW_0201'], self::$widget_data['block_description'], array('inline' => TRUE));
+        echo form_select('block_align', $widget_locale['BLKW_0202'], self::$widget_data['block_align'],
                          array(
                              'inline' => TRUE,
                              'options' => array(
-                                 '0' => $widget_locale['0203'],
-                                 'text-left' => $widget_locale['0204'],
-                                 'text-center' => $widget_locale['0205'],
-                                 'text-right' => $widget_locale['0206'],
+                                 '0'           => $widget_locale['BLKW_0203'],
+                                 'text-left'   => $widget_locale['BLKW_0204'],
+                                 'text-center' => $widget_locale['BLKW_0205'],
+                                 'text-right'  => $widget_locale['BLKW_0206'],
                              )
                          )
         );
-        echo form_text('block_class', $widget_locale['0207'], self::$widget_data['block_class'], array('inline' => TRUE));
+        echo form_text('block_class', $widget_locale['BLKW_0207'], self::$widget_data['block_class'], array('inline' => TRUE));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
-                <strong><?php echo $widget_locale['0218'] ?></strong><br/>
+                <strong><?php echo $widget_locale['BLKW_0218'] ?></strong><br/>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                echo form_text('block_margin', $widget_locale['0219'], self::$widget_data['block_margin'],
+                echo form_text('block_margin', $widget_locale['BLKW_0219'], self::$widget_data['block_margin'],
                                array(
                                    'inline' => TRUE,
                                    'width' => '250px',
                                )
                 );
-                echo form_text('block_padding', $widget_locale['0220'], self::$widget_data['block_padding'],
+                echo form_text('block_padding', $widget_locale['BLKW_0220'], self::$widget_data['block_padding'],
                                array(
                                    'inline' => TRUE,
                                    'width' => '250px',
@@ -114,8 +114,8 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
 
     public function display_form_button() {
         $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['0221'], 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', $widget_locale['0222'], 'widget', array('class' => 'btn-success'));
+        echo form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', array('class' => 'btn-primary'));
+        echo form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', array('class' => 'btn-success'));
     }
 
 }

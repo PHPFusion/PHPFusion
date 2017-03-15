@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Page\Composer;
 
-use PHPFusion\Page\Composer\Network\ComposeContent;
-use PHPFusion\Page\Composer\Network\ComposeEngine;
-use PHPFusion\Page\Composer\Network\ComposeSettings;
+use PHPFusion\Page\Composer\Node\ComposeContent;
+use PHPFusion\Page\Composer\Node\ComposeEngine;
+use PHPFusion\Page\Composer\Node\ComposeSettings;
 use PHPFusion\Page\PageAdmin;
 
 /**

@@ -32,10 +32,7 @@ class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
             <p><?php echo nl2br(parse_textarea($blockData['block_description'])) ?></p>
         </div>
         <?php
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return (string)$html;
+        return ob_get_clean();
     }
 
 }

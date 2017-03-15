@@ -19,7 +19,7 @@
 /**
  * Class ratingsWidgetAdmin
  */
-class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $instance = NULL;
 
@@ -53,9 +53,9 @@ class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine 
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
         if ($colId) {
-            addNotice('success', $widget_locale['0102']);
+            addNotice('success', $widget_locale['RTW_0102']);
         } else {
-            addNotice('danger', $widget_locale['0104']);
+            addNotice('danger', $widget_locale['RTW_0104']);
         }
         redirect(clean_request('', self::getComposerExclude(), FALSE));
     }
