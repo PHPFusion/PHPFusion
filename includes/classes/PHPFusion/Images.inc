@@ -117,6 +117,9 @@ class Images {
             case 'delete':
                 self::delete_images($_GET['view']);
                 break;
+            case 'update':
+    			include INCLUDES."buildlist.php";
+                break;
             default:
                 break;
         }
@@ -227,10 +230,11 @@ class Images {
                 echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['462']."</a></td>\n";
                 echo "</tr>\n";
             }
-            if (self::$settings['tinymce_enabled'] == 1) {
-                echo "<tr>\n<td align='center' colspan='2' class='tbl1'><a href='".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."&amp;action=update'>".self::$locale['464']."</a></td>\n</tr>\n";
-            }
         echo "</table>\n";
+            if (self::$settings['tinymce_enabled'] == 1) {
+            	$upd_link = clean_request("action=update", array("action"), FALSE);
+                echo "<div class='text-center well'><a href='".$upd_link."'>".self::$locale['464']."</a></div>\n";
+            }
         } else {
             echo "<div class='alert alert-info text-center'>".self::$locale['463']."</div>\n";
         }
