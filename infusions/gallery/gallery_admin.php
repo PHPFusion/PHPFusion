@@ -36,7 +36,7 @@ if (empty($gll_settings['gallery_file_types'])){
        "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
        );
        dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
-       self::$gll_settings = get_settings("gallery");
+       $gll_settings = get_settings("gallery");
 }
 
 add_to_head("
