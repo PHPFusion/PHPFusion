@@ -73,6 +73,7 @@ if (isset($_POST['delete_watermarks'])) {
                                                                                                            "photo_watermark_text_color3") : "#000000",
             "gallery_allow_submission" => isset($_POST['gallery_allow_submission']) ? 1 : 0,
             "gallery_extended_required" => isset($_POST['gallery_extended_required']) ? 1 : 0,
+            "gallery_file_types" => form_sanitizer($_POST['gallery_file_types'], "", "gallery_file_types"),
         );
         if (defender::safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
@@ -215,6 +216,24 @@ echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_
     'class' => 'btn-danger',
     'icon' => 'fa fa-trash'
 ));
+require_once INCLUDES."mimetypes_include.php";
+$mime = mimeTypes();
+$mime_opts = array();
+foreach ($mime as $m => $Mime) {
+	$ext = ".$m";
+	$mime_opts[$ext] = $ext;
+}
+sort($mime_opts);
+echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['gallery_file_types'],
+				 array(
+    			'options' => $mime_opts,
+    			'error_text' => $locale['error_type'],
+    			'placeholder' => $locale['choose'],
+    			'multiple' => TRUE,
+    			'tags' => TRUE,
+    			'width' => '100%',
+    			'delimiter' => '|'
+			));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
