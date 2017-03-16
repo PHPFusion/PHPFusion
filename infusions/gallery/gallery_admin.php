@@ -31,7 +31,7 @@ require_once INCLUDES."infusions_include.php";
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
  //Do not delete a week
-if (empty(self::$gll_settings['gallery_file_types'])){
+if (empty($gll_settings['gallery_file_types'])){
    	$inputSettings = array(
        "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
        );
