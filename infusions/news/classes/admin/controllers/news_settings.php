@@ -57,6 +57,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 "news_photo_max_h" => form_sanitizer($_POST['news_photo_max_h'], 1600, 'news_photo_max_h'),
                 "news_photo_max_b" => form_sanitizer($_POST['calc_b'], 150, 'calc_b') * form_sanitizer($_POST['calc_c'], 100000,
                                                                                                        'calc_c'),
+        	"news_file_types" => form_sanitizer($_POST['news_file_types'], "", "news_file_types"),
             );
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -175,6 +176,24 @@ class NewsSettingsAdmin extends NewsAdminModel {
                          array("options" => $cat_opts));
         echo form_select('news_thumb_ratio', $locale['954'], $news_settings['news_thumb_ratio'],
                          array("options" => $thumb_opts));
+        require_once INCLUDES."mimetypes_include.php";
+        $mime = mimeTypes();
+        $mime_opts = array();
+        foreach ($mime as $m => $Mime) {
+            $ext = ".$m";
+            $mime_opts[$ext] = $ext;
+        }
+        sort($mime_opts);
+	echo form_select('news_file_types', $locale['news_0271'], $news_settings['news_file_types'],
+			 array(
+    			'options' => $mime_opts,
+    			'error_text' => $locale['error_type'],
+    			'placeholder' => $locale['choose'],
+    			'multiple' => TRUE,
+    			'tags' => TRUE,
+    			'width' => '100%',
+    			'delimiter' => '|'
+		));
         closeside();
         echo "</div></div>\n";
         echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
