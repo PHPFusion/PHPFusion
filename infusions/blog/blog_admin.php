@@ -34,6 +34,14 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
+ //Do not delete a week
+if (empty(self::$blog_settings['blog_file_types'])){
+   	$inputSettings = array(
+       "settings_name" => 'blog_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "blog",
+       );
+       dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
+       self::$blog_settings = get_settings("blog");
+}
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
 
