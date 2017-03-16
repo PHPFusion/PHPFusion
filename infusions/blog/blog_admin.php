@@ -35,7 +35,7 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
  //Do not delete a week
-if (empty(self::$blog_settings['blog_file_types'])){
+if (empty($blog_settings['blog_file_types'])){
    	$inputSettings = array(
        "settings_name" => 'blog_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "blog",
        );
