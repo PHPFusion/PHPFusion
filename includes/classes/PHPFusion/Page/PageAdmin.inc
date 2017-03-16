@@ -125,19 +125,15 @@ class PageAdmin extends PageModel {
 
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $title]);
         }
-
         $tab_title['title'][] = self::$current_section == 'compose_frm' ? self::$locale['back'] : self::$locale['page_0205'];
         $tab_title['id'][] = 'cp1';
         $tab_title['icon'][] = self::$current_section == 'compose_frm' ? 'fa fa-arrow-left' : '';
-
         if (self::$current_section == 'compose_frm') {
             $tab_title['title'][] = self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200'];
             $tab_title['id'][] = 'compose_frm';
             $tab_title['icon'][] = 'fa fa-pencil';
         }
-
         $tab_active = self::$current_section;
-
         switch (self::$current_action) {
             case 'edit':
                 if (!empty(self::$current_pageId)) {
@@ -165,7 +161,6 @@ class PageAdmin extends PageModel {
             default:
                 opentable(self::$locale['page_0100']);
         }
-
         echo opentab($tab_title, $tab_active, 'cpa', TRUE, '', 'section', array('action', 'cpid'));
         if (self::$current_section == "compose_frm") {
             PageComposer::displayContent();
@@ -173,7 +168,6 @@ class PageAdmin extends PageModel {
             PageList::displayContent();
         }
         echo closetab();
-
         echo closetable();
     }
 
