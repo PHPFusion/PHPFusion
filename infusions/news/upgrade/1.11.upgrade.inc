@@ -81,6 +81,7 @@ $check_array = [
     'news_extended_required' => 0,
     'news_allow_submission' => 1,
     'news_allow_submission_files' => 1
+    'news_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('news');
 foreach ($check_array as $key => $value) {
