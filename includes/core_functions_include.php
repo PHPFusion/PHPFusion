@@ -343,7 +343,7 @@ function trimlink($text, $length) {
  * @return string
  */
 function fusion_first_words($text, $limit, $suffix = '&hellip;') {
-    $text = preg_replace('[\r\n]+', '', $text);
+    $text = preg_replace('/[\r\n]+/', '', $text);
     return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])
 				[[:punct:]]\s*
 		))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
