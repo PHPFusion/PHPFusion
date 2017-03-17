@@ -154,10 +154,11 @@ if ($data['album_image'] || $data['album_thumb1']) {
         "inline"            => TRUE,
         "template"          => "modern",
         "class"             => "m-b-0",
+        'valid_ext'         => $gll_settings['gallery_file_types'],
     );
     echo form_fileinput('album_image', $locale['album_0009'], "", $album_upload_settings);
     echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']),
-            str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'],
+            $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'],
             $gll_settings['photo_max_h'])."</div>\n";
 }
 echo "</div>\n";
