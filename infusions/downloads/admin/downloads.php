@@ -272,9 +272,7 @@ if (!empty($data['download_file'])) {
             str_replace(',', ' ', $dl_settings['download_types']))
     );
     echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
-    echo "<div class='col-xs-12 col-sm-3 p-l-0'><strong>".$locale['download_0217']."</strong></div><div class='col-xs-12 col-sm-9 p-l-0'>\n";
-    echo form_checkbox('calc_upload', $locale['download_0217'], '', ['reverse_label' => TRUE]);
-    echo "</div>\n";
+    echo form_checkbox('calc_upload', $locale['download_0217'], '', ['reverse_label' => FALSE]);
 }
 echo closetabbody();
 echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
