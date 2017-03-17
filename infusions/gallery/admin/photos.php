@@ -196,7 +196,8 @@ function photo_form() {
                 'inline'            => FALSE,
                 "template"          => "modern",
                 "error_text"        => $locale['photo_0014'],
-                "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"),
+                'valid_ext'         => $gll_settings['gallery_file_types'],
+                "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'],
                     $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])
             );
             echo form_fileinput('photo_image', $locale['photo_0004'], "", $upload_settings);
@@ -319,7 +320,8 @@ function mass_photo_form() {
             "multiple"          => TRUE,
             "inline"            => TRUE,
             "error_text"        => $locale['photo_0014'],
-            "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"),
+            'valid_ext'         => $gll_settings['gallery_file_types'],
+            "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'],
                 $gll_settings['photo_max_w'], $gll_settings['photo_max_h']),
         );
         echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], "", $upload_settings);
