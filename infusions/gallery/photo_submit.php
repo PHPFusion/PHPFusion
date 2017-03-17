@@ -137,9 +137,10 @@ if ($gll_settings['gallery_allow_submission']) {
                 "multiple"          => FALSE,
                 "inline"            => TRUE,
                 "error_text"        => $locale['photo_0014'],
+            	'valid_ext'         => $gll_settings['gallery_file_types'],
             ));
             echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']),
-                                                                                   str_replace(',', ' ', ".jpg,.gif,.png"),
+                                                                                   $gll_settings['gallery_file_types'],
                                                                                    $gll_settings['photo_max_w'],
                                                                                    $gll_settings['photo_max_h'])."</div>\n";
             echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
