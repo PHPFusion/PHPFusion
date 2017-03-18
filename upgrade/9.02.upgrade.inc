@@ -803,6 +803,7 @@ function move_photos($album_id) {
     }
 }
 
+if (db_exists(DB_PHOTO_ALBUMS)){
 $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS);
 
 if (dbrows($result) > 0) {
@@ -814,6 +815,7 @@ if (dbrows($result) > 0) {
             move_photos($data['album_id']);
         }
     }
+}
 }
 
 //Remove the whole old photoalbum dir including rouge files

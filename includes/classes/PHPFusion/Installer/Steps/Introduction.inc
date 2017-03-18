@@ -33,9 +33,10 @@ class InstallerIntroduction extends Install_Core {
     public function __recovery() {
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
             $validation = Requirements::get_system_validation();
-            if (!empty(fusion_get_settings('version'))) {
+            $current_version = fusion_get_settings('version');
+            if (!empty($current_version)) {
                 if (isset($validation[3])) {
-                    if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+                    if (version_compare(self::BUILD_VERSION, $current_version, ">")) {
                         return $this->step_Upgrade();
                     } else {
                         return $this->__RecoveryConsole();

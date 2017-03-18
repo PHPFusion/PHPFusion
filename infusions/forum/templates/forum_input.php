@@ -134,7 +134,6 @@ if (!function_exists("display_quickReply")) {
                                       'placeholder' => $locale['forum_0601']."...",
                                       'bbcode'      => TRUE,
                                       'required'    => TRUE,
-                                      'autosize'    => TRUE,
                                       'preview'     => TRUE,
                                       'form_name'   => 'quick_reply_form',
                                       'height'      => '250px'

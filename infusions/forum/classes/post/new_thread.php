@@ -357,12 +357,10 @@ class NewThread extends ForumServer {
                             array(
                                 'required'   => 1,
                                 'error_text' => '',
-                                'autosize'   => 1,
-                                'no_resize'  => 1,
                                 'preview'    => 1,
                                 'form_name'  => 'input_form',
                                 'bbcode'     => 1,
-                                'height'     => '300px'
+                                'height'     => '500px'
                             )),
                         'attachment_field'  => self::getPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]',

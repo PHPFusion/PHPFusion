@@ -344,6 +344,7 @@ class NewsAdmin extends NewsAdminModel {
                                 'thumbnail2_h'     => $news_settings['news_photo_h'],
                                 'type'             => 'image',
                                 'class'            => 'm-b-0',
+            					'valid_ext'        => $news_settings['news_file_types'],
                                 'template'         => 'thumbnail'
                             )
                         );
@@ -487,6 +488,7 @@ class NewsAdmin extends NewsAdminModel {
             'type'             => 'image',
             'template'         => 'modern',
             'class'            => 'm-b-0',
+            'valid_ext'        => $news_settings['news_file_types'],
             'multiple'         => TRUE
         );
 

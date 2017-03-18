@@ -147,10 +147,8 @@ abstract class News extends NewsServer {
      * @return string
      */
     protected static function get_NewsQuery(array $filters = array()) {
-
         $news_settings = self::get_news_settings();
-
-        return "SELECT tn.*, tc.*,
+        $query = "SELECT tn.*, tc.*,
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 				SUM(tr.rating_vote) AS sum_rating,
 				COUNT(tr.rating_item_id) AS count_votes,
@@ -162,13 +160,13 @@ abstract class News extends NewsServer {
 				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
 				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
 				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
-				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")."
-				".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
 				AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
-				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : "")."
+				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
 				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-				ORDER BY ".(!empty($filter['order']) ? $filters['order'] : "")." news_sticky DESC, ".self::check_NewsFilter()."
+				ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".self::check_NewsFilter()."
 				LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
+        return $query;
     }
 
     /**

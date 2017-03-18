@@ -80,7 +80,8 @@ $check_array = [
     'news_pagination' => 15,
     'news_extended_required' => 0,
     'news_allow_submission' => 1,
-    'news_allow_submission_files' => 1
+    'news_allow_submission_files' => 1,
+    'news_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('news');
 foreach ($check_array as $key => $value) {
@@ -114,6 +115,15 @@ if (!db_exists(DB_NEWS_IMAGES)) {
             '".$data['news_image_datestamp']."'
             )";
         }
+	    if (file_exists(IMAGES."news/".$data['news_image'])) {
+    		rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
+    	}
+	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
+        	rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
+    	}
+	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
+        	rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
+    	}
     }
 }
 
@@ -164,7 +174,7 @@ if (dbrows($result)) {
         'windows.gif'    => 'windows.svg',
     ];
     while ($data = dbarray($result)) {
-        $data['news_image'] = strtr($data['news_image'], $arr_defaults);
+        $data['news_cat_image'] = strtr($data['news_cat_image'], $arr_defaults);
         dbquery_insert(DB_NEWS_CATS, $data, 'update', ['keep_session' => TRUE]);
     }
 }

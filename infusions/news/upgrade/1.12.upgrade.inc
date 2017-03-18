@@ -1,4 +1,5 @@
 <?php
+$inf_version = '1.12';
 
 // News upgrade file.
 // Fix submissions for news gallery

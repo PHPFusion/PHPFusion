@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Page\Composer\Network;
+namespace PHPFusion\Page\Composer\Node;
 
 use PHPFusion\Page\PageAdmin;
 use PHPFusion\SiteLinks;

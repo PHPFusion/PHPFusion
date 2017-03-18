@@ -71,8 +71,8 @@ $check_array = [
     'photo_watermark_save' => 0,
     'gallery_pagination' => 24,
     'gallery_extended_required' => 1,
-    'gallery_allow_submission' => 1
-
+    'gallery_allow_submission' => 1,
+    'gallery_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('gallery');
 foreach ($check_array as $key => $value) {

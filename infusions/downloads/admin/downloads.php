@@ -252,7 +252,7 @@ echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
 
 if (!empty($data['download_file'])) {
     echo "<div class='m-t-20 m-b-20'>\n";
-    echo $locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
+    echo $locale['download_0214']." - <a href='".DOWNLOADS."files/".$data['download_file']."'>".DOWNLOADS."files/".$data['download_file']."</a>\n";
     echo form_button('del_upload', $locale['download_0216'], $data['download_id'],
         array('class' => 'm-b-0 pull-right btn-danger', 'icon' => 'fa fa-trash fa-fw'));
     echo form_hidden('download_file', '', $data['download_file']);
@@ -272,9 +272,7 @@ if (!empty($data['download_file'])) {
             str_replace(',', ' ', $dl_settings['download_types']))
     );
     echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
-    echo "<div class='col-xs-12 col-sm-3 p-l-0'><strong>".$locale['download_0217']."</strong></div><div class='col-xs-12 col-sm-9 p-l-0'>\n";
-    echo form_checkbox('calc_upload', $locale['download_0217'], '', ['reverse_label' => TRUE]);
-    echo "</div>\n";
+    echo form_checkbox('calc_upload', $locale['download_0217'], '', ['reverse_label' => FALSE]);
 }
 echo closetabbody();
 echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
@@ -340,12 +338,12 @@ if (isset($_GET['action']) && $_GET['action'] == "edit") {
 }
 closeside();
 openside();
-echo form_text('download_license', $locale['download_0208'], $data['download_license'], array('inline' => 1));
-echo form_text('download_copyright', $locale['download_0222'], $data['download_copyright'], array('inline' => 1));
-echo form_text('download_os', $locale['download_0209'], $data['download_os'], array('inline' => 1));
-echo form_text('download_version', $locale['download_0210'], $data['download_version'], array('inline' => 1));
-echo form_text('download_homepage', $locale['download_0221'], $data['download_homepage'], array('inline' => 1));
-echo form_text('download_filesize', $locale['download_0211'], $data['download_filesize'], array('inline' => 1));
+echo form_text('download_license', $locale['download_0208'], $data['download_license'], array('inline' => TRUE));
+echo form_text('download_copyright', $locale['download_0222'], $data['download_copyright'], array('inline' => TRUE));
+echo form_text('download_os', $locale['download_0209'], $data['download_os'], array('inline' => TRUE));
+echo form_text('download_version', $locale['download_0210'], $data['download_version'], array('inline' => TRUE));
+echo form_text('download_homepage', $locale['download_0221'], $data['download_homepage'], array('inline' => TRUE ,'type'   => 'url', 'regex'  => 'http(s)?\:\/\/(.*?)'));
+echo form_text('download_filesize', $locale['download_0211'], $data['download_filesize'], array('inline' => TRUE));
 closeside();
 echo "</div>\n</div>\n"; // end row.
 echo "<div class='m-t-20'>\n";

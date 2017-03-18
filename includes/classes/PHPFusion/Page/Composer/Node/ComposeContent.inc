@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Page\Composer\Network;
+namespace PHPFusion\Page\Composer\Node;
 
 use PHPFusion\Page\PageAdmin;
 
@@ -25,7 +25,7 @@ class ComposeContent extends PageAdmin {
     public static function displayContent() {
         // add page row and grid data to custom page
         if (empty(self::$data['page_datestamp'])) {
-            self::$data['page_datestamp'] = time();
+            self::$data['page_datestamp'] = TIME;
         }
         ?>
         <div class="row">

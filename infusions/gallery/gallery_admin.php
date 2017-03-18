@@ -30,6 +30,14 @@ require_once INCLUDES."infusions_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
+ //Do not delete a week
+if (empty($gll_settings['gallery_file_types'])){
+   	$inputSettings = array(
+       "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
+       );
+       dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
+       $gll_settings = get_settings("gallery");
+}
 
 add_to_head("
 <style>           

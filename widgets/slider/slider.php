@@ -55,7 +55,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
 
         } else {
 
-            return fusion_get_locale('0404', WIDGETS."slider/locale".LANGUAGE.".php");
+            return fusion_get_locale('SLDW_0404', WIDGETS."slider/locale".LANGUAGE.".php");
         }
     }
 

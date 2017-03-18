@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Page\Composer\Network;
+namespace PHPFusion\Page\Composer\Node;
 
 use PHPFusion\Page\PageAdmin;
 
@@ -26,31 +26,22 @@ class ComposeEngine extends PageAdmin {
 
     /**
      * Get the page composer exclude string
+     *
      * @return array
      */
     public static function getComposerExclude() {
         return self::$composer_exclude;
     }
 
-
+    /**
+     * access       $gridData, $rowData, $composerData, $locale, $composer_exclude
+     */
     public static function displayContent() {
-
         self::load_ComposerData();
-
-        // This is the composer
-        //echo form_button('add_row', 'Add Row', 'add row', array('class' => 'btn-primary m-r-10'));
-        ?>
-        <div class="composerAction m-b-20">
-            <a class="btn btn-primary m-r-10" href="<?php echo clean_request('compose=add_row', self::$composer_exclude, FALSE) ?>">
-                <?php echo self::$locale['page_0350'] ?>
-            </a>
-        </div>
-
-        <?php
+        self::cache_widget();
         if (isset($_POST['cancel_row'])) {
             redirect(clean_request('', self::$composer_exclude, FALSE));
         }
-
         if (isset($_GET['compose'])) {
             switch ($_GET['compose']) {
                 case "del_row":
@@ -87,10 +78,10 @@ class ComposeEngine extends PageAdmin {
                         $delCondition = "page_content_id=".intval($_GET['col_id'])." AND page_grid_id=".intval($_GET['row_id']);
                         if (dbcount("('page_content_id')", DB_CUSTOM_PAGES_CONTENT, $delCondition)) {
                             dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
-                                          'page_content_order',
-                                          self::$data['page_content_id'], 'page_content_id',
-                                          self::$colData['page_grid_id'], 'page_grid_id',
-                                          FALSE, '', 'delete');
+                                'page_content_order',
+                                self::$data['page_content_id'], 'page_content_id',
+                                self::$colData['page_grid_id'], 'page_grid_id',
+                                FALSE, '', 'delete');
 
                             // execute the widget delete
                             $currentWidget = self::$widgets[self::$colData['page_widget']];
@@ -112,10 +103,15 @@ class ComposeEngine extends PageAdmin {
             }
         }
         ?>
-        <section id='pageComposerLayout' class="m-t-20">
-
+        <div class='composerAction m-b-20'>
+            <a class='btn btn-primary m-r-10' href='<?php echo clean_request('compose=add_row', self::$composer_exclude, FALSE) ?>'>
+                <?php echo self::$locale['page_0350'] ?>
+            </a>
+        </div>
+        <section id='pageComposerLayout' class='spacer-sm'>
             <?php foreach (self::$composerData as $row_id => $columns) : ?>
                 <?php
+                $gridData = self::$gridData[$row_id];
                 $add_col_url = clean_request("compose=add_col&row_id=".$row_id, self::$composer_exclude, FALSE);
                 $edit_row_url = clean_request("compose=edit_row&row_id=".$row_id, self::$composer_exclude, FALSE);
                 $copy_row_url = clean_request("compose=copy_row&row_id=".$row_id, self::$composer_exclude, FALSE);
@@ -125,52 +121,65 @@ class ComposeEngine extends PageAdmin {
                         <i class="fa fa-arrows-alt"></i>
                     </div>
                  */
-
                 // check if row has page_content_type == 'content'
-                $_isContent = FALSE;
+                $_hasContent = FALSE;
                 if (!empty($columns)) {
                     foreach ($columns as $column_data) {
-                        if ($column_data['page_content_type'] == 'content') {
-                            $_isContent = TRUE;
+                        if (!empty($column_data['page_content_type'])) {
+                            $_hasContent = TRUE;
                         }
                     }
                 }
                 ?>
-                <div class="well">
-                    <?php if ($_isContent === FALSE) : ?>
-                    <div class="btn-group btn-group-sm m-b-10">
-                        <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="<?php echo self::$locale['page_0351'] ?>">
-                            <i class="fa fa-plus-circle"></i>
+                <div class='well'>
+                    <div class='btn-group btn-group-sm m-b-10'>
+                        <a class='btn btn-default' href='<?php echo $add_col_url ?>' title='<?php echo self::$locale['page_0351'] ?>'>
+                            <i class='fa fa-plus-circle'></i>
                         </a>
                     </div>
-                    <?php endif; ?>
-
-                    <div class="btn-group btn-group-sm m-b-10">
-                        <a class='btn btn-default' href="<?php echo $edit_row_url ?>" title="<?php echo self::$locale['page_0352'] ?>">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        <?php if ($_isContent === FALSE) : ?>
-                        <a class='btn btn-default' href="<?php echo $copy_row_url ?>" title="<?php echo self::$locale['page_0353'] ?>">
-                            <i class="fa fa-copy"></i>
-                        </a>
-                        <a class='btn btn-danger' href="<?php echo $del_row_url ?>" title="<?php echo self::$locale['page_0354'] ?>">
-                            <i class="fa fa-trash"></i>
-                        </a>
+                    <div class='pull-right'>
+                        <?php if ($gridData['page_grid_html_id']) : ?>
+                            <span class='label label-success'>HTML: #<?php echo $gridData['page_grid_html_id'] ?></span>
+                        <?php endif; ?>
+                        <?php if ($gridData['page_grid_class']) : ?>
+                            <span class='label label-warning'>CSS: .<?php echo $gridData['page_grid_class'] ?></span>
                         <?php endif; ?>
                     </div>
-                    <?php if (!empty($columns)) : ?>
-                        <div class="row">
+                    <div class='btn-group btn-group-sm m-b-10'>
+                        <a class='btn btn-default' href='<?php echo $edit_row_url ?>' title='<?php echo self::$locale['page_0352'] ?>'>
+                            <i class='fa fa-cog'></i>
+                        </a>
+                        <a class='btn btn-default' href='<?php echo $copy_row_url ?>' title='<?php echo self::$locale['page_0353'] ?>'>
+                            <i class='fa fa-copy'></i>
+                        </a>
+                        <a class='btn btn-danger' href='<?php echo $del_row_url ?>' title='<?php echo self::$locale['page_0354'] ?>'>
+                            <i class='fa fa-trash'></i>
+                        </a>
+                    </div>
+                    <div class='row spacer-xs'>
+                        <?php if (!empty($columns)) : ?>
                             <?php
                             foreach ($columns as $column_id => $columnData) :
                                 self::draw_cols($columnData, $columns);
                             endforeach;
                             ?>
-                        </div>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                        <?php
+                        // grid is 3
+                        // current column count is 1
+                        $column_count = $_hasContent ? count($columns) : 0;
+                        for ($i = $gridData['page_grid_column_count']; $i > $column_count; $i--) {
+                            $style = "border:1px dashed #ccc; min-height:60px; content:''";
+                            ?>
+                            <div class='<?php echo self::calculateSpan($gridData['page_grid_column_count'], count($columns)) ?>'>
+                                <div style='<?php echo $style ?>'></div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
                 </div>
-
             <?php endforeach; ?>
-
         </section>
         <?php
     }
@@ -178,7 +187,7 @@ class ComposeEngine extends PageAdmin {
     /**
      * Deletes Row and associated Columns
      */
-    public static function execute_RowDelete() {
+    protected static function execute_RowDelete() {
         if (!empty(self::$rowData['page_grid_id'])) {
             $query = "SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id'];
             $result = dbquery($query);
@@ -200,7 +209,7 @@ class ComposeEngine extends PageAdmin {
     /**
      * Duplicate Row and associated Columns
      */
-    public static function execute_RowDuplicate() {
+    protected static function execute_RowDuplicate() {
         if (!empty(self::$rowData['page_grid_id'])) {
             // save new grid id.
             $rowData = self::$rowData;
@@ -233,33 +242,33 @@ class ComposeEngine extends PageAdmin {
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
-    private static function validate_RowData() {
+    protected static function validate_RowData() {
 
         self::$rowData = array(
-            'page_grid_id' => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
-            'page_id' => self::$data['page_id'],
+            'page_grid_id'           => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
+            'page_id'                => self::$data['page_id'],
             'page_grid_column_count' => form_sanitizer($_POST['page_grid_column_count'], 1, 'page_grid_column_count'),
-            'page_grid_html_id' => form_sanitizer($_POST['page_grid_html_id'], '', 'page_grid_html_id'),
-            'page_grid_container' => form_sanitizer($_POST['page_grid_container'], '', 'page_grid_container'),
-            'page_grid_class' => form_sanitizer($_POST['page_grid_class'], '', 'page_grid_class'),
-            'page_grid_order' => form_sanitizer($_POST['page_grid_order'], 0, 'page_grid_order')
+            'page_grid_html_id'      => form_sanitizer($_POST['page_grid_html_id'], '', 'page_grid_html_id'),
+            'page_grid_container'    => form_sanitizer($_POST['page_grid_container'], '', 'page_grid_container'),
+            'page_grid_class'        => form_sanitizer($_POST['page_grid_class'], '', 'page_grid_class'),
+            'page_grid_order'        => form_sanitizer($_POST['page_grid_order'], 0, 'page_grid_order')
         );
 
         if (empty(self::$rowData['page_grid_order'])) {
             self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$data['page_id']),
-                                                         0) + 1;
+                    0) + 1;
         }
     }
 
-    public static function execute_RowUpdate() {
+    protected static function execute_RowUpdate() {
         if (\defender::safe()) {
             if (!empty(self::$rowData['page_grid_id'])) {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
-                              self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
+                    self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
                 dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'update');
             } else {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
-                              self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'save');
+                    self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'save');
                 dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'save');
             }
             redirect(clean_request('', array('compose'), FALSE));
@@ -270,40 +279,39 @@ class ComposeEngine extends PageAdmin {
         ob_start();
         echo openmodal('addRowfrm',
                 (isset($_GET['compose']) && $_GET['compose'] == 'edit_row' ? self::$locale['page_0352'] : self::$locale['page_0350']),
-                       array('static' => TRUE)).
+                array('static' => TRUE)).
             openform('rowform', 'post', FUSION_REQUEST).
             form_hidden('page_grid_id', '', self::$rowData['page_grid_id']).
             form_btngroup('page_grid_column_count', self::$locale['page_0380'], self::$rowData['page_grid_column_count'],
-                          array(
-                              'options' => array(
-                                  1 => format_word(1, self::$locale['page_0381']),
-                                  2 => format_word(2, self::$locale['page_0381']),
-                                  3 => format_word(3, self::$locale['page_0381']),
-                                  4 => format_word(4, self::$locale['page_0381']),
-                                  6 => format_word(6, self::$locale['page_0381']),
-                                  12 => format_word(12, self::$locale['page_0381']),
-                              ),
-                              'inline' => TRUE,
-                          )
+                array(
+                    'options' => array(
+                        1  => format_word(1, self::$locale['page_0381']),
+                        2  => format_word(2, self::$locale['page_0381']),
+                        3  => format_word(3, self::$locale['page_0381']),
+                        4  => format_word(4, self::$locale['page_0381']),
+                        6  => format_word(6, self::$locale['page_0381']),
+                        12 => format_word(12, self::$locale['page_0381']),
+                    ),
+                    'inline'  => TRUE,
+                )
             ).
             form_btngroup('page_grid_container', self::$locale['page_0359'], self::$rowData['page_grid_container'],
-                          array(
-                              'options' => array(0 => self::$locale['disable'], 1 => self::$locale['enable']),
-                              'inline' => TRUE,
-                          )
+                array(
+                    'options' => array(0 => self::$locale['disable'], 1 => self::$locale['enable']),
+                    'inline'  => TRUE,
+                )
             ).
             form_text('page_grid_html_id', self::$locale['page_0382'], self::$rowData['page_grid_html_id'],
-                      array('placeholder' => 'HTML Id', 'inline' => TRUE,)).
+                array('placeholder' => 'HTML Id', 'inline' => TRUE,)).
             form_text('page_grid_class', self::$locale['page_0383'], self::$rowData['page_grid_class'],
-                      array('placeholder' => 'HTML Class', 'inline' => TRUE,)).
+                array('placeholder' => 'HTML Class', 'inline' => TRUE,)).
             form_text('page_grid_order', self::$locale['page_0384'], self::$rowData['page_grid_order'],
-                      array('type' => 'number', 'inline' => TRUE, 'width' => '150px')).
+                array('type' => 'number', 'inline' => TRUE, 'width' => '150px')).
             form_button('save_row', self::$locale['save'], 'save_row', array('class' => 'btn-primary m-r-10')).
             form_button('cancel_row', self::$locale['cancel'], 'cancel_row').
             closeform();
         echo closemodal();
-        add_to_footer(ob_get_contents());
-        ob_end_clean();
+        add_to_footer(ob_get_clean());
     }
 
     // Widget selection menu
@@ -315,20 +323,20 @@ class ComposeEngine extends PageAdmin {
             <div class="p-b-20 m-0 clearfix">
                 <?php
                 if (!empty($widget_cache)) : ?>
-                    <div class="row">
-                        <?php foreach (self::cache_widget() as $widget_file => $widget) : ?>
-                            <div class="col-xs-4 col-sm-3 text-center">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <?php echo $widget['widget_icon'] ?>
-                                        <h5 class="m-t-0 m-b-0"><?php echo $widget['widget_title'] ?></h5>
+                    <div class='row'>
+                        <?php foreach (self::cache_widget() as $widget_file => $widget) :
+                            ?>
+                            <div class='col-xs-4 col-sm-3 text-center'>
+                                <div class='panel panel-default'>
+                                    <div class='panel-body'>
+                                        <img style='width:40px; margin:15px;' src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>'/>
+                                        <h5 class='m-t-0 m-b-0'><?php echo $widget['widget_title'] ?></h5>
                                         <?php echo $widget['widget_description'] ?>
                                     </div>
-                                    <div class="panel-footer">
-                                        <a class="btn btn-xs btn-primary" href="<?php echo clean_request(
-                                            'compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'],
-                                            self::$composer_exclude, FALSE
-                                        ) ?>"><?php echo self::$locale['page_0391'] ?></a>
+                                    <div class='panel-footer'>
+                                        <a class='btn btn-primary' href='<?php echo clean_request('compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'], self::$composer_exclude, FALSE) ?>'>
+                                            <?php echo self::$locale['page_0391'] ?>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -337,17 +345,15 @@ class ComposeEngine extends PageAdmin {
                 <?php endif; ?>
             </div>
             <?php
-            echo modalfooter("
-            <a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude, FALSE)."'>".self::$locale['cancel']."</a>
-            ");
+            echo modalfooter("<a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude, FALSE)."'>".self::$locale['cancel']."</a>");
             echo closemodal();
-            add_to_footer(ob_get_contents()).ob_end_clean();
+            add_to_footer(ob_get_clean());
         else:
             redirect(clean_request('', self::$composer_exclude, FALSE));
         endif;
     }
 
-    public static function get_colData() {
+    protected static function get_colData() {
         if (!empty(self::$composerData) && isset($_GET['row_id']) && isset($_GET['col_id']) &&
             !empty(self::$composerData[$_GET['row_id']][$_GET['col_id']])
         ) {
@@ -385,21 +391,21 @@ class ComposeEngine extends PageAdmin {
                 }
 
                 self::$colData = array(
-                    'page_id' => self::$data['page_id'],
-                    'page_grid_id' => self::$rowData['page_grid_id'],
-                    'page_content_id' => self::$colData['page_content_id'],
-                    'page_content_type' => $currentWidget['widget_title'],
-                    'page_widget' => $currentWidget['widget_name'],
+                    'page_id'            => self::$data['page_id'],
+                    'page_grid_id'       => self::$rowData['page_grid_id'],
+                    'page_content_id'    => self::$colData['page_content_id'],
+                    'page_content_type'  => $currentWidget['widget_title'],
+                    'page_widget'        => $currentWidget['widget_name'],
                     'page_content_order' => (isset($_POST['page_content_order'])) ? form_sanitizer($_POST['page_content_order'], 0,
-                                                                                                   'page_content_order') :
+                        'page_content_order') :
                         self::$colData['page_content_order'],
-                    'page_content' => self::$colData['page_content'],
-                    'page_options' => self::$colData['page_options']
+                    'page_content'       => self::$colData['page_content'],
+                    'page_options'       => self::$colData['page_options']
                 );
 
                 if (self::$colData['page_content_order'] < 1) {
                     self::$colData['page_content_order'] = dbresult(dbquery("SELECT COUNT(page_content_id) 'content_count' FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id']),
-                                                                    0) + 1;
+                            0) + 1;
                 }
 
                 // Override the content or the options - depending on the button pushed. Default is previous data.
@@ -422,19 +428,19 @@ class ComposeEngine extends PageAdmin {
                 if (\defender::safe()) {
                     if (self::$colData['page_content_id'] > 0) {
                         dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
-                                      'page_content_order',
-                                      self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
-                                      'page_grid_id',
-                                      FALSE, '', 'update');
+                            'page_content_order',
+                            self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
+                            'page_grid_id',
+                            FALSE, '', 'update');
 
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                         addNotice('success', self::$locale['page_0408']);
                     } else {
                         dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
-                                      'page_content_order',
-                                      self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
-                                      'page_grid_id',
-                                      FALSE, '', 'save');
+                            'page_content_order',
+                            self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
+                            'page_grid_id',
+                            FALSE, '', 'save');
 
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
                         self::$colData['page_content_id'] = dblastid();
@@ -449,7 +455,7 @@ class ComposeEngine extends PageAdmin {
 
                     if (isset($_POST['save_and_close_widget'])) {
                         redirect(clean_request('col_id='.self::$colData['page_content_id'], self::$composer_exclude,
-                                               FALSE));
+                            FALSE));
                     } else {
 
                         redirect(clean_request('col_id='.self::$colData['page_content_id'], array('col_id'), FALSE));
@@ -479,16 +485,16 @@ class ComposeEngine extends PageAdmin {
                 ?>
             </div>
             <?php echo form_text('page_content_order', self::$locale['page_0355a'], self::$colData['page_content_order'], [
-                'type' => 'number',
-                'required' => FALSE,
-                'inline' => TRUE,
+                'type'        => 'number',
+                'required'    => FALSE,
+                'inline'      => TRUE,
                 'inner_width' => '150px'
             ]); ?>
 
             <?php
             echo modalfooter($object_button."<a class='btn btn-default' href='".clean_request('',
-                                                                                                     self::$composer_exclude,
-                                                                                                     FALSE)."'>".self::$locale['cancel']."</a>
+                    self::$composer_exclude,
+                    FALSE)."'>".self::$locale['cancel']."</a>
             ");
             echo closeform();
             echo closemodal();
@@ -502,14 +508,14 @@ class ComposeEngine extends PageAdmin {
     /**
      * Duplicate a Column
      */
-    public static function execute_ColDuplicate() {
+    protected static function execute_ColDuplicate() {
         if (isset($_GET['col_id']) && isnum($_GET['col_id'])) {
             $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_content_id=".intval($_GET['col_id']));
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $data['page_content_id'] = 0;
                 $data['page_content_order'] = dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
-                                                      "page_grid_id=".self::$rowData['page_grid_id']) + 1;
+                        "page_grid_id=".self::$rowData['page_grid_id']) + 1;
                 $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
                 if (!$colId) {
                     \defender::stop();
@@ -523,50 +529,63 @@ class ComposeEngine extends PageAdmin {
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
+    protected static function get_widget_icon($widget_icon_path) {
+        $default_widget = ADMIN.'images/widget.svg';
+
+        return file_exists($widget_icon_path) && !is_dir($widget_icon_path) ? $widget_icon_path : $default_widget;
+    }
+
     // Internal Administration Column Renderer
     protected static function draw_cols($colData, $columns) {
-
         if ($colData['page_content_id']) :
-
-            $edit_link = clean_request(
-                'compose=configure_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'].'&widget_type='.$colData['page_widget'],
-                self::$composer_exclude,
-                FALSE
-            );
-            $copy_link = clean_request(
-                'compose=copy_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'],
-                self::$composer_exclude,
-                FALSE
-            );
-            $delete_link = clean_request(
-                'compose=del_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'],
-                self::$composer_exclude,
-                FALSE
-            );
+            $widget_path = '';
+            if (isset(self::$widgets[$colData['page_widget']]['widget_icon'])) {
+                $widget_path = WIDGETS.$colData['page_widget'].'/'.self::$widgets[$colData['page_widget']]['widget_icon'];
+            }
+            $widget_img_path = self::get_widget_icon($widget_path);
+            $edit_link = clean_request('compose=configure_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'].'&widget_type='.$colData['page_widget'], self::$composer_exclude, FALSE);
+            $copy_link = clean_request('compose=copy_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'], self::$composer_exclude, FALSE);
+            $delete_link = clean_request('compose=del_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'], self::$composer_exclude, FALSE);
             ?>
-
-            <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
-                <div class="list-group-item m-t-10 text-center" style="border:1px solid #ddd; background: #fff;">
-                    <h5><?php
-                        if ($colData['page_content_type'] == 'content') {
-                            echo self::$locale['page_0441'];
-                        } else {
-                            ucfirst($colData['page_content_type']);
-                        }
-                    ?></h5>
+            <div class='<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>'>
+                <div class='list-group-item m-t-5 m-b-5' style='border:1px solid #ddd; background: #fff;'>
                     <?php if (!empty($colData['page_widget'])) : ?>
-                        <div class="btn-group btn-group-sm">
-                            <a class="btn btn-default" href="<?php echo $edit_link ?>" title="<?php echo self::$locale['page_0356'] ?>"><i
-                                    class="fa fa-cog"></i></a>
-                            <a class="btn btn-default" href="<?php echo $copy_link ?>" title="<?php echo self::$locale['page_0357'] ?>"><i
-                                    class="fa fa-copy"></i></a>
-                            <a class="btn btn-default" href="<?php echo $delete_link ?>" title="<?php echo self::$locale['page_0358'] ?>"><i
-                                    class="fa fa-minus-circle"></i></a>
+                        <div class='pull-left m-r-10' style='width:40px;'>
+                            <img class='img-responsive' src='<?php echo $widget_img_path ?>'/>
+                        </div>
+                        <div class='pull-right m-l-10'>
+                            <div class='btn-group btn-group-sm'>
+                                <a class='btn btn-default' href='<?php echo $edit_link ?>' title='<?php echo self::$locale['page_0356'] ?>'>
+                                    <i class='fa fa-cog'></i>
+                                </a>
+                                <a class='btn btn-default' href='<?php echo $copy_link ?>' title='<?php echo self::$locale['page_0357'] ?>'>
+                                    <i class='fa fa-copy'></i>
+                                </a>
+                                <a class='btn btn-default' href='<?php echo $delete_link ?>' title='<?php echo self::$locale['page_0358'] ?>'>
+                                    <i class='fa fa-minus-circle'></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class='overflow-hide'>
+                            <h5 class='m-0' style='font-size:110%;'><?php
+                                if ($colData['page_content_type'] == 'content') {
+                                    echo self::$locale['page_0441'];
+                                    echo "</h5>\n";
+                                } else {
+                                    echo ucfirst($colData['page_content_type'])."</h5>\n<i class='text-lighter'>";
+                                    $current_widget = self::$widgets[$colData['page_widget']]['display_instance'];
+                                    if (method_exists($current_widget, 'display_info')) {
+                                        echo $current_widget->display_info($colData);
+                                    } else {
+                                        echo fusion_get_locale('na');
+                                    }
+                                    echo "</i>\n";
+                                }
+                                ?>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
         <?php endif;
     }
-
 }

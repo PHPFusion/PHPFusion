@@ -19,7 +19,7 @@
 /**
  * Class fileWidgetAdmin
  */
-class fileWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $instance = NULL;
     private static $widget_data = array();

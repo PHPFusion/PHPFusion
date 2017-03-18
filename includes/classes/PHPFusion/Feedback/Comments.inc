@@ -261,7 +261,7 @@ class Comments {
                                 'form_name' => 'inputform',
                                 "tinymce"   => "simple",
                                 'wordcount' => TRUE,
-                                'type'      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
+                                'type'      => 'bbcode',
                             )
                         ) : $this->locale['c105']),
                         '{%comments_ratings_input%}' => $ratings_input,

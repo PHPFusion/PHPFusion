@@ -377,12 +377,10 @@ class ViewThread extends ForumServer {
                     array(
                         'required'   => TRUE,
                         'error_text' => '',
-                        'autosize'   => TRUE,
-                        'no_resize'  => TRUE,
                         'preview'    => TRUE,
                         'form_name'  => 'input_form',
                         'bbcode'     => TRUE,
-                        'height'     => '300px',
+                        'height'     => '500px',
                     )),
                 // happens only in EDIT
                 'delete_field'      => '',
@@ -667,9 +665,9 @@ class ViewThread extends ForumServer {
                             : form_hidden("thread_subject", "", $thread_data['thread_subject']),
                         'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                             array('required'  => TRUE,
-                                  'autosize'  => TRUE,
-                                  'no_resize' => TRUE,
+                                  'height'    => '300px',
                                   'preview'   => TRUE,
+                                  'no_resize' => FALSE,
                                   'form_name' => 'input_form',
                                   'bbcode'    => TRUE
                             )),

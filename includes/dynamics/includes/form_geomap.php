@@ -179,7 +179,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         success: function(data) {
         //$('#state-spinner').hide();
         $('#".$input_id."-state').select2({
-        placeholder: 'Select State ".($options['required'] == 1 ? '*' : '')."',
+        placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
         allowClear: true,
         data : data
         });
@@ -195,10 +195,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 }
 
 function form_location($input_name, $label = '', $input_value = FALSE, array $options = array()) {
-    global $defender;
-
     $locale = fusion_get_locale();
-
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     if (!defined('PLOCATION')) {
@@ -257,10 +254,10 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -352,13 +349,13 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
 
-    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
     $html .= "</div>\n";
 
-    $defender->add_field_session(array(
+    \defender::add_field_session(array(
                                      'input_name' => $input_name,
                                      'type' => 'textbox',
                                      'title' => trim($title, '[]'),

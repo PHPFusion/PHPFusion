@@ -19,7 +19,7 @@
  * Class carouselWidgetAdmin
  * To use WidgetAdminInterface - Widget SDK Standard Guidelines
  */
-class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $widget_data = array();
     private static $exclude_return = array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
@@ -91,7 +91,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
                                     self::$colData['page_content'] = \defender::serialize($slider_arr);
                                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
-                                    addNotice('success', self::$slider_locale['0200']);
+                                    addNotice('success', self::$slider_locale['SLDW_0200']);
                                     redirect(clean_request('slider=cur_slider', array('widgetAction', 'widgetKey'), FALSE));
                                 }
 
@@ -118,19 +118,19 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             if (empty(self::$colData['page_options'])) {
 
                 self::$new_slider = TRUE;
-                self::$slider_tab['title'][2] = self::$slider_locale['0406'];
+                self::$slider_tab['title'][2] = self::$slider_locale['SLDW_0406'];
                 self::$slider_tab['id'][2] = "slider_settings";
                 self::$tab_active = self::$slider_tab['id'][2];
 
             } else {
 
-                self::$slider_tab['title'][0] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['back'] : self::$slider_locale['0300']);
+                self::$slider_tab['title'][0] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['SLDW_back'] : self::$slider_locale['SLDW_0300']);
                 self::$slider_tab['id'][0] = "cur_slider";
 
-                self::$slider_tab['title'][1] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['0301'] : self::$slider_locale['0302']);
+                self::$slider_tab['title'][1] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['SLDW_0301'] : self::$slider_locale['SLDW_0302']);
                 self::$slider_tab['id'][1] = "slider_frm";
 
-                self::$slider_tab['title'][2] = self::$slider_locale['0303'];
+                self::$slider_tab['title'][2] = self::$slider_locale['SLDW_0303'];
                 self::$slider_tab['id'][2] = "slider_settings";
 
                 self::$tab_active = isset($_GET['slider']) && in_array($_GET['slider'],
@@ -265,10 +265,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 <table class="table table-responsive">
                     <thead>
                     <tr>
-                        <th><?php echo self::$slider_locale['0400'] ?></th>
-                        <th><?php echo self::$slider_locale['0401'] ?></th>
-                        <th><?php echo self::$slider_locale['0402'] ?></th>
-                        <th><?php echo self::$slider_locale['0403'] ?></th>
+                        <th><?php echo self::$slider_locale['SLDW_0400'] ?></th>
+                        <th><?php echo self::$slider_locale['SLDW_0401'] ?></th>
+                        <th><?php echo self::$slider_locale['SLDW_0402'] ?></th>
+                        <th><?php echo self::$slider_locale['SLDW_0403'] ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -286,9 +286,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                             <td><?php echo $slider['slider_order'] ?></td>
                             <td>
                                 <a href="<?php echo $edit_link ?>">
-                                    <?php echo self::$slider_locale['edit'] ?>
+                                    <?php echo self::$slider_locale['SLDW_edit'] ?>
                                 </a> - <a href="<?php echo $del_link ?>">
-                                    <?php echo self::$slider_locale['delete'] ?>
+                                    <?php echo self::$slider_locale['SLDW_delete'] ?>
                                 </a>
                             </td>
                         </tr>
@@ -302,13 +302,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
             } else {
                 ?>
-                <div class="text-center well"><?php echo self::$slider_locale['0404'] ?></div>
+                <div class="text-center well"><?php echo self::$slider_locale['SLDW_0404'] ?></div>
                 <?php
             }
 
         } else {
             ?>
-            <div class="text-center well"><?php echo self::$slider_locale['0404'] ?></div>
+            <div class="text-center well"><?php echo self::$slider_locale['SLDW_0404'] ?></div>
             <?php
         }
     }
@@ -320,14 +320,14 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
         if (!empty(self::$colData['page_options'])) {
             echo "<div class='m-t-20'>\n";
-            echo "<div class='well'>".self::$slider_locale['0405']."</div>\n";
+            echo "<div class='well'>".self::$slider_locale['SLDW_0405']."</div>\n";
             echo "</div>\n";
             echo "<hr />\n";
         }
 
         // Folder options
         $image_options = array(
-            0 => self::$slider_locale['0535']
+            0 => self::$slider_locale['SLDW_0535']
         );
         $options = makefilelist(IMAGES, '.|..|._DS_STORE', TRUE, 'folders', '.|..|._DS_STORE');
         if (!empty($options)) {
@@ -336,23 +336,23 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             }
         }
 
-        echo form_text('slider_id', self::$slider_locale['0500'], self::$slider_settings['slider_id'], array('inline' => TRUE)).
-            form_select('slider_path', self::$slider_locale['0534'], self::$slider_settings['slider_path'],
+        echo form_text('slider_id', self::$slider_locale['SLDW_0500'], self::$slider_settings['slider_id'], array('inline' => TRUE)).
+            form_select('slider_path', self::$slider_locale['SLDW_0534'], self::$slider_settings['slider_path'],
                         array('inline' => TRUE, 'options' => $image_options)).
-            form_text('slider_height', self::$slider_locale['0501'], self::$slider_settings['slider_height'],
+            form_text('slider_height', self::$slider_locale['SLDW_0501'], self::$slider_settings['slider_height'],
                       array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px')).
-            form_text('slider_interval', self::$slider_locale['0603'], self::$slider_settings['slider_interval'],
+            form_text('slider_interval', self::$slider_locale['SLDW_0603'], self::$slider_settings['slider_interval'],
                   array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'ms', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
-                <strong><?php echo self::$slider_locale['0502'] ?></strong>
-                <br/><i><?php echo self::$slider_locale['0304'] ?></i></div>
+                <strong><?php echo self::$slider_locale['SLDW_0502'] ?></strong>
+                <br/><i><?php echo self::$slider_locale['SLDW_0304'] ?></i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
                 $options = array(
-                    0 => self::$slider_locale['0503'],
-                    1 => self::$slider_locale['0504']
+                    0 => self::$slider_locale['SLDW_0503'],
+                    1 => self::$slider_locale['SLDW_0504']
                 );
                 echo form_checkbox('slider_navigation', '', self::$slider_settings['slider_navigation'],
                                    array('type' => 'radio', 'options' => $options));
@@ -360,12 +360,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-3"><?php echo self::$slider_locale['0505'] ?><br/><i><?php echo self::$slider_locale['0506'] ?></i></div>
+            <div class="col-xs-12 col-sm-3"><?php echo self::$slider_locale['SLDW_0505'] ?><br/><i><?php echo self::$slider_locale['SLDW_0506'] ?></i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
                 $options = array(
-                    0 => self::$slider_locale['0507'],
-                    1 => self::$slider_locale['0508']
+                    0 => self::$slider_locale['SLDW_0507'],
+                    1 => self::$slider_locale['SLDW_0508']
                 );
                 echo form_checkbox('slider_indicator', '', self::$slider_settings['slider_indicator'],
                                    array('type' => 'radio', 'options' => $options));
@@ -382,88 +382,88 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         ?>
         <div class="row m-t-20">
             <div class="col-xs-12 col-sm-3">
-                <strong><?php echo self::$slider_locale['0510'] ?></strong><br/><i><?php echo self::$slider_locale['0511'] ?></i>
+                <strong><?php echo self::$slider_locale['SLDW_0510'] ?></strong><br/><i><?php echo self::$slider_locale['SLDW_0511'] ?></i>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
                 echo form_fileinput('slider_image_src', '', self::$slider_content['slider_image_src'],
                                     array(
                                         'upload_path' => IMAGES.self::$slider_settings['slider_path']."/",
-                                        'required' => TRUE,
-                                        'template' => 'modern',
-                                        'media' => TRUE,
-                                        'error_text' => self::$slider_locale['0512'],
-                                        "max_width" => 2000,
-                                        "max_height" => 1800,
-                                        "max_byte" => 150000000,
+                                        'required'    => TRUE,
+                                        'template'    => 'modern',
+                                        'media'       => TRUE,
+                                        'error_text'  => self::$slider_locale['SLDW_0512'],
+                                        "max_width"   => 2000,
+                                        "max_height"  => 1800,
+                                        "max_byte"    => 150000000,
                                     )
                 );
                 ?>
             </div>
         </div>
         <?php
-        echo form_text('slider_title', self::$slider_locale['0513'], self::$slider_content['slider_title'], array('inline' => TRUE));
-        echo form_textarea('slider_description', self::$slider_locale['0514'], self::$slider_content['slider_description'], array('inline' => TRUE));
-        echo form_text('slider_link', self::$slider_locale['0515'], self::$slider_content['slider_link'], array('inline' => TRUE, 'type' => 'url'));
-        echo form_text('slider_order', self::$slider_locale['0516'], self::$slider_content['slider_order'],
+        echo form_text('slider_title', self::$slider_locale['SLDW_0513'], self::$slider_content['slider_title'], array('inline' => TRUE));
+        echo form_textarea('slider_description', self::$slider_locale['SLDW_0514'], self::$slider_content['slider_description'], array('inline' => TRUE));
+        echo form_text('slider_link', self::$slider_locale['SLDW_0515'], self::$slider_content['slider_link'], array('inline' => TRUE, 'type' => 'url'));
+        echo form_text('slider_order', self::$slider_locale['SLDW_0516'], self::$slider_content['slider_order'],
                        array('inline' => TRUE, 'type' => 'number', 'width' => '100px'));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
-                <strong><?php echo self::$slider_locale['0517'] ?></strong><br/><i><?php echo self::$slider_locale['0518'] ?></i>
+                <strong><?php echo self::$slider_locale['SLDW_0517'] ?></strong><br/><i><?php echo self::$slider_locale['SLDW_0518'] ?></i>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                echo form_text('slider_caption_offset', self::$slider_locale['0519'], self::$slider_content['slider_caption_offset'],
+                echo form_text('slider_caption_offset', self::$slider_locale['SLDW_0519'], self::$slider_content['slider_caption_offset'],
                                array(
-                                   'inline' => TRUE,
-                                   'type' => 'number',
-                                   'append' => TRUE,
+                                   'inline'       => TRUE,
+                                   'type'         => 'number',
+                                   'append'       => TRUE,
                                    'append_value' => 'px',
-                                   'width' => '100px',
-                                   'ext_tip' => self::$slider_locale['0520'],
-                                   'required' => TRUE
+                                   'width'        => '100px',
+                                   'ext_tip'      => self::$slider_locale['SLDW_0520'],
+                                   'required'     => TRUE
                                ));
                 $options = array(
-                    'text-left' => self::$slider_locale['0521'],
-                    'text-right' => self::$slider_locale['0522'],
-                    'text-center' => self::$slider_locale['0523']
+                    'text-left'   => self::$slider_locale['SLDW_0521'],
+                    'text-right'  => self::$slider_locale['SLDW_0522'],
+                    'text-center' => self::$slider_locale['SLDW_0523']
                 );
-                echo form_select('slider_caption_align', self::$slider_locale['0524'], self::$slider_content['slider_caption_offset'],
+                echo form_select('slider_caption_align', self::$slider_locale['SLDW_0524'], self::$slider_content['slider_caption_offset'],
                                  array(
                                      'inline' => TRUE,
                                      'options' => $options
                                  )
                 );
-                echo form_text('slider_title_size', self::$slider_locale['0525'], self::$slider_content['slider_title_size'],
+                echo form_text('slider_title_size', self::$slider_locale['SLDW_0525'], self::$slider_content['slider_title_size'],
                                array(
-                                   'inline' => TRUE,
-                                   'type' => 'number',
-                                   'append' => TRUE,
+                                   'inline'       => TRUE,
+                                   'type'         => 'number',
+                                   'append'       => TRUE,
                                    'append_value' => 'px',
-                                   'width' => '100px',
-                                   'ext_tip' => self::$slider_locale['0526'],
-                                   'required' => TRUE
+                                   'width'        => '100px',
+                                   'ext_tip'      => self::$slider_locale['SLDW_0526'],
+                                   'required'     => TRUE
                                )
                 );
-                echo form_text('slider_desc_size', self::$slider_locale['0527'], self::$slider_content['slider_desc_size'],
+                echo form_text('slider_desc_size', self::$slider_locale['SLDW_0527'], self::$slider_content['slider_desc_size'],
                                array(
-                                   'inline' => TRUE,
-                                   'type' => 'number',
-                                   'append' => TRUE,
+                                   'inline'       => TRUE,
+                                   'type'         => 'number',
+                                   'append'       => TRUE,
                                    'append_value' => 'px',
-                                   'width' => '100px',
-                                   'ext_tip' => self::$slider_locale['0528'],
-                                   'required' => TRUE
+                                   'width'        => '100px',
+                                   'ext_tip'      => self::$slider_locale['SLDW_0528'],
+                                   'required'     => TRUE
                                )
                 );
                 $options = array(
-                    0 => self::$slider_locale['0529'],
-                    'btn-sm' => self::$slider_locale['0530'],
-                    'btn-md' => self::$slider_locale['0531'],
-                    'btn-lg' => self::$slider_locale['0532']
+                    0        => self::$slider_locale['SLDW_0529'],
+                    'btn-sm' => self::$slider_locale['SLDW_0530'],
+                    'btn-md' => self::$slider_locale['SLDW_0531'],
+                    'btn-lg' => self::$slider_locale['SLDW_0532']
                 );
-                echo form_select('slider_btn_size', self::$slider_locale['0533'], self::$slider_content['slider_btn_size'],
+                echo form_select('slider_btn_size', self::$slider_locale['SLDW_0533'], self::$slider_content['slider_btn_size'],
                                  array(
                                      'inline' => TRUE,
                                      'options' => $options
@@ -489,9 +489,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 break;
         }
 
-        echo form_button('save_widget', self::$slider_locale['0600'], $input_value, array('class' => 'btn-primary'));
+        echo form_button('save_widget', self::$slider_locale['SLDW_0600'], $input_value, array('class' => 'btn-primary'));
         if (self::$new_slider === FALSE) {
-            echo form_button('save_and_close_widget', self::$slider_locale['0601'], $input_value, array('class' => 'btn-success'));
+            echo form_button('save_and_close_widget', self::$slider_locale['SLDW_0601'], $input_value, array('class' => 'btn-success'));
         }
 
     }

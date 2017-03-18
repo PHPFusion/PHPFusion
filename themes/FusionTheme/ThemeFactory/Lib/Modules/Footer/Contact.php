@@ -99,7 +99,7 @@ class Contact {
 
         echo "<h4>".$locale['400']."</h4>\n";
         echo "<!--contact_pre_idx-->";
-        echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
+        echo openform('contactform', 'post', FUSION_REQUEST);
         echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64));
         echo form_text('email', $locale['403'], $input['email'],
                        array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));

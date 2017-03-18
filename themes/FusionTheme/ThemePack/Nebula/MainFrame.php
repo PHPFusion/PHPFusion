@@ -30,31 +30,33 @@ class MainFrame extends Core {
          * First time installation on default install.
          * Install Page Composer Data Request
          */
-        $theme_settings = get_theme_settings('FusionTheme');
-        if (!isset($theme_settings['home_installed'])) {
-            $qLocale = fusion_get_locale('', THEME.'ThemeFactory/Lib/Installer/locale/'.LANGUAGE.'.php');
-            if (isset($_POST['install_default_homepage'])) {
-                $val = stripinput($_POST['install_default_homepage']);
-                if ($val == 'yes') {
-                    require_once dirname(__FILE__).'/../../ThemeFactory/Lib/Installer/home.inc';
-                    new HomeInstall();
+        if (iSUPERADMIN) {
+            $theme_settings = get_theme_settings('FusionTheme');
+            if (!isset($theme_settings['home_installed'])) {
+                $qLocale = fusion_get_locale('', THEME.'ThemeFactory/Lib/Installer/locale/'.LANGUAGE.'.php');
+                if (isset($_POST['install_default_homepage'])) {
+                    $val = stripinput($_POST['install_default_homepage']);
+                    if ($val == 'yes') {
+                        require_once dirname(__FILE__).'/../../ThemeFactory/Lib/Installer/home.inc';
+                        new HomeInstall();
+                    }
+                    $row = [
+                        'settings_name'  => 'home_installed',
+                        'settings_value' => $val,
+                        'settings_theme' => 'FusionTheme'
+                    ];
+                    dbquery_insert(DB_SETTINGS_THEME, $row, 'save', ['primary_key' => 'settings_name']);
+                    redirect(BASEDIR.'index.php');
                 }
-                $row = [
-                    'settings_name'  => 'home_installed',
-                    'settings_value' => $val,
-                    'settings_theme' => 'FusionTheme'
-                ];
-                dbquery_insert(DB_SETTINGS_THEME, $row, 'save', ['primary_key' => 'settings_name']);
-                redirect(BASEDIR.'index.php');
+                $form = "<div class='container'>\n";
+                $form .= openform('submit_installer', 'post', clean_request(), ['class' => 'm-t-10']);
+                $form .= "<h4>".$qLocale['homeSetup_0200']."</h4>\n";
+                $form .= form_button('install_default_homepage', $qLocale['homeSetup_0201'], 'yes', ['class' => 'btn-success']);
+                $form .= form_button('install_default_homepage', $qLocale['homeSetup_0202'], 'no');
+                $form .= closeform();
+                $form .= "</div>\n";
+                addNotice('warning', $form);
             }
-            $form = "<div class='container'>\n";
-            $form .= openform('submit_installer', 'post', clean_request(), ['class' => 'm-t-10']);
-            $form .= "<h4>".$qLocale['homeSetup_0200']."</h4>\n";
-            $form .= form_button('install_default_homepage', $qLocale['homeSetup_0201'], 'yes', ['class' => 'btn-success']);
-            $form .= form_button('install_default_homepage', $qLocale['homeSetup_0202'], 'no');
-            $form .= closeform();
-            $form .= "</div>\n";
-            addNotice('warning', $form);
         }
 
         if ($this->getParam('header') === TRUE) {

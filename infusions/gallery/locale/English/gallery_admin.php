@@ -86,6 +86,7 @@ $locale['gallery_0213'] = "Enable text watermark on photos?";
 $locale['gallery_0214'] = "Enable photos watermark?";
 $locale['gallery_0215'] = "Save generated watermarks?";
 $locale['gallery_0216'] = "Save Gallery Settings";
+$locale['gallery_0217'] = "Allowed file types:";
 $locale['photo_0001'] = "Photo Title";
 $locale['photo_0002'] = "Photo Name";
 $locale['photo_0003'] = "Photo Album";

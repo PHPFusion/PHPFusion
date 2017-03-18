@@ -86,6 +86,7 @@ $locale['news_0267'] = "No news image defined";
 $locale['news_0268'] = "%d photos have been added";
 $locale['news_0269'] = "%d photos was not uploaded due to errors";
 $locale['news_0270'] = "Please choose Image";
+$locale['news_0271'] = "Allowed file types:";
 $locale['news_0280'] = "Please specify a new subject"; // 250
 $locale['news_0281'] = "Delete this News?"; // 251
 $locale['news_0282'] = "Delete this news category?"; // 252

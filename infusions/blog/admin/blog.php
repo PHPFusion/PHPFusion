@@ -300,6 +300,7 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
         'thumbnail2'       => 1,
         'thumbnail2_w'     => $blog_settings['blog_photo_w'],
         'thumbnail2_h'     => $blog_settings['blog_photo_h'],
+        'valid_ext'        => $blog_settings['blog_file_types'],
         'type'             => 'image'
     );
     echo form_fileinput("blog_image", $locale['blog_0439'], "", $file_input_options);
