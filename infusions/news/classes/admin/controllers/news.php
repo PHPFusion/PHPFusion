@@ -209,6 +209,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
+    $news_settings = self::get_news_settings();
 
         $news_cat_opts = [];
         $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
@@ -230,9 +231,10 @@ class NewsAdmin extends NewsAdminModel {
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
             'height'      => '200px',
+			'file_filter' => explode(',', $news_settings['news_file_types']),
         );
         if (fusion_get_settings('tinymce_enabled')) {
-            $snippetSettings = array('required' => TRUE, 'height' => '200px', 'type' => 'tinymce', 'tinymce' => 'advanced', 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
+            $snippetSettings = array('required' => TRUE, 'height' => '200px', 'type' => 'tinymce', 'tinymce' => 'advanced', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
         }
 
         if (!fusion_get_settings('tinymce_enabled')) {
@@ -245,9 +247,10 @@ class NewsAdmin extends NewsAdminModel {
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                 'wordcount'   => TRUE,
                 'height'      => '300px',
+				'file_filter' => explode(',', $news_settings['news_file_types']),
             );
         } else {
-            $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px');
+            $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
         }
         echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
         self::display_newsButtons('newsContent');
@@ -327,7 +330,6 @@ class NewsAdmin extends NewsAdminModel {
                         echo "</div>\n";
 
                     } else {
-                        $news_settings = self::get_news_settings();
                         echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
                             array(
                                 'upload_path'      => IMAGES_N,
