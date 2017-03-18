@@ -44,7 +44,6 @@ class WeblinksAdminView extends WeblinksAdminModel {
 		$weblinkCatTitle = $this->locale['WLS_0004'];
 
 		if ($_GET['section'] == "weblinks") {
-			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks", "title" => $this->locale['WLS_0001']));
 			if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
 				BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks&amp;ref=weblinks_form", "title" => (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003'])));
 				$weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);

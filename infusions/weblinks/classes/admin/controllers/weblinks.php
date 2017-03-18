@@ -48,14 +48,14 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Displays Articles Form
+     * Displays Weblinks Form
      */
     private function display_weblinks_form() {
 
-		// Delete Article
+		// Delete Weblink
         self::execute_Delete();
 
-		// Update Article
+		// Update Weblink
         self::execute_Update();
 
         /**
@@ -76,7 +76,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
 	/**
-	 * Create or Update a Article
+	 * Create or Update a Weblink
 	 */
     private function execute_Update() {
 
@@ -122,7 +122,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
 	/**
-	 * Display Form for Article
+	 * Display Form for Weblink
 	 */
     private function weblinkContent_form() {
 
@@ -215,7 +215,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Displays Articles Listing
+     * Displays Weblinks Listing
      */
     private function display_weblinks_listing() {
 
@@ -571,7 +571,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         }
     }
 
-    // Articles Delete Function
+    // Weblinks Delete Function
     private function execute_Delete() {
 
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
