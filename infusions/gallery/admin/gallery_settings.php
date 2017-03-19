@@ -94,7 +94,7 @@ if (isset($_POST['delete_watermarks'])) {
 echo openform('settingsform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='well'>".$locale['gallery_0022']."</div>";
 $choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
 echo "<div class='row'><div class='col-xs-12 col-sm-8'>\n";
