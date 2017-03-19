@@ -18,7 +18,7 @@
 $widget_locale = fusion_get_locale('', WIDGETS."ratings/locale/".LANGUAGE.".php");
 // Path Definitions
 $widget_title = $widget_locale['RTW_0100'];
-$widget_icon = 'rating_w.svg';
+$widget_icon = 'ratings.svg';
 $widget_description = $widget_locale['RTW_0101'];
 $widget_admin_file = 'ratings_admin.php';
 $widget_display_file = 'ratings.php';
