@@ -50,7 +50,7 @@ if (isset($_POST['savesettings'])) {
 $opts = array('0' => $locale['952'], '1' => $locale['953']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
-$calc_opts = array(1 => $locale['blog_0538'], 1000 => $locale['blog_0539'], 1000000 => $locale['blog_0540']);
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
 opentable($locale['blog_settings']);
