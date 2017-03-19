@@ -123,13 +123,13 @@ echo "<div class='row'>
 	<label class='label-control col-xs-12 col-sm-3' for='calc_b'>".$locale['930']."</label>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array(
-        'required' => TRUE,
-        'number' => 1,
-        'inline' => TRUE,
+        'required'   => TRUE,
+        'type'       => 'number',
+        'inline'     => TRUE,
         'error_text' => $locale['error_rate'],
-        'width' => '150px',
+        'width'      => '150px',
         'max_length' => 4,
-        'class' => 'pull-left m-r-10'
+        'class'      => 'pull-left m-r-10'
     ))."
 	".form_select('calc_c', '', $calc_c, array(
         'options' => $calc_opts,
