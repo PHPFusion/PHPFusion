@@ -75,7 +75,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $opts = array('0' => $locale['news_0201'], '1' => $locale['953']);
         $cat_opts = array('0' => $locale['959'], '1' => $locale['news_0301']);
         $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	$calc_opts = $locale['1020'];
         $calc_c = $this->calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
         opentable($locale['news_settings']);
