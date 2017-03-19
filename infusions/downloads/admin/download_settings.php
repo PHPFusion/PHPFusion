@@ -51,10 +51,8 @@ if (isset($_POST['savesettings'])) {
     }
     redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
-/**
- * Options for dropdown field
- */
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($dl_settings['download_max_b']);
 $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
