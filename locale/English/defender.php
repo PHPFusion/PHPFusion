@@ -59,6 +59,7 @@ $locale['df_300'] = "Click to add files";
 $locale['df_301'] = "Click to add photo";
 $locale['df_302'] = "Click to add video";
 $locale['df_303'] = "Click to add audio";
+$locale['df_304'] = "Selected file Remove";
 
 $locale['df_400'] = "%s contains invalid character.";
 $locale['df_401'] = "%s is not a valid email address.";
