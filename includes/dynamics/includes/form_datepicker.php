@@ -98,8 +98,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
-        "date_format_js" => "YYYY-M-DD, H:mm:ss",
-        "date_format_php" => "Y-m-d H:i:s",
+        "date_format_js" => $locale['datepicker_js'],
+        "date_format_php" => $locale['datepicker_php'],
         "delimiter" => "-",
         'fieldicon_off' => FALSE,
         "filtered_dates" => array(), // must be an array

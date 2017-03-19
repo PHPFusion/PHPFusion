@@ -456,7 +456,7 @@ class NewsAdmin extends NewsAdminModel {
      */
     private function display_newsButtons($unique_id) {
         echo "<div class='m-t-20'>\n";
-        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10']);
+        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
             array('class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times'));
         echo form_button('save', self::$locale['news_0241'], self::$locale['news_0241'],
@@ -810,11 +810,11 @@ class NewsAdmin extends NewsAdminModel {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
         $news_query = "SELECT n.*, nc.*,
-        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',        
+        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',
         u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_NEWS." n
         INNER JOIN ".DB_USERS." u on u.user_id=n.news_name
-        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat               
+        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
         WHERE news_language=:language $sql_condition
         GROUP BY n.news_id
         ORDER BY n.news_draft DESC, n.news_sticky DESC, n.news_datestamp DESC
