@@ -36,7 +36,7 @@ $locale['gallery_0006'] = "Gallery Settings";
 $locale['gallery_0007'] = "Gallery Submissions";
 $locale['gallery_0009'] = "Single Photo Upload";
 $locale['gallery_0010'] = "Mass Photo Upload";
-$locale['gallery_0012'] = "There are no Photo Albums defined. You must at least have one category before you can add any Photos. &lt;a href=&#039;%s&#039;&gt;Click here&lt;/a&gt; to go to Photo Albums";
+$locale['gallery_0012'] = "There are no Photo Albums defined. You must at least have one category before you can add any Photos. [link]Click here[/link] to go to Photo Albums";
 $locale['gallery_0013'] = "Photo Actions";
 $locale['gallery_0014'] = "Move Photo Up";
 $locale['gallery_0015'] = "Move Photo Down";
