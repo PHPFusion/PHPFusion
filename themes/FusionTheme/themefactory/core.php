@@ -159,8 +159,8 @@ class Core {
     public $cssPath = '';
 
     public function get_themePack($themePack) {
-        $path = THEME."ThemePack/".$themePack."/Theme.php";
-        $this->cssPath = THEME."ThemePack/".$themePack."/Styles.css";
+        $path = THEME."themePack/".strtolower($themePack)."/theme.php";
+        $this->cssPath = THEME."themePack/".strtolower($themePack)."/styles.css";
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
         require_once $path;
     }
