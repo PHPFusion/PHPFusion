@@ -43,7 +43,7 @@ class Members_View extends Members_Admin {
         <!----//filter---->
         <hr/>
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
-        <div id='user_action_bar' class='list-group-item spacer-sm p-5'>{%user_actions%}</div>
+        <div class='list-group-item spacer-sm p-5'>{%user_actions%}</div>
         <table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
             <thead>
                 {%list_head%}
