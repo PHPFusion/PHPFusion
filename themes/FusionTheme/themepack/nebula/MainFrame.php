@@ -235,6 +235,7 @@ class MainFrame extends Core {
     }
 
     private function NebulaFooter() {
+    	$locale = fusion_get_locale('', THEME.'themepack/nebula/locale/'.LANGUAGE.'.php');
 
         if (BL_CENTER && $this->getParam('bl_lower')) :
             echo "<section class='nebulaBottom'>\n";
@@ -278,9 +279,9 @@ class MainFrame extends Core {
 		echo "<div class='overflow-hide'><h1 class='m-0 text-white'>Nebula</h1>\n";
 		echo "</div>\n";
 		echo "</div>\n";
-		echo "The Nebula is a PHP-Fusion 9's first FusionTheme Theme Framework made offering many content elements, styles and features and to better understand and learn to build content using the PHP-Fusion 9, without coding.\n";
+		echo $locale['NB_0000'];
 		echo "</div>\n";
-		echo "<h4>About Us</h4>\n";
+		echo "<h4>".$locale['NB_0001']."</h4>\n";
 		echo "<p>".fusion_get_settings('description')."</p>\n";
 		echo stripslashes(strip_tags(fusion_get_settings('footer')));
 		echo "<p>".showcopyright()."</p>\n";
@@ -299,10 +300,10 @@ class MainFrame extends Core {
 		echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
 		// News Module
-		$this->get_Modules('Footer\\News');
+		$this->get_Modules('footer\\news');
 		echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-        $this->get_Modules('Footer\\Contact');
+        $this->get_Modules('footer\\contact');
 		echo "</div>\n";
 		echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
 		add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
