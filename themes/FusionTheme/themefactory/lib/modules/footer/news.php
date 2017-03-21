@@ -22,9 +22,8 @@ use PHPFusion\News\NewsView;
 class News {
 
     public function __construct() {
+        echo "<h4>".fusion_get_locale('NEWS_001', THEME.'locale/'.LANGUAGE.'.php')."</h4>";
 
-        echo "<h4>".fusion_get_locale('NB_0002', THEME.'themepack/nebula/locale/'.LANGUAGE.'.php')."</h4>";
-        
         if (db_exists(DB_PREFIX."news")) :
             // Latest News
             require_once INFUSIONS."news/infusion_db.php";

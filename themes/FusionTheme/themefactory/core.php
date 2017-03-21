@@ -97,8 +97,11 @@ class Core {
     private static $instance = NULL;
     private static $module_instance = NULL;
     private static $module_list = array();
+    public static $locale = array();
 
     private function __construct() {
+        self::$locale = fusion_get_locale('', THEME.'locale/'.LANGUAGE.'.php');
+
         if (empty(self::$module_list)) {
             // Get Theme Factory Modules
             $ModuleType = makefilelist(THEME."themefactory/lib/modules/", ".|..|.htaccess|index.php|._DS_STORE|.tmp", TRUE, "folders");

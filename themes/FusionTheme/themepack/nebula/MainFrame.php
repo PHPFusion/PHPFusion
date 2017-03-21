@@ -33,11 +33,11 @@ class MainFrame extends Core {
         if (iSUPERADMIN) {
             $theme_settings = get_theme_settings('FusionTheme');
             if (!isset($theme_settings['home_installed'])) {
-                $qLocale = fusion_get_locale('', THEME.'ThemeFactory/Lib/Installer/locale/'.LANGUAGE.'.php');
+                $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
                 if (isset($_POST['install_default_homepage'])) {
                     $val = stripinput($_POST['install_default_homepage']);
                     if ($val == 'yes') {
-                        require_once dirname(__FILE__).'/../../ThemeFactory/Lib/Installer/home.inc';
+                        require_once dirname(__FILE__).'/../../themefactory/lib/installer/home.inc';
                         new HomeInstall();
                     }
                     $row = [
@@ -89,21 +89,21 @@ class MainFrame extends Core {
         echo "<div class='headerInner'>\n";
 
         echo "<div class='container'>\n";
-		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
-		echo "<div class='col-xs-12 col-sm-3 center'>\n";
-		showlogo();
-		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
-		echo "<div class='navbar-header navbar-right'>\n";
-		echo "<ul class='navbar-nav'>\n";
-		if (iMEMBER) :
-			if (iADMIN) :
-				echo "<li><a href='".ADMIN."index.php".fusion_get_aidlink()."'>".fusion_get_locale('global_123')."</a></li>\n";
+        echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
+        echo "<div class='col-xs-12 col-sm-3 center'>\n";
+        showlogo();
+        echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
+        echo "<div class='navbar-header navbar-right'>\n";
+        echo "<ul class='navbar-nav'>\n";
+        if (iMEMBER) :
+            if (iADMIN) :
+                echo "<li><a href='".ADMIN."index.php".fusion_get_aidlink()."'>".fusion_get_locale('global_123')."</a></li>\n";
             endif;
-			echo "<li><a href='".BASEDIR."members.php'>".fusion_get_locale('UM082')."</a></li>\n";
-			echo "<li><a href='".FUSION_SELF."?logout=yes'>".fusion_get_locale('logout')."</a></li>\n";
+            echo "<li><a href='".BASEDIR."members.php'>".fusion_get_locale('UM082')."</a></li>\n";
+            echo "<li><a href='".FUSION_SELF."?logout=yes'>".fusion_get_locale('logout')."</a></li>\n";
         else:
-			echo "<li><a href='".BASEDIR."register.php'>".fusion_get_locale('register')."</a></li>\n";
+            echo "<li><a href='".BASEDIR."register.php'>".fusion_get_locale('register')."</a></li>\n";
             echo "<li><a href='".BASEDIR."login.php'>".fusion_get_locale('login')."</a></li>\n";
         endif;
         echo "</ul>\n";
@@ -126,15 +126,15 @@ class MainFrame extends Core {
 
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
         add_to_jquery("
-			$('#".SiteLinks::MenuDefaultID."').affix({
-				offset: {
-					top: 100,
-					bottom: function () {
-						return (this.bottom = $('.footer').outerHeight(true))
-					}
-				}
-			})
-		");
+            $('#".SiteLinks::MenuDefaultID."').affix({
+                offset: {
+                    top: 100,
+                    bottom: function () {
+                        return (this.bottom = $('.footer').outerHeight(true))
+                    }
+                }
+            })
+        ");
 
         if ((AU_CENTER || ($this->getParam('upper_content')) && $this->getParam('upper'))) :
             echo "<div class='showcase'>\n";
@@ -149,7 +149,7 @@ class MainFrame extends Core {
             echo "</div>\n";
         endif;
 
-		echo "</div>\n";
+        echo "</div>\n";
         echo "</header>\n";
     }
 
@@ -157,12 +157,12 @@ class MainFrame extends Core {
         if ($this->getParam('subheader_content') || $this->getParam('breadcrumbs') === TRUE) :
             echo "<div class='nebulaSubheader'>\n";
             echo "<div class='container'>\n";
-			if ($this->getParam('subheader_content')) :
-				echo "<h4 class='display-inline-block'>".$this->getParam('subheader_content')."</h4>\n";
-			endif;
-			if ($this->getParam('breadcrumbs') === TRUE) :
-				echo render_breadcrumbs();
-			endif;
+            if ($this->getParam('subheader_content')) :
+                echo "<h4 class='display-inline-block'>".$this->getParam('subheader_content')."</h4>\n";
+            endif;
+            if ($this->getParam('breadcrumbs') === TRUE) :
+                echo render_breadcrumbs();
+            endif;
             echo "</div>\n";
             echo "</div>\n";
         endif;
@@ -171,7 +171,7 @@ class MainFrame extends Core {
             echo "<section class='nebulaContentTop'>\n";
             echo "<div class='container'>\n";
             echo U_CENTER;
-			echo "</div>\n";
+            echo "</div>\n";
             echo "</section>\n";
         endif;
 
@@ -184,19 +184,19 @@ class MainFrame extends Core {
                 $main_span = $main_span - $side_span;
             }
         }
-		if (LEFT) :
+        if (LEFT) :
             echo "<div class='nebulaCanvas off'>\n";
-			echo "<a class='canvas-toggle' href='#' data-target='nebulaCanvas'><i class='fa fa-bars fa-lg'></i></a>\n";
+            echo "<a class='canvas-toggle' href='#' data-target='nebulaCanvas'><i class='fa fa-bars fa-lg'></i></a>\n";
             echo LEFT;
             echo "</div>\n";
             add_to_jquery("
-				$('.canvas-toggle').bind('click',function(e){
-					e.preventDefault();
-					var target = $(this).data('target');
-					$('.'+target).toggleClass('off');
-				});
-			");
-		endif;
+                $('.canvas-toggle').bind('click',function(e){
+                    e.preventDefault();
+                    var target = $(this).data('target');
+                    $('.'+target).toggleClass('off');
+                });
+            ");
+        endif;
         echo "<section class='nebulaBody".($this->getParam('body_class') ? " ".$this->getParam('body_class') : "")."'>\n";
 
         if ($this->getParam('body_container') == TRUE) :
@@ -205,19 +205,19 @@ class MainFrame extends Core {
 
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
-		echo CONTENT;
-		echo "</div>\n";
+        echo CONTENT;
+        echo "</div>\n";
 
         if ($this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
-			echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
-			echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
-			echo "</div>\n";
-		endif;
+            echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
+            echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
+            echo "</div>\n";
+        endif;
 
         echo "</div>\n";
         if ($this->getParam('body_container') === TRUE) :
             echo "</div>\n";
-			echo "</section>\n";
+            echo "</section>\n";
         endif;
 
         if (L_CENTER && $this->getParam('l_center')) :
@@ -235,8 +235,6 @@ class MainFrame extends Core {
     }
 
     private function NebulaFooter() {
-    	$locale = fusion_get_locale('', THEME.'themepack/nebula/locale/'.LANGUAGE.'.php');
-
         if (BL_CENTER && $this->getParam('bl_lower')) :
             echo "<section class='nebulaBottom'>\n";
             if ($this->getParam('bl_lower_container') === TRUE) :
@@ -274,20 +272,20 @@ class MainFrame extends Core {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         echo "<div class='about_theme' style='margin-bottom: 60px;'>\n";
-		echo "<div class='nebulaLogo' style='margin-bottom:30px;'>\n";
-		echo "<div class='pull-left'><i class='fa fa-cloud' style='font-size:50px; margin-right:10px;'></i></div>\n";
-		echo "<div class='overflow-hide'><h1 class='m-0 text-white'>Nebula</h1>\n";
-		echo "</div>\n";
-		echo "</div>\n";
-		echo $locale['NB_0000'];
-		echo "</div>\n";
-		echo "<h4>".$locale['NB_0001']."</h4>\n";
-		echo "<p>".fusion_get_settings('description')."</p>\n";
-		echo stripslashes(strip_tags(fusion_get_settings('footer')));
-		echo "<p>".showcopyright()."</p>\n";
-		if (fusion_get_settings('visitorcounter_enabled')) :
-			echo "<p>".showcounter()."</p>\n";
-		endif;
+        echo "<div class='nebulaLogo' style='margin-bottom:30px;'>\n";
+        echo "<div class='pull-left'><i class='fa fa-cloud' style='font-size:50px; margin-right:10px;'></i></div>\n";
+        echo "<div class='overflow-hide'><h1 class='m-0 text-white'>Nebula</h1>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+        echo self::$locale['NB_000'];
+        echo "</div>\n";
+        echo "<h4>".self::$locale['NB_001']."</h4>\n";
+        echo "<p>".fusion_get_settings('description')."</p>\n";
+        echo stripslashes(strip_tags(fusion_get_settings('footer')));
+        echo "<p>".showcopyright()."</p>\n";
+        if (fusion_get_settings('visitorcounter_enabled')) :
+            echo "<p>".showcounter()."</p>\n";
+        endif;
         echo SiteLinks::setSubLinks(
             [
                 'id' => 'footer_a',
@@ -297,16 +295,16 @@ class MainFrame extends Core {
                 'responsive' => FALSE,
             ]
         )->showSubLinks();
-		echo "</div>\n";
+        echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-		// News Module
-		$this->get_Modules('footer\\news');
-		echo "</div>\n";
+        // News Module
+        $this->get_Modules('footer\\news');
+        echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         $this->get_Modules('footer\\contact');
-		echo "</div>\n";
-		echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
-		add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
+        echo "</div>\n";
+        echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
+        add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
         echo "</div>\n";
         echo showbanners(2);
@@ -315,18 +313,18 @@ class MainFrame extends Core {
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
         echo "<div class='col-xs-12 col-sm-4'><h4 class='text-white'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
-		echo "<p>\n";
-		if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
-			echo showrendertime();
-			echo showMemoryUsage();
-		endif;
-		$footer_errors = showFooterErrors();
-		if (!empty($footer_errors)) :
-			echo $footer_errors;
-		endif;
-		echo "</p>\n";
-		echo "</div>\n";
-		echo "</section>\n";
+        echo "<p>\n";
+        if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
+            echo showrendertime();
+            echo showMemoryUsage();
+        endif;
+        $footer_errors = showFooterErrors();
+        if (!empty($footer_errors)) :
+            echo $footer_errors;
+        endif;
+        echo "</p>\n";
+        echo "</div>\n";
+        echo "</section>\n";
     }
 
 }
