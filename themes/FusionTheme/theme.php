@@ -18,4 +18,4 @@
 require_once THEME."autoloader.php";
 $theme_settings = get_theme_settings('FusionTheme');
 $theme_package = !empty($theme_settings['theme_pack']) ? $theme_settings['theme_pack'] : 'Nebula';
-ThemeFactory\Core::getInstance()->get_ThemePack($theme_package);
+themefactory\Core::getInstance()->get_ThemePack($theme_package);
