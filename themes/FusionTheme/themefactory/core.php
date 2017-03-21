@@ -101,10 +101,10 @@ class Core {
     private function __construct() {
         if (empty(self::$module_list)) {
             // Get Theme Factory Modules
-            $ModuleType = makefilelist(THEME."ThemeFactory/Lib/Modules/", ".|..|.htaccess|index.php|._DS_STORE|.tmp", TRUE, "folders");
+            $ModuleType = makefilelist(THEME."themefactory/lib/modules/", ".|..|.htaccess|index.php|._DS_STORE|.tmp", TRUE, "folders");
             if (!empty($ModuleType)) {
                 foreach ($ModuleType as $ModuleFolder) {
-                    $Modules = makefilelist(THEME."ThemeFactory/Lib/Modules/$ModuleFolder/", ".|..|.htaccess|index.php|._DS_STORE|.tmp");
+                    $Modules = makefilelist(THEME."themefactory/lib/modules/$ModuleFolder/", ".|..|.htaccess|index.php|._DS_STORE|.tmp");
                     if (!empty($Modules)) {
                         foreach ($Modules as $ModuleFile) {
                             self::$module_list[] = "$ModuleFolder\\".str_replace('.php', '', $ModuleFile);
@@ -159,8 +159,8 @@ class Core {
     public $cssPath = '';
 
     public function get_themePack($themePack) {
-        $path = THEME."themePack/".strtolower($themePack)."/theme.php";
-        $this->cssPath = THEME."themePack/".strtolower($themePack)."/styles.css";
+        $path = THEME."themepack/".strtolower($themePack)."/theme.php";
+        $this->cssPath = THEME."themepack/".strtolower($themePack)."/styles.css";
         add_to_head("<link rel='stylesheet' href='$this->cssPath' type='text/css'/>");
         require_once $path;
     }
@@ -170,12 +170,12 @@ class Core {
      *
      * @return mixed
      */
-    protected function get_Modules($modules = 'Footer\\News') {
+    protected function get_Modules($modules = 'footer\\news') {
         if (!isset(self::$module_instance[$modules]) or self::$module_instance[$modules] === NULL) {
             if (!empty(self::$module_list)) {
                 $module_ = array_flip(self::$module_list);
                 if (isset($module_[$modules])) {
-                    $namespace_ = "ThemeFactory\\Lib\\Modules\\";
+                    $namespace_ = "themefactory\\lib\\modules\\";
                     $module_ = new \ReflectionClass($namespace_.$modules);
                     self::$module_instance[$modules] = $module_->newInstance();
                 }
