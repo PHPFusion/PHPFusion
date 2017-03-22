@@ -186,21 +186,18 @@ class Authenticate {
     }
 
     public static function setAdminLogin() {
-        global $locale;
-
+        $locale = fusion_get_locale();
         if (isset($_GET['logout'])) {
             self::expireAdminCookie();
             $user = fusion_get_userdata("user_id");
+            session_destroy();
             if (!empty($user)) {
                 redirect(BASEDIR."index.php");
             }
         }
-
         if (isset($_POST['admin_password'])) {
             $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
-
             if (Authenticate::validateAuthAdmin($admin_password)) {
-
                 if (Authenticate::setAdminCookie($admin_password)) {
                     unset($_SESSION['notices']);
                     redirect(FUSION_REQUEST);
@@ -210,9 +207,7 @@ class Authenticate {
             } else {
                 addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
             }
-
         }
-
         if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
             setNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
         }
