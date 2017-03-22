@@ -117,7 +117,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                 '{%snippet%}'      => "<strong>".$locale['news_0203']."</strong><br/>".nl2br($news_snippet),
                 '{%full_text%}'    => "<strong>".$locale['news_0204']."</strong><br/>".nl2br($news_body),
             ]);
-            $modal = openmodal('news_preview', $locale['preview_news']);
+            $modal = openmodal('news_preview', $locale['preview']);
             $modal .= ob_get_clean();
             $modal .= closemodal();
             add_to_footer($modal);
