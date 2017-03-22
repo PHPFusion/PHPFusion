@@ -87,7 +87,6 @@ class MainFrame extends Core {
         $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
         echo "<header ".$headerBg.">\n";
         echo "<div class='headerInner'>\n";
-
         echo "<div class='container'>\n";
         echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
         echo "<div class='col-xs-12 col-sm-3 center'>\n";

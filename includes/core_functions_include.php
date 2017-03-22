@@ -1697,7 +1697,7 @@ function fusion_run_installer() {
 function define_site_language($lang) {
     if (valid_language($lang)) {
         define('LANGUAGE', $lang);
-        define('LOCALESET', $lang);
+        define('LOCALESET', $lang.'/');
     }
 }
 
