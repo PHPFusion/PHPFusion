@@ -1083,15 +1083,16 @@ class NewsAdmin extends NewsAdminModel {
 
                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($_GET['news_id'])."'");
                 if (dbrows($result)) {
-                    $data = dbarray($result);
-                    if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
-                        unlink(IMAGES_N.$data['news_image']);
-                    }
-                    if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
-                        unlink(IMAGES_N_T.$data['news_image_t1']);
-                    }
-                    if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
-                        unlink(IMAGES_N_T.$data['news_image_t2']);
+                    while ($data = dbarray($result)) {
+                    	if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+                    	    unlink(IMAGES_N.$data['news_image']);
+                    	}
+                    	if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                    	    unlink(IMAGES_N_T.$data['news_image_t1']);
+                    	}
+                    	if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                    	    unlink(IMAGES_N_T.$data['news_image_t2']);
+                    	}
                     }
                 }
 
