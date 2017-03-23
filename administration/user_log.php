@@ -35,9 +35,9 @@ $expr = "DESC";
 $user = "";
 $userField = "";
 $orderbyArray = array(
-    $locale['UL_002'] => "userlog_timestamp",
-    $locale['UL_003'] => "user_name",
-    $locale['UL_004'] => "userlog_field"
+    "userlog_timestamp" => $locale['UL_002'],
+    "user_name"         => $locale['UL_003'],
+    "userlog_field"     =>$locale['UL_004']
 );
 
 $exprArray = array("DESC" => $locale['UL_019'], "ASC" => $locale['UL_018']);
@@ -83,26 +83,6 @@ if (isset($_GET['delete']) && isnum($_GET['delete'])) {
 	redirect(FUSION_SELF.fusion_get_aidlink());
 }
 
-function orderbyOptions() {
-    global $orderbyArray;
-    $options = array();
-    foreach ($orderbyArray AS $key => $value) {
-        $options[$value] = $key;
-    }
-
-    return $options;
-}
-
-function exprOptions() {
-    global $exprArray;
-    $options = array();
-    foreach ($exprArray AS $key => $value) {
-        $options[$key] = $value;
-    }
-
-    return $options;
-}
-
 function userFieldOptions() {
     $locale = fusion_get_locale();
     $options['user_name'] = $locale['UL_003'];
@@ -123,12 +103,12 @@ echo openside();
 	echo openform('userlog_search', 'post', FUSION_SELF.$aidlink);
 	echo form_hidden('aid', '', iAUTH);
 	echo form_select('orderby', $locale['UL_008'], $orderby, [
-		'options'    => orderbyOptions(),
+		'options'    => $orderbyArray,
 		'placholder' => $locale['choose'],
 		'inline'     => TRUE
 	]);
 	echo form_select('expr', ' ', $orderby, [
-		'options'    => exprOptions(),
+		'options'    => $exprArray,
 		'placholder' => $locale['choose'],
 		'inline'     => TRUE
 	]);
