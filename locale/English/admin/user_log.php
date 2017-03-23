@@ -16,3 +16,5 @@ $locale['UL_014'] = "Options";
 $locale['UL_015'] = "There aren't logs available at the moment.";
 $locale['UL_016'] = "Delete entries older than:";
 $locale['UL_017'] = "Days";
+$locale['UL_018'] = "Ascending";
+$locale['UL_019'] = "Descending";
