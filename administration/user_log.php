@@ -40,7 +40,7 @@ $orderbyArray = array(
     $locale['UL_004'] => "userlog_field"
 );
 
-$exprArray = array("DESC", "ASC");
+$exprArray = array("DESC" => $locale['UL_019'], "ASC" => $locale['UL_018']);
 if (isset($_POST) && !empty($_POST)) {
     if (isset($_POST['orderby']) && in_array($_POST['orderby'], $orderbyArray)) {
         $orderby = $_POST['orderby'];
@@ -72,7 +72,7 @@ if (isset($_POST) && !empty($_POST)) {
 // End $_GET Vars
 if (isset($_POST['delete']) && isnum($_POST['delete'])) {
     $time = time() - $_POST['delete'] * 24 * 60 * 60;
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp>".$time);
+    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<".$time);
     addNotice('info', sprintf($locale['UL_005'], $_POST['delete']));
 	redirect(FUSION_SELF.fusion_get_aidlink());
 }
@@ -96,8 +96,8 @@ function orderbyOptions() {
 function exprOptions() {
     global $exprArray;
     $options = array();
-    foreach ($exprArray AS $value) {
-        $options[$value] = $value;
+    foreach ($exprArray AS $key => $value) {
+        $options[$key] = $value;
     }
 
     return $options;
@@ -191,7 +191,7 @@ echo openside('', 'm-t-20');
 	echo openform('userlog_delete', 'post', FUSION_SELF.$aidlink);
 	echo form_text('delete', $locale['UL_016'], '', [
 	    'max_length'  => 3,
-	    'number'      => 1,
+	    'type'        => 'number',
 	    'placeholder' => $locale['UL_017'],
 	    'inline'      => TRUE
 	]);
