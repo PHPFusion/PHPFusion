@@ -108,7 +108,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                 'news_keywords'    => form_sanitizer($_POST['news_keywords'], "", 'news_keywords'),
                 'news_cat'         => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
                 'news_news'        => form_sanitizer($_POST['news_news'], "", 'news_news'),
-                'news_extended'    => form_sanitizer($_POST['news_extended'], "", 'news_extended'),
+                'news_extended'    => $news_settings['news_extended_required'] ? form_sanitizer($_POST['news_extended'], "", 'news_extended') : '',
             );
             ob_start();
             echo strtr(display_news_submissions_preview(), [

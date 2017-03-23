@@ -185,7 +185,7 @@ echo "<br />";
 echo "<form action='".FUSION_SELF.$aidlink."' method='post'>\n";
 echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
-echo "<td class='tbl' width='50%'><label for='delete'>".$locale['110'].":</label></td>\n";
+echo "<td class='tbl' width='50%'><label for='delete'>".$locale['110']."</label></td>\n";
 echo "<td class='tbl1' align='right'>\n";
 echo form_text('delete', '', '', array(
     'max_length' => 3,
