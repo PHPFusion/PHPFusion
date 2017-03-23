@@ -100,7 +100,7 @@ function userFieldOptions() {
 opentable($locale['UL_001']);
 
 echo openside();
-	echo openform('userlog_search', 'post', FUSION_SELF.$aidlink);
+	echo openform('userlog_search', 'post', FUSION_REQUEST);
 	echo form_hidden('aid', '', iAUTH);
 	echo form_select('orderby', $locale['UL_008'], $orderby, [
 		'options'    => $orderbyArray,
@@ -168,7 +168,7 @@ if (!defined('FUSION_NULL')) {
 }
 
 echo openside('', 'm-t-20');
-	echo openform('userlog_delete', 'post', FUSION_SELF.$aidlink);
+	echo openform('userlog_delete', 'post', FUSION_REQUEST);
 	echo form_text('delete', $locale['UL_016'], '', [
 	    'max_length'  => 3,
 	    'type'        => 'number',
