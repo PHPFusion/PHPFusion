@@ -87,10 +87,10 @@ function userFieldOptions() {
     $locale = fusion_get_locale();
     $options['user_name'] = $locale['UL_003'];
     $options['user_email'] = $locale['UL_007'];
-    $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_log='1'");
+    $result = dbquery("SELECT field_name, field_title FROM ".DB_USER_FIELDS." WHERE field_log='1'");
     if (dbrows($result)) {
         while ($data = dbarray($result)) {
-            $options[$data['field_name']] = $data['field_name'];
+            $options[$data['field_name']] = $data['field_title'];
         }
     }
 
