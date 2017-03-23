@@ -46,7 +46,7 @@ $result = dbquery("
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
 	".groupaccess('tf.forum_access')." AND t.thread_hidden='0'
 	".(isset($_POST['filter']) && $_POST['filter'] ? "AND t.thread_lastpost < '".(time() - ($_POST['filter'] * 24 * 3600))."'" : '')."
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$forum_settings['threads_per_page']
+	GROUP BY thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$_GET['rowstart'].", ".$forum_settings['threads_per_page']
 );
 // link also need to change
 $this->forum_info['thread_max_rows'] = dbrows($result);

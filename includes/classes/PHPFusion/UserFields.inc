@@ -524,6 +524,7 @@ class UserFields extends QuantumFields {
         $rows = dbrows($result);
         if ($rows != '0') {
             while ($data = dbarray($result)) {
+
                 if ($data['field_cat_id']) {
                     $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
                 }
@@ -549,9 +550,7 @@ class UserFields extends QuantumFields {
                 foreach ($category[$index_page_id] as $cat_id => $cat) {
                     if ($this->registration || $this->method == 'input') {
                         if (isset($item[$cat_id])) {
-
                             $fields['user_field'][$cat_id]['title'] = $cat;
-
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 $options = array(
                                     'show_title' => TRUE,
@@ -568,14 +567,15 @@ class UserFields extends QuantumFields {
                                 $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
                             }
                         }
-
                     } else {
                         // Display User Fields
                         if (isset($item[$cat_id])) {
                             $fields['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
                             foreach ($item[$cat_id] as $field_id => $field) {
+                                // Outputs array
                                 $field_output = $this->display_fields($field, $this->userData, $this->method);
-                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
+                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }
                         }
                     }
