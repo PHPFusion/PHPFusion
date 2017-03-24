@@ -20,7 +20,7 @@ $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en-gb";
 $locale['datepicker_js'] = "M-DD-YYYY, H:mm:ss";
-$locale['datepicker_php'] = "m-d-Y H:i:s";
+$locale['datepicker_php'] = "m-d-Y, H:i:s";
 $locale['password_strength'] = "en";
 // Full & Short Months
 $locale['months'] = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
