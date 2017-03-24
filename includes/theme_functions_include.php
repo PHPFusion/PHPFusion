@@ -1116,14 +1116,16 @@ if (!function_exists("display_comments")) {
     /* Standard comment display */
     function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
     	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
+        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
         $end_link = $link ? "</a>\n" : '';
         $str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;
         if ($news_comments > 0) {
-            return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
+            $start_link = strtr($start_link, ['{%title%}' => "title='".$locale['global_073']."'"]);
         } else {
-            return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
+            $start_link = strtr($start_link, ['{%title%}' => "title='".sprintf($locale['global_089'], $locale['global_077'])."'"]);
         }
+
+        return $start_link.$str.$end_link;
     }
 }
 
