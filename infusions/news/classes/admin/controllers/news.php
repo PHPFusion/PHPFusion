@@ -100,7 +100,8 @@ class NewsAdmin extends NewsAdminModel {
                 'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
             );
-            //print_p($this->news_data);
+            print_p($this->news_data);
+            //\defender::stop();
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
                 $this->news_data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";

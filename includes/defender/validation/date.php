@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Date
  * Validates Date Input
@@ -25,49 +26,46 @@ class Date extends \Defender\Validation {
      * Check and verify submitted date
      * If type is timestamp, it will return a Unix timestamp
      * If type is date, it will return a date
+     *
      * @return int|string
      */
     public function verify_date() {
         $locale = fusion_get_locale();
-        if (self::$inputValue) {
-            $dateParams = date_create_from_format(self::$inputConfig['date_format'], self::$inputValue);
-            if (count($dateParams)) {
-                $dateParams = strtotime($dateParams->date);
-                $dateParams = getdate($dateParams);
-                if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
+        if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
+            $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
+            var_dump($dateParams);
+            $dateParams = strtotime($dateParams->date);
+            $dateParams = getdate($dateParams);
+            if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
 
-                    switch (self::$inputConfig['type']) {
-                        case "timestamp":
+                switch (self::$inputConfig['type']) {
+                    case "timestamp":
 
-                            $secured = (int)mktime($dateParams['hours'],
-                                $dateParams['minutes'],
-                                $dateParams['seconds'],
-                                $dateParams['mon'],
-                                $dateParams['mday'],
-                                $dateParams['year']
-                            );
+                        $secured = (int)mktime($dateParams['hours'],
+                            $dateParams['minutes'],
+                            $dateParams['seconds'],
+                            $dateParams['mon'],
+                            $dateParams['mday'],
+                            $dateParams['year']
+                        );
 
-                            return $secured;
+                        return $secured;
 
-                            break;
-                        case "date":
+                        break;
+                    case "date":
 
-                            return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
-                            break;
-                    }
-
-                } else {
-                    \defender::stop();
-                    \defender::setInputError(self::$inputName);
-                    addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
+                        return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
+                        break;
                 }
+
             } else {
                 \defender::stop();
                 \defender::setInputError(self::$inputName);
                 addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
             }
         }
-        return (string) self::$inputDefault;
+
+        return (string)self::$inputDefault;
     }
-    
+
 }
