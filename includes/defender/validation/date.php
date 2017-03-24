@@ -32,9 +32,7 @@ class Date extends \Defender\Validation {
     public function verify_date() {
         $locale = fusion_get_locale();
         if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
-            $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
-            var_dump($dateParams);
-            $dateParams = strtotime($dateParams->date);
+            $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue)->getTimestamp();
             $dateParams = getdate($dateParams);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
 
