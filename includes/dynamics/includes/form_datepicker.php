@@ -199,14 +199,15 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= "</div>\n";
     $defender->add_field_session(
         array(
-            'input_name' => $input_name,
-            'type' => $options['type'],
-            'title' => $title,
-            'id' => $input_id,
-            'required' => $options['required'],
-            'safemode' => TRUE,
-            'error_text' => $options['error_text'],
-            "delimiter" => $options['delimiter']
+            'input_name'  => $input_name,
+            'type'        => $options['type'],
+            'title'       => $title,
+            'id'          => $input_id,
+            'required'    => $options['required'],
+            'safemode'    => TRUE,
+            'error_text'  => $options['error_text'],
+            "delimiter"   => $options['delimiter'],
+            'date_format' => $options['date_format_php'],
         )
     );
 

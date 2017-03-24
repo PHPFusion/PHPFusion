@@ -301,22 +301,18 @@ abstract class News extends NewsServer {
             }
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
+            $news_extended = $data['news_extended'];
 
             if (isset($_GET['readmore'])) {
-
-                $news_text = $data['news_extended'] ? ("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : "<p>".$data['news_news']."</p>";
-
-                $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $news_text);
-
-                $pagecount = count($news_news);
-                if (is_array($news_news)) {
-                    $news_news = $news_news[$_GET['rowstart']];
+                $news_extended = $data['news_extended'] ? ("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : "<p>".$data['news_news']."</p>";
+                $news_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $news_extended);
+                $pagecount = count($news_extended);
+                if (is_array($news_extended)) {
+                    $news_extended = $news_news[$_GET['rowstart']];
                 }
-
                 if ($pagecount > 1) {
                     $news_pagenav = makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."news/news.php?readmore=".$data['news_id']."&amp;");
                 }
-
             }
 
             $admin_actions = array();
@@ -334,23 +330,24 @@ abstract class News extends NewsServer {
             }
 
             $info = array(
-                "news_id" => $data['news_id'],
-                'news_subject' => $news_subject,
-                'news_link' => $info['news_link'],
-                "news_url" => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-                "news_cat_url" => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
-                'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
-                'news_news' => $news_news,
-                'page_count' => $pagecount,
-                "news_keywords" => $data['news_keywords'],
-                "user_id" => $data['user_id'],
-                "user_name" => $data['user_name'],
-                "user_status" => $data['user_status'],
-                "user_avatar" => $data['user_avatar'],
-                'user_level' => $data['user_level'],
-                "news_date" => $data['news_datestamp'],
-                "news_cat_id" => $data['news_cat'],
-                "news_cat_name" => !empty($data['news_cat_name']) ? $data['news_cat_name'] : fusion_get_locale('news_0006'),
+                "news_id"               => $data['news_id'],
+                'news_subject'          => $news_subject,
+                'news_link'             => $info['news_link'],
+                "news_url"              => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
+                "news_cat_url"          => ($data['news_cat_id'] ? INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'] : ''),
+                'news_anchor'           => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
+                'news_news'             => $news_news,
+                'news_extended'         => $news_extended,
+                'page_count'            => $pagecount,
+                "news_keywords"         => $data['news_keywords'],
+                "user_id"               => $data['user_id'],
+                "user_name"             => $data['user_name'],
+                "user_status"           => $data['user_status'],
+                "user_avatar"           => $data['user_avatar'],
+                'user_level'            => $data['user_level'],
+                "news_date"             => $data['news_datestamp'],
+                "news_cat_id"           => $data['news_cat'],
+                "news_cat_name"         => !empty($data['news_cat_name']) ? $data['news_cat_name'] : fusion_get_locale('news_0006'),
                 "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                 "news_cat_image" => $news_cat_image,
                 "news_image" => $news_image, // image with news link enclosed
@@ -362,9 +359,9 @@ abstract class News extends NewsServer {
                 'news_sum_rating'       => $data['sum_rating'] ? $data['sum_rating'] : 0,
                 'news_count_votes'      => $data['count_votes'],
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 2) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
-                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
+                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,
                 'news_admin_actions'    => $admin_actions,
                 "news_sticky"           => $data['news_sticky'],

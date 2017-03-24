@@ -178,10 +178,8 @@ class MainFrame extends Core {
 
         $side_span = 3;
         $main_span = 12;
-        if (RIGHT) {
-            if (RIGHT) {
-                $main_span = $main_span - $side_span;
-            }
+        if (RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
+            $main_span = $main_span - $side_span;
         }
         if (LEFT) :
             echo "<div class='nebulaCanvas off'>\n";

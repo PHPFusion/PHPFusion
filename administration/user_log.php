@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_log.php
-| Author: gh0st2k
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,10 +19,12 @@ require_once "../maincore.php";
 pageAccess('UL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_log.php";
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
+
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
     $_GET['rowstart'] = 0;
 }
+
 // Set default values
 $dbOrder = "ORDER BY userlog_timestamp DESC";
 $dbWhere = "";
@@ -33,11 +35,12 @@ $expr = "DESC";
 $user = "";
 $userField = "";
 $orderbyArray = array(
-    $locale['102'] => "userlog_timestamp",
-    $locale['103'] => "user_name",
-    $locale['104'] => "userlog_field"
+    "userlog_timestamp" => $locale['UL_002'],
+    "user_name"         => $locale['UL_003'],
+    "userlog_field"     =>$locale['UL_004']
 );
-$exprArray = array("DESC", "ASC");
+
+$exprArray = array("DESC" => $locale['UL_019'], "ASC" => $locale['UL_018']);
 if (isset($_POST) && !empty($_POST)) {
     if (isset($_POST['orderby']) && in_array($_POST['orderby'], $orderbyArray)) {
         $orderby = $_POST['orderby'];
@@ -65,80 +68,63 @@ if (isset($_POST) && !empty($_POST)) {
     // build get string
     $getString .= "&amp;orderby=".$orderby."&amp;expr=".$expr."&amp;user=".$user."&amp;userField=".$userField;
 }
+
 // End $_GET Vars
 if (isset($_POST['delete']) && isnum($_POST['delete'])) {
     $time = time() - $_POST['delete'] * 24 * 60 * 60;
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<".$time);
-    echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['118'], $_POST['delete'])."</div></div>\n";
+    addNotice('info', sprintf($locale['UL_005'], $_POST['delete']));
+	redirect(FUSION_SELF.fusion_get_aidlink());
 }
+
 if (isset($_GET['delete']) && isnum($_GET['delete'])) {
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id='".$_GET['delete']."'");
-    echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['119']."</div></div>\n";
-}
-function orderbyOptions() {
-    global $orderbyArray;
-    $options = array();
-    foreach ($orderbyArray AS $key => $value) {
-        $options[$value] = $key;
-    }
-
-    return $options;
-}
-
-function exprOptions() {
-    global $exprArray;
-    $options = array();
-    foreach ($exprArray AS $value) {
-        $options[$value] = $value;
-    }
-
-    return $options;
+    addNotice('info', $locale['UL_006']);
+	redirect(FUSION_SELF.fusion_get_aidlink());
 }
 
 function userFieldOptions() {
     $locale = fusion_get_locale();
-    $options['user_name'] = $locale['103'];
-    $options['user_email'] = $locale['103a'];
-    $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_log='1'");
+    $options['user_name'] = $locale['UL_003'];
+    $options['user_email'] = $locale['UL_007'];
+    $result = dbquery("SELECT field_name, field_title FROM ".DB_USER_FIELDS." WHERE field_log='1'");
     if (dbrows($result)) {
         while ($data = dbarray($result)) {
-            $options[$data['field_name']] = $data['field_name'];
+            $options[$data['field_name']] = $data['field_title'];
         }
     }
 
     return $options;
 }
 
-opentable($locale['100']);
-echo openform('userlog_search', 'post', FUSION_SELF.$aidlink);
-echo form_hidden('aid', '', iAUTH);
-echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
-echo "<tr>\n";
-echo "<td class='tbl1' align='left'><label for='orderby'>".$locale['107']."</label></td>\n";
-echo "<td class='tbl1' style='align:right;'>\n";
-echo form_select('orderby', '', $orderby, array(
-    'options' => orderbyOptions(),
-    'placholder' => $locale['choose'],
-    'class' => 'pull-right'
-));
-echo form_select('expr', '', $orderby, array('options' => exprOptions(), 'placholder' => $locale['choose']));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl1' align='left'><label for='user'>".$locale['108']."</label></td>\n";
-echo "<td class='tbl1' align='right'>\n";
-echo form_text('user', '', $user);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl1'><label for='userField'>".$locale['115']."</label></td>";
-echo "<td class='tbl1'>\n";
-echo form_select('userField', '', $userField, array(
-    'options' => userFieldOptions(),
-    'placeholder' => $locale['choose'],
-    'allowclear' => 1
-));
-echo "</tr>\n<tr>\n";
-echo "<td class='tbl' align='left'></td>\n<td class='tbl' align='right'>\n";
-echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-echo "<br />";
+opentable($locale['UL_001']);
+
+echo openside();
+	echo openform('userlog_search', 'post', FUSION_REQUEST);
+	echo form_hidden('aid', '', iAUTH);
+	echo form_select('orderby', $locale['UL_008'], $orderby, [
+		'options'    => $orderbyArray,
+		'placholder' => $locale['choose'],
+		'inline'     => TRUE
+	]);
+	echo form_select('expr', ' ', $orderby, [
+		'options'    => $exprArray,
+		'placholder' => $locale['choose'],
+		'inline'     => TRUE
+	]);
+	echo form_text('user', $locale['UL_009'], $user, [
+		'inline' => TRUE
+	]);
+	echo form_select('userField', $locale['UL_010'], $userField, array(
+		'options'     => userFieldOptions(),
+		'placeholder' => $locale['choose'],
+		'allowclear'  => 1,
+		'inline'      => TRUE
+	));
+	echo form_button('submit', $locale['UL_011'], $locale['UL_011'], ['class' => 'btn-primary']);
+	echo closeform();
+echo closeside();
+
 // at least validate token.
 if (!defined('FUSION_NULL')) {
     $result = dbquery("SELECT SQL_CALC_FOUND_ROWS userlog_id, userlog_user_id, userlog_field, userlog_value_old, userlog_value_new, userlog_timestamp, user_name, user_status
@@ -149,55 +135,50 @@ if (!defined('FUSION_NULL')) {
 				   LIMIT ".$_GET['rowstart'].",20");
     $rows = dbresult(dbquery("SELECT FOUND_ROWS()"), 0);
     if (dbrows($result)) {
-        echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
-        echo "<thead>\n";
-        echo "<tr>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:100px;'>".$locale['102']."</th>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:150px;'>".$locale['103']."</th>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:140px;'>".$locale['104']."</th>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['105']."</th>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['106']."</th>\n";
-        echo "<th class='tbl2' style='white-space:nowrap; width:160px;'>".$locale['117']."</th>\n";
-        echo "</tr>\n</thead>\n<tbody>\n";
-        $i = 1;
-        while ($data = dbarray($result)) {
-            $class = ($i % 2 ? "tbl1" : "tbl2");
-            echo "<tr>\n";
-            echo "<td class='".$class."'>".showdate("shortdate", $data['userlog_timestamp'])."</td>\n";
-            echo "<td class='".$class."'>".profile_link($data['userlog_user_id'], $data['user_name'], $data['user_status'])."</td>\n";
-            echo "<td class='".$class."'>".$data['userlog_field']."</td>\n";
-            echo "<td class='".$class."'>".trimlink($data['userlog_value_old'], 100)."</td>\n";
-            echo "<td class='".$class."'>".trimlink($data['userlog_value_new'], 100)."</td>\n";
-            echo "<td class='".$class."'><a href='".FUSION_SELF.$getString."&amp;delete=".$data['userlog_id']."'>".$locale['116']."</a></td>\n";
-            echo "</tr>\n";
-            $i++;
-        }
-        echo "</tbody>\n</table>\n";
+        echo "<table class='table table-responsive table-striped'>\n";
+	        echo "<thead>\n<tr>\n";
+		        echo "<th width:100px;'>".$locale['UL_002']."</th>\n";
+		        echo "<th width:150px;'>".$locale['UL_003']."</th>\n";
+		        echo "<th width:140px;'>".$locale['UL_004']."</th>\n";
+		        echo "<th width:160px;'>".$locale['UL_012']."</th>\n";
+		        echo "<th width:160px;'>".$locale['UL_013']."</th>\n";
+		        echo "<th width:160px;'>".$locale['UL_014']."</th>\n";
+	        echo "</tr>\n</thead>\n";
+
+	        echo "<tbody>\n";
+	        while ($data = dbarray($result)) {
+	            echo "<tr>\n";
+		            echo "<td>".showdate("shortdate", $data['userlog_timestamp'])."</td>\n";
+		            echo "<td>".profile_link($data['userlog_user_id'], $data['user_name'], $data['user_status'])."</td>\n";
+		            echo "<td>".$data['userlog_field']."</td>\n";
+		            echo "<td>".trimlink($data['userlog_value_old'], 100)."</td>\n";
+		            echo "<td>".trimlink($data['userlog_value_new'], 100)."</td>\n";
+		            echo "<td><a href='".FUSION_SELF.$getString."&amp;delete=".$data['userlog_id']."'>".$locale['delete']."</a></td>\n";
+	            echo "</tr>\n";
+	        }
+	        echo "</tbody>\n";
+        echo "</table>\n";
     } else {
-        echo "<center>".$locale['112']."</center>\n";
+        echo "<div class='well text-center'>".$locale['UL_015']."</div>\n";
     }
     if ($rows > 20) {
-        echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3,
+        echo "<div class='m-t-5 text-center'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3,
                                                                           FUSION_SELF.$getString."&amp;")."\n</div>\n";
     }
 }
-echo "<br />";
-echo "<form action='".FUSION_SELF.$aidlink."' method='post'>\n";
-echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
-echo "<tr>\n";
-echo "<td class='tbl' width='50%'><label for='delete'>".$locale['110']."</label></td>\n";
-echo "<td class='tbl1' align='right'>\n";
-echo form_text('delete', '', '', array(
-    'max_length' => 3,
-    'number' => 1,
-    'placeholder' => $locale['111'],
-    'inline' => 1,
-    'width' => '100px'
-));
-echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
-echo "</td>\n";
-echo "</tr>\n";
-echo "</tbody>\n</table>\n";
-echo "</form>\n";
+
+echo openside('', 'm-t-20');
+	echo openform('userlog_delete', 'post', FUSION_REQUEST);
+	echo form_text('delete', $locale['UL_016'], '', [
+	    'max_length'  => 3,
+	    'type'        => 'number',
+	    'placeholder' => $locale['UL_017'],
+	    'inline'      => TRUE
+	]);
+	echo form_button('submit', $locale['UL_011'], $locale['UL_011'], ['class' => 'btn-primary']);
+	echo closeform();
+echo closeside();
+
 closetable();
+
 require_once THEMES."templates/footer.php";

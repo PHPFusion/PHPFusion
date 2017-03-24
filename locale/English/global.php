@@ -19,7 +19,7 @@ $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en-gb";
-$locale['datepicker_js'] = "M-DD-YYYY, H:mm:ss";
+$locale['datepicker_js'] = "M-DD-YYYY H:mm:ss";
 $locale['datepicker_php'] = "m-d-Y H:i:s";
 $locale['password_strength'] = "en";
 // Full & Short Months

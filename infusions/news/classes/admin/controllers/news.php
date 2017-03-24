@@ -82,22 +82,22 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             $this->news_data = array(
-                'news_id'             => form_sanitizer($_POST['news_id'], 0, 'news_id'),
-                'news_subject'        => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
-                'news_cat'            => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
-                'news_news'           => form_sanitizer($news_news, "", "news_news"),
-                'news_extended'       => form_sanitizer($news_extended, "", "news_extended"),
-                'news_keywords'       => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
-                'news_datestamp'      => form_sanitizer($_POST['news_datestamp'], '', 'news_datestamp'),
-                'news_start'          => form_sanitizer($_POST['news_start'], 0, 'news_start'),
-                'news_end'            => form_sanitizer($_POST['news_end'], 0, 'news_end'),
-                'news_visibility'     => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
-                'news_draft'          => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
-                'news_sticky'         => isset($_POST['news_sticky']) ? "1" : "0",
-                'news_name'           => form_sanitizer($_POST['news_name'], 0, 'news_name'),
-                'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
-                'news_allow_ratings'  => isset($_POST['news_allow_ratings']) ? "1" : "0",
-                'news_language'       => form_sanitizer($_POST['news_language'], '', 'news_language'),
+                'news_id'                  => form_sanitizer($_POST['news_id'], 0, 'news_id'),
+                'news_subject'             => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+                'news_cat'                 => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
+                'news_news'                => form_sanitizer($news_news, "", "news_news"),
+                'news_extended'            => form_sanitizer($news_extended, "", "news_extended"),
+                'news_keywords'            => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+                'news_datestamp'           => form_sanitizer($_POST['news_datestamp'], TIME, 'news_datestamp'),
+                'news_start'               => form_sanitizer($_POST['news_start'], 0, 'news_start'),
+                'news_end'                 => form_sanitizer($_POST['news_end'], 0, 'news_end'),
+                'news_visibility'          => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
+                'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
+                'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name'                => form_sanitizer($_POST['news_name'], 0, 'news_name'),
+                'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
+                'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
             );
 
@@ -313,7 +313,8 @@ class NewsAdmin extends NewsAdminModel {
                 } else {
                     echo form_hidden('news_language', '', $this->news_data['news_language']);
                 }
-                echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], array('inline' => TRUE, 'inner_width' => '100%'));
+                echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'],
+                    array('inline' => TRUE, 'inner_width' => '100%'));
                 closeside();
 
                 if ($this->news_data['news_id']) {
