@@ -402,7 +402,6 @@ class UserFieldsInput {
                     if (dbcount("(blacklist_id)", DB_BLACKLIST,
                                 ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
                                 array(':email' => $this->_userEmail))) {
-
                         // this email blacklisted.
                         \defender::stop();
                         \defender::setInputError('user_email');
@@ -491,6 +490,7 @@ class UserFieldsInput {
         $mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
         $mailSubject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u202']);
         sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
+        addNotice('warning', strtr($locale['u200'], ['(%s)' => $this->_userEmail]));
         dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
         dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
     }
