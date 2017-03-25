@@ -7,5 +7,7 @@ $locale['NB_100'] = "News Headline";
 $locale['NB_101'] = "Write a short and catchy new introduction here.";
 $locale['NB_102'] = "Write the Full News Text Here";
 $locale['NB_103'] = "Submissions Properties";
+// Nebula News Template
+$locale['NB_200'] = "By";
 // News Module
 $locale['NEWS_001'] = "Recents posts";
