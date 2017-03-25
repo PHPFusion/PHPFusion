@@ -7,6 +7,7 @@ $locale['NB_100'] = "Haber Başlığı";
 $locale['NB_101'] = "Kısa ve dikkat çekici yeni bir önsöz yazın.";
 $locale['NB_102'] = "Tam Haber Metnini Buraya Yazın";
 $locale['NB_103'] = "Gönderi Özellikleri";
+// Nebula News Template
+$locale['NB_200'] = "By";
 // News Module
 $locale['NEWS_001'] = "Son gönderiler";
-
