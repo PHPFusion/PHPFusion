@@ -433,18 +433,18 @@ class QuantumFields extends \SqlHandler {
                     $data = dbarray($result);
                 }
                 if ($_GET['action'] == 'cmu') { // category move up.
-                    if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    if (!$this->debug && !empty($data['field_cat_id'])) {
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
                     }
                     if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 } elseif ($_GET['action'] == 'cmd') {
-                    if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    if (!$this->debug && !empty($data['field_cat_id'])) {
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
                     }
                     if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 }
                 if (!$this->debug) {

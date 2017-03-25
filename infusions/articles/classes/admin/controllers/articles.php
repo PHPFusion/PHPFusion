@@ -167,84 +167,79 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo openform("articleform", "post", $this->form_action);
         self::display_articleButtons("formstart", true);
         echo form_hidden("article_id", "", $this->article_data['article_id']);
+
+        echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array(
+            "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
+        ));
+        echo form_select("article_keywords", $this->locale['article_0260'], $this->article_data['article_keywords'], array(
+            "max_length" => 320, "placeholder" => $this->locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
+        ));
+
         ?>
-
-        <!-- Display Form -->
         <div class="row">
-            <!-- Display Left Column -->
-            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
-                <?php
-                echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array(
-                    "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
-                ));
-                echo form_select("article_keywords", $this->locale['article_0260'], $this->article_data['article_keywords'], array(
-                    "max_length" => 320, "placeholder" => $this->locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
-                ));
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <?php
+            openside($this->locale['article_0261']);
 
-                echo form_textarea("article_snippet", $this->locale['article_0251'], $this->article_data['article_snippet'], $articleSnippetSettings);
-                echo form_textarea("article_article", $this->locale['article_0252'], $this->article_data['article_article'], $articleExtendedSettings);
-                ?>
+            echo form_select_tree("article_cat", $this->locale['article_0101'], $this->article_data['article_cat'], array(
+                "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
+                "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
+            ),
+                DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
+            );
+
+            echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], array(
+                "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+            ));
+
+            if (multilang_table("AR")) {
+                echo form_select("article_language", $this->locale['language'], $this->article_data['article_language'], array(
+                    "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                ));
+            } else {
+                echo form_hidden("article_language", "", $this->article_data['article_language']);
+            }
+
+            echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->article_data['article_datestamp'], array(
+                "inline" => TRUE, "inner_width" => "100%"
+            ));
+
+            closeside();
+            ?>
             </div>
 
-            <!-- Display Right Column -->
-            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
-                <?php
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <?php
+            openside($this->locale['article_0262']);
 
-                openside($this->locale['article_0261']);
+            echo form_checkbox("article_draft", $this->locale['article_0256'], $this->article_data['article_draft'], array(
+                "class" => "m-b-5", "reverse_label" => TRUE
+            ));
 
-                echo form_select_tree("article_cat", $this->locale['article_0101'], $this->article_data['article_cat'], array(
-                    "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
-                    "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
-                ),
-                    DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
-                );
-
-                echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], array(
-                    "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+            if (fusion_get_settings("tinymce_enabled") != 1) {
+                echo form_checkbox("article_breaks", $this->locale['article_0257'], $this->article_data['article_breaks'], array(
+                    "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
                 ));
+            }
 
-                if (multilang_table("AR")) {
-                    echo form_select("article_language", $this->locale['language'], $this->article_data['article_language'], array(
-                        "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
-                    ));
-                } else {
-                    echo form_hidden("article_language", "", $this->article_data['article_language']);
-                }
+            echo form_checkbox("article_allow_comments", $this->locale['article_0258'], $this->article_data['article_allow_comments'], array(
+                "class"   => "m-b-5", "reverse_label" => TRUE,
+                "ext_tip" => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
+            ));
 
-                echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->article_data['article_datestamp'], array(
-                    "inline" => TRUE, "inner_width" => "100%"
-                ));
+            echo form_checkbox("article_allow_ratings", $this->locale['article_0259'], $this->article_data['article_allow_ratings'], array(
+                "class"   => "m-b-5", "reverse_label" => TRUE,
+                "ext_tip" => (!fusion_get_settings("ratings_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
+            ));
 
-                closeside();
-
-                openside($this->locale['article_0262']);
-
-                echo form_checkbox("article_draft", $this->locale['article_0256'], $this->article_data['article_draft'], array(
-                    "class" => "m-b-5", "reverse_label" => TRUE
-                ));
-
-                if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox("article_breaks", $this->locale['article_0257'], $this->article_data['article_breaks'], array(
-                        "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
-                    ));
-                }
-
-                echo form_checkbox("article_allow_comments", $this->locale['article_0258'], $this->article_data['article_allow_comments'], array(
-                    "class"   => "m-b-5", "reverse_label" => TRUE,
-                    "ext_tip" => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
-                ));
-
-                echo form_checkbox("article_allow_ratings", $this->locale['article_0259'], $this->article_data['article_allow_ratings'], array(
-                    "class"   => "m-b-5", "reverse_label" => TRUE,
-                    "ext_tip" => (!fusion_get_settings("ratings_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
-                ));
-
-                closeside();
-                ?>
-
+            closeside();
+            ?>
             </div>
-        </div>
-        <?php
+        </div><?php
+
+        echo form_textarea("article_snippet", $this->locale['article_0251'], $this->article_data['article_snippet'], $articleSnippetSettings);
+        echo form_textarea("article_article", $this->locale['article_0252'], $this->article_data['article_article'], $articleExtendedSettings);
+
         self::display_articleButtons("formend", false);
         echo closeform();
     }
