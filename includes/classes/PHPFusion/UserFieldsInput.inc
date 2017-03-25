@@ -384,13 +384,11 @@ class UserFieldsInput {
         $settings = fusion_get_settings();
 
         $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
-
         $this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
 
         if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
-
             // override the requirements of password to change email address of a member in admin panel
-            if (iADMIN && checkrights("M")) {
+            if (iSUPERADMIN or (iADMIN && checkrights('M'))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
             } elseif (!$this->registration) {
                 $this->verify_password();
@@ -398,7 +396,6 @@ class UserFieldsInput {
 
             // Require user password for email change
             if ($this->_isValidCurrentPassword || $this->registration) {
-
                 // Require a valid email account
                 if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 
@@ -414,17 +411,11 @@ class UserFieldsInput {
                     } else {
 
                         $email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
-
                         $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
-
                         if ($email_active == 0 && $email_inactive == 0) {
-
                             if ($this->verifyNewEmail && $settings['email_verification'] == 1) {
-
                                 $this->_verifyNewEmail();
-
                             } else {
-                                // Require this for return
                                 $this->data['user_email'] = $this->_userEmail;
                             }
                         } else {
@@ -483,13 +474,10 @@ class UserFieldsInput {
      * Handle new email verification procedures
      */
     private function _verifyNewEmail() {
-
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
-
         require_once INCLUDES."sendmail_include.php";
-
         mt_srand((double)microtime() * 1000000);
         $salt = "";
         for ($i = 0; $i <= 10; $i++) {
@@ -497,17 +485,12 @@ class UserFieldsInput {
         }
         $user_code = md5($this->_userEmail.$salt);
         $email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
-
         $mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
         $mailbody = str_replace("[SITENAME]", fusion_get_settings("sitename"), $mailbody);
         $mailbody = str_replace("[SITEUSERNAME]", fusion_get_settings("siteusername"), $mailbody);
         $mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
-
         $mailSubject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u202']);
-
-        sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject,
-                  $mailbody);
-
+        sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
         dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
         dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
     }
