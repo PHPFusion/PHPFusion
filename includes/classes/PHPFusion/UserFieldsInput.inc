@@ -551,7 +551,6 @@ class UserFieldsInput {
      * @return bool
      */
     public function saveUpdate() {
-
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
@@ -637,7 +636,7 @@ class UserFieldsInput {
     }
 
     private function _setAdminPassword() {
-        global $locale, $defender;
+        $locale = fusion_get_locale();
         if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
             $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
             $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
