@@ -192,7 +192,7 @@ class News extends Core {
             <?php endforeach; ?>
         </ul>
         <!--news_pre_readmore-->
-        <article class='news_item'>
+        <article class='news_item clearfix'>
             <?php echo(($news['news_image_align'] == 'news-img-center') ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
             <div class='post-meta'>
                 <ul class='meta-left'>
@@ -231,24 +231,33 @@ class News extends Core {
             <div class='post-text'>
                 <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
                 <p>
-                    <?php echo $news['news_news'] ?>
+                    <?php
+                    echo $news['news_news']
+                    ?>
                 </p>
+                <p>
+                    <?php echo $news['news_extended'] ?>
+                </p>
+
                 <?php echo $news['news_pagenav']; ?>
             </div>
-            <?php if (!empty($news['news_gallery'])) : ?>
-                <div class='post-gallery'>
-                    <div class='row'>
-                        <?php $animate_delay = 200; ?>
-                        <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                            <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
-                                <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
-                            </div>
-                            <?php $animate_delay = $animate_delay + 150; ?>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php endif; ?>
         </article>
+
+        <?php if (!empty($news['news_gallery'])) : ?>
+            <div class='post-gallery'>
+                <div class='row'>
+                    <?php $animate_delay = 200; ?>
+                    <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
+                        <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
+                        </div>
+                        <?php $animate_delay = $animate_delay + 150; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+
         <!--news_sub_readmore-->
         <?php
         if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {
