@@ -302,13 +302,14 @@ abstract class News extends NewsServer {
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
             $news_extended = $data['news_extended'];
-
             if (isset($_GET['readmore'])) {
-                $news_extended = $data['news_extended'] ? ("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : "<p>".$data['news_news']."</p>";
-                $news_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $news_extended);
-                $pagecount = count($news_extended);
-                if (is_array($news_extended)) {
-                    $news_extended = $news_news[$_GET['rowstart']];
+                if (!empty($news_extended)) {
+                    $news_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $news_extended);
+                    $pagecount = count($news_extended);
+                    $news_extended = $news_extended[0];
+                    if (is_array($news_extended) && isset($_GET['rowstart']) && isnum($_GET['rowstart'])) {
+                        $news_extended = $news_extended[$_GET['rowstart']];
+                    }
                 }
                 if ($pagecount > 1) {
                     $news_pagenav = makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."news/news.php?readmore=".$data['news_id']."&amp;");

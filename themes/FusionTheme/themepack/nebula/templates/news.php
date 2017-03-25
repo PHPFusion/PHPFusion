@@ -197,9 +197,12 @@ class News extends Core {
             <div class='post-meta'>
                 <ul class='meta-left'>
                     <li>By <?php echo profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
-                    <li><?php echo $news['news_cat_name'] ?></li>
-                    <li><?php echo timer($news['news_datestamp']) ?></li>
-                    <li><?php echo showdate('newsdate', $news['news_datestamp']) ?></li>
+                    <?php
+                    $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
+                    $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
+                    ?>
+                    <li><?php echo $start_nc_url.$news['news_cat_name'].$end_nc_url ?></li>
+                    <li><?php echo showdate('newsdate', $news['news_datestamp']).', '.timer($news['news_datestamp']); ?></li>
                 </ul>
                 <ul class='meta-right'>
                     <li><i class='fa fa-eye'></i> <?php echo number_format($news['news_reads']) ?></li>
@@ -211,11 +214,11 @@ class News extends Core {
                     </li>
                     <?php if (!empty($news['news_admin_actions'])) : ?>
                         <li>
-                            <div class='btn-group'>
-                                <?php foreach ($news['news_admin_actions'] as $actions) : ?>
-                                    <a class='btn btn-success' href='<?php echo $actions['link'] ?>'><?php echo $actions['title'] ?></a>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php
+                            echo implode(' &middot; ', array_map(function ($e) {
+                                return "<a href='".$e['link']."'>".$e['title']."</a>";
+                            }, $news['news_admin_actions']));
+                            ?>
                         </li>
                     <?php endif; ?>
                 </ul>
