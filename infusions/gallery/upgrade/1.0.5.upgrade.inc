@@ -43,11 +43,25 @@ if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
 }
 
 // Update new access levels for album access
-$result = dbquery("SELECT album_id, album_access FROM ".DB_PHOTO_ALBUMS."");
-if (dbrows($result) > 0) {
+$result = dbquery("SELECT album_id, album_access, album_language FROM ".DB_PHOTO_ALBUMS);
+if (dbrows($result)) {
+    $localeset = fusion_get_settings('localeset');
     while ($data = dbarray($result)) {
-        if ($data['album_access']) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_access ='-".$data['album_access']."' WHERE album_id='".$data['album_id']."'";
+        $update = array();
+        if ($data['album_access']) { // access > 1 (i.e. 100, 101, 102, 103)
+            $update['album_access'] = '-'.$data['album_access'];
+        }
+        if (!$data['album_language']) {
+            $update['album_language'] = $localeset;
+        }
+        if (!empty($update)) {
+            $update = array_map(function ($key) use ($update) {
+                return "`$key` = '".$update[$key]."'";
+            }, array_keys($update));
+        }
+        $upgrade = implode(', ', $update);
+        if (!empty($update)) {
+            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET $upgrade WHERE album_id='".$data['album_id']."'";
         }
     }
 }
