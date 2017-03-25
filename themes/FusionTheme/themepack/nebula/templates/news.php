@@ -196,7 +196,7 @@ class News extends Core {
             <?php echo(($news['news_image_align'] == 'news-img-center') && !empty($news_image) ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
             <div class='post-meta'>
                 <ul class='meta-left'>
-                    <li>By <?php echo profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
+                    <li><?php echo self::$locale['NB_200'].' '.profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
                     <?php
                     $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
                     $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
