@@ -412,7 +412,7 @@ class UserFieldsInput {
                         $email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
                         $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
                         if ($email_active == 0 && $email_inactive == 0) {
-                            if ($this->verifyNewEmail && $settings['email_verification'] == 1) {
+                            if ($this->verifyNewEmail && $settings['email_verification'] == 1 && !iSUPERADMIN) {
                                 $this->_verifyNewEmail();
                             } else {
                                 $this->data['user_email'] = $this->_userEmail;
