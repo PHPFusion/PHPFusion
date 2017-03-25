@@ -217,6 +217,9 @@ header h1 {
     line-height: 22px;
 }
 
+.nebulaFooter {
+    padding: 5% 0;
+}
 .nebulaBottom {
     background: #F4F6F7;
 }
