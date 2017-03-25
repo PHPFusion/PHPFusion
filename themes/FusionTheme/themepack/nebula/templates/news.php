@@ -193,7 +193,7 @@ class News extends Core {
         </ul>
         <!--news_pre_readmore-->
         <article class='news_item clearfix'>
-            <?php echo(($news['news_image_align'] == 'news-img-center') ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
+            <?php echo(($news['news_image_align'] == 'news-img-center') && !empty($news_image) ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
             <div class='post-meta'>
                 <ul class='meta-left'>
                     <li>By <?php echo profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
@@ -229,7 +229,7 @@ class News extends Core {
                 </h3>
             </div>
             <div class='post-text'>
-                <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
+                <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') && !empty($news_image) ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
                 <p>
                     <?php
                     echo $news['news_news']
