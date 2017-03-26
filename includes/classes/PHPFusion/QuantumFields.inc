@@ -2230,7 +2230,9 @@ class QuantumFields extends \SqlHandler {
                     } else {
                         if (\defender::safe()) {
                             dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
-                            dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
+                            if (dbcount("(field_id)", $this->field_db)) {
+                                dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
+                            }
                         }
                     }
                 } else {
