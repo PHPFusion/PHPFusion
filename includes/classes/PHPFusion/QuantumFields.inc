@@ -1153,6 +1153,8 @@ class QuantumFields extends \SqlHandler {
             $field_value = '';
         }
 
+        $field_label = $options['show_title'] ? self::parse_label($data['field_title']) : '';
+
         switch ($data['field_type']) {
             case 'file':
                 // Do not remove it. It is used in included files.
@@ -1170,15 +1172,9 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
             case 'textbox':
-
                 if ($method == 'input') {
-
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => $field_value,
@@ -1186,32 +1182,22 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
             case 'number':
-
                 if ($method == 'input') {
                     $options += array('type' => 'number');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => $field_value,
                     );
-
                 }
-
                 break;
             case 'url':
                 if ($method == 'input') {
                     $options += array('type' => 'url');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1219,15 +1205,11 @@ class QuantumFields extends \SqlHandler {
                     );
                 }
                 break;
-
             case 'email':
                 if ($method == 'input') {
                     $options += array('type' => 'email');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1239,11 +1221,9 @@ class QuantumFields extends \SqlHandler {
                 if ($method == 'input') {
                     $options['options'] = $option_list;
 
-                    return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
@@ -1253,7 +1233,6 @@ class QuantumFields extends \SqlHandler {
             case 'tags':
                 if ($method == 'input') {
                     $options += array('options' => $option_list, 'tags' => 1, 'multiple' => 1, 'width' => '100%');
-
                     return form_select($data['field_name'],
                         $options['show_title'] ? self::parse_label($data['field_title']) : '',
                         $field_value, $options);
@@ -1268,8 +1247,7 @@ class QuantumFields extends \SqlHandler {
                 if ($method == 'input') {
                     $options += array('width' => '100%');
 
-                    return form_location($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_location($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1279,10 +1257,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'textarea':
                 if ($method == 'input') {
-                    return form_textarea($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_textarea($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1292,9 +1267,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'checkbox':
                 if ($method == 'input') {
-                    return form_checkbox($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
+                    return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1304,10 +1277,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'datepicker':
                 if ($method == 'input') {
-                    return form_datepicker($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_datepicker($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1317,9 +1287,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'colorpicker':
                 if ($method == 'input') {
-                    return form_colorpicker($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
+                    return form_colorpicker($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1329,8 +1297,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'upload':
                 if ($method == 'input') {
-                    return form_fileinput($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_fileinput($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1340,8 +1307,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'hidden':
                 if ($method == 'input') {
-                    return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1351,9 +1317,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'address':
                 if ($method == 'input') {
-                    return form_geo($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value,
-                        $options);
+                    return form_geo($data['field_name'], $field_label, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1365,10 +1329,7 @@ class QuantumFields extends \SqlHandler {
                 $options['toggle'] = 1;
                 $options['toggle_text'] = array($this->locale['off'], $this->locale['on']);
                 if ($method == 'input') {
-                    return form_checkbox($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1377,7 +1338,6 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
         }
-
         return FALSE;
     }
 
@@ -2609,28 +2569,26 @@ class QuantumFields extends \SqlHandler {
         return $this->output_fields;
     }
 
+    /**
+     * Logs the user actions
+     *
+     * @param $db
+     * @param $primary_key
+     */
     public function log_user_action($db, $primary_key) {
         if (\defender::safe()) {
             $output_fields = array();
             $field = flatten_array($this->fields);
             $output_fields[$db] = $this->callback_data;
             foreach ($field as $arr => $field_data) {
-                $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+                $target_db = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
                 $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
                 $index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
-                if ($field_data['field_log'] == TRUE // indicated to log
-                    && isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
-                    && isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum
-                    && $this->callback_data[$field_data['field_name']] !== $this->output_fields[$target_database][$field_data['field_name']] // different old and new values.
-                ) {
-                    //print_p($this->callback_data[$field_data['field_name']]." => ".$this->output_fields[$target_database][$field_data['field_name']]);
-                    save_user_log($index_value, $field_data['field_name'],
-                        $this->output_fields[$target_database][$field_data['field_name']],
-                        $this->callback_data[$field_data['field_name']]);
+                $old_cache = isset($this->callback_data[$field_data['field_name']]) ? $this->callback_data[$field_data['field_name']] : '';
+                $new_val = isset($this->output_fields[$target_db][$field_data['field_name']]) ? $this->output_fields[$target_db][$field_data['field_name']] : '';
+                if ($field_data['field_log'] && $new_val && $new_val != $old_cache) {
+                    save_user_log($index_value, $field_data['field_name'], $new_val, $old_cache);
                 }
-                //print_p($field_data);
-                //print_p($this->output_fields);
-                // nothing to return
             }
         }
     }

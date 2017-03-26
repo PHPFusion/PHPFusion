@@ -276,7 +276,6 @@ a:hover, a:focus {
 
     #devlpr .left_menu header:after {
         display: inline-block;
-        content: "{G}";
         color: #fff;
         font-size: 34px;
         font-weight: 600;

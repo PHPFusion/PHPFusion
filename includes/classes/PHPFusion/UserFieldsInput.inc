@@ -38,6 +38,7 @@ class UserFieldsInput {
     private $_userName;
     // Passwords
     private $data = array();
+
     private $_isValidCurrentPassword = FALSE;
     private $_isValidCurrentAdminPassword = FALSE;
     private $_userHash = FALSE;
@@ -551,7 +552,6 @@ class UserFieldsInput {
      * @return bool
      */
     public function saveUpdate() {
-
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
@@ -574,7 +574,7 @@ class UserFieldsInput {
         $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
         $quantum->load_fields();
         $quantum->load_field_cats();
-        $quantum->setCallbackData($this->data);
+        $quantum->setCallbackData($this->userData);
         $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
         if (!empty($_input)) {
             foreach ($_input as $input) {
@@ -582,20 +582,20 @@ class UserFieldsInput {
             }
         }
         if (\defender::safe()) {
+            // Logs Username change
             if ($this->_userName != $this->userData['user_name']) {
                 save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
             }
+            // Logs Email change
             if ($this->_userEmail != $this->userData['user_email']) {
-                save_user_log($this->userData['user_id'], "user_email", $this->_userEmail,
-                              $this->userData['user_email']);
+                save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
             }
-
+            // Logs Field changes
             $quantum->log_user_action(DB_USERS, "user_id");
-
+            // Update Table
             dbquery_insert(DB_USERS, $this->data, 'update');
 
             $this->_completeMessage = $locale['u163'];
-
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
@@ -626,6 +626,7 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
             }
+
             if (\defender::safe()) {
                 addNotice('success', $locale['u169']);
             }
@@ -637,7 +638,7 @@ class UserFieldsInput {
     }
 
     private function _setAdminPassword() {
-        global $locale, $defender;
+        $locale = fusion_get_locale();
         if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
             $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
             $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
