@@ -938,11 +938,11 @@ if (!function_exists("tab_active")
     class FusionTabs {
 
         private $id = '';
+        private $remember = TRUE;
         private $cookie_prefix = 'tab_js';
         private $cookie_name = '';
-        public $remember = TRUE;
-        public $tab_info = [];
-        public $link_mode = FALSE;
+        private $tab_info = [];
+        private $link_mode = FALSE;
 
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
@@ -965,9 +965,9 @@ if (!function_exists("tab_active")
             }
         }
 
-        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $remember) {
+        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $set_remember = TRUE) {
             $this->id = $id;
-            $this->remember = $remember;
+            $this->remember = $set_remember;
             $this->cookie_name = $this->cookie_prefix.'-'.$id;
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
@@ -1074,8 +1074,6 @@ if (!function_exists("tab_active")
         public function closetabbody() {
             return "</div>\n";
         }
-
-
     }
 
     $fusion_tabs = new FusionTabs();
@@ -1087,7 +1085,7 @@ if (!function_exists("tab_active")
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
      * @param bool $getname        - set getname and turn tabs into link that listens to getname
      *
-*@return string
+     * @return string
      * @todo: options base
      */
     function tab_active($array, $default_active, $getname = FALSE) {
