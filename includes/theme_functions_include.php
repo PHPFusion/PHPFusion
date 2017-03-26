@@ -938,11 +938,12 @@ if (!function_exists("tab_active")
     class FusionTabs {
 
         private $id = '';
-        private $remember = TRUE;
+        private $remember = FALSE;
         private $cookie_prefix = 'tab_js';
         private $cookie_name = '';
         private $tab_info = [];
         private $link_mode = FALSE;
+
 
         public static function tab_active($array, $default_active, $getname = FALSE) {
             if (!empty($getname)) {
@@ -960,14 +961,16 @@ if (!function_exists("tab_active")
                 }
             } else {
                 $id = $array['id'][$default_active];
-
                 return $id;;
             }
         }
 
-        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = [], $set_remember = TRUE) {
+        public function set_remember($value) {
+            $this->remember = $value;
+        }
+
+        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = []) {
             $this->id = $id;
-            $this->remember = $set_remember;
             $this->cookie_name = $this->cookie_prefix.'-'.$id;
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
@@ -1043,8 +1046,8 @@ if (!function_exists("tab_active")
                     }
                 }
                 $status = ($link_active_arrkey == $id ? " in active" : '');
-            }
 
+            }
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
@@ -1089,7 +1092,7 @@ if (!function_exists("tab_active")
      * @todo: options base
      */
     function tab_active($array, $default_active, $getname = FALSE) {
-        \FusionTabs::tab_active($array, $default_active, $getname);
+        return \FusionTabs::tab_active($array, $default_active, $getname);
     }
 
     /**
@@ -1120,7 +1123,7 @@ if (!function_exists("tab_active")
      *
      * @return string
      */
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = TRUE) {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
         global $fusion_tabs;
 
         return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);

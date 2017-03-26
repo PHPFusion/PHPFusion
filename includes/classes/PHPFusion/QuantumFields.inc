@@ -935,11 +935,13 @@ class QuantumFields extends \SqlHandler {
 
             $default_active = key($tab_title['title']);
 
-            $tab_active = tab_active($tab_title, $active ?: $default_active);
-
-            echo opentab($tab_title, $tab_active, 'uftab');
+            // Tab
+            $tab_active = \FusionTabs::tab_active($tab_title, $active ?: $default_active);
+            $tabs = new \FusionTabs();
+            $tabs->set_remember(TRUE);
+            echo $tabs->opentab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', [], TRUE);
             foreach ($this->page[0] as $page_id => $page_details) {
-                echo opentabbody($tab_title['title'][$page_id], $tab_title['id'][$page_id], $tab_active);
+                echo $tabs->opentabbody($tab_title['id'][$page_id], $tab_active);
                 // load all categories here.
                 if ($this->debug) {
                     echo "<div class='m-t-20 text-dark'>\n";
@@ -1040,9 +1042,9 @@ class QuantumFields extends \SqlHandler {
                     // display no category
                     echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>\n";
                 }
-                echo closetabbody();
+                echo $tabs->closetabbody();
             }
-            echo closetab();
+            echo $tabs->closetab();
         } else {
             echo "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
