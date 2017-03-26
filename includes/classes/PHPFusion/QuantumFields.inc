@@ -437,25 +437,25 @@ class QuantumFields extends \SqlHandler {
                     }
                     if (!$this->debug) {
                         // sync the whole order
-                        //dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 } elseif ($_GET['action'] == 'cmd') {
                     if (!$this->debug && !empty($data['field_cat_id'])) {
                         dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
                     }
                     if (!$this->debug) {
-                        //dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 }
 
                 if (!$this->debug) {
-                    $res = dbquery("SELECT field_cat_id FROM ".$this->category_db);
+                    $res = dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent=:id ORDER BY field_cat_order ASC", [':id' => intval($_GET['parent_id'])]);
                     if (dbrows($res)) {
                         $i = 1;
                         while ($rows = dbarray($res)) {
                             dbquery("UPDATE ".$this->category_db." SET field_cat_order=:order WHERE field_cat_id=:id", [
                                 ':order' => $i,
-                                ':id'    => intval($_GET['cat_id'])
+                                ':id'    => intval($rows['field_cat_id'])
                             ]);
                             $i++;
                         }
@@ -471,7 +471,7 @@ class QuantumFields extends \SqlHandler {
                 if ($_GET['action'] == 'fmu') { // field move up.
                     if (!$this->debug) {
                         if (!empty($data['field_id'])) {
-                            //dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                            dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
                         }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
@@ -480,7 +480,7 @@ class QuantumFields extends \SqlHandler {
                 } elseif ($_GET['action'] == 'fmd') {
                     if (!$this->debug) {
                         if (!empty($data['field_id'])) {
-                            //dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                            dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
                         }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
@@ -488,13 +488,14 @@ class QuantumFields extends \SqlHandler {
                     }
                 }
                 if (!$this->debug) {
-                    $res = dbquery("SELECT field_id FROM ".$this->field_db);
+                    $res = dbquery("SELECT field_id, field_order FROM ".$this->field_db." WHERE field_cat=:parent_id ORDER BY field_order ASC", ['parent_id' => ($_GET['parent_id'])]);
                     if (dbrows($res)) {
                         $i = 1;
                         while ($rows = dbarray($res)) {
+                            print_p($rows);
                             dbquery("UPDATE ".$this->field_db." SET field_order=:order WHERE field_id=:id", [
                                 ':order' => $i,
-                                ':id'    => intval($_GET['field_id'])
+                                ':id'    => intval($rows['field_id'])
                             ]);
                             $i++;
                         }
