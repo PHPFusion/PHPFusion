@@ -1110,8 +1110,6 @@ class QuantumFields extends \SqlHandler {
      */
     public function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
 
-        // Add compatibality to V7's UF module.
-        // Security concerns: remove all password hashes and salt
         unset($callback_data['user_algo']);
         unset($callback_data['user_salt']);
         unset($callback_data['user_password']);
@@ -1880,6 +1878,7 @@ class QuantumFields extends \SqlHandler {
                 'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order')
             );
 
+
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
 
             if ($this->field_data['field_type'] == 'upload') {
@@ -1910,6 +1909,10 @@ class QuantumFields extends \SqlHandler {
                         'field_delete_original'    => isset($_POST['field_delete_original']) && $this->field_data['field_upload_type'] == 'image' ? 1 : 0
                     ];
                 }
+            }
+
+            if (!$this->field_data['field_order']) {
+                $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
             }
 
             if (\defender::safe()) {
@@ -2426,8 +2429,7 @@ class QuantumFields extends \SqlHandler {
             $this->field_data = array(
                 'add_module'         => isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'],
                 'field_type'         => 'file',
-                'field_id'           => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '',
-                    'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
+                'field_id'           => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
                 'field_title'        => form_sanitizer($_POST['field_title'], '', 'field_title'),
                 'field_name'         => form_sanitizer($_POST['field_name'], '', 'field_name'),
                 'field_cat'          => form_sanitizer($_POST['field_cat'], '', 'field_cat'),
@@ -2439,6 +2441,9 @@ class QuantumFields extends \SqlHandler {
                 'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order')
             );
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
+            if (!$this->field_data['field_order']) {
+                $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
+            }
             $this->create_fields($this->field_data, 'module');
         }
         echo "<div class='m-t-20'>\n";
