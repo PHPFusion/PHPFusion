@@ -266,7 +266,6 @@ class QuantumFields extends \SqlHandler {
     public function displayQuantumAdmin() {
         pageAccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
-
         if ($this->system_title) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
             add_to_title($this->system_title.' | ');
@@ -458,14 +457,18 @@ class QuantumFields extends \SqlHandler {
                 }
                 if ($_GET['action'] == 'fmu') { // field move up.
                     if (!$this->debug) {
-                        dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        if (!empty($data['field_id'])) {
+                            dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
                         print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0651']));
                     }
                 } elseif ($_GET['action'] == 'fmd') {
                     if (!$this->debug) {
-                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        if (!empty($data['field_id'])) {
+                            dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
                         print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0652']));
@@ -603,38 +606,25 @@ class QuantumFields extends \SqlHandler {
                     }
 
                 } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-
                     // Delete fields
                     $this->debug = FALSE;
-
                     if ($this->debug) {
                         print_p($this->locale['fields_0655']);
                     }
-
                     // Delete Fields - Bug with Isset errors
                     $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
-
                     if (dbrows($result) > 0) {
-
                         while ($data = dbarray($result)) {
-
                             if (in_array($data['field_name'], $field_list)) { // verify table integrity
-
                                 if ($this->debug) {
-
                                     print_p("DROP ".$data['field_name']." FROM ".$target_database);
                                     print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-
                                 } else {
-
                                     $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
-
                                     $field_count = $this->validate_field($data['field_id']);
-
                                     if ($field_count) {
                                         dbquery($field_del_sql);
                                     }
-
                                     // drop a column
                                     if (!empty($target_database)) {
                                         self::drop_column($target_database, $data['field_name']);
@@ -645,39 +635,28 @@ class QuantumFields extends \SqlHandler {
 
                         addNotice('success', $this->locale['field_0200']);
                         redirect(FUSION_SELF.$aidlink);
-
                     }
 
                 } // category deletion path 2
-
                 elseif (!isset($_POST['delete_field']) && isset($_POST['move_field']) && $_POST['move_field'] > 0) {
-
                     $rows = dbcount("(field_id)", $this->field_db, "field_cat='".intval($_GET['cat_id'])."'");
-
                     if ($rows) {
                         $new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
                         dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
                     }
 
                 }
-
                 // Delete the current category
                 $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
-
                 if ($this->debug) {
                     print_p($delete_cat_sql);
                 } else {
-
                     dbquery($delete_cat_sql);
                     addNotice('success', $this->locale['field_0200']);
                     redirect(FUSION_SELF.$aidlink);
-
                 }
-
             } else {
-
                 // show interior form
-
                 $field_list = array();
                 $form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
                 $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."' OR field_cat_id='".get_hkey($this->category_db,

@@ -995,21 +995,23 @@ if (!function_exists("tab_active")
      *
      * @return string
      */
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = []) {
-
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = [], $remember = TRUE) {
         $getArray = array($getname);
         if (!empty($request_addition)) {
             $getArray = array_merge_recursive($request_addition, $getArray);
         }
-
+        $cookieName = "tab_js-$id";
+        if (empty($link) && $remember) {
+            if (isset($_COOKIE[$cookieName])) {
+                $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$cookieName]);
+            }
+        }
         $html = "<div class='nav-wrapper'>\n";
         $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
         foreach ($tab_title['title'] as $arr => $v) {
-
             $v_title = str_replace("-", " ", $v);
             $tab_id = $tab_title['id'][$arr];
             $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-
             $link_url = '#';
             if ($link) {
                 $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
@@ -1020,13 +1022,24 @@ if (!function_exists("tab_active")
             } else {
                 $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
             }
-
-            $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+            $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
             $html .= "</li>\n";
         }
         $html .= "</ul>\n";
         $html .= "<div id='tab-content-$id' class='tab-content'>\n";
-
+        if (empty($link) && $remember) {
+            \PHPFusion\OutputHandler::addToJQuery("        
+            $('#".$id." > li').on('click', function() {            
+                var cookieName = 'tab_js-".$id."';          
+                var cookieValue = $(this).find(\"a[role='tab']\").attr('id');            
+                Cookies.set(cookieName, cookieValue);
+            });
+            var cookieName = 'tab_js-".$id."';        
+            if (Cookies.get(cookieName)) {            
+                $('#".$id."').find('#'+Cookies.get(cookieName)).click();            
+            }
+            ");
+        }
         return (string)$html;
     }
 
