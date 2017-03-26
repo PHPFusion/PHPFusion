@@ -973,16 +973,20 @@ class QuantumFields extends \SqlHandler {
                             print_p($field_cat);
                         }
                         echo "<div class='clearfix'>\n";
-                        echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.self::parse_label($field_cat['field_cat_name']), 'profile_category_name display-inline-block pull-left');
-                        echo "<div class='pull-left m-t-10 m-l-10'>\n";
+                        echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.self::parse_label($field_cat['field_cat_name']), 'profile_category_name display-inline-block m-r-15 pull-left');
+                        echo "<div class='pull-left display-inline-block spacer-xs'>\n";
                         if ($i != 0) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
+                            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$this->locale['move_up']."</a> &middot; ";
+                        } else {
+                            echo "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                         }
                         if ($i !== $counter) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
+                            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$this->locale['move_down']."</a> &middot; ";
+                        } else {
+                            echo "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
                         }
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> - ";
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
+                        echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> &middot; ";
+                        echo "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
                         echo "</div>\n";
                         echo "</div>\n";
                         if (isset($this->fields[$cat_id])) {
@@ -1008,19 +1012,25 @@ class QuantumFields extends \SqlHandler {
                                 }
 
                                 echo $start_edit;
-                                echo "<div class='text-left'>\n";
+                                echo "<div class='clearfix'>\n";
+                                echo "<div class='pull-right spacer-xs m-t-0 m-r-15'>\n";
                                 if ($k != 0) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$this->locale['move_up']."</a> &middot; ";
+                                } else {
+                                    echo "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                                 }
                                 if ($k !== $item_counter) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$this->locale['move_down']."</a> &middot; ";
+                                } else {
+                                    echo "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
                                 }
                                 if ($field_data['field_type'] == 'file') {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> &middot; ";
                                 } else {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> &middot; ";
                                 }
-                                echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$this->locale['delete']."</a>";
+                                echo "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$this->locale['delete']."</a>";
+                                echo "</div>\n";
                                 echo "</div>\n";
 
                                 $options = array('inline' => 1, 'show_title' => 1, 'hide_value' => 1);
