@@ -62,8 +62,8 @@ if (!function_exists('render_thread')) {
             $participated_users .= "<span class='m-r-10'><strong>".$locale['forum_0581']."</strong></span>";
             $i = 1;
             $max = count($info['thread_users']);
-            foreach ($info['thread_users'] as $user_id => $users) {
-                $participated_users .= $users;
+            foreach ($info['thread_users'] as $user_id => $user) {
+                $participated_users .= profile_link($user['user_id'], $user['user_name'], $user['user_status']);
                 $participated_users .= $max == $i ? " " : ", ";
                 $i++;
             }
@@ -101,8 +101,8 @@ if (!function_exists('render_thread')) {
                 {%pagenav%}
             </div>
             <!--pre_forum_thread-->
-            {%post_items%}            
-            {%mod_form%}            
+            {%post_items%}
+            {%mod_form%}
             <div class='clearfix m-t-20'>
                 <div class='pull-left m-t-10'>
                 {%new_thread_button%}{%reply_button%}
