@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/classes/Dashboard.php
+| Filename: Material/classes/Dashboard.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,14 +18,13 @@
 namespace Material;
 
 class Dashboard {
-    public static function RenderDashboard() {
+    private static function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
             $global_ratings, $global_submissions, $link_type, $submit_type, $submit_link,
             $comments_type, $infusions_count, $global_infusions;
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $settings = fusion_get_settings();
 
         opentable($locale['250']);
             $mobile  = '12';
@@ -33,12 +32,12 @@ class Dashboard {
             $laptop  = '6';
             $desktop = '3';
 
-            $panels = array(
-                'registered'   => array('link' => '', 'title' => 251),
-                'cancelled'    => array('link' => 'status=5', 'title' => 263),
-                'unactivated'  => array('link' => 'status=2', 'title' => 252),
-                'security_ban' => array('link' => 'status=4', 'title' => 253)
-            );
+            $panels = [
+                'registered'   => ['link' => '', 'title' => 251],
+                'cancelled'    => ['link' => 'status=5', 'title' => 263],
+                'unactivated'  => ['link' => 'status=2', 'title' => 252],
+                'security_ban' => ['link' => 'status=4', 'title' => 253]
+            ];
 
             echo '<div class="members">';
                 echo '<div class="row">';
@@ -50,8 +49,8 @@ class Dashboard {
                             echo '<h4 class="text-right m-t-0 m-b-0">'.number_format($members[$panel]).'</h4>';
                             echo '<span class="text-smaller pull-right"><strong>'.$locale[$block['title']].'</strong></span>';
 
-                            $content_ = '<div class="text-right text-uppercase">';
-                            $content_ .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="entypo right-open-mini"></i></a>';
+                            $content_  = '<div class="text-right text-uppercase">';
+                            $content_ .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="fa fa-angle-right"></i></a>';
                             $content_ .= '</div>';
                         closeside(checkrights('M') ? $content_ : '');
                         echo '</div>';
@@ -216,7 +215,7 @@ class Dashboard {
                                         echo '<span class="badge m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
                                     }
                                 }
-                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="entypo right-open-mini"></i></a></div>' : '';
+                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-angle-right"></i></a></div>' : '';
                             } else {
                                 echo '<div class="text-center">'.$locale['284'].'</div>';
                             }
@@ -310,26 +309,25 @@ class Dashboard {
         closetable();
     }
 
-    public static function AdminIcons() {
+    private static function AdminIcons() {
         global $admin_icons, $admin_images;
+
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $admin_title = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['200']);
+        $admin_title = str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['200']);
 
         opentable($admin_title);
             echo '<div class="admin-content-icons">';
                 if (count($admin_icons['data']) > 0) {
                     foreach ($admin_icons['data'] as $i => $data) {
-                        echo '<div class="icon-wrapper col-xs-12 col-sm-2 col-md-2 col-lg-2">';
+                        echo '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
                             if ($admin_images) {
-                                echo '<div class="icon-container">';
-                                    echo "<a href='".$data['admin_link'].$aidlink."'>";
-                                        echo "<img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'/>";
-                                    echo '</a>';
+                                echo '<a class="icon-container text-center" href="'.$data['admin_link'].$aidlink.'">';
+                                    echo '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>';
                                     echo '<div class="overflow-hide">';
-                                        echo "<a class='icon-title' href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a>";
+                                        echo '<span class="icon-title">'.$data['admin_title'].'</span>';
                                     echo '</div>';
-                                echo '</div>';
+                                echo '</a>';
                             } else {
                                 echo '<span class="small"><a href="'.$data['admin_link'].$aidlink.'">'.$data['admin_title'].'</a></span>';
                             }
@@ -342,9 +340,9 @@ class Dashboard {
 
     public static function AdminDashboard() {
         if (isset($_GET['os']) or (isset($_GET['pagenum']) && $_GET['pagenum']) > 0) {
-            render_admin_icon();
+            self::AdminIcons();
         } else {
-            render_dashboard();
+            self::RenderDashboard();
         }
     }
 }
