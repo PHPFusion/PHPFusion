@@ -617,11 +617,11 @@ class ForumThreads extends ForumServer {
         // Can accept an answer
         $this->thread_info['permissions']['can_answer'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_answered'] == FALSE && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
         // Can start a bounty
-        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_data['forum_type'] == 4 && !$this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && fusion_get_userdata('user_reputation') >= 50 ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && !$this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && fusion_get_userdata('user_reputation') >= 50 ? TRUE : FALSE;
         // Can edit a bounty
-        $this->thread_info['permissions']['can_edit_bounty'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_edit_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && $this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
         // Can award bounty
-        $this->thread_info['permissions']['can_award_bounty'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_bounty'] && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id')) ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_award_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && $this->thread_data['thread_bounty'] && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id')) ? TRUE : FALSE;
     }
 
     /**
