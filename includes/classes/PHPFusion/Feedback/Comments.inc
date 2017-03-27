@@ -230,7 +230,7 @@ class Comments {
                         }
                     }
                     // Captcha for Guest
-                    if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+                    if (!iMEMBER && fusion_get_settings('guestposts') == TRUE && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
                         $_CAPTCHA_INPUT .= "<div class='m-t-10 m-b-10'>";
                         $_CAPTCHA_INPUT .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
@@ -257,7 +257,7 @@ class Comments {
                     $comments_form .= strtr(ob_get_clean(), [
                         '{%comment_form_title%}'     => ($this->getParams('comment_form_title') ?: $this->locale['c111']),
                         '{%comment_form_id%}'        => $this->getParams('comment_key').'_edit_comment',
-                        '{%user_avatar%}'            => iMEMBER ? $avatar : '',
+                        '{%user_avatar%}'            => $can_post ? $avatar : '',
                         '{%comment_name_input%}'     => ($can_post ? (iGUEST ? form_text('comment_name', $this->locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_name']) : '') : ''),
                         '{%comment_subject_input%}'  => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
                         '{%comment_message_input%}'  => ($can_post ? form_textarea('comment_message', '', $edata['comment_message'],
@@ -273,7 +273,7 @@ class Comments {
                         ) : $this->locale['c105']),
                         '{%comments_ratings_input%}' => $ratings_input,
                         '{%comments_captcha_input%}' => $_CAPTCHA_INPUT,
-                        '{%comment_post%}'           => iMEMBER ? $button : ''
+                        '{%comment_post%}'           => $can_post ? $button : ''
                     ]);
                     $comments_form .= closeform();
                 } else {
