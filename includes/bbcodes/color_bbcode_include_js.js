@@ -1,7 +1,7 @@
 //based on TinyMce color map plugin - modified by wooya
 function showMapColor(color, mapId) {
-    document.getElementById("selectedMapColor" + mapId).style.backgroundColor = color;
-    document.getElementById("selectedMapColorBox" + mapId).value = color;
+    $("#selectedMapColor" + mapId).css('background-color', color);
+    $("#selectedMapColorBox" + mapId).val(color);
 }
 
 //based on TinyMce color map plugin - modified by wooya
@@ -57,5 +57,5 @@ function ColorMap(elname, formname) {
         + '</td></tr>'
         + '</table>';
 
-    document.write(html);
+    $('#bbcode_color_map_' + elname).append(html);
 }
