@@ -229,7 +229,8 @@ class Comments {
                             );
                         }
                     }
-                    if (iMEMBER && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+                    // Captcha for Guest
+                    if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
                         $_CAPTCHA_INPUT .= "<div class='m-t-10 m-b-10'>";
                         $_CAPTCHA_INPUT .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
@@ -359,8 +360,8 @@ class Comments {
             } else {
                 trigger_error('function '.$comments_ui_template.' not found or declared too late. Is defined in your theme?');
             }
-
         }
+
         if ($this->getParams('comment_echo')) {
             echo $html;
 
