@@ -78,7 +78,7 @@ if (!function_exists("display_forum_postform")) {
         echo "<!--end_form-->\n";
         closetable();
         if (!empty($info['last_posts_reply'])) {
-            echo "<div class='well m-t-20'>\n";
+            echo "<div class='well m-t-20 overflow-hide'>\n";
             echo $info['last_posts_reply'];
             echo "</div>\n";
         }

@@ -175,7 +175,7 @@ class Comments {
 
                         $edit_query = "
                         SELECT tcm.*
-                        FROM ".DB_COMMENTS." tcm                        
+                        FROM ".DB_COMMENTS." tcm
                         WHERE comment_id=:comment_id AND comment_item_id=:comment_item_id AND comment_type=:comment_type AND comment_hidden=:comment_hidden";
 
                         $edit_param = [
@@ -229,7 +229,8 @@ class Comments {
                             );
                         }
                     }
-                    if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+                    // Captcha for Guest
+                    if (!iMEMBER && fusion_get_settings('guestposts') == TRUE && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
                         $_CAPTCHA_INPUT .= "<div class='m-t-10 m-b-10'>";
                         $_CAPTCHA_INPUT .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
@@ -245,12 +246,18 @@ class Comments {
                         $_CAPTCHA_INPUT .= "</div>\n";
                     }
 
+                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+
+                    $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
+                            ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
+                            );
+
                     ob_start();
                     $comments_form_template($this->getParams('comment_item_type'), $this->getParams('clink'), $this->getParams('comment_item_id'), isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE, $this->getParams());
                     $comments_form .= strtr(ob_get_clean(), [
                         '{%comment_form_title%}'     => ($this->getParams('comment_form_title') ?: $this->locale['c111']),
                         '{%comment_form_id%}'        => $this->getParams('comment_key').'_edit_comment',
-                        '{%user_avatar%}'            => display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded"),
+                        '{%user_avatar%}'            => $can_post ? $avatar : '',
                         '{%comment_name_input%}'     => ($can_post ? (iGUEST ? form_text('comment_name', $this->locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_name']) : '') : ''),
                         '{%comment_subject_input%}'  => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
                         '{%comment_message_input%}'  => ($can_post ? form_textarea('comment_message', '', $edata['comment_message'],
@@ -266,9 +273,7 @@ class Comments {
                         ) : $this->locale['c105']),
                         '{%comments_ratings_input%}' => $ratings_input,
                         '{%comments_captcha_input%}' => $_CAPTCHA_INPUT,
-                        '{%comment_post%}'           => form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
-                            ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
-                        )
+                        '{%comment_post%}'           => $can_post ? $button : ''
                     ]);
                     $comments_form .= closeform();
                 } else {
@@ -355,8 +360,8 @@ class Comments {
             } else {
                 trigger_error('function '.$comments_ui_template.' not found or declared too late. Is defined in your theme?');
             }
-
         }
+
         if ($this->getParams('comment_echo')) {
             echo $html;
 
@@ -731,7 +736,7 @@ class Comments {
     // All will post towards the last box on multiple instance.
     private function buildJavascript() {
         return "
-        <script>        
+        <script>
         InitComment();
         function InitComment() {
             PostComments();
@@ -817,7 +822,7 @@ class Comments {
                 values[field.name] = field.value;
             });
             var url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
-            
+
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -832,7 +837,7 @@ class Comments {
         });
         }
         function PostCommentsReply() {
-            $('body').on('click', '.comments-reply', function (e) {                
+            $('body').on('click', '.comments-reply', function (e) {
                 e.preventDefault();
                 $('.comments_reply_container').hide();
                 var comment_id = $(this).data('id');
@@ -951,7 +956,7 @@ class Comments {
 
                 $comment_query = "
                 SELECT tcm.* ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? ", tcr.rating_vote 'ratings'" : '')."
-                FROM ".DB_COMMENTS." tcm                
+                FROM ".DB_COMMENTS." tcm
                 ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? "LEFT JOIN ".DB_RATINGS." tcr ON tcr.rating_item_id=tcm.comment_item_id AND tcr.rating_type=tcm.comment_type" : '')."
                 WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden
                 ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC LIMIT ".$c_start.", ".$this->cpp."

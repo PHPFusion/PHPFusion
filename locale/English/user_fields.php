@@ -150,7 +150,7 @@ $locale['u193b'] = "I agree";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation
-$locale['u200'] = "A verify email has been sent to your new email address (%s).";
+$locale['u200'] = "A verify email has been sent to your new email address (%s). Please check your email.";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
 $locale['u202'] = "E-mail address verify - [SITENAME]";
 $locale['u203'] = "Hello [USER_NAME],\n

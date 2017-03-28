@@ -245,7 +245,7 @@ class Members_Display extends Members_Admin {
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
         $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
-        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
+        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
 
         if (!empty($list)) {
             $list_result = '';
@@ -256,13 +256,13 @@ class Members_Display extends Members_Admin {
         /*
          * User Actions Button
          */
-        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class'=>'btn-success m-r-10')).
-            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class'=>'m-r-10'));
+        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class' => 'btn-success m-r-10')).
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class' => ' btn-default m-r-10'));
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
         $html .= form_hidden('aid', '', iAUTH);

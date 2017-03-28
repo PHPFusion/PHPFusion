@@ -55,7 +55,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                 redirect(FUSION_REQUEST);
             } else {
                 addNotice("danger", $this->locale['901']);
-				$article_settings = $inputArray;
+				$weblink_settings = $inputArray;
             }
         }
 

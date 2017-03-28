@@ -68,7 +68,7 @@ class UserFields extends QuantumFields {
 
     public $options = [];
     private $default_options = [
-        'btn_post_class' => 'btn-primary m-t-20 m-b-10',
+        'btn_post_class' => 'btn-default spacer-sm',
         'btn_class'      => 'btn btn-default',
     ];
 
@@ -264,8 +264,8 @@ class UserFields extends QuantumFields {
                     'error_text'       => $locale['u133']
                 )
             );
-            // Avatar Field
 
+            // Avatar Field
             if (!$this->registration) {
 
                 if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
@@ -298,6 +298,7 @@ class UserFields extends QuantumFields {
                     );
                 }
             }
+
             $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, array(
                     'type'       => 'email',
                     "required"   => TRUE,
@@ -306,11 +307,16 @@ class UserFields extends QuantumFields {
                     'error_text' => $locale['u126']
                 )
             );
-            $this->info['user_hide_email'] = form_btngroup('user_hide_email', $locale['u051'], $user_hide_email,
+
+            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $user_hide_email,
                 array(
-                    'inline'  => TRUE,
-                    'options' => array($locale['u053'], $locale['u052']),
-                    'class'   => $this->options['btn_class']
+                    'inline'         => TRUE,
+                    'inline_options' => TRUE,
+                    'type'           => 'radio',
+                    'options'        => array(
+                        1 => $locale['u052'],
+                        0 => $locale['u053'],
+                    ),
                 )
             );
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
@@ -367,7 +373,7 @@ class UserFields extends QuantumFields {
          * Template Output
          */
         ob_start();
-        display_register_form($this->info);
+        $this->registration ? display_register_form($this->info) : display_profile_form($this->info);
         echo strtr(ob_get_clean(), [
                 '{%tab_header%}'                => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '',
                 '{%open_form%}'                 => $this->info['openform'],
@@ -524,6 +530,7 @@ class UserFields extends QuantumFields {
         $rows = dbrows($result);
         if ($rows != '0') {
             while ($data = dbarray($result)) {
+
                 if ($data['field_cat_id']) {
                     $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
                 }
@@ -549,9 +556,7 @@ class UserFields extends QuantumFields {
                 foreach ($category[$index_page_id] as $cat_id => $cat) {
                     if ($this->registration || $this->method == 'input') {
                         if (isset($item[$cat_id])) {
-
                             $fields['user_field'][$cat_id]['title'] = $cat;
-
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 $options = array(
                                     'show_title' => TRUE,
@@ -566,16 +571,18 @@ class UserFields extends QuantumFields {
                                 }
                                 $field_output = $this->display_fields($field, $this->userData, $this->method, $options);
                                 $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
+                                $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }
                         }
-
                     } else {
                         // Display User Fields
                         if (isset($item[$cat_id])) {
                             $fields['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
                             foreach ($item[$cat_id] as $field_id => $field) {
+                                // Outputs array
                                 $field_output = $this->display_fields($field, $this->userData, $this->method);
-                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
+                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }
                         }
                     }

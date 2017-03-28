@@ -38,6 +38,7 @@ class UserFieldsInput {
     private $_userName;
     // Passwords
     private $data = array();
+
     private $_isValidCurrentPassword = FALSE;
     private $_isValidCurrentAdminPassword = FALSE;
     private $_userHash = FALSE;
@@ -384,13 +385,11 @@ class UserFieldsInput {
         $settings = fusion_get_settings();
 
         $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
-
         $this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
 
         if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
-
             // override the requirements of password to change email address of a member in admin panel
-            if (iADMIN && checkrights("M")) {
+            if (iSUPERADMIN or (iADMIN && checkrights('M'))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
             } elseif (!$this->registration) {
                 $this->verify_password();
@@ -398,14 +397,12 @@ class UserFieldsInput {
 
             // Require user password for email change
             if ($this->_isValidCurrentPassword || $this->registration) {
-
                 // Require a valid email account
                 if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 
                     if (dbcount("(blacklist_id)", DB_BLACKLIST,
                                 ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
                                 array(':email' => $this->_userEmail))) {
-
                         // this email blacklisted.
                         \defender::stop();
                         \defender::setInputError('user_email');
@@ -414,17 +411,11 @@ class UserFieldsInput {
                     } else {
 
                         $email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
-
                         $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
-
                         if ($email_active == 0 && $email_inactive == 0) {
-
-                            if ($this->verifyNewEmail && $settings['email_verification'] == 1) {
-
+                            if ($this->verifyNewEmail && $settings['email_verification'] == 1 && !iSUPERADMIN) {
                                 $this->_verifyNewEmail();
-
                             } else {
-                                // Require this for return
                                 $this->data['user_email'] = $this->_userEmail;
                             }
                         } else {
@@ -483,13 +474,10 @@ class UserFieldsInput {
      * Handle new email verification procedures
      */
     private function _verifyNewEmail() {
-
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
-
         require_once INCLUDES."sendmail_include.php";
-
         mt_srand((double)microtime() * 1000000);
         $salt = "";
         for ($i = 0; $i <= 10; $i++) {
@@ -497,17 +485,13 @@ class UserFieldsInput {
         }
         $user_code = md5($this->_userEmail.$salt);
         $email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
-
         $mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
         $mailbody = str_replace("[SITENAME]", fusion_get_settings("sitename"), $mailbody);
         $mailbody = str_replace("[SITEUSERNAME]", fusion_get_settings("siteusername"), $mailbody);
         $mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
-
         $mailSubject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u202']);
-
-        sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject,
-                  $mailbody);
-
+        sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
+        addNotice('warning', strtr($locale['u200'], ['(%s)' => $this->_userEmail]));
         dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
         dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
     }
@@ -568,7 +552,6 @@ class UserFieldsInput {
      * @return bool
      */
     public function saveUpdate() {
-
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
@@ -591,7 +574,7 @@ class UserFieldsInput {
         $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
         $quantum->load_fields();
         $quantum->load_field_cats();
-        $quantum->setCallbackData($this->data);
+        $quantum->setCallbackData($this->userData);
         $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
         if (!empty($_input)) {
             foreach ($_input as $input) {
@@ -599,20 +582,20 @@ class UserFieldsInput {
             }
         }
         if (\defender::safe()) {
+            // Logs Username change
             if ($this->_userName != $this->userData['user_name']) {
                 save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
             }
+            // Logs Email change
             if ($this->_userEmail != $this->userData['user_email']) {
-                save_user_log($this->userData['user_id'], "user_email", $this->_userEmail,
-                              $this->userData['user_email']);
+                save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
             }
-
+            // Logs Field changes
             $quantum->log_user_action(DB_USERS, "user_id");
-
+            // Update Table
             dbquery_insert(DB_USERS, $this->data, 'update');
 
             $this->_completeMessage = $locale['u163'];
-
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
@@ -643,6 +626,7 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
             }
+
             if (\defender::safe()) {
                 addNotice('success', $locale['u169']);
             }
@@ -654,7 +638,7 @@ class UserFieldsInput {
     }
 
     private function _setAdminPassword() {
-        global $locale, $defender;
+        $locale = fusion_get_locale();
         if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
             $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
             $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2

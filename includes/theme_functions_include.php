@@ -934,53 +934,181 @@ if (!function_exists("tab_active")
     && !function_exists("closetabbody")
     && !function_exists("closetab")
 ) {
+
+    class FusionTabs {
+
+        private $id = '';
+        private $remember = FALSE;
+        private $cookie_prefix = 'tab_js';
+        private $cookie_name = '';
+        private $tab_info = [];
+        private $link_mode = FALSE;
+
+
+        public static function tab_active($array, $default_active, $getname = FALSE) {
+            if (!empty($getname)) {
+                $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
+                $count = count($array['title']);
+                if ($count > 0) {
+                    for ($i = 0; $i < $count; $i++) {
+                        $id = $array['id'][$i];
+                        if ($section == $id) {
+                            return $id;
+                        }
+                    }
+                } else {
+                    return $default_active;
+                }
+            } else {
+                $id = $array['id'][$default_active];
+                return $id;;
+            }
+        }
+
+        public function set_remember($value) {
+            $this->remember = $value;
+        }
+
+        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = []) {
+            $this->id = $id;
+            $this->cookie_name = $this->cookie_prefix.'-'.$id;
+            $this->tab_info = $tab_title;
+            $this->link_mode = $link;
+
+            $getArray = array($getname);
+            if (!empty($cleanup_GET)) {
+                $getArray = array_merge_recursive($cleanup_GET, $getArray);
+            }
+            if (empty($link) && $this->remember) {
+                if (isset($_COOKIE[$this->cookie_name])) {
+                    $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
+                }
+            }
+            $html = "<div class='nav-wrapper'>\n";
+            $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
+            foreach ($tab_title['title'] as $arr => $v) {
+                $v_title = str_replace("-", " ", $v);
+                $tab_id = $tab_title['id'][$arr];
+                $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
+                $link_url = '#';
+                if ($link) {
+                    $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
+                    if ($link === TRUE) {
+                        $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
+                    }
+                    $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
+                } else {
+                    $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
+                }
+                $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+                $html .= "</li>\n";
+            }
+            $html .= "</ul>\n";
+            $html .= "<div id='tab-content-$id' class='tab-content'>\n";
+            if (empty($link) && $this->remember) {
+                \PHPFusion\OutputHandler::addToJQuery("        
+                $('#".$id." > li').on('click', function() {            
+                    var cookieName = '".$this->cookie_name."';          
+                    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');            
+                    Cookies.set(cookieName, cookieValue);
+                });
+                var cookieName = 'tab_js-".$id."';        
+                if (Cookies.get(cookieName)) {            
+                    $('#".$id."').find('#'+Cookies.get(cookieName)).click();            
+                }
+                ");
+            }
+
+            return (string)$html;
+        }
+
+        /*
+         * Deprecated $tab_title.
+         * Deprecated $link
+         *
+         * Commit title:
+         * Using globals without adding parameter to pass $id set on previous opentabs() to next opentabbody()
+         */
+        public function opentabbody($id, $link_active_arrkey = FALSE, $key = FALSE) {
+            $key = $key ? $key : 'section';
+            if (isset($_GET[$key]) && $this->link_mode) {
+                if ($link_active_arrkey == $id) {
+                    $status = 'in active';
+                } else {
+                    $status = '';
+                }
+            } else {
+                if (!$this->link_mode) {
+                    if ($this->remember) {
+                        if (isset($_COOKIE[$this->cookie_name])) {
+                            $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
+                        }
+                    }
+                }
+                $status = ($link_active_arrkey == $id ? " in active" : '');
+
+            }
+            return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
+        }
+
+        public function closetab(array $options = array()) {
+            $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+            $default_options = array(
+                "tab_nav" => FALSE,
+            );
+            $options += $default_options;
+            if ($options['tab_nav'] == TRUE) {
+                $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
+                $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
+                add_to_jquery("
+				$('.btnNext').click(function(){
+				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+				});
+				$('.btnPrevious').click(function(){
+				  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+				});
+			");
+                echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
+            }
+
+            return "</div>\n</div>\n";
+        }
+
+        public function closetabbody() {
+            return "</div>\n";
+        }
+    }
+
+    $fusion_tabs = new FusionTabs();
+
     /**
      * Current Tab Active Selector
-     * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
+     *
+     * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-     * @param bool $getname - set getname and turn tabs into link that listens to getname
+     * @param bool $getname        - set getname and turn tabs into link that listens to getname
+     *
      * @return string
      * @todo: options base
      */
-
     function tab_active($array, $default_active, $getname = FALSE) {
-        if (!empty($getname)) {
-            $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
-            $count = count($array['title']);
-            if ($count > 0) {
-                for ($i = 0; $i < $count; $i++) {
-                    $id = $array['id'][$i];
-                    if ($section == $id) {
-                        return $id;
-                    }
-                }
-            } else {
-                return $default_active;
-            }
-        } else {
-            $id = $array['id'][$default_active];
-            $title = $array['title'][$default_active];
-            $v_link = str_replace(" ", "-", $title);
-            $v_link = str_replace("/", "-", $v_link);
-            $v_link = ""; // test without link convertor
-
-            return "".$id."$v_link";
-        }
+        return \FusionTabs::tab_active($array, $default_active, $getname);
     }
 
     /**
      * Render Tab Links
-     * @param            $tab_title - entire array consisting of ['title'], ['id'], ['icon']
-     * @param            $link_active_arrkey - tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param            $id - unique ID
-     * @param bool|FALSE $link - default false for jquery, true for php (will reload page)
-     * @param bool|FALSE $class - the class for the nav
-     * @param string     $getname - the get request
-     * @param array      $request_addition - the request key that needs to be deleted
      *
-     * Example:
-     * $tab_title['title'][] = "Tab 1";
-     * $tab_title['id'][] = "tab1";
+     * @param               $tab_title          entire array consisting of ['title'], ['id'], ['icon']
+     * @param               $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param               $id                 unique ID
+     * @param bool|FALSE    $link               default false for jquery, true for php (will reload page)
+     * @param bool|FALSE    $class              the class for the nav
+     * @param string        $getname            the get request
+     * @param array         $cleanup_GET        the request key that needs to be deleted
+     * @param bool|FALSE    $remember           set to true to automatically remember tab using cookie.
+     *                                          Example:
+     *                                          $tab_title['title'][] = "Tab 1";
+     *                                          $tab_title['id'][] = "tab1";
      *
      * $tab_title['title'][] = "Tab 2";
      * $tab_title['id'][] = "tab2";
@@ -995,102 +1123,37 @@ if (!function_exists("tab_active")
      *
      * @return string
      */
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = []) {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
+        global $fusion_tabs;
 
-        $getArray = array($getname);
-        if (!empty($request_addition)) {
-            $getArray = array_merge_recursive($request_addition, $getArray);
-        }
-
-        $html = "<div class='nav-wrapper'>\n";
-        $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
-        foreach ($tab_title['title'] as $arr => $v) {
-
-            $v_title = str_replace("-", " ", $v);
-            $tab_id = $tab_title['id'][$arr];
-            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-
-            $link_url = '#';
-            if ($link) {
-                $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
-                if ($link === TRUE) {
-                    $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
-                }
-                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
-            } else {
-                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
-            }
-
-            $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
-            $html .= "</li>\n";
-        }
-        $html .= "</ul>\n";
-        $html .= "<div id='tab-content-$id' class='tab-content'>\n";
-
-        return (string)$html;
+        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
     }
 
-    function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
-        $key = $key ? $key : 'section';
-        // get
-        if (isset($_GET[$key]) && $link == 1) {
-            $link = '';
-            if ($link_active_arrkey == $id) {
-                $status = 'in active';
-            } else {
-                $status = '';
-            }
-        } else {
-            if (!$link) {
-                if (is_array($tab_title)) {
-                    $title = $tab_title['title'];
-                    $link = str_replace(" ", "-", $title);
-                    $link = str_replace("/", "-", $link);
-                } else {
-                    $link = str_replace(" ", "-", $tab_title);
-                    $link = str_replace("/", "-", $link);
-                }
-            } else {
-                $link = '';
-            }
-            //if ($link_active_arrkey == "".$id."$link") {
-            if ($link_active_arrkey == $id) { // test without link convertor
-                $status = "in active";
-            } else {
-                $status = "";
-            }
-        }
-        $link = ""; // test without link convertor
+    /**
+     * @param      $tab_title               deprecated, however this function is replaceable, and the params are accessible.
+     * @param      $tab_id
+     * @param bool $link_active_arrkey
+     * @param bool $link                    deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool $key
+     *
+     * @return mixed
+     */
+    function opentabbody($tab_title, $tab_id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
+        global $fusion_tabs;
 
-        return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
+        return $fusion_tabs->opentabbody($tab_id, $link_active_arrkey, $key);
     }
 
     function closetabbody() {
-        return "</div>\n";
+        global $fusion_tabs;
+
+        return $fusion_tabs->closetabbody();
     }
 
     function closetab(array $options = array()) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $default_options = array(
-            "tab_nav" => FALSE,
-        );
-        $options += $default_options;
+        global $fusion_tabs;
 
-        if ($options['tab_nav'] == TRUE) {
-            $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
-            $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-            add_to_jquery("
-				$('.btnNext').click(function(){
-				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
-				});
-				$('.btnPrevious').click(function(){
-				  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-				});
-			");
-            echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
-        }
-
-        return "</div>\n</div>\n";
+        return $fusion_tabs->closetab($options);
     }
 }
 
@@ -1116,14 +1179,16 @@ if (!function_exists("display_comments")) {
     /* Standard comment display */
     function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
     	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
+        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
         $end_link = $link ? "</a>\n" : '';
         $str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;
         if ($news_comments > 0) {
-            return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
+            $start_link = strtr($start_link, ['{%title%}' => "title='".$locale['global_073']."'"]);
         } else {
-            return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
+            $start_link = strtr($start_link, ['{%title%}' => "title='".sprintf($locale['global_089'], $locale['global_077'])."'"]);
         }
+
+        return $start_link.$str.$end_link;
     }
 }
 

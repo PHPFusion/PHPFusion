@@ -42,7 +42,7 @@ class News extends Core {
         self::setParam('body_container', TRUE);
         ?>
 
-        <ul class='m-b-20 list-group-item row'>
+        <ul class='m-b-20 list-group-item'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
@@ -97,31 +97,11 @@ class News extends Core {
         <div class='news_item wow fadeInDown' data-wow-duration='700ms' data-wow-delay='200ms'>
             <article id='news_<?php echo $info['news_id'] ?>'>
                 <div class='post-image'>
-                    <?php if (!empty($info['news_image_src'])) : ?>
+                    <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg') == FALSE) : ?>
                         <a href='<?php echo $info['news_link'] ?>'>
                             <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
                         </a>
                     <?php endif; ?>
-                </div>
-                <div class='post-meta'>
-                    <ul class="meta-left">
-                        <li>By <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?></li>
-                        <li><?php echo $info['news_cat_name'] ?></li>
-                        <li><?php echo timer($info['news_datestamp']) ?></li>
-                    </ul>
-                    <ul class='meta-right'>
-                        <li><i class='fa fa-comment'></i> <?php echo $info['news_display_comments'] ?></li>
-                        <li><i class='fa fa-heart'></i> <?php echo $info['news_display_ratings'] ?></li>
-                        <?php if (!empty($info['news_admin_actions'])) : ?>
-                            <li>
-                                <div class='btn-group'>
-                                    <?php foreach ($info['news_admin_actions'] as $actions) : ?>
-                                        <a class='btn btn-success' href='<?php echo $actions['link'] ?>'><?php echo $actions['title'] ?></a>
-                                    <?php endforeach; ?>
-                                </div>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
                 </div>
                 <div class='post-title'>
                     <h3>
@@ -130,14 +110,44 @@ class News extends Core {
                         </a>
                     </h3>
                 </div>
+                <?php
+                $start_nc_url = ($info['news_cat_url'] ? "<a href='".$info['news_cat_url']."' title='".$info['news_cat_name']."'>" : '');
+                $end_nc_url = ($info['news_cat_url'] ? "</a>" : '');
+                ?>
+                <div class='post-meta'>
+                    <ul class="meta-left">
+                        <li><?php echo showdate('newsdate', $info['news_datestamp']) ?></li>
+                        <li>By <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?> / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
+
+                    </ul>
+                    <ul class='meta-right'>
+                        <li><i class='fa fa-comment-o'></i> <?php echo $info['news_display_comments'] ?></li>
+                        <li><i class='fa fa-heart-o'></i> <?php echo $info['news_display_ratings'] ?></li>
+                        <?php if (!empty($info['news_admin_actions'])) : ?>
+                            <li>
+                                <?php
+                                echo implode(' &middot; ', array_map(function ($e) {
+                                    return "<a href='".$e['link']."'>".$e['title']."</a>";
+                                }, $info['news_admin_actions']));
+                                ?>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
                 <div class='post-text'>
+                    <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg')) : ?>
+                        <div class='pull-left m-r-15' style='width: 100px;'>
+                            <a href='<?php echo $info['news_link'] ?>'>
+                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
+                            </a>
+                </div>
+                    <?php endif; ?>
                     <p>
                         <?php echo $info['news_news'] ?>
+                        <?php if ($info['news_ext'] == 'y') : ?>
+                            ... <a class='text-uppercase text-smaller' href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?> +</a>
+                        <?php endif; ?>
                     </p>
-                </div>
-                <div class='post-footer'>
-                    <a class='btn btn-default btn-md btn-bordered btn-fill'
-                       href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?></a>
                 </div>
             </article>
         </div>
@@ -182,14 +192,17 @@ class News extends Core {
             <?php endforeach; ?>
         </ul>
         <!--news_pre_readmore-->
-        <article class='news_item'>
-            <?php echo(($news['news_image_align'] == 'news-img-center') ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
+        <article class='news_item clearfix'>
+            <?php echo(($news['news_image_align'] == 'news-img-center') && !empty($news_image) ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
             <div class='post-meta'>
                 <ul class='meta-left'>
-                    <li>By <?php echo profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
-                    <li><?php echo $news['news_cat_name'] ?></li>
-                    <li><?php echo timer($news['news_datestamp']) ?></li>
-                    <li><?php echo showdate('newsdate', $news['news_datestamp']) ?></li>
+                    <li><?php echo self::$locale['NB_200'].' '.profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
+                    <?php
+                    $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
+                    $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
+                    ?>
+                    <li><?php echo $start_nc_url.$news['news_cat_name'].$end_nc_url ?></li>
+                    <li><?php echo showdate('newsdate', $news['news_datestamp']).', '.timer($news['news_datestamp']); ?></li>
                 </ul>
                 <ul class='meta-right'>
                     <li><i class='fa fa-eye'></i> <?php echo number_format($news['news_reads']) ?></li>
@@ -201,11 +214,11 @@ class News extends Core {
                     </li>
                     <?php if (!empty($news['news_admin_actions'])) : ?>
                         <li>
-                            <div class='btn-group'>
-                                <?php foreach ($news['news_admin_actions'] as $actions) : ?>
-                                    <a class='btn btn-success' href='<?php echo $actions['link'] ?>'><?php echo $actions['title'] ?></a>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php
+                            echo implode(' &middot; ', array_map(function ($e) {
+                                return "<a href='".$e['link']."'>".$e['title']."</a>";
+                            }, $news['news_admin_actions']));
+                            ?>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -216,26 +229,35 @@ class News extends Core {
                 </h3>
             </div>
             <div class='post-text'>
-                <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
+                <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') && !empty($news_image) ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
                 <p>
-                    <?php echo $news['news_news'] ?>
+                    <?php
+                    echo $news['news_news']
+                    ?>
                 </p>
+                <p>
+                    <?php echo $news['news_extended'] ?>
+                </p>
+
                 <?php echo $news['news_pagenav']; ?>
             </div>
-            <?php if (!empty($news['news_gallery'])) : ?>
-                <div class='post-gallery'>
-                    <div class='row'>
-                        <?php $animate_delay = 200; ?>
-                        <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                            <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
-                                <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
-                            </div>
-                            <?php $animate_delay = $animate_delay + 150; ?>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php endif; ?>
         </article>
+
+        <?php if (!empty($news['news_gallery'])) : ?>
+            <div class='post-gallery'>
+                <div class='row'>
+                    <?php $animate_delay = 200; ?>
+                    <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
+                        <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
+                        </div>
+                        <?php $animate_delay = $animate_delay + 150; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+
         <!--news_sub_readmore-->
         <?php
         if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {

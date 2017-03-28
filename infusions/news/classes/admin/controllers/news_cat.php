@@ -63,7 +63,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 addNotice("success", self::$locale['news_0154']);
             }
             // FUSION_REQUEST without the "action" gets
-            redirect(clean_request("", array("action"), FALSE));
+            redirect(clean_request("", array("action", "ref", "cat_id"), FALSE));
         }
 
         $data = array(

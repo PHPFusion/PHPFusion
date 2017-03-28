@@ -75,7 +75,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $opts = array('0' => $locale['news_0201'], '1' => $locale['953']);
         $cat_opts = array('0' => $locale['959'], '1' => $locale['news_0301']);
         $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	$calc_opts = $locale['1020'];
         $calc_c = $this->calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
         opentable($locale['news_settings']);
@@ -83,22 +83,31 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo openform('settingsform', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
         openside('');
-        echo form_text("news_pagination", $locale['669c'], $news_settings['news_pagination'], array(
-            "inline" => TRUE, "max_length" => 4, "width" => "150px", "type" => "number"
-        ));
+        echo form_text('news_pagination', $locale['669c'], $news_settings['news_pagination'], [
+            			'inline'     => TRUE,
+            			'max_length' => 4,
+            			'width'      => '150px',
+            			'type'       => 'number'
+        	]);
         echo "
 <div class='row'>
 	<div class='col-xs-12 col-sm-3'>
 		<label for='news_thumb_w'>".$locale['601']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('news_thumb_w', '', $news_settings['news_thumb_w'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_thumb_w', '', $news_settings['news_thumb_w'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width'      => '150px'
+            ])."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('news_thumb_h', '', $news_settings['news_thumb_h'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_thumb_h', '', $news_settings['news_thumb_h'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width'      => '150px'
+            ])."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -108,13 +117,19 @@ class NewsSettingsAdmin extends NewsAdminModel {
 		<label for='news_photo_w'>".$locale['602']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('news_photo_w', '', $news_settings['news_photo_w'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_photo_w', '', $news_settings['news_photo_w'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width'      => '150px'
+            ])."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('news_photo_h', '', $news_settings['news_photo_h'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_photo_h', '', $news_settings['news_photo_h'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width'      => '150px'
+            ])."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -124,13 +139,19 @@ class NewsSettingsAdmin extends NewsAdminModel {
 		<label for='blog_thumb_w'>".$locale['603']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width' => '150px'
+            ])."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('news_photo_max_h', '', $news_settings['news_photo_max_h'], array(
-                'class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width' => '150px'
-            ))."
+	".form_text('news_photo_max_h', '', $news_settings['news_photo_max_h'], [
+                'class'      => 'pull-left',
+                'max_length' => 4,
+                'type'       => 'number',
+                'width'      => '150px'
+            ])."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -140,42 +161,47 @@ class NewsSettingsAdmin extends NewsAdminModel {
 		<label for='calc_b'>".$locale['605']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('calc_b', '', $calc_b, array(
-                'required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4,
-                'class' => 'pull-left m-r-10'
-            ))."
-	".form_select('calc_c', '', $calc_c, array(
-                'options' => $calc_opts, 'placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'
-            ))."
+	".form_text('calc_b', '', $calc_b, [
+                'required'   => TRUE,
+                'type'       => 'number',
+                'error_text' => $locale['error_rate'],
+                'width'      => '100px',
+                'max_length' => 4,
+                'class'      => 'pull-left m-r-10'
+            ])."
+	".form_select('calc_c', '', $calc_c, [
+                'options'     => $calc_opts,
+                'placeholder' => $locale['choose'],
+                'width'       => '180px',
+                'class'       => 'pull-left'
+            ])."
 	</div>
 </div>
 ";
         closeside();
         openside("");
-        echo form_select("news_allow_submission", $locale['news_0400'], $news_settings['news_allow_submission'], array(
-            "inline" => TRUE, "options" => array(
-                $locale['disable'], $locale['enable']
-            )
-        ));
-        echo form_select("news_allow_submission_files", $locale['news_0401'], $news_settings['news_allow_submission_files'],
-                         array(
-                             "inline" => TRUE, "options" => array(
-                             $locale['disable'], $locale['enable']
-                         )
-                         ));
-        echo form_checkbox("news_extended_required", $locale['news_0402'], $news_settings['news_extended_required'],
-                           array("inline" => TRUE));
+        echo form_select('news_allow_submission', $locale['news_0400'], $news_settings['news_allow_submission'], [
+                         'inline' => TRUE,
+                         'options' => [$locale['disable'], $locale['enable']]
+        			]);
+        echo form_select('news_allow_submission_files', $locale['news_0401'], $news_settings['news_allow_submission_files'], [
+                         'inline' => TRUE,
+                         'options' => [$locale['disable'], $locale['enable']]
+        			]);
+        echo form_checkbox('news_extended_required', $locale['news_0402'], $news_settings['news_extended_required'], [
+                           'inline' => TRUE
+                           ]);
         closeside();
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         openside('');
-        echo form_select('news_image_link', $locale['951'], $news_settings['news_image_link'], array("options" => $opts));
+        echo form_select('news_image_link', $locale['951'], $news_settings['news_image_link'], ['options' => $opts]);
         echo form_select('news_image_frontpage', $locale['957'], $news_settings['news_image_frontpage'],
-                         array("options" => $cat_opts));
+                         ['options' => $cat_opts]);
         echo form_select('news_image_readmore', $locale['958'], $news_settings['news_image_readmore'],
-                         array("options" => $cat_opts));
+                         ['options' => $cat_opts]);
         echo form_select('news_thumb_ratio', $locale['954'], $news_settings['news_thumb_ratio'],
-                         array("options" => $thumb_opts));
+                         ['options' => $thumb_opts]);
         require_once INCLUDES."mimetypes_include.php";
         $mime = mimeTypes();
         $mime_opts = array();
@@ -185,18 +211,18 @@ class NewsSettingsAdmin extends NewsAdminModel {
         }
         sort($mime_opts);
 	echo form_select('news_file_types', $locale['news_0271'], $news_settings['news_file_types'],
-			 array(
-    			'options' => $mime_opts,
-    			'error_text' => $locale['error_type'],
+			 [
+    			'options'     => $mime_opts,
+    			'error_text'  => $locale['error_type'],
     			'placeholder' => $locale['choose'],
-    			'multiple' => TRUE,
-    			'tags' => TRUE,
-    			'width' => '100%',
-    			'delimiter' => '|'
-		));
+    			'multiple'    => TRUE,
+    			'tags'        => TRUE,
+    			'width'       => '100%',
+    			'delimiter'   => '|'
+		]);
         closeside();
         echo "</div></div>\n";
-        echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+        echo form_button('savesettings', $locale['750'], $locale['750'],['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
         closetable();
     }

@@ -22,7 +22,7 @@ class FusionThemeAdmin {
     private $theme_pack_dir = THEMES;
 
     public function __construct() {
-        $this->theme_pack_dir = $this->theme_pack_dir."FusionTheme/ThemePack/";
+        $this->theme_pack_dir = $this->theme_pack_dir."FusionTheme/themepack/";
         $this->settings();
     }
 

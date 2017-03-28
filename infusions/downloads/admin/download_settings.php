@@ -51,10 +51,8 @@ if (isset($_POST['savesettings'])) {
     }
     redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
-/**
- * Options for dropdown field
- */
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($dl_settings['download_max_b']);
 $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
@@ -123,13 +121,13 @@ echo "<div class='row'>
 	<label class='label-control col-xs-12 col-sm-3' for='calc_b'>".$locale['930']."</label>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array(
-        'required' => TRUE,
-        'number' => 1,
-        'inline' => TRUE,
+        'required'   => TRUE,
+        'type'       => 'number',
+        'inline'     => TRUE,
         'error_text' => $locale['error_rate'],
-        'width' => '150px',
+        'width'      => '150px',
         'max_length' => 4,
-        'class' => 'pull-left m-r-10'
+        'class'      => 'pull-left m-r-10'
     ))."
 	".form_select('calc_c', '', $calc_c, array(
         'options' => $calc_opts,

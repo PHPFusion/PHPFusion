@@ -19,7 +19,7 @@ function form_para($title, $id, $class = 'underline', array $options = array()) 
     $options += array(
         'tip' => !empty($options['tip']) ? "title='".$options['tip']."'" : '',
     );
-    $html = "<h5 id='$id' class='m-b-20 $class'>$title ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</h5>\n";
+    $html = "<h4 id='$id' class='m-b-20 $class'>$title ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</h4>\n";
 
     return $html;
 }

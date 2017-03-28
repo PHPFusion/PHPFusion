@@ -82,22 +82,22 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             $this->news_data = array(
-                'news_id'             => form_sanitizer($_POST['news_id'], 0, 'news_id'),
-                'news_subject'        => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
-                'news_cat'            => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
-                'news_news'           => form_sanitizer($news_news, "", "news_news"),
-                'news_extended'       => form_sanitizer($news_extended, "", "news_extended"),
-                'news_keywords'       => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
-                'news_datestamp'      => form_sanitizer($_POST['news_datestamp'], '', 'news_datestamp'),
-                'news_start'          => form_sanitizer($_POST['news_start'], 0, 'news_start'),
-                'news_end'            => form_sanitizer($_POST['news_end'], 0, 'news_end'),
-                'news_visibility'     => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
-                'news_draft'          => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
-                'news_sticky'         => isset($_POST['news_sticky']) ? "1" : "0",
-                'news_name'           => form_sanitizer($_POST['news_name'], 0, 'news_name'),
-                'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
-                'news_allow_ratings'  => isset($_POST['news_allow_ratings']) ? "1" : "0",
-                'news_language'       => form_sanitizer($_POST['news_language'], '', 'news_language'),
+                'news_id'                  => form_sanitizer($_POST['news_id'], 0, 'news_id'),
+                'news_subject'             => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+                'news_cat'                 => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
+                'news_news'                => form_sanitizer($news_news, "", "news_news"),
+                'news_extended'            => form_sanitizer($news_extended, "", "news_extended"),
+                'news_keywords'            => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+                'news_datestamp'           => form_sanitizer($_POST['news_datestamp'], TIME, 'news_datestamp'),
+                'news_start'               => form_sanitizer($_POST['news_start'], 0, 'news_start'),
+                'news_end'                 => form_sanitizer($_POST['news_end'], 0, 'news_end'),
+                'news_visibility'          => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
+                'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
+                'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name'                => form_sanitizer($_POST['news_name'], 0, 'news_name'),
+                'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
+                'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
             );
 
@@ -209,6 +209,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
+    $news_settings = self::get_news_settings();
 
         $news_cat_opts = [];
         $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
@@ -230,9 +231,10 @@ class NewsAdmin extends NewsAdminModel {
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
             'height'      => '200px',
+			'file_filter' => explode(',', $news_settings['news_file_types']),
         );
         if (fusion_get_settings('tinymce_enabled')) {
-            $snippetSettings = array('required' => TRUE, 'height' => '200px', 'type' => 'tinymce', 'tinymce' => 'advanced', 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
+            $snippetSettings = array('required' => TRUE, 'height' => '200px', 'type' => 'tinymce', 'tinymce' => 'advanced', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
         }
 
         if (!fusion_get_settings('tinymce_enabled')) {
@@ -245,9 +247,10 @@ class NewsAdmin extends NewsAdminModel {
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                 'wordcount'   => TRUE,
                 'height'      => '300px',
+				'file_filter' => explode(',', $news_settings['news_file_types']),
             );
         } else {
-            $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px');
+            $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
         }
         echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
         self::display_newsButtons('newsContent');
@@ -310,7 +313,8 @@ class NewsAdmin extends NewsAdminModel {
                 } else {
                     echo form_hidden('news_language', '', $this->news_data['news_language']);
                 }
-                echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], array('inline' => TRUE, 'inner_width' => '100%'));
+                echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'],
+                    array('inline' => TRUE, 'inner_width' => '100%'));
                 closeside();
 
                 if ($this->news_data['news_id']) {
@@ -327,7 +331,6 @@ class NewsAdmin extends NewsAdminModel {
                         echo "</div>\n";
 
                     } else {
-                        $news_settings = self::get_news_settings();
                         echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
                             array(
                                 'upload_path'      => IMAGES_N,
@@ -454,7 +457,7 @@ class NewsAdmin extends NewsAdminModel {
      */
     private function display_newsButtons($unique_id) {
         echo "<div class='m-t-20'>\n";
-        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10']);
+        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
             array('class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times'));
         echo form_button('save', self::$locale['news_0241'], self::$locale['news_0241'],
@@ -808,11 +811,11 @@ class NewsAdmin extends NewsAdminModel {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
         $news_query = "SELECT n.*, nc.*,
-        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',        
+        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',
         u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_NEWS." n
         INNER JOIN ".DB_USERS." u on u.user_id=n.news_name
-        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat               
+        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
         WHERE news_language=:language $sql_condition
         GROUP BY n.news_id
         ORDER BY n.news_draft DESC, n.news_sticky DESC, n.news_datestamp DESC
@@ -1081,15 +1084,16 @@ class NewsAdmin extends NewsAdminModel {
 
                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($_GET['news_id'])."'");
                 if (dbrows($result)) {
-                    $data = dbarray($result);
-                    if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
-                        unlink(IMAGES_N.$data['news_image']);
-                    }
-                    if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
-                        unlink(IMAGES_N_T.$data['news_image_t1']);
-                    }
-                    if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
-                        unlink(IMAGES_N_T.$data['news_image_t2']);
+                    while ($data = dbarray($result)) {
+                    	if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+                    	    unlink(IMAGES_N.$data['news_image']);
+                    	}
+                    	if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                    	    unlink(IMAGES_N_T.$data['news_image_t1']);
+                    	}
+                    	if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                    	    unlink(IMAGES_N_T.$data['news_image_t2']);
+                    	}
                     }
                 }
 

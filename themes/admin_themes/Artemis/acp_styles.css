@@ -1,6 +1,9 @@
 /* Globals */
 html, body, #tinymce body, .form-control {
     font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
     overflow-x: hidden;
 }
 
@@ -273,7 +276,6 @@ a:hover, a:focus {
 
     #devlpr .left_menu header:after {
         display: inline-block;
-        content: "{G}";
         color: #fff;
         font-size: 34px;
         font-weight: 600;
@@ -1704,7 +1706,7 @@ textarea.form-control {
 }
 
 .profile_category_name {
-    font-size: 14px;
+    margin-top: 8px;
 }
 
 /* Nav tabs */

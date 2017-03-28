@@ -212,12 +212,14 @@ header h1 {
 
 .nebulaContentTop, .nebulaFooter {
     background: #212331;
-    padding: 5% 0;
     color: #99a9b5;
     font-size: 15px;
     line-height: 22px;
 }
 
+.nebulaFooter {
+    padding: 5% 0;
+}
 .nebulaBottom {
     background: #F4F6F7;
 }
