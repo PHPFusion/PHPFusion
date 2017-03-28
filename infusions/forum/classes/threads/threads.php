@@ -366,6 +366,7 @@ class ForumThreads extends ForumServer {
              */
             $poll = new Poll($this->thread_info);
             $poll_form = $poll->generate_poll($this->thread_data);
+            $poll_info = $poll->get_poll_info();
 
             /**
              * Generate Attachment
@@ -469,6 +470,7 @@ class ForumThreads extends ForumServer {
                 'quick_reply_form'     => $qr_form,
                 'thread_bounty'        => $bounty_display,
                 'poll_form'            => $poll_form,
+                'poll_info'            => $poll_info,
                 'post-filters'         => array(),
                 'mod_options'          => [],
                 'form_action'          => '',
