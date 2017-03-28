@@ -366,6 +366,7 @@ class ForumThreads extends ForumServer {
              */
             $poll = new Poll($this->thread_info);
             $poll_form = $poll->generate_poll($this->thread_data);
+            $poll_info = $poll->get_poll_info();
 
             /**
              * Generate Attachment
@@ -469,6 +470,7 @@ class ForumThreads extends ForumServer {
                 'quick_reply_form'     => $qr_form,
                 'thread_bounty'        => $bounty_display,
                 'poll_form'            => $poll_form,
+                'poll_info'            => $poll_info,
                 'post-filters'         => array(),
                 'mod_options'          => [],
                 'form_action'          => '',
@@ -1085,14 +1087,13 @@ class ForumThreads extends ForumServer {
                         $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
                         $pdata['post_votebox'] .= "</div>\n";
                     }
-
                 }
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ".profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
-                        $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
+                        $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
                         $edit_reason .= "</a></div>";
                         $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><span class='text-lighter'>- ".$pdata['post_editreason']."</span></div>\n";
@@ -1100,7 +1101,6 @@ class ForumThreads extends ForumServer {
                         $edit_reason .= "</div>";
                     }
                     $pdata['post_edit_reason'] = $edit_reason;
-                    //$this->edit_reason = TRUE;
                 }
 
                 // Custom Post Message Link/Buttons
