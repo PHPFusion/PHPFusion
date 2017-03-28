@@ -344,6 +344,7 @@ if (!empty($enabled_languages)) {
 }
 
 // Defuse clean up
+$inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_reputation'];
 $inf_droptable[] = DB_FORUMS;
 $inf_droptable[] = DB_FORUM_POSTS;
 $inf_droptable[] = DB_FORUM_THREADS;
