@@ -80,7 +80,7 @@ class Postify_Vote extends Forum_Postify {
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => dbresult($vote_result, 0)]);
                                         // Remove log points
-                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
+                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
                                         // remove points from the post author
                                         dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
@@ -107,7 +107,7 @@ class Postify_Vote extends Forum_Postify {
                                         // I have voted down, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => dbresult($vote_result, 0)]);
                                         // Remove log points
-                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
+                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
                                         // remove points from the post author
                                         dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
