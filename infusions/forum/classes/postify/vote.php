@@ -77,10 +77,11 @@ class Postify_Vote extends Forum_Postify {
                                 if (fusion_get_userdata('user_reputation') >= self::$forum_settings['points_to_upvote']) {
                                     $vote_result = dbquery($vote_query, $vote_bind);
                                     if (dbrows($vote_result)) {
+                                    	$vote = dbarray($vote_result);
                                         // I have voted, I'm removing my vote
-                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => dbresult($vote_result, 0)]);
+                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
-                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
+                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:rep_id", [':rep_id' => $vote['rep_id']]);
                                         // remove points from the post author
                                         dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
@@ -104,10 +105,11 @@ class Postify_Vote extends Forum_Postify {
                                 if (fusion_get_userdata('user_reputation') >= self::$forum_settings['points_to_downvote'] && $thread_data['post_author'] !== fusion_get_userdata('user_id')) {
                                     $vote_result = dbquery($vote_query, $vote_bind);
                                     if (dbrows($vote_result)) {
-                                        // I have voted down, I'm removing my vote
-                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => dbresult($vote_result, 0)]);
+                                    	$vote = dbarray($vote_result);
+                                        // I have voted, I'm removing my vote
+                                        dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
-                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:vote_id", [':vote_id' => dbresult($vote_result, 1)]);
+                                        dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:rep_id", [':rep_id' => $vote['rep_id']]);
                                         // remove points from the post author
                                         dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author_id", [
                                             ':post_author_id' => $thread_data['post_author'],
