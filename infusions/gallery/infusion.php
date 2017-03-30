@@ -32,7 +32,7 @@ $inf_image = "gallery.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-    "title" => $locale['setup_3308'],
+    "title"  => $locale['setup_3308'],
     "rights" => "PG",
 );
 
@@ -77,11 +77,11 @@ $inf_newtable[] = DB_PHOTOS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "PH",
-    "title" => $locale['setup_3308'],
-    "panel" => "gallery_admin.php"
+    "title"  => $locale['setup_3308'],
+    "panel"  => "gallery_admin.php"
 );
 
 // Gallery settings

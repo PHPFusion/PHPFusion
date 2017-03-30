@@ -49,7 +49,7 @@ $inf_newtable[] = DB_WEBLINKS." (
 	weblink_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
 	weblink_count		SMALLINT(5)  UNSIGNED NOT NULL DEFAULT '0',
 	weblink_language	VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY(weblink_id),
+	PRIMARY KEY (weblink_id),
 	KEY weblink_datestamp (weblink_datestamp),
 	KEY weblink_count (weblink_count)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
@@ -62,7 +62,7 @@ $inf_newtable[] = DB_WEBLINK_CATS." (
 	weblink_cat_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
 	weblink_cat_visibility	TINYINT(4)            NOT NULL DEFAULT '0',
 	weblink_cat_language	VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY(weblink_cat_id)
+	PRIMARY KEY (weblink_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Settings

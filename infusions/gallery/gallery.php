@@ -74,9 +74,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         set_title($data['photo_title'].$locale['global_200']);
         add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                           'link' => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
-                           'title' => $data['album_title']
-                       ]);
+            'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
+            'title' => $data['album_title']
+        ]);
 
         if ($data['album_keywords'] !== "") {
             set_meta("keywords", $data['album_keywords']);
@@ -90,9 +90,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
 
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                           'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
-                           'title' => $data['photo_title']
-                       ]);
+            'link'  => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
+            'title' => $data['photo_title']
+        ]);
         // broken watermaking. how to do this?
         if ($gallery_settings['photo_watermark']) {
             // how does watermarking do?
@@ -120,10 +120,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             $info['photo_size'] = @getimagesize(IMAGES_G.$data['photo_filename']);
         } else {
             $info += array(
-                "photo_thumb2" => $data['photo_thumb2'] ? IMAGES_G_T.$data['photo_thumb2'] : "",
-                "photo_thumb1" => $data['photo_thumb1'] ? IMAGES_G_T.$data['photo_thumb1'] : "",
+                "photo_thumb2"   => $data['photo_thumb2'] ? IMAGES_G_T.$data['photo_thumb2'] : "",
+                "photo_thumb1"   => $data['photo_thumb1'] ? IMAGES_G_T.$data['photo_thumb1'] : "",
                 "photo_filename" => IMAGES_G.$data['photo_filename'],
-                "photo_size" => getimagesize(IMAGES_G.$data['photo_filename'])
+                "photo_size"     => getimagesize(IMAGES_G.$data['photo_filename'])
             );
         }
         $info += array(
@@ -186,15 +186,14 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                               'link' => INFUSIONS.'gallery/gallery.php',
-                               'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
-                           ]);
-
+                'link'  => INFUSIONS.'gallery/gallery.php',
+                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+            ]);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                               'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
-                               'title' => $info['album_title']
-                           ]);
+                'link'  => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
+                'title' => $info['album_title']
+            ]);
             if ($info['album_keywords'] !== "") {
                 add_to_meta("keywords", $info['album_keywords']);
             }
@@ -214,10 +213,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					WHERE album_id='".intval($_GET['album_id'])."'
 					ORDER BY photo_datestamp DESC LIMIT 1"));
-                $info['album_stats'] = $locale['422'].$info['max_rows']."<br />\n";
-                $info['album_stats'] .= $locale['423'].profile_link($latest_update['user_id'], $latest_update['user_name'],
-                                                                    $latest_update['user_status'])."".$locale['424'].showdate("longdate",
-                                                                                                                              $latest_update['photo_datestamp'])."\n";
+                $info['album_stats'] = $locale['422']." ".$info['max_rows']."<br />\n";
+                $info['album_stats'] .= $locale['423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
                 $result = dbquery("SELECT tp.*,
 					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar,
 					SUM(tr.rating_vote) 'sum_rating',
@@ -231,23 +228,20 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 					limit ".intval($_GET['rowstart']).",".intval($gallery_settings['gallery_pagination']));
                 $info['photo_rows'] = dbrows($result);
                 $info['page_nav'] = $info['max_rows'] > $gallery_settings['gallery_pagination'] ? makepagenav($_GET['rowstart'],
-                                                                                                              $gallery_settings['gallery_pagination'],
-                                                                                                              $info['max_rows'], 3,
-                                                                                                              INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
+                    $gallery_settings['gallery_pagination'],
+                    $info['max_rows'], 3,
+                    INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
                 if ($info['photo_rows'] > 0) {
                     // this is photo
                     while ($data = dbarray($result)) {
                         // data manipulation
                         $data += array(
-                            "photo_link" => array(
+                            "photo_link"  => array(
                                 'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
                                 'name' => $data['photo_title']
                             ),
-                            "image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'],
-                                //IMAGES_G.$data['photo_filename']
-                                                         INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']
-                            ),
-                            "title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
+                            "image"       => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']),
+                            "title"       => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
                             "description" => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'])) : '',
                             "photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
                         );
@@ -264,7 +258,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                         }
                         if ($data['photo_allow_comments']) {
                             $data += array(
-                                "photo_votes" => $data['count_votes'] > 0 ? $data['count_votes'] : '0',
+                                "photo_votes"    => $data['count_votes'] > 0 ? $data['count_votes'] : '0',
                                 "photo_comments" => array(
                                     'link' => $data['photo_link']['link'].'#comments',
                                     'name' => $data['count_votes'],
@@ -274,7 +268,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                         }
                         if ($data['photo_allow_ratings']) {
                             $data += array(
-                                "sum_rating" => $data['sum_rating'] > 0 ? $data['sum_rating'] : '0',
+                                "sum_rating"    => $data['sum_rating'] > 0 ? $data['sum_rating'] : '0',
                                 "photo_ratings" => array(
                                     'link' => $data['photo_link']['link'].'#ratings',
                                     'name' => $data['sum_rating'],
@@ -297,16 +291,16 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         /* Main Index */
         add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                           'link' => INFUSIONS.'gallery/gallery.php',
-                           'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
-                       ]);
+            'link'  => INFUSIONS.'gallery/gallery.php',
+            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+        ]);
 
         $info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
         if ($info['max_rows'] > 0) {
             $info['page_nav'] = ($info['max_rows'] > $gallery_settings['gallery_pagination']) ? makepagenav($_GET['rowstart'],
-                                                                                                            $gallery_settings['gallery_pagination'],
-                                                                                                            $info['max_rows'], 3) : '';
+                $gallery_settings['gallery_pagination'],
+                $info['max_rows'], 3) : '';
             $result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_image, ta.album_thumb1, ta.album_thumb2, ta.album_datestamp,
 			tu.user_id, tu.user_name, tu.user_status
 			FROM ".DB_PHOTO_ALBUMS." ta
@@ -332,9 +326,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 }
                 $photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
 
-               // if ($data['album_image']) {
-                    $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'],
-                                                       INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
+                // if ($data['album_image']) {
+                $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'],
+                    INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
                 //}
                 $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
                 $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
@@ -391,10 +385,12 @@ require_once THEMES."templates/footer.php";
 
 /**
  * Displays the Album Image
+ *
  * @param $album_image
  * @param $album_thumb1
  * @param $album_thumb2
  * @param $link
+ *
  * @return string
  */
 function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
@@ -424,10 +420,12 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
 
 /**
  * Displays Album Thumb with Colorbox
+ *
  * @param $photo_filename
  * @param $photo_thumb1
  * @param $photo_thumb2
  * @param $link
+ *
  * @return string
  */
 function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thumb2, $link) {

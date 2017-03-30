@@ -1,28 +1,44 @@
 <?php
-$locale['homeSetup_0200'] = 'Do you wish to install the default Nebula Theme Page?';
-$locale['homeSetup_0201'] = 'Yes, Install the Page';
-$locale['homeSetup_0202'] = 'No, thank you';
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename:  themes/FusionTheme/themefactory/lib/installer/locale/Danish.php
+| Author: Helmuth Mikkelsen (helmuth)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+$locale['homeSetup_0200'] = 'Vil du installere standard Nebula temasiden?';
+$locale['homeSetup_0201'] = 'Ja, installer siden';
+$locale['homeSetup_0202'] = 'Nej, tak';
 
 /*
 * Home setup
 */
-$locale['homeSetup_0100'] = 'Home';
-$locale['homeSetup_0101'] = 'Welcome to your PHP-Fusion 9 Website';
-$locale['homeSetup_0102'] = '[b]Congratulations on your first install[/b]';
-$locale['homeSetup_0103'] = 'The easiest way to develop a [i]pro grade[/i] website.[b]Starting Now[/b]';
-$locale['homeSetup_0104'] = "Carousel";
-$locale['homeSetup_0105'] = "Feature Box";
-$locale['homeSetup_0106'] = "Panel";
-$locale['homeSetup_0107'] = "Block";
-$locale['homeSetup_0110'] = "Latest";
-$locale['homeSetup_0111'] = "Find out the latest happening";
-$locale['homeSetup_0112'] = "Theme";
-$locale['homeSetup_0113'] = "Our theme delivers awesome design and powerful features for your website. Pixel perfected to demonstrate your website versatility features.";
-$locale['homeSetup_0114'] = "Why you'll love PHP-Fusion 9";
-$locale['homeSetup_0115'] = "With over a million lines of code rewrites that modernize content management system in a way never like before, PHP-Fusion 9 remains lightweight fast, smarter and is more beautiful than ever.";
+$locale['homeSetup_0100'] = 'Hjem';
+$locale['homeSetup_0101'] = 'Velkommen til din PHP-Fusion 9 hjemmeside';
+$locale['homeSetup_0102'] = '[b]Til lykke med din første installation[/b]';
+$locale['homeSetup_0103'] = 'Den letteste måde at udvikle en [i]pro grade[/i] hjemmeside. [b]Starter nu[/b]';
+$locale['homeSetup_0104'] = "Karrusel";
+$locale['homeSetup_0105'] = "Featureboks";
+$locale['homeSetup_0106'] = "Element";
+$locale['homeSetup_0107'] = "Blok";
+$locale['homeSetup_0110'] = "Seneste";
+$locale['homeSetup_0111'] = "Hvad er der senest sket";
+$locale['homeSetup_0112'] = "Tema";
+$locale['homeSetup_0113'] = "Vores tema leverer formidabelt design og kraftfulde features til din hjemmeside. Pixel perfektioneret til at vise din hjemmesides alsidige features.";
+$locale['homeSetup_0114'] = "Hvorfor du vil elske PHP-Fusion 9";
+$locale['homeSetup_0115'] = "Med over en million genskrevne kodelinjer der vil modernisere CMS på en hidtil uset måde, bevarer PHP-Fusion 9 sin letvægtshurtighed, smartere og er smukkere end nogensinde.";
 $locale['homeSetup_0116'] = "Worldwide Developers Forum";
 $locale['homeSetup_0117'] = "[h4]PHP-Fusion Developers Network[/h4]";
-$locale['homeSetup_0118'] = "[p]Get assisted in code development, Finding developers or Funding ideas and road-maps that in return to be pledged openly, it is all happening.
-Join in a world wide open source collaborative efforts today.[/p]";
-$locale['homeSetup_0119'] = "Amazingly Easy for Everyone";
-$locale['homeSetup_0120'] = "All is required is to tinker around to feel the basic needs. Nothing can ever go wrong with an all round CMS system.";
+$locale['homeSetup_0118'] = "[p]Bliv assisteret i kodeudvikling, find udviklere eller funding ideer og road-maps der lægges frit frem, det sker alt sammen.
+Vær med i en verdensomspændende open source samarbejde i dag.[/p]";
+$locale['homeSetup_0119'] = "Otroligt nemt for alle";
+$locale['homeSetup_0120'] = "Det eneste der kræves er at du snuser rundt for at fornemme de basale behov. Intet kan gå galt med et all round CMS system.";

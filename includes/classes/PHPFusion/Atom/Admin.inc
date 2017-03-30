@@ -32,7 +32,7 @@ class Admin {
         self::$locale = fusion_get_locale();
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        \BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => self::$locale['theme_1000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => self::$locale['theme_1000']]);
     }
 
     /**

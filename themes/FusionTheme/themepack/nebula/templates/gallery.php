@@ -25,10 +25,10 @@ class Gallery {
     private static $gallery_settings = [];
 
     public static function render_gallery(array $info = array()) {
-        add_to_head("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/gallery.css' type='text/css' />");
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         $html .= open_table($locale['400']);
+        add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         self::$gallery_settings = get_settings('gallery');
         if (!empty($info['page_nav'])) {
             $html .= $info['page_nav'];
@@ -53,7 +53,7 @@ class Gallery {
     }
 
     public static function render_photo_album(array $info = array()) {
-        add_to_head("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/gallery.css' type='text/css' />");
+        add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         self::$gallery_settings = get_settings('gallery');
@@ -121,14 +121,14 @@ class Gallery {
         $html .= "<div class='list-group-item m-b-20'>\n";
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        $html .= "<strong>".$locale['434']."</strong>".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
-        $html .= "<strong>".$locale['403']."</strong><abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer(time())."</abbr><br/>";
-        $html .= "<strong>".$locale['454']."</strong>".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
-        $html .= "<strong>".$locale['456']."</strong>".$info['photo_byte'];
+        $html .= "<strong>".$locale['434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
+        $html .= "<strong>".$locale['403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer(time())."</abbr><br/>";
+        $html .= "<strong>".$locale['454']."</strong> ".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
+        $html .= "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
         $html .= "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        $html .= "<strong>".$locale['457']."</strong>".number_format($info['photo_views'])."<br/>\n";
-        $html .= "<strong>".$locale['437']."</strong>".$info['photo_ratings']."<br/>\n";
-        $html .= "<strong>".$locale['436']."</strong>".$info['photo_comment']."<br/>\n";
+        $html .= "<strong>".$locale['457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
+        $html .= "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
+        $html .= "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
         $html .= "</div>\n</div>\n";
         $html .= "</div>\n</div>\n";
         $html .= "<!--sub_photo-->";

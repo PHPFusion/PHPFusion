@@ -24,7 +24,9 @@ require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 /**
  * Converts Hex to RGB
+ *
  * @param string $hex
+ *
  * @return array
  */
 function convert_color($hex) {
@@ -47,7 +49,6 @@ function convert_color($hex) {
 
     return $color;
 }
-
 
 function RGBtoArray($rgb) {
     if (stristr($rgb, "rgb(")) {

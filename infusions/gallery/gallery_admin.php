@@ -30,18 +30,19 @@ require_once INCLUDES."infusions_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
- //Do not delete a week
-if (empty($gll_settings['gallery_file_types'])){
-   	$inputSettings = array(
-       "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
-       );
-       dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
-       $gll_settings = get_settings("gallery");
+//Do not delete a week
+if (empty($gll_settings['gallery_file_types'])) {
+    $inputSettings = array(
+        "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
+    );
+    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
+    $gll_settings = get_settings("gallery");
 }
 
 add_to_head("
 <style>           
 .panel-default > .panel-image-wrapper {
+    height: 150px;
     max-height: 150px;
     min-width: 100%;
     overflow: hidden;
@@ -261,12 +262,8 @@ function gallery_album_listing() {
 		INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
 		".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album.album_access')."
 		GROUP BY album.album_id
-		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT :rowstart, :gll";
-        $gallery_param = [
-            ':rowstart' => $_GET['rowstart'],
-            ':gll'      => $gll_settings['gallery_pagination']
-        ];
-        $result = dbquery($gallery_sql, $gallery_param);
+		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
+        $result = dbquery($gallery_sql);
         $rows = dbrows($result);
         // Photo Album header
         echo "<div class='clearfix'>\n";
@@ -334,6 +331,7 @@ function gallery_album_listing() {
 
 /**
  * Get all the album listing.
+ *
  * @return array
  */
 function get_albumOpts() {
@@ -350,6 +348,7 @@ function get_albumOpts() {
 
 /**
  * Delete and Purge Album Photos
+ *
  * @param $albumData
  */
 function purgeAlbumImage($albumData) {
@@ -366,6 +365,7 @@ function purgeAlbumImage($albumData) {
 
 /**
  * Purge all photo images
+ *
  * @param $photoData
  */
 function purgePhotoImage($photoData) {
@@ -382,6 +382,7 @@ function purgePhotoImage($photoData) {
 
 /**
  * Purge all submissions photo images
+ *
  * @param $photoData
  */
 function purgeSubmissionsPhotoImage($photoData) {
@@ -400,10 +401,12 @@ function purgeSubmissionsPhotoImage($photoData) {
 
 /**
  * Displays the Album Image
+ *
  * @param $album_image
  * @param $album_thumb1
  * @param $album_thumb2
  * @param $link
+ *
  * @return string
  */
 function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
@@ -432,10 +435,12 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
 
 /**
  * Displays Album Thumb with Colorbox
+ *
  * @param $photo_filename
  * @param $photo_thumb1
  * @param $photo_thumb2
  * @param $link
+ *
  * @return string
  */
 function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link) {

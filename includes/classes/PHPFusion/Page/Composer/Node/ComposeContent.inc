@@ -46,7 +46,6 @@ class ComposeContent extends PageAdmin {
                                     'multiple' => 1,
                                 )).
                     form_textarea('page_content', '', self::$data['page_content'], self::$textarea_options);
-
                 ?>
                 <div class="row m-b-20">
                     <div class="col-xs-12 col-sm-3">
@@ -75,7 +74,6 @@ class ComposeContent extends PageAdmin {
                         ?>
                     </div>
                 </div>
-
             </div>
             <div class="col-xs-12 col-sm-4">
                 <div class="panel panel-default">
@@ -101,7 +99,6 @@ class ComposeContent extends PageAdmin {
                                 'inner_width' => '100%',
                                 'placeholder' => self::$locale['choose'],
                             ), DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);
-
                         ?>
 
                     </div>
@@ -109,7 +106,6 @@ class ComposeContent extends PageAdmin {
                         <?php
                         echo form_button('save', self::$locale['save'], self::$locale['save'], array('class' => 'btn-success btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
                         echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
-                        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], array('class' => 'btn-default btn-sm', 'icon' => 'fa fa-eye'));
                         ?>
                     </div>
                 </div>

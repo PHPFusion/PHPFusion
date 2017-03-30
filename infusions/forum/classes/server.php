@@ -529,7 +529,7 @@ abstract class ForumServer {
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
 
-        $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
             $forum_id = isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
@@ -547,7 +547,9 @@ abstract class ForumServer {
                         return $crumb;
                     }
                     $crumb_1 = forum_breadcrumb_arrays($index, get_parent($index, $id));
-                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                    if (is_array($crumb_1)) {
+                        $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                    }
                 }
             }
 
