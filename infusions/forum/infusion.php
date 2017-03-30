@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale("",
+$locale = fusion_get_locale('',
                             array(
                                 LOCALE.LOCALESET."setup.php",
                                 INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
