@@ -243,11 +243,11 @@ function photo_form() {
         echo closeform();
     } else {
         echo "<div class='well m-t-20 text-center'>\n";
-            echo str_replace(
-                ['[link]', '[/link]'],
-                ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'],
-                $locale['gallery_0012']
-            );
+        echo str_replace(
+            ['[link]', '[/link]'],
+            ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'],
+            $locale['gallery_0012']
+        );
         echo "</div>\n";
     }
 }
@@ -333,11 +333,11 @@ function mass_photo_form() {
         echo closeform();
     } else {
         echo "<div class='well m-t-20 text-center'>\n";
-            echo str_replace(
-                ['[link]', '[/link]'],
-                ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'],
-                $locale['gallery_0012']
-            );
+        echo str_replace(
+            ['[link]', '[/link]'],
+            ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'],
+            $locale['gallery_0012']
+        );
         echo "</div>\n";
     }
 }

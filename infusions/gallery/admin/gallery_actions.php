@@ -101,7 +101,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                     if ($targetAlbum > 0) {
                         // move picture to $move_album
                         $target_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($targetAlbum)."'"),
-                                                     0) + 1;
+                                0) + 1;
                         while ($photo_data = dbarray($result)) {
                             $photo_data['photo_order'] = $target_max_order;
                             dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_id='".intval($targetAlbum)."' WHERE photo_id='".$photo_data['photo_id']."'");
@@ -130,12 +130,12 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 echo openform('inputform', 'post', FUSION_REQUEST);
                 echo form_select('target_album', $locale['choose'], '', array(
                     'options' => $albumArray,
-                    'inline' => TRUE,
-                    'width' => '300px'
+                    'inline'  => TRUE,
+                    'width'   => '300px'
                 ));
                 echo form_button('confirm_delete', $locale['confirm'], $_GET['cat_id'], array(
                     'class' => 'btn-sm btn-danger col-sm-offset-3',
-                    'icon' => 'fa fa-trash'
+                    'icon'  => 'fa fa-trash'
                 ));
                 echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-sm btn-default m-l-10'));
                 echo closeform();
@@ -158,7 +158,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
         dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
         dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
         dbquery_order(DB_PHOTOS, $photo_data['photo_order'], "photo_order", $photo_data['photo_id'], "photo_id", $photo_data['album_id'], "album_id",
-                      FALSE, FALSE, "delete");
+            FALSE, FALSE, "delete");
         dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
         addNotice("success", $locale['photo_0024']);
         redirect(clean_request("", array("aid", "album_id"), TRUE));

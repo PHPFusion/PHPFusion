@@ -33,24 +33,24 @@ opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_010
 if ($gll_settings['gallery_allow_submission']) {
 
     $criteriaArray = array(
-        "album_id" => 0,
-        "photo_title" => "",
+        "album_id"          => 0,
+        "photo_title"       => "",
         "photo_description" => "",
-        "photo_filename" => "",
-        "photo_thumb1" => "",
-        "photo_thumb2" => "",
-        "photo_keywords" => "",
+        "photo_filename"    => "",
+        "photo_thumb1"      => "",
+        "photo_thumb2"      => "",
+        "photo_keywords"    => "",
     );
 
     if (isset($_POST['submit_photo'])) {
         $criteriaArray = array(
-            "album_id" => form_sanitizer($_POST['album_id'], 0, "album_id"),
-            "photo_title" => form_sanitizer($_POST['photo_title'], "", "photo_title"),
-            "photo_keywords" => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
+            "album_id"          => form_sanitizer($_POST['album_id'], 0, "album_id"),
+            "photo_title"       => form_sanitizer($_POST['photo_title'], "", "photo_title"),
+            "photo_keywords"    => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
             "photo_description" => form_sanitizer($_POST['photo_description'], "", "photo_description"),
-            "photo_filename" => "",
-            "photo_thumb1" => "",
-            "photo_thumb2" => "",
+            "photo_filename"    => "",
+            "photo_thumb1"      => "",
+            "photo_thumb2"      => "",
         );
         if (defender::safe()) {
 
@@ -72,11 +72,11 @@ if ($gll_settings['gallery_allow_submission']) {
         if (defender::safe()) {
 
             $inputArray = array(
-                "submit_id" => 0,
-                "submit_type" => "p",
-                "submit_user" => fusion_get_userdata("user_id"),
+                "submit_id"        => 0,
+                "submit_type"      => "p",
+                "submit_user"      => fusion_get_userdata("user_id"),
                 "submit_datestamp" => time(),
-                "submit_criteria" => addslashes(serialize($criteriaArray))
+                "submit_criteria"  => addslashes(serialize($criteriaArray))
             );
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
             addNotice("success", $locale['gallery_0101']);
@@ -102,17 +102,17 @@ if ($gll_settings['gallery_allow_submission']) {
             echo form_text('photo_title', $locale['photo_0001'], '', array('required' => TRUE, "inline" => TRUE));
             echo form_select('photo_keywords', $locale['photo_0005'], $data['photo_keywords'], array(
                 'placeholder' => $locale['album_0006'],
-                'inline' => TRUE,
-                'multiple' => TRUE,
-                "tags" => TRUE,
-                'width' => '100%',
+                'inline'      => TRUE,
+                'multiple'    => TRUE,
+                "tags"        => TRUE,
+                'width'       => '100%',
             ));
 
             $textArea_opts = array(
-                "required" => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
-                "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-                "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
-                "autosize" => TRUE,
+                "required"  => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
+                "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "autosize"  => TRUE,
                 "form_name" => "submit_form",
             );
 
@@ -137,12 +137,12 @@ if ($gll_settings['gallery_allow_submission']) {
                 "multiple"          => FALSE,
                 "inline"            => TRUE,
                 "error_text"        => $locale['photo_0014'],
-            	'valid_ext'         => $gll_settings['gallery_file_types'],
+                'valid_ext'         => $gll_settings['gallery_file_types'],
             ));
             echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']),
-                                                                                   $gll_settings['gallery_file_types'],
-                                                                                   $gll_settings['photo_max_w'],
-                                                                                   $gll_settings['photo_max_h'])."</div>\n";
+                    $gll_settings['gallery_file_types'],
+                    $gll_settings['photo_max_w'],
+                    $gll_settings['photo_max_h'])."</div>\n";
             echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
             echo closeform();
         } else {
