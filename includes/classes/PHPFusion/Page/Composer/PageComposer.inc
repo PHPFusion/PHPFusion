@@ -61,6 +61,8 @@ class PageComposer extends PageAdmin {
         if (self::$is_editing) {
             echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-times'));
             echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'><i class='fa fa-eye'></i> ".self::$locale['preview']."</a>";
+            $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? self::$locale['enable']." TINYMCE" : self::$locale['disable']." TINYMCE";
+            echo form_button('tinymce_switch', $val, $val, array('class' => 'btn-default m-l-10', 'type' => 'button'));
         }
         echo "</div>\n";
         echo "<hr/>";

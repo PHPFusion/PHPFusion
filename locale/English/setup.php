@@ -287,6 +287,7 @@ $locale['setup_3324'] = "Start a New Thread";
 $locale['setup_3325'] = "Latest Articles";
 $locale['setup_3326'] = "Latest Downloads"; 
 $locale['setup_3327'] = "Submit FAQ";
+$locale['setup_3328'] = "Blog archive panel";
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
 $locale['setup_3401'] = "Online Users";
