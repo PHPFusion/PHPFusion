@@ -96,19 +96,17 @@ class Components {
     }
 
     public static function Messages() {
-        $userdata  = fusion_get_userdata();
+        $userdata = fusion_get_userdata();
 
         $result = dbquery("
             SELECT message_id, message_subject, message_from user_id, u.user_name, u.user_status, u.user_avatar, message_datestamp
             FROM ".DB_MESSAGES."
             INNER JOIN ".DB_USERS." u ON u.user_id=message_from
-            WHERE message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0'
+            WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'
             GROUP BY message_id
         ");
 
-        $msg_count = "message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."'";
-
-        if (dbcount("(message_id)", DB_MESSAGES, $msg_count)) {
+        if (dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'")) {
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     self::$messages[] = [
