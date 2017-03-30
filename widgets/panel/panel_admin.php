@@ -62,7 +62,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         }
         // Installed panel is displayed here. The visibility should be also seperately configured
         $panel_alt = strtr($widget_locale['PW_0201'], [
-            '[LINK]'  => "<a href='".ADMIN."panels.php".fusion_get_aidlink()."' title='".$widget_locale['0100']."'>",
+            '[LINK]'  => "<a href='".ADMIN."panels.php".fusion_get_aidlink()."' title='".$widget_locale['PW_0100']."'>",
             '[/LINK]' => "</a>"
         ]);
         $panel_opts = \PHPFusion\Panels::get_available_panels();
