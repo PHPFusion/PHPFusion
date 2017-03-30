@@ -74,7 +74,7 @@ $inf_newtable[] = DB_BLOG_CATS." (
 	PRIMARY KEY (blog_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 // Automatic enable the archives panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3328']."', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3318']."', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
     "image" => $inf_image,
