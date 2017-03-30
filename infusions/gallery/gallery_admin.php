@@ -42,6 +42,7 @@ if (empty($gll_settings['gallery_file_types'])){
 add_to_head("
 <style>           
 .panel-default > .panel-image-wrapper {
+    height: 150px;
     max-height: 150px;
     min-width: 100%;
     overflow: hidden;

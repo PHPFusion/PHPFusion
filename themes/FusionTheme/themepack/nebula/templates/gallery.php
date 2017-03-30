@@ -25,10 +25,10 @@ class Gallery {
     private static $gallery_settings = [];
 
     public static function render_gallery(array $info = array()) {
-        add_to_head("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/gallery.css' type='text/css' />");
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         $html .= open_table($locale['400']);
+        add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         self::$gallery_settings = get_settings('gallery');
         if (!empty($info['page_nav'])) {
             $html .= $info['page_nav'];
@@ -53,7 +53,7 @@ class Gallery {
     }
 
     public static function render_photo_album(array $info = array()) {
-        add_to_head("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/gallery.css' type='text/css' />");
+        add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         self::$gallery_settings = get_settings('gallery');

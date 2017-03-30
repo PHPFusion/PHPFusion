@@ -50,7 +50,9 @@ class Infusion_Core {
 
     protected static function adminpanel_infuse($inf) {
         $error = FALSE;
+
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+
             foreach ($inf['adminpanel'] as $adminpanel) {
                 // auto recovery
                 if (!empty($adminpanel['rights'])) {
@@ -71,7 +73,7 @@ class Infusion_Core {
                     );
                     dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page)
                             VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')");
-                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
+                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
                     }
