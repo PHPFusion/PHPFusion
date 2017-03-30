@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace ThemePack\Nebula;
 
+use PHPFusion\PrivateMessages;
 use PHPFusion\SiteLinks;
 use ThemeFactory\Core;
 use ThemeFactory\Lib\Installer\HomeInstall;
@@ -96,6 +97,8 @@ class MainFrame extends Core {
         echo "<div class='navbar-header navbar-right'>\n";
         echo "<ul class='navbar-nav'>\n";
         if (iMEMBER) :
+            $msg_count = dbcount("('message_id')", DB_MESSAGES, "message_to=:my_id AND message_read=:unread AND message_folder=:inbox", [':inbox' => 0, ':my_id' => fusion_get_userdata('user_id'), ':unread' => 0]);
+            echo "<li><a href='".BASEDIR."messages.php'>".fusion_get_locale('global_121').($msg_count ? "<span class='badge m-l-5'>$msg_count</span>" : "")."</a></li>";
             if (iADMIN) :
                 echo "<li><a href='".ADMIN."index.php".fusion_get_aidlink()."'>".fusion_get_locale('global_123')."</a></li>\n";
             endif;
@@ -112,15 +115,15 @@ class MainFrame extends Core {
         echo "</div>\n"; // container
 
         $menu_config = [
-            'container' => TRUE,
-            'navbar_class' => 'navbar-default',
+            'container'         => TRUE,
+            'navbar_class'      => 'navbar-default',
             'language_switcher' => TRUE,
-            'searchbar' => TRUE,
-            'caret_icon' => 'fa fa-angle-down',
-            'show_banner' => FALSE,
-            'grouping' => fusion_get_settings('links_grouping'),
-            'links_per_page' => fusion_get_settings('links_per_page'),
-            'show_header' => TRUE
+            'searchbar'         => TRUE,
+            'caret_icon'        => 'fa fa-angle-down',
+            'show_banner'       => FALSE,
+            'grouping'          => fusion_get_settings('links_grouping'),
+            'links_per_page'    => fusion_get_settings('links_per_page'),
+            'show_header'       => TRUE
         ];
 
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
@@ -244,26 +247,25 @@ class MainFrame extends Core {
             echo "</section>\n";
         endif;
 
-
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
 
         echo "<div class='row'>\n";
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER1') && USER1 ? USER1 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER1') && USER1 ? USER1 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER2') && USER2 ? USER2 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER2') && USER2 ? USER2 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER3') && USER3 ? USER3 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER3') && USER3 ? USER3 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER4') && USER4 ? USER4 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER4') && USER4 ? USER4 : '';
+        echo "</div>\n";
         echo "</div>\n";
 
         echo "<div class='row'>\n";
@@ -285,11 +287,11 @@ class MainFrame extends Core {
         endif;
         echo SiteLinks::setSubLinks(
             [
-                'id' => 'footer_a',
+                'id'            => 'footer_a',
                 'link_position' => 4, // Insert as Custom ID #4
-                'navbar_class' => 'nav',
-                'nav_class' => 'nav nav-stacked',
-                'responsive' => FALSE,
+                'navbar_class'  => 'nav',
+                'nav_class'     => 'nav nav-stacked',
+                'responsive'    => FALSE,
             ]
         )->showSubLinks();
         echo "</div>\n";

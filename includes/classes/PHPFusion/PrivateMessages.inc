@@ -63,7 +63,7 @@ class PrivateMessages {
                 u.user_id, u.user_name, u.user_status, u.user_avatar,
                 max(m.message_id) as last_message
                 FROM ".DB_MESSAGES." m
-                LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+                INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
                 WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
                 group by message_id
                 ORDER BY m.message_datestamp DESC
@@ -71,6 +71,7 @@ class PrivateMessages {
 
                 $this->info['max_rows'] = dbrows($result);
                 if ($this->info['max_rows']) {
+
                     while ($data = dbarray($result)) {
                         $data['contact_user'] = array(
                             'user_id' => $data['user_id'],
@@ -91,6 +92,7 @@ class PrivateMessages {
                     if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
                         dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
                     }
+
                 } else {
                     $this->info['no_item'] = $this->locale['471'];
                 }
@@ -157,14 +159,10 @@ class PrivateMessages {
                        class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><?php echo form_button("mark", $this->locale['493'], "mark_all",
-                                                   array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['494'], "mark_read",
-                                                   array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['495'], "mark_unread",
-                                                   array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['496'], "unmark_all",
-                                                   array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['493'], "mark_all", array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['494'], "mark_read", array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['495'], "mark_unread", array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['496'], "unmark_all", array("class" => "btn-link")) ?></li>
                     </ul>
                 </div>
                 <?php
@@ -235,8 +233,6 @@ class PrivateMessages {
 					$('#selectedPM').val(checkedCheckbox());
 				}
 			});
-			");
-                add_to_jquery("
 			$('input[type=checkbox]').bind('click', function() {
 				var checkList = $('#selectedPM').val();
 				if ($(this).is(':checked')) {
@@ -751,16 +747,16 @@ class PrivateMessages {
         $this->info['reply_form'] = openform('inputform', 'post', FUSION_REQUEST)
             .form_hidden("msg_send", "", $this->info['items'][$_GET['msg_read']]['message_from'])
             .form_hidden("subject", "", $this->info['items'][$_GET['msg_read']]['message_subject'])
-            .form_textarea("message", $this->locale['422'], '', array(
-                'required' => TRUE,
-                'autosize' => TRUE,
-                'no_resize' => 0,
-                'preview' => TRUE,
-                'form_name' => 'inputform',
-                'bbcode' => TRUE
-            )).form_button('cancel', $this->locale['cancel'], $this->locale['cancel']).form_button('send_message', $this->locale['430'], $this->locale['430'], array(
-                'class' => 'btn m-l-10 btn-primary'
-            )).closeform();
+            .form_textarea("message", '', '', array(
+                'required'    => TRUE,
+                'placeholder' => $this->locale['422'],
+                'preview'     => TRUE,
+                'height'      => '300px',
+                'form_name'   => 'inputform',
+                'bbcode'      => TRUE
+            )).form_button('send_message', $this->locale['430'], $this->locale['430'], array(
+                'class' => 'btn btn-primary m-r-10'
+            )).form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-link']).closeform();
     }
 
     /**
