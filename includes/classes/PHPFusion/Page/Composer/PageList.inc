@@ -164,7 +164,6 @@ class PageList extends PageAdmin {
             echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108'], array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";
-
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
