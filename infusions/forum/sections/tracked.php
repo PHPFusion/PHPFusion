@@ -25,26 +25,24 @@ if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", D
     $result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
     redirect(FUSION_SELF);
 }
-
+$forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
 // xss injection
+$tracked_param = [
+    ':current_userid' => fusion_get_userdata('user_id'),
+    ':thread_status'  => 0
+];
 $result = dbquery("SELECT tn.thread_id FROM ".DB_FORUM_THREAD_NOTIFY." tn
             INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
             INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-            WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
+            WHERE tn.notify_user=:current_userid AND ".groupaccess('forum_access')." AND tt.thread_hidden=:thread_status", $tracked_param);
 
 $rows = dbrows($result);
-
-if (!isset($_GET['rowstart']) or !isnum($_GET['rowstart']) or $_GET['rowstart'] > $rows) {
-    $_GET['rowstart'] = 0;
-}
-
+$rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rows) ? $_GET['rowstart'] : 0;
 $info['post_rows'] = $rows;
 
 if ($rows) {
     require_once INCLUDES."mimetypes_include.php";
-
-    $info['page_nav'] = ($rows > 10) ? makepagenav($_GET['rowstart'], 16, $rows, 3, FUSION_REQUEST, "rowstart") : "";
-
+    $info['page_nav'] = ($rows > $forum_settings['threads_per_page']) ? makepagenav($rowstart, $forum_settings['threads_per_page'], $rows, 3, FUSION_REQUEST, "rowstart") : '';
     $result = dbquery("
                 SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods,
                 tn.thread_id, tn.notify_datestamp, tn.notify_user,
@@ -67,17 +65,16 @@ if ($rows) {
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
                 LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = tt.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
 				LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = tt.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
-                WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
+                WHERE tn.notify_user=:current_userid AND tt.thread_hidden=:thread_status AND ".groupaccess('tf.forum_access')."
                 GROUP BY tn.thread_id
                 ORDER BY tn.notify_datestamp DESC
-                LIMIT ".$_GET['rowstart'].",16
-            ");
+                LIMIT :rowstart, :threads_per_page
+            ", $tracked_param + [':rowstart' => $rowstart, ':threads_per_page' => $forum_settings['threads_per_page']]);
     $i = 0;
     while ($threads = dbarray($result)) {
         // opt for moderators.
         $this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']);
-
-        $icon = "";
+        $icon = '';
         $match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
         if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {
             if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)",
