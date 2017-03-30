@@ -214,10 +214,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					WHERE album_id='".intval($_GET['album_id'])."'
 					ORDER BY photo_datestamp DESC LIMIT 1"));
-                $info['album_stats'] = $locale['422'].$info['max_rows']."<br />\n";
-                $info['album_stats'] .= $locale['423'].profile_link($latest_update['user_id'], $latest_update['user_name'],
-                                                                    $latest_update['user_status'])."".$locale['424'].showdate("longdate",
-                                                                                                                              $latest_update['photo_datestamp'])."\n";
+                $info['album_stats'] = $locale['422']." ".$info['max_rows']."<br />\n";
+                $info['album_stats'] .= $locale['423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
                 $result = dbquery("SELECT tp.*,
 					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar,
 					SUM(tr.rating_vote) 'sum_rating',
@@ -239,15 +237,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     while ($data = dbarray($result)) {
                         // data manipulation
                         $data += array(
-                            "photo_link" => array(
+                            "photo_link"  => array(
                                 'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
                                 'name' => $data['photo_title']
                             ),
-                            "image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'],
-                                //IMAGES_G.$data['photo_filename']
-                                                         INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']
-                            ),
-                            "title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
+                            "image"       => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']),
+                            "title"       => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
                             "description" => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'])) : '',
                             "photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
                         );
