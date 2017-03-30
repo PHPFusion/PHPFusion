@@ -18,7 +18,10 @@
 namespace PHPFusion;
 
 class PrivateMessages {
-    private $info = array();
+
+    private $info = array(
+        'items' => array()
+    );
     private $locale = array();
 
     /**
@@ -69,21 +72,18 @@ class PrivateMessages {
                 $this->info['max_rows'] = dbrows($result);
                 if ($this->info['max_rows']) {
                     while ($data = dbarray($result)) {
-
                         $data['contact_user'] = array(
                             'user_id' => $data['user_id'],
                             'user_name' => $data['user_name'],
                             'user_status' => $data['user_status'],
                             'user_avatar' => $data['user_avatar']
                         );
-
                         $data['message'] = array(
                             "link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                             "name" => $data['message_subject'],
                             "message_header" => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
                             "message_text" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
                         );
-
                         $this->info['items'][$data['message_id']] = $data;
                     }
 
@@ -339,7 +339,7 @@ class PrivateMessages {
 			SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
 			FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
 			");
-                if (dbrows($result) > 0) {
+                if (dbrows($result)) {
                     $data = dbarray($result);
                     // What this does is that if any of the params is 0, we use default system values.
                     $settings = array(
@@ -773,8 +773,9 @@ class PrivateMessages {
         if (iADMIN) {
             $input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$this->locale['434']."</a><br/>";
             $input_header .= form_user_select("msg_send", $this->locale['420a'], $_GET['msg_send'], array(
-                "required" => TRUE,
-                "inline" => TRUE,
+                "required"    => TRUE,
+                'inner_width' => '100%',
+                'width'       => '100%',
                 'placeholder' => $this->locale['421']
             ));
             $input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
@@ -785,9 +786,9 @@ class PrivateMessages {
             $user_groups = fusion_get_groups();
             unset($user_groups[0]);
             $input_header .= form_select('msg_group_send', "", "", array(
-                'options' => $user_groups,
-                'width' => "100%",
-                'class' => 'm-b-0'
+                'options'     => $user_groups,
+                'inner_width' => '300px',
+                'width'       => "100%",
             ));
             $input_header .= "</div>\n</div>\n";
             // Toggle "Send to All" link
@@ -805,22 +806,27 @@ class PrivateMessages {
 			");
         } else {
             $input_header = form_user_select("msg_send", $this->locale['420a'], $_GET['msg_send'], array(
-                "required" => TRUE,
-                'input_id' => 'msgsend2',
-                "inline" => TRUE,
+                "required"    => TRUE,
+                'input_id'    => 'msgsend2',
+                "inline"      => TRUE,
+                'width'       => '100%',
+                'inner_width' => '100%',
                 'placeholder' => $this->locale['421']
             ));
         }
         $this->info['reply_form'] = openform('inputform', 'post', FUSION_REQUEST)
-            .$input_header.form_text('subject', $this->locale['405'], '', array(
+            .$input_header.form_text('subject', '', '', array(
+                'placeholder'      => $this->locale['405'],
+                'inner_class'      => 'input-lg',
                 "required" => TRUE,
                 "inline" => TRUE,
                 'max_length' => 100,
                 "autocomplete_off" => TRUE,
                 "width" => "100%",
                 'placeholder' => $this->locale['405']
-            )).form_textarea('message', $this->locale['422'], '', array(
-                "required" => TRUE,
+            )).form_textarea('message', '', '', array(
+                'placeholder' => $this->locale['422'],
+                "required"    => TRUE,
                 'error_text' => '',
                 'autosize' => 1,
                 'no_resize' => 0,

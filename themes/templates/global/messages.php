@@ -22,14 +22,14 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('display_inbox')) {
 
     function display_inbox($info) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         /**
          * Message Reader Functions for Inbox, Outbox, Archive
          * @param $info
          */
         function _inbox($info) {
-            global $locale;
+            $locale = fusion_get_locale();
 
             if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
 
@@ -122,12 +122,12 @@ if (!function_exists('display_inbox')) {
                 </a>
                 <?php
                 $i = 0;
-                echo "<ul class='m-t-20'>\n";
+                echo "<ul class='m-t-20 nav'>\n";
                 foreach ($info['folders'] as $key => $folderData) {
                     echo "<li><a href='".$folderData['link']."' class='text-dark ".($_GET['folder'] == $key ? "strong" : '')."'>".$folderData['title'];
                     if ($i < count($info['folders']) - 1) {
                         $total_key = $key."_total";
-                        echo "(".$info[$total_key].")";
+                        echo "<div class='pull-right'>(".$info[$total_key].")</div>";
                     }
                     echo "</a></li>\n";
                     $i++;
