@@ -544,15 +544,17 @@ class UserFields extends QuantumFields {
 
                 if ($data['field_cat_db'] && $data['field_cat_index']) { // 2nd tab might want to be users as well
                     // extend userData
-                    if (!empty($this->callback_data) || ($this->registration && $this->method = 'input')) {
+                    //if (!empty($this->callback_data) || ($this->registration && $this->method = 'input')) {
                         // Fix a bug where new db has no insertions rows yet.
-                        $cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
-                        if (dbrows($cresult)) {
-                            $cdata = dbarray($cresult);
-                            $this->callback_data = array_merge_recursive($this->callback_data, $cdata);
-                        }
-                    }
+                    //$cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
+                    //if (dbrows($cresult)) {
+                    //  $cdata = dbarray($cresult);
+                    //$this->callback_data = array_merge_recursive($this->callback_data, $cdata);
+                    // this causes anomaly in callback data with multiple nested query
+                    //}
+                    //}
                 }
+
             }
 
             if (isset($category[$index_page_id])) {
@@ -572,7 +574,7 @@ class UserFields extends QuantumFields {
                                         'plugin_locale_folder' => $this->plugin_locale_folder
                                     );
                                 }
-                                $field_output = $this->display_fields($field, $this->userData, $this->method, $options);
+                                $field_output = $this->display_fields($field, $this->callback_data, $this->method, $options);
                                 $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }
@@ -583,7 +585,7 @@ class UserFields extends QuantumFields {
                             $fields['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 // Outputs array
-                                $field_output = $this->display_fields($field, $this->userData, $this->method);
+                                $field_output = $this->display_fields($field, $this->callback_data, $this->method);
                                 $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }

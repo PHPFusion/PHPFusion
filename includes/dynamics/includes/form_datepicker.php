@@ -72,7 +72,9 @@
  * @return string
  */
 
+
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
+    // there was no sanitization?
     $locale = fusion_get_locale();
     $defender = \defender::getInstance();
 
