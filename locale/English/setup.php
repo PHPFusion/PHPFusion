@@ -31,7 +31,6 @@ $locale['setup_0106'] = "Primary Admin Details";
 $locale['setup_0107'] = "Final Settings";
 $locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
 $locale['setup_0110'] = "Due to the settings for Servertokens in httpd.confg, it is impossible to determine the version of Apache without mod_rewrite, a minimum version of 2.2.16 is needed.";
-$locale['setup_0111'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
 $locale['setup_0112'] = "The phpinfo() function has been disabled for security reasons. To see your server's phpinfo() information, change your PHP settings or contact your server administrator.";
 $locale['setup_0113'] = "Your PHP installation is too old. PHP-Fusion requires at least a minimum of 5.5.21. PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.";
 $locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in the following list";
@@ -285,7 +284,7 @@ $locale['setup_3322'] = "Unanswered Threads";
 $locale['setup_3323'] = "Unsolved Questions";
 $locale['setup_3324'] = "Start a New Thread";
 $locale['setup_3325'] = "Latest Articles";
-$locale['setup_3326'] = "Latest Downloads"; 
+$locale['setup_3326'] = "Latest Downloads";
 $locale['setup_3327'] = "Submit FAQ";
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
