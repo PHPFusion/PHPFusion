@@ -77,24 +77,24 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'icon'             => '',
         'autocomplete_off' => FALSE,
         'tip'              => '',
-        'ext_tip'          => '',
-        'append_button' => '',
-        'append_value' => '',
-        'append_form_value' => '',
-        'append_size' => '',
-        'append_class' => 'btn-default',
-        'append_type' => 'submit',
-        'prepend_button' => '',
-        'prepend_value' => '',
+        'ext_tip'            => '',
+        'append_button'      => '',
+        'append_value'       => '',
+        'append_form_value'  => '',
+        'append_size'        => '',
+        'append_class'       => 'btn-default',
+        'append_type'        => 'submit',
+        'prepend_button'     => '',
+        'prepend_value'      => '',
         'prepend_form_value' => '',
-        'prepend_size' => '',
-        'prepend_class' => 'btn-default',
-        'prepend_type' => 'submit',
-        'error_text' => '',
-        'delimiter' => ',',
-        'stacked' => '',
-        'group_size' => '', // http://getbootstrap.com/components/#input-groups-sizing
-        'password_strength' => FALSE
+        'prepend_size'       => '',
+        'prepend_class'      => 'btn-default',
+        'prepend_type'       => 'submit',
+        'error_text'         => '',
+        'delimiter'          => ',',
+        'stacked'            => '',
+        'group_size'         => '', // http://getbootstrap.com/components/#input-groups-sizing - sm, md, lg
+        'password_strength'  => FALSE
     );
 
     $options += $default_options;
@@ -139,7 +139,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            //addNotice("danger", $options['error_text']);
         }
     }
 
@@ -280,7 +280,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             }
         });
         ");
+    }
 
+    if ($options['autocomplete_off']) {
+        // Delay by 20ms and reset values.
+        add_to_jquery("
+        $('#".$options['input_id']."').val(' ');        
+        setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
+        ");
     }
 
     return $html;

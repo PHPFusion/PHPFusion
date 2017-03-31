@@ -193,9 +193,9 @@ class ViewThread extends ForumServer {
 
         if ($thread->getThreadPermission("can_reply")) {
 
-            add_to_title($locale['global_201'].$locale['forum_0503']);
+            add_to_title($locale['global_201'].$locale['forum_0360']);
 
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             // field data
             $post_data = array(
@@ -365,7 +365,7 @@ class ViewThread extends ForumServer {
             }
 
             $info = array(
-                'title'             => $locale['forum_0503'],
+                'title'             => $locale['forum_0360'],
                 'description'       => $locale['forum_2000'].$thread_data['thread_subject'],
                 'openform'          => openform('input_form', 'post', $form_action, array('enctype' => $thread->getThreadPermission("can_upload_attach"))),
                 'closeform'         => closeform(),
@@ -377,12 +377,10 @@ class ViewThread extends ForumServer {
                     array(
                         'required'   => TRUE,
                         'error_text' => '',
-                        'autosize'   => TRUE,
-                        'no_resize'  => TRUE,
                         'preview'    => TRUE,
                         'form_name'  => 'input_form',
                         'bbcode'     => TRUE,
-                        'height'     => '300px',
+                        'height'     => '500px',
                     )),
                 // happens only in EDIT
                 'delete_field'      => '',
@@ -403,14 +401,14 @@ class ViewThread extends ForumServer {
                     : "",
                 "poll_form"         => '',
                 'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
-                'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
                 'sticky_field'      => '',
                 'lock_field'        => '',
                 'hide_edit_field'   => '',
                 'post_locked_field' => '',
                 // not available in edit mode.
-                'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
-                'post_buttons'      => form_button('post_reply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
+                'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0171'], $post_data['notify_me'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                'post_buttons'      => form_button('post_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
                 'last_posts_reply'  => ''
             );
 
@@ -496,8 +494,8 @@ class ViewThread extends ForumServer {
 
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
-            add_to_title($locale['global_201'].$locale['forum_0503']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
+            add_to_title($locale['global_201'].$locale['forum_0360']);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 				FROM ".DB_FORUM_POSTS." tp
@@ -660,16 +658,16 @@ class ViewThread extends ForumServer {
                             )) : '',
                         "forum_field"       => "",
                         'subject_field'     => $thread_info['post_firstpost'] == $_GET['post_id'] ?
-                            form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'],
+                            form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'],
                                 array('required'    => TRUE,
                                       'placeholder' => $locale['forum_2001'],
                                       "class"       => 'm-t-20 m-b-20'))
                             : form_hidden("thread_subject", "", $thread_data['thread_subject']),
                         'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                             array('required'  => TRUE,
-                                  'autosize'  => TRUE,
-                                  'no_resize' => TRUE,
+                                  'height'    => '300px',
                                   'preview'   => TRUE,
+                                  'no_resize' => FALSE,
                                   'form_name' => 'input_form',
                                   'bbcode'    => TRUE
                             )),
@@ -690,7 +688,7 @@ class ViewThread extends ForumServer {
                         // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
                         "poll_form"         => "",
                         'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
-                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
                         //sticky only in new thread or edit first post
                         'sticky_field'      => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
                         'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
@@ -700,7 +698,7 @@ class ViewThread extends ForumServer {
                         // edit mode only
                         // not available in edit mode.
                         'notify_field'      => '',
-                        //$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
+                        //$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0171'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
                         'post_buttons'      => form_button('post_edit', $locale['save'], $locale['save'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
                         'last_posts_reply'  => ''
                     );
@@ -800,13 +798,13 @@ class ViewThread extends ForumServer {
      */
     public function get_participated_users($info) {
         $user = array();
-        $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, count(p.post_id) 'post_count'
+        $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
 				INNER JOIN ".DB_USERS." u on (u.user_id=p.post_author)
 				WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' group by user_id");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $user[$data['user_id']] = profile_link($data['user_id'], $data['user_name'], $data['user_status']);
+                $user[$data['user_id']] = $data;
             }
         }
 

@@ -16,8 +16,6 @@
 +--------------------------------------------------------*/
 
 /* Globals */
-@import url(../../../includes/fonts/Ubuntu/font.css);
-
 html,
 body {
     font: 14px/18px 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -942,7 +940,7 @@ div.mce-edit-area {
 }
 
 .dashboard-icon {
-    max-width: 55px;
+    max-width: 48px;
 }
 
 .admin-image {

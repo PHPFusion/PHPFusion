@@ -46,7 +46,7 @@ class Comments {
      * comment_title - display the comment block title
      * comment_count - display the current comment count
      */
-    private static $default_params = array(
+    private static $params = array(
         'comment_user'                     => '',
         'comment_item_type'                => '',
         'comment_db'                       => '',
@@ -114,7 +114,6 @@ class Comments {
 
         // Comments Per Page
         $this->cpp = fusion_get_settings('comments_per_page');
-
     }
 
     /**
@@ -129,19 +128,22 @@ class Comments {
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
             self::$key = $key;
-            $params += self::$default_params;
             $params['comment_key'] = $key;
-            // reshuffle code on these.
-            self::$instances[$key]->setParams($params);
-            self::$instances[$key]->setEmptyCommentData();
-            self::$instances[$key]->checkPermissions();
-            self::$instances[$key]->execute_CommentUpdate();
+            self::$params = $params + self::$params;
+            self::setInstance($key);
         }
-        //self::$instances[$key]->checkPermissions();
-        self::$instances[$key]->get_Comments();
-
         return self::$instances[$key];
     }
+
+    private static function setInstance($key) {
+        $obj = self::getInstance([], $key);
+        $obj->setParams(self::$params);
+        $obj->setEmptyCommentData();
+        $obj->checkPermissions();
+        $obj->execute_CommentUpdate();
+        $obj->get_Comments();
+    }
+
 
     /**
      * Displays Comments
@@ -166,21 +168,26 @@ class Comments {
                         'comment_subject' => '',
                         'comment_message' => '',
                     ];
+
                     $clink = $this->getParams('clink');
 
                     if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 
-                        $query = "SELECT tcm.*, tcu.user_name FROM ".DB_COMMENTS." tcm WHERE comment_id=:comment_id AND comment_item_id=:comment_item_id AND comment_type=:comment_type AND comment_hidden=:comment_hidden";
-                        $bind = [
+                        $edit_query = "
+                        SELECT tcm.*
+                        FROM ".DB_COMMENTS." tcm
+                        WHERE comment_id=:comment_id AND comment_item_id=:comment_item_id AND comment_type=:comment_type AND comment_hidden=:comment_hidden";
+
+                        $edit_param = [
                             ':comment_id'      => $_GET['comment_id'],
                             ':comment_item_id' => $this->getParams('comment_item_id'),
                             ':comment_type'    => $this->getParams('comment_item_type'),
                             ':comment_hidden'  => 0,
                         ];
+                        $e_result = dbquery($edit_query, $edit_param);
 
-                        $eresult = dbquery($query, $bind);
-                        if (dbrows($eresult)) {
-                            $edata = dbarray($eresult);
+                        if (dbrows($e_result)) {
+                            $edata = dbarray($e_result);
                             if ((iADMIN && checkrights("C")) || (iMEMBER && $edata['comment_name'] == fusion_get_userdata('user_id') && isset($edata['user_name']))) {
                                 $clink = $this->getParams('clink')."&amp;c_action=edit&amp;comment_id=".$edata['comment_id'];
                             }
@@ -188,30 +195,25 @@ class Comments {
                     }
 
                     $can_post = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
-
                     // Comments form
-                    $comments_form = openform('inputform', 'post', $clink, [
+                    $form_action = fusion_get_settings('site_path').str_replace('../', '', self::format_clink($clink));
+                    $comments_form = openform('inputform', 'post', $form_action, [
                             'form_id'    => $this->getParams('comment_key').'-inputform',
-                            'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                            'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings('site_path')."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ''
                         ]
                     );
-
                     $ratings_input = '';
                     $_CAPTCHA_INPUT = '';
-
                     if ($can_post) {
-
-                        $comments_form .= form_hidden("comment_id", '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
-                        $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
-                        $comments_form .= form_hidden("comment_key", '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
+                        $comments_form .= form_hidden('comment_id', '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
+                        $comments_form .= form_hidden('comment_cat', '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
+                        $comments_form .= form_hidden('comment_key', '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
                         $comments_form .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
                         $comments_form .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
                         $comments_form .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
-
                         /*
                          * Ratings Selector
                          */
-
                         if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
                             $ratings_input .= form_select('comment_rating', $this->locale['r106'], '',
                                 array(
@@ -227,8 +229,8 @@ class Comments {
                             );
                         }
                     }
-
-                    if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+                    // Captcha for Guest
+                    if (!iMEMBER && fusion_get_settings('guestposts') == TRUE && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
                         $_CAPTCHA_INPUT .= "<div class='m-t-10 m-b-10'>";
                         $_CAPTCHA_INPUT .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
@@ -244,12 +246,18 @@ class Comments {
                         $_CAPTCHA_INPUT .= "</div>\n";
                     }
 
+                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+
+                    $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
+                            ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
+                            );
+
                     ob_start();
                     $comments_form_template($this->getParams('comment_item_type'), $this->getParams('clink'), $this->getParams('comment_item_id'), isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE, $this->getParams());
                     $comments_form .= strtr(ob_get_clean(), [
                         '{%comment_form_title%}'     => ($this->getParams('comment_form_title') ?: $this->locale['c111']),
                         '{%comment_form_id%}'        => $this->getParams('comment_key').'_edit_comment',
-                        '{%user_avatar%}'            => display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded"),
+                        '{%user_avatar%}'            => $can_post ? $avatar : '',
                         '{%comment_name_input%}'     => ($can_post ? (iGUEST ? form_text('comment_name', $this->locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_name']) : '') : ''),
                         '{%comment_subject_input%}'  => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
                         '{%comment_message_input%}'  => ($can_post ? form_textarea('comment_message', '', $edata['comment_message'],
@@ -260,14 +268,12 @@ class Comments {
                                 'form_name' => 'inputform',
                                 "tinymce"   => "simple",
                                 'wordcount' => TRUE,
-                                'type'      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
+                                'type'      => 'bbcode',
                             )
                         ) : $this->locale['c105']),
                         '{%comments_ratings_input%}' => $ratings_input,
                         '{%comments_captcha_input%}' => $_CAPTCHA_INPUT,
-                        '{%comment_post%}'           => form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
-                            ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
-                        )
+                        '{%comment_post%}'           => $can_post ? $button : ''
                     ]);
                     $comments_form .= closeform();
                 } else {
@@ -354,8 +360,8 @@ class Comments {
             } else {
                 trigger_error('function '.$comments_ui_template.' not found or declared too late. Is defined in your theme?');
             }
-
         }
+
         if ($this->getParams('comment_echo')) {
             echo $html;
 
@@ -390,6 +396,7 @@ class Comments {
      */
     private function display_all_comments($c_data, $index = 0, $options) {
         $comments_html = &$comments_html;
+
         foreach ($c_data[$index] as $comments_id => $data) {
             $ratings = '';
             if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
@@ -517,6 +524,7 @@ class Comments {
          * 2. in your jquery - POST the `form id`
          */
         if ($this->jquery_enabled === TRUE) {
+
             if (!defined("COMMENTS_JQUERY_SCRIPT")) {
                 define("COMMENTS_JQUERY_SCRIPT", TRUE);
                 if (!$this->getParams('comment_custom_script')) {
@@ -524,22 +532,30 @@ class Comments {
                     add_to_jquery($comment_js);
                 }
             }
+
         } else {
+
             // Non Jquery Actions
-            if (isset($_GET['c_action']) && $_GET['c_action'] == 'edit') {
-                redirect(self::format_clink($this->comment_params['clink']));
-            }
             if (isset($_GET['comment_reply'])) {
                 add_to_jquery("scrollTo('comments_reply_form');");
             }
+
             /** Delete */
             if (isset($_GET['c_action']) && iMEMBER) {
                 if ($_GET['c_action'] == 'delete') {
-                    $eresult = dbquery("SELECT tcm.*, tcu.user_name
-				FROM ".DB_COMMENTS." tcm
-				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'");
-                    if (dbrows($eresult) > 0) {
+                    $delete_query = "
+                    SELECT tcm.*, tcu.user_name
+                    FROM ".DB_COMMENTS." tcm
+                    LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
+                    WHERE comment_id=:comment_id AND comment_hidden=:comment_hidden
+                    ";
+                    $delete_param = [
+                        ':comment_id'     => intval(stripinput($_POST['comment_id'])),
+                        ':comment_hidden' => 0,
+                    ];
+
+                    $eresult = dbquery($delete_query, $delete_param);
+                    if (dbrows($eresult)) {
                         $edata = dbarray($eresult);
                         $redirect_link = $this->getParams('clink').($this->settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0");
                         $child_query = "SELECT comment_id FROM ".DB_COMMENTS." WHERE comment_cat='".intval($_GET['comment_id'])."'";
@@ -607,9 +623,6 @@ class Comments {
                 'comment_ip_type' => USER_IP_TYPE,
                 'comment_hidden'  => 0,
             );
-            if (!$default_comment_id) {
-                $comment_data['comment_datestamp'] = TIME;
-            }
 
             $ratings_query = "
             SELECT rating_id FROM ".DB_RATINGS." WHERE rating_item_id='".$comment_data['comment_item_id']."'
@@ -675,6 +688,9 @@ class Comments {
                 }
 
             } else {
+
+                $comment_data['comment_datestamp'] = TIME;
+
                 // Save New comment
                 if ($this->jquery_enabled === FALSE) {
                     if (!dbcount("(".$this->getParams('comment_col').")", $this->getParams('comment_db'),
@@ -720,7 +736,7 @@ class Comments {
     // All will post towards the last box on multiple instance.
     private function buildJavascript() {
         return "
-        <script>        
+        <script>
         InitComment();
         function InitComment() {
             PostComments();
@@ -806,7 +822,7 @@ class Comments {
                 values[field.name] = field.value;
             });
             var url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
-            
+
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -821,7 +837,7 @@ class Comments {
         });
         }
         function PostCommentsReply() {
-            $('body').on('click', '.comments-reply', function (e) {                
+            $('body').on('click', '.comments-reply', function (e) {
                 e.preventDefault();
                 $('.comments_reply_container').hide();
                 var comment_id = $(this).data('id');
@@ -848,9 +864,8 @@ class Comments {
      * @return string
      */
     private static $clink = [];
-
     private static function format_clink($clink) {
-        if (!empty(self::$clink[$clink])) {
+        if (empty(self::$clink[$clink])) {
             $fusion_query = array();
             $url = $url = ((array)parse_url(htmlspecialchars_decode($clink))) + array(
                     'path'  => '',
@@ -941,7 +956,7 @@ class Comments {
 
                 $comment_query = "
                 SELECT tcm.* ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? ", tcr.rating_vote 'ratings'" : '')."
-                FROM ".DB_COMMENTS." tcm                
+                FROM ".DB_COMMENTS." tcm
                 ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? "LEFT JOIN ".DB_RATINGS." tcr ON tcr.rating_item_id=tcm.comment_item_id AND tcr.rating_type=tcm.comment_type" : '')."
                 WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden
                 ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC LIMIT ".$c_start.", ".$this->cpp."
@@ -1017,9 +1032,9 @@ class Comments {
                 $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
                 $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' ".(isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id'] ? "" : "style='display:none;'").">";
             }
-            $reply_form .= openform("comments_reply_frm-".$row['comment_id'], "post", FUSION_REQUEST, [
-                    "class"      => "comments_reply_form m-t-20 m-b-20",
-                    "remote_url" => $this->jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ''
+            $reply_form .= openform('comments_reply_frm-'.$row['comment_id'], 'post', FUSION_REQUEST, [
+                    'class'      => 'comments_reply_form m-t-20 m-b-20',
+                    'remote_url' => $this->jquery_enabled === TRUE ? fusion_get_settings('site_path').'includes/classes/PHPFusion/Feedback/Comments.ajax.php' : ''
                 ]
             );
 

@@ -25,7 +25,7 @@ class Members_View extends Members_Admin {
         <div class='pull-left'>{%filter_text%} {%filter_button%}</div>
         </div>
         <!----filter---->
-        <div id='filter_panel' style='display:none'>
+        <div id='filter_panel' class='m-t-10' style='display:none'>
             <div class='list-group-item'>
                 <div class='row'>
                     <div class='col-xs-3'><strong>".self::$locale['ME_560']."</strong></div>
@@ -43,7 +43,7 @@ class Members_View extends Members_Admin {
         <!----//filter---->
         <hr/>
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
-        <div id='user_action_bar' class='list-group-item spacer-sm p-5'>{%user_actions%}</div>
+        <div id='user_action_bar' class='list-group-item spacer-sm p-10 text-center'>{%user_actions%}</div>
         <table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
             <thead>
                 {%list_head%}

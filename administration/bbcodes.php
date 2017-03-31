@@ -130,17 +130,15 @@ if ($_GET['page'] == 1) {
             $lp++;
             $enabled_bbcodes[] = $data['bbcode_name'];
             if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".png")) {
-                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".png' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".png' alt='".$data['bbcode_name']."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif' alt='".$data['bbcode_name']."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg' alt='".$data['bbcode_name']."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".svg")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".svg' alt='".$data['bbcode_name']."' style='border:1px solid black; width: 24px; height: 24px;' />\n";
             } else {
-                if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif")) {
-                    $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
-                } else {
-                    if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg")) {
-                        $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
-                    } else {
-                        $bbcode_image = "-";
-                    }
-                }
+                $bbcode_image = "-";
             }
             $cls = ($lp % 2 == 0 ? "tbl2" : "tbl1");
             echo "<tr>\n";
@@ -181,19 +179,17 @@ if ($_GET['page'] == 1) {
         foreach ($available_bbcodes as $available_bbcode) {
             $__BBCODE__ = array();
             if (!in_array($available_bbcode, $enabled_bbcodes)) {
-                if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".png")) {
-                    $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".png' alt='".$available_bbcode."' style='border:1px solid black' />\n";
-                } else {
-                    if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".gif")) {
-                        $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".gif' alt='".$available_bbcode."' style='border:1px solid black' />\n";
-                    } else {
-                        if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".jpg")) {
-                            $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".jpg' alt='".$available_bbcode."' style='border:1px solid black' />\n";
-                        } else {
-                            $bbcode_image = "-";
-                        }
-                    }
-                }
+            if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".png")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".png' alt='".$available_bbcode."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".gif")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".gif' alt='".$available_bbcode."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".jpg")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".jpg' alt='".$available_bbcode."' style='border:1px solid black;' />\n";
+            } else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".svg")) {
+                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".svg' alt='".$available_bbcode."' style='border:1px solid black; width: 24px; height: 24px;' />\n";
+            } else {
+                $bbcode_image = "-";
+            }
                 if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php")) {
                     include(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php");
                 } elseif (file_exists(LOCALE."English/bbcodes/".$available_bbcode.".php")) {

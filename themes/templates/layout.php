@@ -70,19 +70,23 @@ if (function_exists("get_head_tags")) {
 
 echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
 echo "<script type='text/javascript'>!window.jQuery && document.write('<script src=\'".INCLUDES."jquery/jquery.min.js\'><\/script>');</script>\n";
-
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
 echo "</head>\n";
 
-// Online users database -- to core level whether panel is on or not
-if (dbcount("(online_user)", DB_ONLINE, (iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'")) == 1) {
-    $result = dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."'
-	WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
-} else {
-    $result = dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive)
-	VALUES ('".(iMEMBER ? fusion_get_userdata('user_id') : 0)."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
+$o_param = [
+    ':user_id'   => 0,
+    ':online_ip' => USER_IP,
+];
+if (iMEMBER) {
+    $o_param[':user_id'] = fusion_get_userdata('user_id');
 }
-$result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive<".(TIME - 60));
+// Online users database -- to core level whether panel is on or not
+if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:online_ip", $o_param)) {
+    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
+} else {
+    dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
+}
+dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (TIME - 60)]);
 
 /**
  * new constant - THEME_BODY;
@@ -98,7 +102,7 @@ if (!defined("THEME_BODY")) {
 
 if (iADMIN) {
     if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-        addNotice("danger", fusion_get_locale('global_198'), 'all');
+        //addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
         addNotice("warning", fusion_get_locale('global_190'), 'all');
@@ -111,10 +115,8 @@ if (iADMIN) {
 if (function_exists("render_page")) {
     render_page(); // by here, header and footer already closed
 }
-
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-
 if (!empty($footerError)) {
     echo "<div class='admin-message container'>".$footerError."</div>\n";
 }

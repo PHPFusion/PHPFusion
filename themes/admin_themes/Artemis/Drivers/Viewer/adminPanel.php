@@ -127,9 +127,11 @@ $('#search_app').bind('keyup', function(e) {
      */
     private function left_nav() {
         $aidlink = fusion_get_aidlink();
+        $locale = parent::get_locale();
+
         $sections = Admins::getInstance()->getAdminSections();
 
-        $sections[] = "Collapse Menu";
+        $sections[] = $locale['admin_collapse'];
         $this->admin_section_icons[] = "<i class='fa fa-chevron-circle-left'></i>\n";
 
         $pages = Admins::getInstance()->getAdminPages();
@@ -148,8 +150,7 @@ $('#search_app').bind('keyup', function(e) {
                 }
                 ?>
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
-                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
-                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
                     </a>
                     <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
@@ -173,11 +174,13 @@ $('#search_app').bind('keyup', function(e) {
 
         $aidlink = parent::get_aidlink();
 
+        $locale = parent::get_locale();
+
         $sections = Admins::getInstance()->getAdminSections();
 
         $pages = Admins::getInstance()->getAdminPages();
 
-        $is_current_page = parent::getCurrentPage();
+        $is_current_page = parent::_currentPage();
 
         echo "<ul id=\"app_search_result\"  style=\"display:none;\"></ul>\n";
 
@@ -286,8 +289,48 @@ $('#search_app').bind('keyup', function(e) {
 
     private function message_notification() {
         $locale = self::get_locale();
+        $userdata = fusion_get_userdata();
 
-        $messages = self::get_messages();
+        $messages = [];
+
+        $msg_count_sql = "message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'";
+
+        $msg_search_sql = "
+                        SELECT message_id, message_subject,
+                        message_from 'sender_id', u.user_name 'sender_name', u.user_avatar 'sender_avatar', u.user_status 'sender_status',
+                        message_datestamp
+                        FROM ".DB_MESSAGES."
+                        INNER JOIN ".DB_USERS." u ON u.user_id=message_from
+                        WHERE message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'
+                        GROUP BY message_id
+                        ";
+
+        if (dbcount("(message_id)", DB_MESSAGES, $msg_count_sql)) {
+
+            $msg_result = dbquery($msg_search_sql);
+
+            if (dbrows($msg_result) > 0) {
+
+                while ($data = dbarray($msg_result)) {
+
+                    $messages[] = array(
+                        "link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+                        "title" => $data['message_subject'],
+                        "sender" => array(
+                            "user_id" => $data['sender_id'],
+                            "user_name" => $data['sender_name'],
+                            "user_avatar" => $data['sender_avatar'],
+                            "user_status" => $data['sender_status'],
+                        ),
+                        "datestamp" => timer($data['message_datestamp']),
+                    );
+
+                }
+
+            }
+
+        }
+
         $html = '<li class="dropdown hidden-xs hidden-sm">';
         if (!empty($messages)) {
             $html .= '

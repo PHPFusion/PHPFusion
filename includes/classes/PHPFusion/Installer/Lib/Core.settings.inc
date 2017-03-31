@@ -108,8 +108,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => "<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>"
             ],
             [
-                'settings_name' => 'opening_page',
-                'settings_value' => 'viewpage.php?page_id=1'
+                'settings_name'  => 'opening_page',
+                'settings_value' => 'home.php'
             ],
             [
                 'settings_name' => 'locale',
@@ -120,8 +120,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'entypo',
-                'settings_value' => 1
+                'settings_name'  => 'entypo',
+                'settings_value' => 0
             ],
             [
                 'settings_name' => 'fontawesome',
@@ -356,16 +356,16 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'avatar_width',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_width',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_height',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_height',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_filesize',
-                'settings_value' => 50000
+                'settings_name'  => 'avatar_filesize',
+                'settings_value' => 150000
             ],
             [
                 'settings_name' => 'avatar_ratio',
@@ -772,6 +772,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ]
         ]
     ];
+    // if we're installing
     $table_settings['settings_theme'] = [
         'insert' => [
             [
@@ -1161,7 +1162,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'link_name'       => $locale['setup_3300'],
                 'link_cat'        => '0',
-                'link_icon'       => 'php-fusion m-r-5',
+                'link_icon'       => '',
                 'link_url'        => 'index.php',
                 'link_visibility' => '0',
                 'link_position'   => '2',

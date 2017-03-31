@@ -72,4 +72,9 @@ if (db_exists(DB_FORUMS)) {
                               'allowclear' => TRUE
                           ))
     );
+
+    add_to_jquery('
+      $("#advanced_search_form #forums-field").addClass("display-inline-block");
+      $("#advanced_search_form #forum_id-field").removeClass("display-block").addClass("display-inline-block").addClass("m-b-0");
+    ');
 }

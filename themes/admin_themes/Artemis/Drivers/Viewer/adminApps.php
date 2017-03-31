@@ -21,8 +21,8 @@ class adminApps {
 
     private $result = array();
 
-
     public function display_apps_result() {
+
         if (($this->result['status'] == 200 && !empty($this->result['data'])) && isset($_GET['mode'])) {
 
             if ($_GET['mode'] == "json") {
@@ -30,6 +30,8 @@ class adminApps {
                 echo json_encode($this->result);
 
             } elseif ($_GET['mode'] == "html") {
+
+                $locale = fusion_get_locale();
 
                 foreach ($this->result['data'] as $data) {
 

@@ -40,10 +40,6 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 }
 define('MOD_REWRITE', $mod_rewrite);
 
-if (!MOD_REWRITE) {
-    addNotice('danger', "<i class='fa fa-lg fa-warning m-r-10'></i>".$locale['rewrite_disabled']);
-}
-
 $settings_seo = array(
     'site_seo' => fusion_get_settings('site_seo'),
     'normalize_seo' => fusion_get_settings('normalize_seo'),
@@ -53,82 +49,14 @@ $settings_seo = array(
 if (isset($_POST['savesettings'])) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
-
-        if ($defender->safe()) {
+        if (\defender::safe()) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
         }
     }
 
-    $htc = "# Force utf-8 charset".PHP_EOL;
-    $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
-    $htc .= "# Security".PHP_EOL;
-    $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-    $htc .= "# Secure htaccess file".PHP_EOL;
-    $htc .= "<Files .htaccess>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Protect config.php".PHP_EOL;
-    $htc .= "<Files config.php>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Block Nasty Bots".PHP_EOL;
-    $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-    $htc .= "# Disable directory listing".PHP_EOL;
-    $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-
-    if ($settings_seo['site_seo'] == 1) {
-        // Rewrite settings
-        $htc .= "Options +SymLinksIfOwnerMatch".PHP_EOL;
-        $htc .= "<IfModule mod_rewrite.c>".PHP_EOL;
-        $htc .= "	# Let PHP know mod_rewrite is enabled".PHP_EOL;
-        $htc .= "	<IfModule mod_env.c>".PHP_EOL;
-        $htc .= "		SetEnv MOD_REWRITE On".PHP_EOL;
-        $htc .= "	</IfModule>".PHP_EOL;
-        $htc .= "	RewriteEngine On".PHP_EOL;
-        $htc .= "	RewriteBase ".$settings['site_path'].PHP_EOL;
-        $htc .= "	# Fix Apache internal dummy connections from breaking [(site_url)] cache".PHP_EOL;
-        $htc .= "	RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]".PHP_EOL;
-        $htc .= "	RewriteRule .* - [F,L]".PHP_EOL;
-        $htc .= "	# Exclude /assets and /manager directories and images from rewrite rules".PHP_EOL;
-        $htc .= "	RewriteRule ^(administration|themes)/*$ - [L]".PHP_EOL;
-        $htc .= "	RewriteCond %{REQUEST_FILENAME} !-f".PHP_EOL;
-        $htc .= "	RewriteCond %{REQUEST_FILENAME} !-d".PHP_EOL;
-        $htc .= "	RewriteCond %{REQUEST_FILENAME} !-l".PHP_EOL;
-        $htc .= "	RewriteCond %{REQUEST_URI} !^/(administration|config|index.php)".PHP_EOL;
-        $htc .= "	RewriteRule ^(.*?)$ index.php [L]".PHP_EOL;
-        $htc .= "</IfModule>".PHP_EOL;
-
-    } else {
-        // Error pages
-        $htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400".PHP_EOL;
-        $htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401".PHP_EOL;
-        $htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403".PHP_EOL;
-        $htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404".PHP_EOL;
-        $htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500".PHP_EOL;
-    }
-
-    // Create the .htaccess file
-    if (!file_exists(BASEDIR.".htaccess")) {
-        if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-            @rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
-        } else {
-            touch(BASEDIR.".htaccess");
-        }
-    }
-
-    // Write the contents to .htaccess
-    $temp = fopen(BASEDIR.".htaccess", "w");
-    if (fwrite($temp, $htc)) {
-        fclose($temp);
-    }
-
     if (\defender::safe()) {
+        require_once(INCLUDES.'htaccess_include.php');
+        write_htaccess();
         addNotice("success", $locale['900']);
         redirect(FUSION_SELF.$aidlink."&amp;section=pls");
     }
@@ -138,7 +66,6 @@ if (isset($_POST['savepermalinks'])) {
     $error = 0;
 
     if (\defender::safe()) {
-
         if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
             $permalinks = stripinput($_POST['permalink']);
             foreach ($permalinks as $key => $value) {
@@ -376,9 +303,10 @@ opentable($locale['428']);
 echo "<div class='well'>\n";
 echo $locale['415'];
 echo "</div>\n";
-
+if (!MOD_REWRITE) {
+    echo "<div class='alert alert-warning'><i class='fa fa-warning fa-fw m-r-10'></i>".$locale['rewrite_disabled']."</div>\n";
+}
 echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-t-20 m-b-20");
-
 switch ($_GET['section']) {
     case "pl":
         // edit
@@ -475,7 +403,6 @@ switch ($_GET['section']) {
         }
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['400']]);
         break;
-
     case "pl2":
         echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n<tbody>\n<tr>\n";
         if (count($available_rewrites) != count($enabled_rewrites)) {
@@ -502,7 +429,6 @@ switch ($_GET['section']) {
         echo "</tbody>\n</table>\n";
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.FUSION_REQUEST, 'title' => $locale['401']]);
         break;
-
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
         echo "<div class='well m-t-20'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";

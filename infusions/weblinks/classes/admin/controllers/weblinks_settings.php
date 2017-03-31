@@ -55,22 +55,22 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                 redirect(FUSION_REQUEST);
             } else {
                 addNotice("danger", $this->locale['901']);
-				$article_settings = $inputArray;
+				$weblink_settings = $inputArray;
             }
         }
 
 		opentable("");
 		echo openform("settingsform", "post", FUSION_REQUEST);
-		echo "<div class='well m-b-0'>".$this->locale['WLS_0400']."</div>\n";
+		echo "<div class='well m-b-0 spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
 
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12'>\n";
 
-		echo form_text("links_per_page", $this->locale['WLS_0401'], $weblink_settings['links_per_page'], array(
-				"max_lenght" => 4, "inner_width" => "250px", "type" => "number"
+        echo form_text("links_per_page", $this->locale['WLS_0132'], $weblink_settings['links_per_page'], array(
+            "max_length" => 4, "inner_width" => "250px", "type" => "number"
 			));
 
-		echo form_select("links_allow_submission", $this->locale['WLS_0402'], $weblink_settings['links_allow_submission'], array(
+        echo form_select("links_allow_submission", $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], array(
 				"options" => array($this->locale['disable'], $this->locale['enable'])
 			));
 

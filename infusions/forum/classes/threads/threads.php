@@ -192,7 +192,7 @@ class ForumThreads extends ForumServer {
                             'file'   => $threads['attach_files'] > 0 ? "<i class='".self::get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ),
-                        "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
+                        "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
                                 $author['user_name'],
                                 $author['user_status'])."</span>",
                         "thread_author"  => $author,
@@ -268,13 +268,21 @@ class ForumThreads extends ForumServer {
      */
     public function set_threadInfo() {
 
-        // Sanitize forum_id, thread_id, parent_id
-        if ((!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) || (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) || (isset($_GET['parent_id']) && !isnum($_GET['parent_id']))) {
+        if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id'])) {
             redirect(FORUM.'index.php');
         }
 
         if (isset($_GET['forum_id'])) {
-            if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."' AND thread_id='".$_GET['thread_id']."'")) {
+            if (isnum($_GET['forum_id'])) {
+                if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id=:forum_id AND thread_id=:thread_id",
+                    [
+                        ':forum_id'  => $_GET['forum_id'],
+                        ':thread_id' => $_GET['thread_id']]
+                )
+                ) {
+                    redirect(FORUM.'index.php');
+                }
+            } else {
                 redirect(FORUM.'index.php');
             }
         }
@@ -286,7 +294,7 @@ class ForumThreads extends ForumServer {
 
         $this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
 
-        if (!empty($this->thread_data) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
+        if (!empty($this->thread_data) && !empty($_GET['thread_id']) && isnum($_GET['thread_id']) && $this->check_forum_access($forum_index, 0, $_GET['thread_id'])) {
 
             // get post_count, lastpost_id, first_post_id.
             $thread_stat = self::get_thread_stats($_GET['thread_id']);
@@ -358,6 +366,7 @@ class ForumThreads extends ForumServer {
              */
             $poll = new Poll($this->thread_info);
             $poll_form = $poll->generate_poll($this->thread_data);
+            $poll_info = $poll->get_poll_info();
 
             /**
              * Generate Attachment
@@ -461,6 +470,7 @@ class ForumThreads extends ForumServer {
                 'quick_reply_form'     => $qr_form,
                 'thread_bounty'        => $bounty_display,
                 'poll_form'            => $poll_form,
+                'poll_info'            => $poll_info,
                 'post-filters'         => array(),
                 'mod_options'          => [],
                 'form_action'          => '',
@@ -609,11 +619,11 @@ class ForumThreads extends ForumServer {
         // Can accept an answer
         $this->thread_info['permissions']['can_answer'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_answered'] == FALSE && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
         // Can start a bounty
-        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_data['forum_type'] == 4 && !$this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && fusion_get_userdata('user_reputation') >= 50 ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_start_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && !$this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && fusion_get_userdata('user_reputation') >= 50 ? TRUE : FALSE;
         // Can edit a bounty
-        $this->thread_info['permissions']['can_edit_bounty'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_edit_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && $this->thread_data['thread_bounty'] && $this->thread_data['thread_locked'] == FALSE && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id') || iMOD) ? TRUE : FALSE;
         // Can award bounty
-        $this->thread_info['permissions']['can_award_bounty'] = $this->thread_data['forum_type'] == 4 && $this->thread_data['thread_bounty'] && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id')) ? TRUE : FALSE;
+        $this->thread_info['permissions']['can_award_bounty'] = $this->thread_data['forum_type'] == 4 && iMEMBER && $this->thread_data['thread_bounty'] && ($this->thread_data['thread_bounty_user'] == fusion_get_userdata('user_id')) ? TRUE : FALSE;
     }
 
     /**
@@ -994,7 +1004,7 @@ class ForumThreads extends ForumServer {
                 }
 
                 // Website
-                if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
+                if (!empty($pdata['user_web']) && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
                     $user_web_url = !preg_match("@^http(s)?\:\/\/@i", $pdata['user_web']) ? "http://".$pdata['user_web'] : $pdata['user_web'];
                     $pdata['user_web'] = array(
                         'link'  => $user_web_url,
@@ -1014,7 +1024,7 @@ class ForumThreads extends ForumServer {
                 }
 
                 // User Sig
-                if (isset($pdata['user_sig']) && $pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
+                if (!empty($pdata['user_sig']) && $pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
                     $pdata['user_sig'] = nl2br(parseubb(parsesmileys(stripslashes($pdata['user_sig'])), "b|i|u||center|small|url|mail|img|color"));
                 } else {
                     $pdata['user_sig'] = "";
@@ -1077,14 +1087,13 @@ class ForumThreads extends ForumServer {
                         $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
                         $pdata['post_votebox'] .= "</div>\n";
                     }
-
                 }
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ".profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
-                        $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
+                        $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
                         $edit_reason .= "</a></div>";
                         $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><span class='text-lighter'>- ".$pdata['post_editreason']."</span></div>\n";
@@ -1092,7 +1101,6 @@ class ForumThreads extends ForumServer {
                         $edit_reason .= "</div>";
                     }
                     $pdata['post_edit_reason'] = $edit_reason;
-                    //$this->edit_reason = TRUE;
                 }
 
                 // Custom Post Message Link/Buttons

@@ -82,4 +82,4 @@ foreach ($array_check as $key => $value) {
 
 // Remove old cats link and update new path for admin link
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='download_cats.php'";
-$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/downloads/download.png', `admin_link`='../infusions/downloads/downloads_admin.php' WHERE admin_link='downloads.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/downloads/download.svg', admin_link='../infusions/downloads/downloads_admin.php' WHERE admin_link='downloads.php'";

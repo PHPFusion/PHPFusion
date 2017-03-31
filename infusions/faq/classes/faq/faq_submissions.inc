@@ -33,7 +33,7 @@ class FaqSubmissions extends FaqServer {
 
     public function displayFaq() {
 
-        $this->locale = fusion_get_locale("", FAQ_ADMIN_LOCALE);
+        $this->locale = fusion_get_locale("", FAQ_LOCALE);
         add_to_title($this->locale['faq_0900']);
         opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['faq_0900']);
         if (self::$faq_settings['faq_allow_submission']) {
@@ -60,7 +60,7 @@ class FaqSubmissions extends FaqServer {
         if (isset($_POST['cancel'])) {
             redirect(FUSION_REQUEST);
         }
-        if (dbcount("(faq_id)", DB_FAQS, (multilang_table("FQ") ? "faq_language='".LANGUAGE."' AND " : "")."faq_status=1 AND ".groupaccess("faq_visibility")."")) {
+        if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? "faq_cat_language='".LANGUAGE."'" : ""))) {
             // Save
             if (isset($_POST['submit_link'])) {
                 $submit_info['faq_question'] = parse_textarea($_POST['faq_question']);
@@ -92,7 +92,7 @@ class FaqSubmissions extends FaqServer {
             } else {
                 echo "<div class='alert alert-info m-b-20 submission-guidelines text-center'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920'])."</div>\n";
                 echo openform('submit_form', 'post', BASEDIR."submit.php?stype=q");
-                echo form_text('faq_question', $this->locale['faq_0250'], $criteriaArray['faq_question'], array(
+                echo form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'], array(
                     "error_text" => $this->locale['faq_0271'],
                     'required'   => TRUE
                 ));
@@ -112,7 +112,7 @@ class FaqSubmissions extends FaqServer {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], array(
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $faq_data['faq_cat_id'], array(
                     'inner_width' => '100%',
                     'inline'      => TRUE,
                     'options'     => $options,
@@ -120,7 +120,10 @@ class FaqSubmissions extends FaqServer {
 
                 if (multilang_table('FQ')) {
                     echo form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'], array(
-                        'options' => fusion_get_enabled_languages(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%',
+                        'options' => fusion_get_enabled_languages(),
+                        'inline' => TRUE,
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
                     ));
                 } else {
                     echo form_hidden('faq_language', '', $criteriaArray['faq_language']);

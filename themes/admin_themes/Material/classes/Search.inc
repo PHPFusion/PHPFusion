@@ -16,14 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace Material;
+
 use PHPFusion\Admins;
 
 class Search {
-    private $result = array(
-        'data' => array(),
-        'count' => 0,
+    private $result = [
+        'data'   => [],
+        'count'  => 0,
         'status' => ''
-    );
+    ];
 
     public function __construct() {
         if ($this->AuthorizeAid()) {
@@ -84,11 +85,11 @@ class Search {
         }
     }
 
-    public function SetResult($result) {
+    private function SetResult($result) {
         $this->result = $result;
     }
 
-    public function DisplayResult() {
+    private function DisplayResult() {
         if (!empty($this->result['data'])) {
             foreach ($this->result['data'] as $data) {
                 if (stristr($data['admin_link'], '/infusions/')) {
@@ -117,8 +118,9 @@ class Search {
         }
     }
 
-    public function SetLocale($lc = NULL) {
-        $locale = array();
+    private function SetLocale($lc = NULL) {
+        $locale = [];
+
         if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
             include MATERIAL."locale/".LANGUAGE.".php";
         } else {

@@ -63,13 +63,12 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
             exit;
         } elseif (!empty($data['download_url'])) {
             $res = 1;
-            $url_prefix = !strstr($data['download_url'], "http://") && !strstr($data['download_url'],
-                "https://") ? "http://" : "";
+            $url_prefix = (!strstr($data['download_url'], "http://") && !strstr($data['download_url'], "https://") ? "http://" : '');
             redirect($url_prefix.$data['download_url']);
         }
     }
     if ($res == 0) {
-        redirect("downloads.php");
+        redirect(DOWNLOADS."downloads.php");
     }
 }
 
@@ -142,7 +141,7 @@ if (isset($_GET['download_id'])) {
             include INCLUDES."ratings_include.php";
             $data = dbarray($result);
             $data['download_description_short'] = nl2br(parse_textarea($data['download_description_short']));
-            $data['download_description'] = nl2br(parse_textarea($data['download_description']));
+            $data['download_description'] = nl2br(parse_textarea($data['download_description'], FALSE, FALSE, TRUE, FALSE));
             $data['download_file_link'] = INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'];
             $data['download_post_author'] = display_avatar($data, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
             $data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";

@@ -145,7 +145,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_000c']]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_root']]);
         for ($i = count($crumb['title']) - 1; $i >= 0; $i--) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $crumb['title'][$i]]);
         }
@@ -692,7 +692,7 @@ class ForumAdminView extends ForumAdminInterface {
     public function display_forum_admin() {
         global $aidlink;
 
-        opentable(self::$locale['forum_000c']);
+        opentable(self::$locale['forum_root']);
 
         $tab_title['title'][] = self::$locale['forum_admin_000'];
         $tab_title['id'][] = 'fm';
@@ -886,7 +886,7 @@ class ForumAdminView extends ForumAdminInterface {
             closeside();
 
         } else {
-            openside('Forum Image');
+            openside(self::$locale['forum_028a']);
             echo "<div class='row spacer-xs'>\n";
             echo "<div class='col-xs-12 col-sm-4' style='border-right:1px solid #ddd'>\n";
             echo form_fileinput('forum_image', '', '', [
@@ -1043,66 +1043,11 @@ class ForumAdminView extends ForumAdminInterface {
             "delimiter" => ".",
             "inline"    => TRUE
         ));
-        /*
-        echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_003']."</span><br/>\n";
-        $mod_groups = getusergroups();
-        $mods1_user_id = array();
-        $mods1_user_name = array();
-        while (list($key, $mod_group) = each($mod_groups)) {
-            if ($mod_group['0'] != USER_LEVEL_PUBLIC && $mod_group['0'] != USER_LEVEL_MEMBER && $mod_group['0'] != USER_LEVEL_SUPER_ADMIN) {
-                if (!preg_match("(^{$mod_group['0']}$|^{$mod_group['0']}\.|\.{$mod_group['0']}\.|\.{$mod_group['0']}$)", $data['forum_mods'])) {
-                    $mods1_user_id[] = $mod_group['0'];
-                    $mods1_user_name[] = $mod_group['1'];
-                } else {
-                    $mods2_user_id[] = $mod_group['0'];
-                    $mods2_user_name[] = $mod_group['1'];
-                }
-            }
-        }
-        echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<select multiple='multiple' size='10' name='modlist1' id='modlist1' class='form-control textbox m-r-10' onchange=\"addUser('modlist2','modlist1');\">\n";
-        for ($i = 0; $i < count($mods1_user_id); $i++) {
-            echo "<option value='".$mods1_user_id[$i]."'>".$mods1_user_name[$i]."</option>\n";
-        }
-        echo "</select>\n";
-        echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<select multiple='multiple' size='10' name='modlist2' id='modlist2' class='form-control textbox' onchange=\"addUser('modlist1','modlist2');\">\n";
-        if (isset($mods2_user_id) && is_array($mods2_user_id)) {
-            for ($i = 0; $i < count($mods2_user_id); $i++) {
-                echo "<option value='".$mods2_user_id[$i]."'>".$mods2_user_name[$i]."</option>\n";
-            }
-        }
-        echo "</select>\n";
-        //echo form_text('forum_mods', '', $data['forum_mods']);
 
-        echo "</div>\n</div>\n";
-        */
         closeside();
         echo form_button('save_permission', self::$locale['forum_042'], self::$locale['forum_042'],
             array('class' => 'btn-primary'));
-        /*
-        add_to_jquery(" $('#save').bind('click', function() { saveMods(); }); ");
-        echo "<script type='text/javascript'>\n"."function addUser(toGroup,fromGroup) {\n";
-        echo "var listLength = document.getElementById(toGroup).length;\n";
-        echo "var selItem = document.getElementById(fromGroup).selectedIndex;\n";
-        echo "var selText = document.getElementById(fromGroup).options[selItem].text;\n";
-        echo "var selValue = document.getElementById(fromGroup).options[selItem].value;\n";
-        echo "var i; var newItem = true;\n";
-        echo "for (i = 0; i < listLength; i++) {\n";
-        echo "if (document.getElementById(toGroup).options[i].text == selText) {\n";
-        echo "newItem = false; break;\n}\n}\n"."if (newItem) {\n";
-        echo "document.getElementById(toGroup).options[listLength] = new Option(selText, selValue);\n";
-        echo "document.getElementById(fromGroup).options[selItem] = null;\n}\n}\n";
-        echo "function saveMods() {\n"."var strValues = \"\";\n";
-        echo "var boxLength = document.getElementById('modlist2').length;\n";
-        echo "var count = 0;\n"."	if (boxLength != 0) {\n"."for (i = 0; i < boxLength; i++) {\n";
-        echo "if (count == 0) {\n"."strValues = document.getElementById('modlist2').options[i].value;\n";
-        echo "} else {\n"."strValues = strValues + \".\" + document.getElementById('modlist2').options[i].value;\n";
-        echo "}\n"."count++;\n}\n}\n";
-        echo "if (strValues.length == 0) {\n"."document.forms['inputform'].submit();\n";
-        echo "} else {\n"."document.forms['inputform'].forum_mods.value = strValues;\n";
-        echo "document.forms['inputform'].submit();\n}\n}\n</script>\n";
-        */
+
         closetable();
     }
 
@@ -1131,7 +1076,7 @@ class ForumAdminView extends ForumAdminInterface {
         $aidlink = fusion_get_aidlink();
 
         $title = !empty($this->level['title']) ? sprintf(self::$locale['forum_000b'],
-            $this->level['title'][0]) : self::$locale['forum_000c'];
+            $this->level['title'][0]) : self::$locale['forum_root'];
         add_to_title(" ".$title);
 
         $forum_settings = $this->get_forum_settings();
@@ -1164,8 +1109,8 @@ class ForumAdminView extends ForumAdminInterface {
             $ui_label = array(
                 "move_up"         => $has_entypo ? "<i class='entypo up-bold m-r-10'></i>" : $has_fa ? "<i class='fa fa-angle-up fa-lg m-r-10'></i>" : self::$locale['forum_046'],
                 "move_down"       => $has_entypo ? "<i class='entypo down-bold m-r-10'></i>" : $has_fa ? "<i class='fa fa-angle-down fa-lg m-r-10'></i>" : self::$locale['forum_045'],
-                "edit_permission" => $has_entypo ? "<i class='entypo key m-r-10'></i>" : $has_fa ? "<i class='fa fa-eye fa-lg m-r-10'></i>" : self::$locale['forum_047'],
-                "edit"            => $has_entypo ? "<i class='entypo cog m-r-10'></i>" : $has_fa ? "<i class='fa fa-cog fa-lg m-r-10'></i>" : self::$locale['forum_048'],
+                "edit_permission" => $has_entypo ? "<i class='entypo key m-r-10'></i>" : $has_fa ? "<i class='fa fa-eye fa-lg m-r-10'></i>" : self::$locale['forum_029'],
+                "edit"            => $has_entypo ? "<i class='entypo cog m-r-10'></i>" : $has_fa ? "<i class='fa fa-cog fa-lg m-r-10'></i>" : self::$locale['forum_002'],
                 "delete"          => $has_entypo ? "<i class='entypo icancel m-r-10'></i>" : $has_fa ? "<i class='fa fa-trash-o fa-lg m-r-10'></i>" : self::$locale['forum_049'],
             );
 
@@ -1199,8 +1144,8 @@ class ForumAdminView extends ForumAdminInterface {
 
                 echo ($i == 1) ? '' : "<a title='".self::$locale['forum_046']."' href='".$upLink."'>".$ui_label['move_up']."</a>";
                 echo ($i == $rows) ? '' : "<a title='".self::$locale['forum_045']."' href='".$downLink."'>".$ui_label['move_down']."</a>";
-                echo "<a title='".self::$locale['forum_047']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
-                echo "<a title='".self::$locale['forum_048']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
+                echo "<a title='".self::$locale['forum_029']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
+                echo "<a title='".self::$locale['forum_002']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
                 echo "<a title='".self::$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".self::$locale['delete_notice']."');\">".$ui_label['delete']."</a>"; // delete
                 echo "</div>\n";
                 echo "<span class='text-dark text-smaller strong'>".self::$locale['forum_057']." ".number_format($data['forum_threadcount'])." / ".self::$locale['forum_059']." ".number_format($data['forum_postcount'])." </span>\n<br/>";

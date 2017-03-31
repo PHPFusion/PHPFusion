@@ -2,6 +2,10 @@ PHP-Fusion 9.02
 ==================
 Developers Only Copy: This copy has commits that might led to instability of your copies, please do not update until further notice.
 
+Important Announcements:
+=============
+02/Mar/2017(GMT+8) 17:50hr - https://www.php-fusion.co.uk/forum/viewthread.php?thread_id=38308
+
 
 Change Logs for RC5 .. so far:
 ===============================
@@ -58,7 +62,7 @@ PHP-Fusion Developers Only Version
 ===================================
 PHP-Fusion 9.00 is currently under active development. The first version of Beta release is launched in 3rd Quarter of 2014.
 The PHP-Fusion 9.00 adds SEO permalinks, security countermeasures, and form building components. Templates are introduced to increase design capabilities.
-Added Features in the Version 9.00 includes blog and e-commerce.
+Added Features in the Version 9.00 includes blog.
 
 PHP-Fusion is a light-weight open-source content management system (CMS) founded by Nick Jones (also known as Digitanium) in PHP. It uses a MySQL database to store a web site's content and comes with a simple but comprehensive administration system. PHP-Fusion includes features common in many other CMS packages.
 
@@ -119,7 +123,6 @@ PHP-Fusion has the following major features:
 <ul>
 <li>News</li>
 <li>Blog</li>
-<li>E-commerce</li>
 <li>Articles</li>
 <li>Forums</li>
 <li>Photogallery</li>
@@ -204,10 +207,8 @@ During Beta 4, Developer Team pushed a new hierarchy menu navigation system into
 
 New Core Systems
 =================
-- E-commerce System - New Version, with Ajax and written in OOP implementations. The E-shop delivers MVC templatable.
  -- Templatable Core
  -- Unlimited Hierarchy
- -- New Ajax Cart Panels
  -- New Administration Interface
 
 - Blog System

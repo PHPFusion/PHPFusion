@@ -69,6 +69,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'delimiter'      => ',',
         'callback_check' => '',
         "stacked"        => "",
+        'onchange'       => '',
     );
 
     $options += $default_options;
@@ -114,7 +115,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">\n";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
@@ -244,7 +245,6 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
  */
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
     $locale = fusion_get_locale();
-
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
         'required'       => FALSE,
@@ -272,17 +272,11 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'file'           => '',
         'allow_self'     => FALSE,
     );
-    $options += $default_options;
-    if (!$options['width']) {
-        $options['width'] = $default_options['width'];
-    }
 
-    // always trim id
+    $options += $default_options;
     $options['input_id'] = trim($options['input_id'], "[]");
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
-
     $length = "minimumInputLength: 1,";
-
     $error_class = "";
 
     if (defender::inputHasError($input_name)) {
@@ -294,17 +288,15 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' style='width:".$options['width']."px'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3 p-l-0' : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
-    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."%;' ".($options['deactivate'] ? 'disabled' : '')." />";
+    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."'".($options['deactivate'] ? ' disabled' : '')."/>\n";
     if ($options['deactivate']) {
-        $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
+        $html .= form_hidden($input_name, '', $input_value, array("input_id" => $options['input_id']));
     }
     $html .= (defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '');
-
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-
     $html .= $options['inline'] ? "</div>\n" : '';
 
     $html .= "</div>\n";

@@ -20,6 +20,7 @@ require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
+$settings = fusion_get_settings();
 
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);

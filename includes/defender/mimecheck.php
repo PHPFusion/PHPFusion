@@ -39,7 +39,7 @@ class ImageValidation {
 
                             for($i = 0; $i < count($each['name']); $i++) {
                                 $file_info = pathinfo($each['name'][$i]);
-                                $extension = $file_info['extension'];
+                                $extension = strtolower($file_info['extension']);
                                 if (isset($mime_types[$extension])) {
                                     if (is_array($mime_types[$extension])) {
                                         $valid_mimetype = FALSE;
@@ -63,7 +63,7 @@ class ImageValidation {
                             }
                         } else {
                             $file_info = pathinfo($each['name']);
-                            $extension = $file_info['extension'];
+                            $extension = strtolower($file_info['extension']);
                             if (isset($mime_types[$extension])) {
                                 if (is_array($mime_types[$extension])) {
                                     $valid_mimetype = FALSE;
@@ -113,7 +113,7 @@ class ImageValidation {
                     $check_type[$ext] = $mime_types[$ext];
                 }
             }
-            $check_ext = ltrim($file_ext, '.');
+            $check_ext = strtolower(ltrim($file_ext, '.'));
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {
                     if (in_array($type, $check_type[$check_ext])) {

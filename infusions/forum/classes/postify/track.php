@@ -63,7 +63,7 @@ class Postify_Track extends Forum_Postify {
                     ]);
                     redirect($thread_data['thread_link'], 3);
                 } else {
-                    redirect($thread_data['thread_link'], 3);
+                    redirect($thread_data['thread_link']);
                 }
             } else {
                 redirect($thread_data['thread_link'], 3);

@@ -63,7 +63,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         echo openform("settingsform", "post", FUSION_REQUEST);
         ?>
 
-        <div class="well m-b-0">
+        <div class="well m-b-0 spacer-xs">
             <?php echo $this->locale['article_0400']; ?>
         </div><?php
 
@@ -71,7 +71,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
                 "inline" => true, "max_lenght" => 4, "width" => "150px", "type" => "number"
             ));
 
-            echo form_select("article_allow_submission", $this->locale['article_0402'], $article_settings['article_allow_submission'], array(
+        echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], array(
                 "inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])
             ));
 

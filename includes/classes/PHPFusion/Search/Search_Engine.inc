@@ -180,11 +180,8 @@ class Search_Engine extends Search_Model {
         ".form_checkbox('stype', $locale['407'], self::get_param('stype'), array(
                                'type' => 'radio',
                                'value' => 'all',
-                               'inner_width' => '100%',
-                               'width' => '100%',
                                'onclick' => 'display(this.value)',
-                               'reverse_label' => TRUE,
-                               'inline'=>TRUE,
+                               'reverse_label' => TRUE
                            )
         )."</td>\n</tr>\n</table>\n";
         /*

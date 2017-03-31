@@ -30,8 +30,8 @@ use PHPFusion\BreadCrumbs;
 class Postify_Reply extends Forum_Postify {
 
     public function execute() {
-        add_to_title(self::$locale['global_201'].self::$locale['forum_0503']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0503']]);
+        add_to_title(self::$locale['global_201'].self::$locale['forum_0360']);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id",
                 [':thread_id' => $_GET['thread_id']])
         );
@@ -129,7 +129,7 @@ class Postify_Reply extends Forum_Postify {
         $link[] = ['url' => FORUM.'index.php', 'title' => self::$locale['forum_0550']];
 
         render_postify([
-            'title'       => self::$locale['forum_0503'],
+            'title'       => self::$locale['forum_0360'],
             'error'       => $this->get_postify_error_message(),
             'description' => $this->get_postify_error_message() ?: self::$locale['forum_0544'],
             'link'        => $link

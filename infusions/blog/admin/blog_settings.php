@@ -32,6 +32,7 @@ if (isset($_POST['savesettings'])) {
         "blog_photo_max_w" => form_sanitizer($_POST['blog_photo_max_w'], 1800, 'blog_photo_max_w'),
         "blog_photo_max_h" => form_sanitizer($_POST['blog_photo_max_h'], 1600, 'blog_photo_max_h'),
         "blog_photo_max_b" => form_sanitizer($_POST['calc_b'], 150, 'calc_b') * form_sanitizer($_POST['calc_c'], 100000, 'calc_c'),
+        "blog_file_types" => form_sanitizer($_POST['blog_file_types'], "", "blog_file_types"),
     );
     if (defender::safe()) {
         foreach ($inputArray as $settings_name => $settings_value) {
@@ -46,10 +47,10 @@ if (isset($_POST['savesettings'])) {
         addNotice('danger', $locale['901']);
     }
 }
-$opts = array('0' => $locale['952'], '1' => $locale['953b']);
+$opts = array('0' => $locale['952'], '1' => $locale['953']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
-$calc_opts = array(1 => $locale['blog_0538'], 1000 => $locale['blog_0539'], 1000000 => $locale['blog_0540']);
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
 opentable($locale['blog_settings']);
@@ -139,6 +140,24 @@ echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('blog_image_link', $locale['951'], $blog_settings['blog_image_link'], array("options" => $opts, "width" => "100%"));
 echo form_select('blog_thumb_ratio', $locale['954'], $blog_settings['blog_thumb_ratio'], array("options" => $thumb_opts, "width" => "100%"));
+require_once INCLUDES."mimetypes_include.php";
+$mime = mimeTypes();
+$mime_opts = array();
+foreach ($mime as $m => $Mime) {
+	$ext = ".$m";
+	$mime_opts[$ext] = $ext;
+}
+sort($mime_opts);
+echo form_select('blog_file_types', $locale['961'], $blog_settings['blog_file_types'],
+				 array(
+    			'options' => $mime_opts,
+    			'error_text' => $locale['error_type'],
+    			'placeholder' => $locale['choose'],
+    			'multiple' => TRUE,
+    			'tags' => TRUE,
+    			'width' => '100%',
+    			'delimiter' => '|'
+			));
 closeside();
 echo "</div></div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));

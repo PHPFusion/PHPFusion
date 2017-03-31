@@ -229,5 +229,12 @@ function dblastid() {
  * @return AbstractDatabaseDriver
  */
 function dbconnection() {
-    return DatabaseFactory::getConnection('default');
+    try {
+        return DatabaseFactory::getConnection('default');
+    } catch (\Exception $e) {
+        ## Do nothing to hide all errors
+        ini_set('display_errors', FALSE);
+
+        return NULL;
+    }
 }

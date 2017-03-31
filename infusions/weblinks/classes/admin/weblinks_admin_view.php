@@ -35,7 +35,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
 		// Sitetitle
-		add_to_title($this->locale['WLS_0000']);
+        add_to_title($this->locale['WLS_0001']);
 
 		// Handle Breadcrumbs and Titles
 		BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $this->locale['WLS_0001']));
@@ -44,7 +44,6 @@ class WeblinksAdminView extends WeblinksAdminModel {
 		$weblinkCatTitle = $this->locale['WLS_0004'];
 
 		if ($_GET['section'] == "weblinks") {
-			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks", "title" => $this->locale['WLS_0001']));
 			if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
 				BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks&amp;ref=weblinks_form", "title" => (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003'])));
 				$weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);
@@ -88,7 +87,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $master_title['icon'][] = "fa fa-fw fa-cogs";
 
 		// Display Content
-        opentable($this->locale['WLS_0000']);
+        opentable($this->locale['WLS_0001']);
 
         echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE, "", "section");
         switch ($_GET['section']) {

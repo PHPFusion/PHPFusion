@@ -48,14 +48,14 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Displays Articles Form
+     * Displays Weblinks Form
      */
     private function display_weblinks_form() {
 
-		// Delete Article
+		// Delete Weblink
         self::execute_Delete();
 
-		// Update Article
+		// Update Weblink
         self::execute_Update();
 
         /**
@@ -76,7 +76,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
 	/**
-	 * Create or Update a Article
+	 * Create or Update a Weblink
 	 */
     private function execute_Update() {
 
@@ -122,7 +122,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
 	/**
-	 * Display Form for Article
+	 * Display Form for Weblink
 	 */
     private function weblinkContent_form() {
 
@@ -148,8 +148,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
 			<!-- Display Left Column -->
 			<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
 				<?php
-				echo form_text("weblink_name", $this->locale['WLS_0250'], $this->weblink_data['weblink_name'], array(
-					"required" => true, "placeholder" =>  $this->locale['WLS_0251'], "error_text" => $this->locale['WLS_0252']
+                echo form_text("weblink_name", $this->locale['WLS_0201'], $this->weblink_data['weblink_name'], array(
+                    "required" => true, "placeholder" => $this->locale['WLS_0201'], "error_text" => $this->locale['WLS_0252']
 				));
 
 				echo form_text("weblink_url", $this->locale['WLS_0253'], $this->weblink_data['weblink_url'], array(
@@ -166,12 +166,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
 				openside($this->locale['WLS_0260']);
 
-				echo form_select_tree("weblink_cat", $this->locale['WLS_0256'], $this->weblink_data['weblink_cat'], array(
+                echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $this->weblink_data['weblink_cat'], array(
 						"required" => TRUE, "no_root" => TRUE, "placeholder" =>  $this->locale['choose'],
 				        "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
 					    ), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-				echo form_select("weblink_visibility", $this->locale['WLS_0257'], $this->weblink_data['weblink_visibility'], array(
+                echo form_select("weblink_visibility", $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], array(
 					"options" => fusion_get_groups(), "placeholder" => $this->locale['choose']
 				));
 
@@ -215,7 +215,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Displays Articles Listing
+     * Displays Weblinks Listing
      */
     private function display_weblinks_listing() {
 
@@ -362,7 +362,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
 			<div class="clearfix">
 				<div class="pull-right">
 					<?php if ($weblink_cats) { ?>
-						<a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", array("ref"), false); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0110']; ?></a>
+                        <a class="btn btn-success btn-sm m-r-10" href="<?php echo clean_request("ref=weblinkform", array("ref"), false); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
 					<?php } ?>
 					<a class="btn btn-default btn-sm m-r-10" onclick="run_admin('verify');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></a>
 					<a class="btn btn-default btn-sm m-r-10" onclick="run_admin('publish');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></a>
@@ -455,12 +455,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
         <table class="table table-responsive table-striped">
             <thead>
             <tr>
-                <td class="strong col-xs-4"><?php echo $this->locale['WLS_0100'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0101'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0102'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0103'] ?></td>
-                <td class="strong"><?php echo $this->locale['language'] ?></td>
-                <td class="strong"><?php echo $this->locale['WLS_0104'] ?></td>
+                <th></th>
+                <th class="strong"><?php echo $this->locale['WLS_0100'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0101'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0102'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0103'] ?></th>
+                <th class="strong"><?php echo $this->locale['language'] ?></th>
+                <th class="strong"><?php echo $this->locale['WLS_0104'] ?></th>
             </tr>
             </thead>
             <tbody>
@@ -493,7 +494,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="6" class="text-center"><?php echo ($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
+                    <td colspan="7" class="text-center"><?php echo ($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
                 </tr>
             <?php endif; ?>
             </tbody>
@@ -570,7 +571,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         }
     }
 
-    // Articles Delete Function
+    // Weblinks Delete Function
     private function execute_Delete() {
 
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {

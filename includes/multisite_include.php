@@ -30,7 +30,6 @@ define("DB_EMAIL_TEMPLATES", DB_PREFIX."email_templates");
 define("DB_ERRORS", DB_PREFIX."errors");
 define("DB_FLOOD_CONTROL", DB_PREFIX."flood_control");
 define("DB_INFUSIONS", DB_PREFIX."infusions");
-define("DB_INFUSIONS_CAT", DB_PREFIX."infusions_cat");
 define("DB_LANGUAGE_TABLES", DB_PREFIX."mlt_tables");
 define("DB_LANGUAGE_SESSIONS", DB_PREFIX."language_sessions");
 define("DB_MESSAGES", DB_PREFIX."messages");

@@ -266,6 +266,28 @@ class Poll {
     }
 
     /**
+     * @var array
+     * openform         the oepn form tag and request url action link
+     * closeform        the closing form tag
+     * edit_button      ['title'] title of the button ['link'] edit url of the button
+     * delete_button    same as above but for delete action
+     * post_button      the post button
+     * content          ['value'] - the option choice count, ['title'] - the title of the poll option, ['output'] - the field/value
+     */
+    private static $poll_info = [
+        'openform'      => '',
+        'closeform'     => '',
+        'edit_button'   => '',
+        'delete_button' => '',
+        'post_button'   => '',
+        'content'       => array(),
+    ];
+
+    public static function get_poll_info() {
+        return self::$poll_info;
+    }
+
+    /**
      * Generate Poll HTML
      *
      * @param array $thread_data
@@ -275,7 +297,7 @@ class Poll {
     public static function generate_poll(array $thread_data) {
 
         $locale = fusion_get_locale();
-        $html = "";
+        $html = '';
 
         if (self::get_poll_permissions("can_access") && $thread_data['thread_poll'] == TRUE) {
 
@@ -283,10 +305,11 @@ class Poll {
             SELECT poll_opts.*, poll.forum_poll_title, poll.forum_poll_votes
             FROM ".DB_FORUM_POLL_OPTIONS." poll_opts
             INNER JOIN ".DB_FORUM_POLLS." poll using (thread_id)
-            WHERE poll.thread_id='".intval($thread_data['thread_id'])."'
+            WHERE poll.thread_id=:thread_id ORDER BY forum_poll_option_id ASC
             ";
+            $poll_param = [':thread_id' => intval($thread_data['thread_id'])];
 
-            $poll_result = dbquery($poll_query);
+            $poll_result = dbquery($poll_query, $poll_param);
 
             if (dbrows($poll_result) > 0) {
                 $i = 0;
@@ -303,57 +326,73 @@ class Poll {
                     $i++;
                 }
 
-                // SQL cast poll vote
-                if (isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $poll['forum_poll_max_options']) {
-                    if (self::get_poll_permissions("can_vote_poll") == TRUE) {
-                        $pollInput['poll_option_id'] = stripinput($_POST['poll_option']);
-                        if (\defender::safe()) {
-                            dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."' AND forum_poll_option_id='".intval($pollInput['poll_option_id'])."'");
-                            dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."'");
-                            dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$thread_data['thread_id']."', '".fusion_get_userdata("user_id")."', '".USER_IP."', '".USER_IP_TYPE."')");
-                            addNotice('success', $locale['forum_0614']);
-                            redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
-                        } else {
-                            addNotice("danger", $locale['forum_0617']);
+                if (!empty($poll)) {
+                    self::$poll_info['poll_title'] = $poll['forum_poll_title'];
+
+                    // SQL cast poll vote
+                    if (isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $poll['forum_poll_max_options']) {
+                        if (self::get_poll_permissions("can_vote_poll") == TRUE) {
+                            $pollInput['poll_option_id'] = stripinput($_POST['poll_option']);
+                            if (\defender::safe()) {
+                                dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."' AND forum_poll_option_id='".intval($pollInput['poll_option_id'])."'");
+                                dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."'");
+                                dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$thread_data['thread_id']."', '".fusion_get_userdata("user_id")."', '".USER_IP."', '".USER_IP_TYPE."')");
+                                addNotice('success', $locale['forum_0614']);
+                                redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                            } else {
+                                addNotice("danger", $locale['forum_0617']);
+                            }
                         }
                     }
-                }
+                    if (self::get_poll_permissions("can_vote_poll")) {
+                        self::$poll_info['openform'] = openform("poll_vote_form", "post", FUSION_REQUEST);
+                        self::$poll_info['post_button'] = form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-primary m-l-20'));
+                        self::$poll_info['closeform'] = closeform();
+                    }
 
-                $poll_start = "";
-                $poll_end = "";
+                    if (self::get_poll_permissions("can_edit_poll")) {
+                        self::$poll_info['edit_button'] = [
+                            'link'  => INFUSIONS."forum/viewthread.php?action=editpoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id'],
+                            'title' => $locale['forum_0603']
+                        ];
+                        self::$poll_info['delete_button'] = [
+                            'link'  => INFUSIONS."forum/viewthread.php?action=deletepoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id'],
+                            'title' => $locale['delete']
+                        ];
+                        $html .= "<div class='pull-right btn-group'>\n";
+                        $html .= "<a class='btn btn-sm btn-default' href='".self::$poll_info['edit_button']['link']."'>".self::$poll_info['edit_button']['title']."</a>\n";
+                        $html .= "<a class='btn btn-sm btn-default' href='".self::$poll_info['delete_button']['link']."' onclick='confirm('".$locale['forum_0616']."');'>".self::$poll_info['delete_button']['title']."</a>\n";
+                        $html .= "</div>\n";
+                    }
 
-                if (self::get_poll_permissions("can_vote_poll")) {
-                    $poll_start = openform("poll_vote_form", "post", FUSION_REQUEST);
-                    $poll_end = form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-primary m-l-20 '));
-                    $poll_end .= closeform();
-                }
-
-                if (self::get_poll_permissions("can_edit_poll")) {
-                    $html .= "<div class='pull-right btn-group'>\n";
-                    $html .= "<a class='btn btn-sm btn-default' href='".INFUSIONS."forum/viewthread.php?action=editpoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."'>".$locale['forum_0603']."</a>\n";
-                    $html .= "<a class='btn btn-sm btn-default' href='".INFUSIONS."forum/viewthread.php?action=deletepoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."' onclick='confirm('".$locale['forum_0616']."');'>".$locale['delete']."</a>\n";
-                    $html .= "</div>\n";
-                }
-
-                if (!empty($poll)) {
-                    $html .= $poll_start;
-                    $html .= "<h2 class='strong m-t-0 m-b-10'><i class='fa fa-fw fa-pie-chart fa-lg'></i>".$locale['forum_0377'].": \"".$poll['forum_poll_title']."\"</h2>\n";
+                    $html .= self::$poll_info['openform'];
+                    $html .= "<h2 class='strong m-t-0 m-b-10'>".$locale['forum_0314'].": ".self::$poll_info['poll_title']."</h2>\n";
                     $html .= "<ul class='p-l-20 p-t-0 block'>\n";
                     if (!empty($poll['forum_poll_options'])) {
                         $i = 1;
-                        $vote_options = $poll['forum_poll_options'];
-                        foreach ($vote_options as $poll_option) {
+                        self::$poll_info['poll_options'] = $poll['forum_poll_options'];
+                        foreach ($poll['forum_poll_options'] as $poll_option) {
                             if (self::get_poll_permissions("can_vote_poll") == TRUE) {
-                                $html .= "<li><label for='opt-".$i."'><input id='opt-".$i."' type='radio' name='poll_option' value='".$i."' class='m-r-20'> <span class='m-l-10'>".$poll_option['forum_poll_option_text']."</span>\n</label></li>\n";
+                                self::$poll_info['content'][$i] = array(
+                                    'value'  => $i,
+                                    'title'  => $poll_option['forum_poll_option_text'],
+                                    'output' => "<input id='opt-".$i."' type='radio' name='poll_option' value='".$i."' class='m-r-15'>",
+                                );
+                                $html .= "<li><label for='opt-".$i."'>".self::$poll_info['content'][$i]['output'].self::$poll_info['content'][$i]['title']."</span>\n</label></li>\n";
                             } else {
                                 $option_votes = ($poll['forum_poll_votes'] ? number_format(100 / $poll['forum_poll_votes'] * $poll_option['forum_poll_option_votes']) : 0);
-                                $html .= progress_bar($option_votes, $poll_option['forum_poll_option_text'], '', '10px');
+                                self::$poll_info['content'][$i] = array(
+                                    'value'  => $i,
+                                    'title'  => $poll_option['forum_poll_option_text'],
+                                    'output' => $option_votes,
+                                );
+                                $html .= progress_bar(self::$poll_info['content'][$i]['output'], self::$poll_info['content'][$i]['title'], '', '10px');
                             }
                             $i++;
                         }
                     }
                     $html .= "</ul>\n";
-                    $html .= $poll_end;
+                    $html .= self::$poll_info['post_button'].self::$poll_info['closeform'];
                 }
             }
         }

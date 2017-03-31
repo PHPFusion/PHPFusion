@@ -79,7 +79,7 @@ abstract class Faq extends FaqServer {
             'faq_categories' => [
                 0 => [
                     'faq_cat_id'          => 0,
-                    'faq_cat_name'        => self::$locale['faqs_0003'],
+                    'faq_cat_name'        => self::$locale['faq_0010'],
                     'faq_cat_description' => ''
                 ]
             ],
@@ -92,7 +92,7 @@ abstract class Faq extends FaqServer {
         }
 
         // Get Items
-        $result = dbquery("SELECT ac.*, 
+        $result = dbquery("SELECT ac.*,
             au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined
             FROM ".DB_FAQS." ac
             LEFT JOIN ".DB_USERS." AS au ON ac.faq_name=au.user_id
@@ -102,7 +102,7 @@ abstract class Faq extends FaqServer {
         ");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, IMAGES, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
+                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
                 $info['faq_items'][$data['faq_id']] = $data;
             }
         }

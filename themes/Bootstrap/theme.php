@@ -55,67 +55,66 @@ function render_page($license = FALSE) {
             ?>
         </div>
         <div class="col-xs-12 col-sm-8 text-right">
-            <div class="display-block">
-                <?php
-                echo "<div class='display-inline-block pull-right m-l-10' style='width:30%;'>\n";
-                echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                              array(
-                                  'class' => 'm-b-10',
-                                  'remote_url' => fusion_get_settings('site_path')."search.php"
-                              )
-                );
-                echo form_text('stext', '', '', array(
-                    'placeholder' => $locale['search'],
-                    'append_button' => TRUE,
-                    'append_type' => "submit",
-                    "append_form_value" => 'search',
-                    "append_value" => "<i class='fa fa-search'></i> ".$locale['search'],
-                    "append_button_name" => "search",
-                    'class' => 'no-border m-b-0',
-                ));
-                echo closeform();
-                echo "</div>\n";
-                echo "<ul class='display-inline-block m-t-10'>\n";
-                $language_opts = '';
-                if (count(fusion_get_enabled_languages()) > 1) {
-                    $language_opts = "<li class='dropdown display-inline-block p-r-5'>\n";
-                    $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('UM101')."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
-                    $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
-                    $language_switch = fusion_get_language_switch();
-                    if (!empty($language_switch)) {
-                        foreach ($language_switch as $folder => $langData) {
-                            $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
-                            $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
-                            $language_opts .= $langData['language_name'];
-                            $language_opts .= "</a></li>\n";
-                        }
+            <?php
+            echo "<div class='display-inline-block pull-right m-l-10' style='width:30%;'>\n";
+            echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
+                array(
+                    'class'      => 'm-b-10',
+                    'remote_url' => fusion_get_settings('site_path')."search.php"
+                )
+            );
+            echo form_text('stext', '', '', array(
+                'placeholder'        => $locale['search'],
+                'append_button'      => TRUE,
+                'append_type'        => "submit",
+                "append_form_value"  => 'search',
+                "append_value"       => "<i class='fa fa-search'></i> ".$locale['search'],
+                "append_button_name" => "search",
+                'class'              => 'no-border m-b-0',
+            ));
+            echo closeform();
+            echo "</div>\n";
+            echo "<ul class='display-inline-block m-t-10'>\n";
+            $language_opts = '';
+            if (count(fusion_get_enabled_languages()) > 1) {
+                $language_opts = "<li class='dropdown display-inline-block p-r-5'>\n";
+                $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('UM101')."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
+                $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
+                $language_switch = fusion_get_language_switch();
+                if (!empty($language_switch)) {
+                    foreach ($language_switch as $folder => $langData) {
+                        $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
+                        $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
+                        $language_opts .= $langData['language_name'];
+                        $language_opts .= "</a></li>\n";
                     }
-                    $language_opts .= "</ul>\n";
-                    $language_opts .= "</li>\n";
                 }
-                if (!iMEMBER) {
-                    echo "<li class='display-inline-block p-l-5 p-r-5'><a href='".BASEDIR."login.php'>".$locale['login']."</a></li>\n";
-                    if (fusion_get_settings("enable_registration")) {
-                        echo "<li class='display-inline-block p-l-5 p-r-5'><a href='".BASEDIR."register.php'>".$locale['register']."</a></li>\n";
-                    }
-                    echo $language_opts;
-                } else {
-                    if (iADMIN) {
-                        echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['global_123']."</a>\n</li>\n";
-                    }
-                    echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['profile']."</a>\n</li>\n";
-                    echo $language_opts;
-                    echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
+                $language_opts .= "</ul>\n";
+                $language_opts .= "</li>\n";
+            }
+            if (!iMEMBER) {
+                echo "<li class='display-inline-block p-l-5 p-r-5'><a href='".BASEDIR."login.php'>".$locale['login']."</a></li>\n";
+                if (fusion_get_settings("enable_registration")) {
+                    echo "<li class='display-inline-block p-l-5 p-r-5'><a href='".BASEDIR."register.php'>".$locale['register']."</a></li>\n";
                 }
+                echo $language_opts;
+            } else {
+                if (iADMIN) {
+                    echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['global_123']."</a>\n</li>\n";
+                }
+                echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['profile']."</a>\n</li>\n";
+                echo $language_opts;
+                echo "<li class='display-inline-block p-l-5 p-r-5'>\n<a href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
+            }
 
-                echo "</ul>\n";
-                ?>
-            </div>
+            echo "</ul>\n";
+            ?>
         </div>
     </div>
     <?php
 
     echo showsublinks('', 'navbar-default', array('logo' => $brand, 'show_header' => TRUE))."\n";
+    echo showbanners(1);
     // row 1 - go for max width
     if (defined('AU_CENTER') && AU_CENTER) {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".AU_CENTER."</div>\n</div>";
@@ -160,6 +159,7 @@ function render_page($license = FALSE) {
 
     // footer
     echo "<hr>\n";
+    echo showbanners(2);
     echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
     echo "<span>".stripslashes(strip_tags($settings['footer']))."</span><br/>\n";
     echo "<span>".showcopyright()."</span><br/>\n";
@@ -178,7 +178,3 @@ function render_page($license = FALSE) {
     echo "</div>\n</div>\n";
     echo "</div>\n";
 }
-
-
-
-

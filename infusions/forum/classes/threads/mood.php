@@ -132,23 +132,20 @@ class Forum_Mood extends ForumServer {
                 $description = isset($mood_cache[$m_data['notify_mood_id']]['mood_description']) ? $mood_cache[$m_data['notify_mood_id']]['mood_description'] : $locale['forum_0529'];
                 $mood_description[$m_data['notify_mood_id']] = $description;
                 if ($user = fusion_get_user($m_data['notify_sender'])) {
-                    $user_list[$m_data['notify_mood_id']][$user['user_id']] = profile_link($user['user_id'], $user['user_name'], $user['user_status'],
-                                                                                           'mood_sender');
+                    $user_list[$m_data['notify_mood_id']][$user['user_id']] = profile_link($user['user_id'], $user['user_name'], $user['user_status'], 'mood_sender');
                 }
                 $last_datestamp[$m_data['notify_mood_id']] = $m_data['notify_datestamp'];
             }
 
             $my_id = fusion_get_userdata('user_id');
-
             if (!empty($user_list)) {
                 foreach ($user_list as $mood_id => $short_list) {
-
                     if (isset($short_list[$my_id])) {
                         unset($short_list[$my_id]);
                         $short_list[0] = $locale['you'];
                     }
                     if (count($short_list) > 3) {
-                        $count = (count($short_list) - 3)." others";
+                        $count = (count($short_list) - 3)." ".$locale['forum_0530'];
                         $short_list = array_slice($short_list, 0, 3);
                         $short_list[] = $count;
                     }

@@ -78,7 +78,7 @@ if (!function_exists("display_forum_postform")) {
         echo "<!--end_form-->\n";
         closetable();
         if (!empty($info['last_posts_reply'])) {
-            echo "<div class='well m-t-20'>\n";
+            echo "<div class='well m-t-20 overflow-hide'>\n";
             echo $info['last_posts_reply'];
             echo "</div>\n";
         }
@@ -127,14 +127,13 @@ if (!function_exists("display_quickReply")) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
         $html = "<!--sub_forum_thread-->\n";
-        $html .= openform('quick_reply_form', 'post', FUSION_SELF."?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
+        $html .= openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
         $html .= "<h4>".$locale['forum_0168']."</h4>\n";
         $html .= form_textarea('post_message', '', '',
                                   array(
                                       'placeholder' => $locale['forum_0601']."...",
                                       'bbcode'      => TRUE,
                                       'required'    => TRUE,
-                                      'autosize'    => TRUE,
                                       'preview'     => TRUE,
                                       'form_name'   => 'quick_reply_form',
                                       'height'      => '250px'

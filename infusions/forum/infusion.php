@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale("",
+$locale = fusion_get_locale('',
                             array(
                                 LOCALE.LOCALESET."setup.php",
                                 INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
@@ -35,7 +35,7 @@ $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@php-fusion.co.uk';
 $inf_weburl = 'https://www.php-fusion.co.uk';
 $inf_folder = 'forum';
-$inf_image = 'forums.png';
+$inf_image = 'forums.svg';
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -344,6 +344,7 @@ if (!empty($enabled_languages)) {
 }
 
 // Defuse clean up
+$inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_reputation'];
 $inf_droptable[] = DB_FORUMS;
 $inf_droptable[] = DB_FORUM_POSTS;
 $inf_droptable[] = DB_FORUM_THREADS;

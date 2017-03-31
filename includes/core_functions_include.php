@@ -88,44 +88,6 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
     return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
 }
 
-/**
- * Check if a given language is valid or if exists
- * Checks whether a language can be found in enabled languages array
- * Can also be used to check whether a language actually exists
- *
- * @param string $lang
- * @param bool   $file_check intended to be used when enabling languages in Admin Panel
- *
- * @return bool
- */
-function valid_language($lang, $file_check = FALSE) {
-    $enabled_languages = fusion_get_enabled_languages();
-    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
-            $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
-    ) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-// Set the requested language
-function set_language($lang) {
-    global $userdata;
-    if (iMEMBER) {
-        dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
-        $userdata['user_language'] = $lang;
-    } else {
-        $rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-        if ($rows != 0) {
-            dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
-        } else {
-            dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
-        }
-        // Sanitize guest sessions occasionally
-        dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time() - (86400 * 60))."'");
-    }
-}
 
 /**
  * Check if a given theme exists and is valid
@@ -186,104 +148,6 @@ function set_theme($theme) {
         die();
 
     }
-}
-
-/**
- * Create a selection list of possible languages in list
- *
- * @todo rename it from get_available_languages_list to a more proper name
- *
- * @param string $selected_language
- *
- * @return string
- */
-function get_available_languages_list($selected_language = "") {
-    $enabled_languages = fusion_get_enabled_languages();
-    $res = "";
-    foreach ($enabled_languages as $language) {
-        $sel = ($selected_language == $language ? " selected='selected'" : "");
-        $label = str_replace('_', ' ', $language);
-        $res .= "<option value='".$language."'$sel>".$label."</option>\n";
-    }
-
-    return $res;
-}
-
-/**
- * Get Language Switch Arrays
- *
- * @return array
- */
-function fusion_get_language_switch() {
-    static $language_switch = array();
-    if (empty($language_link)) {
-        $enabled_languages = fusion_get_enabled_languages();
-        foreach ($enabled_languages as $language => $language_name) {
-
-            $link = clean_request('lang='.$language, array('lang'), FALSE);
-
-            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
-                $link = str_replace(fusion_get_settings("site_path"), "", $link);
-            }
-            $language_switch[$language] = array(
-                "language_name"   => $language_name,
-                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
-                "language_icon"   => BASEDIR."locale/$language/$language.png",
-                "language_link"   => $link,
-            );
-        }
-    }
-
-    return (array)$language_switch;
-}
-
-/**
- * Language switcher function
- *
- * @param bool|TRUE $icon
- */
-function lang_switcher($icon = TRUE) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $enabled_languages = fusion_get_enabled_languages();
-    if (count($enabled_languages) <= 1) {
-        return;
-    }
-    openside($locale['global_ML102']);
-    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-    if ($icon) {
-        $language_switch = fusion_get_language_switch();
-        if (!empty($language_switch)) {
-            $row = 0;
-            foreach ($language_switch as $folder => $langData) {
-                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
-                if ($folder != LANGUAGE) {
-                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
-                }
-                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
-                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
-                $row++;
-            }
-        }
-    } else {
-        include_once INCLUDES."translate_include.php";
-        echo openform('lang_menu_form', 'post', FUSION_SELF);
-        echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
-        echo closeform();
-        add_to_jquery("
-			function showflag(item){
-				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
-			}
-			$('#lang_menu').select2({
-			placeholder: 'Switch Language',
-			formatSelection: showflag,
-			escapeMarkup: function(m) { return m; },
-			formatResult: showflag,
-			}).bind('change', function(item) {
-				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-			});
-		");
-    }
-    closeside();
 }
 
 /**
@@ -464,6 +328,7 @@ function trimlink($text, $length) {
     if (strlen($text) > $length) {
         $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
     }
+
     return $text;
 }
 
@@ -478,9 +343,10 @@ function trimlink($text, $length) {
  * @return string
  */
 function fusion_first_words($text, $limit, $suffix = '&hellip;') {
+    $text = preg_replace('/[\r\n]+/', '', $text);
     return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])
 				[[:punct:]]\s*
-		))\b(.+)$~isxu', '$1'.$suffix, $text);
+		))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
 }
 
 /**
@@ -663,12 +529,13 @@ function displaysmileys($textarea, $form = "inputform") {
  * @return mixed
  */
 function fusion_parse_user($user_name) {
-    $user_regex = '@[-0-9A-Z_\.]{1,50}';
+    $user_regex = ' @[-0-9A-Z_\.]{1,50}';
     $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
         $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
 
         return render_user_tags($user_name);
     }, $user_name);
+
     return $text;
 }
 
@@ -722,7 +589,9 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $smileys ? parsesmileys($text) : $text;
     $text = $bbcode ? parseubb($text) : $text;
     $text = $add_line_breaks ? nl2br($text) : $text;
-
+    if (defined('IN_PERMALINK')) {
+        $text = strtr($text, [fusion_get_settings('site_path') => '']);
+    }
     return (string)$text;
 }
 
@@ -1099,7 +968,6 @@ function checkusergroup($group, $user_level, $user_groups) {
     return FALSE;
 }
 
-
 /**
  * Cache groups' data into an array
  *
@@ -1339,20 +1207,22 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  *
- * @global array $locale
+ * @global array  $locale
  *
- * @param int    $start       The number of the first listed item - $_GET['rowstart']
- * @param int    $count       The number of displayed items - LIMIT on sql
- * @param int    $total       The number of all items - a dbcount of total
- * @param int    $range       The number of links before and after the current page
- * @param string $link        The base url before the appended part
- * @param string $getname     the variable name in the query string which stores
+ * @param int     $start      The number of the first listed item - $_GET['rowstart']
+ * @param int     $count      The number of displayed items - LIMIT on sql
+ * @param int     $total      The number of all items - a dbcount of total
+ * @param int     $range      The number of links before and after the current page
+ * @param string  $link       The base url before the appended part
+ * @param string  $getname    the variable name in the query string which stores
  *                            the number of the current page
+ * @param boolean $button     Displays as button
  *
  * @return boolean|string FALSE if $count is invalid
  */
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $single_button = FALSE) {
-    global $locale;
+function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
+
+    $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
@@ -1373,7 +1243,8 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
         $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
     }
-    if ($link == "") {
+
+    if ($link == '') {
         $link = FUSION_SELF."?";
         if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
             global $filepath;
@@ -1389,7 +1260,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     }
     $idx_back = $start - $count;
     $idx_next = $start + $count;
-    if ($single_button == TRUE) {
+    if ($button == TRUE) {
         if ($idx_next >= $total) {
             return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
         } else {
@@ -1430,6 +1301,48 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     }
 
     return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+}
+
+/**
+ * @param        $scroll_url    The ajax script that loads the content
+ * @param int    $rowstart      Current rowstart - $_GET['rowstart']
+ * @param int    $total_count   The total rows - dbrows($result);
+ * @param string $getname       Default is 'rowstart'
+ * @param string $additional_http_query '&section=some_section'
+ *
+ * @return string
+ */
+function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
+    $script = "<script>
+    var count = $rowstart+1;
+    $(window).scroll(function(){
+      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+        if (count <= '$total_count') {
+            loadInfinityContent(count);
+            count++;
+        }
+      }
+    });
+   function loadInfinityContent(pageNumber){
+       $('.infiniteLoader').show('fast');
+       $.ajax({
+              url: '$scroll_url',
+              type:'GET',
+              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
+              success: function(html){
+                  $('.infiniteLoader').hide();
+                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded
+              }
+          });
+      return false;
+    }
+    </script>";
+    add_to_jquery(str_replace(['<script>', '</script>'], '', $script));
+
+    return "
+    <div id='scroll_target'></div>
+    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>Loading...</div></div>
+    ";
 }
 
 /**
@@ -1506,24 +1419,33 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  *
  * @return string
  */
-function showdate($format, $val) {
+function showdate($format, $val, $options = array()) {
     $userdata = fusion_get_userdata();
-    $tz_server = fusion_get_settings("serveroffset");
-    if (!empty($userdata['user_timezone'])) {
-        $tz_client = $userdata['user_timezone'];
-    } else {
-        $tz_client = fusion_get_settings("timeoffset");
-    }
-    $server_dtz = new DateTimeZone($tz_server);
+/*    $tz_server = fusion_get_settings("serveroffset");
+	if (empty($tz_server)) $tz_server = 'Europe/London';*/
+	if (isset($options['tz_override'])) {
+		$tz_client = $options['tz_override'];
+	} else {
+        if (!empty($userdata['user_timezone'])) {
+            $tz_client = $userdata['user_timezone'];
+        } else {
+            $tz_client = fusion_get_settings("timeoffset");
+        }
+	}
+	if (empty($tz_client)) $tz_client = 'Europe/London';
+//    $server_dtz = new DateTimeZone($tz_server);
     $client_dtz = new DateTimeZone($tz_client);
-    $server_dt = new DateTime("now", $server_dtz);
+//    $server_dt = new DateTime("now", $server_dtz);
     $client_dt = new DateTime("now", $client_dtz);
-    $offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
-    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
+    //$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
+    $offset = $client_dtz->getOffset($client_dt);
+
+//    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
+	if (in_array($format, array("shortdate", "longdate", "forumdate", "newsdate"))) {
         $format = fusion_get_settings($format);
         $offset = intval($val) + $offset;
 
-	return strftime($format, $offset);
+        return strftime($format, $offset);
     } else {
         $offset = intval($val) + $offset;
 
@@ -1602,6 +1524,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 
 /**
  * Variable dump printer for debugging purposes
+ *
  * @param      $array
  * @param bool $modal
  * @param bool $print
@@ -1619,6 +1542,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         $modal .= "</pre>\n";
         $modal .= closemodal();
         PHPFusion\OutputHandler::addToFooter($modal);
+
         return FALSE;
     }
     if ($print == TRUE) {
@@ -1626,6 +1550,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         echo $debug;
         echo "</pre>\n";
     }
+
     return $debug;
 }
 
@@ -1640,7 +1565,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
 function fusion_get_settings($key = NULL) {
     // It is initialized only once because of 'static'
     static $settings = array();
-    if (empty($settings) and defined('DB_SETTINGS') and dbconnection()) {
+    if (empty($settings) and defined('DB_SETTINGS') and dbconnection() && db_exists('settings')) {
         $result = dbquery("SELECT * FROM ".DB_SETTINGS);
         while ($data = dbarray($result)) {
             $settings[$data['settings_name']] = $data['settings_value'];
@@ -1690,7 +1615,7 @@ function fusion_get_userdata($key = NULL) {
     if (empty($userdata)) {
         $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
     }
-    $userdata += array(
+    $userdata = $userdata + array(
         "user_id"     => 0,
         "user_name"   => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
         "user_status" => 1,
@@ -1760,6 +1685,160 @@ function fusion_run_installer() {
         die("No config.php or install.php files were found");
     }
 }
+
+/*-------------------------
+ * Language Handling
+ +-------------------------/
+
+/**
+ * Define Site Language
+ * @param $lang
+ */
+function define_site_language($lang) {
+    if (valid_language($lang)) {
+        define('LANGUAGE', $lang);
+        define('LOCALESET', $lang.'/');
+    }
+}
+
+// Set the requested language
+function set_language($lang) {
+    $userdata = fusion_get_userdata();
+    if (valid_language($lang)) {
+        if (iMEMBER) {
+            dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
+        } else {
+            $rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+            if ($rows != 0) {
+                dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
+            } else {
+                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".TIME."');");
+            }
+            // Sanitize guest sessions occasionally
+            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(TIME - (86400 * 60))."'");
+        }
+    }
+}
+
+/**
+ * Check if a given language is valid or if exists
+ * Checks whether a language can be found in enabled languages array
+ * Can also be used to check whether a language actually exists
+ *
+ * @param string $lang
+ * @param bool   $file_check intended to be used when enabling languages in Admin Panel
+ *
+ * @return bool
+ */
+function valid_language($lang, $file_check = FALSE) {
+    $enabled_languages = fusion_get_enabled_languages();
+    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
+            $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
+    ) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Create a selection list of possible languages in list
+ *
+ * @todo rename it from get_available_languages_list to a more proper name
+ *
+ * @param string $selected_language
+ *
+ * @return string
+ */
+function get_available_languages_list($selected_language = "") {
+    $enabled_languages = fusion_get_enabled_languages();
+    $res = "";
+    foreach ($enabled_languages as $language) {
+        $sel = ($selected_language == $language ? " selected='selected'" : "");
+        $label = str_replace('_', ' ', $language);
+        $res .= "<option value='".$language."'$sel>".$label."</option>\n";
+    }
+
+    return $res;
+}
+
+/**
+ * Get Language Switch Arrays
+ *
+ * @return array
+ */
+function fusion_get_language_switch() {
+    static $language_switch = array();
+    if (empty($language_link)) {
+        $enabled_languages = fusion_get_enabled_languages();
+        foreach ($enabled_languages as $language => $language_name) {
+
+            $link = clean_request('lang='.$language, array('lang'), FALSE);
+
+            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
+                $link = str_replace(fusion_get_settings("site_path"), "", $link);
+            }
+            $language_switch[$language] = array(
+                "language_name"   => $language_name,
+                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
+                "language_icon"   => BASEDIR."locale/$language/$language.png",
+                "language_link"   => $link,
+            );
+        }
+    }
+
+    return (array)$language_switch;
+}
+
+/**
+ * Language switcher function
+ *
+ * @param bool|TRUE $icon
+ */
+function lang_switcher($icon = TRUE) {
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $enabled_languages = fusion_get_enabled_languages();
+    if (count($enabled_languages) <= 1) {
+        return;
+    }
+    openside($locale['global_ML102']);
+    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
+    if ($icon) {
+        $language_switch = fusion_get_language_switch();
+        if (!empty($language_switch)) {
+            $row = 0;
+            foreach ($language_switch as $folder => $langData) {
+                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
+                if ($folder != LANGUAGE) {
+                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
+                }
+                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
+                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+                $row++;
+            }
+        }
+    } else {
+        include_once INCLUDES."translate_include.php";
+        echo openform('lang_menu_form', 'post', FUSION_SELF);
+        echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
+        echo closeform();
+        add_to_jquery("
+			function showflag(item){
+				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+			}
+			$('#lang_menu').select2({
+			placeholder: '".$locale['global_ML103']."',
+			formatSelection: showflag,
+			escapeMarkup: function(m) { return m; },
+			formatResult: showflag,
+			}).bind('change', function(item) {
+				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
+			});
+		");
+    }
+    closeside();
+}
+
 
 /**
  * Detect whether the system is installed and return the config file path
@@ -1838,4 +1917,35 @@ function jsminify($code) {
     $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));
 
     return $min;
+}
+
+/**
+ * A wrapper function for file_put_contents with cache invalidation
+ *
+ * If opcache is enabled on the server, this function will write the file
+ * as the original file_put_contents and invalidate the cache of the file.
+ *
+ * It is needed when you create a file dynamically and want to include it
+ * before the cache is invalidated. Redirection does not matter.
+ *
+ * @todo Find a better place and/or name for this function
+ *
+ * @param string          $file file path
+ * @param string|string[] $data
+ * @param int             $flags
+ *
+ * @return int Number of written bytes
+ */
+function write_file($file, $data, $flags = NULL) {
+    $bytes = NULL;
+    if ($flags === NULL) {
+        $bytes = \file_put_contents($file, $data);
+    } else {
+        $bytes = \file_put_contents($file, $data, $flags);
+    }
+    if (function_exists('opcache_invalidate')) {
+        \opcache_invalidate($file, TRUE);
+    }
+
+    return $bytes;
 }

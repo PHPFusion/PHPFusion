@@ -18,9 +18,9 @@
 // Path Definitions
 $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
 
-$widget_title = $widget_locale['0100'];
-$widget_icon = "<span class='fa-stack fa-2x'><i class='fa fa-square-o fa-stack-2x'></i><i class='fa fa-clone fa-stack-1x'></i></span>";
-$widget_description = $widget_locale['0101'];
+$widget_title = $widget_locale['BLKW_0100'];
+$widget_icon = 'block.svg';
+$widget_description = $widget_locale['BLKW_0101'];
 $widget_admin_file = "block_admin.php";
 $widget_display_file = "block.php";
 $widget_admin_callback = "blockWidgetAdmin";

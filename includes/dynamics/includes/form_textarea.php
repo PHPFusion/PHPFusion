@@ -64,6 +64,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'ext_tip'             => '',
         'input_bbcode'        => '',
         'wordcount'           => FALSE,
+        'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
         'tinymce_theme'       => 'modern',
     );
 
@@ -84,19 +85,20 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             if (is_array($options['path'])) {
                 foreach ($options['path'] as $dir) {
                     if (file_exists($dir)) {
-                        $image_list = array_merge(makefilelist($dir, ".|..|"), $image_list);
+                        $image_list[$dir] = makefilelist($dir, ".|..|");
                     }
                 }
             } else {
-                $image_list = makefilelist($options['path'], '.|..|');
+                $image_list[$options['path']] = makefilelist($options['path'], '.|..|');
             }
-            $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
-            foreach ($image_list as $image_name) {
-                $image_1 = explode('.', $image_name);
-                $last_str = count($image_1) - 1;
-                if (in_array($image_1[$last_str], $image_filter)) {
-                    $tinymce_list[] = array('title' => $image_name, 'value' => IMAGES.$image_name);
-                }
+            foreach ($image_list as $key => $images) {
+            	foreach ($images as $keys => $image_name) {
+                	$image_1 = explode('.', $image_name);
+                	$last_str = count($image_1) - 1;
+                	if (in_array(".".$image_1[$last_str], $options['file_filter'])) {
+                	    $tinymce_list[] = array('title' => $image_name, 'value' => $key.$image_name);
+                	}
+            	}
             }
         }
 
@@ -309,12 +311,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
-        $html .= "<div>\n";
-        $html .= display_bbcodes('100%', $input_name, $options['form_name'], $options['input_bbcode']);
+        $html .= "<div class='bbcode_input'>\n";
+        $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div>\n";
-        $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
+        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
         $html .= $options['preview'] ? "</div>\n" : "";
     }
 

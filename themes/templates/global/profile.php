@@ -34,7 +34,7 @@ if (!function_exists('display_register_form')) {
         ?>
         <!---HTML---->
         {%tab_header%}
-        <!--editprofile_pre_idx-->
+        <!--register_pre_idx-->
         <div id='register_form' class='row m-t-20'><div class='col-xs-12 col-sm-12'>
                {%open_form%}
                {%user_id%}
@@ -50,10 +50,50 @@ if (!function_exists('display_register_form')) {
                {%post_button%}
                {%close_form%}
        </div></div>
-       <!--editprofile_sub_idx-->
-       {%tab_footer%}
+        <!--register_sub_idx-->
+        {%tab_footer%}
         <!---//HTML---->
-       <?php
+        <?php
+    }
+}
+
+if (!function_exists('display_profile_form')) {
+    /**
+     * Edit Profile Form Template
+     * The tags {%xyz%} are default replacement that the core will perform
+     * echo output design in compatible with Version 7.xx theme set.
+     *
+     * @param $info - the array output that is accessible for your custom requirements
+     *
+     * @return string
+     */
+    function display_profile_form(array $info = array()) {
+        add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
+        ?>
+        <!---HTML---->
+        {%tab_header%}
+        <!--editprofile_pre_idx-->
+        <div id='profile_form' class='row m-t-20'>
+            <div class='col-xs-12 col-sm-12'>
+                {%open_form%}
+                {%user_id%}
+                {%user_name_field%}
+                {%user_email_field%}
+                {%user_hide_email_field%}
+                {%user_avatar_field%}
+                {%user_password_field%}
+                {%user_admin_password_field%}
+                {%custom_fields%}
+                {%captcha_fields%}
+                {%eula%}
+                {%post_button%}
+                {%close_form%}
+            </div>
+        </div>
+        <!--editprofile_sub_idx-->
+        {%tab_footer%}
+        <!---//HTML---->
+        <?php
     }
 }
 
@@ -71,7 +111,7 @@ if (!function_exists('display_user_profile')) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
         <!--userprofile_pre_idx-->
-        <section id='user-profile' class='spacer-sm'>
+        <section id='user-profile' class='spacer-sm overflow-hide'>
             {%tab_header%}
             <div class='container spacer-sm'>
                 <div class='clearfix p-15 p-t-0'>
@@ -82,7 +122,7 @@ if (!function_exists('display_user_profile')) {
                 <hr/>
                 <div class='clearfix'>{%basic_info%}</div>
                 <hr/>
-                <div class='clearifx'>{%extended_info%}</div>
+                <div class='clearfix'>{%extended_info%}</div>
             </div>
             {%tab_footer%}
         </section>
@@ -97,8 +137,9 @@ if (!function_exists('display_user_field')) {
     function display_user_field($info) {
         ?>
         <div id='{%field_id%}' class='row spacer-xs'>
-        <div class='col-xs-12 col-sm-3'><strong>{%field_title%}</strong></div>
+            <label class='col-xs-12 col-sm-3'><strong>{%field_title%}</strong></label>
         <div class='col-xs-12 col-sm-9'><span class='profile_text'>{%field_value%}</span></div>
+        </div>
         <?php
     }
 }

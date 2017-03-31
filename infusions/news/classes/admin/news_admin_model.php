@@ -27,26 +27,26 @@ class NewsAdminModel extends NewsServer {
      * @var array
      */
     protected $default_news_data = array(
-        'news_id' => 0,
-        'news_draft' => 0,
-        'news_sticky' => 0,
-        'news_news' => '',
-        'news_datestamp' => TIME, //time(),
-        'news_extended' => '',
-        'news_keywords' => '',
-        'news_breaks' => 'n',
+        'news_id'             => 0,
+        'news_draft'          => 0,
+        'news_sticky'         => 0,
+        'news_news'           => '',
+        'news_datestamp'      => TIME,
+        'news_extended'       => '',
+        'news_keywords'       => '',
+        'news_breaks'         => 'n',
         'news_allow_comments' => 1,
-        'news_allow_ratings' => 1,
-        'news_language' => LANGUAGE,
-        'news_visibility' => 0,
-        'news_subject' => '',
-        'news_start' => '',
-        'news_end' => '',
-        'news_cat' => 0,
-        'news_image' => '',
-        'news_image_full_default' => '',
-        'news_image_front_defualt' => '',
-        'news_image_align' => 'pull-left'
+        'news_allow_ratings'  => 1,
+        'news_language'       => LANGUAGE,
+        'news_visibility'     => 0,
+        'news_subject'        => '',
+        'news_start'          => '',
+        'news_end'            => '',
+        'news_cat'            => 0,
+        'news_image'          => '',
+        'news_image_full_default'  => '',
+        'news_image_front_default' => '',
+        'news_image_align'         => 'pull-left'
     );
 
     /**
@@ -126,10 +126,13 @@ class NewsAdminModel extends NewsServer {
 
     /**
      * Function to progressively return closest full image_path
-     * @param $news_image
+     *
+*@param $news_image
      * @param $news_image_t1
      * @param $news_image_t2
-     * @return string
+     * @param $hiRes - forced full image (false by default)
+     *
+*@return string
      */
     protected function get_news_image_path($news_image, $news_image_t1, $news_image_t2, $hiRes = FALSE) {
         if (!$hiRes) {

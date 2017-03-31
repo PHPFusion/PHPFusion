@@ -54,7 +54,7 @@ class Smileys {
                 break;
             default:
                 if (isset($_GET['smiley_text'])) {
-                $this->data['smiley_text'] = str_replace(array('.gif','.png','.jpg'), '', $_GET['smiley_text']);
+                $this->data['smiley_text'] = str_replace(array('.gif', '.png', '.jpg', '.svg'), '', $_GET['smiley_text']);
                 $this->data['smiley_image'] = $_GET['smiley_text'];
                	$this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form";
                 } else {
@@ -242,7 +242,7 @@ class Smileys {
         foreach ($smileys_list as $list) {
         echo "<tr>\n";
         echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$list."' alt='' title='' style='border:0px;' /></td>\n";
-        echo "<td class='col-xs-2'>".ucwords(str_replace(array('.gif','.png','.jpg'), '', $list))."</td>\n";
+        echo "<td class='col-xs-2'>".ucwords(str_replace(array('.gif', '.png', '.jpg', '.svg'), '', $list))."</td>\n";
         echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;smiley_text=".$list."'>".self::$locale['add']."<i class='fa fa-plus-square m-l-10'></i></a></td>\n";
         echo "</tr>\n";
         }

@@ -111,7 +111,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         }
 
-        $button_locale = $this->data['tag_id'] ? self::$locale['forum_tag_0208'] : self::$locale['forum_tag_0207'];
+        $button_locale = $this->data['tag_id'] ? self::$locale['forum_tag_0208'] : self::$locale['forum_tag_0103'];
 
 
         $html =

@@ -216,14 +216,11 @@ if (!function_exists('upload_file')) {
 // Upload image function
 if (!function_exists('upload_image')) {
 
-    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "") {
+    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp')) {
 
-        //print_p($source_image);
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
         }
-
-        //print_p($_FILES[$source_image]['tmp_name']);
 
         if (is_uploaded_file($_FILES[$source_image]['tmp_name'])) {
             $image = $_FILES[$source_image];
@@ -263,9 +260,10 @@ if (!function_exists('upload_image')) {
                     // Invalid file size
                     $image_info['error'] = 1;
                 } elseif (!verify_image($image['tmp_name'])) {
-                    // Unsupported image type
+                    // Failed payload scan
                     $image_info['error'] = 2;
-                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp')) === FALSE) {
+                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === FALSE) {
+                    // Failed extension checks
                     $image_info['error'] = 5;
                 } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                     // Invalid image resolution

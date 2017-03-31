@@ -5,7 +5,6 @@ $locale['news_0003'] = "Edit";
 $locale['news_0004'] = "News";
 $locale['news_0005'] = "No News has been posted yet";
 $locale['news_0006'] = "Uncategorised";
-$locale['news_0007'] = "News";
 $locale['news_0008'] = "Last Updated";
 $locale['news_0009'] = "News Categories";
 $locale['news_0010'] = "All Other Categories";

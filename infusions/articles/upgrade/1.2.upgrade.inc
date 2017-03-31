@@ -82,4 +82,4 @@ foreach ($check_array as $key => $value) {
 
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name = 'articles_per_page'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='article_cats.php'";
-$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/articles/articles.png', admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/articles/articles.svg', admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";

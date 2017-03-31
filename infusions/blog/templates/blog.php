@@ -173,7 +173,7 @@ if (!function_exists('display_blog_menu')) {
             if (!empty($info[$cat_id])) {
                 foreach ($info[$cat_id] as $blog_cat_id => $cdata) {
                     $unCat_active = ($blog_cat_id == 0 && (isset($_GET['cat_id']) && ($_GET['cat_id'] == 0))) ? TRUE : FALSE;
-                    $active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !== '') ? TRUE : FALSE;
+                    $active = ($_GET['cat_id'] !== NULL && $blog_cat_id == $_GET['cat_id']) ? TRUE : FALSE;
                     $html .= "<li ".($active || $unCat_active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
                     if ($active && $blog_cat_id != 0) {
                         if (!empty($info[$blog_cat_id])) {

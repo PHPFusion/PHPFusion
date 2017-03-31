@@ -82,14 +82,14 @@ class Members_Profile extends Members_Admin {
     public static function edit_user_profile() {
         if (isset($_POST['savechanges'])) {
             $userInput = new \UserFieldsInput();
-            $userInput->userData = self::$user_data;
+            $userInput->userData = self::$user_data; // full user data
             $userInput->adminActivation = 0;
             $userInput->registration = FALSE;
             $userInput->emailVerification = 0;
             $userInput->isAdminPanel = TRUE;
             $userInput->skipCurrentPass = TRUE;
             $userInput->saveUpdate();
-            self::$user_data = $userInput->getData();
+            self::$user_data = $userInput->getData(); // data overridden on error.
             unset($userInput);
             if (\defender::safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
@@ -115,7 +115,7 @@ class Members_Profile extends Members_Admin {
         if (isset($_POST['delete_user'])) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
                 array(
-                    ':user_id' => self::$user_id,
+                    ':user_id'    => self::$user_id,
                     ':user_level' => USER_LEVEL_SUPER_ADMIN
                 )
             );
@@ -156,7 +156,7 @@ class Members_Profile extends Members_Admin {
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$user_id."'");
                 }
                 if (db_exists(DB_NEWS)) {
-                   dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
+                    dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
                 }
                 if (db_exists(DB_POLL_VOTES)) {
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$user_id."'");
@@ -171,7 +171,7 @@ class Members_Profile extends Members_Admin {
                         while ($thread = dbarray($threads)) {
                             // Update thread last post author, date and id
                             $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
-                            dbquery("UPDATE ".DB_FORUM_THREADS." SET	
+                            dbquery("UPDATE ".DB_FORUM_THREADS." SET
                             thread_lastpost='".$last_thread_post['post_datestamp']."',
 							thread_lastpostid='".$last_thread_post['post_id']."',
 							thread_lastuser='".$last_thread_post['post_author']."'
@@ -235,5 +235,4 @@ class Members_Profile extends Members_Admin {
         echo closeform();
         echo "</div>\n";
     }
-
 }

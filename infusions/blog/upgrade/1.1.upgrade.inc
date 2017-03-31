@@ -19,6 +19,15 @@
 $inf_version = '1.0.5';
 require_once INCLUDES."infusions_include.php";
 
+$check_array = [
+    'blog_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
+];
+$settings = get_settings('blog');
+foreach ($check_array as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'news')";
+    }
+}
 if (column_exists(DB_BLOG, 'blog_cat')) {
     $inf_altertable[] = DB_BLOG." CHANGE blog_cat blog_cat VARCHAR(50) NOT NULL DEFAULT '0'";
 } else {

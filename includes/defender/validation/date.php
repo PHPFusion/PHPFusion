@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Date
  * Validates Date Input
@@ -25,20 +26,17 @@ class Date extends \Defender\Validation {
      * Check and verify submitted date
      * If type is timestamp, it will return a Unix timestamp
      * If type is date, it will return a date
+     *
      * @return int|string
      */
     public function verify_date() {
         $locale = fusion_get_locale();
-        if (self::$inputValue) {
-
-            $dateParams = strtotime(self::$inputValue);
+        if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
+            $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue)->getTimestamp();
             $dateParams = getdate($dateParams);
-
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
-
                 switch (self::$inputConfig['type']) {
                     case "timestamp":
-
                         $secured = (int)mktime($dateParams['hours'],
                             $dateParams['minutes'],
                             $dateParams['seconds'],
@@ -46,16 +44,14 @@ class Date extends \Defender\Validation {
                             $dateParams['mday'],
                             $dateParams['year']
                         );
-
                         return $secured;
-
                         break;
                     case "date":
+                        $date = (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
 
-                        return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
+                        return $date;
                         break;
                 }
-
             } else {
                 \defender::stop();
                 \defender::setInputError(self::$inputName);
@@ -63,7 +59,7 @@ class Date extends \Defender\Validation {
             }
         }
 
-        return (string) self::$inputDefault;
+        return (string)self::$inputDefault;
     }
-    
+
 }

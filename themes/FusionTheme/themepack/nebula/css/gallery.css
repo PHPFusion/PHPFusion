@@ -1,0 +1,58 @@
+/**
+Gallery CSS for FusionTheme
+ */
+.gallery_item {
+    width: 20%;
+    padding: 0 15px;
+    float: left;
+}
+
+.gallery_item .panel-default > .panel-image-wrapper {
+    height: 150px;
+    max-height: 150px;
+    min-width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery_item .panel-default > .panel-image-wrapper .author {
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    text-decoration: none;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 0px 10px;
+}
+
+.gallery_item .panel-default .album_title {
+    width: 100%;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    content: "";
+    position: relative;
+}
+
+.gallery_item .panel-default .album_title,
+.gallery_item .panel-default .album_link {
+    text-decoration: none;
+}
+
+.gallery_item .panel-default .album_title:hover, .panel-default .album_title:focus {
+    color: #333;
+}
+
+.gallery_item .panel-default .album_title:before {
+    content: '';
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    left: 0;
+    display: block;
+    top: 0;
+    background: linear-gradient(transparent 32px, white);
+}

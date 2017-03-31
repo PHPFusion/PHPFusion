@@ -50,7 +50,9 @@ class Infusion_Core {
 
     protected static function adminpanel_infuse($inf) {
         $error = FALSE;
+
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+
             foreach ($inf['adminpanel'] as $adminpanel) {
                 // auto recovery
                 if (!empty($adminpanel['rights'])) {
@@ -71,7 +73,7 @@ class Infusion_Core {
                     );
                     dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page)
                             VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')");
-                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
+                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I'), [':admin' => USER_LEVEL_ADMIN]);
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
                     }
@@ -583,9 +585,12 @@ class Infusion_Core {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
-                $result = dbquery("CREATE TABLE ".$newtable);
-                if (!$result) {
-                    $error = TRUE;
+                $table_name = fusion_first_words($newtable, 1, '');
+                if (!db_exists($table_name)) {
+                    $result = dbquery("CREATE TABLE ".$newtable);
+                    if (!$result) {
+                        $error = TRUE;
+                    }
                 }
             }
         }
@@ -597,13 +602,16 @@ class Infusion_Core {
 
     protected function newcol_infuse($inf) {
         $error = FALSE;
+        static $table_schema = [];
         if (!empty($inf['newcol']) && is_array($inf['newcol'])) {
             foreach ($inf['newcol'] as $newCol) {
                 if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
-                    $columns = fieldgenerator($newCol['table']);
-                    $count = count($columns);
-                    if (!in_array($newCol['column'], $columns)) {
-                        $result = dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                    if (empty($table_schema[$newCol['table']])) {
+                        $table_schema[$newCol['table']] = fieldgenerator($newCol['table']);
+                    }
+                    $count = count($table_schema[$newCol['table']]);
+                    if (!in_array($newCol['column'], $table_schema[$newCol['table']])) {
+                        $result = dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$table_schema[$newCol['table']][$count - 1]);
                         if (!$result) {
                             $error = TRUE;
                         }
