@@ -550,7 +550,7 @@ class Comments {
                     WHERE comment_id=:comment_id AND comment_hidden=:comment_hidden
                     ";
                     $delete_param = [
-                        ':comment_id'     => intval(stripinput($_POST['comment_id'])),
+                        ':comment_id'     => intval(stripinput($_GET['comment_id'])),
                         ':comment_hidden' => 0,
                     ];
 
