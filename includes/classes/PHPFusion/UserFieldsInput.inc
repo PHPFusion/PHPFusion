@@ -62,6 +62,11 @@ class UserFieldsInput {
      * @return array
      */
     public function getData() {
+        if (!empty($this->userData['user_password'])) {
+            $this->data['user_hash'] = $this->userData['user_password'];
+        } elseif (isset($_POST['user_hash'])) {
+            $this->data['user_hash'] = form_sanitizer($_POST['user_hash'], '', 'user_hash');
+        }
         return $this->data;
     }
 
@@ -566,7 +571,6 @@ class UserFieldsInput {
             $this->_setValidationError();
         }
         $this->_setUserAvatar();
-
         $quantum = new QuantumFields();
         $quantum->setCategoryDb(DB_USER_FIELD_CATS);
         $quantum->setFieldDb(DB_USER_FIELDS);
@@ -581,6 +585,14 @@ class UserFieldsInput {
                 $this->data += $input;
             }
         }
+        $this->data = $this->getData();
+
+        // hidden input tamper check
+        if ($_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
+            \defender::stop();
+        }
+
+        // check for password match
         if (\defender::safe()) {
             // Logs Username change
             if ($this->_userName != $this->userData['user_name']) {
@@ -594,7 +606,6 @@ class UserFieldsInput {
             $quantum->log_user_action(DB_USERS, "user_id");
             // Update Table
             dbquery_insert(DB_USERS, $this->data, 'update');
-
             $this->_completeMessage = $locale['u163'];
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
@@ -626,7 +637,6 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
             }
-
             if (\defender::safe()) {
                 addNotice('success', $locale['u169']);
             }

@@ -94,30 +94,37 @@ class adminPanel extends resource {
      * Javascript for Interface
      */
     private function do_interface_js() {
-
         add_to_jquery("
-$('#search_app').bind('keyup', function(e) {
-    var data = {
-        'appString' : $(this).val(),
-        'mode' : 'html',
-        'url' : '".$_SERVER['REQUEST_URI']."',
-    };
-    var sendData = $.param(data);
-    $.ajax({
-        url: '".THEMES."admin_themes/Artemis/acp_request.php".$this->get_aidlink()."',
-        dataType: 'html',
-        method : 'get',
-        type: 'json',
-        data: sendData,
-        success: function(e) {
-            $('.app_page_list').hide();
-            $('ul#app_search_result').html(e).show();
-        },
-        error : function(e) {
-            console.log('fail');
-        }
-    });
-});
+        menuToggle('".self::$locale['admin_collapse']."');        
+        $('.menu-action').bind('click', function (e) {
+            menu_wrap.toggleClass('collapsed');
+            body_wrap.toggleClass('collapsed');
+            app_wrap.toggleClass('collapsed');
+            menuToggle('".self::$locale['admin_collapse']."');
+            e.preventDefault();
+        });        
+        $('#search_app').bind('keyup', function(e) {
+            var data = {
+                'appString' : $(this).val(),
+                'mode' : 'html',
+                'url' : '".$_SERVER['REQUEST_URI']."',
+            };
+            var sendData = $.param(data);
+            $.ajax({
+                url: '".THEMES."admin_themes/Artemis/acp_request.php".$this->get_aidlink()."',
+                dataType: 'html',
+                method : 'get',
+                type: 'json',
+                data: sendData,
+                success: function(e) {
+                    $('.app_page_list').hide();
+                    $('ul#app_search_result').html(e).show();
+                },
+                error : function(e) {
+                    console.log('fail');
+                }
+            });
+        });
         ");
 
     }

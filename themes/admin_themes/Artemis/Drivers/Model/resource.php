@@ -29,7 +29,7 @@ abstract class resource extends Admins {
 
     private static $userdata = array();
 
-    private static $locale = array();
+    protected static $locale = array();
 
     public function __construct() {
         self::$page_title = $this->set_page_title();
