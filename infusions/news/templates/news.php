@@ -331,7 +331,7 @@ if (!function_exists('render_news_item')) {
             <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
             </a>";
         }
-        echo $data['news_news'];
+        echo $data['news_extended'];
         echo "</div>\n";
         echo $data['news_pagenav'];
         echo "<div style='clear:both;'></div>\n";
