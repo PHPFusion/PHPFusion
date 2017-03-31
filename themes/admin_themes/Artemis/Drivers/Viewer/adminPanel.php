@@ -289,8 +289,48 @@ $('#search_app').bind('keyup', function(e) {
 
     private function message_notification() {
         $locale = self::get_locale();
+        $userdata = fusion_get_userdata();
 
-        $messages = self::get_messages();
+        $messages = [];
+
+        $msg_count_sql = "message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'";
+
+        $msg_search_sql = "
+                        SELECT message_id, message_subject,
+                        message_from 'sender_id', u.user_name 'sender_name', u.user_avatar 'sender_avatar', u.user_status 'sender_status',
+                        message_datestamp
+                        FROM ".DB_MESSAGES."
+                        INNER JOIN ".DB_USERS." u ON u.user_id=message_from
+                        WHERE message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'
+                        GROUP BY message_id
+                        ";
+
+        if (dbcount("(message_id)", DB_MESSAGES, $msg_count_sql)) {
+
+            $msg_result = dbquery($msg_search_sql);
+
+            if (dbrows($msg_result) > 0) {
+
+                while ($data = dbarray($msg_result)) {
+
+                    $messages[] = array(
+                        "link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+                        "title" => $data['message_subject'],
+                        "sender" => array(
+                            "user_id" => $data['sender_id'],
+                            "user_name" => $data['sender_name'],
+                            "user_avatar" => $data['sender_avatar'],
+                            "user_status" => $data['sender_status'],
+                        ),
+                        "datestamp" => timer($data['message_datestamp']),
+                    );
+
+                }
+
+            }
+
+        }
+
         $html = '<li class="dropdown hidden-xs hidden-sm">';
         if (!empty($messages)) {
             $html .= '
