@@ -118,13 +118,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $options += $default_options;
 
     if (!empty($input_value)) {
-
         if ($options['type'] == "timestamp") {
-
             $input_value = date($options['date_format_php'], $input_value);
-
         } elseif ($options['type'] == "date") {
-
             if (stristr($input_value, $options['delimiter'])) {
                 $input_value = explode($options['delimiter'], $input_value);
                 if (count($input_value) == 3) {

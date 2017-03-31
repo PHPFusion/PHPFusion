@@ -35,10 +35,8 @@ class Date extends \Defender\Validation {
             $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue)->getTimestamp();
             $dateParams = getdate($dateParams);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
-
                 switch (self::$inputConfig['type']) {
                     case "timestamp":
-
                         $secured = (int)mktime($dateParams['hours'],
                             $dateParams['minutes'],
                             $dateParams['seconds'],
@@ -46,16 +44,14 @@ class Date extends \Defender\Validation {
                             $dateParams['mday'],
                             $dateParams['year']
                         );
-
                         return $secured;
-
                         break;
                     case "date":
+                        $date = (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
 
-                        return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
+                        return $date;
                         break;
                 }
-
             } else {
                 \defender::stop();
                 \defender::setInputError(self::$inputName);
