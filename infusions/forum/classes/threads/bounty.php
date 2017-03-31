@@ -208,7 +208,7 @@ class Forum_Bounty extends ForumServer {
                     send_pm(self::$data['thread_bounty_user'], 0, $subject, stripinput($message));
 
                     $subject = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
+                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($data['post_author'], 0, $subject, stripinput($message));
                 }
                 // consumes the bounty
