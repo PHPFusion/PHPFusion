@@ -121,7 +121,7 @@ class Forum_Bounty extends ForumServer {
                     ];
                     dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
                     $title = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
+                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusion/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($post_data['post_author'], 0, $title, stripinput($message));
                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
                             [
