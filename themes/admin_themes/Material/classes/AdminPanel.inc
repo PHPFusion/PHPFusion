@@ -92,7 +92,7 @@ class AdminPanel extends Components {
         $userdata  = fusion_get_userdata();
         $languages = fusion_get_enabled_languages();
         $messages  = self::Messages();
-        $messages  = !empty(count($messages)) ? '<span class="label label-danger messages">'.count($messages).'</span>' : '';
+        $messages  = !empty($messages) ? '<span class="label label-danger messages">'.count($messages).'</span>' : '';
 
         echo '<div class="top-menu navbar fixed">';
             echo '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
