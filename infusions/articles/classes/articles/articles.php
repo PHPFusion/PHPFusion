@@ -491,7 +491,7 @@ abstract class Articles extends ArticlesServer {
                 set_meta("keywords", $data['article_keywords']);
             }
 
-            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && !isset($_GET['rowstart'])) {
+            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && empty($_GET['rowstart'])) {
                 dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
                 $data['article_reads']++;
             }
