@@ -2558,23 +2558,17 @@ class QuantumFields extends \SqlHandler {
         $output_fields = array();
 
         $field = flatten_array($this->fields);
-
         if ($callback_data == TRUE) {
             $output_fields[$db] = $this->callback_data;
         }
-
         foreach ($field as $arr => $field_data) {
-
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-
             $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-
             // Find index primary key value
             $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0, $col_name) : 0;
             if (!isset($output_fields[$target_database][$col_name])) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
             }
-
             // Set input as default if posted but blank
             if (isset($_POST[$field_data['field_name']])) {
                 $output_fields[$target_database][$field_data['field_name']] =
@@ -2584,9 +2578,7 @@ class QuantumFields extends \SqlHandler {
                         $field_data['field_name']
                     );
             }
-
         }
-
         $this->output_fields = $output_fields;
 
         return $this->output_fields;

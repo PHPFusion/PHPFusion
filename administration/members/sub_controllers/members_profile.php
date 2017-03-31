@@ -82,14 +82,14 @@ class Members_Profile extends Members_Admin {
     public static function edit_user_profile() {
         if (isset($_POST['savechanges'])) {
             $userInput = new \UserFieldsInput();
-            $userInput->userData = self::$user_data;
+            $userInput->userData = self::$user_data; // full user data
             $userInput->adminActivation = 0;
             $userInput->registration = FALSE;
             $userInput->emailVerification = 0;
             $userInput->isAdminPanel = TRUE;
             $userInput->skipCurrentPass = TRUE;
             $userInput->saveUpdate();
-            self::$user_data = $userInput->getData();
+            self::$user_data = $userInput->getData(); // data overridden on error.
             unset($userInput);
             if (\defender::safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());

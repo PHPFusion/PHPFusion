@@ -124,23 +124,21 @@ class UserFields extends QuantumFields {
      */
     public function display_profile_input(array $input = array()) {
         $this->method = 'input';
-
         $locale = fusion_get_locale();
-
         $this->info = [
             'section'             => $this->getProfileSections(),
             'user_id'             => form_hidden('user_id', '', isset($_GET['lookup']) && isnum($_GET['lookup']) ? $_GET['lookup'] : 0),
             'user_name'           => '',
+            'user_password'       => '',
+            'user_admin_password' => '',
             'user_email'          => '',
             'user_hide_email'     => '',
             'user_avatar'         => '',
-            'user_admin_password' => '',
             'validate'            => '',
             'terms'               => ''
         ];
 
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
-
         $this->options += $this->default_options;
 
         if ($_GET['section'] == 1) {
@@ -326,9 +324,12 @@ class UserFields extends QuantumFields {
                 $this->info['terms'] = $this->renderTerms();
             }
         } else {
+            if (empty($this->userData['user_hash'])) {
+                $this->userData['user_hash'] = $this->userData['user_password'];
+            }
             // requires password
             $this->info['user_password'] = form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
-            $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password']);
+            $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_hash']);
         }
 
         $this->info += array(
