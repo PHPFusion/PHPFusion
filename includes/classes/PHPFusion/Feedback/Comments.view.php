@@ -96,7 +96,7 @@ if (!function_exists('display_comments_list')) {
                 <div>{%comment_reply_link%} &middot; {%comment_edit_link%} &middot; {%comment_delete_link%}</div>
             </div>
             {%comment_reply_form%}
-            <ul class='sub-comments'>
+            <ul class='sub-comments m-l-30'>
                 {%comment_sub_comments%}
             </ul>
         </li>
