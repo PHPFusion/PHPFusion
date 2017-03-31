@@ -268,7 +268,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
             $info['blog_item'] = $item;
 
-            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && isset($_GET['readmore']) && !isset($_GET['rowstart'])) {
+            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && isset($_GET['readmore']) && empty($_GET['rowstart'])) {
                 dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id=:read_more", [':read_more' => intval($_GET['readmore'])]);
                 $item['blog_reads']++;
             }
