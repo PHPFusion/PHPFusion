@@ -395,7 +395,7 @@ class Comments {
      * @return string
      */
     private function display_all_comments($c_data, $index = 0, $options) {
-        $comments_html = &$comments_html;
+        $comments_html = '';
 
         foreach ($c_data[$index] as $comments_id => $data) {
             $ratings = '';
@@ -889,12 +889,6 @@ class Comments {
 
         if (fusion_get_settings('comments_enabled')) {
 
-            $actions = [
-                "edit_dell"   => '',
-                "edit_link"   => '',
-                "delete_link" => '',
-            ];
-
             if ($this->getParams('comment_allow_ratings')) {
                 $ratings_query = "
                 SELECT
@@ -932,12 +926,11 @@ class Comments {
             $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
             $this->c_arr['c_info']['total_comments'] = 0;
 
-            $c_rows = dbcount("('comment_id')", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat=:comment_cat",
+            $c_rows = dbcount("('comment_id')", DB_COMMENTS, "comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden",
                 [
                     ':comment_item_id'   => $this->getParams('comment_item_id'),
                     ':comment_item_type' => $this->getParams('comment_item_type'),
-                    ':comment_hidden'    => 0,
-                    ':comment_cat'       => 0,
+                    ':comment_hidden'    => 0
                 ]
             );
 
