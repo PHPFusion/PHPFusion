@@ -18,11 +18,12 @@
 if (!function_exists('display_comments_ui')) {
     function display_comments_ui() {
         ?>
+        <h4>{%comment_title%}</h4>
         <div id='comments'>
+            <div id='{%comment_form_container_id%}' class='comments-header'>{%comment_count%}</div>
+            {%comments_form%}
             <div id='{%comment_container_id%}' name='comments'>
                 {%comments_listing%}
-                <a id='{%comment_form_container_id%}'></a>
-                {%comments_form%}
             </div>
         </div>
         <?php
@@ -45,9 +46,6 @@ if (!function_exists("display_comments_section")) {
         ?>
         <!---comments-->
         <div class='comments-panel'>
-            <div class='comments-header'>
-                {%comment_title%} {%comment_count%}
-            </div>
             {%comment_ratings%}
             <div class='comments overflow-hide'>
                 {%comments%}
@@ -80,7 +78,7 @@ if (!function_exists('display_comments_listing')) {
  * Single Comment List {%comments_lists%}
  */
 if (!function_exists('display_comments_list')) {
-    function display_comments_list() {
+    function display_comments_list($info) {
         ?>
         <li id='{%comment_list_id%}' class='m-b-15'>
             <?php if (fusion_get_settings('comments_avatar')) : ?>
@@ -88,17 +86,19 @@ if (!function_exists('display_comments_list')) {
             <?php endif ?>
             <div class='overflow-hide'>
                 <div class='comment_name display-inline-block m-r-10'>{%user_name%}
-                    <small class='comment_date'>{%comment_date%}</small>
                 </div>
-                {%comment_ratings%}
-                <p class='comment_title'>{%comment_title%}</p>
-                <p class='comment_message'>{%comment_message%}</p>
-                <div>{%comment_reply_link%} &middot; {%comment_edit_link%} &middot; {%comment_delete_link%}</div>
+                <?php if ($info['comment_ratings']) : ?>{%comment_ratings%}<?php endif; ?>
+                <?php if ($info['comment_subject']) : ?>
+                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}<!--//comment_subject--></div><?php endif; ?>
+                <div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
+                <div>
+                    <small>{%comment_reply_link%} &middot; {%comment_edit_link%} &middot; {%comment_delete_link%} - <span class='comment_date'>{%comment_date%}</span></small>
+                </div>
+                {%comment_reply_form%}
+                <ul class='sub_comments'>
+                    {%comment_sub_comments%}
+                </ul>
             </div>
-            {%comment_reply_form%}
-            <ul class='sub-comments m-l-30'>
-                {%comment_sub_comments%}
-            </ul>
         </li>
         <?php
     }
