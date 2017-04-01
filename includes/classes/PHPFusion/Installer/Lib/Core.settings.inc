@@ -300,10 +300,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'comments_jquery',
-                'settings_value' => 1
-            ],
-            [
                 'settings_name' => 'ratings_enabled',
                 'settings_value' => 1
             ],
