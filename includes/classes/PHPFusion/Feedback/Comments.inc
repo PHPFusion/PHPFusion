@@ -126,6 +126,11 @@ class Comments {
      * @return static
      */
     public static function getInstance(array $params = array(), $key = 'Default') {
+
+        if (dbcount('(settings_name)', DB_SETTINGS, "settings_name=:jq", [':jq' => 'comments_jquery'])) {
+            dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name=:jq", [':jq' => 'comments_jquery']);
+        }
+
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
             self::$key = $key;
