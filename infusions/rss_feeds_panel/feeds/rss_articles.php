@@ -48,7 +48,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR") ? " - ".$locale['rss_in'].$row['article_cat_language'] : "")."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/articles/articles.php?article_id=".$rsid."</link>\n";
-            echo "<description>".htmlspecialchars($description)."</description>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]</description>\n";
             echo "</item>\n";
         }
     } else {
