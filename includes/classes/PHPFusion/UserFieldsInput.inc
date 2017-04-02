@@ -30,7 +30,6 @@ class UserFieldsInput {
     public $isAdminPanel = FALSE;
     private $_completeMessage;
     private $_method;
-    private $_noErrors = TRUE;
 
     private $_userEmail;
     private $_userHideEmail;
@@ -41,7 +40,6 @@ class UserFieldsInput {
 
     private $_isValidCurrentPassword = FALSE;
     private $_isValidCurrentAdminPassword = FALSE;
-    private $_userHash = FALSE;
     private $_userPassword = FALSE;
     private $_newUserPassword = FALSE;
     private $_newUserPassword2 = FALSE;
@@ -588,7 +586,7 @@ class UserFieldsInput {
         $this->data = $this->getData();
 
         // hidden input tamper check
-        if ($_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
+        if (isset($_GET['section']) && $_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
             \defender::stop();
         }
 
