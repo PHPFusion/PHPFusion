@@ -30,7 +30,7 @@ if (db_exists(DB_NEWS)) {
     $rssimage = $settings['siteurl'].$settings['sitebanner'];
 
     echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
-    echo "<rss version=\"2.0\">\n<image>\n<url>$rssimage</url>\n</image>\n<channel>\n";
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<image>\n<url>$rssimage</url>\n</image>\n<channel>\n";
 
     if (dbrows($result) != 0) {
         echo "<title>".$settings['sitename'].' - '.$locale['rss_news'].(multilang_table("NS") ? $locale['rss_in'].LANGUAGE : "")."</title>\n";
@@ -46,7 +46,7 @@ if (db_exists(DB_NEWS)) {
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/news/news.php?readmore=".$rsid."</link>\n";
-            echo "<description>".htmlspecialchars($description)."</description>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
             echo "</item>\n";
         }
     } else {

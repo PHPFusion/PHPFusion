@@ -38,7 +38,7 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
 	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT 0,10");
 
     echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
-    echo "<rss version=\"2.0\">\n<channel>\n";
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
@@ -53,7 +53,7 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle)." [ ".$row['forum_name']." ] </title>\n";
             echo "<link>".$settings['siteurl']."infusions/forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$rsid."</link>\n";
-            echo "<description>".htmlspecialchars($description)."</description>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
             echo "</item>\n";
         }
     } else {

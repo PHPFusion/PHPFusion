@@ -34,7 +34,7 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
 	ORDER BY tbl2.weblink_count DESC LIMIT 0,10");
 
     echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
-    echo "<rss version=\"2.0\">\n<channel>\n";
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
@@ -48,7 +48,7 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
             $description = strip_tags($description, "<a><p><br /><hr />");
             echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/weblinks/weblinks.php?weblink_id=".$rsid."</link>\n";
-            echo "<description>".htmlspecialchars($description)."</description>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
             echo "</item>\n";
         }
     } else {
