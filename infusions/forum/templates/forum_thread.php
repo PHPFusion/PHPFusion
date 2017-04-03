@@ -137,7 +137,7 @@ if (!function_exists('render_thread')) {
                 '{%sticky_icon%}'       => ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : ''),
                 '{%locked_icon%}'       => ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : ''),
                 '{%thread_subject%}'    => $data['thread_subject'],
-                '{%time_updated%}'      => $locale['forum_0363'].timer($data['thread_lastpost']),
+                '{%time_updated%}'      => $locale['forum_0363'].' '.timer($data['thread_lastpost']),
                 '{%thread_tags%}'       => (!empty($info['thread_tags_display']) ? "<div class='clearfix'><i class='fa fa-tags text-lighter fa-fw'></i> ".$info['thread_tags_display']."</div>" : ''),
                 '{%poll_form%}'         => (!empty($info['poll_form']) ? "<div class='well'>".$info['poll_form']."</div>" : ''),
                 '{%poll_button%}'       => ($can_poll ? "<a class='btn btn-success btn-sm m-r-10 ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
