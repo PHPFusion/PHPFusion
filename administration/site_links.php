@@ -206,15 +206,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             "links_grouping" => fusion_get_settings("links_grouping")
         );
 
-        /**
-         * @silent upgrade
-         * @todo: Remove this line on 31/12/2016
-         * */
-        if ($settings['links_per_page'] === NULL) {
-            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_per_page', 8)");
-            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_grouping', 1)");
-        }
-
         if (isset($_POST['save_settings'])) {
 
             $settings = array(
