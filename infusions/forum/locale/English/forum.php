@@ -237,7 +237,7 @@ $locale['forum_0609'] = "Update";
 $locale['forum_0610'] = "Delete";
 $locale['forum_0611'] = "Edit Reason";
 $locale['forum_0612'] = "Poll edited";
-$locale['forum_0613'] = "Field marked with &lt;span class=&#039;required&#039;&gt;*&lt;/span&gt; contains votes or is required. Otherwise, leave blank to remove poll options";
+$locale['forum_0613'] = "Field marked with {REQUIRED} contains votes or is required. Otherwise, leave blank to remove poll options";
 $locale['forum_0614'] = "Thank you for voting. Your vote has been polled.";
 $locale['forum_0615'] = "Poll deleted";
 $locale['forum_0616'] = "Warning: Deleting poll will also delete all votes polled.";
