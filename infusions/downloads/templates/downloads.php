@@ -52,7 +52,7 @@ if (!function_exists('render_downloads')) {
             echo "<div class='panel-heading clearfix'>\n";
             echo "<div class='row'>\n";
             echo "<div class='col-xs-5 col-sm-5 col-md-5 col-lg-5' style='border-right: 1px solid #ddd;'>\n";
-            echo "<a href='".$data['download_file_link']."' class='pull-left m-r-20 btn btn-success m-t-5 text-white'>\n";
+            echo "<a target='_blank' href='".$data['download_file_link']."' class='pull-left m-r-20 btn btn-success m-t-5 text-white'>\n";
             echo "<i class='fa fa-download p-5 fa-2x'></i>\n";
             echo "</a>\n";
             echo "<div class='overflow-hide'><h4 class='m-t-5 m-b-0 strong'>".$locale['download_1007']."</h4>\n ".$locale['download_1020'].": ".$data['download_filesize']." </div>\n";
@@ -135,7 +135,7 @@ if (!function_exists('render_downloads')) {
                         echo "<div class='m-r-10'><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
                     }
 
-                    echo "<a class='btn btn-sm btn-primary m-t-10 ".(empty($data['download_file_link']) ? 'disabled' : '')."' href='".$data['download_file_link']."'><i class='fa fa-download fa-fw'></i> ".$locale['download_1007']."</a>\n";
+                    echo "<a class='btn btn-sm btn-primary m-t-10 ".(empty($data['download_file_link']) ? 'disabled' : '')."' target='_blank' href='".$data['download_file_link']."'><i class='fa fa-download fa-fw'></i> ".$locale['download_1007']."</a>\n";
                     echo "</div>\n";
                     echo "<div class='pull-left m-r-10'>\n";
                     echo $data['download_image'];
