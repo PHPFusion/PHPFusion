@@ -315,7 +315,7 @@ class UserGroups {
                 $html .= "<tr>\n";
                 $html .= "<td><a href='$edit_link'>".$groups[1]." (".self::count_usergroup($groups[0]).")</a></td>\n";
                 $html .= "<td>".$groups[2]."</td>\n";
-                $html .= "<td class='text-center'>".(!empty($groups[3]) ? "<i class='".$groups[3]."'></i> ".$groups[3] : $groups[3])."</td>\n";
+                $html .= "<td class='text-center'>".(!empty($groups[3]) ? "<i class='".$groups[3]."'></i> " : $groups[3])."</td>\n";
                 $html .= "<td>";
                 $html .= "<a href='$member_link'>".self::$locale['GRP_438']."</a> - ";
                 $html .= "<a href='$edit_link'>".self::$locale['edit']."</a> - ";
