@@ -113,7 +113,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='d' order by submit_datestamp desc");
+			WHERE submit_type='d' AND submit_id='".$_GET['submit_id']."'
+			");
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $submit_criteria = unserialize($data['submit_criteria']);
@@ -267,7 +268,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='d' order by submit_datestamp desc
+			WHERE submit_type='d'
+			ORDER BY submit_datestamp DESC
 			");
     $rows = dbrows($result);
     if ($rows > 0) {
