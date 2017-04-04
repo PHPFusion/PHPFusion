@@ -564,8 +564,8 @@ class ForumThreads extends ForumServer {
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
 				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 				#LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id ##--------------this is wrong, as it only checks its own parent. it does not check ancestor root.
-				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'				
-				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'				
+				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
+				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
 				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
 				".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ")."
 				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'";
@@ -774,12 +774,12 @@ class ForumThreads extends ForumServer {
 					u2.user_name AS edit_name, u2.user_status AS edit_status,
 					count(a1.attach_id) 'attach_image_count',
 					count(a2.attach_id) 'attach_files_count',
-					SUM(v.vote_points) 'vote_points', 
-					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points'  					
-					FROM ".DB_FORUM_POSTS." p					
+					SUM(v.vote_points) 'vote_points',
+					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points'
+					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id 					
-					LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".fusion_get_userdata('user_id')."'					
+					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id
+					LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".fusion_get_userdata('user_id')."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
 					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.post_id = p.post_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
@@ -861,7 +861,7 @@ class ForumThreads extends ForumServer {
                             if (!empty($aFiles)) {
                                 $post_attachments .= "<div class='emulated-fieldset'>\n";
                                 $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'],
-                                        $pdata['user_status']).$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
+                                        $pdata['user_status']).' '.$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
                                 $post_attachments .= "<div class='attachments-list m-t-10'>".$aFiles."</div>\n";
                                 $post_attachments .= "</div>\n";
                             }
@@ -869,7 +869,7 @@ class ForumThreads extends ForumServer {
                             if (!empty($aImage)) {
                                 $post_attachments .= "<div class='emulated-fieldset'>\n";
                                 $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'],
-                                        $pdata['user_status']).$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
+                                        $pdata['user_status']).' '.$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
                                 $post_attachments .= "<div class='attachments-list'>".$aImage."</div>\n";
                                 $post_attachments .= "</div>\n";
                                 if (!defined('COLORBOX')) {
@@ -880,7 +880,7 @@ class ForumThreads extends ForumServer {
                                 }
                             }
                         } else {
-                            $post_attachments = "Failed to fetch the attachment";
+                            $post_attachments = $locale['forum_0163a'];
                         }
                     } else {
                         $post_attachments = "<small><i class='fa fa-clipboard'></i> ".$locale['forum_0184']."</small>\n";

@@ -47,6 +47,7 @@ $locale['forum_0160'] = "of";
 $locale['forum_0161'] = "attached the following file:";
 $locale['forum_0162'] = "Downloads";
 $locale['forum_0163'] = "You are not allowed to see attachments in this thread.";
+$locale['forum_0163a'] = "Failed to fetch the attachment";
 $locale['forum_0164'] = "Edited by";
 $locale['forum_0165'] = "Reason";
 $locale['forum_0166'] = "Click here to show the edit reason.";
