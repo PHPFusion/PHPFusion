@@ -58,7 +58,8 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             'download_version' => form_sanitizer($_POST['download_version'], '', 'download_version'),
             'download_file' => '',
             'download_url' => '',
-            'download_image' => ''
+            'download_image' => '',
+            'download_image_thumb' => ''
         );
         /**
          * Download File Section
