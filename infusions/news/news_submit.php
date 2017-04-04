@@ -112,8 +112,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             );
             ob_start();
             echo strtr(display_news_submissions_preview(), [
-                '{%title%}'        => $locale['news_0400'],
-                '{%news_subject%}' => $criteriaArray['news_subject'],
+                '{%title%}'        => $criteriaArray['news_subject'],
                 '{%snippet%}'      => "<strong>".$locale['news_0203']."</strong><br/>".nl2br($news_snippet),
                 '{%full_text%}'    => "<strong>".$locale['news_0204']."</strong><br/>".nl2br($news_body),
             ]);
