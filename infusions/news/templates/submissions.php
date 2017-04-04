@@ -34,7 +34,7 @@ if (!function_exists('display_news_confirm_submissions')) {
 
 if (!function_exists('display_news_submissions_preview')) {
     function display_news_submissions_preview() {
-        return open_table('{%news_subject%}')."
+        return open_table('{%title%}')."
             <p>{%snippet%}</p>
             <p>{%full_text%}</p>
         ".close_table();

@@ -46,9 +46,9 @@ class Submissions extends Core {
         <div class='row'>
         <div class='submit_body'>
         <div class='container'>
-        ".form_text('news_subject', '', '', ['required' => TRUE, 'placeholder' => self::$locale['NB_100']])."
-        ".form_textarea('news_news', '', '', ['required' => TRUE, 'placeholder' => self::$locale['NB_101']])."
-        ".form_textarea('news_body', '', '', ['required' => TRUE, 'placeholder' => self::$locale['NB_102']])."
+        ".form_text('news_subject', '', $info['criteria_array']['news_subject'], ['required' => TRUE, 'placeholder' => self::$locale['NB_100']])."
+        ".form_textarea('news_news', '', $info['criteria_array']['news_news'], ['required' => TRUE, 'placeholder' => self::$locale['NB_101']])."
+        ".form_textarea('news_body', '', $info['criteria_array']['news_body'], ['required' => TRUE, 'placeholder' => self::$locale['NB_102']])."
         </div></div></div>
 
         <div class='row'>
