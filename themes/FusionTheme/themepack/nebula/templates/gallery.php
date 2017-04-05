@@ -122,7 +122,7 @@ class Gallery {
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
         $html .= "<strong>".$locale['434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
-        $html .= "<strong>".$locale['403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer(time())."</abbr><br/>";
+        $html .= "<strong>".$locale['403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
         $html .= "<strong>".$locale['454']."</strong> ".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
         $html .= "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
         $html .= "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
