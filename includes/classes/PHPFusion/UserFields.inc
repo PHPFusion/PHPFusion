@@ -461,7 +461,7 @@ class UserFields extends QuantumFields {
         $html .= "<div class='col-xs-12 col-sm-9'>\n";
         $html .= form_checkbox('agreement', $agreement, '', array("required" => TRUE, "reverse_label" => TRUE));
         $html .= "</div>\n</div>\n";
-        add_to_jquery("
+        add_to_head("<script type='text/javascript'>$(function() {
         $('#agreement').bind('click', function() {
             var regBtn = $('#register');
             if ($(this).is(':checked')) {
@@ -470,7 +470,7 @@ class UserFields extends QuantumFields {
                 regBtn.attr('disabled', true).addClass('disabled');
             }
         });
-        ");
+        });</script>");
 
         return $html;
     }
