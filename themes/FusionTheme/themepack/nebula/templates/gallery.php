@@ -179,8 +179,8 @@ class Gallery {
             $html .= "<div class='pull-right dropdown'>\n";
             $html .= "<a href='#' data-toggle='dropdown'><i class='fa fa-cog'></i></a>\n";
             $html .= "<ul class='dropdown-menu'>\n";
-            $html .= "<li><a href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a></li>\n";
-            $html .= "<li><a href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a></li>\n";
+            $html .= "<li><a href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit fa-lg'></i> ".$info['photo_edit']['name']."</a></li>\n";
+            $html .= "<li><a href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash fa-lg'></i> ".$info['photo_delete']['name']."</a></li>\n";
             $html .= "</ul>\n</div>\n";
         }
 
