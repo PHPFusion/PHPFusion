@@ -331,14 +331,14 @@ class NewThread extends ForumServer {
                     }
 
                     $this->info = array(
-                        'title'             => self::$locale['forum_0057'],
-                        'description'       => '',
-                        'openform'          => openform('input_form', 'post', FUSION_SELF."?forum_id=".$post_data['forum_id'], array('enctype' => self::getPermission("can_upload_attach"))),
-                        'closeform'         => closeform(),
-                        'forum_id_field'    => '',
-                        'thread_id_field'   => '',
-                        "forum_field"       => "",
-                        'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'],
+                        'title'           => self::$locale['forum_0057'],
+                        'description'     => '',
+                        'openform'        => openform('input_form', 'post', clean_request('forum_id='.$post_data['forum_id'], ['forum_id'], FALSE), array('enctype' => self::getPermission("can_upload_attach"))),
+                        'closeform'       => closeform(),
+                        'forum_id_field'  => '',
+                        'thread_id_field' => '',
+                        "forum_field"     => "",
+                        'subject_field'   => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'],
                             array(
                                 'required'    => 1,
                                 'placeholder' => self::$locale['forum_2001'],

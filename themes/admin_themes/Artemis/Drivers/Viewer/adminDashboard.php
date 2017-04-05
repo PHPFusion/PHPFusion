@@ -211,7 +211,7 @@ class adminDashboard extends resource {
 
             echo "<div class='row'>\n";
                 echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                    openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format($infusions_count)."</span>");
+                    openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
                     $content = '';
                     if ($infusions_count > 0) {
                         echo "<div class='comment_content'>\n";
@@ -235,7 +235,7 @@ class adminDashboard extends resource {
                             $comment_item_url = (isset($link_type[$comment_data['comment_type']]) ? "<a href='".sprintf($link_type[$comment_data['comment_type']]."'", $comment_data['comment_item_id'])."'>{%item%}</a>" : '{%item%}');
                             $comment_item_name = (isset($comments_type[$comment_data['comment_type']])) ? $comments_type[$comment_data['comment_type']] : $locale['global_073b'];
                             echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                             echo "<div id='comment_action-$i' class='pull-right dropdown dropdown-menu-right'>\n
                                 <a span class='dropdown-toggle btn btn-default' data-toggle='dropdown'><i class='fa fa-angle-down'></i></a>
                                 <ul class='dropdown-menu'>
@@ -270,7 +270,7 @@ class adminDashboard extends resource {
                             $ratings_item = isset($comments_type[$ratings_data['rating_type']]) ? $comments_type[$ratings_data['rating_type']] : $locale['ratings'];
                             echo "<!--Start Rating Item-->\n";
                             echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                             echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
                             echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
                             echo strtr($ratings_url, ['{%item%}' => $ratings_item]);
@@ -298,7 +298,7 @@ class adminDashboard extends resource {
 
                             echo "<!--Start Submissions Item-->\n";
                             echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                             echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])." </strong>\n";
                             echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span><br/>\n";
                             echo timer($submit_data['submit_datestamp'])."<br/>\n";

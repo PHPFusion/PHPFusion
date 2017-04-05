@@ -18,13 +18,12 @@
 spl_autoload_register(function ($className) {
 
     $autoload_register_paths = array(
-        "Artemis\\Viewer\\adminPanel" => THEMES."admin_themes/Artemis/Drivers/Viewer/adminPanel.php",
-        "Artemis\\Viewer\\adminDashboard" => THEMES."admin_themes/Artemis/Drivers/Viewer/adminDashboard.php",
-        "Artemis\\Viewer\\adminPanel" => THEMES."admin_themes/Artemis/Drivers/Viewer/adminPanel.php",
-        "Artemis\\Viewer\\loginPanel" => THEMES."admin_themes/Artemis/Drivers/Viewer/loginPanel.php",
-        "Artemis\\Viewer\\adminApps" => THEMES."admin_themes/Artemis/Drivers/Viewer/adminApps.php",
-        "Artemis\\Model\\resource" => THEMES."admin_themes/Artemis/Drivers/Model/resource.php",
-        "Artemis\\Controller" => THEMES."admin_themes/Artemis/Drivers/controller.php",
+        "Artemis\\Viewer\\adminPanel"      => THEMES."admin_themes/Artemis/Drivers/Viewer/adminPanel.php",
+        "Artemis\\Viewer\\adminDashboard"  => THEMES."admin_themes/Artemis/Drivers/Viewer/adminDashboard.php",
+        "Artemis\\Viewer\\loginPanel"      => THEMES."admin_themes/Artemis/Drivers/Viewer/loginPanel.php",
+        "Artemis\\Viewer\\adminApps"       => THEMES."admin_themes/Artemis/Drivers/Viewer/adminApps.php",
+        "Artemis\\Model\\resource"         => THEMES."admin_themes/Artemis/Drivers/Model/resource.php",
+        "Artemis\\Controller"              => THEMES."admin_themes/Artemis/Drivers/controller.php",
         "Artemis\\Subcontroller\\get_apps" => THEMES."admin_themes/Artemis/Drivers/Subcontroller/get_apps.php"
     );
 
