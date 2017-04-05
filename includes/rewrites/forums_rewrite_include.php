@@ -148,11 +148,11 @@ $pattern += array(
 );
 
 $pattern += array(
-    "forum/my-threads" => "infusions/forum_threads_list_panel/my_threads.php",
-    "forum/my-post" => "infusions/forum_threads_list_panel/my_posts.php",
-    "forum/my-post-rows-%rowstart%" => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
-    "forum/new-post" => "infusions/forum_threads_list_panel/new_posts.php",
-    "forum/tracked-threads" => "infusions/forum_threads_list_panel/tracked_threads.php",
+    "forum/my-threads"                                              => "infusions/forum_threads_list_panel/my_threads.php",
+    "forum/my-post"                                                 => "infusions/forum_threads_list_panel/my_posts.php",
+    "forum/my-post-rows-%rowstart%"                                 => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
+    "forum/new-post"                                                => "infusions/forum_threads_list_panel/new_posts.php",
+    "forum/tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
     "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
 );
 
