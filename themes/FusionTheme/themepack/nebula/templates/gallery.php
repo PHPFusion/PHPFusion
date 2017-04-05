@@ -107,10 +107,10 @@ class Gallery {
         $html .= "</a>\n";
         $html .= "<div class='clearfix'>\n";
         $html .= "<div class='btn-group pull-right m-t-20'>\n";
-        $html .= isset($info['nav']['first']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['first']['link']."' title='".$info['nav']['first']['name']."'><i class='entypo to-start'></i></a>\n" : '';
-        $html .= isset($info['nav']['prev']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['prev']['link']."' title='".$info['nav']['prev']['name']."'><i class='entypo left-dir'></i></a>\n" : '';
-        $html .= isset($info['nav']['next']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['next']['link']."' title='".$info['nav']['next']['name']."'><i class='entypo right-dir'></i></a>\n" : '';
-        $html .= isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['last']['name']."'><i class='entypo to-end'></i></a>\n" : '';
+        $html .= isset($info['nav']['first']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['first']['link']."' title='".$info['nav']['first']['name']."'><i class='fa fa-angle-double-left'></i></a>\n" : '';
+        $html .= isset($info['nav']['prev']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['prev']['link']."' title='".$info['nav']['prev']['name']."'><i class='fa fa-angle-left'></i></a>\n" : '';
+        $html .= isset($info['nav']['next']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['next']['link']."' title='".$info['nav']['next']['name']."'><i class='fa fa-angle-right'></i></a>\n" : '';
+        $html .= isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['last']['name']."'><i class='fa fa-angle-double-right'></i></a>\n" : '';
         $html .= "</div>\n";
         $html .= "<div class='overflow-hide m-b-20'>\n";
         $html .= "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
