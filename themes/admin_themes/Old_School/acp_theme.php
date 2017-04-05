@@ -84,7 +84,6 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-    global $defender, $pages, $admin;
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
