@@ -175,7 +175,7 @@ if (!function_exists('render_photo')) {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
         echo "<strong>".$locale['434']."</strong>".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
-        echo "<strong>".$locale['403']."</strong><abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer(time())."</abbr><br/>";
+        echo "<strong>".$locale['403']."</strong><abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
         echo "<strong>".$locale['454']."</strong>".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
         echo "<strong>".$locale['456']."</strong>".$info['photo_byte'];
         echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
