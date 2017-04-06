@@ -22,16 +22,16 @@ if (!defined("IN_FUSION")) {
 
 $regex = array(
     // Always the last key, they cannot stack together due to \W. Will crash
-    "%forum_name%" => "([0-9a-zA-Z._\W]+)",
-    "%forum_id%" => "([0-9]+)",
-    "%parent_id%" => "([0-9]+)",
-
-    "%thread_id%" => "([0-9]+)",
-    "%thread_name%" => "([0-9a-zA-Z._\W]+)",
+    "%forum_name%"   => "([0-9a-zA-Z._\W]+)",
+    "%tag_id%"       => "([0-9]+)",
+    "%forum_id%"     => "([0-9]+)",
+    "%thread_id%"    => "([0-9]+)",
+    "%tag_name%"     => "([0-9a-zA-Z._\W]+)",
+    "%thread_name%"  => "([0-9a-zA-Z._\W]+)",
     "%track_status%" => "(on|off)",
-    "%nr%" => "([0-9]+)",
-    "%post_id%" => "([0-9]+)",
-    "%rowstart%" => "([0-9]+)",
+    "%nr%"           => "([0-9]+)",
+    "%post_id%"      => "([0-9]+)",
+    "%rowstart%"     => "([0-9]+)",
 
     "%action%" => "(reply|new|edit)",
     "%section%" => "(participated|latest|tracked|unanswered|unsolved)",
@@ -61,10 +61,10 @@ $forum_filterTypes = array(
     "sort-%sort%" => "sort=%sort%",
     "order-%order%" => "order=%order%",
 );
-$fKeyPrefix = "forum/%forum_id%/%parent_id%";
+$fKeyPrefix = "forum/%forum_id%";
 $fKeyAppend = "/filters";
 $fKeyAppend2 = "/page-%rowstart%/filters";
-$fRulePrefix = "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%";
+$fRulePrefix = "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%";
 if (!function_exists("filter_implode")) {
     function filter_implode($arr, $delimiter, $temp_string, &$collect) {
         if ($temp_string != "") {
@@ -106,9 +106,12 @@ $pattern += $filter_sef_rules_rowstart;
 
 // Forum View
 $pattern += array(
-    "forum/create-new-thread" => "infusions/forum/newthread.php",
-    "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
-    "forum" => "infusions/forum/index.php",
+    "forum/create-new-thread"              => "infusions/forum/newthread.php",
+    "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
+    "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
+    "forum/tags"                           => "infusions/forum/tags.php",
+    "forum"                                => "infusions/forum/index.php",
+
 );
 
 // Thread View
@@ -181,5 +184,14 @@ $pattern_tables["%post_id%"] = array(
     "id" => array("%post_id%" => "post_id"),
     "columns" => array(
         "%post_message%" => "post_message",
+    )
+);
+
+$pattern_tables["%tag_id%"] = array(
+    "table"       => DB_FORUM_TAGS,
+    "primary_key" => "tag_id",
+    "id"          => array("%tag_id%" => "tag_id"),
+    "columns"     => array(
+        "%tag_name%" => "tag_title",
     )
 );
