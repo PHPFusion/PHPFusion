@@ -117,7 +117,7 @@ class Poll {
                             }
                         }
                         if (\defender::safe()) {
-                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                            redirect(FORUM."postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                         }
                     }
                     // how to make sure values containing options votes
@@ -170,6 +170,7 @@ class Poll {
                     redirect(FORUM."index.php"); // redirect because the poll id is not available.
                 }
             } else {
+
                 // Save New Poll
                 if (isset($_POST['add_poll'])) {
                     dbquery_insert(DB_FORUM_POLLS, $poll_data, 'save');
@@ -186,7 +187,7 @@ class Poll {
                     }
                     if (\defender::safe()) {
                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'");
-                        redirect(FORUM.'postify.php?post=newpoll&error=0&forum_id='.self::$data['forum_id'].'&thread_id='.self::$data['thread_id']);
+                        redirect(FORUM."postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                     }
 
                 }
@@ -227,7 +228,7 @@ class Poll {
             display_forum_pollform($info);
 
         } else {
-            redirect(FORUM."index.php");
+            redirect(FORUM);
         }
     }
 

@@ -43,7 +43,6 @@ class Forum_Postify extends ForumServer {
 
         add_to_title(self::$locale['global_204']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
-        //$_tdata = \PHPFusion\Forums\ForumServer::thread()->get_threadInfo(); // this is too heavy. lighten the load.
     }
 
     protected function get_postify_error_message() {
@@ -141,6 +140,9 @@ class Forum_Postify extends ForumServer {
                 if (iMOD) addNotice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
+        } else {
+            if (iMOD) addNotice('danger', 'No action taken');
+            redirect(self::$default_redirect_link);
         }
     }
 }
