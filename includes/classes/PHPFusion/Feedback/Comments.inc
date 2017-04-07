@@ -1078,11 +1078,13 @@ class Comments {
                 ) : ''),
                 '{%comment_message%}' => form_textarea("comment_message_reply", "", $this->comment_data['comment_message'],
                     [
-                        "tinymce"  => "simple",
-                        'autosize' => TRUE,
-                        "type"     => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
-                        "input_id" => "comment_message-".$row['comment_id'],
-                        "required" => TRUE
+                        "tinymce"   => "simple",
+                        'autosize'  => TRUE,
+                        "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
+                        //comments_reply_frm-1
+                        "input_id"  => "comment_message-".$row['comment_id'],
+                        'form_name' => 'comments_reply_frm-'.$this->comment_data['comment_cat'],
+                        "required"  => TRUE
                     ]),
                 '{%comment_captcha%}' => $_CAPTCHA_HTML,
                 '{%comment_post%}'    => form_button('post_comment', fusion_get_locale('c102'), $row['comment_id'], [
