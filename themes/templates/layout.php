@@ -73,21 +73,6 @@ echo "<script type='text/javascript'>!window.jQuery && document.write('<script s
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
 echo "</head>\n";
 
-$o_param = [
-    ':user_id'   => 0,
-    ':online_ip' => USER_IP,
-];
-if (iMEMBER) {
-    $o_param[':user_id'] = fusion_get_userdata('user_id');
-}
-// Online users database -- to core level whether panel is on or not
-if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:online_ip", $o_param)) {
-    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
-} else {
-    dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
-}
-dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (TIME - 60)]);
-
 /**
  * new constant - THEME_BODY;
  * replace <body> tags with your own theme definition body tags. Some body tags require additional params

@@ -80,10 +80,10 @@ echo "<div class='well'>".$locale['time_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466']."):</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466'].")</strong></div>\n";
 echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";

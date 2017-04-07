@@ -178,7 +178,6 @@ class Comments {
                     $clink = $this->getParams('clink');
 
                     if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
-
                         $edit_query = "
                         SELECT tcm.*
                         FROM ".DB_COMMENTS." tcm
@@ -264,9 +263,9 @@ class Comments {
                         '{%comment_form_title%}'     => ($this->getParams('comment_form_title') ?: $this->locale['c111']),
                         '{%comment_form_id%}'        => $this->getParams('comment_key').'_edit_comment',
                         '{%user_avatar%}'            => $can_post ? $avatar : '',
-                        '{%comment_name_input%}'     => ($can_post ? (iGUEST ? form_text('comment_name', $this->locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_name']) : '') : ''),
-                        '{%comment_subject_input%}'  => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
-                        '{%comment_message_input%}'  => ($can_post ? form_textarea('comment_message', '', $edata['comment_message'],
+                        '{%comment_name_input%}'    => ($can_post ? (iGUEST ? form_text('comment_name', $this->locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_name']) : '') : ''),
+                        '{%comment_subject_input%}' => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
+                        '{%comment_message_input%}' => ($can_post ? form_textarea($edata['comment_cat'] ? 'comment_message_reply' : 'comment_message', '', $edata['comment_message'],
                             array(
                                 'input_id'  => $this->getParams('comment_key')."-comment_message",
                                 'required'  => 1,
@@ -1078,11 +1077,13 @@ class Comments {
                 ) : ''),
                 '{%comment_message%}' => form_textarea("comment_message_reply", "", $this->comment_data['comment_message'],
                     [
-                        "tinymce"  => "simple",
-                        'autosize' => TRUE,
-                        "type"     => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
-                        "input_id" => "comment_message-".$row['comment_id'],
-                        "required" => TRUE
+                        "tinymce"   => "simple",
+                        'autosize'  => TRUE,
+                        "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
+                        //comments_reply_frm-1
+                        "input_id"  => "comment_message-".$row['comment_id'],
+                        'form_name' => 'comments_reply_frm-'.$this->comment_data['comment_cat'],
+                        "required"  => TRUE
                     ]),
                 '{%comment_captcha%}' => $_CAPTCHA_HTML,
                 '{%comment_post%}'    => form_button('post_comment', fusion_get_locale('c102'), $row['comment_id'], [
