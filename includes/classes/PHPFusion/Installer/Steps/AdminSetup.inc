@@ -207,18 +207,13 @@ class InstallerAdminSetup extends Install_Core {
                 'error_text' => self::$locale['setup_5011']
             )
         );
-        $timezones = timezone_abbreviations_list();
-        $timezoneArray = array();
-        foreach ($timezones as $zones) {
-            foreach ($zones as $zone) {
-                if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
-                    if (!in_array($zone['timezone_id'], $timezoneArray)) {
-                        $timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
-                    }
-                }
-            }
-        }
-        unset($timezones);
+		$timezones = DateTimeZone::listIdentifiers(DateTimeZone::AMERICA | DateTimeZone::AFRICA | DateTimeZone::ARCTIC | DateTimeZone::ASIA | DateTimeZone::ATLANTIC | DateTimeZone::EUROPE | DateTimeZone::INDIAN | DateTimeZone::PACIFIC); //gives both african and american time zones
+		foreach ($timezones as $zone) {
+			$zone = explode('/', $zone);
+			if (!empty($zone[1])) {
+				$timezoneArray[$zone[0].'/'.$zone[1]] = str_replace('_', ' ', $zone[1]);
+			}
+		}
         $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
         $content .= "<hr />\n";
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
