@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace ThemePack\Nebula;
 
-use PHPFusion\PrivateMessages;
 use PHPFusion\SiteLinks;
 use ThemeFactory\Core;
 use ThemeFactory\Lib\Installer\HomeInstall;
@@ -63,8 +62,8 @@ class MainFrame extends Core {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
 
-            add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");
-            //add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
+            add_to_footer("<script src='".THEME."themefactory/lib/js/wow.min.js'></script>");
+            //add_to_footer("<script src='".THEME."themefactory/lib/js/jquery.nicescroll.min.js'></script>");
             /*add_to_jquery("
             $('html').niceScroll({
                 touchbehavior: false,
@@ -138,7 +137,7 @@ class MainFrame extends Core {
             })
         ");
 
-        if ((AU_CENTER || ($this->getParam('upper_content')) && $this->getParam('upper'))) :
+        if ((defined('AU_CENTER') && AU_CENTER || ($this->getParam('upper_content')) && $this->getParam('upper'))) :
             echo "<div class='showcase'>\n";
             if ($this->getParam('upper_container')) {
                 echo "<div class='container'>\n";
@@ -169,7 +168,7 @@ class MainFrame extends Core {
             echo "</div>\n";
         endif;
 
-        if (U_CENTER) :
+        if (defined('U_CENTER') && U_CENTER) :
             echo "<section class='nebulaContentTop'>\n";
             echo "<div class='container'>\n";
             echo U_CENTER;
@@ -181,10 +180,10 @@ class MainFrame extends Core {
 
         $side_span = 3;
         $main_span = 12;
-        if (RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
+        if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
             $main_span = $main_span - $side_span;
         }
-        if (LEFT) :
+        if (defined('LEFT') && LEFT) :
             echo "<div class='nebulaCanvas off'>\n";
             echo "<a class='canvas-toggle' href='#' data-target='nebulaCanvas'><i class='fa fa-bars fa-lg'></i></a>\n";
             echo LEFT;
@@ -208,7 +207,7 @@ class MainFrame extends Core {
         echo CONTENT;
         echo "</div>\n";
 
-        if ($this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
+        if (defined('RIGHT') && $this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
             echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
             echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
             echo "</div>\n";
@@ -220,7 +219,7 @@ class MainFrame extends Core {
             echo "</section>\n";
         endif;
 
-        if (L_CENTER && $this->getParam('l_center')) :
+        if (defined('L_CENTER') && L_CENTER && $this->getParam('l_center')) :
             echo "<section class='nebulaContentBottom'>\n";
             if ($this->getParam('l_center_container') === TRUE) :
                 echo "<div class='container'>\n";
@@ -235,7 +234,7 @@ class MainFrame extends Core {
     }
 
     private function NebulaFooter() {
-        if (BL_CENTER && $this->getParam('bl_lower')) :
+        if (defined('BL_CENTER') && BL_CENTER && $this->getParam('bl_lower')) :
             echo "<section class='nebulaBottom'>\n";
             if ($this->getParam('bl_lower_container') === TRUE) :
                 echo "<div class='container'>\n";

@@ -18,7 +18,6 @@
 
 namespace ThemePack\Nebula\Templates;
 
-use PHPFusion\Panels;
 use ThemeFactory\Core;
 
 /**

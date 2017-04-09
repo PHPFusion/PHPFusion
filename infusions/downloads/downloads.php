@@ -122,13 +122,11 @@ if (isset($_GET['download_id'])) {
 					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 	 				SUM(tr.rating_vote) AS sum_rating,
 					COUNT(tr.rating_item_id) AS count_votes,
-					COUNT(td.comment_item_id) AS count_comment,
 					d.download_datestamp as last_updated
 					FROM ".DB_DOWNLOADS." d
 					INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
 					LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
-					LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
 					".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
 					download_id='".intval($_GET['download_id'])."'
 					GROUP BY download_id";
@@ -235,13 +233,11 @@ if (isset($_GET['download_id'])) {
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 				IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating,
 				COUNT(tr.rating_item_id) AS count_votes,
-				COUNT(td.comment_item_id) AS count_comment,
 				MAX(d.download_datestamp) as last_updated
 				FROM ".DB_DOWNLOADS." d
 				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
 				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
 				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
-				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
 				".(multilang_table("DL") ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('download_visibility')."
 				AND download_cat = '".intval($_GET['cat_id'])."'
 				GROUP BY d.download_id
@@ -271,13 +267,11 @@ if (isset($_GET['download_id'])) {
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 				IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating,
 				COUNT(tr.rating_item_id) AS count_votes,
-				COUNT(td.comment_item_id) AS count_comment,
 				max(d.download_datestamp) as last_updated
 				FROM ".DB_DOWNLOADS." d
 				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
 				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
 				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
-				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
 				".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
 				".$condition."
 				GROUP BY d.download_id
@@ -328,6 +322,14 @@ if (dbrows($author_result)) {
 }
 render_downloads($info);
 require_once THEMES."templates/footer.php";
+function count_db($id, $type) {
+            $count_db = dbarray(dbquery("SELECT
+				COUNT(comment_item_id) AS count_comment
+				FROM ".DB_COMMENTS."
+				WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
+             "));
+return $count_db['count_comment'];
+}
 /**
  * Returns Downloads Category Hierarchy Tree Data
  *

@@ -11,3 +11,5 @@ $locale['NB_103'] = "Submissions Properties";
 $locale['NB_200'] = "By";
 // News Module
 $locale['NEWS_001'] = "Recent News";
+// Widget
+$locale['WIDGET_001'] = "Theme Settings Updated";
