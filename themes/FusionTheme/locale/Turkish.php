@@ -11,3 +11,5 @@ $locale['NB_103'] = "Gönderi Özellikleri";
 $locale['NB_200'] = "By";
 // News Module
 $locale['NEWS_001'] = "Son Haberler";
+// Widget
+$locale['WIDGET_001'] = "Tema Ayarları Güncellendi";
