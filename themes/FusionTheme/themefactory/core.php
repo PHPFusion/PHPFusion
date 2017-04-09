@@ -38,48 +38,48 @@ class Core {
         'left_pre_content'    => '',
         'left_post_content'   => '',
 
-        'user_1'           => TRUE,
-        'user_1_content'   => '',
-        'user_1_container' => TRUE,
+        'user_1'              => TRUE,
+        'user_1_content'      => '',
+        'user_1_container'    => TRUE,
 
-        'user_2'           => TRUE,
-        'user_2_content'   => '',
-        'user_2_container' => TRUE,
+        'user_2'              => TRUE,
+        'user_2_content'      => '',
+        'user_2_container'    => TRUE,
 
-        'user_3'           => TRUE,
-        'user_3_content'   => '',
-        'user_3_container' => TRUE,
+        'user_3'              => TRUE,
+        'user_3_content'      => '',
+        'user_3_container'    => TRUE,
 
-        'user_4' => TRUE,
-        'user_4_content' => '',
-        'user_4_container' => TRUE,
+        'user_4'              => TRUE,
+        'user_4_content'      => '',
+        'user_4_container'    => TRUE,
 
         /*
          * AU_UPPER
          */
-        'upper'              => TRUE, //status
-        'upper_content'      => '',
-        'upper_container'    => TRUE,
+        'upper'               => TRUE, //status
+        'upper_content'       => '',
+        'upper_container'     => TRUE,
         /*
          * U_CENTER
          */
-        'u_center'           => TRUE,
-        'u_center_content'   => '',
-        'u_center_container' => TRUE,
+        'u_center'            => TRUE,
+        'u_center_content'    => '',
+        'u_center_container'  => TRUE,
         /*
          * BL_LOWER
          */
-        'bl_lower'           => TRUE, // BL_LOWER
-        'bl_lower_content'   => '',
-        'bl_lower_container' => TRUE,
+        'bl_lower'            => TRUE, // BL_LOWER
+        'bl_lower_content'    => '',
+        'bl_lower_container'  => TRUE,
         /*
          * L_CENTER
          */
-        'l_center'           => TRUE, // BL_LOWER
-        'l_center_content'   => '',
-        'l_center_container' => TRUE,
+        'l_center'            => TRUE, // BL_LOWER
+        'l_center_content'    => '',
+        'l_center_container'  => TRUE,
 
-        'footer' => TRUE, // has footer
+        'footer'              => TRUE, // has footer
         'footer_container'    => TRUE,
 
         'copyright'           => TRUE,
@@ -89,7 +89,7 @@ class Core {
         'left_span'           => 2,
         'left_class'          => '',
         'main_span'           => '',
-        'main_class'         => '',
+        'main_class'          => '',
         'right_is_affix'      => FALSE, // @todo: auto affix
         'right_pre_content'   => '', // right side top content
         'right_post_content'  => '', // right side bottom content
@@ -191,8 +191,4 @@ class Core {
 
     private function __clone() {
     }
-
-    private function __wakeup() {
-    }
-
 }
