@@ -10,4 +10,4 @@ $locale['NB_103'] = "Gönderi Özellikleri";
 // Nebula News Template
 $locale['NB_200'] = "By";
 // News Module
-$locale['NEWS_001'] = "Son gönderiler";
+$locale['NEWS_001'] = "Son Haberler";
