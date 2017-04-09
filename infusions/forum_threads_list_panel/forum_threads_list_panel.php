@@ -51,7 +51,7 @@ if (dbrows($result)) {
     opentable($locale['global_040']);
         echo "<table class='table table-responsive table-striped'>";
             echo "<thead><tr>";
-                echo "<td>&nbsp;</td>\n";
+    echo "<td class='min'>&nbsp;</td>\n";
                 echo "<td><strong>".$locale['global_044']."</strong></td>\n";
                 echo "<td><strong>".$locale['global_045']."</strong></td>\n";
                 echo "<td><strong>".$locale['global_046']."</strong></td>\n";
@@ -76,8 +76,8 @@ if (dbrows($result)) {
                         }
                         echo "</td>\n";
                         echo "<td>".$thread_poll."
-                        <a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)." <i class='fa fa-external-link-square'></i></a>
-                        <br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)." <i class='fa fa-external-link-square'></i></a></td>\n";
+                        <a class='strong' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a>
+                        <br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)."</a></td>\n";
                         echo "<td>".$data['thread_views']."</td>\n";
                         echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
                         echo "<td>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";

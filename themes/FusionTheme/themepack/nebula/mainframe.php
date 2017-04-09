@@ -311,7 +311,7 @@ class MainFrame extends Core {
 
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
-        echo "<div class='col-xs-12 col-sm-4'><h4 class='text-white'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
+        echo "<div class='col-xs-12 col-sm-4'><h4>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
         echo "<p>\n";
         if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
             echo showrendertime();
