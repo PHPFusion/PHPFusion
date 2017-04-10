@@ -224,8 +224,9 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "<div class='clearfix'>\n";
         echo "<span class='small pull-right'>".self::$locale['535']."</span>\n";
         echo "<label for='attachmax_count'>".self::$locale['534']."</label>\n";
+        $range = range(1, 10);
         echo form_select('forum_attachmax_count', '', $forum_settings['forum_attachmax_count'], [
-            'options'    => range(1, 10),
+            'options'    => array_combine(range(1, count($range)), array_values($range)),
             'error_text' => self::$locale['error_value'],
             'width'      => '100%'
         ]);
