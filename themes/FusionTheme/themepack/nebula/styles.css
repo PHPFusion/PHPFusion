@@ -42,8 +42,9 @@ ul > li {
     list-style: none;
 }
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
-    background-size: cover;
+    /* background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
+    background-size: cover; */
+    background: #171F25;
     min-height: 300px;
 }
 
