@@ -60,22 +60,17 @@ class NewThread extends ForumServer {
 				AND ".groupaccess('f.forum_access')."
 				"));
 
-                if ($forum_data['forum_type'] == 1) {
+                if ($forum_data['forum_type'] == 1 or $forum_data['forum_lock']) {
                     redirect(INFUSIONS."forum/index.php");
                 }
 
-                // Use the new permission settings
-                self::setPermission($forum_data);
-
                 $forum_data['lock_edit'] = $forum_settings['forum_edit_lock'];
-
+                self::setPermission($forum_data);
                 if (self::getPermission("can_post") && self::getPermission("can_access")) {
-
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
                         'title' => $forum_data['forum_name']
                     ]);
-
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
                         'title' => self::$locale['forum_0057']
@@ -206,7 +201,7 @@ class NewThread extends ForumServer {
                         'post_editreason' => '',
                         'post_hidden'     => 0,
                         'notify_me'       => isset($_POST['notify_me']) ? 1 : 0,
-                        'post_locked'     => 0, //$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+                        'post_locked'     => 0,
                     );
 
                     // Execute post new thread
@@ -412,21 +407,18 @@ class NewThread extends ForumServer {
                 }
 
             } else {
-
                 /*
                  * Quick New Forum Posting.
                  * Does not require to run permissions.
                  * Does not contain forum poll.
                  * Does not contain attachment
                  */
-
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_type !='1'")) {
                     redirect(FORUM.'index.php');
                 }
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
                     redirect(FORUM.'index.php');
                 }
-
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
                 $thread_data = array(
                     'forum_id'          => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,

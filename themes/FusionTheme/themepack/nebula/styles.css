@@ -487,6 +487,10 @@ Buttons
     text-align: start;
     height: 45px;
 }
+
+.btn.btn-file, .form-control.file-caption {
+    padding-top: 12px;
+}
 /* btn-success */
 .btn.btn-success {
     color: rgb(255, 255, 255);
@@ -1072,4 +1076,35 @@ Comments
     margin: 15px 0;
     border-left: 1px solid #ccc;
     padding-left: 15px;
+}
+
+.small, .text-smaller {
+    font-size: 90% !important;
+}
+
+/*
+Forum
+ */
+.forum.label {
+    padding: 6px;
+}
+
+.forum.label > .detail {
+    padding: 5px .833em;
+    margin-left: 5px;
+}
+
+.dropdown-menu.forum-post-options li > span {
+    padding: 3px 20px;
+    display: block;
+}
+
+.emulated-legend {
+    font-size: 14px !important;
+}
+
+.attachments-list img {
+    width: 300px !important;
+    height: auto !important;
+    display: inline-block !important;
 }
