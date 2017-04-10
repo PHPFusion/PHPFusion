@@ -42,8 +42,7 @@ ul > li {
     list-style: none;
 }
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
-    background-size: cover;
+    background: #22498E;
     min-height: 300px;
 }
 
@@ -307,18 +306,22 @@ header h1 {
     border-top: 1px solid #313646;
 }
 
+.nicescroll-cursors {
+    background: #ccc !important;
+}
 .nebulaCanvas {
-    width: 250px;
+    width: 300px;
+    border-right: 1px solid #ccc;
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    background: #1e2024;
+    background: #fff;
     z-index: 21;
     transition: all 0.3s ease-in-out;
 }
 .nebulaCanvas .contentLeft {
-    padding: 3% 25px;
+    padding: 30px;
     height: 100vh;
     overflow-y:scroll;
 }
@@ -327,19 +330,23 @@ header h1 {
     margin-left: 100%;
     top: 200px;
     display: block;
-    background: #1e2024;
+    background: #fff;
     padding: 25px;
 }
-
 .nebulaCanvas.off {
-    left: -250px;
+    left: -300px;
 }
-
 .nebulaCanvas a {
-    color: #fff;
     text-decoration: none;
+    color: #444;
+    font-weight: 700;
 }
 
+.nebulaCanvas > .canvas-toggle {
+    color: #444;
+    border: 1px solid #ccc;
+    border-left: none;
+}
 .nebulaCanvas a:hover,
 .nebulaCanvas a:focus {
     color: #01ACDE;
@@ -355,7 +362,6 @@ header h1 {
 .nebulaCanvas .contentLeft .panel,
 .nebulaCanvas .contentLeft .panel-default .panel-heading,
 .nebulaCanvas .contentLeft .panel-footer {
-    color: #fff;
     border-color: rgba(255, 255, 255, .1);
 }
 
@@ -366,14 +372,6 @@ header h1 {
 .control-label > img {
     margin-right: 5px;
     width: 24px;
-}
-
-/******************
-Left
-******************/
-.contentLeft > .openSide,
-.contentLeft > .openSide > .title {
-    color: #fff;
 }
 
 /*
@@ -462,22 +460,35 @@ Buttons
     font-weight: 600;
 }
 
+.input-group > .input-group-btn > .btn {
+    height: 45px;
+}
 .form-control {
     color: #626262;
     background-color: rgba(255, 255, 255, 1);
-    border-color: #EBEBEB;
-    padding: 10px;
     outline: none;
-    margin: 0;
+    margin: 0 0 20px;
     max-width: 100%;
     display: block;
-    margin-bottom: 20px;
     font-size: 13px;
-    border-width: 1px;
-    border-style: solid;
     border-radius: 0;
     box-sizing: border-box;
     -webkit-appearance: none;
+    border: 1px solid #CCC;
+    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    height: 45px;
+}
+
+.btn.btn-file, .form-control.file-caption {
+    padding-top: 12px;
 }
 /* btn-success */
 .btn.btn-success {
@@ -565,9 +576,8 @@ Buttons
 }
 
 .btn.btn-default {
-    color: rgb(255, 255, 255);
-    background-color: rgb(59, 65, 95);
-    border-color: rgb(59, 65, 95);
+    color: #747474;
+    background-color: #fff;
 }
 
 .btn.btn-default.btn-bordered {
@@ -577,9 +587,7 @@ Buttons
 }
 
 .btn.btn-default:hover, .btn.btn-default:focus {
-    color: rgb(255, 255, 255);
-    border-color: rgb(92, 107, 192);
-    background-color: rgb(92, 107, 192);
+    background-color: #EBEBEB;
 }
 
 .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-primary:hover, .btn.btn-primary:focus {
@@ -1067,4 +1075,35 @@ Comments
     margin: 15px 0;
     border-left: 1px solid #ccc;
     padding-left: 15px;
+}
+
+.small, .text-smaller {
+    font-size: 90% !important;
+}
+
+/*
+Forum
+ */
+.forum.label {
+    padding: 6px;
+}
+
+.forum.label > .detail {
+    padding: 5px .833em;
+    margin-left: 5px;
+}
+
+.dropdown-menu.forum-post-options li > span {
+    padding: 3px 20px;
+    display: block;
+}
+
+.emulated-legend {
+    font-size: 14px !important;
+}
+
+.attachments-list img {
+    width: 300px !important;
+    height: auto !important;
+    display: inline-block !important;
 }

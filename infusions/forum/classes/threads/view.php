@@ -74,12 +74,7 @@ class ViewThread extends ForumServer {
             }
 
         } else {
-
-            $response = self::check_download_request();
-            if ($response == true) {
-                redirect(clean_request("", array("getfile"), false));
-            }
-
+            self::check_download_request();
             // +1 threadviews
             $this->increment_thread_views($info['thread']['thread_id']);
 
@@ -741,33 +736,24 @@ class ViewThread extends ForumServer {
      * @return bool
      */
     public static function check_download_request() {
-
         $locale = fusion_get_locale("", FORUM_LOCALE);
-        $response = FALSE;
-
-        if (isset($_GET['getfile']) && isnum($_GET['getfile'])) {
-            $result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id='".$_GET['getfile']."'");
+        if (isset($_GET['getfiles']) && isnum($_GET['getfiles'])) {
+            $result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id='".$_GET['getfiles']."'");
             if (dbrows($result)) {
                 $data = dbarray($result);
                 if (file_exists(FORUM."attachments/".$data['attach_name'])) {
                     dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET attach_count=attach_count+1 WHERE attach_id='".$data['attach_id']."'");
-                    //ob_end_clean();
-
                     require_once INCLUDES."class.httpdownload.php";
                     $object = new httpdownload();
                     $object->set_byfile(FORUM."attachments/".$data['attach_name']);
                     $object->use_resume = TRUE;
                     $object->download();
-
-                    $response = TRUE;
-
+                    exit;
                 } else {
                     addNotice("warning", $locale['forum_0398']);
                 }
             }
         }
-
-        return $response;
     }
 
     /**

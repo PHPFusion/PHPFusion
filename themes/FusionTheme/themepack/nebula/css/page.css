@@ -1,6 +1,6 @@
 #home_carousel {
     position: relative;
-    margin-top: -320px;
+    margin-top: -400px;
     height: 700px;
 }
 
@@ -135,6 +135,7 @@
 #showcase {
     height: 700px;
     overflow: hidden;
+    background: #F1F3F2;
 }
 
 #showcase:after {

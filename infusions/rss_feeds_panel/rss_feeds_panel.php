@@ -33,10 +33,10 @@ add_to_head('<style type="text/css">
 .rss-button {
     background: #FF9800;
     padding: 1px 15px;
-    color: #fff;
+    color: #fff !important;
     border-radius: 4px;
     margin: 3px 0;
-    display: block;
+    display: block;    
 }
 .rss-button:hover,
 .rss-button:focus {
@@ -45,8 +45,7 @@ add_to_head('<style type="text/css">
     text-decoration: none;
 }
 .rss-button .fa {
-    padding-right: 4px;
-    border-right: 1px solid #FFB74D;
+    padding-right: 5px;
 }
 </style>');
 

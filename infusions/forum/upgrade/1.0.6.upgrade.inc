@@ -24,17 +24,21 @@ $locale = fusion_get_locale("",
 );
 
 $inf_version = '1.0.6';
-
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('upvote_points', '2', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('downvote_points', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('answering_points', '15', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_upvote', '100', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', 'forum')";
-
+$check_array = [
+    'upvote_points'      => 2,
+    'downvote_points'    => 1,
+    'answering_points'   => 15,
+    'points_to_upvote'   => 100,
+    'points_to_downvote' => 100,
+];
+foreach ($check_array as $name => $val) {
+    if (!dbcount("(setting_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
+    }
+}
 if (!column_exists('forum_threads', 'thread_bounty')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL DEFAULT '0' AFTER thread_answered";
 }
-
 if (!column_exists('forum_threads', 'thread_bounty_description')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_description TEXT NOT NULL AFTER thread_bounty";
 }

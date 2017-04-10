@@ -96,6 +96,9 @@ a:hover, a:focus {
     margin: 24px;
 }
 
+#devlpr .apps {
+    float: left;
+}
 #devlpr .left_menu h2 {
     width: 140px;
     height: 70px;
@@ -241,8 +244,6 @@ a:hover, a:focus {
     font-weight: 600;
     font-size: 1rem;
     margin-top: 16px;
-    text-overflow: ellipsis;
-    overflow: hidden;
     display: block;
     white-space: nowrap;
 }
@@ -1614,6 +1615,8 @@ textarea.form-control {
     padding: 21px 15px !important;
     font-family: serif;
     line-height: 30px;
+    overflow-y: auto !important;
+    max-height: 300px;
 }
 
 /* Site Information */

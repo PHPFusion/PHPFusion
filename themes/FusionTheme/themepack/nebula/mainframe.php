@@ -63,16 +63,16 @@ class MainFrame extends Core {
             $this->NebulaHeader();
 
             add_to_footer("<script src='".THEME."themefactory/lib/js/wow.min.js'></script>");
-            //add_to_footer("<script src='".THEME."themefactory/lib/js/jquery.nicescroll.min.js'></script>");
-            /*add_to_jquery("
-            $('html').niceScroll({
-                touchbehavior: false,
+            add_to_footer("<script src='".THEME."themefactory/lib/js/jquery.nicescroll.min.js'></script>");
+            add_to_jquery("
+            $('.contentLeft').niceScroll({
+                touchbehavior: true,
                 cursorborder: 'none',
                 cursorwidth: '8px',
-                background: '#666',
+                background: '#fff',
                 zindex: '999'
             });
-            ");*/
+            ");
         }
         $this->NebulaBody();
 
