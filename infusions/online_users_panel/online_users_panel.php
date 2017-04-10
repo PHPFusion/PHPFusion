@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 $locale = fusion_get_locale();
-openside("<i class='fa fa-clock-o fa-fw'></i> ".$locale['global_010']);
+openside($locale['global_010']);
 $user_online_query = "SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id";
 $result = dbquery($user_online_query);
 $guests = 0;

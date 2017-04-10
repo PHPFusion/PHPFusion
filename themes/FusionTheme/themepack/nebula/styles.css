@@ -42,9 +42,7 @@ ul > li {
     list-style: none;
 }
 .headerBg {
-    /* background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
-    background-size: cover; */
-    background: #171F25;
+    background: #22498E;
     min-height: 300px;
 }
 
@@ -308,18 +306,22 @@ header h1 {
     border-top: 1px solid #313646;
 }
 
+.nicescroll-cursors {
+    background: #ccc !important;
+}
 .nebulaCanvas {
-    width: 250px;
+    width: 300px;
+    border-right: 1px solid #ccc;
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    background: #1e2024;
+    background: #fff;
     z-index: 21;
     transition: all 0.3s ease-in-out;
 }
 .nebulaCanvas .contentLeft {
-    padding: 3% 25px;
+    padding: 30px;
     height: 100vh;
     overflow-y:scroll;
 }
@@ -328,19 +330,23 @@ header h1 {
     margin-left: 100%;
     top: 200px;
     display: block;
-    background: #1e2024;
+    background: #fff;
     padding: 25px;
 }
-
 .nebulaCanvas.off {
-    left: -250px;
+    left: -300px;
 }
-
 .nebulaCanvas a {
-    color: #fff;
     text-decoration: none;
+    color: #444;
+    font-weight: 700;
 }
 
+.nebulaCanvas > .canvas-toggle {
+    color: #444;
+    border: 1px solid #ccc;
+    border-left: none;
+}
 .nebulaCanvas a:hover,
 .nebulaCanvas a:focus {
     color: #01ACDE;
@@ -367,14 +373,6 @@ header h1 {
 .control-label > img {
     margin-right: 5px;
     width: 24px;
-}
-
-/******************
-Left
-******************/
-.contentLeft > .openSide,
-.contentLeft > .openSide > .title {
-    color: #fff;
 }
 
 /*
@@ -463,6 +461,9 @@ Buttons
     font-weight: 600;
 }
 
+.input-group > .input-group-btn > .btn {
+    height: 45px;
+}
 .form-control {
     color: #626262;
     background-color: rgba(255, 255, 255, 1);
