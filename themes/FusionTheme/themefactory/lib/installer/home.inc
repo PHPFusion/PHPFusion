@@ -26,7 +26,7 @@ class HomeInstall {
 
     public function __construct() {
         // Page
-        self::$locale = fusion_get_locale('', THEME."themegactory/lib/installer/locale/".LANGUAGE.".php");
+        self::$locale = fusion_get_locale('', THEME."themefactory/lib/installer/locale/".LANGUAGE.".php");
         $row_id = [];
 
         $cpData = array(
