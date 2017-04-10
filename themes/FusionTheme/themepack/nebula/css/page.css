@@ -135,6 +135,7 @@
 #showcase {
     height: 700px;
     overflow: hidden;
+    background: #F1F3F2;
 }
 
 #showcase:after {
