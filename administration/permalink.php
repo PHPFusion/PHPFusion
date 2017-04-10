@@ -306,7 +306,7 @@ echo "</div>\n";
 if (!MOD_REWRITE) {
     echo "<div class='alert alert-warning'><i class='fa fa-warning fa-fw m-r-10'></i>".$locale['rewrite_disabled']."</div>\n";
 }
-echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-t-20 m-b-20");
+echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-t-20");
 switch ($_GET['section']) {
     case "pl":
         // edit
