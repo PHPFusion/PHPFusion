@@ -1614,6 +1614,8 @@ textarea.form-control {
     padding: 21px 15px !important;
     font-family: serif;
     line-height: 30px;
+    overflow-y: auto !important;
+    max-height: 300px;
 }
 
 /* Site Information */
