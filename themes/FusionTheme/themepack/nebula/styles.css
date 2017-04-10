@@ -572,9 +572,8 @@ Buttons
 }
 
 .btn.btn-default {
-    color: rgb(255, 255, 255);
-    background-color: rgb(59, 65, 95);
-    border-color: rgb(59, 65, 95);
+    color: #747474;
+    background-color: #fff;
 }
 
 .btn.btn-default.btn-bordered {
@@ -584,9 +583,7 @@ Buttons
 }
 
 .btn.btn-default:hover, .btn.btn-default:focus {
-    color: rgb(255, 255, 255);
-    border-color: rgb(92, 107, 192);
-    background-color: rgb(92, 107, 192);
+    background-color: #EBEBEB;
 }
 
 .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-primary:hover, .btn.btn-primary:focus {
