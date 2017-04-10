@@ -32,6 +32,9 @@ class Login {
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
+        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
+        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
+        Core::setParam('body_class', 'm-0');
         Core::setParam('body_container', FALSE);
         Core::setParam('copyright', FALSE);
 

@@ -465,19 +465,25 @@ Buttons
 .form-control {
     color: #626262;
     background-color: rgba(255, 255, 255, 1);
-    border-color: #EBEBEB;
-    padding: 10px;
     outline: none;
-    margin: 0;
+    margin: 0 0 20px;
     max-width: 100%;
     display: block;
-    margin-bottom: 20px;
     font-size: 13px;
-    border-width: 1px;
-    border-style: solid;
     border-radius: 0;
     box-sizing: border-box;
     -webkit-appearance: none;
+    border: 1px solid #CCC;
+    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    height: 45px;
 }
 /* btn-success */
 .btn.btn-success {
