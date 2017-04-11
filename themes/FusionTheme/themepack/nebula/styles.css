@@ -362,7 +362,6 @@ header h1 {
 .nebulaCanvas .contentLeft .panel,
 .nebulaCanvas .contentLeft .panel-default .panel-heading,
 .nebulaCanvas .contentLeft .panel-footer {
-    color: #fff;
     border-color: rgba(255, 255, 255, .1);
 }
 
