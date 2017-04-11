@@ -68,11 +68,11 @@ class NewThread extends ForumServer {
                 self::setPermission($forum_data);
                 if (self::getPermission("can_post") && self::getPermission("can_access")) {
                     BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
                     ]);
                     BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => self::$locale['forum_0057']
                     ]);
 
@@ -320,7 +320,7 @@ class NewThread extends ForumServer {
                                 }
                             }
                             if (\defender::safe()) {
-                                redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                                redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                             }
                         }
                     }
@@ -595,7 +595,7 @@ class NewThread extends ForumServer {
                                 }
 
                                 if (\defender::safe()) {
-                                    redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                                    redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                                 }
 
                             } else {
