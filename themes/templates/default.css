@@ -1291,19 +1291,18 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .forum.label > .detail {
     background: rgba(0, 0, 0, .1);
-    margin: 0 -.833em -.5833em .5em;
-    padding: .5833em .833em;
+    margin: -5px -10px;
+    padding: 6px 12px;
     border-radius: 0 .28571429rem .28571429rem 0;
     display: inline-block;
     vertical-align: top;
     font-weight: 700;
-    margin-left: 1em;
     opacity: .8;
 }
 
 .forum.label > i {
-    margin-top: 7px;
-    margin-right: 0;
+    margin: 3px 10px 0 0;
+    padding-right: 20px;
 }
 
 .forum.label-super-admin {

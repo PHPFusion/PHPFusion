@@ -1085,13 +1085,9 @@ Comments
 /*
 Forum
  */
-.forum.label {
-    padding: 6px;
-}
-
 .forum.label > .detail {
-    padding: 5px .833em;
-    margin-left: 5px;
+    padding: 9px .833em;
+    margin-top: -3px;
 }
 
 .dropdown-menu.forum-post-options li > span {
