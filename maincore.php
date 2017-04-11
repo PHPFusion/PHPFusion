@@ -94,9 +94,9 @@ $mysql_queries_time = array();
 $locale = array();
 
 // Calculate ROOT path for Permalinks
-$current_path = $_SERVER['REQUEST_URI'];
+$current_path = html_entity_decode($_SERVER['REQUEST_URI']);
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
-    $current_path = str_replace($settings['site_path'], "", $current_path);
+    $current_path = str_replace($settings['site_path'], '', $current_path);
 } else {
     $current_path = ltrim($current_path, "/");
 }

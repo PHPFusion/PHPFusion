@@ -697,7 +697,7 @@ abstract class RewriteDriver {
      */
     protected static function normalize($string) {
         $table = array(
-            '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
+            '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a', "(" => '(', ")" => ")",
             'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
             'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
             'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
@@ -792,8 +792,7 @@ abstract class RewriteDriver {
                     preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
 
                     if (empty($output_matches[0]) && !empty($_POST)) {
-                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches,
-                            PREG_PATTERN_ORDER);
+                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
                     }
 
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);

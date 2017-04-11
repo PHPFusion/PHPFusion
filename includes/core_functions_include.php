@@ -210,7 +210,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
  * @return string
  */
 function cleanurl($url) {
-    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
+    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "", "", "*");
     $safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
 
     return str_replace($bad_entities, $safe_entities, $url);

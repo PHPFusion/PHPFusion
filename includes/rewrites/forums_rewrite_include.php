@@ -22,12 +22,12 @@ if (!defined("IN_FUSION")) {
 
 $regex = array(
     // Always the last key, they cannot stack together due to \W. Will crash
-    "%forum_name%"   => "([0-9a-zA-Z._\W]+)",
+    "%forum_name%"   => "([0-9a-zA-Z._()\W]+)",
     "%tag_id%"       => "([0-9]+)",
     "%forum_id%"     => "([0-9]+)",
     "%thread_id%"    => "([0-9]+)",
-    "%tag_name%"     => "([0-9a-zA-Z._\W]+)",
-    "%thread_name%"  => "([0-9a-zA-Z._\W]+)",
+    "%tag_name%"     => "([0-9a-zA-Z._()\W]+)",
+    "%thread_name%"  => "([0-9a-zA-Z._()\W]+)",
     "%track_status%" => "(on|off)",
     "%nr%"           => "([0-9]+)",
     "%post_id%"      => "([0-9]+)",
@@ -100,18 +100,8 @@ array_shift($filter_sef_rules);
 array_shift($filter_sef_rules_rowstart);
 
 // Install Thread Filters
-$pattern += $filter_sef_rules;
-$pattern += $filter_sef_rules_rowstart;
-
-// Forum View
-$pattern += array(
-    "forum/create-new-thread"              => "infusions/forum/newthread.php",
-    "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
-    "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
-    "forum/tags"                           => "infusions/forum/tags.php",
-    "forum"                                => "infusions/forum/index.php",
-
-);
+//$pattern += $filter_sef_rules;
+//$pattern += $filter_sef_rules_rowstart;
 
 // Rules to increment
 /*
@@ -122,21 +112,17 @@ $pattern += array(
 
 // Thread View  viewthread.php
 $pattern += array(
-    "forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%"  => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
-    "forum/%forum_id%/%action%/%thread_id%/%thread_name%"                       => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/%thread_name%/sort-by/%sort_action%"         => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;sort_post=%sort_action%",
-    "forum/thread/view/%thread_id%/%thread_name%"                               => "infusions/forum/viewthread.php?thread_id=%thread_id%",
-
+    "forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%"     => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%"      => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+    "forum/%forum_id%/%action%/%thread_id%/%thread_name%"                           => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/view/%thread_id%/%thread_name%/sort-by/%sort_action%"             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;sort_post=%sort_action%",
+    "forum/thread/view/%thread_id%/%thread_name%"                                   => "infusions/forum/viewthread.php?thread_id=%thread_id%",
     "forum/thread/view/%thread_id%/%thread_name%-row-%rowstart%"                    => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%",
     "forum/thread/view/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%"         => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%",
     "forum/thread/confirm-move/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%" => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%&amp;sv",
     "forum/thread/view-%pid%/%thread_id%/%thread_name%"                             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
     // valid request for router
     "forum/thread/view-%pid%/%thread_id%/%thread_name%#post_%post_id%"              => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
-    // this is not a valid request
-    "forum/thread/oldest/%thread_id%/%thread_name%"                                 => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
-    "forum/thread/latest/%thread_id%/%thread_name%"                                 => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
     "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"              => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"                              => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
     "print/F/%rowstart%/%thread_id%/%thread_name%"                                  => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
@@ -152,8 +138,8 @@ $pattern += array(
 );
 // Postify Redirect
 $pattern += array(
-    "forum/newthread-post/%action%/%error_code%/%parent_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
-    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%"     => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/newthread-post/%action%/%error_code%/%forum_id%/%thread_id%/%thread_name%"         => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
 );
 
 $pattern += array(
@@ -163,6 +149,14 @@ $pattern += array(
     "forum/new-post"                                                => "infusions/forum_threads_list_panel/new_posts.php",
     "forum/tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
     "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
+);
+
+$pattern += array(
+    "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
+    "forum/create-new-thread"              => "infusions/forum/newthread.php",
+    "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
+    "forum/tags"                           => "infusions/forum/tags.php",
+    "forum"                                => "infusions/forum/index.php",
 );
 
 $pattern_tables["%forum_id%"] = array(
