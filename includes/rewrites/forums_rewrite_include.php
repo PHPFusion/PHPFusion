@@ -53,6 +53,7 @@ $pattern = array();
 /**
  * Generate All Possible Filter Rules for SEF Installation
  */
+
 $filter_sef_rules = array();
 $forum_filterTypes = array(
     "time-%time%"   => "time=%time%",
@@ -100,8 +101,8 @@ array_shift($filter_sef_rules);
 array_shift($filter_sef_rules_rowstart);
 
 // Install Thread Filters
-//$pattern += $filter_sef_rules;
-//$pattern += $filter_sef_rules_rowstart;
+$pattern += $filter_sef_rules;
+$pattern += $filter_sef_rules_rowstart;
 
 // Rules to increment
 /*
@@ -109,6 +110,14 @@ array_shift($filter_sef_rules_rowstart);
  * http://localhost/infusions/forum/viewthread.php?action=newpoll&forum_id=2&thread_id=4 -- increment
  * //http://localhost/infusions/forum/viewthread.php?thread_id=4&sort_post=oldest
 */
+
+$pattern += array(
+    "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
+    "forum/create-new-thread"              => "infusions/forum/newthread.php",
+    "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
+    "forum/tags"                           => "infusions/forum/tags.php",
+    "forum"                                => "infusions/forum/index.php",
+);
 
 // Thread View  viewthread.php
 $pattern += array(
@@ -131,7 +140,6 @@ $pattern += array(
 $pattern += array(
     "forum/%section%" => "infusions/forum/index.php?section=%section%",
 );
-
 // Buttons & Forms
 $pattern += array(
     "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
@@ -151,13 +159,6 @@ $pattern += array(
     "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
 );
 
-$pattern += array(
-    "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
-    "forum/create-new-thread"              => "infusions/forum/newthread.php",
-    "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
-    "forum/tags"                           => "infusions/forum/tags.php",
-    "forum"                                => "infusions/forum/index.php",
-);
 
 $pattern_tables["%forum_id%"] = array(
     "table"       => DB_FORUMS,

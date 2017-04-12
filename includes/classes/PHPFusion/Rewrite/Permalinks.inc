@@ -68,7 +68,6 @@ class Permalinks extends RewriteDriver {
 
         // Output and Redirect 301 if NON-SEO url found
         $this->replace_output();
-
         // Prepend all the File/Images/CSS/JS etc Links with ROOT path
         /*
          * This does not apply to page that is not SEO enabled driver.
@@ -95,6 +94,7 @@ class Permalinks extends RewriteDriver {
                     $this->output = preg_replace($search, $replace, $this->output);
                 }
             }
+            //print_p($this->output);
         }
 
         // Alias translation
@@ -105,6 +105,7 @@ class Permalinks extends RewriteDriver {
                     $this->output = preg_replace($search, $replace, $this->output);
                 }
             }
+
         }
 
         // Alias Redirecting
@@ -148,6 +149,8 @@ class Permalinks extends RewriteDriver {
             }
 
             $this->output = $basedir;
+
+            print_p($this->output);
         }
 
     }
