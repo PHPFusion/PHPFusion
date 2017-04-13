@@ -493,12 +493,13 @@ function parsesmileys($message) {
     if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
         foreach (cache_smileys() as $smiley) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
-            $smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+            $smiley_image = get_image("smiley_".$smiley['smiley_text']);
+            $smiley_image = "<img src='$smiley_image' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
             $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
         }
     }
 
-    return fusion_parse_user($message);
+    return $message;
 }
 
 /**
@@ -590,6 +591,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $default_image_folder ? parse_imageDir($text, $default_image_folder) : $text;
     $text = $smileys ? parsesmileys($text) : $text;
     $text = $bbcode ? parseubb($text) : $text;
+    $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
     if (defined('IN_PERMALINK')) {
         $text = strtr($text, [fusion_get_settings('site_path') => '']);

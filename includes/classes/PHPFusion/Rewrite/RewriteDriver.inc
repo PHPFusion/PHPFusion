@@ -1068,30 +1068,8 @@ abstract class RewriteDriver {
      *
      * @param $output
      */
-    protected function HTML_In($output) {
-
-        $this->output = $output; // Do not touch this line
-
-        /**
-         * ON - Bbcode on-click incompatibalities. JS will be ruined.
-         * ON - Forum does not translate at all - Incompatible with clean_request
-         * OFF - Any link encased in a double quote will not be translated.
-         */
-        //$this->output = str_replace("\"", "'", $output);
-
-        // global $locale;
-        //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
-    }
-
-    /**
-     * Exit from Permalink to PHP Buffer
-     * This function prepares HTML codes to be viewed by browser
-     *
-     * @param $output
-     */
-    protected function HTML_Out($output) {
-        // According to my test, not doing anything has the best output
-        //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
+    protected function set_output($output) {
+        $this->output = $output;
     }
 
     /**
