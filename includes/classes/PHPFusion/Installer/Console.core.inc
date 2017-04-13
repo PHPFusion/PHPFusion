@@ -39,7 +39,6 @@ class Console_Core extends Install_Core {
             '4' => self::$locale['setup_0104'],
             '5' => self::$locale['setup_0106'],
             '6' => self::$locale['setup_0105'],
-            '7' => self::$locale['setup_0107'],
         );
         $html = "<div class='block-container center-x'>\n";
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);

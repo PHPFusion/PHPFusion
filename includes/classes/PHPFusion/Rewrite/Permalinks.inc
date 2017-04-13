@@ -150,7 +150,7 @@ class Permalinks extends RewriteDriver {
 
             $this->output = $basedir;
 
-            print_p($this->output);
+            //print_p($this->output);
         }
 
     }
