@@ -1322,6 +1322,8 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 /* Textarea Dynamics */
 .panel-txtarea .preview-response {
     background-color: #f5f4f4;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 /** Media containers*/
