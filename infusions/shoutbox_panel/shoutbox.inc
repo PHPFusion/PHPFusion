@@ -48,7 +48,7 @@ class Shoutbox {
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
-        $this->postLink = FUSION_REQUEST;
+        $this->postLink = FORM_REQUEST;
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
         $this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
