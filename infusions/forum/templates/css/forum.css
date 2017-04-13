@@ -42,6 +42,8 @@ PHP-Fusion 9 Core Template Forum CSS
 	border-left:4px solid #777;
 	font-size:11px;
 	min-height:50px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .forum-pages > nav {
 	font-size:13px;
@@ -158,6 +160,8 @@ PHP-Fusion 9 Core Template Forum CSS
 }
 .post_message {
     margin: 15px 0;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .post_items, .forum-list {
 	margin:25px 0 10px;
