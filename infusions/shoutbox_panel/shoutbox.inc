@@ -501,7 +501,7 @@ class Shoutbox {
                         $data['user_status'])."</span>\n" : $data['shout_name']."\n";
                 echo "</div>\n";
                 echo "<div class='shoutboxdate'>".timer($data['shout_datestamp'])."</div>\n";
-                echo "<div class='shoutbox'>".parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/")."</div>\n";
+                echo "<div class='shoutbox'>".parse_textarea($data['shout_message'], TRUE, TRUE, FALSE)."</div>\n";
                 echo "</div>\n";
             }
             echo($info['sbform_name'] == 'sarchiv' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (

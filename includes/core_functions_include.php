@@ -588,6 +588,7 @@ function parse_imageDir($data, $prefix_ = "") {
  */
 function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
     $text = $decode ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
+    $text = $decode ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
     $text = $default_image_folder ? parse_imageDir($text, $default_image_folder) : $text;
     $text = $smileys ? parsesmileys($text) : $text;
     $text = $bbcode ? parseubb($text) : $text;
