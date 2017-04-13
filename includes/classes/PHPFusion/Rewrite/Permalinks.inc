@@ -50,9 +50,8 @@ class Permalinks extends RewriteDriver {
      * @return string
      */
     public function getOutput($output) {
-        $this->HTML_In($output);
+        $this->set_output($output);
         $this->handleOutput();
-        $this->HTML_Out($output);
         return $this->output;
     }
 
@@ -62,10 +61,8 @@ class Permalinks extends RewriteDriver {
      * which are used in this Class.
      */
     private function handleOutput() {
-
         // Buffers for Permalink - Using New Driver Pattern
         $this->handle_permalink_requests();
-
         // Output and Redirect 301 if NON-SEO url found
         $this->replace_output();
         // Prepend all the File/Images/CSS/JS etc Links with ROOT path
@@ -129,20 +126,14 @@ class Permalinks extends RewriteDriver {
      * are in website. (Not External HTTP links)
      */
     protected function appendRootAll() {
-
         if (preg_match("/(href|src|action)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
-
             $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
-
             $basedir = preg_replace("~(href|src|action)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);
-
             // Remove ../ before http://
             $loop = 20;
-
             for ($i = 1; $i <= $loop; $i++) {
                 $basedir = str_replace(str_repeat('../', $i).'http://', 'http://', $basedir);
             }
-
             // Remove ../ before https://
             for ($i = 1; $i <= $loop; $i++) {
                 $basedir = str_replace(str_repeat('../', $i).'https://', 'https://', $basedir);
@@ -150,7 +141,6 @@ class Permalinks extends RewriteDriver {
 
             $this->output = $basedir;
         }
-
     }
 
     /**
@@ -158,28 +148,20 @@ class Permalinks extends RewriteDriver {
      * @param $content
      */
     public function handle_url_routing($content) {
-
-        $this->HTML_In($content);
+        $this->set_output($content);
         $this->requesturi = PERMALINK_CURRENT_PATH;
-
         // Import the required Handlers
         $this->loadSQLDrivers();
-
         // Include the Rewrites
         $this->includeRewrite();
-
         // Read from DB
         $this->verifyHandlers();
-
         // Include the files
         $this->includeHandlers();
-
         // Prepare the strings
         $this->importPatterns();
-
         // Prepare search strings against buffers and URI
         $this->prepare_searchRegex();
-
         // Redirect if something happens
         $this->handle_non_seo_url();
     }
