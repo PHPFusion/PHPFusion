@@ -765,11 +765,12 @@ abstract class RewriteDriver {
 
     /**
      * Validate_url
-     *
+     * Post Handling
      * If Page is Not SEO, Redirect to SEO one
      *
      */
     protected function handle_non_seo_url() {
+        $this->requesturi = stripinput($this->requesturi);
         $loop_count = 0;
         foreach ($this->path_search_regex as $field => $searchRegex) {
 

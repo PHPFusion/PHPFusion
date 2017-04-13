@@ -130,11 +130,11 @@ class Permalinks extends RewriteDriver {
      */
     protected function appendRootAll() {
 
-        if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
+        if (preg_match("/(href|src|action)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
 
             $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
 
-            $basedir = preg_replace("~(href|src)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);
+            $basedir = preg_replace("~(href|src|action)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);
 
             // Remove ../ before http://
             $loop = 20;
@@ -149,8 +149,6 @@ class Permalinks extends RewriteDriver {
             }
 
             $this->output = $basedir;
-
-            //print_p($this->output);
         }
 
     }
@@ -162,7 +160,6 @@ class Permalinks extends RewriteDriver {
     public function handle_url_routing($content) {
 
         $this->HTML_In($content);
-
         $this->requesturi = PERMALINK_CURRENT_PATH;
 
         // Import the required Handlers
