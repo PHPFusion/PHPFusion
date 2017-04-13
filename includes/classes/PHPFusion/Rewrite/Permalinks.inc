@@ -75,7 +75,7 @@ class Permalinks extends RewriteDriver {
         if (defined('IN_PERMALINK')) {
             $file = Router::getRouterInstance()->getFilePath();
             if ($file !== 'error.php') {
-                //$this->appendRootAll();
+                $this->appendRootAll();
             }
         }
     }
