@@ -183,6 +183,8 @@ function check_admin_pass($password) {
  */
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
+    //define('STOP_REDIRECT', true);
+    $location = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? FUSION_ROOT.$location : $location;
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";

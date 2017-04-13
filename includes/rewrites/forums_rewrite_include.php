@@ -110,6 +110,10 @@ $pattern += $filter_sef_rules_rowstart;
  * http://localhost/infusions/forum/viewthread.php?action=newpoll&forum_id=2&thread_id=4 -- increment
  * //http://localhost/infusions/forum/viewthread.php?thread_id=4&sort_post=oldest
 */
+$pattern += array(
+    "forum/newthread-post/%action%/%error_code%/%forum_id%/%thread_id%/%thread_name%"         => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+);
 
 $pattern += array(
     "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
@@ -143,11 +147,6 @@ $pattern += array(
 // Buttons & Forms
 $pattern += array(
     "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
-);
-// Postify Redirect
-$pattern += array(
-    "forum/newthread-post/%action%/%error_code%/%forum_id%/%thread_id%/%thread_name%"         => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
 );
 
 $pattern += array(

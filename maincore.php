@@ -103,6 +103,7 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
+define('FORM_REQUEST', fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? PERMALINK_CURRENT_PATH : FUSION_REQUEST);
 //BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
 //E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
 if (explode("?", PERMALINK_CURRENT_PATH)) {

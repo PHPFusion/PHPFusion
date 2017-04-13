@@ -542,7 +542,7 @@ class MemberPoll {
 
         $opt_count = count($this->data['poll_opt']);
 
-        echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
+        echo openform('addcat', 'post', FORM_REQUEST, array('class' => "m-t-20"));
             echo form_hidden('poll_id', '', $this->data['poll_id']);
             echo form_hidden('opt_count', '', $opt_count);
             echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], array(
