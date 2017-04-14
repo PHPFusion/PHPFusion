@@ -148,6 +148,9 @@
     left: 0;
 }
 
+#home_feature {
+    background: #fff;
+}
 #home_parallax p, #home_feature p, #showcase p {
     font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
     font-weight: 300;
