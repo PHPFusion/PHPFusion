@@ -24,6 +24,19 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
+$language = [
+    'English' => 'Category One',
+    'Malay'   => 'Kategori Satu',
+    'Spanish' => 'Categoría Uno',
+    'Arabic'  => 'الفئة أون',
+    'Chinese' => '类别ONe',
+    'Danish'  => 'kategori ett',
+];
+$panel_name = serialize($language);
+print_p($panel_name);
+$panel_name = \PHPFusion\QuantumFields::parse_label($panel_name);
+print_p($panel_name);
+
 echo form_textarea("figure_accessories", 'Accessories', $data['figure_accessories'], [
     "type"      => 'tinymce',
     "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
