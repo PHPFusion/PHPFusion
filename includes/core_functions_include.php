@@ -498,7 +498,6 @@ function parsesmileys($message) {
             $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
         }
     }
-
     return $message;
 }
 
@@ -587,15 +586,15 @@ function parse_imageDir($data, $prefix_ = "") {
  * @return string
  */
 function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
-    $text = $decode ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
-    $text = $decode ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
-    $text = $default_image_folder ? parse_imageDir($text, $default_image_folder) : $text;
-    $text = $smileys ? parsesmileys($text) : $text;
-    $text = $bbcode ? parseubb($text) : $text;
+    $text = $decode == TRUE ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
+    $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
+    $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
+    $text = $smileys == TRUE ? parsesmileys($text) : $text;
+    $text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
     if (defined('IN_PERMALINK')) {
-        $text = strtr($text, [fusion_get_settings('site_path') => '']);
+        //$text = strtr($text, [fusion_get_settings('site_path') => '']);
     }
     return (string)$text;
 }
