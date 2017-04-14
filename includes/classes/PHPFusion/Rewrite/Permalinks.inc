@@ -126,7 +126,6 @@ class Permalinks extends RewriteDriver {
      * are in website. (Not External HTTP links)
      */
     protected function appendRootAll() {
-
         if (preg_match("/(href|src|action)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
             $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
             $basedir = preg_replace("~(href|src|action)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);

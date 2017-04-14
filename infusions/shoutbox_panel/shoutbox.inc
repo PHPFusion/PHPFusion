@@ -417,7 +417,7 @@ class Shoutbox {
                 echo "</div>\n";
                 echo '</div>';
                 echo '<div class="col-sm-6">';
-                echo parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/");
+                echo parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
                 echo '</div>';
                 echo '<div class="col-sm-3">';
                 echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
@@ -501,7 +501,8 @@ class Shoutbox {
                         $data['user_status'])."</span>\n" : $data['shout_name']."\n";
                 echo "</div>\n";
                 echo "<div class='shoutboxdate'>".timer($data['shout_datestamp'])."</div>\n";
-                echo "<div class='shoutbox'>".parse_textarea($data['shout_message'], TRUE, TRUE, FALSE)."</div>\n";
+                $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                echo "<div class='shoutbox'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }
             echo($info['sbform_name'] == 'sarchiv' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (
