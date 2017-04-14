@@ -41,7 +41,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
     if (isset($_POST['submit_news'])) {
 
         $submit_info['news_news'] = nl2br(parseubb(stripinput($_POST['news_news'])));
-        $submit_info['news_body'] = nl2br(parseubb(stripinput($_POST['news_body'])));
+        $submit_info['news_body'] = !empty($_POST['news_body']) ? nl2br(parseubb(stripinput($_POST['news_body']))) : '';
         $criteriaArray = array(
             'news_subject'  => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
             'news_cat'      => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
@@ -100,7 +100,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         // Preview
         if (isset($_POST['preview_news'])) {
             $news_snippet = ($_POST['news_news'] ? parse_textarea($_POST['news_news']) : '');
-            $news_body = ($_POST['news_body'] ? parse_textarea($_POST['news_body']) : '');
+            $news_body = !empty($_POST['news_body']) ? parse_textarea($_POST['news_body']) : '';
             $criteriaArray = array(
                 'news_subject'     => form_sanitizer($_POST['news_subject'], "", 'news_subject'),
                 'news_language'    => form_sanitizer($_POST['news_language'], "", 'news_language'),
