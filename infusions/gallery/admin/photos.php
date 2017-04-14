@@ -323,6 +323,7 @@ function mass_photo_form() {
             "template"          => "modern",
             "multiple"          => TRUE,
             "inline"            => TRUE,
+            "max_count"         => 20,
             "error_text"        => $locale['photo_0014'],
             'valid_ext'         => $gll_settings['gallery_file_types'],
             "ext_tip"           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'],
