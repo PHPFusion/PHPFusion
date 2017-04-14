@@ -303,9 +303,9 @@ opentable($locale['428']);
 echo "<div class='well'>\n";
 echo $locale['415'];
 echo "</div>\n";
-if (!MOD_REWRITE) {
-    echo "<div class='alert alert-warning'><i class='fa fa-warning fa-fw m-r-10'></i>".$locale['rewrite_disabled']."</div>\n";
-}
+//if (!MOD_REWRITE) {
+//  echo "<div class='alert alert-warning'><i class='fa fa-warning fa-fw m-r-10'></i>".$locale['rewrite_disabled']."</div>\n";
+//}
 echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-t-20");
 switch ($_GET['section']) {
     case "pl":
