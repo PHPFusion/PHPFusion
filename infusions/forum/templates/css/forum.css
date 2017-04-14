@@ -11,7 +11,7 @@ PHP-Fusion 9 Core Template Forum CSS
 	opacity: 0.7;
 }
 .forum-container {
-    padding: 0;
+	padding: 0;
 }
 .forum-description {
 	font-size:13px;
@@ -42,8 +42,8 @@ PHP-Fusion 9 Core Template Forum CSS
 	border-left:4px solid #777;
 	font-size:11px;
 	min-height:50px;
-    word-wrap: break-word;
-    word-break: break-all;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 .forum-pages > nav {
 	font-size:13px;
@@ -89,15 +89,15 @@ PHP-Fusion 9 Core Template Forum CSS
 }
 
 .tag_info {
-    display: inline-block;
-    margin-right: 10px;
+	display: inline-block;
+	margin-right: 10px;
 }
 
 /* viewthread */
 .thread_tags {
-    margin-bottom: 10px;
-    display: inline-block;
-    margin-left: 10px;
+	margin-bottom: 10px;
+	display: inline-block;
+	margin-left: 10px;
 }
 .top-action-bar {
 	margin-bottom:20px;
@@ -108,19 +108,19 @@ PHP-Fusion 9 Core Template Forum CSS
 	display: inline-block;
 }
 .post_items .post_info {
-    color: #7089a9;
+	color: #7089a9;
 }
 .forum_rank, .forum_poster {
 	display: inline-block;
 	margin-right: 10px;
 	font-weight: 600;
-    font-size: 15px;
+	font-size: 15px;
 }
 .forum_poster a {
-    color: #000;
+	color: #000;
 }
 .forum_poster a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 .forum_avatar {
 	float:left;
@@ -159,9 +159,9 @@ PHP-Fusion 9 Core Template Forum CSS
 	margin-bottom:30px;
 }
 .post_message {
-    margin: 15px 0;
-    word-wrap: break-word;
-    word-break: break-all;
+	margin: 15px 0;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 .post_items, .forum-list {
 	margin:25px 0 10px;
@@ -177,10 +177,10 @@ PHP-Fusion 9 Core Template Forum CSS
 	transition: border 0.3s ease-in-out;
 }
 .post_items {
-    padding: 20px;
+	padding: 20px;
 }
 .post_items .post_stats {
-    font-size:12px;
+	font-size:12px;
 }
 .forum_sig {
 	display: block;
@@ -206,5 +206,9 @@ a.answer_unchecked {
 }
 a.answer_unchecked:hover,
 a.answer_unchecked:focus {
-    color: #ccc;
+	color: #ccc;
+}
+.forum_thread_user_post {
+	word-wrap: break-word;
+	word-break: break-all;
 }
