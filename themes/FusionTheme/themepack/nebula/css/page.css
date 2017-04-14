@@ -135,11 +135,10 @@
 #showcase {
     height: 700px;
     overflow: hidden;
-    background: #F1F3F2;
 }
 
 #showcase:after {
-    background: url(../../../../templates/global/default_home/images/theme9.jpg) center top no-repeat;
+    background: #F1F3F2 url(../../../../templates/global/default_home/images/theme9.jpg) center top no-repeat;
     display: block;
     width: 100%;
     position: absolute;
@@ -149,6 +148,9 @@
     left: 0;
 }
 
+#home_feature {
+    background: #fff;
+}
 #home_parallax p, #home_feature p, #showcase p {
     font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
     font-weight: 300;
