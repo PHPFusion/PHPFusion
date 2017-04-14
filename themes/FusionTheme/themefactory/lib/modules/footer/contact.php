@@ -30,7 +30,6 @@ class Contact {
             'message'      => '',
             'captcha_code' => '',
         );
-
         if (isset($_POST['sendmessages'])) {
             foreach ($input as $key => $value) {
                 if (isset($_POST[$key])) {

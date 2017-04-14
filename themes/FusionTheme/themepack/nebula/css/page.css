@@ -135,11 +135,10 @@
 #showcase {
     height: 700px;
     overflow: hidden;
-    background: #F1F3F2;
 }
 
 #showcase:after {
-    background: url(../../../../templates/global/default_home/images/theme9.jpg) center top no-repeat;
+    background: #F1F3F2 url(../../../../templates/global/default_home/images/theme9.jpg) center top no-repeat;
     display: block;
     width: 100%;
     position: absolute;
