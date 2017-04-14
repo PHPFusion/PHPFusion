@@ -74,11 +74,13 @@ class MainFrame extends Core {
             });
             ");
         }
+        echo "<section class='nebulaBody".($this->getParam('body_class') ? " ".$this->getParam('body_class') : "")."'>\n";
+        $this->NebulaTop();
         $this->NebulaBody();
-
         if ($this->getParam('footer') === TRUE) {
             $this->NebulaFooter();
         }
+        echo "</section>\n";
     }
 
     private function NebulaHeader() {
@@ -154,7 +156,7 @@ class MainFrame extends Core {
         echo "</header>\n";
     }
 
-    private function NebulaBody() {
+    private function NebulaTop() {
         if ($this->getParam('subheader_content') || $this->getParam('breadcrumbs') === TRUE) :
             echo "<div class='nebulaSubheader'>\n";
             echo "<div class='container'>\n";
@@ -177,7 +179,6 @@ class MainFrame extends Core {
         endif;
 
         echo showbanners(1);
-
         $side_span = 3;
         $main_span = 12;
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
@@ -196,12 +197,17 @@ class MainFrame extends Core {
                 });
             ");
         endif;
-        echo "<section class='nebulaBody".($this->getParam('body_class') ? " ".$this->getParam('body_class') : "")."'>\n";
+    }
 
+    private function NebulaBody() {
+        $side_span = 3;
+        $main_span = 12;
+        if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
+            $main_span = $main_span - $side_span;
+        }
         if ($this->getParam('body_container') == TRUE) :
             echo "<div class='container'>\n";
         endif;
-
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
         echo CONTENT;
@@ -216,7 +222,6 @@ class MainFrame extends Core {
         echo "</div>\n";
         if ($this->getParam('body_container') === TRUE) :
             echo "</div>\n";
-            echo "</section>\n";
         endif;
 
         if (defined('L_CENTER') && L_CENTER && $this->getParam('l_center')) :
@@ -324,5 +329,4 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo "</section>\n";
     }
-
 }

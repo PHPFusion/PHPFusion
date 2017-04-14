@@ -375,6 +375,7 @@ header h1 {
 
 .nebulaBody {
     margin: 100px 0;
+    background: #fff;
 }
 
 .control-label > img {
