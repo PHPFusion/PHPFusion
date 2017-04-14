@@ -107,9 +107,6 @@ if (!function_exists('display_blog_item')) {
         }
         echo $data['blog_extended'];
         echo "</div>\n";
-        if ($info['blog_nav']) {
-            echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
-        }
         echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
 
         echo $data['blog_allow_comments'] ? "<hr/>".$data['blog_show_comments'] : '';
@@ -152,9 +149,11 @@ if (!function_exists('display_blog_index')) {
 						<hr>
 					</div>
 				";
-                echo !empty($info['blog_nav']) ? '<div class="m-t-5">'.$info['blog_nav'].'</div>' : '';
+
                 echo (isset($_GET['cat_id'])) ? "<!--sub_blog_cat_idx-->" : "<!--sub_blog_idx-->\n";
             }
+
+            echo !empty($info['blog_nav']) ? '<div class="m-t-5">'.$info['blog_nav'].'</div>' : '';
         } else {
             echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
         }
