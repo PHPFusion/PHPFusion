@@ -158,8 +158,6 @@ class Comments {
         $comments_listing = '';
         $comments_form = '';
         $html = '';
-        print_p($this->getParams('clink'));
-
         if ($this->settings['comments_enabled'] == TRUE) {
             $settings = fusion_get_settings();
 
