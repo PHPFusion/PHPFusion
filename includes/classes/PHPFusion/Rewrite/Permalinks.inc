@@ -129,7 +129,6 @@ class Permalinks extends RewriteDriver {
         if (preg_match("/(href|src|action)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
             $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
             $basedir = preg_replace("~(href|src|action)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);
-            //$basedir = str_replace("..//", "../", $basedir);
             // Remove ../ before http://
             $loop = 7;
             for ($i = 1; $i <= $loop; $i++) {
@@ -139,6 +138,7 @@ class Permalinks extends RewriteDriver {
             for ($i = 1; $i <= $loop; $i++) {
                 $basedir = str_replace(str_repeat('../', $i).'https://', 'https://', $basedir);
             }
+            $basedir = str_replace("..//", "../", $basedir);
             $this->output = $basedir;
         }
     }
