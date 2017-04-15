@@ -63,11 +63,4 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
     }
 } else {
     redirect(BASEDIR.$settings['opening_page']);
-    /*
-    if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-        redirect('home.php');
-    } else {
-        redirect($settings['opening_page']);
-    }
-    */
 }
