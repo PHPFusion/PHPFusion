@@ -124,7 +124,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             } else {
 
-                self::$slider_tab['title'][0] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['SLDW_back'] : self::$slider_locale['SLDW_0300']);
+                self::$slider_tab['title'][0] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['back'] : self::$slider_locale['SLDW_0300']);
                 self::$slider_tab['id'][0] = "cur_slider";
 
                 self::$slider_tab['title'][1] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['SLDW_0301'] : self::$slider_locale['SLDW_0302']);
@@ -286,9 +286,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                             <td><?php echo $slider['slider_order'] ?></td>
                             <td>
                                 <a href="<?php echo $edit_link ?>">
-                                    <?php echo self::$slider_locale['SLDW_edit'] ?>
+                                    <?php echo self::$slider_locale['edit'] ?>
                                 </a> - <a href="<?php echo $del_link ?>">
-                                    <?php echo self::$slider_locale['SLDW_delete'] ?>
+                                    <?php echo self::$slider_locale['delete'] ?>
                                 </a>
                             </td>
                         </tr>
