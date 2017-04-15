@@ -282,13 +282,6 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo self::$locale['NB_000'];
         echo "</div>\n";
-        echo "<h4>".self::$locale['NB_001']."</h4>\n";
-        echo "<p>".fusion_get_settings('description')."</p>\n";
-        echo stripslashes(strip_tags(fusion_get_settings('footer')));
-        echo "<p>".showcopyright()."</p>\n";
-        if (fusion_get_settings('visitorcounter_enabled')) :
-            echo "<p>".showcounter()."</p>\n";
-        endif;
         echo SiteLinks::setSubLinks(
             [
                 'id'            => 'footer_a',
@@ -304,7 +297,12 @@ class MainFrame extends Core {
         $this->get_Modules('footer\\news');
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-        $this->get_Modules('footer\\contact');
+        //$this->get_Modules('footer\\contact');
+        echo "<h4>".self::$locale['NB_001']."</h4>\n";
+        echo "<p>".fusion_get_settings('description')."</p>\n";
+        echo stripslashes(strip_tags(fusion_get_settings('footer')));
+        echo "<p>".showcopyright()."</p>\n";
+
         echo "</div>\n";
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
@@ -315,8 +313,12 @@ class MainFrame extends Core {
 
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
-        echo "<div class='col-xs-12 col-sm-4'><h4>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
-        echo "<p>\n";
+        echo "<div class='col-xs-12 col-sm-4'><h4 class='m-b-0'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4>\n";
+        if (fusion_get_settings('visitorcounter_enabled')) :
+            echo "<small>".showcounter()."</small>\n";
+        endif;
+        echo "</div>\n";
+        echo "<p class='m-t-10'>\n";
         if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
             echo showrendertime();
             echo showMemoryUsage();

@@ -1438,15 +1438,14 @@ class Securimage {
         static $javascript_init = FALSE;
 
         if (!isset($options['securimage_path'])) {
-
             /*
              * Bug: https://www.php-fusion.co.uk/forum/viewthread.php?thread_id=38145&pid=201071#post_201071
              */
-            $docroot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENT_ROOT'] : substr($_SERVER['SCRIPT_FILENAME'], 0, -strlen($_SERVER['SCRIPT_NAME']));
-            $docroot = realpath($docroot);
-            $sipath = dirname(__FILE__);
-            $securimage_path = str_replace($docroot, '', $sipath); // <---------- ../..//fusion9/includes/captchas/securimage3/images/audio_icon.png
-
+            //$docroot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENT_ROOT'] : substr($_SERVER['SCRIPT_FILENAME'], 0, -strlen($_SERVER['SCRIPT_NAME']));
+            //$docroot = realpath($docroot);
+            //$sipath = dirname(__FILE__);
+            //$securimage_path = str_replace($docroot, '', $sipath); // <---------- ../..//fusion9/includes/captchas/securimage3/images/audio_icon.png
+            $securimage_path = INCLUDES.'captchas/securimage3';
         } else {
             $securimage_path = $options['securimage_path'];
         }
