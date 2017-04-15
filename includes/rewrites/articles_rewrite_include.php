@@ -30,18 +30,20 @@ $regex = array(
     "%filter_type%"      => "([0-9a-zA-Z]+)",
     "%type%"             => "(A)",
     "%stype%"            => "(a)",
+    "%hash_stop%"        => "\#(?=\s*|)",
 );
 
 $pattern = array(
-    "submit/%stype%/articles"                                  => "submit.php?stype=%stype%",
-    "submit/%stype%/articles/submitted-and-thank-you"          => "submit.php?stype=%stype%&amp;submitted=A",
-    "articles/filter/%filter_type%"                            => "infusions/articles/articles.php?type=%filter_type%",
-    "print/%type%/%article_id%/%article_title%"                => "print.php?type=%type%&amp;item_id=%article_id%",
-    "articles/comments-%c_start%/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
-    "articles/%article_id%/%article_title%"                    => "infusions/articles/articles.php?article_id=%article_id%",
-    "articles/%article_id%-%rowstart%/%article_title%"         => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
-    "articles/category/%article_cat_id%/%article_cat_name%"    => "infusions/articles/articles.php?cat_id=%article_cat_id%",
-    "articles"                                                 => "infusions/articles/articles.php",
+    "submit/%stype%/articles"                                               => "submit.php?stype=%stype%",
+    "submit/%stype%/articles/submitted-and-thank-you"                       => "submit.php?stype=%stype%&amp;submitted=A",
+    "articles/filter/%filter_type%"                                         => "infusions/articles/articles.php?type=%filter_type%",
+    "print/%type%/%article_id%/%article_title%"                             => "print.php?type=%type%&amp;item_id=%article_id%",
+    "articles/comments-%c_start%/%article_id%/%article_title%"              => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
+    "articles/comments-%c_start%/%article_id%/%article_title%#%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
+    "articles/%article_id%/%article_title%"                                 => "infusions/articles/articles.php?article_id=%article_id%",
+    "articles/%article_id%-%rowstart%/%article_title%"                      => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
+    "articles/category/%article_cat_id%/%article_cat_name%"                 => "infusions/articles/articles.php?cat_id=%article_cat_id%",
+    "articles"                                                              => "infusions/articles/articles.php",
 );
 
 $pattern_tables["%article_id%"] = array(

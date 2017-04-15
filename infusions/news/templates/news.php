@@ -112,8 +112,7 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['news_0008'].":</span> <span class='text-dark'>\n
-			".($info['news_last_updated'] > 0 ? showdate('newsdate',
-                                                         $info['news_last_updated']) : $locale['na'])."</span>";
+			".(!empty($info['news_last_updated']) ? $info['news_last_updated'] : $locale['na'])."</span>";
         echo "</div>\n";
         echo "</div>\n";
 

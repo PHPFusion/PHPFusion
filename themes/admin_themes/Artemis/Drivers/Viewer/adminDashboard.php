@@ -328,7 +328,7 @@ class adminDashboard extends resource {
 
         $aidlink = self::get_aidlink();
         $locale = parent::get_locale();
-        add_to_head('<link href="'.THEME.'templates/css/autogrid.css" rel="stylesheet" />');
+        //add_to_head('<link href="'.THEME.'templates/css/autogrid.css" rel="stylesheet" />');
         opentable($locale['admin_apps']);
         echo "<div class='row'>\n";
         if (count($admin_icons['data']) > 0) {

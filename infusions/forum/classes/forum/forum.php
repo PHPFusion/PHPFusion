@@ -233,7 +233,7 @@ class Forum extends ForumServer {
                             $last_post = array(
                                 'avatar'       => '',
                                 'avatar_src'   => $row['user_avatar'] && file_exists(IMAGES.'avatars/'.$row['user_avatar']) && !is_dir(IMAGES.'avatars/'.$row['user_avatar']) ? IMAGES.'avatars/'.$row['user_avatar'] : '',
-                                'message'      => fusion_first_words(parseubb(parsesmileys($row['post_message'])), 10),
+                                'message'      => trim_text(parseubb(parsesmileys($row['post_message'])), 100),
                                 'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
                                 'time'         => timer($row['forum_lastpost']),
                                 'date'         => showdate("forumdate", $row['forum_lastpost']),
@@ -445,7 +445,7 @@ class Forum extends ForumServer {
                 $last_post = array(
                     'avatar'       => '',
                     'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
-                    'message'      => fusion_first_words(parseubb(parsesmileys($data['post_message'])), 10),
+                    'message'      => trim_text(parseubb(parsesmileys($data['post_message'])), 100),
                     'profile_link' => profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status']),
                     'time'         => timer($data['forum_lastpost']),
                     'date'         => showdate("forumdate", $data['forum_lastpost']),
