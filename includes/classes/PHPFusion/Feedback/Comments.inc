@@ -1095,7 +1095,6 @@ class Comments {
                     ]
                 )
             ]);
-            //print_p($this->comment_data);
             $reply_form .= form_hidden("comment_cat", "", $this->comment_data['comment_cat'], ['input_id' => 'comment_cat-'.$row['comment_id']]);
             if ($this->jquery_enabled) {
                 $reply_form .= form_hidden("comment_key", '', $this->getParams('comment_key'), ['input_id' => 'comment_key-'.$row['comment_id']]);
@@ -1108,7 +1107,6 @@ class Comments {
                 $reply_form .= "</div>";
             }
         }
-        print_p($_GET);
         /** formats $row */
         $row = array(
                 "comment_id"        => $row['comment_id'],
