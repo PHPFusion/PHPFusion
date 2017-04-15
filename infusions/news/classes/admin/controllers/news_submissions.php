@@ -16,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\News;
 
 class NewsSubmissionsAdmin extends NewsAdminModel {
@@ -53,7 +54,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 if (dbrows($result)) {
 
                     $data = dbarray($result);
-                    $submit_criteria = \defender::decode($data['submit_criteria']);
 
                     $news_news = '';
                     if ($_POST['news_news']) {
@@ -79,14 +79,14 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         'news_end'                 => form_sanitizer($_POST['news_end'], 0, 'news_end'),
                         'news_visibility'          => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
                         'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
-                        'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
+                        'news_sticky'              => isset($_POST['news_sticky']) ? 1 : 0,
                         'news_name'                => $data['user_id'],
-                        'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
-                        'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                        'news_allow_comments'      => isset($_POST['news_allow_comments']) ? 1 : 0,
+                        'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? 1 : 0,
                         'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
-                        'news_image_full_default'  => $submit_criteria['news_image_full_default'],
-                        'news_image_front_default' => $submit_criteria['news_image_front_default'],
-                        'news_image_align'         => $submit_criteria['news_image_align'],
+                        'news_image_full_default'  => '',
+                        'news_image_front_default' => '',
+                        'news_image_align'         => '',
                     );
 
                     if (fusion_get_settings('tinymce_enabled') != 1) {
@@ -97,39 +97,38 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                     if (\defender::safe()) {
 
-                        if ($this->news_data['news_image_full_default']) {
-                            // update news gallery default if exist
+                        if (!empty($_FILES['featured_image'])) { // when files is uploaded.
+                            $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
+                            if (!empty($upload)) {
+                                if (!$upload['error']) {
+                                    $data = array(
+                                        'news_image_user'      => fusion_get_userdata('user_id'),
+                                        'submit_id'            => $_GET['submit_id'],
+                                        'news_image'           => $upload['image_name'],
+                                        'news_image_t1'        => $upload['thumb1_name'],
+                                        'news_image_t2'        => $upload['thumb2_name'],
+                                        'news_image_datestamp' => TIME
+                                    );
+                                    $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
+                                    $this->news_data['news_image_full_default'] = $photo_id;
+                                    $this->news_data['news_image_front_default'] = $photo_id;
+                                    $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
+                                }
+                            }
+                        } else {
+
                             if (!empty($_POST['news_image_full_default'])) {
                                 $this->news_data['news_image_full_default'] = form_sanitizer($_POST['news_image_full_default'], '', 'news_image_full_default');
                             }
+
                             if (!empty($_POST['news_image_front_default'])) {
                                 $this->news_data['news_image_front_default'] = form_sanitizer($_POST['news_image_front_default'], '', 'news_image_front_default');
                             }
                             if (!empty($_POST['news_image_align'])) {
                                 $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                             }
-                        } else {
-                            // upload the image into a new gallery and prepare the gallery
-                            if (!empty($_FILES['featured_image'])) { // when files is uploaded.
-                                $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
-                                if (!empty($upload)) {
-                                    if (!$upload['error']) {
-                                        $data = array(
-                                            'news_image_user'      => fusion_get_userdata('user_id'),
-                                            'submit_id'            => $_GET['submit_id'],
-                                            'news_image'           => $upload['image_name'],
-                                            'news_image_t1'        => $upload['thumb1_name'],
-                                            'news_image_t2'        => $upload['thumb2_name'],
-                                            'news_image_datestamp' => TIME
-                                        );
-                                        $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
-                                        $this->news_data['news_image_full_default'] = $photo_id;
-                                        $this->news_data['news_image_front_default'] = $photo_id;
-                                        $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
-                                    }
-                                }
-                            }
                         }
+
 
                         if (isset($_POST['preview'])) {
 
@@ -149,21 +148,10 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             }
 
                             $news_id = dbquery_insert(DB_NEWS, $this->news_data, 'save');
-
                             // Move all news image from submit id to news id
                             if ($this->news_data['news_image_full_default']) {
-                                $result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
-                                if (dbrows($result)) {
-                                    while ($data = dbarray($result)) {
-                                        dbquery("UPDATE ".DB_NEWS_IMAGES." SET submit_id=:submit_id AND news_id=:news_id WHERE news_image_id=:news_image_id", [
-                                            ':news_image_id' => $data['news_image_id'],
-                                            ':news_id'       => $news_id,
-                                            ':submit_id'     => 0,
-                                        ]);
-                                    }
-                                }
+                                dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_id=:news_id, submit_id=:zero WHERE submit_id=:submit_id", [':news_id' => $news_id, ':zero' => 0, ':submit_id' => $_GET['submit_id']]);
                             }
-
                             // delete the submissions
                             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
 
@@ -174,19 +162,16 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             }
 
                             redirect(clean_request('', array('submit_id'), FALSE));
-
                         }
-
                     }
-
                 } else {
                     redirect(clean_request('', array('submit_id'), FALSE));
                 }
 
-            } elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+            }
+            /* elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 
                 $bind = [':submit_id' => $_GET['submit_id']];
-
                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE submit_id=:submit_id", $bind);
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
@@ -195,16 +180,11 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         if (file_exists(IMAGES_N_T.$data['news_image_t2'])) unlink(IMAGES_N_T.$data['news_image_t2']);
                     }
                 }
-
                 dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE submit_id=:submit_id", $bind);
-
                 dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submit_id", $bind);
-
                 addNotice("success", self::$locale['news_0145']);
-
                 redirect(clean_request("", array("submit_id"), FALSE));
-
-            }
+            } */
 
             $submit_query = "SELECT ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
                         FROM ".DB_SUBMISSIONS." ts
@@ -212,9 +192,28 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         WHERE submit_type='n' ORDER BY submit_datestamp DESC";
 
             $result = dbquery($submit_query);
+
+            $default_criteria = [
+                'submit_id'                => 0,
+                'submit_datestamp'         => '',
+                'submit_keywords'          => '',
+                'news_image_full_default'  => '',
+                'news_image_front_default' => '',
+                'news_language'            => '',
+                'news_subject'             => '',
+                'news_image_align'         => '',
+                'news_cat'                 => '',
+                'news_news'                => '',
+                'news_extended'            => '',
+            ];
+
             if (dbrows($result) > 0) {
+
                 $data = dbarray($result);
+
                 $submit_criteria = \defender::decode($data['submit_criteria']);
+                $submit_criteria += $default_criteria;
+
                 $this->news_data = array(
                     'submit_id'                => $data['submit_id'],
                     'news_start'               => $data['submit_datestamp'],
@@ -224,9 +223,12 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     'news_image_full_default'  => $submit_criteria['news_image_full_default'],
                     'news_image_front_default' => $submit_criteria['news_image_front_default'],
                     'news_image_align'         => $submit_criteria['news_image_align'],
-                    'news_end'                 => '', 'news_draft' => 0, 'news_sticky' => 0,
+                    'news_end'                 => '',
+                    'news_draft'               => 0,
+                    'news_sticky'              => 0,
                     'news_language'            => $submit_criteria['news_language'],
-                    'news_subject'             => $submit_criteria['news_subject'], 'news_cat' => $submit_criteria['news_cat'],
+                    'news_subject'             => $submit_criteria['news_subject'],
+                    'news_cat'                 => $submit_criteria['news_cat'],
                     'news_news'                => phpentities(stripslashes($submit_criteria['news_news'])),
                     'news_extended'            => phpentities(stripslashes($submit_criteria['news_extended'])),
                     'news_breaks'              => fusion_get_settings('tinyce_enabled') ? TRUE : FALSE,
@@ -263,7 +265,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
                     }
                 }
-
                 $snippetSettings = array(
                     'required'    => TRUE,
                     'preview'     => TRUE,
@@ -293,7 +294,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 } else {
                     $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px');
                 }
-
                 ?>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
@@ -494,9 +494,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "<thead>\n";
                 echo "<tr>\n";
                 echo "<th>".self::$locale['news_0144']."</th>\n";
+                echo "<th>".self::$locale['news_0136']."</th>\n";
                 echo "<th>".self::$locale['news_0142']."</th>\n";
                 echo "<th>".self::$locale['news_0143']."</th>\n";
-                echo "<th>".self::$locale['news_0136']."</th>\n";
                 echo "</tr>\n";
                 echo "</thead>\n";
                 echo "<tbody>\n";
@@ -504,11 +504,10 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     $submit_criteria = \defender::decode($data['submit_criteria']);
                     echo "<tr>\n";
                     echo "<td>".$data['submit_id']."</td>\n";
+                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], ['section', 'aid'], TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
                     echo "<td>".display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
                     echo "<td>".timer($data['submit_datestamp'])."</td>\n";
-                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
-                            "section", "aid"
-                        ), TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
+
                     echo "</tr>\n";
                 }
                 echo "</tbody>\n";
