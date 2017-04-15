@@ -31,6 +31,7 @@ require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 
+print_p($dear);
 $settings = fusion_get_settings();
 
 if ($settings['tinymce_enabled'] == 1) {

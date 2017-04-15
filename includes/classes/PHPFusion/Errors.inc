@@ -321,12 +321,7 @@ class Errors {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
 
-        $form_action = FUSION_REQUEST;
-        if (fusion_get_settings('site_seo') && !isset($_GET['aid'])) {
-            $form_action = (substr_count(fusion_get_settings('site_path'), '/') > 1 ? '../' : '').ROOT.ltrim($form_action, '/');
-        }
-
-        $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
+        $html = openform('error_logform', 'post', FORM_REQUEST, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE));
