@@ -116,7 +116,7 @@ class News extends Core {
                 <div class='post-meta'>
                     <ul class="meta-left">
                         <li><?php echo showdate('newsdate', $info['news_datestamp']) ?></li>
-                        <li>By <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?> / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
+                        <li><?php echo fusion_get_locale('NB_200') ?> <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?> / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
 
                     </ul>
                     <ul class='meta-right'>

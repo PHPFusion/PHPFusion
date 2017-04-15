@@ -300,6 +300,7 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
 
 if (!empty($info['download_rows'])) {
     while ($data = dbarray($result)) {
+    	$data['count_comment'] = count_db($data['download_id'], 'D');
         $data = array_merge($data, parseInfo($data));
         $info['download_item'][$data['download_id']] = $data;
     }
