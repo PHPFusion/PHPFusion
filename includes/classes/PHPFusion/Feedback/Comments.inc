@@ -108,9 +108,6 @@ class Comments {
         // Post link?
         $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         $this->postLink = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->postLink);
-        // Set global GET['comment']
-        $_GET['comment'] = isset($_GET['comment']) && isnum($_GET['comment']) ? $_GET['comment'] : 0;
-
         // Comments Per Page
         $this->cpp = fusion_get_settings('comments_per_page');
     }
@@ -434,7 +431,7 @@ class Comments {
                     '{%comment_ratings%}'     => $data['comment_ratings'],
                     '{%comment_subject%}'     => $data['comment_subject'],
                     '{%comment_message%}'     => $data['comment_message'],
-                    '{%comment_reply_link%}'  => ($this->getParams('comment_allow_reply') ? "<a href='".$data['reply_link']."#c".$data['comment_id']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
+                    '{%comment_reply_link%}'  => ($this->getParams('comment_allow_reply') ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
                     '{%comment_edit_link%}'   => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
                     '{%comment_delete_link%}' => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
                     '{%comment_reply_form%}'   => ($data['reply_form'] ?: ''),
@@ -1111,7 +1108,7 @@ class Comments {
                 $reply_form .= "</div>";
             }
         }
-
+        print_p($_GET);
         /** formats $row */
         $row = array(
                 "comment_id"        => $row['comment_id'],
@@ -1124,7 +1121,7 @@ class Comments {
                     "user_avatar" => $row['user_avatar'],
                     "status"      => $row['user_status'],
                 ),
-                "reply_link"        => $this->jquery_enabled === TRUE ? "" : clean_request("comment_reply=".$row['comment_id'], array("comment_reply"), FALSE),
+                "reply_link"        => self::format_clink($this->getParams('clink')).'&amp;comment_reply='.$row['comment_id'].'#c'.$row['comment_id'],
                 "reply_form"        => $reply_form,
                 'ratings'           => isset($row['ratings']) ? $row['ratings'] : '',
                 "comment_datestamp" => showdate('longdate', $row['comment_datestamp']),
