@@ -203,7 +203,7 @@ class NewsAdmin extends NewsAdminModel {
                 if (file_exists(IMAGES_N.$photo_data['news_image'])) unlink(IMAGES_N.$photo_data['news_image']);
                 if (file_exists(IMAGES_N_T.$photo_data['news_image_t1'])) unlink(IMAGES_N_T.$photo_data['news_image_t1']);
                 if (file_exists(IMAGES_N_T.$photo_data['news_image_t2'])) unlink(IMAGES_N_T.$photo_data['news_image_t2']);
-                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0 AND submit_id !=0");
             }
         }
     }

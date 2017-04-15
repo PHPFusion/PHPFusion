@@ -97,7 +97,7 @@ echo form_text('mailname', $locale['402'], $input['mailname'], array('required' 
 echo form_text('email', $locale['403'], $input['email'], array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
 echo form_text('subject', $locale['404'], $input['subject'], array('required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64));
 echo form_textarea('message', $locale['405'], $input['message'], array('required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128));
-if (!iADMIN && $settings['display_validation']) {
+if (iGUEST) {
     echo "<div class='panel panel-default tbl-border'>\n";
     echo "<div class='panel-body clearfix'>\n";
     echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
