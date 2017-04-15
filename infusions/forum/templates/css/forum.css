@@ -12,6 +12,11 @@ PHP-Fusion 9 Core Template Forum CSS
 }
 .forum-container {
     padding: 0;
+	margin: 20px 0;
+}
+
+.forum-container .lastpost-avatar {
+	margin-right: 10px;
 }
 .forum-description {
 	font-size:13px;
@@ -26,7 +31,6 @@ PHP-Fusion 9 Core Template Forum CSS
 }
 .nowrap > .fa { margin-right: 5px !important;}
 
-.forum-container { margin-top: 20px;}
 .forum-link {
 	font-size:15px;
 	font-weight: 500;
