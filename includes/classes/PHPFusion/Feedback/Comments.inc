@@ -106,7 +106,6 @@ class Comments {
         // Set current userdata
         $this->userdata = fusion_get_userdata();
 
-        // Set the post link
         $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         $this->postLink = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->postLink);
 
@@ -155,9 +154,12 @@ class Comments {
      * Displays Comments
      */
     public function showComments() {
+
         $comments_listing = '';
         $comments_form = '';
         $html = '';
+        print_p($this->getParams('clink'));
+
         if ($this->settings['comments_enabled'] == TRUE) {
             $settings = fusion_get_settings();
 
@@ -212,10 +214,10 @@ class Comments {
                     if ($can_post) {
                         $comments_form .= form_hidden('comment_id', '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
                         $comments_form .= form_hidden('comment_cat', '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
-                        $comments_form .= form_hidden('comment_key', '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
-                        $comments_form .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
-                        $comments_form .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
-                        $comments_form .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
+                        //$comments_form .= form_hidden('comment_key', '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
+                        //$comments_form .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
+                        //$comments_form .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
+                        //$comments_form .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
                         /*
                          * Ratings Selector
                          */
