@@ -304,8 +304,8 @@ if (!function_exists("render_article_item")) {
 			  <?php if (!empty($data['admin_actions'])) { ?>
 			  <hr>
 			  <div class="btn-group">
-				<a href="<?php echo $data['admin_actions']['edit']['link']; ?>" title="<?php echo $locale['edit']; ?>" class="btn btn-warning"><i class="fa fa-fw fa-pencil"></i> <?php echo $data['admin_actions']['edit']['title']; ?></a>
-				<a href="<?php echo $data['admin_actions']['delete']['link']; ?>" title="<?php echo $locale['delete']; ?>" class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> <?php echo $data['admin_actions']['delete']['title']; ?></a>
+                  <a href="<?php echo $data['admin_actions']['edit']['link']; ?>" title="<?php echo $locale['edit']; ?>" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i> <?php echo $data['admin_actions']['edit']['title']; ?></a>
+                  <a href="<?php echo $data['admin_actions']['delete']['link']; ?>" title="<?php echo $locale['delete']; ?>" class="btn btn-default"><i class="fa fa-fw fa-trash"></i> <?php echo $data['admin_actions']['delete']['title']; ?></a>
 			  </div>
 			  <?php } ?>
 
