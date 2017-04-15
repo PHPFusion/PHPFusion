@@ -481,7 +481,7 @@ abstract class News extends NewsServer {
             while ($data = dbarray($result)) {
                 $news_count++;
                 if ($news_count == 1) {
-                    $info['news_last_updated'] = showdate('newsdate', $info['news_last_updated']);
+                    $info['news_last_updated'] = showdate('newsdate', $data['news_datestamp']);
                 }
                 $news_info[$news_count] = self::get_NewsData($data);
             }
