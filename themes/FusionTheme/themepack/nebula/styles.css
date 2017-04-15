@@ -71,6 +71,24 @@ header .navbar-default .navbar-collapse {
     border: none;
 }
 
+header .navbar-default a.navbar-brand {
+    color: #444;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+header .navbar-default.affix a.navbar-brand {
+    color: #fff;
+}
+
+header .navbar-default .navbar-toggle .icon-bar {
+    background-color: #444;
+}
+
+header .navbar-default.affix .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
 header .navbar-default.affix .navbar-collapse {
     background: #2854A1;
     color: #fff;
@@ -186,28 +204,16 @@ header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
     text-decoration: none;
 }
 
-/** Responsive Menu */
-@media only screen and (max-width: 767px) {
-    header .navbar-default {
-        margin-bottom: 0;
-        background: #fff;
-    }
 
-    header .navbar-default .navbar-collapse {
-        padding-left: 100px;
-    }
-}
 
 #headerBar {
     height: 130px;
     display: block;
 }
-
 header .logo, header .navbar-header {
     padding-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 11px;
 }
-
 header .navbar-header > ul.navbar-nav li > a {
     padding: 0 15px;
     font-size: 14px;
@@ -218,7 +224,6 @@ header .headerContent {
     color: #fff;
     text-align: left;
 }
-
 header .navbar.affix {
     background: #2854A1;
     width: 100%;
@@ -234,7 +239,6 @@ header .navbar.affix {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
-
 header h1 {
     font: 700 70px/90px 'Segoe UI', Helvetica, Arial, sans-serif;
 }
@@ -1115,4 +1119,30 @@ Forum
     width: 300px !important;
     height: auto !important;
     display: inline-block !important;
+}
+
+/*
+Media queries for navbar-collapse
+Cellphones
+ */
+@media only screen and (max-width: 767px) {
+    .canvas-toggle {
+        top: 85%;
+    }
+
+    /** Responsive Menu */
+    header .navbar-default {
+        margin-bottom: 0;
+        background: #fff;
+    }
+
+    header .navbar-default .navbar-collapse {
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-top: 0;
+    }
+
+    header .navbar-default .navbar-brand {
+        margin-left: 15px;
+    }
 }
