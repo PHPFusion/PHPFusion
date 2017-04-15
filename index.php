@@ -55,7 +55,7 @@ if ($settings['site_seo'] && !isset($_GET['aid'])) {
                         $router->setGetParameters($params);
                         $router->setservervars();
                         $router->setquerystring();
-                        require_once fusion_get_settings("siteurl")."error.php";
+                        require_once BASEDIR."error.php";
                     }
                 }
             }
