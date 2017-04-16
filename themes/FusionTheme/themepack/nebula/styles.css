@@ -75,6 +75,7 @@ header .navbar-default a.navbar-brand {
     color: #444;
     font-size: 26px;
     font-weight: 600;
+    padding-top: 10px;
 }
 
 header .navbar-default.affix a.navbar-brand {
@@ -1135,7 +1136,6 @@ Cellphones
         margin-bottom: 0;
         background: #fff;
     }
-
     header .navbar-default .navbar-collapse {
         padding-left: 35px;
         padding-right: 35px;
@@ -1144,6 +1144,10 @@ Cellphones
 
     header .navbar-default .navbar-brand {
         margin-left: 15px;
+    }
+
+    header .navbar-default .navbar-nav > li > a:before {
+        visibility: hidden;
     }
 
     .nebulaCopyright {
