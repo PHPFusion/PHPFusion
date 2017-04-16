@@ -308,7 +308,7 @@ header h1 {
 .nebulaCopyright {
     background: #fff;
     color: #444;
-    padding: 30px 0;
+    padding: 35px 0;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -377,7 +377,7 @@ header h1 {
 }
 
 .nebulaBody {
-    margin: 100px 0;
+    margin: 100px 0 160px;
     background: #fff;
 }
 
@@ -1144,5 +1144,54 @@ Cellphones
 
     header .navbar-default .navbar-brand {
         margin-left: 15px;
+    }
+
+    /*
+    Page 1
+     */
+    .carousel-caption {
+        top: -150px !important;
+    }
+
+    #showcase > div:first-child {
+        width: 100%;
+    }
+
+    #showcase {
+        height: 800px;
+    }
+
+    #showcase:after {
+        height: 800px;
+        background-position: center 160px;
+    }
+
+    #showcase > div:first-child .text-left {
+        margin: 50px 0 !important;
+    }
+
+    #support .support {
+        margin: 35px 0 0 !important;
+    }
+
+    #support p {
+        color: #fff !important;
+    }
+
+    #home_parallax::before {
+        background-position: center 400px;
+    }
+
+    .nebulaCopyright {
+        padding-left: 70px;
+    }
+
+    #top {
+        margin-right: 30px;
+        border-radius: 50%;
+        background: #fff;
+        padding: 2.3% 3% 3% 3%;
+        margin-bottom: -70px;
+        border: 1px solid #ccc;
     }
 }
