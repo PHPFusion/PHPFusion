@@ -29,7 +29,7 @@ class ComposeContent extends PageAdmin {
         }
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-9">
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
                 <?php
                 echo form_text('page_title', self::$locale['page_0300'], self::$data['page_title'],
                                array(
@@ -77,41 +77,42 @@ class ComposeContent extends PageAdmin {
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-3">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong><?php echo self::$locale['page_0304'] ?></strong></div>
                     <div class="panel-body">
                         <?php
                         echo form_select('page_status', self::$locale['page_0305'], self::$data['page_status'], array(
-                                'options' => array(self::$locale['unpublish'], self::$locale['publish']),
+                                'options'     => array(self::$locale['unpublish'], self::$locale['publish']),
                                 'inner_width' => '100%',
-                                'inline' => TRUE
+                                'inline'      => FALSE
                             )).
                             form_select('page_access', self::$locale['page_0306'], self::$data['page_access'], array(
-                                'options' => fusion_get_groups(),
+                                'options'     => fusion_get_groups(),
                                 'inner_width' => '100%',
-                                'inline' => TRUE,
+                                'inline'      => FALSE,
                             )).
                             form_datepicker('page_datestamp', self::$locale['page_0307'], self::$data['page_datestamp'], array(
                                 'inner_width' => '100%',
-                                'inline' => TRUE,
+                                'inline'      => FALSE,
                             )).
                             form_select_tree('page_cat', self::$locale['page_0308'], self::$data['page_cat'], array(
-                                'inline' => TRUE,
                                 'inner_width' => '100%',
                                 'placeholder' => self::$locale['choose'],
+                                'inline'      => FALSE,
                             ), DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);
                         ?>
 
                     </div>
-                    <div class="panel-footer">
-                        <?php
-                        echo form_button('save', self::$locale['save'], self::$locale['save'], array('class' => 'btn-success btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
-                        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
-                        ?>
-                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="spacer-sm">
+            <?php
+            echo form_button('save', self::$locale['save'], self::$locale['save'], array('class' => 'btn-success btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-hdd-o'));
+            ?>
         </div>
         <?php
     }
