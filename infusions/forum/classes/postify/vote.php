@@ -140,7 +140,7 @@ class Postify_Vote extends Forum_Postify {
                 } else {
                     addNotice('danger', self::$locale['forum_0520a'], 'viewthread.php');
                 }
-                print_p(self::$default_redirect_link);
+                // print_p(self::$default_redirect_link);
                 redirect(self::$default_redirect_link);
 
             } else {
