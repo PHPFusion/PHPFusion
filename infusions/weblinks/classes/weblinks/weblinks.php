@@ -37,6 +37,7 @@ abstract class Weblinks extends WeblinksServer {
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        add_to_title(self::$locale['global_201'].self::$locale['home']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
@@ -279,12 +280,11 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+           set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
            BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link" => INFUSIONS."weblinks/weblinks.php",
                 "title" => SiteLinks::get_current_SiteLinks("", "link_name")
             ));
-            add_to_title(self::$locale['global_201'].$data['weblink_cat_name']);
 
             // Predefined variables, do not edit these values
             $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, "weblink_cat_id", "weblink_cat_parent");
