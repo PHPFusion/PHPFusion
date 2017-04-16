@@ -352,10 +352,10 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery($select, $bind);
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
             ));
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
