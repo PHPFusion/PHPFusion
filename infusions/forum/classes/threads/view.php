@@ -347,13 +347,10 @@ class ViewThread extends ForumServer {
 										WHERE thread_id='".intval($thread_data['thread_id'])."' and post_id='".intval($_GET['quote'])."'");
 
                 if (dbrows($quote_result) > 0) {
-
+                    require_once INCLUDES.'bbcodes_include.php';
                     $quote_data = dbarray($quote_result);
-
-                    $post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
-
+                    $post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".\strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
                     $form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
-
                 } else {
                     redirect(INFUSIONS."forum/index.php");
                 }
