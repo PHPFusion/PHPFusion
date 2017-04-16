@@ -99,6 +99,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
+                'news_image_align'         => '',
             );
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
