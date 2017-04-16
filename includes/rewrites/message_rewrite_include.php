@@ -31,13 +31,13 @@ $regex = array(
 );
 
 $pattern = array(
-    "message/%msg_const%/new-message" => "messages.php?msg_send=%msg_const%",
-    "message/send/%msg_id%/send-message-to-%user_name%" => "messages.php?msg_send=%msg_id%",
-    "message/%folder_outbox%/%msg_id%/message-to-%user_name%" => "messages.php?folder=%folder_outbox%&amp;msg_read=%msg_id%",
-    "message/%folder_inbox%/%msg_id%/message-from-%user_name%" => "messages.php?folder=%folder_inbox%&amp;msg_read=%msg_id%",
-    "message/%folder_archive%/%msg_id%/message-with-%user_name%" => "messages.php?folder=%folder_archive%&amp;msg_read=%msg_id%",
-    "message/%folder%" => "messages.php?folder=%folder%",
-    "message" => "messages.php",
+    "messages/%msg_const%/new-message" => "messages.php?msg_send=%msg_const%",
+    "messages/send/%msg_id%/send-message-to-%user_name%" => "messages.php?msg_send=%msg_id%",
+    "messages/%folder_outbox%/%msg_id%/message-to-%user_name%" => "messages.php?folder=%folder_outbox%&amp;msg_read=%msg_id%",
+    "messages/%folder_inbox%/%msg_id%/message-from-%user_name%" => "messages.php?folder=%folder_inbox%&amp;msg_read=%msg_id%",
+    "messages/%folder_archive%/%msg_id%/message-with-%user_name%" => "messages.php?folder=%folder_archive%&amp;msg_read=%msg_id%",
+    "messages/%folder%" => "messages.php?folder=%folder%",
+    "messages" => "messages.php",
 );
 
 if (isset($_GET['folder'])) {
