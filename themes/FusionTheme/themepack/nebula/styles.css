@@ -1199,3 +1199,7 @@ Cellphones
         background-position: center 400px;
     }
 }
+
+.select2-results .select2-highlighted {
+    color: #616161;
+}
