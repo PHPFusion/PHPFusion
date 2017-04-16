@@ -309,7 +309,7 @@ header h1 {
 .nebulaCopyright {
     background: #fff;
     color: #444;
-    padding: 35px 0;
+    padding: 50px 0;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -1151,7 +1151,7 @@ Cellphones
     }
 
     .nebulaCopyright {
-        padding-left: 70px;
+        padding: 35px 60px;
     }
 
     .nebulaFooter {
