@@ -1203,3 +1203,8 @@ Cellphones
 .select2-results .select2-highlighted {
     color: #616161;
 }
+
+.search table {
+    background-color: inherit;
+    border: none;
+}
