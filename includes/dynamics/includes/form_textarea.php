@@ -315,7 +315,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
-        $html .= "<div>\n";
+        $html .= "<div class='m-t-10 m-b-10'>\n";
         $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
         $html .= $options['preview'] ? "</div>\n" : "";
     }

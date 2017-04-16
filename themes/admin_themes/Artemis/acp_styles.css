@@ -1082,7 +1082,7 @@ input[type="submit"].btn.btn-mini {
     vertical-align: middle;
     zoom: 1;
     height: 25px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .btn-group:first-child {
@@ -1090,7 +1090,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .btn-group + .btn-group {
-    margin-left: 5px;
+    margin-right: 10px;
 }
 
 .btn-toolbar {

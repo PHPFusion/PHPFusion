@@ -29,7 +29,7 @@ class ComposeContent extends PageAdmin {
         }
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-8">
+            <div class="col-xs-12 col-sm-12 col-md-9">
                 <?php
                 echo form_text('page_title', self::$locale['page_0300'], self::$data['page_title'],
                                array(
@@ -47,35 +47,37 @@ class ComposeContent extends PageAdmin {
                                 )).
                     form_textarea('page_content', '', self::$data['page_content'], self::$textarea_options);
                 ?>
-                <div class="row m-b-20">
-                    <div class="col-xs-12 col-sm-3">
-                        <strong><?php echo self::$locale['page_0302'] ?></strong><br/><i><?php echo self::$locale['page_0303'] ?></i>
-                    </div>
-                    <div class="col-xs-12 col-sm-9">
-                        <?php
-                        if (multilang_table("CP")) {
-                            $page_lang = !empty(self::$data['page_language']) ? explode('.', self::$data['page_language']) : array();
-                            foreach (fusion_get_enabled_languages() as $language => $language_name) {
-                                echo form_checkbox('page_language[]', $language_name,
-                                                   in_array($language, $page_lang) ? TRUE : FALSE,
-                                                   array(
-                                                       'class' => 'm-b-0',
-                                                       'value' => $language,
-                                                       'input_id' => 'page_lang-'.$language,
-                                                       "delimiter" => ".",
-                                                       'reverse_label' => TRUE,
-                                                       'required' => TRUE
-                                                   )
-                                );
+                <div class='well'>
+                    <div class="row m-b-20">
+                        <div class="col-xs-3 col-sm-4">
+                            <strong><?php echo self::$locale['page_0302'] ?></strong><br/><i><?php echo self::$locale['page_0303'] ?></i>
+                        </div>
+                        <div class="col-xs-9 col-sm-8">
+                            <?php
+                            if (multilang_table("CP")) {
+                                $page_lang = !empty(self::$data['page_language']) ? explode('.', self::$data['page_language']) : array();
+                                foreach (fusion_get_enabled_languages() as $language => $language_name) {
+                                    echo form_checkbox('page_language[]', $language_name,
+                                        in_array($language, $page_lang) ? TRUE : FALSE,
+                                        array(
+                                            'class'         => 'm-b-0',
+                                            'value'         => $language,
+                                            'input_id'      => 'page_lang-'.$language,
+                                            "delimiter"     => ".",
+                                            'reverse_label' => TRUE,
+                                            'required'      => TRUE
+                                        )
+                                    );
+                                }
+                            } else {
+                                echo form_hidden('page_language', '', self::$data['page_language']);
                             }
-                        } else {
-                            echo form_hidden('page_language', '', self::$data['page_language']);
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4">
+            <div class="col-xs-12 col-sm-12 col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong><?php echo self::$locale['page_0304'] ?></strong></div>
                     <div class="panel-body">
