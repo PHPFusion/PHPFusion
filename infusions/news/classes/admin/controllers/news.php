@@ -324,13 +324,11 @@ class NewsAdmin extends NewsAdminModel {
 
                     openside(self::$locale['news_0006']);
 
-                    if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
-                        // have an image id with 0
+                    if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0 AND submit_id=0")) {
                         echo "<div class='list-group-item m-b-10'>\n";
                         echo "<img src='".IMAGES_N.dbresult(dbquery("SELECT news_image FROM ".DB_NEWS_IMAGES." WHERE news_id=0"), 0)."' class='img-responsive'>\n";
                         echo form_button('del_photo', self::$locale['news_0010'], self::$locale['news_0010'], ['class' => 'btn-danger btn-block spacer-xs']);
                         echo "</div>\n";
-
                     } else {
                         echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
                             array(
