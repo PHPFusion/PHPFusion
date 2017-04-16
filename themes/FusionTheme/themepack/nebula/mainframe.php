@@ -254,27 +254,29 @@ class MainFrame extends Core {
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
 
-        echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo defined('USER1') && USER1 ? USER1 : '';
-        echo "</div>\n";
+        if (defined('USER1') && USER1 || defined('USER2') && USER2 || defined('USER3') && USER3 || defined('USER4') && USER4) :
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER1') && USER1 ? USER1 : '';
+            echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo defined('USER2') && USER2 ? USER2 : '';
-        echo "</div>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER2') && USER2 ? USER2 : '';
+            echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo defined('USER3') && USER3 ? USER3 : '';
-        echo "</div>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER3') && USER3 ? USER3 : '';
+            echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-        echo defined('USER4') && USER4 ? USER4 : '';
-        echo "</div>\n";
-        echo "</div>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+            echo defined('USER4') && USER4 ? USER4 : '';
+            echo "</div>\n";
+            echo "</div>\n";
+        endif;
 
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-        echo "<div class='about_theme' style='margin-bottom: 60px;'>\n";
+        echo "<div class='about_theme'>\n";
         echo "<div class='nebulaLogo' style='margin-bottom:30px;'>\n";
         echo "<div class='pull-left'><i class='fa fa-cloud' style='font-size:50px; margin-right:10px;'></i></div>\n";
         echo "<div class='overflow-hide'><h1 class='m-0 text-white'>Nebula</h1>\n";
@@ -318,16 +320,18 @@ class MainFrame extends Core {
             echo "<small>".showcounter()."</small>\n";
         endif;
         echo "</div>\n";
-        echo "<p class='m-t-10'>\n";
+        echo "<div class='col-xs-12 col-sm-8'>\n";
         if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
             echo showrendertime();
             echo showMemoryUsage();
         endif;
         $footer_errors = showFooterErrors();
         if (!empty($footer_errors)) :
+            echo "<p>\n";
             echo $footer_errors;
+            echo "</p>\n";
         endif;
-        echo "</p>\n";
+
         echo "</div>\n";
         echo "</section>\n";
     }
