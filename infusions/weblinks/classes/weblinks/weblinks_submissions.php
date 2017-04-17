@@ -144,8 +144,8 @@ class WeblinksSubmissions extends WeblinksServer {
 
             echo form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'], $textArea_opts);
 
-			echo form_button("cancel_link", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"));
-            echo form_button('submit_link', $this->locale['save'], $this->locale['save'], array('class' => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"));
+            echo form_button('submit_link', $this->locale['submit'], $this->locale['submit'], array('class' => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"));
+            echo form_button("cancel_link", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"));
 
             echo closeform();
         }
