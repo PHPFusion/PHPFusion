@@ -37,12 +37,12 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks('', 'link_name')
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', 'link_name')
             )
         );
 
@@ -456,7 +456,7 @@ abstract class Articles extends ArticlesServer {
                 }
             }
         } elseif (isset($crumb['title'])) {
-            add_to_title($locale['global_201'].$crumb['title']);
+            //add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
         }
     }
@@ -472,9 +472,6 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
         $settings = fusion_get_settings();
-
-        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
-
         BreadCrumbs::getInstance()->addBreadCrumb(array(
             "link"  => INFUSIONS."articles/articles.php",
             "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
@@ -500,10 +497,11 @@ abstract class Articles extends ArticlesServer {
 
             $_GET['cat_id'] = $data['article_cat_id'];
 
-            set_title($article_subject.self::$locale['global_200'].self::$locale['article_0005']);
-
             $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
+            set_title($article_subject);
+
             $this->article_cat_breadcrumbs($article_cat_index);
+
 
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
@@ -526,6 +524,7 @@ abstract class Articles extends ArticlesServer {
             redirect(INFUSIONS."articles/articles.php");
         }
 
+        add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
         return (array)$info;
 
     }
