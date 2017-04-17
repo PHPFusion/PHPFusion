@@ -291,7 +291,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     } else {
 
         /* Main Index */
-        set_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
+        set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name"));
 
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS.'gallery/gallery.php',
