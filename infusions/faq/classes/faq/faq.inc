@@ -40,7 +40,7 @@ abstract class Faq extends FaqServer {
     public function set_FaqInfo($category = 0) {
         self::$locale = fusion_get_locale("", FAQ_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/faq/faq.php', 'link_name'));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS.'faq/faq.php',
