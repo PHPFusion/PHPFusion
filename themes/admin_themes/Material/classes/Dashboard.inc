@@ -289,7 +289,7 @@ class Dashboard {
                                         echo $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
                                         echo timer($submit_data['submit_datestamp']);
                                         if (!empty($review_link)) {
-                                            echo '<a class="btn btn-sm btn-default m-l-10" href="'.$review_link.'">'.$locale['286'].'</a>';
+                                            echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
                                         }
                                     echo '</div>';
                                 }
