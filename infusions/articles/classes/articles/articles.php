@@ -37,7 +37,7 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(

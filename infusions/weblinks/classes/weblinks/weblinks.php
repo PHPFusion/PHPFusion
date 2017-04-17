@@ -37,7 +37,6 @@ abstract class Weblinks extends WeblinksServer {
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
-        add_to_title(self::$locale['global_201'].self::$locale['home']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(

@@ -39,29 +39,31 @@ abstract class Faq extends FaqServer {
      */
     public function set_FaqInfo($category = 0) {
         self::$locale = fusion_get_locale("", FAQ_LOCALE);
-        if (empty($_GET['cat_id']) && !isnum($_GET['cat_id'])) {
-        set_title(SiteLinks::get_current_SiteLinks("", 'link_name'));
-        add_to_title(self::$locale['global_201'].self::$locale['home']);
-		}
+
+        set_title(SiteLinks::get_current_SiteLinks('infusions/faq/faq.php', 'link_name'));
+
         BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => INFUSIONS.'faq/faq.php',
-                'title' => SiteLinks::get_current_SiteLinks('', 'link_name')
-            ]);
+            'link'  => INFUSIONS.'faq/faq.php',
+            'title' => SiteLinks::get_current_SiteLinks('', 'link_name')
+        ]);
 
         $info = array(
             'faq_categories' => array(),
             'faq_items'      => array(),
             'faq_get'        => 0,
         );
+
         $info = array_merge($info, self::get_FaqData($category));
+
         if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-        set_title(SiteLinks::get_current_SiteLinks("", 'link_name'));
-        add_to_title(self::$locale['global_201'].$info['faq_categories'][$_GET['cat_id']]['faq_cat_name']);
-        BreadCrumbs::getInstance()->addBreadCrumb([
-                    'link'  => INFUSIONS.'faq/faq.php?cat_id='.$_GET['cat_id'],
-                    'title' => $info['faq_categories'][$_GET['cat_id']]['faq_cat_name']
-               ]);
+            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
+            add_to_title(self::$locale['global_201'].$info['faq_categories'][$_GET['cat_id']]['faq_cat_name']);
+            BreadCrumbs::getInstance()->addBreadCrumb([
+                'link'  => INFUSIONS.'faq/faq.php?cat_id='.$_GET['cat_id'],
+                'title' => $info['faq_categories'][$_GET['cat_id']]['faq_cat_name']
+            ]);
         }
+
         $this->info = $info;
 
         return (array)$info;

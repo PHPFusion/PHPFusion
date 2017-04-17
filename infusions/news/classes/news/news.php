@@ -38,7 +38,7 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS.'news/news.php',

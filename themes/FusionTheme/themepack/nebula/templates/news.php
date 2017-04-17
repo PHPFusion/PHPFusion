@@ -227,7 +227,7 @@ class News extends Core {
                     <strong><?php echo $news['news_subject'] ?></strong>
                 </h3>
             </div>
-            <div class='post-text'>
+            <div class='post-text overflow-hide'>
                 <?php echo(($news['news_image_align'] == 'pull-left' || $news['news_image_align'] == 'pull-right') && !empty($news_image) ? "<div class='display-inline-block p-l-0 m-r-15 col-xs-12 col-sm-5 ".$news['news_image_align']."'>$news_image</div>" : '') ?>
                 <p>
                     <?php

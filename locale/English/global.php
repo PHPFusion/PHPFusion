@@ -457,8 +457,8 @@ $locale['close'] = "Close";
 $locale['nopreview'] = "There is nothing to Preview";
 $locale['mark_as'] = "Mark As";
 $locale['preview'] = "Preview";
-$locale['view'] = "View";
 $locale['custom'] = "Custom";
+$locale['submit'] = "Submit";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
