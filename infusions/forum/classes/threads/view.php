@@ -186,7 +186,13 @@ class ViewThread extends ForumServer {
 
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
 
-        if ($thread->getThreadPermission("can_reply")) {
+        if (isset($_POST['cancel']) && !empty($thread_data['thread_id'])) {
+            if (fusion_get_settings("site_seo")) {
+                redirect(fusion_get_settings("siteurl")."infusions/forum/viewthread.php?thread_id=".$thread_data['thread_id']);
+            }
+            redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id']);
+
+        } elseif ($thread->getThreadPermission("can_reply") && !empty($thread_data['thread_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0360']);
 
@@ -217,6 +223,7 @@ class ViewThread extends ForumServer {
             if (isset($_POST['post_reply'])) {
 
                 require_once INCLUDES."flood_include.php";
+
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 
                     // If you merge, the datestamp on all forum, threads, post will not be updated.
@@ -368,7 +375,6 @@ class ViewThread extends ForumServer {
                 'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                     array(
                         'required'   => TRUE,
-                        'error_text' => '',
                         'preview'    => TRUE,
                         'form_name'  => 'input_form',
                         'bbcode'     => TRUE,
@@ -389,7 +395,7 @@ class ViewThread extends ForumServer {
                               'valid_ext'   => $forum_settings['forum_attachtypes'],
                               "class"       => "m-b-0",
                         ))."
-								 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
+                        <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                     : "",
                 "poll_form"         => '',
                 'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
@@ -455,7 +461,6 @@ class ViewThread extends ForumServer {
             }
 
             display_forum_postform($info);
-
         } else {
             if (fusion_get_settings("site_seo")) {
                 redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
@@ -516,8 +521,14 @@ class ViewThread extends ForumServer {
                         redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
                     }
 
-                    // execute form post actions
-                    if (isset($_POST['post_edit'])) {
+                    if (isset($_POST['cancel']) && !empty($thread_data['thread_id'])) {
+
+                        if (fusion_get_settings("site_seo")) {
+                            redirect(fusion_get_settings("siteurl")."infusions/forum/viewthread.php?thread_id=".$thread_data['thread_id']);
+                        }
+                        redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id']);
+
+                    } elseif (isset($_POST['post_edit'])) {
 
                         require_once INCLUDES."flood_include.php";
 
