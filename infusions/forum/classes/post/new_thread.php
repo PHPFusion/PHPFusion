@@ -654,7 +654,6 @@ class NewThread extends ForumServer {
                         )),
                     'message_field'     => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'], array(
                         'required'   => 1,
-                        'error_text' => '',
                         'autosize'   => 1,
                         'no_resize'  => 1,
                         'preview'    => 1,

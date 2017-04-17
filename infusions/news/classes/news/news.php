@@ -38,11 +38,11 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
-                           'link' => INFUSIONS.'news/news.php',
-                           'title' => SiteLinks::get_current_SiteLinks("", "link_name")
+            'link'  => INFUSIONS.'news/news.php',
+            'title' => SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name")
             ]);
 
         $info = array(
@@ -409,17 +409,14 @@ abstract class News extends NewsServer {
 
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title($data['news_cat_name']);
+            add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'news/news.php',
-                'title' => SiteLinks::get_current_SiteLinks("", "link_name")
+                'title' => SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name")
             ]);
-
-            add_to_title(self::$locale['global_201'].$data['news_cat_name']);
-
             // Predefined variables, do not edit these values
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
-
             // build categorial data.
             $info['news_cat_id'] = $data['news_cat_id'];
             $info['news_cat_name'] = $data['news_cat_name'];
@@ -549,7 +546,7 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'news/news.php',
@@ -584,7 +581,7 @@ abstract class News extends NewsServer {
 
             $_GET['cat_id'] = $data['news_cat_id'];
 
-            set_title($news_subject.self::$locale['global_200'].self::$locale['news_0004']);
+            set_title($news_subject.self::$locale['global_201'].self::$locale['news_0004']);
 
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
             $this->news_cat_breadcrumbs($news_cat_index);

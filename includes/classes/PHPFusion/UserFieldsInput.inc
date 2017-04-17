@@ -744,8 +744,9 @@ class UserFieldsInput {
         }
         if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
             if (!empty($_FILES['user_avatar']) && is_uploaded_file($_FILES['user_avatar']['tmp_name'])) {
-                $upload = form_sanitizer($_FILES['user_avatar'], "", "user_avatar");
-                if ($upload['error'] == 0) {
+                $upload = form_sanitizer($_FILES['user_avatar'], '', 'user_avatar');
+                if (isset($upload['error']) && !$upload['error']) {
+                    // ^ maybe use empty($upload['error']) also can but maybe low end php version has problem on empty.
                     $this->data['user_avatar'] = $upload['image_name'];
                 }
             }
