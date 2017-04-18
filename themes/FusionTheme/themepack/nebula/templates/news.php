@@ -39,9 +39,10 @@ class News extends Core {
         self::setParam('subheader_content', $info['news_cat_name']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('body_container', TRUE);
-        ?>
 
-        <ul class='m-b-20 list-group-item'>
+        ob_start();
+        ?>
+        <ul class='list-group-item'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
@@ -56,6 +57,8 @@ class News extends Core {
                 </li>
             <?php endforeach; ?>
         </ul>
+        <?php self::setParam('top_1_content', ob_get_clean()); ?>
+
         <?php
         if (!empty($info['news_items'])) {
             foreach ($info['news_items'] as $news_id => $data) {
@@ -64,6 +67,7 @@ class News extends Core {
         } else {
             echo "<div class='well text-center'>".fusion_get_locale('news_0005')."</div>\n";
         }
+
 
         // Send categories to the right panel
         ob_start();
@@ -82,9 +86,7 @@ class News extends Core {
         </ul>
         <?php
         closeside();
-        $news_category_html = ob_get_contents();
-        ob_end_clean();
-        self::setParam('right_post_content', $news_category_html);
+        self::setParam('right_post_content', ob_get_clean());
     }
 
     /**
@@ -172,8 +174,10 @@ class News extends Core {
                 </div>
             </div>";
         }
+
+        ob_start();
         ?>
-        <ul class='m-b-20 list-group-item row'>
+        <ul class='list-group-item'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
@@ -190,6 +194,9 @@ class News extends Core {
                 </li>
             <?php endforeach; ?>
         </ul>
+        <?php self::setParam('top_1_content', ob_get_clean()); ?>
+
+
         <!--news_pre_readmore-->
         <article class='news_item clearfix'>
             <?php echo(($news['news_image_align'] == 'news-img-center') && !empty($news_image) ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
@@ -262,6 +269,10 @@ class News extends Core {
         if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {
             echo "<hr />".$news['news_show_comments']."\n";
         }
+
+        //closetable();
+
+
         $ratings_html = "";
         if (fusion_get_settings('ratings_enabled') && $news['news_show_ratings']) {
             ob_start();

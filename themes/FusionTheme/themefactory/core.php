@@ -30,12 +30,16 @@ class Core {
         'subheader'           => TRUE,
         'subheader_content'   => '',
         'subheader_container' => TRUE,
+
         'subheader_class'     => '', // sets the class to the subheader
         'body_class'          => '', // set body section class
         'body_container'      => TRUE, // whether is a container or full grid
+
         'breadcrumbs'         => FALSE, // show breadcrumbs
+
         'right'               => TRUE, // RIGHT
         'left'                => TRUE, // LEFT
+
         'left_pre_content'    => '',
         'left_post_content'   => '',
 
@@ -56,27 +60,43 @@ class Core {
         'user_4_container'    => TRUE,
 
         /*
-         * AU_UPPER
+        * AU_CENTER
+        */
+        'top_1'               => TRUE, //status
+        'top_1_content'       => '',
+        'top_1_container'     => TRUE,
+
+        'bottom_1'            => TRUE, //status
+        'bottom_1_content'    => '',
+        'bottom_1_container'  => TRUE,
+
+        /*
+         * AU_CENTER
          */
         'upper'               => TRUE, //status
         'upper_content'       => '',
         'upper_container'     => TRUE,
+
         /*
          * U_CENTER
+         * Not available for nebula
          */
         'u_center'            => TRUE,
         'u_center_content'    => '',
         'u_center_container'  => TRUE,
+
         /*
-         * BL_LOWER
+         * BL_CENTER
          */
-        'bl_lower'            => TRUE, // BL_LOWER
-        'bl_lower_content'    => '',
-        'bl_lower_container'  => TRUE,
+        'bl_center'           => TRUE,
+        'bl_center_content'   => '',
+        'bl_center_container' => TRUE,
+
         /*
          * L_CENTER
+         * Not available for nebula
          */
-        'l_center'            => TRUE, // BL_LOWER
+        'l_center'            => TRUE,
         'l_center_content'    => '',
         'l_center_container'  => TRUE,
 
