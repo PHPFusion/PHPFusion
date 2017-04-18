@@ -12,7 +12,7 @@ $locale['WLS_0031'] = "Web Link successfully updated";
 $locale['WLS_0032'] = "Web Link successfully deleted";
 $locale['WLS_0034'] = "You must choose at least one Web Link";
 $locale['WLS_0035'] = "Web Link successfully published";
-$locale['WLS_0036'] = "Web Link publishing deleted";
+$locale['WLS_0036'] = "Web Link successfully unpublished";
 $locale['WLS_0040'] = "Category successfully created";
 $locale['WLS_0041'] = "Category successfully updated";
 $locale['WLS_0042'] = "Category successfully deleted";
@@ -79,7 +79,7 @@ $locale['WLS_0911'] = "Thank you for the Submission.";
 $locale['WLS_0912'] = "Submit other Web Link";
 $locale['WLS_0913'] = "Back to [SITENAME]";
 $locale['WLS_0920'] = "Use the following form to submit Web Link. Your submission will be reviewed by an
-Administrator. [SITENAME] reserves the right to amend or edit any submission. Web Link should be applicable to the content of this site. 
+Administrator. [SITENAME] reserves the right to amend or edit any submission. Web Link should be applicable to the content of this site.
 Unsuitable submissions will be deleted.";
 $locale['WLS_0922'] = "Sorry, we currently do not accept any Web Link submissions on this site.";
 $locale['WLS_0923'] = "You cannot submit a Web Link, because there are no Categories defined.";

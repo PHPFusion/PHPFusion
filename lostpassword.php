@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-require_once INCLUDES."sendmail_include.php";
 include LOCALE.LOCALESET."lostpassword.php";
+require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
     redirect("index.php");
 }

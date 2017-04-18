@@ -43,7 +43,7 @@ ul > li {
 }
 .headerBg {
     background: #22498E;
-    min-height: 300px;
+    min-height: 400px;
 }
 
 .nebulaBg.full {
@@ -206,8 +206,6 @@ header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
     text-decoration: none;
 }
 
-
-
 #headerBar {
     height: 130px;
     display: block;
@@ -253,6 +251,14 @@ header h1 {
     position: relative;
 }
 
+.nebulaBody > .container {
+    margin-top: 100px;
+}
+
+.nebulaBody > .container > .row {
+    margin-bottom: 100px;
+}
+
 .nebulaSubheader h4, .nebulaSubheader .breadcrumb { margin: 0; }
 
 .nebulaSubheader h4 {
@@ -273,6 +279,7 @@ header h1 {
 
 .nebulaContentTop {
     background: #F9F9FA;
+    padding-bottom: 50px;
 }
 
 .nebulaFooter {
@@ -287,6 +294,7 @@ header h1 {
 }
 .nebulaBottom {
     background: #F4F6F7;
+    padding: 100px 0;
 }
 
 .nebulaFooter h4 {
@@ -379,7 +387,7 @@ header h1 {
 }
 
 .nebulaBody {
-    margin: 100px 0 160px;
+    margin-bottom: 160px;
     background: #fff;
 }
 
@@ -389,20 +397,34 @@ header h1 {
 }
 
 /*
-contentUpper
+contentAupper
  */
-.contentUpper {
+.contentAupper {
     color: #787d85;
 }
 
-.contentUpper > .openTable > .title {
+.contentAupper > .openTable > .title {
     color: #292e36;
 }
 
-.contentUpper > .openTable {
+.contentAupper > .openTable {
     position: relative;
     margin: 100px 0;
+    color: #fff !important;
 }
+
+.contentAupper h1, .contentAupper h2, .contentAupper h3, .contentAupper h4, .contentAupper h5, .contentAupper h6, .contentAupper > .openTable > .title {
+    color: #fff;
+}
+
+.contentAupper td {
+    color: #444;
+}
+
+.contentLower {
+    padding: 50px 0;
+}
+
 /*******************
 Panels
 ********************/

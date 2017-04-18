@@ -39,9 +39,10 @@ class News extends Core {
         self::setParam('subheader_content', $info['news_cat_name']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('body_container', TRUE);
-        ?>
 
-        <ul class='m-b-20 list-group-item'>
+        ob_start();
+        ?>
+        <ul class='list-group-item'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
@@ -56,6 +57,8 @@ class News extends Core {
                 </li>
             <?php endforeach; ?>
         </ul>
+        <?php self::setParam('top_1_content', ob_get_clean()); ?>
+
         <?php
         if (!empty($info['news_items'])) {
             foreach ($info['news_items'] as $news_id => $data) {
@@ -64,6 +67,7 @@ class News extends Core {
         } else {
             echo "<div class='well text-center'>".fusion_get_locale('news_0005')."</div>\n";
         }
+
 
         // Send categories to the right panel
         ob_start();
@@ -82,9 +86,7 @@ class News extends Core {
         </ul>
         <?php
         closeside();
-        $news_category_html = ob_get_contents();
-        ob_end_clean();
-        self::setParam('right_post_content', $news_category_html);
+        self::setParam('right_post_content', ob_get_clean());
     }
 
     /**
@@ -158,7 +160,6 @@ class News extends Core {
      * @param $info
      */
     public static function render_news_item($info) {
-
         self::setParam('subheader_content', $info['news_item']['news_subject']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('container', TRUE);
@@ -172,8 +173,10 @@ class News extends Core {
                 </div>
             </div>";
         }
+
+        ob_start();
         ?>
-        <ul class='m-b-20 list-group-item row'>
+        <ul class='list-group-item'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
@@ -190,6 +193,9 @@ class News extends Core {
                 </li>
             <?php endforeach; ?>
         </ul>
+        <?php self::setParam('top_1_content', ob_get_clean()); ?>
+
+
         <!--news_pre_readmore-->
         <article class='news_item clearfix'>
             <?php echo(($news['news_image_align'] == 'news-img-center') && !empty($news_image) ? "<div class='".$news['news_image_align']."'>$news_image</div>" : '') ?>
@@ -242,18 +248,24 @@ class News extends Core {
             </div>
         </article>
 
-        <?php if (!empty($news['news_gallery'])) : ?>
+        <?php if (!empty($news['news_gallery'])) :
+            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
+            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
+            ?>
+            <hr/>
+            <?php openside(fusion_get_locale('news_0019')) ?>
             <div class='post-gallery'>
-                <div class='row'>
-                    <?php $animate_delay = 200; ?>
-                    <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                        <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
-                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
+                <?php $animate_delay = 200; ?>
+                <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
+                    <div class='pull-left post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 33%; height: <?php echo $thumb_height ?>px' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                        <div class='center-xy'>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE) ?>
                         </div>
-                        <?php $animate_delay = $animate_delay + 150; ?>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                    <?php $animate_delay = $animate_delay + 150; ?>
+                <?php endforeach; ?>
             </div>
+            <?php closeside() ?>
         <?php endif; ?>
 
 
@@ -262,6 +274,7 @@ class News extends Core {
         if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {
             echo "<hr />".$news['news_show_comments']."\n";
         }
+
         $ratings_html = "";
         if (fusion_get_settings('ratings_enabled') && $news['news_show_ratings']) {
             ob_start();

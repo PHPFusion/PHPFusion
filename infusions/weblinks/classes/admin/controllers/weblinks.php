@@ -452,7 +452,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         </div>
 
 		<!-- Display Table -->
-        <table class="table table-responsive table-striped">
+        <table id="links-table" class="table table-responsive table-striped">
             <thead>
             <tr>
                 <th></th>
@@ -472,8 +472,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     $edit_link     = clean_request("section=weblinks&ref=weblinkform&action=edit&weblink_id=".$data['weblink_id'],              array("section", "ref", "action", "weblink_id"), FALSE);
 					$delete_link   = clean_request("section=weblinks&ref=weblinkform&action=delete&weblink_id=".$data['weblink_id'],            array("section", "ref", "action", "weblink_id"), FALSE);
                     ?>
-                    <tr data-id="<?php echo $data['weblink_id']; ?>">
-                        <td><?php echo form_checkbox("weblink_id[]", "", "", array("value" => $data['weblink_id'], "class" => "m-0")) ?></td>
+                    <tr id="link-<?php echo $data['weblink_id']; ?>" data-id="<?php echo $data['weblink_id']; ?>">
+                        <td><?php echo form_checkbox("weblink_id[]", "", "", array("value" => $data['weblink_id'], "class" => "m-0", 'input_id' => 'link-id-'.$data['weblink_id'])) ?></td>
                         <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
                         <td>
                             <a class="text-dark" href="<?php echo $cat_edit_link ?>">
@@ -491,8 +491,30 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         </td>
                     </tr>
                     <?php
+                    add_to_jquery('$("#link-id-'.$data['weblink_id'].'").click(function() {
+                        if ($(this).prop("checked")) {
+                            $("#link-'.$data['weblink_id'].'").addClass("active");
+                        } else {
+                            $("#link-'.$data['weblink_id'].'").removeClass("active");
+                        }
+                    });');
                 endwhile;
-            else: ?>
+            ?><th colspan='7'><?php
+                echo form_checkbox('check_all', 'Select All', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE));
+
+                add_to_jquery("
+                    $('#check_all').bind('click', function() {
+                        if ($(this).is(':checked')) {
+                            $('input[name^=weblink_id]:checkbox').prop('checked', true);
+                            $('#links-table tbody tr').addClass('active');
+                        } else {
+                            $('input[name^=weblink_id]:checkbox').prop('checked', false);
+                            $('#links-table tbody tr').removeClass('active');
+                        }
+                    });
+                ");
+            ?></th>
+            <?php else: ?>
                 <tr>
                     <td colspan="7" class="text-center"><?php echo ($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
                 </tr>
