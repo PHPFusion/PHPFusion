@@ -160,7 +160,6 @@ class News extends Core {
      * @param $info
      */
     public static function render_news_item($info) {
-
         self::setParam('subheader_content', $info['news_item']['news_subject']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('container', TRUE);
@@ -249,19 +248,22 @@ class News extends Core {
             </div>
         </article>
 
-        <?php if (!empty($news['news_gallery'])) : ?>
+        <?php if (!empty($news['news_gallery'])) :
+            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
+            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
+            ?>
             <hr/>
             <?php openside(fusion_get_locale('news_0019')) ?>
             <div class='post-gallery'>
-                <div class='row'>
-                    <?php $animate_delay = 200; ?>
-                    <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                        <div class='col-xs-12 col-sm-4 post-gallery-item wow fadeInUp' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
-                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
+                <?php $animate_delay = 200; ?>
+                <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
+                    <div class='pull-left post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 33%; height: <?php echo $thumb_height ?>px' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                        <div class='center-xy'>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE) ?>
                         </div>
-                        <?php $animate_delay = $animate_delay + 150; ?>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                    <?php $animate_delay = $animate_delay + 150; ?>
+                <?php endforeach; ?>
             </div>
             <?php closeside() ?>
         <?php endif; ?>
@@ -272,9 +274,6 @@ class News extends Core {
         if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {
             echo "<hr />".$news['news_show_comments']."\n";
         }
-
-        //closetable();
-
 
         $ratings_html = "";
         if (fusion_get_settings('ratings_enabled') && $news['news_show_ratings']) {

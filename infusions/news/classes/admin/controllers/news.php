@@ -491,7 +491,8 @@ class NewsAdmin extends NewsAdminModel {
             'template'         => 'modern',
             'class'            => 'm-b-0',
             'valid_ext'        => $news_settings['news_file_types'],
-            'multiple'         => TRUE
+            'multiple'         => TRUE,
+            'max_count'        => 8
         );
 
         $alignOptions = array(
