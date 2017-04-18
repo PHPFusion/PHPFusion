@@ -14,3 +14,4 @@ To change your password please click the following link:\n[NEW_PASS_LINK]\n\nReg
 $locale['411'] = "Hello [USER_NAME],\nYour new password to access your [SITENAME] account is:\n
 [NEW_PASS]\n\nRegards,\n[SITEUSERNAME]";
 $locale['412'] = "There was an error, please try again.";
+$locale['413'] = "Please enter your email address:";

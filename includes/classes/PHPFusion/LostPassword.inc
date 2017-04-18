@@ -103,14 +103,14 @@ class LostPassword extends PasswordAuth {
         $mailbody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailbody);
         sendemail($this->_userName, $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'],
                   $mailbody);
-        $result = dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
+        dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
         $this->_html .= "<div style='text-align:center'><br />\n".$locale['402']."<br /><br />\n<a href='../index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
     }
 
     public function renderInputForm() {
         $locale = fusion_get_locale();
-        $this->_html = openform("passwordform", "post", FUSION_SELF, array("class" => "text-center"));
-        $this->_html .= form_text("email", $locale['407'], "", array("max_length" => 100, "width" => "200px", "type" => "email", "inline" => TRUE));
+        $this->_html = openform("passwordform", "post", FORM_REQUEST);
+        $this->_html .= form_text("email", $locale['413'], "", array("max_length" => 100, "width" => "200px", "type" => "email", "inline" => FALSE, 'ext_tip' => $locale['407']));
         $this->_html .= form_button("send_password", $locale['408'], $locale['408'], array("class" => "btn-primary"));
         $this->_html .= closeform();
 
