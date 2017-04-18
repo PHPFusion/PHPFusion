@@ -29,9 +29,9 @@ if (!function_exists('display_home')) {
                 echo "<div class='row'>";
                 foreach ($content['data'] as $data) {
                     echo "<div class='".$classes." clearfix'>";
-                    echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
+                    echo "<h4><a href='".$data['url']."'>".$data['title']."</a></h4>";
                     echo "<div class='small m-b-10'>".$data['meta']."</div>";
-                    echo "<div class='overflow-hide'>".fusion_first_words($data['content'], 100)."</div>";
+                    echo "<div class='overflow-hide'>".nl2br(trim_text(strip_tags($data['content']), 250))."</div>";
                     echo "</div>";
                 }
                 echo "</div>";

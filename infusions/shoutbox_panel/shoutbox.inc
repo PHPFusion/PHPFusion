@@ -48,7 +48,7 @@ class Shoutbox {
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
-        $this->postLink = FUSION_REQUEST;
+        $this->postLink = FORM_REQUEST;
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
         $this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
@@ -417,7 +417,7 @@ class Shoutbox {
                 echo "</div>\n";
                 echo '</div>';
                 echo '<div class="col-sm-6">';
-                echo parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/");
+                echo parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
                 echo '</div>';
                 echo '<div class="col-sm-3">';
                 echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
@@ -492,8 +492,8 @@ class Shoutbox {
                 echo "</div>\n";
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".$this->postLink.$this->sep."s_action=edit&amp;shout_id=".$data['shout_id']."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".$this->postLink.$this->sep."s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".clean_request('s_action=edit&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".clean_request('s_action=delete&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
                 echo "<div class='shoutboxname'>\n";
@@ -501,7 +501,8 @@ class Shoutbox {
                         $data['user_status'])."</span>\n" : $data['shout_name']."\n";
                 echo "</div>\n";
                 echo "<div class='shoutboxdate'>".timer($data['shout_datestamp'])."</div>\n";
-                echo "<div class='shoutbox'>".parse_textarea($data['shout_message'], TRUE, TRUE, TRUE, "images/")."</div>\n";
+                $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                echo "<div class='shoutbox'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }
             echo($info['sbform_name'] == 'sarchiv' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (

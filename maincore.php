@@ -94,15 +94,16 @@ $mysql_queries_time = array();
 $locale = array();
 
 // Calculate ROOT path for Permalinks
-$current_path = $_SERVER['REQUEST_URI'];
+$current_path = html_entity_decode($_SERVER['REQUEST_URI']);
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
-    $current_path = str_replace($settings['site_path'], "", $current_path);
+    $current_path = str_replace($settings['site_path'], '', $current_path);
 } else {
     $current_path = ltrim($current_path, "/");
 }
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
+define('FORM_REQUEST', fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? PERMALINK_CURRENT_PATH : FUSION_REQUEST);
 //BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
 //E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
 if (explode("?", PERMALINK_CURRENT_PATH)) {

@@ -207,18 +207,18 @@ class InstallerAdminSetup extends Install_Core {
                 'error_text' => self::$locale['setup_5011']
             )
         );
-        $timezones = timezone_abbreviations_list();
-        $timezoneArray = array();
-        foreach ($timezones as $zones) {
-            foreach ($zones as $zone) {
-                if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
-                    if (!in_array($zone['timezone_id'], $timezoneArray)) {
-                        $timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
-                    }
-                }
-            }
-        }
-        unset($timezones);
+		$timezones = timezone_abbreviations_list();
+		$timezoneArray = array();
+		foreach ($timezones as $zones) {
+			foreach ($zones as $zone) {
+				if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
+					if (!in_array($zone['timezone_id'], $timezoneArray)) {
+						$timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
+					}
+				}
+			}
+		}
+		unset($timezones);
         $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
         $content .= "<hr />\n";
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
@@ -358,6 +358,9 @@ class InstallerAdminSetup extends Install_Core {
 
                     if (strpos(self::$siteData['enabled_languages'], '.')) {
 
+                        // Update all existing panel and update new enabled language values
+                        dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".self::$siteData['enabled_languages']."'");
+
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
@@ -385,16 +388,40 @@ class InstallerAdminSetup extends Install_Core {
                                 $installed_languages[] = $data['template_language'];
                             }
                         }
+
                         $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
                         if (!empty($langDiff)) {
+
                             foreach ($langDiff as $language) {
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
                             }
+
+                            // Update all UF Cat Fields
+                            $ufc_result = dbquery("SELECT field_cat_id, field_cat_name FROM ".DB_PREFIX."user_field_cats");
+                            if (dbrows($result) && is_array($langDiff) && count($langDiff)) {
+                                $locale_keys = array_flip(self::$locale);
+                                while ($ufc_data = dbarray($ufc_result)) {
+                                    $category_name[self::$localeset] = $ufc_data['field_cat_name'];
+                                    // get current locale key
+                                    if (isset($locale_keys[$ufc_data['field_cat_name']])) {
+                                        $lang_key = $locale_keys[$ufc_data['field_cat_name']];
+                                        foreach ($langDiff as $language) {
+                                            $language_file = fusion_get_locale('', LOCALE.$language.'/setup.php');
+                                            $category_name[$language] = $language_file[$lang_key]; // bind language = translations value
+                                        }
+                                    }
+                                    if (!empty($category_name)) {
+                                        $new_field_cat_name = serialize($category_name);
+                                        dbquery("UPDATE ".DB_PREFIX."user_field_cats SET field_cat_name=:field_cat_value WHERE field_cat_id=:field_cat_id", [':field_cat_value' => $new_field_cat_name, ':field_cat_id' => $ufc_data['field_cat_id']]);
+                                    }
+                                }
+                            }
                         }
                     }
+
                     if (\defender::safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";

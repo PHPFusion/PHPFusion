@@ -3,32 +3,42 @@ table {
     line-height: 24px;
     width: 100%;
     max-width: 100%;
-    background-color: #29282e;
+    background-color: #F2F3F5;
     border-spacing: 0;
-    border: 1px solid #414046;
+    border: 1px solid #ccc;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-    color: #fff;
+}
+
+table > thead td, table > thead th {
+    color: inherit;
+}
+
+table td {
+    color: inherit;
 }
 
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
     padding: 15px 20px;
     border-top: none;
-    border-top: 1px solid #414046;
-    border-right: 1px solid #414046;
+    border-top: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 .table-striped > tbody > tr:nth-child(odd) > td {
     background-color: rgba(255, 255, 255, .05);
-    color: #fff;
+    color: #676767;
 }
 
 .table-striped > tbody > tr:nth-child(odd) > th {
-    background-color: #323334;
+    background-color: rgba(0, 0, 0, .05);
 }
 
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
-    background-color: #323334;
+    background-color: rgba(0, 0, 0, .05);
 }
 
+.alphabet-table tr > td {
+    padding: 8px !important;
+}

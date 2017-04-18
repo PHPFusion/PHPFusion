@@ -117,21 +117,6 @@ function render_news($info) {
     ThemePack\Nebula\Templates\News::render_news($info);
 }
 
-function display_news_submissions_form(array $info = array()) {
-    \PHPFusion\OutputHandler::addToHead("<link rel='stylesheet' href='".THEME."ThemePack/Nebula/css/submit.css' type='text/css' media='screen' />");
-    \PHPFusion\Panels::getInstance()->hide_panel('LEFT');
-    \PHPFusion\Panels::getInstance()->hide_panel('RIGHT');
-    $theme = \ThemeFactory\Core::getInstance();
-    $theme->setParam('body_class', 'fullform');
-    $theme->setParam('body_container', FALSE);
-    $theme->setParam('left', FALSE);
-    $theme->setParam('right', FALSE);
-    $theme->setParam('footer', FALSE);
-    $theme->setParam('copyright', FALSE);
-
-    return ThemePack\Nebula\Templates\Submissions::display_news_submissions_form($info);
-}
-
 /**
  * Photo Gallery Template
  *
@@ -140,20 +125,17 @@ function display_news_submissions_form(array $info = array()) {
 function render_gallery($info) {
     $panel = \PHPFusion\Panels::getInstance();
     $panel->hide_panel('RIGHT');
-    $panel->hide_panel('LEFT');
     echo ThemePack\Nebula\Templates\Gallery::render_gallery($info);
 }
 
 function render_photo_album($info) {
     $panel = \PHPFusion\Panels::getInstance();
     $panel->hide_panel('RIGHT');
-    $panel->hide_panel('LEFT');
     echo ThemePack\Nebula\Templates\Gallery::render_photo_album($info);
 }
 
 function render_photo($info) {
     $panel = \PHPFusion\Panels::getInstance();
     $panel->hide_panel('RIGHT');
-    $panel->hide_panel('LEFT');
     echo ThemePack\Nebula\Templates\Gallery::render_photo($info);
 }

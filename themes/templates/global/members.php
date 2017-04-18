@@ -33,8 +33,8 @@ if (!function_exists('render_members')) {
 
         echo "<table class='m-b-20' style='width:100%;'>\n";
         echo "<tr>\n";
-        echo "<td>\n".$info['page_result']."</td>\n";
-        echo "<td class='text-right'>\n".$info['page_nav']."</td>\n";
+        echo "<td class='p-10'>\n".$info['page_result']."</td>\n";
+        echo "<td class='text-right p-10'>\n".$info['page_nav']."</td>\n";
         echo "</tr>\n</table>\n";
 
         echo "<hr/>\n";
@@ -79,8 +79,8 @@ if (!function_exists('render_members')) {
 
             echo "<table class='m-b-20' style='width:100%;'>\n";
             echo "<tr>\n";
-            echo "<td>\n".$info['page_result']."</td>\n";
-            echo "<td class='text-right'>\n".$info['page_nav']."</td>\n";
+            echo "<td class='p-10'>\n".$info['page_result']."</td>\n";
+            echo "<td class='text-right p-10'>\n".$info['page_nav']."</td>\n";
             echo "</tr>\n</table>\n";
 
             echo $info['search_table'];

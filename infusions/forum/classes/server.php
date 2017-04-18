@@ -165,8 +165,9 @@ abstract class ForumServer {
                 $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
                 $list[] = $forum_id;
                 if ($ancestor = get_all_parent($forum_index, $forum_id)) {
-                    $list = $list + $ancestor;
+                    $list = array_merge_recursive($list, $ancestor);
                 }
+
                 if (!empty($list)) {
                     $list_sql = implode(',', $list);
                     $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";

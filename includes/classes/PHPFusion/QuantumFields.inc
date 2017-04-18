@@ -1162,7 +1162,7 @@ class QuantumFields extends \SqlHandler {
         $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
 
         if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
-            $field_value = $_POST[$data['field_name']];
+            $field_value = form_sanitizer($_POST[$data['field_name']], '', $data['field_name']);
         } elseif ($options['hide_value']) {
             $field_value = '';
         }
@@ -2355,7 +2355,6 @@ class QuantumFields extends \SqlHandler {
     }
 
     /* Single array output match against $db - use get_structureData before to populate $fields */
-
     private function dynamics_fieldinfo($type, $default_value) {
         $info = array(
             'textbox'     => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
@@ -2364,7 +2363,7 @@ class QuantumFields extends \SqlHandler {
             'tags'        => "TEXT NOT NULL",
             'checkbox'    => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'toggle'      => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
-            'datepicker'  => "TINYINT(10) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
+            'datepicker'  => "INT(10) UNSIGNED NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'location'    => "VARCHAR(50) NOT NULL DEFAULT '".$default_value."'",
             'colorpicker' => "VARCHAR(10) NOT NULL DEFAULT '".$default_value."'",
             'upload'      => "VARCHAR(100) NOT NULL DEFAULT '".$default_value."'",
@@ -2565,7 +2564,7 @@ class QuantumFields extends \SqlHandler {
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
             $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
             // Find index primary key value
-            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0, $col_name) : 0;
+            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], '', $col_name) : '';
             if (!isset($output_fields[$target_database][$col_name])) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
             }

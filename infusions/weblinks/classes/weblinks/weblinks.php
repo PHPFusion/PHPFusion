@@ -36,7 +36,7 @@ abstract class Weblinks extends WeblinksServer {
 
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/weblinks/weblinks.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
@@ -46,14 +46,14 @@ abstract class Weblinks extends WeblinksServer {
         );
 
         $info = array(
-            "weblink_cat_id" => intval(0),
-            "weblink_cat_name" => self::$locale['web_0001'],
+            "weblink_cat_id"          => intval(0),
+            "weblink_cat_name"        => self::$locale['web_0001'],
             "weblink_cat_description" => "",
-            "weblink_cat_language" => LANGUAGE,
-            "weblink_categories" => array(),
-            "weblink_item_rows" => 0,
-            "weblink_last_updated" => 0,
-            "weblink_items" => array()
+            "weblink_cat_language"    => LANGUAGE,
+            "weblink_categories"      => array(),
+            "weblink_item_rows"       => 0,
+            "weblink_last_updated"    => 0,
+            "weblink_items"           => array()
         );
         $info = array_merge($info, self::get_WeblinkFilters());
         $info = array_merge($info, self::get_WeblinkCategories());
@@ -89,7 +89,7 @@ abstract class Weblinks extends WeblinksServer {
     protected function get_WeblinkCategories() {
         $info['weblink_categories'] = array();
         $result = dbquery("
-            SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
+            SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
             FROM ".DB_WEBLINK_CATS." wc
             LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id AND ".groupaccess("weblink_visibility")."
             WHERE wc.weblink_cat_status='1' AND ".groupaccess("wc.weblink_cat_visibility")."
@@ -103,7 +103,7 @@ abstract class Weblinks extends WeblinksServer {
                     "link" => INFUSIONS."weblinks/weblinks.php?cat_id=".$cdata['weblink_cat_id'],
                     "name" => $cdata['weblink_cat_name'],
                     "description" => $cdata['weblink_cat_description'],
-                    "count" => $cdata['weblink_count']
+                    "count" => ($cdata['weblink_status'] == 1) ? $cdata['weblink_count'] : 0
                 );
             }
         }
@@ -279,12 +279,11 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+           set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
            BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link" => INFUSIONS."weblinks/weblinks.php",
                 "title" => SiteLinks::get_current_SiteLinks("", "link_name")
             ));
-            add_to_title(self::$locale['global_201'].$data['weblink_cat_name']);
 
             // Predefined variables, do not edit these values
             $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, "weblink_cat_id", "weblink_cat_parent");

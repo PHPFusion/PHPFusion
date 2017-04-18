@@ -55,19 +55,15 @@ if (isset($_POST['savesettings'])) {
     }
 }
 
-$timezones = timezone_abbreviations_list();
-$timezoneArray = array();
-foreach ($timezones as $zones) {
-    foreach ($zones as $zone) {
-        if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
-            if (!in_array($zone['timezone_id'], $timezoneArray)) {
-                $timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
-            }
-        }
-    }
+$timezones = DateTimeZone::listIdentifiers(DateTimeZone::AMERICA | DateTimeZone::AFRICA | DateTimeZone::ARCTIC | DateTimeZone::ASIA | DateTimeZone::ATLANTIC | DateTimeZone::EUROPE | DateTimeZone::INDIAN | DateTimeZone::PACIFIC); //gives both african and american time zones
+
+foreach ($timezones as $zone) {
+	$zone = explode('/', $zone); // 0 => Continent, 1 => City
+	if (!empty($zone[1])) {
+		$timezoneArray[$zone[0].'/'.$zone[1]] = str_replace('_', ' ', $zone[1]); // Creates array(DateTimeZone => 'Friendly name')
+	}
 }
-unset($dummy);
-unset($timezones);
+
 $weekdayslist = explode("|", $locale['weekdays']);
 
 $date_opts = array();
@@ -80,10 +76,10 @@ echo "<div class='well'>".$locale['time_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461']."):</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466']."):</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461'].")</strong></div>\n";
+echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466'].")</strong></div>\n";
 echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";

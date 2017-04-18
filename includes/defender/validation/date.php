@@ -32,23 +32,17 @@ class Date extends \Defender\Validation {
     public function verify_date() {
         $locale = fusion_get_locale();
         if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
-            $dateParams = \DateTime::createFromFormat(self::$inputConfig['date_format'], self::$inputValue)->getTimestamp();
-            $dateParams = getdate($dateParams);
+            $date = new \DateTime();
+            $date_format = $date->createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
+            $timestamp = $date_format->getTimestamp();
+            $dateParams = getdate($timestamp);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
                 switch (self::$inputConfig['type']) {
                     case "timestamp":
-                        $secured = (int)mktime($dateParams['hours'],
-                            $dateParams['minutes'],
-                            $dateParams['seconds'],
-                            $dateParams['mon'],
-                            $dateParams['mday'],
-                            $dateParams['year']
-                        );
-                        return $secured;
+                        return $timestamp;
                         break;
                     case "date":
                         $date = (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
-
                         return $date;
                         break;
                 }

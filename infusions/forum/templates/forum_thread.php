@@ -81,7 +81,7 @@ if (!function_exists('render_thread')) {
             {%breadcrumbs%}
             <h2>{%sticky_icon%}{%locked_icon%}{%thread_subject%}</h2>
             <div class='clearfix m-b-20'>
-                <div class='last-updated'>{%time_updated%}<i class='fa fa-calendar fa-fw'></i> </div>
+                <div class='last-updated'><i class='fa fa-calendar fa-fw m-r-10'></i>{%time_updated%}</div>
                 {%thread_tags%}
             </div>
             {%poll_form%}
@@ -90,7 +90,7 @@ if (!function_exists('render_thread')) {
                     <div class='pull-right'>{%bounty_button%} {%poll_button%} {%new_thread_button%}</div>
                     <div class='pull-left'>
                         <div class='dropdown display-inline-block m-r-10'>
-                            <a class='btn btn-sm btn-default dropdown-toggle' data-toggle='dropdown'><strong>".$locale['forum_0183']."</strong> {%filter_word%}<span class='caret'></span></a>
+                            <a class='btn btn-default dropdown-toggle' data-toggle='dropdown'><strong>".$locale['forum_0183']."</strong> {%filter_word%}<span class='caret'></span></a>
                             {%filter_dropdown%}
                         </div>
                         <div class='btn-group'>
@@ -137,17 +137,17 @@ if (!function_exists('render_thread')) {
                 '{%sticky_icon%}'       => ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : ''),
                 '{%locked_icon%}'       => ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : ''),
                 '{%thread_subject%}'    => $data['thread_subject'],
-                '{%time_updated%}'      => $locale['forum_0363'].timer($data['thread_lastpost']),
+                '{%time_updated%}'      => $locale['forum_0363'].' '.timer($data['thread_lastpost']),
                 '{%thread_tags%}'       => (!empty($info['thread_tags_display']) ? "<div class='clearfix'><i class='fa fa-tags text-lighter fa-fw'></i> ".$info['thread_tags_display']."</div>" : ''),
                 '{%poll_form%}'         => (!empty($info['poll_form']) ? "<div class='well'>".$info['poll_form']."</div>" : ''),
-                '{%poll_button%}'       => ($can_poll ? "<a class='btn btn-success btn-sm m-r-10 ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
-                '{%bounty_button%}'     => ($can_bounty ? "<a class='btn btn-primary btn-sm ".(!empty($info['thread']['thread_bounty']) ? 'disabled' : '')."' title='".$buttons['bounty']['title']."' href='".$buttons['bounty']['link']."'>".$buttons['bounty']['title']." <i class='fa fa-dot-circle-o'></i></a>\n" : ''),
-                '{%new_thread_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>" : ''),
-                '{%reply_button%}'      => ($can_post ? "<a class='btn btn-primary btn-sm m-l-10 ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
+                '{%poll_button%}'       => ($can_poll ? "<a class='btn btn-success  m-r-10 ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
+                '{%bounty_button%}'     => ($can_bounty ? "<a class='btn btn-primary  ".(!empty($info['thread']['thread_bounty']) ? 'disabled' : '')."' title='".$buttons['bounty']['title']."' href='".$buttons['bounty']['link']."'>".$buttons['bounty']['title']." <i class='fa fa-dot-circle-o'></i></a>\n" : ''),
+                '{%new_thread_button%}' => ($can_post ? "<a class='btn btn-primary  ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>" : ''),
+                '{%reply_button%}'      => ($can_post ? "<a class='btn btn-primary  m-l-10 ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
                 '{%filter_word%}'       => (isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180']),
                 '{%filter_dropdown%}'   => $filter_dropdown,
-                '{%notify_button%}'     => (!empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : ''),
-                '{%print_button%}'      => "<a class='btn btn-default btn-sm' title='".$buttons['print']['title']."' target='_blank' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i></a>",
+                '{%notify_button%}'     => (!empty($buttons['notify']) ? "<a class='btn btn-default ' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : ''),
+                '{%print_button%}'      => "<a class='btn btn-default ' title='".$buttons['print']['title']."' target='_blank' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i></a>",
                 '{%mod_form%}'          => (iMOD ? "<div class='list-group-item'>".$info['mod_form']."</div>\n" : ''),
                 '{%post_items%}'        => $post_items,
                 '{%quick_reply_form%}'  => (!empty($info['quick_reply_form']) ? "<hr/>\n".$info['quick_reply_form'] : ''),
@@ -176,7 +176,6 @@ if (!function_exists('render_post_item')) {
         $aidlink = fusion_get_aidlink();
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
-        $userdata = fusion_get_userdata();
         ob_start();
 
         $template = "
@@ -192,10 +191,11 @@ if (!function_exists('render_post_item')) {
                             <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
                             <div class='btn-group'>
                                 {%quote_button%}{%reply_button%}{%edit_button%}
-                                <a class='dropdown-toggle btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
-                                <ul class='dropdown-menu'>
+                                <a class='dropdown-toggle btn btn-sm btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
+                                <ul class='dropdown-menu forum-post-options'>
                                     {%li_user_ip%}
                                     {%li_user_post_count%}
+                                    <li class='divider'></li>
                                     {%li_message%}
                                     {%li_web%}
                                     {%li_print%}
@@ -255,13 +255,13 @@ if (!function_exists('render_post_item')) {
                 '{%post_reply_message%}' => $data['post_reply_message'],
                 '{%post_mood_message%}'  => $data['post_mood_message'],
                 '{%post_attach%}'        => ($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : ""),
-                '{%quote_button%}'       => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-xs quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : ''),
-                '{%reply_button%}'       => (isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-xs reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : ''),
-                '{%edit_button%}'        => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-xs edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : ""),
-                '{%li_user_ip%}'         => ($data['user_ip'] ? "<li><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : ""),
-                '{%li_user_post_count%}' => "<li><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>",
+                '{%quote_button%}'       => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-sm quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : ''),
+                '{%reply_button%}'       => (isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-sm reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : ''),
+                '{%edit_button%}'        => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-sm edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : ""),
+                '{%li_user_ip%}'         => ($data['user_ip'] ? "<li class='dropdown-header'>".$data['user_ip']."</li>" : ''),
+                '{%li_user_post_count%}' => "<li class='dropdown-header'>".$data['user_post_count']."</li>",
                 '{%li_message%}'         => ($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : ""),
-                '{%li_web%}'             => ($data['user_web']['link'] ? "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n" : ""),
+                '{%li_web%}'             => ($data['user_web']['link'] ? "<li><span>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</span></li>\n" : ""),
                 '{%li_print%}'           => "<li><a href='".$data['print']['link']."' target='_blank' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n",
                 '{%li_quote%}'           => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : ''),
                 '{%li_edit%}'            => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),

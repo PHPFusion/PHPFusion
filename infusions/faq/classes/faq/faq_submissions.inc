@@ -55,6 +55,7 @@ class FaqSubmissions extends FaqServer {
             'faq_answer'   => "",
             'faq_question' => "",
             'faq_language' => LANGUAGE,
+            'faq_status'   => 1
         );
         // Cancel Form
         if (isset($_POST['cancel'])) {
@@ -69,6 +70,7 @@ class FaqSubmissions extends FaqServer {
                     'faq_question' => form_sanitizer($submit_info['faq_question'], '', 'faq_question'),
                     'faq_answer'   => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'),
                     'faq_language' => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
+                    'faq_status'   => 1
                 );
                 // Save
                 if (\defender::safe() && isset($_POST['submit_link'])) {
@@ -128,8 +130,8 @@ class FaqSubmissions extends FaqServer {
                 } else {
                     echo form_hidden('faq_language', '', $criteriaArray['faq_language']);
                 }
+                echo form_button('submit_link', $this->locale['submit'], $this->locale['submit'], array('class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o'));
                 echo form_button('cancel_link', $this->locale['cancel'], $this->locale['cancel'], array('class' => 'btn-default', 'icon' => 'fa fa-fw fa-times'));
-                echo form_button('submit_link', $this->locale['save'], $this->locale['save'], array('class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o'));
                 echo closeform();
             }
         } else {

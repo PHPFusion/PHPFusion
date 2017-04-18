@@ -168,7 +168,7 @@ $locale['694'] = "Allow PHP Execution";
 $locale['695'] = "WARNING! Allowing PHP execution will open the system to SQL vulnerabilities.";
 $locale['696'] = "Please enter your public and private reCAPTCHA key!";
 
-$locale['913'] = "Comments per page";
+$locale['913'] = "Base Comments per Page";
 
 $locale['955'] = "Original";
 $locale['956'] = "Square";

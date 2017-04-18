@@ -57,19 +57,19 @@ class Search extends Search_Engine {
         {%search_method%}
         {%search_button%}
         </div>
-        <div class='row'>
+        <div class='row search'>
         <div class='col-xs-12 col-sm-6'>
-            <div class='well'>
+            <div class='well p-20'>
             {%search_sources%}
             </div>
         </div><div class='col-xs-12 col-sm-6'>
-            <div class='well'>
+            <div class='well p-20'>
             {%search_areas%}
             </div>
-            <div class='well'>
+            <div class='well p-20'>
             {%sort_areas%}
             </div>
-            <div class='well'>
+            <div class='well p-20'>
             {%char_areas%}
             </div>
         </div></div>
@@ -144,7 +144,7 @@ class Search extends Search_Engine {
         {%item_search_context%}
         {%item_search_criteria%}
         </div>
-        </div>        
+        </div>
         </li>
         ";
     }

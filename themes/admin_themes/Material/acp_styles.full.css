@@ -4287,3 +4287,6 @@ ol, ul {
   background: #fff;
   padding: 0 !important
 }
+label {
+  margin-bottom: 0;
+}

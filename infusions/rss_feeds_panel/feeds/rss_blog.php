@@ -35,7 +35,7 @@ if (db_exists(DB_BLOG)) {
 
     $rssimage = $settings['siteurl'].$settings['sitebanner'];
     echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
-    echo "<rss version=\"2.0\">\n
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n
 		<image>
 		<url>$rssimage</url>
 		</image>
@@ -54,7 +54,7 @@ if (db_exists(DB_BLOG)) {
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/blog/blog.php?readmore=".$rsid."</link>\n";
-            echo "<description>".htmlspecialchars($description)."</description>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
             echo "</item>\n";
         }
     } else {

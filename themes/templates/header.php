@@ -40,6 +40,18 @@ require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 
+$o_param = [
+    ':user_id'   => (iMEMBER ? fusion_get_userdata('user_id') : 0),
+    ':online_ip' => USER_IP,
+];
+// Online users database -- to core level whether panel is on or not
+if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:online_ip", $o_param)) {
+    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
+} else {
+    dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
+}
+dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (TIME - 60)]);
+
 if (iMEMBER) {
     dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
 }

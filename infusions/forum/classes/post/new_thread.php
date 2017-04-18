@@ -60,24 +60,19 @@ class NewThread extends ForumServer {
 				AND ".groupaccess('f.forum_access')."
 				"));
 
-                if ($forum_data['forum_type'] == 1) {
+                if ($forum_data['forum_type'] == 1 or $forum_data['forum_lock']) {
                     redirect(INFUSIONS."forum/index.php");
                 }
 
-                // Use the new permission settings
-                self::setPermission($forum_data);
-
                 $forum_data['lock_edit'] = $forum_settings['forum_edit_lock'];
-
+                self::setPermission($forum_data);
                 if (self::getPermission("can_post") && self::getPermission("can_access")) {
-
                     BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
                     ]);
-
                     BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => self::$locale['forum_0057']
                     ]);
 
@@ -206,7 +201,7 @@ class NewThread extends ForumServer {
                         'post_editreason' => '',
                         'post_hidden'     => 0,
                         'notify_me'       => isset($_POST['notify_me']) ? 1 : 0,
-                        'post_locked'     => 0, //$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+                        'post_locked'     => 0,
                     );
 
                     // Execute post new thread
@@ -325,20 +320,20 @@ class NewThread extends ForumServer {
                                 }
                             }
                             if (\defender::safe()) {
-                                redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                                redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                             }
                         }
                     }
 
                     $this->info = array(
-                        'title'             => self::$locale['forum_0057'],
-                        'description'       => '',
-                        'openform'          => openform('input_form', 'post', FUSION_SELF."?forum_id=".$post_data['forum_id'], array('enctype' => self::getPermission("can_upload_attach"))),
-                        'closeform'         => closeform(),
-                        'forum_id_field'    => '',
-                        'thread_id_field'   => '',
-                        "forum_field"       => "",
-                        'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'],
+                        'title'           => self::$locale['forum_0057'],
+                        'description'     => '',
+                        'openform'        => openform('input_form', 'post', clean_request('forum_id='.$post_data['forum_id'], ['forum_id'], FALSE), array('enctype' => self::getPermission("can_upload_attach"))),
+                        'closeform'       => closeform(),
+                        'forum_id_field'  => '',
+                        'thread_id_field' => '',
+                        "forum_field"     => "",
+                        'subject_field'   => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'],
                             array(
                                 'required'    => 1,
                                 'placeholder' => self::$locale['forum_2001'],
@@ -412,21 +407,18 @@ class NewThread extends ForumServer {
                 }
 
             } else {
-
                 /*
                  * Quick New Forum Posting.
                  * Does not require to run permissions.
                  * Does not contain forum poll.
                  * Does not contain attachment
                  */
-
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_type !='1'")) {
                     redirect(FORUM.'index.php');
                 }
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
                     redirect(FORUM.'index.php');
                 }
-
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
                 $thread_data = array(
                     'forum_id'          => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,
@@ -603,7 +595,7 @@ class NewThread extends ForumServer {
                                 }
 
                                 if (\defender::safe()) {
-                                    redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                                    redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                                 }
 
                             } else {
@@ -662,7 +654,6 @@ class NewThread extends ForumServer {
                         )),
                     'message_field'     => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'], array(
                         'required'   => 1,
-                        'error_text' => '',
                         'autosize'   => 1,
                         'no_resize'  => 1,
                         'preview'    => 1,

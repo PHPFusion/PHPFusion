@@ -231,7 +231,7 @@ Grids
 }
 
 .m-b-0 {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 
 .m-b-5 {
@@ -451,7 +451,6 @@ Grids
 .display-block {
     display: block !important;
     width: 100%;
-    overflow: hidden;
 }
 
 .display-inline {
@@ -1281,8 +1280,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .comments_reply_form {
-    margin-left: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 /* Forum mods */
@@ -1292,19 +1290,18 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .forum.label > .detail {
     background: rgba(0, 0, 0, .1);
-    margin: 0 -.833em -.5833em .5em;
-    padding: .5833em .833em;
+    margin: -5px -10px;
+    padding: 6px 12px;
     border-radius: 0 .28571429rem .28571429rem 0;
     display: inline-block;
     vertical-align: top;
     font-weight: 700;
-    margin-left: 1em;
     opacity: .8;
 }
 
 .forum.label > i {
-    margin-top: 7px;
-    margin-right: 0;
+    margin: 3px 10px 0 0;
+    padding-right: 20px;
 }
 
 .forum.label-super-admin {
@@ -1324,6 +1321,8 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 /* Textarea Dynamics */
 .panel-txtarea .preview-response {
     background-color: #f5f4f4;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 /** Media containers*/

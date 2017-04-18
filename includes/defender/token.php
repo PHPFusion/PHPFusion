@@ -70,7 +70,7 @@ class Token extends \defender {
 
             // If you allow repost, token will be valid since it is not being consumed.
             // Bots will capture a valid token key and repost again and again.
-            if (self::$allow_repost == FALSE && !iADMIN) {
+            if (self::$allow_repost == FALSE && !iADMIN && !empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $tokens_consumed = '';
                 $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 if (!empty($token_rings)) {

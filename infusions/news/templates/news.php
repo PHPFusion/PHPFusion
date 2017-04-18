@@ -112,8 +112,7 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['news_0008'].":</span> <span class='text-dark'>\n
-			".($info['news_last_updated'] > 0 ? showdate('newsdate',
-                                                         $info['news_last_updated']) : $locale['na'])."</span>";
+			".($info['news_last_updated'] > 0 ? showdate('newsdate',$info['news_last_updated']) : $locale['na'])."</span>";
         echo "</div>\n";
         echo "</div>\n";
 
@@ -322,7 +321,7 @@ if (!function_exists('render_news_item')) {
             echo "</div>\n";
         }
         echo "<h2 class='text-left m-t-0 m-b-0'>".$data['news_subject']."</h2>\n";
-        echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
+        echo "<div class='news_news text-dark m-t-20 m-b-20 overflow-hide'>\n";
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_image_align']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
@@ -331,6 +330,7 @@ if (!function_exists('render_news_item')) {
             <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
             </a>";
         }
+        echo $data['news_news'];
         echo $data['news_extended'];
         echo "</div>\n";
         echo $data['news_pagenav'];

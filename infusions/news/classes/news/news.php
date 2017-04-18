@@ -38,11 +38,11 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
-                           'link' => INFUSIONS.'news/news.php',
-                           'title' => SiteLinks::get_current_SiteLinks("", "link_name")
+            'link'  => INFUSIONS.'news/news.php',
+            'title' => SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name")
             ]);
 
         $info = array(
@@ -294,6 +294,7 @@ abstract class News extends NewsServer {
             $pagecount = 1;
 
             $data['news_news'] = parse_textarea($data['news_news'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+
             $data['news_extended'] = parse_textarea($data['news_extended'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
             if (defined('IN_PERMALINK')) {
                 $data['news_news'] = strtr($data['news_news'], [fusion_get_settings('site_path') => '']);
@@ -408,17 +409,14 @@ abstract class News extends NewsServer {
 
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title($data['news_cat_name']);
+            add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'news/news.php',
-                'title' => SiteLinks::get_current_SiteLinks("", "link_name")
+                'title' => SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name")
             ]);
-
-            add_to_title(self::$locale['global_201'].$data['news_cat_name']);
-
             // Predefined variables, do not edit these values
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
-
             // build categorial data.
             $info['news_cat_id'] = $data['news_cat_id'];
             $info['news_cat_name'] = $data['news_cat_name'];
@@ -480,7 +478,7 @@ abstract class News extends NewsServer {
             while ($data = dbarray($result)) {
                 $news_count++;
                 if ($news_count == 1) {
-                    $info['news_last_updated'] = showdate('newsdate', $info['news_last_updated']);
+                    $info['news_last_updated'] = showdate('newsdate', $data['news_datestamp']);
                 }
                 $news_info[$news_count] = self::get_NewsData($data);
             }
@@ -548,7 +546,7 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'news/news.php',
@@ -574,7 +572,7 @@ abstract class News extends NewsServer {
                 set_meta("keywords", $data['news_keywords']);
             }
 
-            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && isset($_GET['readmore']) && !isset($_GET['rowstart'])) {
+            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && isset($_GET['readmore']) && empty($_GET['rowstart'])) {
                 dbquery("UPDATE ".DB_NEWS." SET news_reads=news_reads+1 WHERE news_id=:read_more", [':read_more' => intval($_GET['readmore'])]);
                 $data['news_reads']++;
             }
@@ -583,7 +581,7 @@ abstract class News extends NewsServer {
 
             $_GET['cat_id'] = $data['news_cat_id'];
 
-            set_title($news_subject.self::$locale['global_200'].self::$locale['news_0004']);
+            set_title($news_subject.self::$locale['global_201'].self::$locale['news_0004']);
 
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
             $this->news_cat_breadcrumbs($news_cat_index);

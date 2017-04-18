@@ -17,16 +17,11 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 $settings = fusion_get_settings();
-if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
-
+if ($settings['site_seo'] && !isset($_GET['aid'])) {
     define("IN_PERMALINK", TRUE);
-
     $router = PHPFusion\Rewrite\Router::getRouterInstance();
-
     $router->rewritePage();
-
     $filepath = $router->getFilePath();
-
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         redirect(PERMALINK_CURRENT_PATH);
     } else {
@@ -60,7 +55,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
                         $router->setGetParameters($params);
                         $router->setservervars();
                         $router->setquerystring();
-                        require_once fusion_get_settings("site_url")."error.php";
+                        require_once BASEDIR."error.php";
                     }
                 }
             }
@@ -68,11 +63,4 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
     }
 } else {
     redirect(BASEDIR.$settings['opening_page']);
-    /*
-    if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-        redirect('home.php');
-    } else {
-        redirect($settings['opening_page']);
-    }
-    */
 }

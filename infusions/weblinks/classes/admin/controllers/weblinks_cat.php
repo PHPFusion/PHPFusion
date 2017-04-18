@@ -20,6 +20,7 @@ namespace PHPFusion\Weblinks;
 class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
     private static $instance = NULL;
+    private $locale = array();
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -169,11 +170,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 					), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
                     echo form_textarea("weblink_cat_description", $this->locale['WLS_0254'], $data['weblink_cat_description'], array(
-						"type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-						"tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
-						"autosize" => TRUE,
-						"preview" => TRUE,
-						"form_name" => "catform"
+                        "autosize" => TRUE,
+                        //"preview" => FALSE,
+                        //"type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                        //"tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
+                        //"form_name" => "catform"
 					));
 					?>
 				</div>

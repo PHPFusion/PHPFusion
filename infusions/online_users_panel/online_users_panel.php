@@ -20,16 +20,9 @@ if (!defined("IN_FUSION")) {
 }
 
 $locale = fusion_get_locale();
-
-openside("<i class='fa fa-clock-o fa-fw'></i> ".$locale['global_010']);
-
-$user_online_query = "
-SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton
-LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id
-";
-
+openside($locale['global_010']);
+$user_online_query = "SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id";
 $result = dbquery($user_online_query);
-
 $guests = 0;
 $members = array();
 while ($data = dbarray($result)) {
@@ -63,6 +56,5 @@ if (iADMIN && checkrights("M") && fusion_get_settings("admin_activation") == "1"
 }
 
 $data = dbarray(dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));
-echo THEME_BULLET." ".$locale['global_016'].": <span class='side'>".profile_link($data['user_id'], $data['user_name'],
-                                                                                 $data['user_status'])."</span>\n";
+echo THEME_BULLET." ".$locale['global_016'].": <span class='side'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
 closeside();

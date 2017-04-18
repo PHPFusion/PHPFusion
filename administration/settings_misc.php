@@ -37,7 +37,6 @@ $settings_misc = array(
     'visitorcounter_enabled' => fusion_get_settings('visitorcounter_enabled'),
     'rendertime_enabled'     => fusion_get_settings('rendertime_enabled'),
     'comments_avatar'        => fusion_get_settings('comments_avatar'),
-    'comments_jquery'        => fusion_get_settings('comments_jquery'),
     'comments_sorting'       => fusion_get_settings('comments_sorting'),
     'index_url_bbcode'       => fusion_get_settings('index_url_bbcode'),
     'index_url_userweb'      => fusion_get_settings('index_url_userweb'),
@@ -62,7 +61,6 @@ if (isset($_POST['savesettings'])) {
         'visitorcounter_enabled' => form_sanitizer($_POST['visitorcounter_enabled'], '0', 'visitorcounter_enabled'),
         'rendertime_enabled'     => form_sanitizer($_POST['rendertime_enabled'], '0', 'rendertime_enabled'),
         'comments_avatar'        => form_sanitizer($_POST['comments_avatar'], '0', 'comments_avatar'),
-        'comments_jquery'        => form_sanitizer($_POST['comments_jquery'], '0', 'comments_jquery'),
         'comments_sorting'       => form_sanitizer($_POST['comments_sorting'], 'DESC', 'comments_sorting'),
         'index_url_bbcode'       => form_sanitizer($_POST['index_url_bbcode'], '0', 'index_url_bbcode'),
         'index_url_userweb'      => form_sanitizer($_POST['index_url_userweb'], '0', 'index_url_userweb'),
@@ -143,12 +141,6 @@ echo form_checkbox('comments_sorting', $locale['684'], $settings_misc['comments_
 echo form_checkbox('comments_avatar', $locale['656'], $settings_misc['comments_avatar'], array(
     'inline'  => TRUE,
     'options' => $choice_arr,
-    'type'    => 'radio',
-));
-echo form_checkbox('comments_jquery', $locale['656a'], $settings_misc['comments_jquery'], array(
-    'inline'  => TRUE,
-    'options' => $choice_arr,
-    'ext_tip' => $locale['656b'],
     'type'    => 'radio',
 ));
 closeside();

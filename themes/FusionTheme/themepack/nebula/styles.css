@@ -16,7 +16,7 @@
 +--------------------------------------------------------*/
 @import url('css/carousel.css');
 @import url('css/panel.css');
-/*@import url('Nebula/css/table.css');*/
+@import url('css/table.css');
 @import url('css/comp.css');
 @import url('css/page.css');
 @import url('css/animate.min.css');
@@ -33,23 +33,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a, h4 a:hover, a:hover h5, h5 > a:hover, a:hover h6, h6 > a:hover {
-    color: #01ACDE;
+    color: #0061D5;
     -webkit-transition: color 0.15s ease-out; -moz-transition: color 0.15s ease-out; -ms-transition: color 0.15s ease-out; -o-transition: color 0.15s ease-out; transition: color 0.15s ease-out;
     outline: 0;
-}
-
-a:hover, a:focus {
-    color: #384554;
-    text-decoration: none;
 }
 
 ul > li {
     list-style: none;
 }
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
-    background-size: cover;
-    min-height: 300px;
+    background: #22498E;
+    min-height: 400px;
 }
 
 .nebulaBg.full {
@@ -60,22 +54,59 @@ header .headerInner {
     position: relative;
 }
 
+header .fa.fa-angle-down {
+    margin-left: 5px;
+}
 header .navbar-default {
     background: transparent;
     width: 100%;
     border: 0;
-    margin: 0;
+    margin-top: 20px;
+    margin-bottom: 0;
 }
-
 header .navbar-default .navbar-collapse {
     background: #fff;
     border-radius: 0;
     color: #444;
     padding: 15px 15px 12px 15px;
     border: none;
-    -webkit-transition: all 0.3s ease-out; -moz-transition: all 0.3s ease-out; -ms-transition: all 0.3s ease-out; -o-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
 }
 
+header .navbar-default a.navbar-brand {
+    color: #444;
+    font-size: 26px;
+    font-weight: 600;
+    padding-top: 10px;
+}
+
+header .navbar-default.affix a.navbar-brand {
+    color: #fff;
+}
+
+header .navbar-default .navbar-toggle .icon-bar {
+    background-color: #444;
+}
+
+header .navbar-default.affix .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+header .navbar-default.affix .navbar-collapse {
+    background: #2854A1;
+    color: #fff;
+}
+
+header .navbar-default.affix .navbar-nav > li > a,
+header .navbar-default.affix .navbar-nav > li.active > a,
+header .navbar-default.affix .navbar-nav > li.active > a:hover,
+header .navbar-default.affix .navbar-nav > li.active > a:focus,
+header .navbar-default.affix .navbar-nav > li > a:hover,
+header .navbar-default.affix .navbar-nav > li > a:focus,
+header .navbar-default.affix .navbar-nav > li.open > a,
+header .navbar-default.affix .navbar-nav > li.open > a:hover,
+header .navbar-default.affix .navbar-nav > li.open > a:focus {
+    color: #fff;
+}
 header .navbar-default .navbar-nav > li.active > a,
 header .navbar-default .navbar-nav > li.active > a:hover,
 header .navbar-default .navbar-nav > li.active > a:focus,
@@ -84,7 +115,7 @@ header .navbar-default .navbar-nav > li > a:focus,
 header .navbar-default .navbar-nav > li.open > a,
 header .navbar-default .navbar-nav > li.open > a:hover,
 header .navbar-default .navbar-nav > li.open > a:focus {
-    color: #01ACDE;
+    color: #000;
     font-weight: 600;
     background: none !important;
     text-decoration: none;
@@ -99,79 +130,108 @@ header .navbar-default .navbar-nav > li.open > a:focus {
 }
 
 header .navbar-default .navbar-nav > li > a {
-    font: 600 15px/150% 'Segoe UI', Helvetica, Arial, sans-serif;
-    text-transform: uppercase;
-    color: #444;
-    border-right: 1px solid rgba(0, 0, 0, .05) !important;
+    font: 600 16px/150% 'Segoe UI', Helvetica, Arial, sans-serif;
+    color: #000;
+    text-align: center;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: -ms-flex;
+    display: flex;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-align-content: center;
+    -moz-align-content: center;
+    -ms-align-content: center;
+    align-content: center;
+    -ms-flex-line-pack: stretch;
+}
+
+header .navbar-default .navbar-nav > li > a:before {
+    content: ' ';
+    position: absolute;
+    display: block;
+    width: 20px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    left: 0;
+    height: 3px;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+header .navbar-default .navbar-nav > li.open > a:before,
+header .navbar-default .navbar-nav > li > a:hover:before {
+    background: #fff;
+    width: 90%;
 }
 
 header .navbar-default .navbar-nav > li > .dropdown-menu {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    background: #F2F2F2;
+    background: #23262D;
     border-radius: 0;
-    top: 64px;
+    top: 66px;
     box-shadow: none;
     border-radius: 0;
 }
 
+header .navbar-default .navbar-nav > li > .dropdown-menu > li:hover,
+header .navbar-default .navbar-nav > li > .dropdown-menu > li:focus {
+    background: rgba(0, 0, 0, .3);
+}
 header .navbar-default .navbar-nav > li > .dropdown-menu > li > a {
-    font: 14px/150% 'Segoe UI', Helvetica, Arial, sans-serif;
-    color: #5f5f5f;
+    color: #fff;
+    font-weight: 700;
     text-decoration: none;
     padding: 10px 20px;
     display: block;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
-
 header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
 header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
-    color: #2e2e2e;
+    color: #1ebbf0;
+    background: -webkit-gradient(linear, left top, right top, color-stop(32%, #1ebbf0), color-stop(100%, #39dfaa));
+    background: -webkit-linear-gradient(left, #1ebbf0 32%, #39dfaa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-decoration: none;
-    background: rgba(0, 0, 0, .06);
-}
-
-/** Responsive Menu */
-@media only screen and (max-width: 767px) {
-    header .navbar-default {
-        margin-bottom: 0;
-        background: #fff;
-    }
-
-    header .navbar-default .navbar-collapse {
-        padding-left: 100px;
-    }
 }
 
 #headerBar {
     height: 130px;
     display: block;
 }
-
 header .logo, header .navbar-header {
     padding-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 11px;
 }
-
 header .navbar-header > ul.navbar-nav li > a {
     padding: 0 15px;
     font-size: 14px;
+    color: #fff;
 }
 header .headerContent {
     padding: 3% 0;
     color: #fff;
     text-align: left;
 }
-
-#DefaultMenu.affix {
+header .navbar.affix {
+    background: #2854A1;
     width: 100%;
     left: 0;
     top: 0;
     margin: 0 auto;
-    height: 79px;
+    height: 81px;
     z-index: 701;
-    background: #fff;
     opacity: .97;
     filter: alpha(opacity=97);
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
@@ -179,7 +239,6 @@ header .headerContent {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
-
 header h1 {
     font: 700 70px/90px 'Segoe UI', Helvetica, Arial, sans-serif;
 }
@@ -190,6 +249,14 @@ header h1 {
     background-repeat: no-repeat;
     padding: 30px 0;
     position: relative;
+}
+
+.nebulaBody > .container {
+    margin-top: 100px;
+}
+
+.nebulaBody > .container > .row {
+    margin-bottom: 100px;
 }
 
 .nebulaSubheader h4, .nebulaSubheader .breadcrumb { margin: 0; }
@@ -210,8 +277,13 @@ header h1 {
     margin-top: 15px;
 }
 
-.nebulaContentTop, .nebulaFooter {
-    background: #212331;
+.nebulaContentTop {
+    background: #F9F9FA;
+    padding-bottom: 50px;
+}
+
+.nebulaFooter {
+    background: #171F25;
     color: #99a9b5;
     font-size: 15px;
     line-height: 22px;
@@ -222,6 +294,7 @@ header h1 {
 }
 .nebulaBottom {
     background: #F4F6F7;
+    padding: 100px 0;
 }
 
 .nebulaFooter h4 {
@@ -232,7 +305,7 @@ header h1 {
 }
 
 .nebulaFooter .form-control {
-    background-color: #181828;
+    background-color: rgba(255, 255, 255, .02);
     border: 2px solid #394050;
     color: #fff;
 }
@@ -243,45 +316,58 @@ header h1 {
 }
 
 .nebulaCopyright {
-    background: #181828;
-    color: #99a9b5;
-    padding: 40px 0;
-    border-top: 1px solid #313646;
+    background: #fff;
+    color: #444;
+    padding: 50px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: -2;
 }
 
+.nicescroll-cursors {
+    background: #ccc !important;
+}
 .nebulaCanvas {
-    width: 250px;
+    width: 300px;
+    border-right: 1px solid #ccc;
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    background: #1e2024;
+    background: #fff;
     z-index: 21;
     transition: all 0.3s ease-in-out;
 }
 .nebulaCanvas .contentLeft {
-    padding: 3% 25px;
+    padding: 30px;
     height: 100vh;
     overflow-y:scroll;
 }
 .canvas-toggle {
     position: absolute;
     margin-left: 100%;
-    top: 200px;
+    top: 155px;
     display: block;
-    background: #1e2024;
+    background: #fff;
     padding: 25px;
 }
-
 .nebulaCanvas.off {
-    left: -250px;
+    left: -300px;
 }
-
 .nebulaCanvas a {
-    color: #fff;
     text-decoration: none;
+    color: #444;
+    font-weight: 700;
 }
 
+.nebulaCanvas > .canvas-toggle {
+    color: #444;
+    border: 1px solid #ccc;
+    border-left: none;
+}
 .nebulaCanvas a:hover,
 .nebulaCanvas a:focus {
     color: #01ACDE;
@@ -297,15 +383,12 @@ header h1 {
 .nebulaCanvas .contentLeft .panel,
 .nebulaCanvas .contentLeft .panel-default .panel-heading,
 .nebulaCanvas .contentLeft .panel-footer {
-    color: #fff;
     border-color: rgba(255, 255, 255, .1);
 }
 
-
-
 .nebulaBody {
-    padding: 3% 0;
-    padding-bottom: 0;
+    margin-bottom: 160px;
+    background: #fff;
 }
 
 .control-label > img {
@@ -313,12 +396,33 @@ header h1 {
     width: 24px;
 }
 
-/******************
-Left
-******************/
-.contentLeft > .openSide,
-.contentLeft > .openSide > .title {
+/*
+contentAupper
+ */
+.contentAupper {
+    color: #787d85;
+}
+
+.contentAupper > .openTable > .title {
+    color: #292e36;
+}
+
+.contentAupper > .openTable {
+    position: relative;
+    margin: 100px 0;
+    color: #fff !important;
+}
+
+.contentAupper h1, .contentAupper h2, .contentAupper h3, .contentAupper h4, .contentAupper h5, .contentAupper h6, .contentAupper > .openTable > .title {
     color: #fff;
+}
+
+.contentAupper td {
+    color: #444;
+}
+
+.contentLower {
+    padding: 50px 0;
 }
 
 /*******************
@@ -390,25 +494,42 @@ Buttons
 /* btn-primary */
 .btn {
     font-weight: 600;
-    border-width: 2px;
 }
 
+.input-group > .input-group-btn > .btn {
+    height: 45px;
+}
 .form-control {
     color: #626262;
     background-color: rgba(255, 255, 255, 1);
-    border-color: #EBEBEB;
-    padding: 10px;
     outline: none;
-    margin: 0;
+    margin: 0 0 20px;
     max-width: 100%;
     display: block;
-    margin-bottom: 20px;
     font-size: 13px;
-    border-width: 1px;
-    border-style: solid;
     border-radius: 0;
     box-sizing: border-box;
     -webkit-appearance: none;
+    border: 1px solid #CCC;
+    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    height: 45px;
+}
+
+textarea.form-control {
+    max-height: 300px !important;
+    overflow-y: scroll;
+}
+
+.btn.btn-file, .form-control.file-caption {
+    padding-top: 12px;
 }
 /* btn-success */
 .btn.btn-success {
@@ -492,14 +613,12 @@ Buttons
 /* btn-default */
 .btn-primary, .btn.btn-default.active {
     color: rgb(255, 255, 255);
-    background-color: rgb(0, 188, 212);
-    border-color: rgb(0, 188, 212);
+    background: #2854A1;
 }
 
 .btn.btn-default {
-    color: rgb(255, 255, 255);
-    background-color: rgb(59, 65, 95);
-    border-color: rgb(59, 65, 95);
+    color: #747474;
+    background-color: #fff;
 }
 
 .btn.btn-default.btn-bordered {
@@ -509,9 +628,7 @@ Buttons
 }
 
 .btn.btn-default:hover, .btn.btn-default:focus {
-    color: rgb(255, 255, 255);
-    border-color: rgb(92, 107, 192);
-    background-color: rgb(92, 107, 192);
+    background-color: #EBEBEB;
 }
 
 .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-default.btn-bordered.btn-fill:hover, .btn.btn-primary:hover, .btn.btn-primary:focus {
@@ -989,4 +1106,127 @@ bbcode input
 .bbcode_input > div input[type=image] {
     width: 18px !important;
     margin-right: 8px;
+}
+
+/**
+Comments
+ */
+.sub_comments {
+    position: relative;
+    margin: 15px 0;
+    border-left: 1px solid #ccc;
+    padding-left: 15px;
+}
+
+.small, .text-smaller {
+    font-size: 90% !important;
+}
+
+/*
+Forum
+ */
+.forum.label > .detail {
+    padding: 9px .833em;
+    margin-top: -3px;
+}
+
+.dropdown-menu.forum-post-options li > span {
+    padding: 3px 20px;
+    display: block;
+}
+
+.emulated-legend {
+    font-size: 14px !important;
+}
+
+.attachments-list img {
+    width: 300px !important;
+    height: auto !important;
+    display: inline-block !important;
+}
+
+/*
+Media queries for navbar-collapse
+Cellphones
+ */
+@media only screen and (max-width: 767px) {
+
+    .canvas-toggle {
+        top: 85%;
+    }
+
+    /** Responsive Menu */
+    header .navbar-default {
+        margin: 0;
+        background: #fff;
+    }
+    header .navbar-default .navbar-collapse {
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-top: 0;
+    }
+
+    header .navbar-default .navbar-brand {
+        margin-left: 15px;
+    }
+
+    header .navbar-default .navbar-nav > li > a:before {
+        visibility: hidden;
+    }
+
+    .nebulaCopyright {
+        padding: 35px 60px;
+    }
+
+    .nebulaFooter {
+        padding: 5% 80px;
+    }
+
+    #top {
+        margin-top: 15px;
+        margin-right: 30px;
+        border-radius: 50%;
+        background: #fff;
+        padding: 2.3% 3% 3% 3%;
+        margin-bottom: -70px;
+        border: 1px solid #ccc;
+    }
+    /*
+    Page 1
+     */
+    .carousel-caption {
+        top: -150px !important;
+    }
+    #showcase > div:first-child {
+        width: 100%;
+    }
+    #showcase {
+        height: 800px;
+    }
+    #showcase:after {
+        height: 800px;
+        background-position: center 230px;
+    }
+    #showcase > div:first-child .text-left {
+        margin: 50px 0 !important;
+        padding: 0 80px;
+    }
+    #support .support {
+        margin: 35px 0 0 !important;
+    }
+    #support p {
+        color: #fff !important;
+    }
+    #home_parallax::before {
+        background-position: center 400px;
+    }
+}
+
+.select2-results .select2-highlighted {
+    color: #616161;
+}
+
+.search table {
+    background-color: inherit;
+    border: none;
 }

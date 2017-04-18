@@ -72,6 +72,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<button type='button' value='right' title='".$locale['html_008']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:right;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-right'></i></button>\n";
         $res .= "<button type='button' value='justify' title='".$locale['html_009']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:justify;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-justify'></i></button>\n";
         $res .= "</div>\n";
+
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='glyphicon glyphicon-paperclip'></i></button>\n";
         //$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 dropdown-toggle button' data-toggle='dropdown' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
@@ -182,15 +183,17 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
             $res .= form_select($textarea.'-insertimage', '', '',
                                 array(
-                                    'options' => $options,
+                                    'options'     => $options,
                                     'placeholder' => $locale['html_011'],
-                                    'allowclear' => TRUE,
-                                    'width' => '200px'
+                                    'allowclear'  => TRUE,
+                                    'width'       => '200px',
+                                    'class'       => 'm-0'
+
                                 )
             );
             add_to_jquery("
             $('#$textarea-insertimage').bind('change', function(e){
-                insertText('$textarea', '<img src=\"".fusion_get_settings('site_path')."'+$(this).val()+'\" alt=\"\" style=\"margin:5px\"/>', '$formname');
+                insertText('$textarea', '<img src=\"".fusion_get_settings('siteurl')."'+$(this).val()+'\" alt=\"\" class=\"img-responsive\" style=\"margin:5px;s\"/>', '$formname');
                 $(this).select2('val', '');
             });
             ");

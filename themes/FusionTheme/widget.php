@@ -31,7 +31,6 @@ class FusionThemeAdmin {
         if (isset($_POST['save_settings'])) {
             $inputArray = array(
                 "theme_pack" => form_sanitizer($_POST['theme_pack'], "", "theme_pack"),
-                "theme_font" => isset($_POST['theme_font']) ? form_sanitizer($_POST['theme_font'], "", "theme_font") : "",
             );
             if (defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -41,7 +40,7 @@ class FusionThemeAdmin {
                         "settings_theme" => "FusionTheme",
                     );
                     dbquery_insert(DB_SETTINGS_THEME, $sqlArray, "update", array("primary_key" => "settings_name"));
-                    addNotice("success", "Theme Settings Updated");
+                    addNotice("success", fusion_get_locale('WIDGET_001', THEME.'locale/'.LANGUAGE.'.php'));
                 }
                 if (defender::safe()) {
                     redirect(FUSION_REQUEST);

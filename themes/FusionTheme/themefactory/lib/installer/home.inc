@@ -26,7 +26,8 @@ class HomeInstall {
 
     public function __construct() {
         // Page
-        self::$locale = fusion_get_locale('', THEME."ThemeFactory/Lib/Installer/locale/".LANGUAGE.".php");
+        self::$locale = fusion_get_locale('', THEME."themefactory/lib/installer/locale/".LANGUAGE.".php");
+        $row_id = [];
 
         $cpData = array(
             'page_id'           => 0,
@@ -73,10 +74,10 @@ class HomeInstall {
             'page_widget'        => ''
         );
         $col_id = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $clData, 'save');
-// update
+        // update
         dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_grid_id='$grid_id', page_content_id='$col_id' WHERE page_id='$page_id'");
 
-// Carousel Data
+        // Carousel Data
         $rowData[1] = array(
             'page_grid_id'           => 0,
             'page_id'                => $page_id,
@@ -87,18 +88,7 @@ class HomeInstall {
             'page_grid_order'        => 1,
         );
 
-// block and latest
-        $rowData[2] = array(
-            'page_grid_id'           => 0,
-            'page_id'                => $page_id,
-            'page_grid_container'    => 1,
-            'page_grid_column_count' => 1,
-            'page_grid_html_id'      => 'latest',
-            'page_grid_class'        => '',
-            'page_grid_order'        => 2,
-        );
-
-// theme
+        // theme
         $rowData[3] = array(
             'page_grid_id'           => 0,
             'page_id'                => $page_id,
@@ -147,7 +137,7 @@ class HomeInstall {
          * End of row insertion
          */
 
-// Carousel - OK
+        // Carousel - OK
         $sliderDesc = str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"),
             self::$locale['homeSetup_0102']);
         $sliderDesc .= "\n";
@@ -186,43 +176,7 @@ class HomeInstall {
             'page_widget'        => 'slider'
         );
 
-// Latest block
-        $colData[2] = array(
-            'page_id'            => $page_id,
-            'page_grid_id'       => $row_id[2],
-            'page_content_id'    => 0,
-            'page_content_type'  => self::$locale['homeSetup_0106'],
-            'page_content'       => \defender::serialize(
-                array(
-                    'block_title'       => self::$locale['homeSetup_0110'],
-                    'block_description' => self::$locale['homeSetup_0111'],
-                    'block_align'       => 'text-left',
-                    'block_class'       => '',
-                    'block_margin'      => '35px 0',
-                    'block_padding'     => '',
-                )
-            ),
-            'page_options'       => '',
-            'page_content_order' => 1,
-            'page_widget'        => 'block'
-        );
-
-        $colData[3] = array(
-            'page_id'            => $page_id,
-            'page_grid_id'       => $row_id[2],
-            'page_content_id'    => 0,
-            'page_content_type'  => self::$locale['homeSetup_0106'],
-            'page_content'       => \defender::serialize(
-                array(
-                    'panel_include' => 'home_panel'
-                )
-            ),
-            'page_options'       => '',
-            'page_content_order' => 2,
-            'page_widget'        => 'panel'
-        );
-
-// Theme
+        // Theme
         $colData[4] = array(
             'page_id'            => $page_id,
             'page_grid_id'       => $row_id[3],
@@ -243,7 +197,7 @@ class HomeInstall {
             'page_widget'        => 'block'
         );
 
-// Why you'll love PHP-Fusion
+        // Why you'll love PHP-Fusion
         $colData[5] = array(
             'page_id'            => $page_id,
             'page_grid_id'       => $row_id[4],
@@ -318,5 +272,4 @@ class HomeInstall {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='viewpage.php?page_id=$last_inserted_home' WHERE settings_name='opening_page'");
 
     }
-
 }

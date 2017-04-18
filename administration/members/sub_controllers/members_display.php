@@ -199,10 +199,10 @@ class Members_Display extends Members_Admin {
                 foreach ($key as $data_key) {
                     switch ($data_key) {
                         case 'user_joined' :
-                            $data[$data_key] = date('d-M-Y', $data[$data_key]);
+                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
                             break;
                         case 'user_lastvisit':
-                            $data[$data_key] = date('d-M-Y', $data[$data_key]);
+                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
                             break;
                         case 'user_groups':
                             if (!empty($data[$data_key])) {

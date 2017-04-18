@@ -183,6 +183,8 @@ function check_admin_pass($password) {
  */
 
 function redirect($location, $delay = FALSE, $script = FALSE) {
+    //define('STOP_REDIRECT', true);
+    $location = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? FUSION_ROOT.$location : $location;
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
@@ -210,7 +212,7 @@ function redirect($location, $delay = FALSE, $script = FALSE) {
  * @return string
  */
 function cleanurl($url) {
-    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
+    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "", "", "*");
     $safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
 
     return str_replace($bad_entities, $safe_entities, $url);
@@ -491,12 +493,12 @@ function parsesmileys($message) {
     if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
         foreach (cache_smileys() as $smiley) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
-            $smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+            $smiley_image = get_image("smiley_".$smiley['smiley_text']);
+            $smiley_image = "<img src='$smiley_image' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
             $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
         }
     }
-
-    return fusion_parse_user($message);
+    return $message;
 }
 
 /**
@@ -584,13 +586,15 @@ function parse_imageDir($data, $prefix_ = "") {
  * @return string
  */
 function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
-    $text = $decode ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
-    $text = $default_image_folder ? parse_imageDir($text, $default_image_folder) : $text;
-    $text = $smileys ? parsesmileys($text) : $text;
-    $text = $bbcode ? parseubb($text) : $text;
+    $text = $decode == TRUE ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
+    $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
+    $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
+    $text = $smileys == TRUE ? parsesmileys($text) : $text;
+    $text = $bbcode == TRUE ? parseubb($text) : $text;
+    $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
     if (defined('IN_PERMALINK')) {
-        $text = strtr($text, [fusion_get_settings('site_path') => '']);
+        //$text = strtr($text, [fusion_get_settings('site_path') => '']);
     }
     return (string)$text;
 }

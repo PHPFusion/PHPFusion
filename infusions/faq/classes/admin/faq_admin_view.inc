@@ -39,7 +39,7 @@ class FaqAdminView extends FaqAdminModel {
         // Handle Breadcrumbs and Titles
         BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink(), "title" => $this->locale['faq_0001']));
 
-        $faqTitle = $this->locale['faq_0002'];
+        $faqTitle = $this->locale['faq_0000'];
         if ($_GET['section'] == 'faq') {
             if (isset($_GET['ref'])) {
                 switch ($_GET['ref']) {

@@ -99,6 +99,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
+                'news_image_align'         => '',
             );
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
@@ -203,7 +204,7 @@ class NewsAdmin extends NewsAdminModel {
                 if (file_exists(IMAGES_N.$photo_data['news_image'])) unlink(IMAGES_N.$photo_data['news_image']);
                 if (file_exists(IMAGES_N_T.$photo_data['news_image_t1'])) unlink(IMAGES_N_T.$photo_data['news_image_t1']);
                 if (file_exists(IMAGES_N_T.$photo_data['news_image_t2'])) unlink(IMAGES_N_T.$photo_data['news_image_t2']);
-                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0 AND submit_id !=0");
             }
         }
     }
@@ -323,13 +324,11 @@ class NewsAdmin extends NewsAdminModel {
 
                     openside(self::$locale['news_0006']);
 
-                    if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
-                        // have an image id with 0
+                    if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0 AND submit_id=0")) {
                         echo "<div class='list-group-item m-b-10'>\n";
                         echo "<img src='".IMAGES_N.dbresult(dbquery("SELECT news_image FROM ".DB_NEWS_IMAGES." WHERE news_id=0"), 0)."' class='img-responsive'>\n";
                         echo form_button('del_photo', self::$locale['news_0010'], self::$locale['news_0010'], ['class' => 'btn-danger btn-block spacer-xs']);
                         echo "</div>\n";
-
                     } else {
                         echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
                             array(
@@ -492,7 +491,8 @@ class NewsAdmin extends NewsAdminModel {
             'template'         => 'modern',
             'class'            => 'm-b-0',
             'valid_ext'        => $news_settings['news_file_types'],
-            'multiple'         => TRUE
+            'multiple'         => TRUE,
+            'max_count'        => 8
         );
 
         $alignOptions = array(

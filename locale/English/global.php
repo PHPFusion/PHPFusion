@@ -435,8 +435,8 @@ $locale['parent'] = "Create as New Parent..";
 $locale['order'] = "Item Ordering";
 $locale['status'] = "Status";
 $locale['note'] = "Make a note of this item";
-$locale['publish'] = "Published";
-$locale['unpublish'] = "Unpublished";
+$locale['publish'] = "Publish";
+$locale['unpublish'] = "Unpublish";
 $locale['sticky'] = "Sticky";
 $locale['unsticky'] = "Unsticky";
 $locale['draft'] = "Draft";
@@ -458,6 +458,7 @@ $locale['nopreview'] = "There is nothing to Preview";
 $locale['mark_as'] = "Mark As";
 $locale['preview'] = "Preview";
 $locale['custom'] = "Custom";
+$locale['submit'] = "Submit";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
@@ -503,5 +504,8 @@ $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
 $locale['fmt_points'] = "point|points";
+$locale['fmt_admin'] = "admin|admins";
+$locale['fmt_group'] = "group|groups";
+$locale['fmt_category'] = "category|categories";
 // include Defender locales
 include __DIR__."/defender.php";

@@ -117,12 +117,12 @@ class Poll {
                             }
                         }
                         if (\defender::safe()) {
-                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
+                            redirect(FORUM."postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                         }
                     }
                     // how to make sure values containing options votes
                     $poll_field['openform'] = openform('pollform', 'post', FUSION_REQUEST);
-                    $poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
+                    $poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".str_replace('{REQUIRED}','<span class=\'required\'>*</span>', $locale['forum_0613'])."</div>\n";
                     $poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'],
                         array(
                             'max_length'  => 255,
@@ -170,6 +170,7 @@ class Poll {
                     redirect(FORUM."index.php"); // redirect because the poll id is not available.
                 }
             } else {
+
                 // Save New Poll
                 if (isset($_POST['add_poll'])) {
                     dbquery_insert(DB_FORUM_POLLS, $poll_data, 'save');
@@ -186,7 +187,7 @@ class Poll {
                     }
                     if (\defender::safe()) {
                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'");
-                        redirect(FORUM.'postify.php?post=newpoll&error=0&forum_id='.self::$data['forum_id'].'&thread_id='.self::$data['thread_id']);
+                        redirect(FORUM."postify.php?post=newpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                     }
 
                 }
@@ -219,7 +220,7 @@ class Poll {
             }
 
             $info = array(
-                'title'       => $locale['forum_0366'],
+                'title'       => (isset($_GET['action']) && $_GET['action'] == 'editpoll') ? $locale['forum_0603'] : $locale['forum_0366'],
                 'description' => $locale['forum_2000'].self::$data['thread_subject'],
                 'field'       => $poll_field
             );
@@ -227,7 +228,7 @@ class Poll {
             display_forum_pollform($info);
 
         } else {
-            redirect(FORUM."index.php");
+            redirect(FORUM);
         }
     }
 

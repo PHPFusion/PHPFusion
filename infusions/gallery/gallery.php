@@ -24,6 +24,7 @@ require_once THEMES."templates/header.php";
 $locale = fusion_get_locale('', GALLERY_LOCALE);
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
+
 $gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) {
     define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
@@ -71,8 +72,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
-        set_title($data['photo_title'].$locale['global_200']);
-        add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title($data['photo_title'].$locale['global_201']);
+        add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
             'title' => $data['album_title']
@@ -173,17 +174,18 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         redirect(INFUSIONS.'gallery/gallery.php');
     }
 } else {
+
     if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 
         /* View Album */
         $result = dbquery("SELECT album_title, album_description, album_keywords, album_image, album_thumb1, album_thumb2, album_access
-	FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'
-	");
+        FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'
+        ");
         if (dbrows($result) > 0) {
             $info = dbarray($result);
 
-            set_title($info['album_title'].$locale['global_200']);
-            add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title($info['album_title'].$locale['global_201']);
+            add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php',
@@ -289,10 +291,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     } else {
 
         /* Main Index */
-        add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name"));
+
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS.'gallery/gallery.php',
-            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name")
         ]);
 
         $info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));

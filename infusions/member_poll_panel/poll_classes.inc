@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 class MemberPoll {
     private static $instance = NULL;
-    private static $rows = 0;
     private static $locale = array();
-    private static $opt_count = 2;
     private static $limit = 4;
 
     private $data = array(
@@ -32,7 +31,7 @@ class MemberPoll {
     );
 
     public function __construct() {
-        self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LOCALESET."poll.php");
+        self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php");
 
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
@@ -276,7 +275,7 @@ class MemberPoll {
                                 $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
                             }
 
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048'].":".$info_t['poll_table'][$key]['max_vote'];
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".$info_t['poll_table'][$key]['max_vote'];
                             $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].":".showdate("shortdate", $dat['poll_started']);
 
                             if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
@@ -379,7 +378,7 @@ class MemberPoll {
                                 echo "<p><strong>".$opt_votes."% [".(format_word($num_votes, self::$locale['POLL_040']))."]</strong></p>\n";
                             }
                             echo "<p><strong>".self::$locale['POLL_060'].$db_info."</strong></p>\n";
-                    echo "<p>".self::$locale['POLL_048'].":".showdate("shortdate", $data['poll_started'])."</p>\n";
+                    echo "<p>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
                     echo "<p class='display-inline-block badge'>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
                             if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
                                 echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
@@ -459,7 +458,7 @@ class MemberPoll {
 
                             echo "<div class='panel-footer'>\n";
                                 echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].$db_info."</strong></p>\n";
-                        echo "<p class='m-b-0'>".self::$locale['POLL_048'].":".showdate("shortdate", $data['poll_started'])."</p>\n";
+                        echo "<p class='m-b-0'>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
                         echo "<p class='display-inline-block badge class='m-b-0''>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
 
                                 if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
@@ -543,7 +542,7 @@ class MemberPoll {
 
         $opt_count = count($this->data['poll_opt']);
 
-        echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
+        echo openform('addcat', 'post', FORM_REQUEST, array('class' => "m-t-20"));
             echo form_hidden('poll_id', '', $this->data['poll_id']);
             echo form_hidden('opt_count', '', $opt_count);
             echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], array(

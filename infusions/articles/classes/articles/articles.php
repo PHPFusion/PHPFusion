@@ -37,12 +37,12 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks('', 'link_name')
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', 'link_name')
             )
         );
 
@@ -352,10 +352,10 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery($select, $bind);
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
             ));
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
@@ -456,7 +456,7 @@ abstract class Articles extends ArticlesServer {
                 }
             }
         } elseif (isset($crumb['title'])) {
-            add_to_title($locale['global_201'].$crumb['title']);
+            //add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
         }
     }
@@ -472,12 +472,9 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
         $settings = fusion_get_settings();
-
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
-
         BreadCrumbs::getInstance()->addBreadCrumb(array(
             "link"  => INFUSIONS."articles/articles.php",
-            "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+            "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
         ));
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
@@ -491,7 +488,7 @@ abstract class Articles extends ArticlesServer {
                 set_meta("keywords", $data['article_keywords']);
             }
 
-            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && !isset($_GET['rowstart'])) {
+            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && empty($_GET['rowstart'])) {
                 dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
                 $data['article_reads']++;
             }
@@ -500,10 +497,11 @@ abstract class Articles extends ArticlesServer {
 
             $_GET['cat_id'] = $data['article_cat_id'];
 
-            set_title($article_subject.self::$locale['global_200'].self::$locale['article_0005']);
-
             $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
+            set_title($article_subject);
+
             $this->article_cat_breadcrumbs($article_cat_index);
+
 
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
@@ -526,6 +524,7 @@ abstract class Articles extends ArticlesServer {
             redirect(INFUSIONS."articles/articles.php");
         }
 
+        add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
         return (array)$info;
 
     }

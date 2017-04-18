@@ -30,7 +30,6 @@ class UserFieldsInput {
     public $isAdminPanel = FALSE;
     private $_completeMessage;
     private $_method;
-    private $_noErrors = TRUE;
 
     private $_userEmail;
     private $_userHideEmail;
@@ -41,7 +40,6 @@ class UserFieldsInput {
 
     private $_isValidCurrentPassword = FALSE;
     private $_isValidCurrentAdminPassword = FALSE;
-    private $_userHash = FALSE;
     private $_userPassword = FALSE;
     private $_newUserPassword = FALSE;
     private $_newUserPassword2 = FALSE;
@@ -588,7 +586,7 @@ class UserFieldsInput {
         $this->data = $this->getData();
 
         // hidden input tamper check
-        if ($_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
+        if (isset($_GET['section']) && $_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
             \defender::stop();
         }
 
@@ -746,8 +744,9 @@ class UserFieldsInput {
         }
         if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
             if (!empty($_FILES['user_avatar']) && is_uploaded_file($_FILES['user_avatar']['tmp_name'])) {
-                $upload = form_sanitizer($_FILES['user_avatar'], "", "user_avatar");
-                if ($upload['error'] == 0) {
+                $upload = form_sanitizer($_FILES['user_avatar'], '', 'user_avatar');
+                if (isset($upload['error']) && !$upload['error']) {
+                    // ^ maybe use empty($upload['error']) also can but maybe low end php version has problem on empty.
                     $this->data['user_avatar'] = $upload['image_name'];
                 }
             }
