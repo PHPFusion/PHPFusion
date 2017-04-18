@@ -212,7 +212,7 @@ class Admin {
                 echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
                 echo "<div>\n";
                 if (!empty($theme_data['description'])) {
-                    echo "<div class='display-block m-b-10'>".$theme_data['description']."</div>";
+                    echo "<div class='display-block spacer-sm'>".$theme_data['description']."</div>";
                 }
                 if (!empty($theme_data['license'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
