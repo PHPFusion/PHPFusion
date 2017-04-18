@@ -16,3 +16,4 @@ $locale['news_0015'] = "List view";
 $locale['news_0016'] = "No categories defined.";
 $locale['news_0017'] = "Filter by";
 $locale['news_0018'] = "Show all news";
+$locale['news_0019'] = "News Gallery";

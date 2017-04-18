@@ -250,6 +250,8 @@ class News extends Core {
         </article>
 
         <?php if (!empty($news['news_gallery'])) : ?>
+            <hr/>
+            <?php openside(fusion_get_locale('news_0019')) ?>
             <div class='post-gallery'>
                 <div class='row'>
                     <?php $animate_delay = 200; ?>
@@ -261,6 +263,7 @@ class News extends Core {
                     <?php endforeach; ?>
                 </div>
             </div>
+            <?php closeside() ?>
         <?php endif; ?>
 
 

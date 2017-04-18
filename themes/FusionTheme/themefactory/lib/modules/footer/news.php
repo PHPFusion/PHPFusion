@@ -34,7 +34,7 @@ class News {
                 <?php foreach ($data['news_items'] as $news_id => $news_data) : ?>
                     <li class="m-b-20">
                         <div class="pull-left m-r-15" style="width:20%">
-                            <div class="display-block" style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
+                            <div class="display-block overflow-hide" style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
                                 <img class="center-xy" style="position:absolute; min-height: 70px; min-width: 70px;"
                                      src="<?php echo $news_data['news_image_optimized'] ?>"
                                      title="<?php echo $news_data['news_subject'] ?>"/>

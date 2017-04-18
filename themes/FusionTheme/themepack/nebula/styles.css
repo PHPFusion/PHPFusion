@@ -206,8 +206,6 @@ header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
     text-decoration: none;
 }
 
-
-
 #headerBar {
     height: 130px;
     display: block;
@@ -421,6 +419,10 @@ contentAupper
 
 .contentAupper td {
     color: #444;
+}
+
+.contentLower {
+    padding: 50px 0;
 }
 
 /*******************
