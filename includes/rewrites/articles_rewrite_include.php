@@ -21,37 +21,45 @@ if (!defined("IN_FUSION")) {
 }
 
 $regex = array(
-    "%article_id%" => "([0-9]+)",
-    "%c_start%" => "([0-9]+)",
-    "%rowstart%" => "([0-9]+)",
-    "%article_title%" => "([0-9a-zA-Z._\W]+)",
-    "%article_cat_id%" => "([0-9]+)",
+    "%article_id%"       => "([0-9]+)",
+    "%c_start%"          => "([0-9]+)",
+    "%comment_id%"       => "([0-9]+)",
+    "%comment_cat%"      => "([0-9]+)",
+    "%rowstart%"         => "([0-9]+)",
+    "%article_title%"    => "([0-9a-zA-Z._\W]+)",
+    "%article_cat_id%"   => "([0-9]+)",
     "%article_cat_name%" => "([0-9a-zA-Z._\W]+)",
-    "%type%" => "(A)",
-    "%stype%" => "(a)",
+    "%filter_type%"      => "([0-9a-zA-Z]+)",
+    "%type%"             => "(A)",
+    "%stype%"            => "(a)",
+    "%hash_stop%"        => "\#(?=\s*|)",
 );
 
 $pattern = array(
-    "submit/%stype%/articles" => "submit.php?stype=%stype%",
-    "submit/%stype%/articles/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=A",
-    "articles/comments-%c_start%/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
-    "articles/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%",
-    "articles/%article_id%-%rowstart%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
-    "articles/category/%article_cat_id%/%article_cat_name%" => "infusions/articles/articles.php?cat_id=%article_cat_id%",
-    "print/%type%/%article_id%/%article_title%" => "print.php?type=%type%&amp;item_id=%article_id%",
-    "articles" => "infusions/articles/articles.php",
+    "submit/%stype%/articles"                                                          => "submit.php?stype=%stype%",
+    "submit/%stype%/articles/submitted-and-thank-you"                                  => "submit.php?stype=%stype%&amp;submitted=A",
+    "articles/filter/%filter_type%"                                                    => "infusions/articles/articles.php?type=%filter_type%",
+    "print/%type%/%article_id%/%article_title%"                                        => "print.php?type=%type%&amp;item_id=%article_id%",
+    "articles/comments-reply-%comment_cat%/%article_id%/%article_title%"               => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%",
+    "articles/comments-reply-%comment_cat%/%article_id%/%article_title%#c%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%#c%comment_id%",
+    "articles/comments-%c_start%/%article_id%/%article_title%"                         => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
+    "articles/comments-%c_start%/%article_id%/%article_title%#%comment_id%"            => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
+    "articles/%article_id%/%article_title%"                                            => "infusions/articles/articles.php?article_id=%article_id%",
+    "articles/%article_id%-%rowstart%/%article_title%"                                 => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
+    "articles/category/%article_cat_id%/%article_cat_name%"                            => "infusions/articles/articles.php?cat_id=%article_cat_id%",
+    "articles"                                                                         => "infusions/articles/articles.php",
 );
 
 $pattern_tables["%article_id%"] = array(
-    "table" => DB_ARTICLES,
+    "table"       => DB_ARTICLES,
     "primary_key" => "article_id",
-    "id" => array("%article_id%" => "article_id"),
-    "columns" => array("%article_title%" => "article_subject",)
+    "id"          => array("%article_id%" => "article_id"),
+    "columns"     => array("%article_title%" => "article_subject",)
 );
 
 $pattern_tables["%article_cat_id%"] = array(
-    "table" => DB_ARTICLE_CATS,
+    "table"       => DB_ARTICLE_CATS,
     "primary_key" => "article_cat_id",
-    "id" => array("%article_cat_id%" => "article_cat_id"),
-    "columns" => array("%article_cat_name%" => "article_cat_name",)
+    "id"          => array("%article_cat_id%" => "article_cat_id"),
+    "columns"     => array("%article_cat_name%" => "article_cat_name",)
 );

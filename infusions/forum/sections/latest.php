@@ -46,7 +46,7 @@ $result = dbquery("
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
 	".groupaccess('tf.forum_access')." AND t.thread_hidden='0'
 	".(isset($_POST['filter']) && $_POST['filter'] ? "AND t.thread_lastpost < '".(time() - ($_POST['filter'] * 24 * 3600))."'" : '')."
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$forum_settings['threads_per_page']
+	GROUP BY thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$_GET['rowstart'].", ".$forum_settings['threads_per_page']
 );
 // link also need to change
 $this->forum_info['thread_max_rows'] = dbrows($result);
@@ -96,7 +96,7 @@ if (dbrows($result) > 0) {
                 'file' => $threads['attach_files'] > 0 ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                 'icon' => $icon,
             ),
-            "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
+            "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
                                                                                                                                  $author['user_name'],
                                                                                                                                  $author['user_status'])."</span>",
             "thread_author" => $author,

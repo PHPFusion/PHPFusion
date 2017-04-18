@@ -22,23 +22,15 @@ if (!defined('IN_FUSION')) {
 define('MATERIAL', THEMES.'admin_themes/Material/');
 require_once INCLUDES.'theme_functions_include.php';
 require_once MATERIAL.'theme_autoloader.php';
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-Material\Main::AddTo();
 
-function render_admin_login() {
-    Material\Main::Login();
-}
+\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 function render_admin_panel() {
-    Material\Main::AdminPanel();
+    new Material\AdminPanel();
 }
 
-function render_dashboard() {
-    Material\Dashboard::RenderDashboard();
-}
-
-function render_admin_icon() {
-    Material\Dashboard::AdminIcons();
+function render_admin_login() {
+    new Material\Login();
 }
 
 function render_admin_dashboard() {
@@ -46,23 +38,23 @@ function render_admin_dashboard() {
 }
 
 function openside($title = FALSE, $class = NULL) {
-    Material\Main::OpenSide($title, $class);
+    Material\Components::OpenSide($title, $class);
 }
 
 function closeside($title = FALSE) {
-    Material\Main::CloseSide($title);
+    Material\Components::CloseSide($title);
 }
 
 function opentable($title, $class = NULL) {
-    Material\Main::OpenTable($title, $class);
+    Material\Components::OpenTable($title, $class);
 }
 
 function closetable() {
-    Material\Main::CloseTable();
+    Material\Components::CloseTable();
 }
 
 function replace_meta($output = '') {
-    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#1e2c3c"/>', $output);
+    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#243447"/>', $output);
 }
 
 add_handler('replace_meta');

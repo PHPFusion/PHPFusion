@@ -17,10 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $locale = fusion_get_locale("",
-                            array(
-                                LOCALE.LOCALESET."setup.php",
-                                INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
-                            )
+    array(
+        LOCALE.LOCALESET."setup.php",
+        INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+    )
 );
 
 // Infusion general information
@@ -31,15 +31,15 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "forum";
-$inf_image = "forums.png";
+$inf_image = "forums.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-    "title" => $locale['forums']['title'],
+    "title"  => $locale['forums']['title'],
     "rights" => "FO",
 );
 $inf_mlt[] = array(
-    "title" => $locale['setup_3038'],
+    "title"  => $locale['setup_3038'],
     "rights" => "FR",
 );
 /**
@@ -105,11 +105,6 @@ if (!db_exists($db_prefix."forum_post_notify")) {
 	KEY notify_datestamp (notify_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }
-
-/**
- * Modify Table Structure -- Columns
- */
-
 /*
  * Modify Forum Table
  */
@@ -179,7 +174,6 @@ if (column_exists('forums', 'forum_attach')) {
 if (column_exists('forums', 'forum_attach_download')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
 }
-
 // Update existing records and change level accesses to new user groups values
 $result = dbquery("SELECT forum_id, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download FROM ".$db_prefix."forums");
 if (dbrows($result) > 0) {
@@ -217,8 +211,6 @@ if (dbrows($result) > 0) {
      */
     $inf_updatedbrow[] = $db_prefix."forums SET forum_type = 2 WHERE forum_cat != 0";
 }
-
-
 /*
  * Modify Forum Ranks Table
  */
@@ -236,7 +228,6 @@ if (dbrows($result) > 0) {
         $inf_updatedbrow[] = $db_prefix."forum_ranks SET rank_apply ='-".$data['rank_apply']."' WHERE rank_id='".$data['rank_id']."'";
     }
 }
-
 /*
  * Modify Forum Threads Table
  */
@@ -253,17 +244,12 @@ if (!column_exists('forum_threads', 'thread_tags_change')) {
 if (!column_exists('forum_threads', 'thread_answered')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky";
 }
-
 /*
  * Modify Forum Attachment Table
  */
 if (!column_exists('forum_attachments', 'attach_mime') && column_exists('forum_attachments', 'attach_ext')) {
     $inf_altertable[] = $db_prefix."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
 }
-
-
-
-
 // Clear old core settings if they are there regardless of current state
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_ips'";
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_attachmax'";
@@ -281,47 +267,48 @@ $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='threads_per_page'";
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='posts_per_page'";
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='numofthreads'";
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_rank_style'";
-
-
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_forum.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='forum_ranks.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='forums.php'";
-
 // Insert new and old settings tables to Infusions table
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ranks', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_lock', '0', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_timelimit', '0', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '604800', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_posts_reply', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_editpost_to_lastpost', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('threads_per_page', '20', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_rank_style', '0', 'forum')";
-
+$check_array = [
+    'forum_ips'                  => -103,
+    'forum_attachmax'            => 1000000,
+    'forum_attachmax_count'      => 5,
+    'forum_attachtypes'          => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
+    'thread_notify'              => 1,
+    'forum_ranks'                => 1,
+    'forum_edit_lock'            => 0,
+    'forum_edit_timelimit'       => 0,
+    'popular_threads_timeframe'  => 604800,
+    'forum_last_posts_reply'     => 1,
+    'forum_last_post_avatar'     => 1,
+    'forum_editpost_to_lastpost' => 1,
+    'threads_per_page'           => 20,
+    'posts_per_page'             => 20,
+    'numofthreads'               => 16,
+    'forum_rank_style'           => 0,
+];
+foreach ($check_array as $name => $val) {
+    if (!dbcount("(setting_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
+    }
+}
 // Add forum default thread tag //FORUM_LOCALE
-$inf_insertdbrow[] = $db_prefix."forum_thread_tags (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
-
-
+if (!dbcount("(tag_title)", DB_FORUM_TAGS)) {
+    $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
+}
 if (function_exists("fusion_get_enabled_languages")) {
     $enabled_languages = array_keys(fusion_get_enabled_languages());
 } else {
     $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 }
 
-// Create a link for all installed languages
+// Multi-language Insertions
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-
-        $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
-        $locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
-
+        $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"]);
+        // Link
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', '0', '2', '-101', '1', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".$language."')";
@@ -329,7 +316,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', '0', '2', '-101', '4', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')";
-
+        // Ranks
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', '-103', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3601']."', 'rank_admin.png', 0, '1', '-102', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3602']."', 'rank_mod.png', 0, '1', '-104', '".$language."')";
@@ -339,9 +326,8 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', '-101', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', '-101', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', '-101', '".$language."')";
-
         $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".$language."')";
-
+        // Delete rows
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/index.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/newthread.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/index.php?section=latest' AND link_language='".$language."'";
@@ -361,12 +347,11 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".LANGUAGE."')";
 }
-
 // Admin links
 $inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "F",
-    "title" => $locale['setup_3012'],
-    "panel" => "admin/forums.php"
+    "title"  => $locale['setup_3012'],
+    "panel"  => "admin/forums.php"
 );

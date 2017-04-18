@@ -50,3 +50,13 @@ Morphs Mobile Icons
 .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
     z-index: 0;
 }
+
+.bbcode-popup img {
+    width: auto;
+}
+
+.editor-wrapper input[type=image] {
+    width: 22px;
+    margin-right: 10px;
+    margin-top: 5px;
+}

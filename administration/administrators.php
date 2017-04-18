@@ -76,7 +76,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 
 if (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1) {
     if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-        $result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_level='-101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<='-102'");
+        $result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level='-101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<='-102'");
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         redirect(FUSION_SELF.$aidlink."&status=del", TRUE);
     } else {
@@ -136,10 +136,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             if ($counter != 0 && ($counter % $columns == 0)) {
                 echo "</tr>\n<tr>\n";
             }
-            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'><input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'],
-                                                                                                                                                                              $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'],
-                                                                                                                                                                                                                                   $user_rights) ? " checked='checked'" : "")." /> ".$data2['admin_title']."</label>".(in_array($data2['admin_rights'],
-                                                                                                                                                                                                                                                                                                                                $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
+            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'>";
+                echo "<input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'], $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'], $user_rights) ? " checked='checked'" : "")." /> ";
+                echo $data2['admin_title']."</label>".(in_array($data2['admin_rights'], $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
             $counter++;
         }
         echo "</tr>\n";

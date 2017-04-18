@@ -134,7 +134,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo form_select('download_cat_sort_by', $locale['download_0302'], $data['download_cat_sort_by'], array(
         'options' => array(
             '1' => $locale['download_0303'],
-            '2' => $locale['download_0304'],
+            '2' => $locale['download_0200'],
             '3' => $locale['download_0305']
         ),
         'class' => 'pull-left m-r-10',
@@ -170,7 +170,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $row_num = 0;
     showcatlist();
     if ($row_num == 0) {
-        echo "<div class='well text-center'>".$locale['download_0313']."</div>\n";
+        echo "<div class='well text-center'>".$locale['download_0251']."</div>\n";
     }
     echo closetabbody();
     echo closetab();
@@ -196,8 +196,10 @@ function showcatlist($parent = 0, $level = 0) {
 	ORDER BY d.download_cat_name
 	");
     if (dbrows($result) != 0) {
+        echo "<div class='row'>";
         while ($data = dbarray($result)) {
-            echo "<div class='list-group-item clearfix'>\n";
+            echo "<div class='col-xs-12 col-sm-6'>";
+            echo "<div class='well clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-5'>\n";
             echo "<a class='btn btn-sm btn-default' href='".clean_request("action=edit&cat_id=".$data['download_cat_id'], array(
                     "section",
@@ -215,8 +217,10 @@ function showcatlist($parent = 0, $level = 0) {
             }
             echo "</div>\n";
             echo "</div>\n";
+            echo "</div>";
             $row_num++;
             showcatlist($data['download_cat_id'], $level + 1);
         }
+        echo "</div>";
     }
 }

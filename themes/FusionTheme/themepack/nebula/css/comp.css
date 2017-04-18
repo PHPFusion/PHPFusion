@@ -1,0 +1,18 @@
+
+.openTable {
+    margin-bottom: 35px;
+}
+
+.openTable .title {
+    text-align: left;
+    font-size: 20px;
+    color: #3c3950;
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.list-group-item {
+    border-color: #dfe5e8;
+    -webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important;
+}

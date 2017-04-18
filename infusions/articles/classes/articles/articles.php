@@ -37,12 +37,12 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', 'link_name')
             )
         );
 
@@ -232,11 +232,15 @@ abstract class Articles extends ArticlesServer {
             // Article Texts
             $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
+            if (defined('IN_PERMALINK')) {
+                $data['article_snippet'] = strtr($data['article_snippet'], [fusion_get_settings('site_path') => '']);
+                $data['article_article'] = strtr($data['article_article'], [fusion_get_settings('site_path') => '']);
+            }
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
             // Handle Text
             if (isset($_GET['article_id'])) {
-                $articleText = $data['article_article'] ? "<p>".$data['article_snippet']."</p><p>".$data['article_article']."</p>" : "<p>".$data['article_snippet']."</p>";
+                $articleText = $data['article_article'] ? $data['article_article'] : $data['article_snippet'];
 
                 // Handle Pages
                 $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['article_breaks'] == "y" ? nl2br($articleText) : $articleText);
@@ -340,23 +344,18 @@ abstract class Articles extends ArticlesServer {
         $info = array_merge($info, self::get_ArticleCategories());
 
         // Filtered by Category ID.
-        $result = dbquery("
-            SELECT *
-            FROM ".DB_ARTICLE_CATS."
-            WHERE  ".(multilang_table("AR") ? "WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")." 
-            article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")."            
-        ", [
+        $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? "article_cat_language='".LANGUAGE."' AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
+        $bind = [
             ':cat_id' => intval($article_cat_id),
             ':status' => 1
-        ]);
-
-        if (dbrows($result) > 0) {
+        ];
+        $result = dbquery($select, $bind);
+        if (dbrows($result)) {
             $data = dbarray($result);
-
-            set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
             ));
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
@@ -457,7 +456,7 @@ abstract class Articles extends ArticlesServer {
                 }
             }
         } elseif (isset($crumb['title'])) {
-            add_to_title($locale['global_201'].$crumb['title']);
+            //add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
         }
     }
@@ -473,12 +472,9 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
         $settings = fusion_get_settings();
-
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
-
         BreadCrumbs::getInstance()->addBreadCrumb(array(
             "link"  => INFUSIONS."articles/articles.php",
-            "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+            "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
         ));
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
@@ -492,7 +488,7 @@ abstract class Articles extends ArticlesServer {
                 set_meta("keywords", $data['article_keywords']);
             }
 
-            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {
+            if (!isset($_POST['post_comment']) && !isset($_POST['post_rating']) && empty($_GET['rowstart'])) {
                 dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
                 $data['article_reads']++;
             }
@@ -501,10 +497,11 @@ abstract class Articles extends ArticlesServer {
 
             $_GET['cat_id'] = $data['article_cat_id'];
 
-            set_title($article_subject.self::$locale['global_200'].self::$locale['article_0005']);
-
             $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
+            set_title($article_subject);
+
             $this->article_cat_breadcrumbs($article_cat_index);
+
 
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
@@ -527,6 +524,7 @@ abstract class Articles extends ArticlesServer {
             redirect(INFUSIONS."articles/articles.php");
         }
 
+        add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
         return (array)$info;
 
     }
@@ -539,13 +537,12 @@ abstract class Articles extends ArticlesServer {
      * @return string
      */
     private static function get_ArticlesRatings($data) {
-        $html = "";
+        $html = '';
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
             require_once INCLUDES."ratings_include.php";
-            showratings("A", $data['article_id'], FUSION_SELF."?article_id=".$data['article_id']);
-            $html = ob_get_contents();
-            ob_end_clean();
+            showratings("A", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id']);
+            $html = ob_get_clean();
         }
 
         return (string)$html;
@@ -563,9 +560,8 @@ abstract class Articles extends ArticlesServer {
         if (fusion_get_settings('comments_enabled') && $data['article_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], FUSION_SELF."?article=".$data['article_id'], $data['article_allow_ratings']);
-            $html = ob_get_contents();
-            ob_end_clean();
+            showcomments("A", DB_ARTICLES, "article_id", $data['article_id'], BASEDIR."infusions/articles/articles.php?article_id=".$data['article_id'], FALSE);
+            $html = ob_get_clean();
         }
 
         return (string)$html;

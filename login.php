@@ -87,19 +87,15 @@ if (!iMEMBER) {
             $placeholder = $locale['global_101a'];
     }
     $info = array(
-        "open_form" => openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
-        "user_name" => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : "",
-                                 array('placeholder' => $placeholder)),
-        "user_pass" => form_text('user_pass', $locale['global_102'], "", array('placeholder' => $locale['global_102'], 'type' => 'password')),
-        "remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
-        "login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
-        "registration_link" => (fusion_get_settings("enable_registration")) ? str_replace(array(
-                                                                                              "[LINK]", "[/LINK]"
-                                                                                          ), array("<a href='".BASEDIR."register.php'>", "</a>"),
-                                                                                          $locale['global_105']) : "",
-        "forgot_password_link" => str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."lostpassword.php'>", "</a>"),
-                                              $locale['global_106']),
-        "close_form" => closeform()
+        'open_form'            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
+        'user_name'            => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]),
+        'user_pass'            => form_text('user_pass', $locale['global_102'], '', ['placeholder' => $locale['global_102'], 'type' => 'password']),
+        'remember_me'          => form_checkbox('remember_me', $locale['global_103'], '', ['reverse_label' => TRUE, 'ext_tip' => $locale['UM067']]),
+        'login_button'         => form_button('login', $locale['UM064'], $locale['UM064'], ['class' => 'btn-primary btn-login']),
+        'signup_button'        => "<a class='btn btn-default btn-register' href='".BASEDIR."register.php'>".$locale['global_109']."</a>\n",
+        'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
+        'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
+        'close_form'           => closeform()
     );
 }
 display_loginform($info);

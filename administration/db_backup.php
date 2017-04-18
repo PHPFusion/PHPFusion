@@ -28,6 +28,8 @@ class db_backup {
     private function execute_backup() {
         global $db_name, $db_prefix, $pdo_enabled;
         if (isset($_POST['btn_create_backup'])) {
+            ini_set('max_execution_time', 0);
+            set_time_limit(600);
             if (!check_admin_pass(isset($_POST['user_admin_password']) ? form_sanitizer($_POST['user_admin_password'], '', 'user_admin_password') : "")) {
                 defender::stop();
             }
@@ -56,19 +58,11 @@ class db_backup {
                     if ($result && dbrows($result)) {
                         echo $crlf."#".$crlf."# Table Data for `".$table."`".$crlf."#".$crlf;
                         $column_list = "";
-                        if ($pdo_enabled == "1") {
-                            $column_list = "";
-                            $num_fields = $result->columnCount();
-                            for ($i = 0; $i < $num_fields; $i++) {
-                                $column_meta = $result->getColumnMeta($i);
-                                $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
-                                unset($column_meta);
-                            }
-                        } else {
-                            $num_fields = mysql_num_fields($result);
-                            for ($i = 0; $i < $num_fields; $i++) {
-                                $column_list .= (($column_list != "") ? ", " : "")."`".mysql_field_name($result, $i)."`";
-                            }
+                        $num_fields = $result->columnCount();
+                        for ($i = 0; $i < $num_fields; $i++) {
+                            $column_meta = $result->getColumnMeta($i);
+                            $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
+                            unset($column_meta);
                         }
                     }
                     while ($row = dbarraynum($result)) {
@@ -78,11 +72,7 @@ class db_backup {
                             if (!isset($row[$i])) {
                                 $dump .= "NULL";
                             } elseif ($row[$i] == "0" || $row[$i] != "") {
-                                if ($pdo_enabled == "1") {
-                                    $type = $this->GetSqlFieldType($table, $i);
-                                } else {
-                                    $type = mysql_field_type($result, $i);
-                                }
+                                $type = $this->GetSqlFieldType($table, $i);
                                 if (substr($type, 0, 7) == "tinyint" || substr($type, 0, 8) == "smallint" || substr($type, 0,
                                         9) == "mediumint" || substr($type, 0,
                                         3) == "int" || substr($type,

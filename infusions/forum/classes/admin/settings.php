@@ -65,7 +65,6 @@ class ForumAdminSettings extends ForumAdminInterface {
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='numofthreads' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$threads_num' WHERE settings_name='threads_per_page' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$posts_num' WHERE settings_name='posts_per_page'  AND settings_inf='forum'");
-                //".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ips' WHERE settings_name='forum_ips' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='forum_attachmax' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'");
@@ -97,29 +96,29 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "<div class='col-xs-12 col-sm-8'>\n";
         openside('');
         echo "<span class='small pull-right'>* ".self::$locale['506']."</span><br/>\n";
-        echo form_text('numofthreads', self::$locale['505'], $forum_settings['numofthreads'], array(
+        echo form_text('numofthreads', self::$locale['505'], $forum_settings['numofthreads'], [
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1,
+            'inline'     => TRUE,
             'width'      => '150px',
             'type'       => 'number'
-        ));
+        ]);
         closeside();
         openside('');
-        echo form_text('threads_per_page', self::$locale['forum_080'], $forum_settings['threads_per_page'], array(
+        echo form_text('threads_per_page', self::$locale['forum_080'], $forum_settings['threads_per_page'], [
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1,
+            'inline'     => TRUE,
             'width'      => '150px',
             'type'       => 'number'
-        ));
-        echo form_text('posts_per_page', self::$locale['forum_081'], $forum_settings['posts_per_page'], array(
+        ]);
+        echo form_text('posts_per_page', self::$locale['forum_081'], $forum_settings['posts_per_page'], [
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1,
+            'inline'     => TRUE,
             'width'      => '150px',
             'type'       => 'number'
-        ));
+        ]);
         closeside();
         openside(self::$locale['forum_136']);
-        $points_config = ['type' => 'number', 'width' => '150px', 'placeholder' => '1', 'inline' => TRUE, 'append' => 1, 'append_value' => self::$locale['forum_135']];
+        $points_config = ['type' => 'number', 'width' => '150px', 'placeholder' => '1', 'inline' => TRUE, 'append' => TRUE, 'append_value' => self::$locale['forum_135']];
         echo form_text('upvote_points', self::$locale['forum_130'], $forum_settings['upvote_points'], $points_config);
         echo form_text('downvote_points', self::$locale['forum_131'], $forum_settings['downvote_points'], $points_config);
         echo form_text('answering_points', self::$locale['forum_132'], $forum_settings['answering_points'], $points_config);
@@ -127,72 +126,72 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo form_text('points_to_downvote', self::$locale['forum_134'], $forum_settings['points_to_downvote'], $points_config);
         closeside();
         openside(self::$locale['forum_admin_001']);
-        echo form_select('forum_ranks', self::$locale['520'], $forum_settings['forum_ranks'], array(
+        echo form_select('forum_ranks', self::$locale['520'], $forum_settings['forum_ranks'], [
             'options'    => $yes_no_array,
-            'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
-        echo form_select('forum_rank_style', self::$locale['forum_064'], $forum_settings['forum_rank_style'], array(
-            'options'    => array(
+            'inline'     => TRUE,
+            'error_text' => self::$locale['error_value']
+        ]);
+        echo form_select('forum_rank_style', self::$locale['forum_064'], $forum_settings['forum_rank_style'], [
+            'options'    => [
                 self::$locale['forum_063'],
                 self::$locale['forum_062']
-            ),
-            'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
+            ],
+            'inline'     => TRUE,
+            'error_text' => self::$locale['error_value']
+        ]);
         closeside();
 
         openside('');
-        echo form_select('thread_notify', self::$locale['512'], $forum_settings['thread_notify'], array(
+        echo form_select('thread_notify', self::$locale['512'], $forum_settings['thread_notify'], [
             'options'    => $yes_no_array,
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
+            'inline'     => TRUE
+        ]);
         closeside();
         openside('');
         echo "<span class='pull-right position-absolute small' style='right:30px;'>".self::$locale['537']."</span>\n";
-        echo form_select('forum_edit_timelimit', self::$locale['536'], $forum_settings['forum_edit_timelimit'], array(
-            'options'    => array(
+        echo form_select('forum_edit_timelimit', self::$locale['536'], $forum_settings['forum_edit_timelimit'], [
+            'options'    => [
                 '0',
                 '10',
                 '30',
                 '45',
                 '60'
-            ),
+            ],
             'max_length' => 2,
             'width'      => '100px',
-            'required'   => 1,
+            'required'   => TRUE,
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
-        echo form_select('forum_ips', self::$locale['507'], $forum_settings['forum_ips'], array(
+            'inline'     => TRUE
+        ]);
+        echo form_select('forum_ips', self::$locale['507'], $forum_settings['forum_ips'], [
             'options'    => $yes_no_array,
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
+            'inline'     => TRUE
+        ]);
 
         echo form_select('forum_last_post_avatar', self::$locale['539'], $forum_settings['forum_last_post_avatar'],
-            array(
+            [
                 'options'    => $yes_no_array,
                 'error_text' => self::$locale['error_value'],
-                'inline'     => 1
-            ));
-        echo form_select('forum_edit_lock', self::$locale['521'], $forum_settings['forum_edit_lock'], array(
+                'inline'     => TRUE
+            ]);
+        echo form_select('forum_edit_lock', self::$locale['521'], $forum_settings['forum_edit_lock'], [
             'options'    => $yes_no_array,
             'error_text' => self::$locale['error_value'],
-            'inline'     => 1
-        ));
+            'inline'     => TRUE
+        ]);
         echo form_select('forum_editpost_to_lastpost', self::$locale['538'],
-            $forum_settings['forum_editpost_to_lastpost'], array(
+            $forum_settings['forum_editpost_to_lastpost'], [
                 'options'    => $yes_no_array,
                 'error_text' => self::$locale['error_value'],
-                'inline'     => 1
-            ));
+                'inline'     => TRUE
+            ]);
         closeside();
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         openside('');
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+        $calc_opts = self::$locale['1020'];
         $calc_c = self::calculate_byte($forum_settings['forum_attachmax']);
         $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
         require_once INCLUDES."mimetypes_include.php";
@@ -207,40 +206,41 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "<div class='clearfix'>\n";
         echo "<span class='pull-right small'>".self::$locale['509']."</span>";
         echo "<label for='calc_c'>".self::$locale['508']."</label><br />\n";
-        echo form_text('calc_b', '', $calc_b, array(
-            'required'   => 1,
-            'number'     => 1,
+        echo form_text('calc_b', '', $calc_b, [
+            'required'   => TRUE,
+            'type'       => 'number',
             'error_text' => self::$locale['error_rate'],
             'width'      => '100px',
             'max_length' => '3',
             'class'      => 'm-r-10 pull-left'
-        ));
-        echo form_select('calc_c', '', $calc_c, array(
+        ]);
+        echo form_select('calc_c', '', $calc_c, [
             'options'     => $calc_opts,
             'placeholder' => self::$locale['choose'],
             'class'       => 'pull-left',
             'width'       => '100%'
-        ));
+        ]);
         echo "</div>\n";
         echo "<div class='clearfix'>\n";
         echo "<span class='small pull-right'>".self::$locale['535']."</span>\n";
         echo "<label for='attachmax_count'>".self::$locale['534']."</label>\n";
-        echo form_select('forum_attachmax_count', '', $forum_settings['forum_attachmax_count'], array(
-            'options'    => range(1, 10),
+        $range = range(1, 10);
+        echo form_select('forum_attachmax_count', '', $forum_settings['forum_attachmax_count'], [
+            'options'    => array_combine(range(1, count($range)), array_values($range)),
             'error_text' => self::$locale['error_value'],
             'width'      => '100%'
-        ));
+        ]);
         echo "</div>\n";
         echo "<div class='clearfix'>\n";
         echo "<span class='small pull-right'>".self::$locale['511']."</span>\n";
-        echo form_select('forum_attachtypes', self::$locale['510'], $forum_settings['forum_attachtypes'], array(
+        echo form_select('forum_attachtypes', self::$locale['510'], $forum_settings['forum_attachtypes'], [
             'options'     => $mime_opts,
             'width'       => '100%',
             'error_text'  => self::$locale['error_type'],
-            'tags'        => 1,
-            'multiple'    => 1,
+            'tags'        => TRUE,
+            'multiple'    => TRUE,
             'placeholder' => self::$locale['choose']
-        ));
+        ]);
         echo "</div>\n";
         closeside();
         openside('');
@@ -259,25 +259,25 @@ class ForumAdminSettings extends ForumAdminInterface {
         }
         echo "<div class='clearfix'>\n";
         echo form_select('popular_threads_timeframe', self::$locale['525'],
-            $forum_settings['popular_threads_timeframe'], array(
+            $forum_settings['popular_threads_timeframe'], [
                 'options'    => $timeframe_opts,
                 'error_text' => self::$locale['error_value'],
                 'width'      => '100%'
-            ));
+            ]);
         echo "</div>\n";
         echo "<div class='clearfix'>\n";
         echo form_select('forum_last_posts_reply', self::$locale['531'], $forum_settings['forum_last_posts_reply'],
-            array(
+            [
                 'options'    => $lastpost_opts,
                 'error_text' => self::$locale['error_value'],
                 'width'      => '100%'
-            ));
+            ]);
         echo "</div>\n";
-        echo form_button('recount_user_post', self::$locale['523'], '1', array('class' => 'btn-primary btn-block'));
+        echo form_button('recount_user_post', self::$locale['523'], '1', ['class' => 'btn-primary btn-block']);
         closeside();
         echo "</div>\n";
         echo "</div>\n";
-        echo form_button('savesettings', self::$locale['750'], self::$locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+        echo form_button('savesettings', self::$locale['750'], self::$locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
     }
 
@@ -289,7 +289,7 @@ class ForumAdminSettings extends ForumAdminInterface {
      * @return int|string
      */
     protected static function calculate_byte($download_max_b) {
-        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+        $calc_opts = self::$locale['1020'];
         foreach ($calc_opts as $byte => $val) {
             if ($download_max_b / $byte <= 999) {
                 return $byte;

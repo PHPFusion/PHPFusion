@@ -29,8 +29,7 @@ abstract class resource extends Admins {
 
     private static $userdata = array();
 
-    private static $locale = array();
-    private static $messages = array();
+    protected static $locale = array();
 
     public function __construct() {
         self::$page_title = $this->set_page_title();
@@ -139,51 +138,7 @@ abstract class resource extends Admins {
             FUSION_REQUEST."&amp;logout" => self::$locale['admin-logout'],
             BASEDIR."index.php?logout=yes" => self::$locale['logout']
         );
-
-        $msg_count_sql = "message_to = '".self::$userdata['user_id']."' AND message_user='".self::$userdata['user_id']."'";
-
-        $msg_search_sql = "
-                        SELECT message_id, message_subject,
-                        message_from 'sender_id', u.user_name 'sender_name', u.user_avatar 'sender_avatar', u.user_status 'sender_status',
-                        message_datestamp
-                        FROM ".DB_MESSAGES."
-                        INNER JOIN ".DB_USERS." u ON u.user_id=message_from
-                        WHERE message_to = '".self::$userdata['user_id']."' AND message_user='".self::$userdata['user_id']."' AND message_read='0'
-                        GROUP BY message_id
-                        ";
-
-        if (dbcount("(message_id)", DB_MESSAGES, $msg_count_sql)) {
-
-            $msg_result = dbquery($msg_search_sql);
-
-            if (dbrows($msg_result) > 0) {
-
-                while ($data = dbarray($msg_result)) {
-
-                    self::$messages[] = array(
-                        "link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
-                        "title" => $data['message_subject'],
-                        "sender" => array(
-                            "user_id" => $data['sender_id'],
-                            "user_name" => $data['sender_name'],
-                            "user_avatar" => $data['sender_avatar'],
-                            "user_status" => $data['sender_status'],
-                        ),
-                        "datestamp" => timer($data['message_datestamp']),
-                    );
-
-                }
-
-            }
-
-        }
-
     }
-
-    public static function get_messages() {
-        return self::$messages;
-    }
-
 
     public static function get_udrop() {
         return self::$user_drop;

@@ -24,13 +24,12 @@ if (!column_exists(DB_PHOTOS, 'photo_keywords', FALSE)) {
     $inf_altertable[] = DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description";
 }
 
-
 $check_array = [
     'album_language' => " ADD album_language varchar(50) NOT NULL default '".fusion_get_settings('localeset')."' AFTER album_datestamp",
     'album_keywords' => " ADD album_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER album_description",
-    'album_image' => " ADD album_image VARCHAR(200) NOT NULL DEFAULT '' AFTER album_keywords",
-    'album_thumb1' => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
-    'album_thumb2' => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1",
+    'album_image'    => " ADD album_image VARCHAR(200) NOT NULL DEFAULT '' AFTER album_keywords",
+    'album_thumb1'   => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
+    'album_thumb2'   => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
@@ -43,36 +42,50 @@ if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
 }
 
 // Update new access levels for album access
-$result = dbquery("SELECT album_id, album_access FROM ".DB_PHOTO_ALBUMS."");
-if (dbrows($result) > 0) {
+$result = dbquery("SELECT album_id, album_access, album_language FROM ".DB_PHOTO_ALBUMS);
+if (dbrows($result)) {
+    $localeset = fusion_get_settings('localeset');
     while ($data = dbarray($result)) {
-        if ($data['album_access']) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_access ='-".$data['album_access']."' WHERE album_id='".$data['album_id']."'";
+        $update = array();
+        if ($data['album_access']) { // access > 1 (i.e. 100, 101, 102, 103)
+            $update['album_access'] = '-'.$data['album_access'];
+        }
+        if (!$data['album_language']) {
+            $update['album_language'] = $localeset;
+        }
+        if (!empty($update)) {
+            $update = array_map(function ($key) use ($update) {
+                return "`$key` = '".$update[$key]."'";
+            }, array_keys($update));
+        }
+        $upgrade = implode(', ', $update);
+        if (!empty($update)) {
+            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET $upgrade WHERE album_id='".$data['album_id']."'";
         }
     }
 }
 
 $check_array = [
-    'thumb_w' => 640,
-    'thumb_h' => 480,
-    'photo_w' => 1920,
-    'photo_h' => 1080,
-    'photo_max_w' => 2400,
-    'photo_max_h' => 2400,
-    'photo_max_b' => 2000000,
-    'thumbs_per_row' => 4,
-    'admin_thumbs_per_row' => 6,
-    'photo_watermark' => 1,
-    'photo_watermark_image' => 'infusions/gallery/photos/watermark.png',
-    'photo_watermark_text' => 0,
+    'thumb_w'                     => 640,
+    'thumb_h'                     => 480,
+    'photo_w'                     => 1920,
+    'photo_h'                     => 1080,
+    'photo_max_w'                 => 2400,
+    'photo_max_h'                 => 2400,
+    'photo_max_b'                 => 2000000,
+    'thumbs_per_row'              => 4,
+    'admin_thumbs_per_row'        => 6,
+    'photo_watermark'             => 1,
+    'photo_watermark_image'       => 'infusions/gallery/photos/watermark.png',
+    'photo_watermark_text'        => 0,
     'photo_watermark_text_color1' => 'FF6600',
     'photo_watermark_text_color2' => 'FFFF00',
     'photo_watermark_text_color3' => 'FFFFFF',
-    'photo_watermark_save' => 0,
-    'gallery_pagination' => 24,
-    'gallery_extended_required' => 1,
-    'gallery_allow_submission' => 1
-
+    'photo_watermark_save'        => 0,
+    'gallery_pagination'          => 24,
+    'gallery_extended_required'   => 1,
+    'gallery_allow_submission'    => 1,
+    'gallery_file_types'          => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('gallery');
 foreach ($check_array as $key => $value) {
@@ -94,4 +107,4 @@ if (dbrows($result) > 0) {
     }
 }
 
-$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/gallery/gallery.png', `admin_link`='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/gallery/gallery.svg', admin_link='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'";

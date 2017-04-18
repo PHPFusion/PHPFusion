@@ -17,11 +17,10 @@
 +--------------------------------------------------------*/
 // Path Definitions
 $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
-
-$widget_title = $widget_locale['0100'];
-$widget_icon = "<span class='fa-stack fa-2x'><i class='fa fa-square-o fa-stack-2x'></i><i class='fa fa-magnet fa-stack-1x'></i></span>";
-$widget_description = $widget_locale['0101'];
-$widget_admin_file = "panel_admin.php";
-$widget_display_file = "panel.php";
-$widget_admin_callback = "panelWidgetAdmin";
-$widget_display_callback = "panelWidget";
+$widget_title = $widget_locale['PW_0100'];
+$widget_icon = 'panel.svg';
+$widget_description = $widget_locale['PW_0101'];
+$widget_admin_file = 'panel_admin.php';
+$widget_display_file = 'panel.php';
+$widget_admin_callback = 'panelWidgetAdmin';
+$widget_display_callback = 'panelWidget';

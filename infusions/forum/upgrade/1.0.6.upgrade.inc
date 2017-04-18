@@ -23,26 +23,22 @@ $locale = fusion_get_locale("",
     )
 );
 
-// Infusion general information
-$inf_title = $locale['forums']['title'];
-$inf_description = $locale['forums']['description'];
 $inf_version = '1.0.6';
-$inf_developer = 'PHP Fusion Development Team';
-$inf_email = 'info@php-fusion.co.uk';
-$inf_weburl = 'https://www.php-fusion.co.uk';
-$inf_folder = 'forum';
-$inf_image = 'forums.png';
-
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('upvote_points', '2', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('downvote_points', '1', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('answering_points', '15', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_upvote', '100', 'forum')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', 'forum')";
-
+$check_array = [
+    'upvote_points'      => 2,
+    'downvote_points'    => 1,
+    'answering_points'   => 15,
+    'points_to_upvote'   => 100,
+    'points_to_downvote' => 100,
+];
+foreach ($check_array as $name => $val) {
+    if (!dbcount("(setting_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
+    }
+}
 if (!column_exists('forum_threads', 'thread_bounty')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL DEFAULT '0' AFTER thread_answered";
 }
-
 if (!column_exists('forum_threads', 'thread_bounty_description')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_description TEXT NOT NULL AFTER thread_bounty";
 }
@@ -55,8 +51,12 @@ if (!column_exists('forum_threads', 'thread_bounty_user')) {
     $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_start";
 }
 
-if (!column_exists('forum_posts', 'post_answer')) {
+if (!column_exists('forum_posts', 'post_cat')) {
     $inf_altertable[] = $db_prefix."forum_posts ADD post_answer TINYINT(1) NOT NULL DEFAULT '0' AFTER post_locked";
+}
+
+if (!column_exists('forum_posts', 'post_answer')) {
+    $inf_altertable[] = $db_prefix."forum_posts ADD post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER post_id";
 }
 
 if (!column_exists('users', 'user_reputation')) {

@@ -167,9 +167,9 @@ if (!function_exists('render_main_news')) {
         ?>
         <ul>
             <?php if (!empty($info['news_categories'])) :
-                foreach ($info['news_categories'] as $cat_id => $cat_data) :
-                    echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
-                endforeach;
+                foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
+                    echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+                }
                 echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
             else:
                 echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";

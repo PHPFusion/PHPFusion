@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
-    global $settings;
+    $settings = fusion_get_settings();
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);
@@ -64,7 +64,7 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 }
 
 function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
-    global $settings;
+    $settings = fusion_get_settings();
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);

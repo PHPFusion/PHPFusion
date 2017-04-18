@@ -37,16 +37,15 @@ class Forum_Bounty extends ForumServer {
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';
         $bounty_points = 50;
+        $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
         if ($edit ? self::get_bounty_permissions('can_edit_bounty') : self::get_bounty_permissions('can_start_bounty')) {
-            $locale = fusion_get_locale("", FORUM_LOCALE);
             $default = 50;
             for ($i = 1; $i <= 10; $i++) {
-                $points[$i * $default] = format_word($i * $default, 'Point|Points');
+                $points[$i * $default] = format_word($i * $default, $locale['forum_2015']);
             }
             if (isset($_POST['save_bounty'])) {
                 $bounty_description = form_sanitizer($_POST['bounty_description'], '', 'bounty_description');
-                $bounty_points = form_sanitizer($_POST['bounty_points'], $default, 'bounty_points');
                 if (\defender::safe()) {
                     if ($edit) {
                         dbquery('UPDATE '.DB_FORUM_THREADS.' SET thread_bounty_description=:thread_bounty_description WHERE thread_id=:thread_id',
@@ -56,6 +55,7 @@ class Forum_Bounty extends ForumServer {
                             ]
                         );
                     } else {
+                        $bounty_points = form_sanitizer($_POST['bounty_points'], $default, 'bounty_points');
                         $point_bal = fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
@@ -81,13 +81,11 @@ class Forum_Bounty extends ForumServer {
 
             $bounty_field['openform'] = openform('set_bountyfrm', 'post', FUSION_REQUEST, ['class' => 'spacer-xs']);
             $bounty_field['closeform'] = closeform();
-            $bounty_field['bounty_description'] = form_textarea('bounty_description', 'Bounty Description', $bounty_description, ['type' => 'bbcode']);
-            if (!$edit) {
-                $bounty_field['bounty_select'] = form_select('bounty_points', 'Set Bounty', $bounty_points, ['options' => $points]);
-            }
-            $bounty_field['bounty_button'] = form_button('save_bounty', 'Start Bounty', 'Start Bounty', ['class' => 'btn-primary']);
+            $bounty_field['bounty_description'] = form_textarea('bounty_description', $locale['forum_2016'], $bounty_description, ['type' => 'bbcode']);
+            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'] , $bounty_points, ['options' => $points]) : '');
+            $bounty_field['bounty_button'] = form_button('save_bounty', $locale['forum_2018'], $locale['forum_2018'], ['class' => 'btn-primary']);
             $info = array(
-                'title'       => 'Set a Bounty',
+                'title'       => $locale['forum_2014'],
                 'description' => $locale['forum_2000'].self::$data['thread_subject'],
                 'field'       => $bounty_field
             );
@@ -123,7 +121,7 @@ class Forum_Bounty extends ForumServer {
                     ];
                     dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
                     $title = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
+                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($post_data['post_author'], 0, $title, stripinput($message));
                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
                             [
@@ -210,7 +208,7 @@ class Forum_Bounty extends ForumServer {
                     send_pm(self::$data['thread_bounty_user'], 0, $subject, stripinput($message));
 
                     $subject = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>".self::$data['thread_subject']."</a>"]);
+                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($data['post_author'], 0, $subject, stripinput($message));
                 }
                 // consumes the bounty

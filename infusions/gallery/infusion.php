@@ -28,11 +28,11 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "gallery";
-$inf_image = "gallery.png";
+$inf_image = "gallery.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-    "title" => $locale['setup_3308'],
+    "title"  => $locale['setup_3308'],
     "rights" => "PG",
 );
 
@@ -77,11 +77,11 @@ $inf_newtable[] = DB_PHOTOS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "PH",
-    "title" => $locale['setup_3308'],
-    "panel" => "gallery_admin.php"
+    "title"  => $locale['setup_3308'],
+    "panel"  => "gallery_admin.php"
 );
 
 // Gallery settings
@@ -102,6 +102,7 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_allow_submission', '1', 'gallery')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_extended_required', '1', 'gallery')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_file_types', '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', 'gallery')";
 
 // always find and loop ALL languages
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

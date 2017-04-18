@@ -19,7 +19,7 @@
 /**
  * Class panelWidgetAdmin
  */
-class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $widget_data = array();
 
@@ -32,7 +32,6 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
 
         return self::$instance;
     }
-
 
     public function exclude_return() {
     }
@@ -62,27 +61,26 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
             self::$widget_data = \defender::unserialize(self::$colData['page_content']);
         }
         // Installed panel is displayed here. The visibility should be also seperately configured
-        $panel_alt = str_replace(
-            array("[LINK]", "[/LINK]"),
-            array(
-                "<a href='".ADMIN."panels.php".fusion_get_aidlink()."' title='".$widget_locale['0100']."'>",
-                "</a>"
-            ), $widget_locale['0201']);
-        echo form_select('panel_include', $widget_locale['0200'], self::$widget_data['panel_include'],
+        $panel_alt = strtr($widget_locale['PW_0201'], [
+            '[LINK]'  => "<a href='".ADMIN."panels.php".fusion_get_aidlink()."' title='".$widget_locale['PW_0100']."'>",
+            '[/LINK]' => "</a>"
+        ]);
+        $panel_opts = \PHPFusion\Panels::get_available_panels();
+        unset($panel_opts['none']);
+        echo form_select('panel_include', $widget_locale['PW_0200'], self::$widget_data['panel_include'],
                          array(
-                             'inline' => TRUE,
-                             'options' => \PHPFusion\Panels::get_available_panels(),
+                             'class'   => 'm-b-0',
+                             'inline'  => TRUE,
+                             'options' => $panel_opts,
                              'ext_tip' => $panel_alt,
                          )
         );
-
-
     }
 
     public function display_form_button() {
         $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['0220'], 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', $widget_locale['0221'], 'widget', array('class' => 'btn-success'));
+        echo form_button('save_widget', $widget_locale['PW_0220'], 'widget', array('class' => 'btn-primary'));
+        echo form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', array('class' => 'btn-success'));
     }
 
 }

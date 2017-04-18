@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Page;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Panels;
 
 /**
@@ -27,10 +28,10 @@ use PHPFusion\Panels;
 class PageController extends PageModel {
 
     protected static $info = array(
-        'title' => '',
-        'error' => '',
-        'body' => '',
-        'count' => 0,
+        'title'   => '',
+        'error'   => '',
+        'body'    => '',
+        'count'   => 0,
         'pagenav' => '',
     );
 
@@ -68,6 +69,7 @@ class PageController extends PageModel {
         }
         $eval = ob_get_contents();
         ob_end_clean();
+        $htmlArray['pagenav'] = '';
         $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
         $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
         $htmlArray['count'] = count($htmlArray['body']);
@@ -75,10 +77,8 @@ class PageController extends PageModel {
             if ($htmlArray['rowstart'] > $htmlArray['count']) {
                 redirect(BASEDIR."viewpage.php?page_id=".intval($_GET['page_id']));
             }
-            $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1,
-                                                BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
+            $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1, BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
         }
-
         ob_start();
         display_page_content($htmlArray);
         $html = ob_get_contents();
@@ -131,7 +131,7 @@ class PageController extends PageModel {
             self::cache_widget();
             // Construct Meta
             add_to_title($locale['global_200'].self::$data['page_title']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
             if (!empty(self::$data['page_keywords'])) {
                 set_meta("keywords", self::$data['page_keywords']);
             }

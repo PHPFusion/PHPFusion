@@ -27,55 +27,62 @@ class PageModel {
      * @var array - default custom page data
      */
     protected static $data = array(
-        'page_id' => 0,
-        'page_cat' => 0,
-        'page_link_cat' => 0,
-        'page_title' => '',
-        'page_access' => iGUEST,
-        'page_content' => '',
-        'page_keywords' => '',
-        'page_status' => 0,
-        'page_user' => 0,
-        'page_datestamp' => 0,
-        'page_language' => LANGUAGE,
-        'page_grid_id' => 0,
-        'page_content_id' => 0,
-        'page_left_panel' => 1,
-        'page_right_panel' => 1,
+        'page_id'           => 0,
+        'page_cat'          => 0,
+        'page_link_cat'     => 0,
+        'page_title'        => '',
+        'page_access'       => iGUEST,
+        'page_content'      => '',
+        'page_keywords'     => '',
+        'page_status'       => 0,
+        'page_user'         => 0,
+        'page_datestamp'    => 0,
+        'page_language'     => LANGUAGE,
+        'page_grid_id'      => 0,
+        'page_content_id'   => 0,
+        'page_left_panel'   => 1,
+        'page_right_panel'  => 1,
         'page_header_panel' => 1,
         'page_footer_panel' => 1,
-        'page_top_panel' => 1,
+        'page_top_panel'    => 1,
         'page_bottom_panel' => 1
     );
     /**
      * @var array - default grid row data
      */
     protected static $rowData = array(
-        'page_grid_id' => 0,
-        'page_id' => 0,
-        'page_grid_container' => 0,
+        'page_grid_id'           => 0,
+        'page_id'                => 0,
+        'page_grid_container'    => 0,
         'page_grid_column_count' => 1,
-        'page_grid_html_id' => '',
-        'page_grid_class' => '',
-        'page_grid_order' => 1,
+        'page_grid_html_id'      => '',
+        'page_grid_class'        => '',
+        'page_grid_order'        => 1,
     );
     /**
      * @var array - default grid column data
      */
     protected static $colData = array(
-        'page_id' => 0,
-        'page_grid_id' => 0,
-        'page_content_id' => 0,
-        'page_content_type' => 'content',
-        'page_content' => '',
+        'page_id'            => 0,
+        'page_grid_id'       => 0,
+        'page_content_id'    => 0,
+        'page_content_type'  => 'content',
+        'page_content'       => '',
         'page_content_order' => 1,
-        'page_options' => ''
+        'page_options'       => ''
     );
     private static $page_instance = NULL;
 
     /**
+     * @var array       the row information
+     */
+    protected static $gridData = [];
+
+    /**
      * Return page composer object
+     *
      * @param bool|FALSE $set_info
+     *
      * @return null|static
      */
     public static function getInstance($set_info = FALSE) {
@@ -90,7 +97,9 @@ class PageModel {
 
     /**
      * Displays a single custom page data
+     *
      * @param $id - page_id
+     *
      * @return array;
      */
     public static function load_customPage($id) {
@@ -102,6 +111,7 @@ class PageModel {
                     ")
             );
         }
+
         return (array)$array;
     }
 
@@ -140,18 +150,18 @@ class PageModel {
             }
         }
         echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '',
-                         array(
-                             "options" => $edit_opts,
-                             "class" => 'm-b-0',
-                             "required" => TRUE,
-                         ));
+            array(
+                "options"  => $edit_opts,
+                "class"    => 'm-b-0',
+                "required" => TRUE,
+            ));
         echo form_hidden('section', '', 'cp2');
         echo form_hidden('aid', '', iAUTH);
         echo "</div>\n";
         echo form_button('action', $locale['edit'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
         echo form_button('action', $locale['delete'], 'delete', array(
             'class' => 'btn-danger pull-left',
-            'icon' => 'fa fa-trash'
+            'icon'  => 'fa fa-trash'
         ));
         echo closeform();
         echo "</div>\n";
@@ -170,25 +180,31 @@ class PageModel {
         $result = dbquery($query);
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
+                self::$gridData[$data['page_grid_id']] = [
+                    'page_id'                => $data['page_id'],
+                    'page_grid_id'           => $data['page_grid_id'],
+                    'page_grid_container'    => $data['page_grid_container'],
+                    'page_grid_column_count' => $data['page_grid_column_count'],
+                    'page_grid_html_id'      => $data['page_grid_html_id'],
+                    'page_grid_class'        => $data['page_grid_class'],
+                    'page_grid_order'        => $data['page_grid_order']/**/
+                ];
                 if (!empty($data['page_content_id'])) {
-                    // is a column
                     self::$composerData[$data['page_grid_id']][$data['page_content_id']] = $data;
                 } else {
                     self::$composerData[$data['page_grid_id']][] = $data;
                 }
-
                 // Load rowData
                 if (isset($_GET['row_id']) && $_GET['row_id'] == $data['page_grid_id']) {
                     self::$rowData = $data;
                 }
-
             }
         }
-        //print_p(self::$composerData);
     }
 
     /**
      * Cache widgets info and object
+     *
      * @return mixed
      */
     protected static function cache_widget() {
@@ -225,12 +241,13 @@ class PageModel {
                     }
 
                     $list[$folder] = array(
-                        'widget_name' => $folder,
-                        'widget_title' => ucfirst($widget_title),
-                        'widget_icon' => $widget_icon,
+                        'widget_name'        => $folder,
+                        'widget_title'       => ucfirst($widget_title),
+                        'widget_folder'      => $folder,
+                        'widget_icon'        => $widget_icon,
                         'widget_description' => $widget_description,
-                        'admin_instance' => $adminObj,
-                        'display_instance' => $displayObj,
+                        'admin_instance'     => $adminObj,
+                        'display_instance'   => $displayObj,
                     );
                 }
             }
@@ -242,7 +259,8 @@ class PageModel {
 
     /**
      * @param $max_column_limit - max grid count per row
-     * @param $current_count - current actual count if is a fluid design
+     * @param $current_count    - current actual count if is a fluid design
+     *
      * @return string
      */
     protected static function calculateSpan($max_column_limit, $current_count) {
@@ -259,6 +277,7 @@ class PageModel {
 
     /**
      * SQL delete page
+     *
      * @param $page_id
      */
     protected function delete_customPage($page_id) {
@@ -272,7 +291,9 @@ class PageModel {
 
     /**
      * Authenticate the page ID is valid
+     *
      * @param $id
+     *
      * @return bool|string
      */
     protected static function verify_customPage($id) {

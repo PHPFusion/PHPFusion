@@ -27,10 +27,10 @@ if (!function_exists("display_main_faq")) {
     function display_main_faq($info) {
         $locale = fusion_get_locale();
 
-        opentable($locale['faqs_0000']);
+        opentable($locale['faq_0000']);
         echo render_breadcrumbs();
 
-        echo "<h3 class='m-b-20'>".$locale['faqs_0001']."</h3>\n";
+        echo "<h3 class='m-b-20'>".$locale['faq_0001']."</h3>\n";
         if (!empty($info['faq_categories'])) {
             foreach ($info['faq_categories'] as $cat_id => $cat_data) {
                 echo "<div class='m-t-10' id='cat-".$cat_id."'>\n";
@@ -47,7 +47,7 @@ if (!function_exists("render_faq_item")) {
     function render_faq_item($info) {
         $locale = fusion_get_locale();
 
-        opentable($locale['faqs_0000']);
+        opentable($locale['faq_0000']);
         echo render_breadcrumbs();
 
         if (!empty($info['faq_items'])) {
@@ -57,14 +57,14 @@ if (!function_exists("render_faq_item")) {
             foreach ($info['faq_items'] as $faq_id => $faq_data) {
                 echo "<div id='faq-item-".$faq_id."'>";
                 $faq_admin = '';
-                $faq_print = "<a href='".BASEDIR."print.php?type=FQ&amp;item_id=".$faq_data['faq_id']."' title=".$locale['print'].">".$locale['print']."</a>\n";
+                $faq_print = "<a target='_blank' href='".BASEDIR."print.php?type=FQ&amp;item_id=".$faq_data['faq_id']."' title=".$locale['print'].">".$locale['print']."</a>\n";
                 if (iADMIN && checkrights("FQ")) {
                     $faq_admin = "&middot; <a href='".INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=edit&amp;cat_id=".$faq_data['faq_cat_id']."&amp;faq_id=".$faq_data['faq_id']."' title='".$locale['edit']."'>".$locale['edit']."</a>";
                 }
 
                 echo "<a data-toggle='collapse' href='#".$faq_id."' aria-expanded='false' aria-controls='".$faq_id."'>";
                     echo "<h4 class='display-inline-block'>".$faq_data['faq_question']."</h4>";
-                    echo "<a class='pull-right top' href='#' title=".$locale['faqs_0002']."><i class='fa fa-arrow-up'></i></a>\n";
+                echo "<a class='pull-right top' href='#' title=".$locale['faq_0002']."><i class='fa fa-arrow-up'></i></a>\n";
                 echo "</a>";
 
                 echo "<div class='collapse' id='".$faq_id."'>";
@@ -78,7 +78,7 @@ if (!function_exists("render_faq_item")) {
                 echo "</div>";
             }
         } else {
-            echo "<div class='well text-center'>".$locale['faqs_0010']."</div>";
+            echo "<div class='well text-center'>".$locale['faq_0112']."</div>";
         }
         closetable();
     }

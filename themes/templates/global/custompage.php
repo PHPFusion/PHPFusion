@@ -45,6 +45,7 @@ if (!function_exists("display_page_content")) {
             echo "</div>\n";
         } else {
             echo $info['body'][$info['rowstart']];
+            echo $info['pagenav'];
         }
     }
 }

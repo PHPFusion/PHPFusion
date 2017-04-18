@@ -39,28 +39,31 @@ abstract class Faq extends FaqServer {
      */
     public function set_FaqInfo($category = 0) {
         self::$locale = fusion_get_locale("", FAQ_LOCALE);
-        set_title(SiteLinks::get_current_SiteLinks("", 'link_name'));
-        BreadCrumbs::getInstance()->addBreadCrumb(
-            array(
-                'link'  => INFUSIONS.'faq/faq.php',
-                'title' => SiteLinks::get_current_SiteLinks('', 'link_name')
-            )
-        );
+
+        set_title(SiteLinks::get_current_SiteLinks('infusions/faq/faq.php', 'link_name'));
+
+        BreadCrumbs::getInstance()->addBreadCrumb([
+            'link'  => INFUSIONS.'faq/faq.php',
+            'title' => SiteLinks::get_current_SiteLinks('', 'link_name')
+        ]);
 
         $info = array(
             'faq_categories' => array(),
             'faq_items'      => array(),
             'faq_get'        => 0,
         );
+
         $info = array_merge($info, self::get_FaqData($category));
+
         if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-            BreadCrumbs::getInstance()->addBreadCrumb(
-                array(
-                    'link'  => INFUSIONS.'faq/faq.php?cat_id='.$_GET['cat_id'],
-                    'title' => $info['faq_categories'][$_GET['cat_id']]['faq_cat_name']
-                )
-            );
+            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
+            add_to_title(self::$locale['global_201'].$info['faq_categories'][$_GET['cat_id']]['faq_cat_name']);
+            BreadCrumbs::getInstance()->addBreadCrumb([
+                'link'  => INFUSIONS.'faq/faq.php?cat_id='.$_GET['cat_id'],
+                'title' => $info['faq_categories'][$_GET['cat_id']]['faq_cat_name']
+            ]);
         }
+
         $this->info = $info;
 
         return (array)$info;
@@ -79,7 +82,7 @@ abstract class Faq extends FaqServer {
             'faq_categories' => [
                 0 => [
                     'faq_cat_id'          => 0,
-                    'faq_cat_name'        => self::$locale['faqs_0003'],
+                    'faq_cat_name'        => self::$locale['faq_0010'],
                     'faq_cat_description' => ''
                 ]
             ],
@@ -92,7 +95,7 @@ abstract class Faq extends FaqServer {
         }
 
         // Get Items
-        $result = dbquery("SELECT ac.*, 
+        $result = dbquery("SELECT ac.*,
             au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined
             FROM ".DB_FAQS." ac
             LEFT JOIN ".DB_USERS." AS au ON ac.faq_name=au.user_id
@@ -102,7 +105,7 @@ abstract class Faq extends FaqServer {
         ");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, IMAGES, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
+                $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
                 $info['faq_items'][$data['faq_id']] = $data;
             }
         }

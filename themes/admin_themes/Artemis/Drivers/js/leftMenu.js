@@ -10,21 +10,20 @@ var app_wrap = $('#devlpr .app_menu');
 var menu_header = $('#devlpr .left_menu > header');
 var menu_li = $('#devlpr .menu li');
 
-function menuToggle() {
-
+function menuToggle(locale) {
     if (menu_wrap.hasClass('collapsed')) {
         // close menu
         $('.admin-menu-icon').show();
         $('.admin-menu-item').hide();
         menu_header.html('<h4 class=\"php-fusion text-white text-center fa fa-lg\"></h4>');
-        $('.menu-action').html('<i class=\"fa fa-chevron-circle-right\"></i>');
+        $('.menu-action').html('<i class=\"fa fa-chevron-circle-right hidden-xs\"></i>');
         Cookies.set('acpState', 0);
     } else {
         // open menu
         $('.admin-menu-icon').hide();
         $('.admin-menu-item').show();
         menu_header.html('<h2>Artemis</h2>');
-        $('.menu-action').html('<i class=\"fa fa-chevron-circle-left\"></i> <span class=\"m-l-10\">Collapse Menu</span>');
+        $('.menu-action').html('<i class=\"fa fa-chevron-circle-left hidden-xs\"></i> <span class=\"m-l-10\">' + locale + '</span>');
         Cookies.set('acpState', 1);
     }
 }
@@ -35,20 +34,9 @@ if (CookieState !== undefined) {
         menu_wrap.addClass('collapsed');
         body_wrap.addClass('collapsed');
         app_wrap.addClass('collapsed');
-        $('.menu-action').html('<i class=\"fa fa-chevron-circle-right\"></i>');
+        $('.menu-action').html('<i class=\"fa fa-chevron-circle-right hidden-xs\"></i>');
     }
 }
-
-menuToggle();
-
-$('.menu-action').bind('click', function (e) {
-    menu_wrap.toggleClass('collapsed');
-    body_wrap.toggleClass('collapsed');
-    app_wrap.toggleClass('collapsed');
-    menuToggle();
-    e.preventDefault();
-});
-
 
 // Tray Loader
 $('a[data-load]').bind('click', function (e) {

@@ -698,6 +698,7 @@ abstract class RewriteDriver {
     protected static function normalize($string) {
         $table = array(
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
+            '('     => '', ')' => '', '.' => '',
             'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
             'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
             'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
@@ -764,11 +765,12 @@ abstract class RewriteDriver {
 
     /**
      * Validate_url
-     *
+     * Post Handling
      * If Page is Not SEO, Redirect to SEO one
      *
      */
     protected function handle_non_seo_url() {
+        $this->requesturi = stripinput($this->requesturi);
         $loop_count = 0;
         foreach ($this->path_search_regex as $field => $searchRegex) {
 
@@ -792,8 +794,7 @@ abstract class RewriteDriver {
                     preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
 
                     if (empty($output_matches[0]) && !empty($_POST)) {
-                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches,
-                            PREG_PATTERN_ORDER);
+                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
                     }
 
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
@@ -1067,30 +1068,8 @@ abstract class RewriteDriver {
      *
      * @param $output
      */
-    protected function HTML_In($output) {
-
-        $this->output = $output; // Do not touch this line
-
-        /**
-         * ON - Bbcode on-click incompatibalities. JS will be ruined.
-         * ON - Forum does not translate at all - Incompatible with clean_request
-         * OFF - Any link encased in a double quote will not be translated.
-         */
-        //$this->output = str_replace("\"", "'", $output);
-
-        // global $locale;
-        //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
-    }
-
-    /**
-     * Exit from Permalink to PHP Buffer
-     * This function prepares HTML codes to be viewed by browser
-     *
-     * @param $output
-     */
-    protected function HTML_Out($output) {
-        // According to my test, not doing anything has the best output
-        //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
+    protected function set_output($output) {
+        $this->output = $output;
     }
 
     /**

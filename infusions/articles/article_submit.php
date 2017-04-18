@@ -112,11 +112,11 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
             // Textarea Settings
             if (!fusion_get_settings("tinymce_enabled")) {
                 $articleSnippetSettings = array(
-                    "required" => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $locale['article_0251a'], 
+                    "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $locale['article_0254'],
                     "error_text" => $locale['article_0271'], "form_name" => "submissionform", "wordcount" => true
                 );
                 $articleExtendedSettings = array(
-                    "required" => ($articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $locale['article_0252a'], 
+                    "required"   => ($articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $locale['article_0253'],
                     "error_text" => $locale['article_0272'], "form_name" => "submissionform", "wordcount" => true
                 );
             } else {
@@ -126,7 +126,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
 
             echo openform("submissionform", "post", BASEDIR."submit.php?stype=a");
 
-            echo form_text("article_subject", $locale['article_0250'], $criteriaArray['article_subject'], array(
+            echo form_text("article_subject", $locale['article_0100'], $criteriaArray['article_subject'], array(
                 "required" => true, "max_lenght" => 200, "error_text" => $locale['article_0270']
             ));
 
@@ -138,9 +138,9 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
 
             echo form_textarea("article_article", $locale['article_0252'], $criteriaArray['article_article'], $articleExtendedSettings);
 
-            echo form_select_tree("article_cat", $locale['article_0253'], $criteriaArray['article_cat'], array(
+            echo form_select_tree("article_cat", $locale['article_0101'], $criteriaArray['article_cat'], array(
                     "required" => TRUE, "error_text" => $locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $locale['choose'],
-                    "query" => "WHERE article_cat_status='1' AND ".groupaccess("article_cat_visibility").(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_id ASC"
+                    "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                 ),
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );

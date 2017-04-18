@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale("",
+$locale = fusion_get_locale('',
                             array(
                                 LOCALE.LOCALESET."setup.php",
                                 INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
@@ -35,7 +35,7 @@ $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@php-fusion.co.uk';
 $inf_weburl = 'https://www.php-fusion.co.uk';
 $inf_folder = 'forum';
-$inf_image = 'forums.png';
+$inf_image = 'forums.svg';
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -287,8 +287,8 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', 'forum')";
 
 // Insert Panels
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '0')";
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '2')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '1', '1', '".fusion_get_settings('opening_page')."', '2', '".fusion_get_settings('enabled_languages')."')";
 
 if (function_exists("fusion_get_enabled_languages")) {
     $enabled_languages = array_keys(fusion_get_enabled_languages());
@@ -300,8 +300,7 @@ if (function_exists("fusion_get_enabled_languages")) {
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
 
-        $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
-        $locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
+        $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", FORUM.'locale/'.$language.'/forum_tags.php']);
 
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', '0', '2', '-101', '1', '1', '".$language."')";
@@ -344,6 +343,7 @@ if (!empty($enabled_languages)) {
 }
 
 // Defuse clean up
+$inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_reputation'];
 $inf_droptable[] = DB_FORUMS;
 $inf_droptable[] = DB_FORUM_POSTS;
 $inf_droptable[] = DB_FORUM_THREADS;

@@ -56,13 +56,13 @@ class FaqSettingsAdmin extends FaqAdminModel {
         }
 
         echo openform("settingsform", "post", FUSION_REQUEST);
-        echo "<div class='well m-b-0'>".$this->locale['faq_0400']."</div>\n";
+            echo "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n";
 
-            echo form_select('faq_allow_submission', $this->locale['faq_0401'], self::$faq_settings['faq_allow_submission'], array(
+            echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], array(
                 'inline' => TRUE, 'options' => array($this->locale['disable'], $this->locale['enable'])
             ));
 
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
+            echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
         echo closeform();
     }
 }

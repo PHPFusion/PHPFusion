@@ -26,8 +26,9 @@ if (isset($_GET['action']) && iMEMBER) {
         $eresult = dbquery("SELECT tcm.*, tcu.user_name
 				FROM ".DB_COMMENTS." tcm
 				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'");
-        if (dbrows($eresult) > 0) {
+				WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'
+				");
+        if (dbrows($eresult)) {
             $edata = dbarray($eresult);
             $edata['comment_options'] = \defender::unserialize($_POST['comment_options']);
             if ((iADMIN && checkrights("C"))
@@ -60,16 +61,14 @@ if (isset($_GET['action']) && iMEMBER) {
                 // Refetch the query
                 $ajax_respond = \defender::unserialize($_POST['comment_options']);
                 $ajax_respond['comment_custom_script'] = TRUE;
-                PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
+                echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
             }
             exit;
         }
     }
 
 } else {
-
     $ajax_respond = \defender::unserialize($_POST['comment_options']);
     $ajax_respond['comment_custom_script'] = TRUE;
-    PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
+    echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_key'])->showComments();
 }
-

@@ -52,10 +52,11 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $infusions_count, $global_infusions;
+    global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
+        $global_ratings, $global_submissions, $link_type, $submit_type, $submit_link,
+        $comments_type, $infusions_count, $global_infusions;
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
-    $settings = fusion_get_settings();
 
     $mobile = '12';
     $tablet = '6';
@@ -236,7 +237,7 @@ function render_dashboard() {
 
         echo "<div class='row'>\n";
             echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
-                openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format($infusions_count)."</span>");
+                openside("<strong class='text-smaller text-uppercase'>".$locale['283']."</strong><span class='pull-right badge'>".number_format((int)$infusions_count)."</span>");
                 $content = '';
                 if ($infusions_count > 0) {
                     echo "<div class='comment_content'>\n";
@@ -259,7 +260,7 @@ function render_dashboard() {
                     foreach ($global_comments['data'] as $i => $comment_data) {
                         echo "<!--Start Comment Item-->\n";
                         echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<div id='comment_action-$i' class='btn-group pull-right display-none' style='position:absolute; right: 30px; margin-top:25px;'>\n
                             <a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo eye'></i></a>
                             <a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo pencil'></i></a>
@@ -267,7 +268,7 @@ function render_dashboard() {
                         echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
                         echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
-                        echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
+                        echo "<span class='text-smaller text-lighter'>".trimlink(parse_textarea($comment_data['comment_message'], TRUE, FALSE), 70)."</span>\n";
                         echo "</div>\n";
                         echo "<!--End Comment Item-->\n";
                     }
@@ -288,7 +289,7 @@ function render_dashboard() {
                     foreach ($global_ratings['data'] as $i => $ratings_data) {
                         echo "<!--Start Rating Item-->\n";
                         echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
                         echo "<a href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
@@ -312,34 +313,10 @@ function render_dashboard() {
                 openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
                 if (count($global_submissions['data']) > 0) {
                     foreach ($global_submissions['data'] as $i => $submit_data) {
-                        switch ($submit_data['submit_type']) {
-                            case "n":
-                                $review_link = INFUSIONS."news/news_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "a":
-                                $review_link = INFUSIONS."articles/articles_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "p":
-                                $review_link = INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "b":
-                                $review_link = INFUSIONS."blog/blog_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "d":
-                                $review_link = INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "l":
-                                $review_link = INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            case "q":
-                                $review_link = INFUSIONS."faq/faq_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
-                                break;
-                            default:
-                                $review_link = "";
-                        }
+                        $review_link = sprintf($submit_link[$submit_data['submit_type']], $submit_data['submit_id']);
                         echo "<!--Start Submissions Item-->\n";
                         echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5", "")."</div>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span><br/>\n";
                         echo timer($submit_data['submit_datestamp'])."<br/>\n";

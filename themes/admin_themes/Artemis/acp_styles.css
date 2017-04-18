@@ -1,8 +1,9 @@
-@import "../../../includes/fonts/Ubuntu/font.css";
-
 /* Globals */
 html, body, #tinymce body, .form-control {
-    font: 14px/16px "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
     overflow-x: hidden;
 }
 
@@ -23,8 +24,8 @@ html, body, #tinymce body, .form-control {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 800;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
 }
 
 .text-success {
@@ -95,6 +96,9 @@ a:hover, a:focus {
     margin: 24px;
 }
 
+#devlpr .apps {
+    float: left;
+}
 #devlpr .left_menu h2 {
     width: 140px;
     height: 70px;
@@ -240,8 +244,6 @@ a:hover, a:focus {
     font-weight: 600;
     font-size: 1rem;
     margin-top: 16px;
-    text-overflow: ellipsis;
-    overflow: hidden;
     display: block;
     white-space: nowrap;
 }
@@ -275,7 +277,6 @@ a:hover, a:focus {
 
     #devlpr .left_menu header:after {
         display: inline-block;
-        content: "{G}";
         color: #fff;
         font-size: 34px;
         font-weight: 600;
@@ -638,14 +639,17 @@ a:hover, a:focus {
 .btn, .btn-group .btn {
     display: inline-block;
     *display: inline;
-    padding: 6px 12px;
     margin-bottom: 0;
     *margin-left: .3em;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
     line-height: 20px;
     text-align: center;
 }
 
+.btn.btn-xs {
+    font-weight: 400;
+}
 .btn:hover,
 .btn:focus,
 .btn:active,
@@ -683,9 +687,25 @@ a:hover, a:focus {
     outline-offset: -2px;
 }
 
+.editor-wrapper > div > .form-group {
+    max-width: 200px !important;
+    display: inline-block !important;
+}
+
+.editor-wrapper > .nav > li {
+    margin: 0 !important;
+}
+
+.editor-wrapper button {
+    background: none;
+    border: 0;
+    padding: 0;
+}
+
 .editor-wrapper .btn-group {
     margin-bottom: 0;
 }
+
 .editor-wrapper .active > .btn,
 .btn.active,
 .btn:active {
@@ -702,6 +722,7 @@ a:hover, a:focus {
     padding: 3px 9px;
     height: 35px;
 }
+
 .btn.disabled,
 .btn[disabled] {
     cursor: default;
@@ -1030,6 +1051,7 @@ input[type="submit"].btn.btn-mini {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    outline: none !important;
 }
 
 .btn-link:hover,
@@ -1037,6 +1059,12 @@ input[type="submit"].btn.btn-mini {
     color: #005580;
     text-decoration: underline;
     background-color: transparent;
+    outline: none;
+}
+
+.btn-link:active {
+    outline: none;
+    border-color: transparent;
 }
 
 .btn-link[disabled]:hover,
@@ -1053,7 +1081,8 @@ input[type="submit"].btn.btn-mini {
     white-space: nowrap;
     vertical-align: middle;
     zoom: 1;
-    margin-bottom: 10px;
+    height: 25px;
+    margin-bottom: 20px;
 }
 
 .btn-group:first-child {
@@ -1061,7 +1090,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .btn-group + .btn-group {
-    margin-left: 5px;
+    margin-right: 10px;
 }
 
 .btn-toolbar {
@@ -1316,6 +1345,19 @@ input[type="submit"].btn.btn-mini {
     background-color: #2E87C1;
 }
 
+/* Alerts ! */
+.alert-warning {
+    color: #735c0f;
+    background-color: #ffea7f;
+    border-color: rgba(176, 136, 0, 0.3);
+}
+
+.alert-danger {
+    color: #fff;
+    background-color: #d73a49;
+    border: 1px solid #9e1c23;
+}
+
 .admin-message {
     width: 100%;
     position: fixed;
@@ -1389,13 +1431,14 @@ table thead > tr:first-child > td:last-child {
 table.table-striped tbody > tr:nth-child(even) {
     background: #F5F5F5;
 }
+
 table > tr:not(:last-child) > thead td,
 table > tr:not(:last-child) > thead th {
-    border-bottom:1px solid #ccc !important;
+    border-bottom: 1px solid #ccc !important;
 }
+
 #devlpr #main_content .content table > thead td,
-#devlpr #main_content .content table > thead th
-{
+#devlpr #main_content .content table > thead th {
     padding: 15px 15px 12px 15px;
     color: #888;
 }
@@ -1505,6 +1548,9 @@ label small {
     margin-bottom: 5px !important;
 }
 
+.label.label-danger {
+    color: #fff;
+}
 /* General table properties */
 table {
     border-collapse: collapse;
@@ -1533,14 +1579,44 @@ table {
 
 .panel-txtarea > .panel-heading {
     padding: 5px 15px !important;
+    background: #fff;
 }
 
 .panel-txtarea > .panel-heading .overflow-hide {
     padding-top: 8px;
 }
 
-textarea, input {
-    font-family: "LatoWebSemibold", Helvetica, Arial, Verdana, sans-serif;
+.panel-txtarea .bbcode_input {
+    padding: 10px 0;
+}
+
+.panel-txtarea .bbcode_input input[type=image] {
+    width: 18px !important;
+    height: auto !important;
+    margin-right: 5px;
+}
+
+.form-control {
+    background-color: #fafbfc;
+}
+
+.form-control:focus {
+    background-color: #fff;
+}
+.form-group-lg input.form-control {
+    font-size: 25px;
+    font-family: serif;
+}
+
+textarea.form-control {
+    font-family: serif;
+    font-size: 20px;
+    color: #555;
+    padding: 21px 15px !important;
+    font-family: serif;
+    line-height: 30px;
+    overflow-y: auto !important;
+    max-height: 300px;
 }
 
 /* Site Information */
@@ -1633,7 +1709,7 @@ textarea, input {
 }
 
 .profile_category_name {
-    font-size: 14px;
+    margin-top: 8px;
 }
 
 /* Nav tabs */
@@ -1732,7 +1808,7 @@ textarea, input {
 
 .nav-wrapper.editor-wrapper {
     margin-top: 0;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 .nav-wrapper.editor-wrapper > .tab-content {
@@ -1754,6 +1830,9 @@ textarea, input {
     border: 0;
 }
 
+.editor-wrapper .btn-group {
+    margin-bottom: 10px;
+}
 nav ul {
     list-style: none;
     margin: 0;
@@ -2084,6 +2163,7 @@ div.mce-edit-area {
     padding: 8px 0 3px;
     height: auto;
 }
+
 .modal-center {
     top: 0 !important;
     margin-top: 200px !important;
@@ -2114,4 +2194,32 @@ div.mce-edit-area {
     display: block;
     width: 100%;
     padding-right: 90px;
+}
+
+input[type=text] {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.dashboard-icon {
+    width: 50px;
+}
+
+.bootstrap-datetimepicker-widget table > thead th {
+    padding: 5px !important;
+}
+
+.label {
+    display: inline-block;
+    padding: 8px 10px;
+    margin: 0 0.5em 0.5em 0;
+    white-space: nowrap;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.label.label-info {
+    background-color: #f1f8ff;
 }

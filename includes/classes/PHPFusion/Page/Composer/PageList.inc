@@ -164,7 +164,6 @@ class PageList extends PageAdmin {
             echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108'], array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";
-
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
@@ -251,65 +250,60 @@ class PageList extends PageAdmin {
 		");
 
         echo "<div class='m-t-20'>\n";
-        echo "<table class='table table-responsive".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
+        echo "<table id='cp_table_list' class='table table-responsive".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
+        echo "<thead>\n";
         echo "<tr>\n";
         echo "<th></th>\n";
-        echo "<th>".$locale['page_0106']."</th>\n";
-        echo "<th>".self::$locale['page_0101']."</th>\n";
+        echo "<th class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
         echo "<th>".$locale['page_0102']."</th>\n";
         echo "<th>".$locale['page_0103']."</th>\n";
-        echo "<th>".$locale['page_0104']."</th>\n";
-        echo "<th>".$locale['page_0105']."</th>\n";
+        //echo "<th>".$locale['page_0104']."</th>\n";
+        //echo "<th>".$locale['page_0105']."</th>\n";
         echo "<th>".$locale['page_0305']."</th>\n";
         echo "<th>".$locale['page_0118']."</th>\n";
+        echo "<th>".$locale['page_0106']."</th>\n";
         echo "</tr>\n";
+        echo "</thead>\n";
+        echo "<tbody id='custompage-links' class='connected'>\n";
 
         if (dbrows($page_result) > 0) {
-
-            echo "<tbody id='custompage-links' class='connected'>\n";
-
             while ($pageData = dbarray($page_result)) {
-
                 $pageLanguage = '';
                 $pageLang = explode(".", $pageData['page_language']);
                 foreach ($pageLang as $languages) {
                     $pageLanguage .= "<span class='badge'>".translate_lang_names($languages)."</span>\n";
                 }
-
-                $pageParent = $pageData['page_cat'] == 0 ? self::$locale['page_0106'] : "<a href='".clean_request('pref='.$pageData['page_cat'],
-                                                                                                       array('pref'),
-                                                                                                       FALSE)."'>".$pageData['page_cat_title']."</a>\n";
+                $pageParent = $pageData['page_cat'] == 0 ? self::$locale['page_0106'] : "<a href='".clean_request('pref='.$pageData['page_cat'], array('pref'), FALSE)."'>".$pageData['page_cat_title']."</a>\n";
                 $pageStatus = $pageData['page_status'] == 1 ? self::$locale['publish'] : self::$locale['unpublish'];
-                $pageLink = clean_request('pref='.$pageData['page_id'], array('pref'), FALSE);
-
+                $edit_link = FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id'];
+                // Disable until later releases
+                //$pageLink = clean_request('pref='.$pageData['page_id'], array('pref'), FALSE);
                 echo "<tr id='listItem_".$pageData['page_id']."' data-id='".$pageData['page_id']."' class='list-result pointer'>\n";
                 echo "<td>".form_checkbox('cp[]', '', '', array(
-                        'value' => $pageData['page_id'], 'input_id' => 'cp-'.$pageData['page_id']
+                        'value' => $pageData['page_id'], 'input_id' => 'cp-'.$pageData['page_id'], 'class' => 'm-b-0'
                     ))."</td>";
-
-                echo "<td>".$pageData['page_id']."</td>\n";
-                echo "<td><a href='$pageLink'>".$pageData['page_title']."</a></td>\n";
+                echo "<td><a href='$edit_link'>".$pageData['page_title']."</a></td>\n";
                 echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
                 echo "<td>".$pageLanguage."</td>\n";
-                echo "<td>$pageParent</td>\n";
-                echo "<td>".$pageData['page_sub_count']."</td>\n";
+                //echo "<td>$pageParent</td>\n";
+                //echo "<td>".$pageData['page_sub_count']."</td>\n";
                 echo "<td>$pageStatus</td>\n";
                 echo "<td>";
-                    echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> |
-                <a href='".FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
+                echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;
+                <a href='$edit_link'>".$locale['edit']."</a> &middot; 
                 <a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>";
                 echo "</td>";
+                echo "<td>".$pageData['page_id']."</td>\n";
                 echo "</tr>\n";
             }
-            echo "</tbody>\n";
         } else {
             echo "<tr>\n";
             echo "<td colspan='9' class='text-center'>\n<div class='well'>\n".$locale['page_0440']."</div>\n</td>\n";
             echo "</tr>\n";
         }
+        echo "</tbody>\n";
         echo "</table>\n";
         echo "</div>\n";
-
         if (fusion_get_settings('tinymce_enabled')) {
             add_to_jquery("
 			function SetTinyMCE(val) {

@@ -23,7 +23,6 @@ class Console_Core extends Install_Core {
 
     private static $console_instance = NULL;
 
-
     public static function getInstance() {
         if (self::$console_instance == NULL) {
             self::$console_instance = new static();
@@ -32,9 +31,7 @@ class Console_Core extends Install_Core {
         return self::$console_instance;
     }
 
-
     public static function getView($content) {
-
         $steps = array(
             '1' => self::$locale['setup_0101'],
             '2' => self::$locale['setup_0102'],
@@ -42,27 +39,23 @@ class Console_Core extends Install_Core {
             '4' => self::$locale['setup_0104'],
             '5' => self::$locale['setup_0106'],
             '6' => self::$locale['setup_0105'],
-            '7' => self::$locale['setup_0107'],
         );
-
         $html = "<div class='block-container center-x'>\n";
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
         $html .= "<div class='block'>\n";
         $html .= "<div class='block-content'>\n";
-        $html .= "<h6><strong>".self::$locale['setup_0000']."</strong></h6>\n";
+        $html .= "<h6><strong>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</strong></h6>\n";
         $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
-
         $html .= "<p class='text-right'>".self::$locale['setup_0010'].self::BUILD_VERSION."</p>";
-        $html .= renderNotices(getNotices());
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-3'>\n";
-        $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".self::$locale['setup_0000']."</h2>\n";
+        $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</h2>\n";
         $html .= "<div class='list-group'>\n";
         foreach ($steps as $key => $value) {
-            $active = intval(INSTALLATION_STEP) === $key;
-            $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'],
-                                                                                                                                                $key,
-                                                                                                                                                $value) : $value)."</div>\n";
+            if ($key !== 4) {
+                $active = intval(INSTALLATION_STEP) === $key;
+                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+            }
         }
         $html .= "</div>\n";
         $html .= "</div>\n";
@@ -71,7 +64,6 @@ class Console_Core extends Install_Core {
         if (self::$localeset) {
             $html .= form_hidden('localeset', self::$localeset);
         }
-
         if (self::$step) {
             foreach (self::$step as $button_prop) {
                 $default_class['class'] = "btn-primary";
@@ -91,6 +83,11 @@ class Console_Core extends Install_Core {
         return $html;
     }
 
+    /**
+     * Need to replace more things.
+     *
+     * @return string
+     */
     public static function getLayout() {
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."'>\n";
@@ -118,7 +115,7 @@ class Console_Core extends Install_Core {
         $html .= "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
         $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
-        $html .= "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
+        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.css' rel='stylesheet' />";
         $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body>\n";
         $html .= "{%content%}";

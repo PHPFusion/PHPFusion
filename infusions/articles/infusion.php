@@ -30,7 +30,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "articles";
-$inf_image = "articles.png";
+$inf_image = "articles.svg";
 
 // Tables
 $inf_newtable[] = DB_ARTICLES." (
@@ -68,7 +68,7 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
 
 // Adminlink
 $inf_adminpanel[] = array(
-    "image" => "articles.png",
+    "image" => $inf_image,
     "page" => 1,
     "rights" => "A",
     "title" => $locale['setup_3002'],
@@ -81,7 +81,7 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', 'article')";
 
 // Insert Panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3325']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3325']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
 // Insert Multilanguage
 $inf_mlt[] = array(

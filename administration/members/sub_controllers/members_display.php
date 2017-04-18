@@ -182,7 +182,7 @@ class Members_Display extends Members_Admin {
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
-        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')." 
+        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')."
                   FROM ".DB_USERS.$status_cond.$search_cond." LIMIT $rowstart, $limit
                   ";
         $result = dbquery($query, $query_bind);
@@ -199,10 +199,10 @@ class Members_Display extends Members_Admin {
                 foreach ($key as $data_key) {
                     switch ($data_key) {
                         case 'user_joined' :
-                            $data[$data_key] = date('d-M-Y', $data[$data_key]);
+                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
                             break;
                         case 'user_lastvisit':
-                            $data[$data_key] = date('d-M-Y', $data[$data_key]);
+                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
                             break;
                         case 'user_groups':
                             if (!empty($data[$data_key])) {
@@ -216,7 +216,7 @@ class Members_Display extends Members_Admin {
                             }
                             break;
                         case 'user_hide_email':
-                            $data[$data_key] = $data[$data_key] ? "Hidden" : "Shown";
+                            $data[$data_key] = $data[$data_key] ? self::$locale['ME_415'] : self::$locale['ME_416'];
                             break;
                     }
                     // custom ones
@@ -227,7 +227,9 @@ class Members_Display extends Members_Admin {
                 $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>\n
                 <div class='overflow-hide'><a href='".self::$status_uri['view'].$data['user_id']."'>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
                 </div>\n";
-                $list[$data['user_id']]['user_actions'] = "<a href='".self::$status_uri['edit'].$data['user_id']."'>".self::$locale['edit']."</a> - <a href='".self::$status_uri['delete'].$data['user_id']."''>".self::$locale['delete']."</a> - <a href='".self::$status_uri['view'].$data['user_id']."'>".self::$locale['view']."</a>";
+
+                $list[$data['user_id']]['user_actions'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN ? "<a href='".self::$status_uri['edit'].$data['user_id']."'>".self::$locale['edit']."</a> - <a href='".self::$status_uri['delete'].$data['user_id']."''>".self::$locale['delete']."</a> -" : "")." <a href='".self::$status_uri['view'].$data['user_id']."'>".self::$locale['view']."</a>";
+
                 $list[$data['user_id']]['user_level'] = getuserlevel($data['user_level']);
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
             }
@@ -235,13 +237,15 @@ class Members_Display extends Members_Admin {
 
         // Render table header and table result
         $table_head = "<tr><th></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
-        $table_subheader = "<th class='min'><th>".self::$locale['ME_410']."</th><th></th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
+
+        $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
+
         foreach ($selected_fields as $column) {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='3'>".form_checkbox('check_all', '', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
-        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 4)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
 
         if (!empty($list)) {
             $list_result = '';
@@ -252,13 +256,13 @@ class Members_Display extends Members_Admin {
         /*
          * User Actions Button
          */
-        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class'=>'btn-success m-r-10')).
-            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class'=>'m-r-10')).
-            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class'=>'m-r-10'));
+        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class' => 'btn-success m-r-10')).
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class' => ' btn-default m-r-10')).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class' => ' btn-default m-r-10'));
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
         $html .= form_hidden('aid', '', iAUTH);
@@ -272,8 +276,6 @@ class Members_Display extends Members_Admin {
                                                                                     'class'              => 'm-b-0'
                 )),
                 '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', array('icon' => 'caret')),
-                //form_button('email', 'Send Email', 'email', array('icon' => 'fa fa-paper-plane-o', 'class' => 'btn-link')) .
-                //form_button('pm', 'Send PM', 'pm', array('icon' => 'fa fa-envelope-open-o', 'class' => 'btn-link')),
                 '{%action_button%}'       => "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>\n",
                 '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
                 '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",
@@ -300,15 +302,26 @@ class Members_Display extends Members_Admin {
      * Render Listing Functions
      */
     protected static function list_func($user_id, $list, $selected_fields) {
-        $html = "<tr>\n
+        $html = "<tr id='user-".$user_id."'>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
-                <td>".$list[$user_id]['user_name']."</td>\n
+                <td class='col-xs-2'>".$list[$user_id]['user_name']."</td>\n
                 <td class='no-break'>".$list[$user_id]['user_actions']."</td>
                 <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
                 <td>\n".$list[$user_id]['user_email']."</td>\n";
+
+        add_to_jquery('$("#user_id_'.$user_id.'").click(function() {
+            if ($(this).prop("checked")) {
+                $("#user-'.$user_id.'").addClass("active");
+            } else {
+                $("#user-'.$user_id.'").removeClass("active");
+            }
+        });');
+
         foreach ($selected_fields as $column) {
             $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
         }
+
+        $html .= "</tr>\n";
 
         return $html;
     }

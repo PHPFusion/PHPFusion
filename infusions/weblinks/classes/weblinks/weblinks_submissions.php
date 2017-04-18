@@ -108,14 +108,14 @@ class WeblinksSubmissions extends WeblinksServer {
 
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=l");
 
-            echo form_select_tree("weblink_cat", $this->locale['WLS_0256'], $criteriaArray['weblink_cat'], array(
+            echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $criteriaArray['weblink_cat'], array(
                 "no_root" => TRUE,
                 "placeholder" => $this->locale['choose'],
                 "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
             ), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-            echo form_text('weblink_name', $this->locale['WLS_0250'], $criteriaArray['weblink_name'], array(
-                "placeholder" => $this->locale['WLS_0251'],
+            echo form_text('weblink_name', $this->locale['WLS_0201'], $criteriaArray['weblink_name'], array(
+                "placeholder" => $this->locale['WLS_0201'],
                 "error_text" => $this->locale['WLS_0252'],
                 'required' => TRUE
             ));
@@ -144,8 +144,8 @@ class WeblinksSubmissions extends WeblinksServer {
 
             echo form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'], $textArea_opts);
 
-			echo form_button("cancel_link", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"));
-            echo form_button('submit_link', $this->locale['save'], $this->locale['save'], array('class' => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"));
+            echo form_button('submit_link', $this->locale['submit'], $this->locale['submit'], array('class' => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"));
+            echo form_button("cancel_link", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"));
 
             echo closeform();
         }

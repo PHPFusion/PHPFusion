@@ -158,34 +158,36 @@ abstract class ForumServer {
     protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
         if (iSUPERADMIN) {
             $this->forum_access = TRUE;
-
             return $this->forum_access;
         }
-        if (!$forum_id or !isnum($forum_id)) {
+        if (!$forum_id or isnum($forum_id)) {
             if ($thread_id && isnum($thread_id)) {
                 $forum_id = dbresult(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $thread_id]), 0);
                 $list[] = $forum_id;
                 if ($ancestor = get_all_parent($forum_index, $forum_id)) {
-                    $list = $list + $ancestor;
+                    $list = array_merge_recursive($list, $ancestor);
                 }
-                $list_sql = implode(',', $list);
-                $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
-                $result = dbquery($query);
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        if ($user_id) {
-                            $user = fusion_get_user($user_id);
-                            $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
-                        } else {
-                            $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
-                        }
-                        if ($this->forum_access === FALSE) {
-                            break;
+
+                if (!empty($list)) {
+                    $list_sql = implode(',', $list);
+                    $query = "SELECT forum_access FROM ".DB_FORUMS." WHERE forum_id IN ($list_sql) ORDER BY forum_cat ASC";
+                    $result = dbquery($query);
+                    if (dbrows($result)) {
+                        while ($data = dbarray($result)) {
+                            if ($user_id) {
+                                $user = fusion_get_user($user_id);
+                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                            } else {
+                                $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                            }
+                            if ($this->forum_access === FALSE) {
+                                break;
+                            }
                         }
                     }
                 }
             } else {
-                throw new \Exception('There are no forum ID or thread id defined. Please define either one.');
+                throw new \Exception(fusion_get_locale('forum_4120'));
             }
         }
         return (bool)$this->forum_access;
@@ -528,7 +530,7 @@ abstract class ForumServer {
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
 
-        $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
             $forum_id = isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
@@ -546,7 +548,9 @@ abstract class ForumServer {
                         return $crumb;
                     }
                     $crumb_1 = forum_breadcrumb_arrays($index, get_parent($index, $id));
-                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                    if (is_array($crumb_1)) {
+                        $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                    }
                 }
             }
 

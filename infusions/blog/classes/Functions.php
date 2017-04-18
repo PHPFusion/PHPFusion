@@ -173,20 +173,21 @@ class Functions {
     public static function get_blog_comments($data) {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
-            ob_start();
-            Comments::getInstance(
+            $html = Comments::getInstance(
                 array(
-                    'comment_item_type'     => "B",
+                    'comment_item_type'     => 'B',
                     'comment_db'            => DB_BLOG,
                     'comment_col'           => 'blog_id',
                     'comment_item_id'       => $data['blog_id'],
-                    'clink'                 => FUSION_SELF."?readmore=".$data['blog_id'],
-                    'comment_echo'          => TRUE,
-                    'comment_allow_ratings' => $data['blog_allow_ratings']
-                ), '_B'.$data['blog_id']
+                    'clink'                 => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+                    'comment_count'         => TRUE,
+                    'comment_allow_subject' => FALSE,
+                    'comment_allow_reply'   => TRUE,
+                    'comment_allow_post'    => TRUE,
+                    'comment_once'          => FALSE,
+                    'comment_allow_ratings' => FALSE,
+                ), 'blog_comments'
             )->showComments();
-            $html = ob_get_contents();
-            ob_end_clean();
         }
 
         return (string)$html;
@@ -196,7 +197,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
             ob_start();
-            echo showratings("B", $data['blog_id'], FUSION_SELF."?readmore=".$data['blog_id']);
+            echo showratings("B", $data['blog_id'], BASEDIR."infusions/blog/blog.php?readmore=".$data['blog_id']);
             $html = ob_get_contents();
             ob_end_clean();
         }

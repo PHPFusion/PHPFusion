@@ -20,29 +20,29 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 
     $default_options = array(
-        "input_id" => $input_name,
-        "inline" => FALSE,
-        "required" => FALSE,
-        "deactivate" => FALSE,
-        "class" => "",
-        "type" => "checkbox",
-        "toggle" => FALSE,
-        "toggle_text" => array($locale['no'], $locale['yes']),
-        "options" => array(),
-        "options_value" => array(),
-        "delimiter" => ",",
-        "safemode" => FALSE,
-        "keyflip" => FALSE,
-        "error_text" => $locale['error_input_checkbox'],
-        "value" => 1,
-        "tip" => "",
-        "ext_tip" => "",
-        'inner_width' => '',
-        "reverse_label" => FALSE,
-        'deactivate_key' => '',
-        'onclick' => ''
+        'input_id'       => $input_name,
+        'inline'         => FALSE,
+        'inline_options' => FALSE,
+        'required'       => FALSE,
+        'deactivate'     => FALSE,
+        'class'          => "",
+        'type'           => 'checkbox',
+        'toggle'         => FALSE,
+        'toggle_text'    => array($locale['no'], $locale['yes']),
+        'options'        => array(),
+        'options_value'  => array(),
+        'delimiter'      => ',',
+        'safemode'       => FALSE,
+        'keyflip'        => FALSE,
+        'error_text'     => $locale['error_input_checkbox'],
+        'value'          => 1,
+        'tip'            => "",
+        'ext_tip'        => "",
+        'inner_width'    => '',
+        'reverse_label'  => FALSE,
+        'deactivate_key' => NULL,
+        'onclick'        => ''
     );
-
 
     $options += $default_options;
 
@@ -114,14 +114,14 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
     }
 
-    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 p-l-0'>\n" : "\n";
+    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
 
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
-            if ($options['deactivate_key'] == $key) {
+            if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
                 $checkbox .= form_hidden($input_name, '', $key);
             }
-            $checkbox .= "<div class='m-b-0'>\n";
+            $checkbox .= "<div class='m-b-0".($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
             ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' style='vertical-align:middle' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">".$value."</label>\n";
@@ -154,13 +154,13 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $defender->add_field_session(
         array(
             'input_name' => str_replace("[]", "", $input_name),
-            'title' => trim($title, '[]'),
-            'id' => $options['input_id'],
-            'type' => $options['type'],
-            'required' => $options['required'],
-            'safemode' => $options['safemode'],
+            'title'      => trim($title, '[]'),
+            'id'         => $options['input_id'],
+            'type'       => $options['type'],
+            'required'   => $options['required'],
+            'safemode'   => $options['safemode'],
             'error_text' => $options['error_text'],
-            'delimiter' => $options['delimiter'],
+            'delimiter'  => $options['delimiter'],
         ));
 
     return $html;

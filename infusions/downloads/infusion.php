@@ -29,7 +29,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "downloads";
-$inf_image = "download.png";
+$inf_image = "download.svg";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -85,7 +85,7 @@ $inf_adminpanel[] = array(
 );
 
 // Automatic enable the latest downloads panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '0', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
 // Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')";

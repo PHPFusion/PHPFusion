@@ -19,6 +19,8 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."home_panel/home_panel.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
+add_to_title($locale['home']);
+add_breadcrumb(array("title" => $locale['home'], "link" => BASEDIR."home.php"));
+require_once INFUSIONS.'home_panel/home_panel.php';
 require_once THEMES."templates/footer.php";

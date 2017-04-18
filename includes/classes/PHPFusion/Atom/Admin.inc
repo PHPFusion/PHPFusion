@@ -18,22 +18,21 @@
 namespace PHPFusion\Atom;
 
 use PHPFusion\BreadCrumbs;
-
-require_once LOCALE.LOCALESET."admin/theme.php";
-
 /**
  * Administration Page for Theme Settings
  * Class Admin
  * @package PHPFusion\Atom
  */
 class Admin {
+
+    private static $locale = [];
+
     public function __construct() {
         $aidlink = fusion_get_aidlink();
-        $locale = fusion_get_locale();
-
+        self::$locale = fusion_get_locale();
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => self::$locale['theme_1000']]);
     }
 
     /**
@@ -145,8 +144,9 @@ class Admin {
     }
 
     public static function display_theme_list() {
-        global $locale, $aidlink, $settings;
-
+        $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
+        $settings = fusion_get_settings();
         if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
             $theme_name = form_sanitizer($_GET['theme'], '');
             if (self::theme_installable($theme_name)) {
@@ -212,7 +212,7 @@ class Admin {
                 echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
                 echo "<div>\n";
                 if (!empty($theme_data['description'])) {
-                    echo "<div class='display-block m-b-10'>".$theme_data['description']."</div>";
+                    echo "<div class='display-block spacer-sm'>".$theme_data['description']."</div>";
                 }
                 if (!empty($theme_data['license'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
@@ -255,7 +255,7 @@ class Admin {
     }
 
     public static function theme_uploader() {
-        global $defender;
+        $defender = \defender::getInstance();
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         if (isset($_POST['upload'])) {

@@ -15,6 +15,7 @@ $locale['df_error_text'] = "%s has error and requires your attention.";
 $locale['error_invalid_theme'] = "Please select a valid theme"; // to be moved
 $locale['error_input_checkbox'] = "Please tick this checkbox"; // to be moved
 $locale['error_input_file'] = "Please select a valid file";
+$locale['error_secure_file'] = "The uploaded file has been rejected due to possibility of malicious payload.";
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";
@@ -59,6 +60,7 @@ $locale['df_300'] = "Click to add files";
 $locale['df_301'] = "Click to add photo";
 $locale['df_302'] = "Click to add video";
 $locale['df_303'] = "Click to add audio";
+$locale['df_304'] = "Selected file Remove";
 
 $locale['df_400'] = "%s contains invalid character.";
 $locale['df_401'] = "%s is not a valid email address.";

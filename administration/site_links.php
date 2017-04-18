@@ -22,23 +22,25 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
     private static $siteLinksAdmin_instance = NULL;
     private $data = array(
-        'link_id' => 0,
-        'link_name' => '',
-        'link_url' => '',
-        'link_icon' => '',
-        'link_cat' => 0,
-        'link_language' => LANGUAGE,
-        'link_visibility' => 0,
-        'link_status' => 0,
-        'link_order' => 0,
-        'link_position' => 1,
+        'link_id'          => 0,
+        'link_name'        => '',
+        'link_url'         => '',
+        'link_icon'        => '',
+        'link_cat'         => 0,
+        'link_language'    => LANGUAGE,
+        'link_visibility'  => 0,
+        'link_status'      => 1,
+        'link_order'       => 0,
+        'link_position'    => 1,
         'link_position_id' => 0,
-        'link_window' => 0,
+        'link_window'      => 0,
     );
     private $language_opts = array();
     private $link_index = array();
     private static $default_display = 16;
     private $form_action = '';
+    private $aidlink = '';
+    private $locale = array();
 
     private function __construct() {
         $this->aidlink = fusion_get_aidlink();
@@ -132,16 +134,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         }
 		");
-
-        /**
-         * @silent upgrade Sitelinks for folks
-         * @todo: remove after 9.02 releases
-         */
-        if (!column_exists(DB_SITE_LINKS, 'link_status')) {
-            dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER link_position");
-            addNotice("success", "Your site links table is upgraded. This message will self destruct in 3 seconds.");
-        }
-
     }
 
     public static function Administration() {
@@ -214,15 +206,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             "links_grouping" => fusion_get_settings("links_grouping")
         );
 
-        /**
-         * @silent upgrade
-         * @todo: Remove this line on 31/12/2016
-         * */
-        if ($settings['links_per_page'] === NULL) {
-            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_per_page', 8)");
-            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_grouping', 1)");
-        }
-
         if (isset($_POST['save_settings'])) {
 
             $settings = array(
@@ -294,16 +277,15 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             $this->data = array(
                 "link_id" => form_sanitizer($_POST['link_id'], 0, 'link_id'),
                 "link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
-                "link_name" => form_sanitizer($_POST['link_name'], '', 'link_name'),
-                "link_url" => form_sanitizer($_POST['link_url'], '', 'link_url'),
-                "link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
-                "link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
+                "link_name"       => form_sanitizer($_POST['link_name'], '', 'link_name'),
+                "link_url"        => form_sanitizer($_POST['link_url'], '', 'link_url'),
+                "link_icon"       => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
+                "link_language"   => form_sanitizer($_POST['link_language'], '', 'link_language'),
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], '', 'link_visibility'),
-                "link_position" => form_sanitizer($_POST['link_position'], '', 'link_position'),
-                'link_status' => form_sanitizer($_POST['link_status'] , 0 , 'link_status'),
-                "link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
-                "link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0,
-                                                'link_window')
+                "link_position"   => form_sanitizer($_POST['link_position'], '', 'link_position'),
+                'link_status'     => form_sanitizer($_POST['link_status'], 0, 'link_status'),
+                "link_order"      => form_sanitizer($_POST['link_order'], '', 'link_order'),
+                "link_window"     => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0, 'link_window')
             );
             if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');

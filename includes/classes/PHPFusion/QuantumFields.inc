@@ -266,7 +266,6 @@ class QuantumFields extends \SqlHandler {
     public function displayQuantumAdmin() {
         pageAccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
-
         if ($this->system_title) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
             add_to_title($this->system_title.' | ');
@@ -433,21 +432,34 @@ class QuantumFields extends \SqlHandler {
                     $data = dbarray($result);
                 }
                 if ($_GET['action'] == 'cmu') { // category move up.
-                    if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    if (!$this->debug && !empty($data['field_cat_id'])) {
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
                     }
                     if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        // sync the whole order
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 } elseif ($_GET['action'] == 'cmd') {
-                    if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    if (!$this->debug && !empty($data['field_cat_id'])) {
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
                     }
                     if (!$this->debug) {
-                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                        dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
                     }
                 }
+
                 if (!$this->debug) {
+                    $res = dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent=:id ORDER BY field_cat_order ASC", [':id' => intval($_GET['parent_id'])]);
+                    if (dbrows($res)) {
+                        $i = 1;
+                        while ($rows = dbarray($res)) {
+                            dbquery("UPDATE ".$this->category_db." SET field_cat_order=:order WHERE field_cat_id=:id", [
+                                ':order' => $i,
+                                ':id'    => intval($rows['field_cat_id'])
+                            ]);
+                            $i++;
+                        }
+                    }
                     redirect(FUSION_SELF.$aidlink);
                 }
             } elseif (isset($_GET['field_id']) && isnum($_GET['field_id']) && ($_GET['action'] == 'fmu' or $_GET['action'] == 'fmd')) {
@@ -458,20 +470,36 @@ class QuantumFields extends \SqlHandler {
                 }
                 if ($_GET['action'] == 'fmu') { // field move up.
                     if (!$this->debug) {
-                        dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        if (!empty($data['field_id'])) {
+                            dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
                         print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0651']));
                     }
                 } elseif ($_GET['action'] == 'fmd') {
                     if (!$this->debug) {
-                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        if (!empty($data['field_id'])) {
+                            dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
                         print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0652']));
                     }
                 }
                 if (!$this->debug) {
+                    $res = dbquery("SELECT field_id, field_order FROM ".$this->field_db." WHERE field_cat=:parent_id ORDER BY field_order ASC", ['parent_id' => ($_GET['parent_id'])]);
+                    if (dbrows($res)) {
+                        $i = 1;
+                        while ($rows = dbarray($res)) {
+                            print_p($rows);
+                            dbquery("UPDATE ".$this->field_db." SET field_order=:order WHERE field_id=:id", [
+                                ':order' => $i,
+                                ':id'    => intval($rows['field_id'])
+                            ]);
+                            $i++;
+                        }
+                    }
                     redirect(FUSION_SELF.$aidlink);
                 }
             }
@@ -603,38 +631,25 @@ class QuantumFields extends \SqlHandler {
                     }
 
                 } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-
                     // Delete fields
                     $this->debug = FALSE;
-
                     if ($this->debug) {
                         print_p($this->locale['fields_0655']);
                     }
-
                     // Delete Fields - Bug with Isset errors
                     $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
-
                     if (dbrows($result) > 0) {
-
                         while ($data = dbarray($result)) {
-
                             if (in_array($data['field_name'], $field_list)) { // verify table integrity
-
                                 if ($this->debug) {
-
                                     print_p("DROP ".$data['field_name']." FROM ".$target_database);
                                     print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-
                                 } else {
-
                                     $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
-
                                     $field_count = $this->validate_field($data['field_id']);
-
                                     if ($field_count) {
                                         dbquery($field_del_sql);
                                     }
-
                                     // drop a column
                                     if (!empty($target_database)) {
                                         self::drop_column($target_database, $data['field_name']);
@@ -645,39 +660,28 @@ class QuantumFields extends \SqlHandler {
 
                         addNotice('success', $this->locale['field_0200']);
                         redirect(FUSION_SELF.$aidlink);
-
                     }
 
                 } // category deletion path 2
-
                 elseif (!isset($_POST['delete_field']) && isset($_POST['move_field']) && $_POST['move_field'] > 0) {
-
                     $rows = dbcount("(field_id)", $this->field_db, "field_cat='".intval($_GET['cat_id'])."'");
-
                     if ($rows) {
                         $new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
                         dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
                     }
 
                 }
-
                 // Delete the current category
                 $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
-
                 if ($this->debug) {
                     print_p($delete_cat_sql);
                 } else {
-
                     dbquery($delete_cat_sql);
                     addNotice('success', $this->locale['field_0200']);
                     redirect(FUSION_SELF.$aidlink);
-
                 }
-
             } else {
-
                 // show interior form
-
                 $field_list = array();
                 $form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
                 $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."' OR field_cat_id='".get_hkey($this->category_db,
@@ -931,11 +935,13 @@ class QuantumFields extends \SqlHandler {
 
             $default_active = key($tab_title['title']);
 
-            $tab_active = tab_active($tab_title, $active ?: $default_active);
-
-            echo opentab($tab_title, $tab_active, 'uftab');
+            // Tab
+            $tab_active = \FusionTabs::tab_active($tab_title, $active ?: $default_active);
+            $tabs = new \FusionTabs();
+            $tabs->set_remember(TRUE);
+            echo $tabs->opentab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', [], TRUE);
             foreach ($this->page[0] as $page_id => $page_details) {
-                echo opentabbody($tab_title['title'][$page_id], $tab_title['id'][$page_id], $tab_active);
+                echo $tabs->opentabbody($tab_title['id'][$page_id], $tab_active);
                 // load all categories here.
                 if ($this->debug) {
                     echo "<div class='m-t-20 text-dark'>\n";
@@ -967,16 +973,20 @@ class QuantumFields extends \SqlHandler {
                             print_p($field_cat);
                         }
                         echo "<div class='clearfix'>\n";
-                        echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.self::parse_label($field_cat['field_cat_name']), 'profile_category_name display-inline-block pull-left');
-                        echo "<div class='pull-left m-t-10 m-l-10'>\n";
+                        echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.self::parse_label($field_cat['field_cat_name']), 'profile_category_name display-inline-block m-r-15 pull-left');
+                        echo "<div class='pull-left display-inline-block spacer-xs'>\n";
                         if ($i != 0) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
+                            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$this->locale['move_up']."</a> &middot; ";
+                        } else {
+                            echo "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                         }
                         if ($i !== $counter) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
+                            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$this->locale['move_down']."</a> &middot; ";
+                        } else {
+                            echo "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
                         }
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> - ";
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
+                        echo "<a href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> &middot; ";
+                        echo "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
                         echo "</div>\n";
                         echo "</div>\n";
                         if (isset($this->fields[$cat_id])) {
@@ -1002,19 +1012,25 @@ class QuantumFields extends \SqlHandler {
                                 }
 
                                 echo $start_edit;
-                                echo "<div class='text-left'>\n";
+                                echo "<div class='clearfix'>\n";
+                                echo "<div class='pull-right spacer-xs m-t-0 m-r-15'>\n";
                                 if ($k != 0) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$this->locale['move_up']."</a> &middot; ";
+                                } else {
+                                    echo "<span class='text-lighter'>".$this->locale['move_up']."</span> &middot; ";
                                 }
                                 if ($k !== $item_counter) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$this->locale['move_down']."</a> &middot; ";
+                                } else {
+                                    echo "<span class='text-lighter'>".$this->locale['move_down']."</span> &middot; ";
                                 }
                                 if ($field_data['field_type'] == 'file') {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> &middot; ";
                                 } else {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
+                                    echo "<a href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> &middot; ";
                                 }
-                                echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$this->locale['delete']."</a>";
+                                echo "<a class='text-danger' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$this->locale['delete']."</a>";
+                                echo "</div>\n";
                                 echo "</div>\n";
 
                                 $options = array('inline' => 1, 'show_title' => 1, 'hide_value' => 1);
@@ -1036,9 +1052,9 @@ class QuantumFields extends \SqlHandler {
                     // display no category
                     echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>\n";
                 }
-                echo closetabbody();
+                echo $tabs->closetabbody();
             }
-            echo closetab();
+            echo $tabs->closetab();
         } else {
             echo "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
@@ -1094,8 +1110,6 @@ class QuantumFields extends \SqlHandler {
      */
     public function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
 
-        // Add compatibality to V7's UF module.
-        // Security concerns: remove all password hashes and salt
         unset($callback_data['user_algo']);
         unset($callback_data['user_salt']);
         unset($callback_data['user_password']);
@@ -1148,10 +1162,12 @@ class QuantumFields extends \SqlHandler {
         $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
 
         if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
-            $field_value = $_POST[$data['field_name']];
+            $field_value = form_sanitizer($_POST[$data['field_name']], '', $data['field_name']);
         } elseif ($options['hide_value']) {
             $field_value = '';
         }
+
+        $field_label = $options['show_title'] ? self::parse_label($data['field_title']) : '';
 
         switch ($data['field_type']) {
             case 'file':
@@ -1170,15 +1186,9 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
             case 'textbox':
-
                 if ($method == 'input') {
-
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => $field_value,
@@ -1186,32 +1196,22 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
             case 'number':
-
                 if ($method == 'input') {
                     $options += array('type' => 'number');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => $field_value,
                     );
-
                 }
-
                 break;
             case 'url':
                 if ($method == 'input') {
                     $options += array('type' => 'url');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1219,15 +1219,11 @@ class QuantumFields extends \SqlHandler {
                     );
                 }
                 break;
-
             case 'email':
                 if ($method == 'input') {
                     $options += array('type' => 'email');
 
-                    return form_text($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_text($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1239,11 +1235,9 @@ class QuantumFields extends \SqlHandler {
                 if ($method == 'input') {
                     $options['options'] = $option_list;
 
-                    return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
-
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
@@ -1253,7 +1247,6 @@ class QuantumFields extends \SqlHandler {
             case 'tags':
                 if ($method == 'input') {
                     $options += array('options' => $option_list, 'tags' => 1, 'multiple' => 1, 'width' => '100%');
-
                     return form_select($data['field_name'],
                         $options['show_title'] ? self::parse_label($data['field_title']) : '',
                         $field_value, $options);
@@ -1268,8 +1261,7 @@ class QuantumFields extends \SqlHandler {
                 if ($method == 'input') {
                     $options += array('width' => '100%');
 
-                    return form_location($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_location($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1279,10 +1271,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'textarea':
                 if ($method == 'input') {
-                    return form_textarea($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_textarea($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1292,9 +1281,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'checkbox':
                 if ($method == 'input') {
-                    return form_checkbox($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
+                    return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1304,10 +1291,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'datepicker':
                 if ($method == 'input') {
-                    return form_datepicker($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_datepicker($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1317,9 +1301,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'colorpicker':
                 if ($method == 'input') {
-                    return form_colorpicker($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
+                    return form_colorpicker($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1329,8 +1311,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'upload':
                 if ($method == 'input') {
-                    return form_fileinput($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_fileinput($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1340,8 +1321,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'hidden':
                 if ($method == 'input') {
-                    return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value,
-                        $options);
+                    return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1351,9 +1331,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'address':
                 if ($method == 'input') {
-                    return form_geo($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value,
-                        $options);
+                    return form_geo($data['field_name'], $field_label, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1365,10 +1343,7 @@ class QuantumFields extends \SqlHandler {
                 $options['toggle'] = 1;
                 $options['toggle_text'] = array($this->locale['off'], $this->locale['on']);
                 if ($method == 'input') {
-                    return form_checkbox($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                        $field_value, $options);
-
+                    return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -1377,7 +1352,6 @@ class QuantumFields extends \SqlHandler {
                 }
                 break;
         }
-
         return FALSE;
     }
 
@@ -1904,6 +1878,7 @@ class QuantumFields extends \SqlHandler {
                 'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order')
             );
 
+
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
 
             if ($this->field_data['field_type'] == 'upload') {
@@ -1936,8 +1911,14 @@ class QuantumFields extends \SqlHandler {
                 }
             }
 
+            if (!$this->field_data['field_order']) {
+                $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
+            }
+
             if (\defender::safe()) {
-                $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
+                if (!empty($this->field_data['field_config'])) {
+                    $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
+                }
                 $this->create_fields($this->field_data, 'dynamics'); // will redirect and refresh config
             }
 
@@ -2268,7 +2249,9 @@ class QuantumFields extends \SqlHandler {
                     } else {
                         if (\defender::safe()) {
                             dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
-                            dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
+                            if (dbcount("(field_id)", $this->field_db)) {
+                                dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
+                            }
                         }
                     }
                 } else {
@@ -2372,7 +2355,6 @@ class QuantumFields extends \SqlHandler {
     }
 
     /* Single array output match against $db - use get_structureData before to populate $fields */
-
     private function dynamics_fieldinfo($type, $default_value) {
         $info = array(
             'textbox'     => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
@@ -2381,7 +2363,7 @@ class QuantumFields extends \SqlHandler {
             'tags'        => "TEXT NOT NULL",
             'checkbox'    => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'toggle'      => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
-            'datepicker'  => "TINYINT(10) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
+            'datepicker'  => "INT(10) UNSIGNED NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'location'    => "VARCHAR(50) NOT NULL DEFAULT '".$default_value."'",
             'colorpicker' => "VARCHAR(10) NOT NULL DEFAULT '".$default_value."'",
             'upload'      => "VARCHAR(100) NOT NULL DEFAULT '".$default_value."'",
@@ -2446,8 +2428,7 @@ class QuantumFields extends \SqlHandler {
             $this->field_data = array(
                 'add_module'         => isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'],
                 'field_type'         => 'file',
-                'field_id'           => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '',
-                    'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
+                'field_id'           => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
                 'field_title'        => form_sanitizer($_POST['field_title'], '', 'field_title'),
                 'field_name'         => form_sanitizer($_POST['field_name'], '', 'field_name'),
                 'field_cat'          => form_sanitizer($_POST['field_cat'], '', 'field_cat'),
@@ -2459,6 +2440,9 @@ class QuantumFields extends \SqlHandler {
                 'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order')
             );
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
+            if (!$this->field_data['field_order']) {
+                $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
+            }
             $this->create_fields($this->field_data, 'module');
         }
         echo "<div class='m-t-20'>\n";
@@ -2573,23 +2557,17 @@ class QuantumFields extends \SqlHandler {
         $output_fields = array();
 
         $field = flatten_array($this->fields);
-
         if ($callback_data == TRUE) {
             $output_fields[$db] = $this->callback_data;
         }
-
         foreach ($field as $arr => $field_data) {
-
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-
             $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-
             // Find index primary key value
-            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0, $col_name) : 0;
+            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], '', $col_name) : '';
             if (!isset($output_fields[$target_database][$col_name])) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
             }
-
             // Set input as default if posted but blank
             if (isset($_POST[$field_data['field_name']])) {
                 $output_fields[$target_database][$field_data['field_name']] =
@@ -2599,36 +2577,32 @@ class QuantumFields extends \SqlHandler {
                         $field_data['field_name']
                     );
             }
-
         }
-
         $this->output_fields = $output_fields;
 
         return $this->output_fields;
     }
 
+    /**
+     * Logs the user actions
+     *
+     * @param $db
+     * @param $primary_key
+     */
     public function log_user_action($db, $primary_key) {
         if (\defender::safe()) {
             $output_fields = array();
             $field = flatten_array($this->fields);
             $output_fields[$db] = $this->callback_data;
             foreach ($field as $arr => $field_data) {
-                $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+                $target_db = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
                 $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
                 $index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
-                if ($field_data['field_log'] == TRUE // indicated to log
-                    && isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
-                    && isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum
-                    && $this->callback_data[$field_data['field_name']] !== $this->output_fields[$target_database][$field_data['field_name']] // different old and new values.
-                ) {
-                    //print_p($this->callback_data[$field_data['field_name']]." => ".$this->output_fields[$target_database][$field_data['field_name']]);
-                    save_user_log($index_value, $field_data['field_name'],
-                        $this->output_fields[$target_database][$field_data['field_name']],
-                        $this->callback_data[$field_data['field_name']]);
+                $old_cache = isset($this->callback_data[$field_data['field_name']]) ? $this->callback_data[$field_data['field_name']] : '';
+                $new_val = isset($this->output_fields[$target_db][$field_data['field_name']]) ? $this->output_fields[$target_db][$field_data['field_name']] : '';
+                if ($field_data['field_log'] && $new_val && $new_val != $old_cache) {
+                    save_user_log($index_value, $field_data['field_name'], $new_val, $old_cache);
                 }
-                //print_p($field_data);
-                //print_p($this->output_fields);
-                // nothing to return
             }
         }
     }

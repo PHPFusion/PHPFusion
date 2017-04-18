@@ -271,7 +271,7 @@ class Requirements extends Install_Core {
 
         $locale = self::$locale;
 
-        if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
+        if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name'])) {
 
             require_once INCLUDES."db_handlers/all_functions_include.php";
 
@@ -281,16 +281,14 @@ class Requirements extends Install_Core {
                 'elapsed' => microtime(TRUE) - $microtime
             ];
 
-            DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
+            DatabaseFactory::setDefaultDriver(intval(isset(self::$connection['pdo_enabled']) && self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 
             // There will be a connection issue present.
-            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
-                                                       self::$connection['db_name'], FALSE);
+            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
 
             if ($db_connect) {
-
                 $validation[2] = [
                     'result' => 1,
                     'description' => self::$locale['setup_0138'],
@@ -304,8 +302,6 @@ class Requirements extends Install_Core {
                         'description' => self::$locale['setup_0139'],
                         'elapsed' => microtime(TRUE) - $microtime
                     ];
-
-
                     if (!check_table($system['db_prefix'])) {
                         $validation[4] = [
                             'result' => 1,
@@ -450,99 +446,4 @@ function write_config(array $system = array()) {
     }
 
     return FALSE;
-}
-
-function write_htaccess() {
-
-    $site_path = fusion_get_settings('site_path');
-
-    if (!file_exists(BASEDIR.'.htaccess')) {
-        if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-            @rename(BASEDIR."_htaccess", ".htaccess");
-        } else {
-            touch(BASEDIR.".htaccess");
-        }
-    }
-
-    $htc = "# Force utf-8 charset".PHP_EOL;
-    $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
-    $htc .= "# Security".PHP_EOL;
-    $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-    $htc .= "# Secure htaccess file".PHP_EOL;
-    $htc .= "<Files .htaccess>".PHP_EOL;
-    $htc .= "   order allow,deny".PHP_EOL;
-    $htc .= "   deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Secure inc file".PHP_EOL;
-    $htc .= "<Files *.inc>".PHP_EOL;
-    $htc .= "   Order allow,deny".PHP_EOL;
-    $htc .= "   deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Protect config.php".PHP_EOL;
-    $htc .= "<Files config.php>".PHP_EOL;
-    $htc .= "   order allow,deny".PHP_EOL;
-    $htc .= "   deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "#Cache images for 7 days to soften network load".PHP_EOL;
-    $htc .= "<IfModule mod_headers.c>".PHP_EOL;
-    $htc .= '<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">'.PHP_EOL;
-    $htc .= '   Header set Cache-Control "max-age=290304000, public"'.PHP_EOL;
-    $htc .= "</FilesMatch>".PHP_EOL;
-    $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-    $htc .= "# Block Nasty Bots".PHP_EOL;
-    $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "   SetEnvIfNoCase ^User-Agent$ .*(almaden|Anarchie|ASPSeek|attach|autoemailspider|BackWeb|Bandit|BatchFTP|BlackWidow|Bot\ mailto:craftbot@yahoo.com|Buddy|bumblebee|CherryPicker|ChinaClaw|CICC|Collector|Copier|Crescent|Custo|DA|DIIbot|DISCo|DISCo\ Pump|Download\ Demon|Download\ Wonder|Downloader|Drip|DSurf15a|eCatch|EasyDL/2.99|EirGrabber|EmailCollector|EmailSiphon|EmailWolf|Express\ WebPictures|ExtractorPro|EyeNetIE|FileHound|FlashGet|GetRight|GetSmart|GetWeb!|gigabaz|Go\!Zilla|Go!Zilla|Go-Ahead-Got-It|gotit|Grabber|GrabNet|Grafula|grub-client|HMView|HTTrack|httpdown|ia_archiver|Image\ Stripper|Image\ Sucker|Indy*Library|InterGET|InternetLinkagent|Internet\ Ninja|InternetSeer.com|Iria|JBH*agent|JetCar|JOC\ Web\ Spider|JustView|larbin|LeechFTP|LexiBot|lftp|Link*Sleuth|likse|Link|LinkWalker|Mag-Net|Magnet|Mass\ Downloader|Memo|Microsoft.URL|MIDown\ tool|Mirror|Mister\ PiX|Mozilla.*Indy|Mozilla.*NEWT|Mozilla*MSIECrawler|MS\ FrontPage*|MSFrontPage|MSIECrawler|MSProxy|Navroad|NearSite|NetAnts|NetMechanic|NetSpider|Net\ Vampire|NetZIP|NICErsPRO|Ninja|Octopus|Offline\ Explorer|Offline\ Navigator|Openfind|PageGrabber|Papa\ Foto|pavuk|pcBrowser|Ping|PingALink|Pockey|psbot|Pump|QRVA|RealDownload|Reaper|Recorder|ReGet|Scooter|Seeker|Siphon|sitecheck.internetseer.com|SiteSnagger|SlySearch|SmartDownload|Snake|SpaceBison|sproose|Stripper|Sucker|SuperBot|SuperHTTP|Surfbot|Szukacz|tAkeOut|Teleport\ Pro|URLSpiderPro|Vacuum|VoidEYE|Web\ Image\ Collector|Web\ Sucker|WebAuto|[Ww]eb[Bb]andit|webcollage|WebCopier|Web\ Downloader|WebEMailExtrac.*|WebFetch|WebGo\ IS|WebHook|WebLeacher|WebMiner|WebMirror|WebReaper|WebSauger|Website|Website\ eXtractor|Website\ Quester|Webster|WebStripper|ebWhacker|WebZIP|Wget|Whacker|Widow|WWWOFFLE|x-Tractor|Xaldon\ WebSpider|Xenu|Zeus.*Webster|Zeus) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-    $htc .= "# Disable directory listing".PHP_EOL;
-    $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-    // This force image to not be able to be used as other matter
-    // See the harmless_kitten image in image directory
-    $htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
-    $htc .= "   ForceType image/jpeg".PHP_EOL;
-    $htc .= "</FilesMatch>".PHP_EOL;
-    $htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
-    $htc .= "   ForceType image/gif".PHP_EOL;
-    $htc .= "</FilesMatch>".PHP_EOL;
-    $htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
-    $htc .= "   ForceType image/png".PHP_EOL;
-    $htc .= "</FilesMatch>".PHP_EOL.PHP_EOL;
-    $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
-    $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
-    $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
-    $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-    $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
-    write_file(BASEDIR.".htaccess", $htc);
-}
-
-/**
- * A wrapper function for file_put_contents with cache invalidation
- *
- * If opcache is enabled on the server, this function will write the file
- * as the original file_put_contents and invalidate the cache of the file.
- *
- * It is needed when you create a file dynamically and want to include it
- * before the cache is invalidated. Redirection does not matter.
- *
- * @todo Find a better place and/or name for this function
- *
- * @param string          $file file path
- * @param string|string[] $data
- * @param int             $flags
- * @return int Number of written bytes
- */
-function write_file($file, $data, $flags = NULL) {
-    $bytes = NULL;
-    if ($flags === NULL) {
-        $bytes = \file_put_contents($file, $data);
-    } else {
-        $bytes = \file_put_contents($file, $data, $flags);
-    }
-    if (function_exists('opcache_invalidate')) {
-        \opcache_invalidate($file, TRUE);
-    }
-
-    return $bytes;
 }

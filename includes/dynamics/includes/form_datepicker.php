@@ -72,7 +72,9 @@
  * @return string
  */
 
+
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
+    // there was no sanitization?
     $locale = fusion_get_locale();
     $defender = \defender::getInstance();
 
@@ -98,8 +100,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
-        "date_format_js" => "YYYY-M-DD, H:mm:ss",
-        "date_format_php" => "Y-m-d H:i:s",
+        "date_format_js" => $locale['datepicker_js'],
+        "date_format_php" => $locale['datepicker_php'],
         "delimiter" => "-",
         'fieldicon_off' => FALSE,
         "filtered_dates" => array(), // must be an array
@@ -118,13 +120,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $options += $default_options;
 
     if (!empty($input_value)) {
-
         if ($options['type'] == "timestamp") {
-
             $input_value = date($options['date_format_php'], $input_value);
-
         } elseif ($options['type'] == "date") {
-
             if (stristr($input_value, $options['delimiter'])) {
                 $input_value = explode($options['delimiter'], $input_value);
                 if (count($input_value) == 3) {
@@ -187,10 +185,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     }
 
     $input_id = $options['input_id'] ?: $default_options['input_id'];
-    $html = "<div id='$input_id-field' class='form-group ".(!$options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '')."
-	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-	</label>\n" : '';
+    $html = "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."'>\n";
+    $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<div class='input-group date' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
     $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
@@ -201,14 +197,15 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= "</div>\n";
     $defender->add_field_session(
         array(
-            'input_name' => $input_name,
-            'type' => $options['type'],
-            'title' => $title,
-            'id' => $input_id,
-            'required' => $options['required'],
-            'safemode' => TRUE,
-            'error_text' => $options['error_text'],
-            "delimiter" => $options['delimiter']
+            'input_name'  => $input_name,
+            'type'        => $options['type'],
+            'title'       => $title,
+            'id'          => $input_id,
+            'required'    => $options['required'],
+            'safemode'    => TRUE,
+            'error_text'  => $options['error_text'],
+            "delimiter"   => $options['delimiter'],
+            'date_format' => $options['date_format_php'],
         )
     );
 

@@ -43,6 +43,20 @@ if (!defined("FORUM_LOCALE")) {
         define("FORUM_LOCALE", INFUSIONS."forum/locale/English/forum.php");
     }
 }
+if (!defined("FORUM_RANKS_LOCALE")) {
+    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_admin.php")) {
+        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php");
+    } else {
+        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/English/forum_ranks.php");
+    }
+}
+if (!defined("FORUM_TAGS_LOCALE")) {
+    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_tags.php")) {
+        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_tags.php");
+    } else {
+        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/English/forum_tags.php");
+    }
+}
 
 if (!defined("FORUM_ADMIN_LOCALE")) {
     if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_admin.php")) {

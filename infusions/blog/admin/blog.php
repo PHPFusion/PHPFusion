@@ -300,6 +300,7 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
         'thumbnail2'       => 1,
         'thumbnail2_w'     => $blog_settings['blog_photo_w'],
         'thumbnail2_h'     => $blog_settings['blog_photo_h'],
+        'valid_ext'        => $blog_settings['blog_file_types'],
         'type'             => 'image'
     );
     echo form_fileinput("blog_image", $locale['blog_0439'], "", $file_input_options);
@@ -338,6 +339,6 @@ echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes'".($dat
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('save', $locale['blog_0437'], $locale['blog_0437'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
-echo form_button('preview', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-primary', 'icon' => 'fa fa-eye'));
+echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], array('class' => 'btn-primary', 'icon' => 'fa fa-eye'));
 echo closeform();
 echo "</div>\n";

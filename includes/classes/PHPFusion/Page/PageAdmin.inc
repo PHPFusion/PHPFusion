@@ -75,7 +75,18 @@ class PageAdmin extends PageModel {
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/sitelinks.php');
         self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
-
+        $request = clean_request('', ['aid', 'section', 'action', 'cpid'], TRUE);
+        $request = str_replace('&amp;', '&', $request);
+        add_to_jquery("
+        function SetTinyMCE(val) {
+            now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
+            expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
+            location.href='".$request."';
+        }
+        $('#tinymce_switch').bind('click', function() {
+            SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
+        });
+        ");
         self::$textarea_options = array(
             'width' => '100%',
             'height' => '260px',
@@ -125,19 +136,15 @@ class PageAdmin extends PageModel {
 
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $title]);
         }
-
         $tab_title['title'][] = self::$current_section == 'compose_frm' ? self::$locale['back'] : self::$locale['page_0205'];
         $tab_title['id'][] = 'cp1';
         $tab_title['icon'][] = self::$current_section == 'compose_frm' ? 'fa fa-arrow-left' : '';
-
         if (self::$current_section == 'compose_frm') {
             $tab_title['title'][] = self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200'];
             $tab_title['id'][] = 'compose_frm';
             $tab_title['icon'][] = 'fa fa-pencil';
         }
-
         $tab_active = self::$current_section;
-
         switch (self::$current_action) {
             case 'edit':
                 if (!empty(self::$current_pageId)) {
@@ -157,15 +164,12 @@ class PageAdmin extends PageModel {
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_pageId);
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_pageId);
                     addNotice('success', self::$locale['page_0400']);
-                } else {
-
                 }
                 redirect(FUSION_SELF.fusion_get_aidlink());
                 break;
             default:
                 opentable(self::$locale['page_0100']);
         }
-
         echo opentab($tab_title, $tab_active, 'cpa', TRUE, '', 'section', array('action', 'cpid'));
         if (self::$current_section == "compose_frm") {
             PageComposer::displayContent();
@@ -173,7 +177,6 @@ class PageAdmin extends PageModel {
             PageList::displayContent();
         }
         echo closetab();
-
         echo closetable();
     }
 

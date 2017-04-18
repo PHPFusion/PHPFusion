@@ -42,7 +42,8 @@ if (!function_exists("display_loginform")) {
                 echo "<strong><a href='".BASEDIR."messages.php' class='side'>".sprintf($locale['global_125'], $msg_count);
                 echo ($msg_count == 1 ? $locale['global_126'] : $locale['global_127'])."</a></strong>\n";
             }
-            echo "<br /><br /></div>\n";
+            echo "</div>\n";
+            closetable();
         } else {
             echo "<div id='login_form' class='panel panel-default text-center text-dark'>\n";
             if (fusion_get_settings("sitebanner")) {

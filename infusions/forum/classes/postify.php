@@ -25,24 +25,24 @@ class Forum_Postify extends ForumServer {
     protected static $locale = [];
     protected static $default_redirect_link = '';
     protected static $postify_uri = [];
-
+    protected static $settings = [];
     private $postify_action;
 
     public function __construct() {
 
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
+        self::$settings = fusion_get_settings();
         self::get_forum_settings();
 
         if (!isset($_GET['forum_id'])) throw new \Exception(self::$locale['forum_0587']);
         if (!isset($_GET['thread_id'])) throw new \Exception(self::$locale['forum_0588']);
 
-        self::$default_redirect_link = fusion_get_settings('site_seo') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
+        self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 
         if (!iMEMBER) redirect(self::$default_redirect_link);
 
         add_to_title(self::$locale['global_204']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
-        //$_tdata = \PHPFusion\Forums\ForumServer::thread()->get_threadInfo(); // this is too heavy. lighten the load.
     }
 
     protected function get_postify_error_message() {
@@ -140,6 +140,9 @@ class Forum_Postify extends ForumServer {
                 if (iMOD) addNotice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
+        } else {
+            if (iMOD) addNotice('danger', 'No action taken');
+            redirect(self::$default_redirect_link);
         }
     }
 }

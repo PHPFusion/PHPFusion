@@ -148,14 +148,10 @@ class Router extends RewriteDriver {
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
                     if ($data['pattern_cat'] == "normal") {
-
                         $this->pattern_search[$data['rewrite_name']][] = $data['pattern_source'];
                         $this->pattern_replace[$data['rewrite_name']][] = $data['pattern_target'];
-
                     } elseif ($data['pattern_cat'] == "alias") {
-
                         $this->alias_pattern[$data['rewrite_name']][$data['pattern_source']] = $data['pattern_target'];
-
                     }
                 }
             }
@@ -172,21 +168,14 @@ class Router extends RewriteDriver {
     private function checkAlias() {
         // Check if there is any Alias matching the current URI
         $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$this->requesturi."' LIMIT 1";
-
         $result = dbquery($query);
-
         $this->queries[] = $query;
-
         if (dbrows($result)) {
             $aliasdata = dbarray($result);
             // If Yes, then Exploded the corresponding php_url and render the page
             if ($aliasdata['alias_php_url'] != "") {
-
-                $alias_url = $this->getAliasURL($aliasdata['alias_url'], $aliasdata['alias_php_url'],
-                                                $aliasdata['alias_type']);
-
+                $alias_url = $this->getAliasURL($aliasdata['alias_url'], $aliasdata['alias_php_url'], $aliasdata['alias_type']);
                 $url_info = $this->explodeURL($alias_url, "&amp;");
-
                 // File Path (Example: news.php)
                 $this->pathtofile = $url_info[0];
                 if (isset($url_info[1])) {
@@ -444,12 +433,10 @@ class Router extends RewriteDriver {
                             if (isset($this->pattern_replace[$type][$key]) && isset($this->pattern_search[$type][$key])) {
 
                                 $search_pattern = $this->pattern_search[$type][$key];
-
                                 $replace_pattern = $this->pattern_replace[$type][$key];
 
                                 if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                                    $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
-                                                          $search);
+                                    $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
                                 }
 
                                 $search = "~".$this->cleanRegex($search)."$~i";
@@ -463,7 +450,6 @@ class Router extends RewriteDriver {
                                     preg_match_all($search, $this->requesturi, $url_matches, PREG_SET_ORDER);
 
                                     if (isset($url_info[1])) { // indicate has $_GET request
-
                                         /**
                                          * File path is in search pattern
                                          */
@@ -473,11 +459,9 @@ class Router extends RewriteDriver {
 
                                         if (!empty($tag_matches[0])) {
 
-                                            $tagData = array_combine(range(1, count($tag_matches[0])),
-                                                                     array_values($tag_matches[0]));
+                                            $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
 
-                                            $tagRequests = array_combine(range(1, count($tag_matches[0])),
-                                                                         array_values($tag_matches[1]));
+                                            $tagRequests = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[1]));
 
                                             foreach ($tagData as $tagKey => $tagVal) {
                                                 $tag_values[$tagRequests[$tagKey]] = $matches[$tagKey];

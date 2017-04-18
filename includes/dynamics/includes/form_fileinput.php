@@ -72,6 +72,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'multiple'          => FALSE,
         'template'          => 'classic',
         'media'             => FALSE,
+        'placeholder'       => '',
     );
 
     $options += $default_options;
@@ -98,7 +99,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
-    $browseLabel = $locale['df_300'];
+    $browseLabel = $options['placeholder'] ?: $locale['df_300'];
     // file type if single filter, if not will accept as object if left empty.
     $type_for_js = NULL;
     if ($options['type']) {
@@ -150,7 +151,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     // Draw the framework first
     if ($options['media'] == TRUE) {
         $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files', 'psd|txt|md|php|exe|bat|pdf|js');
-
         $container_height = 300;
         $image_container_height = floor($container_height / 2.5);
         $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
@@ -248,6 +248,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseClass: 'btn ".$options['btn_class']." button',
                 uploadClass: 'btn btn-default button',
                 captionClass : '',
+                maxFileCount: '".$options['max_count']."',
+                removeLabel: '".$locale['remove']."',
+                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn btn-default button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
@@ -266,6 +269,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseClass: 'btn btn-modal btn-lg',
                 uploadClass: 'btn btn-modal btn-lg',
                 captionClass : '',
+                maxFileCount: '".$options['max_count']."',
+                removeLabel: '".$locale['remove']."',
+                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
@@ -289,6 +295,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseClass: 'btn btn-sm btn-block btn-default',
                 uploadClass: 'btn btn-modal',
                 captionClass : '',
+                maxFileCount: '".$options['max_count']."',
+                removeLabel: '".$locale['remove']."',
+                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',

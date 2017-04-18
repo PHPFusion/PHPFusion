@@ -18,8 +18,9 @@ require_once INCLUDES."theme_functions_include.php";
 
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.DIRECTORY_SEPARATOR;
-    $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+    $path = strtolower(str_replace('\\', DIRECTORY_SEPARATOR, $className));
     $fullPath = $baseDir.$path.'.php';
+    //print_p($fullPath);
     if (is_file($fullPath)) {
         require $fullPath;
     }

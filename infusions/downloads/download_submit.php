@@ -58,21 +58,27 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             'download_version' => form_sanitizer($_POST['download_version'], '', 'download_version'),
             'download_file' => '',
             'download_url' => '',
-            'download_image' => ''
+            'download_image' => '',
+            'download_image_thumb' => ''
         );
         /**
          * Download File Section
          */
         if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+
             $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
-            if (!$upload['error']) {
+            $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
+
+            if (empty($upload['error']) && !empty($_FILES['download_file']['size'])) {
                 // might be image, might be file
                 if (!empty($upload['image_name'])) {
                     $criteriaArray['download_file'] = $upload['image_name'];
-                } else {
+                } elseif (!empty($upload['target_file'])) {
                     $criteriaArray['download_file'] = $upload['target_file'];
+                } else {
+                    \defender::stop();
+                    addNotice('warning', $locale['download_0113']);
                 }
-                $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
             }
             unset($upload);
         } elseif (!empty($_POST['download_url']) && empty($data['download_file'])) {
@@ -81,11 +87,10 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             $defender->stop();
             addNotice('danger', $locale['download_0111']);
         }
-
         // Screenshot submissions
         if ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
             $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
-            if ($upload['error'] == 0) {
+            if (empty($upload['error'])) {
                 $criteriaArray['download_image'] = $upload['image_name'];
                 $criteriaArray['download_image_thumb'] = $upload['thumb1_name'];
                 unset($upload);
@@ -254,7 +259,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 
             echo "</div>\n</div>\n";
 
-            echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('submit_download', $locale['download_0041'], $locale['download_0041'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 
             echo closeform();
 

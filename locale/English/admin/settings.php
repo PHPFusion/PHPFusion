@@ -76,6 +76,7 @@ $locale['462'] = "Server offset";
 $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
+$locale['466'] = "Default for New Users";
 
 // Registration Settings
 $locale['550'] = "Registration";
@@ -112,7 +113,7 @@ $locale['659'] = "Bad words filter enabled?";
 $locale['660'] = "Flood interval (seconds):";
 $locale['661'] = "Leave empty for immediate upload/download of backups.";
 $locale['662'] = "TinyMCE Editor";
-$locale['663'] = "For Article, Blog and News Administration only.";
+$locale['663'] = "For Articles, Blogs and News Administration only.";
 $locale['664'] = "SMTP Host";
 $locale['665'] = "Leave empty if sendmail is enabled.";
 $locale['666'] = "SMTP Username";
@@ -167,7 +168,7 @@ $locale['694'] = "Allow PHP Execution";
 $locale['695'] = "WARNING! Allowing PHP execution will open the system to SQL vulnerabilities.";
 $locale['696'] = "Please enter your public and private reCAPTCHA key!";
 
-$locale['913'] = "Comments per page";
+$locale['913'] = "Base Comments per Page";
 
 $locale['955'] = "Original";
 $locale['956'] = "Square";

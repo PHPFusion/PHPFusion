@@ -51,10 +51,8 @@ if (isset($_POST['savesettings'])) {
     }
     redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
-/**
- * Options for dropdown field
- */
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+
+$calc_opts = $locale['1020'];
 $calc_c = calculate_byte($dl_settings['download_max_b']);
 $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
@@ -70,19 +68,19 @@ echo "<div class='well'>".$locale['download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
-openside('');
-
+openside("");
 echo form_text('download_pagination', $locale['939'], $dl_settings['download_pagination'], array(
-    'class' => 'pull-left',
-    'max_length' => 4,
-    'type' => 'number',
-    'inline' => TRUE,
+    'max_length'  => 4,
+    'type'        => 'number',
+    'inline'      => TRUE,
     'inner_width' => '150px',
-    'width' => '150px'
+    'width'       => '150px'
 ));
-echo "<div class='row m-0'>\n
+closeside();
+openside('');
+echo "<div class='row'>\n
 	<label class='control-label col-xs-12 col-sm-3' for='photo_w'>".$locale['934']."</label>\n
-	<div class='col-xs-12 col-sm-9 p-l-0'>\n
+	<div class='col-xs-12 col-sm-9'>\n
 	".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], array(
         'class' => 'pull-left m-r-10',
         'max_length' => 4,
@@ -98,11 +96,10 @@ echo "<div class='row m-0'>\n
     ))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>\n</div>";
-
 echo "
-<div class='row m-0'>
+<div class='row'>
 	<label class='label-control col-xs-12 col-sm-3' for='photo_w'>".$locale['937']."</label>
-	<div class='col-xs-12 col-sm-9 p-l-0'>
+	<div class='col-xs-12 col-sm-9'>
 	".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], array(
         'class' => 'pull-left m-r-10',
         'max_length' => 4,
@@ -120,18 +117,17 @@ echo "
 	</div>
 </div>";
 
-echo "
-<div class='row m-0'>
+echo "<div class='row'>
 	<label class='label-control col-xs-12 col-sm-3' for='calc_b'>".$locale['930']."</label>
-	<div class='col-xs-12 col-sm-9 p-l-0'>
+	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array(
-        'required' => TRUE,
-        'number' => 1,
-        'inline' => TRUE,
+        'required'   => TRUE,
+        'type'       => 'number',
+        'inline'     => TRUE,
         'error_text' => $locale['error_rate'],
-        'width' => '150px',
+        'width'      => '150px',
         'max_length' => 4,
-        'class' => 'pull-left m-r-10'
+        'class'      => 'pull-left m-r-10'
     ))."
 	".form_select('calc_c', '', $calc_c, array(
         'options' => $calc_opts,
@@ -143,10 +139,9 @@ echo "
 </div>
 ";
 
-echo "
-<div class='row m-0'>
+echo "<div class='row'>
 	<label class='label-control col-xs-12 col-sm-3' for='calc_bb'>".$locale['936']."</label>
-	<div class='col-xs-12 col-sm-9 p-l-0'>
+	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_bb', '', $calc_bb, array(
         'required' => TRUE,
         'type' => 'number',
@@ -162,11 +157,9 @@ echo "
         'width' => '180px'
     ))."
 	</div>
-</div>
-";
+</div>";
 closeside();
-
-openside("");
+openside('');
 echo form_select('download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], array(
     'inline' => TRUE, 'options' => array($locale['disable'], $locale['enable'])
 ));

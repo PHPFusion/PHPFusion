@@ -31,7 +31,7 @@ if (!function_exists("display_forum_tags")) {
 
             // thread design
             echo "<!--pre_forum-->\n";
-            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0002']."</div>\n";
 
             forum_filter($info);
 
@@ -89,8 +89,7 @@ if (!function_exists("display_forum_tags")) {
                                 <hr/>
                                 <?php if (!empty($tag_data['threads'])) : ?>
                                     <span class="tag_result text-white">
-                                    <?php echo trim_text($tag_data['threads']['thread_subject'],
-                                                         10)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
+                                    <?php echo trim_text($tag_data['threads']['thread_subject'], 100)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
                                 </span>
                                 <?php endif; ?>
                             </a>

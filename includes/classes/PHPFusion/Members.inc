@@ -152,7 +152,7 @@ class Members {
                 'search_form' => $search_form,
             );
 
-            $info['search_table'] = "<table class='table table-responsive table-striped center'>\n<tr>\n";
+            $info['search_table'] = "<table class='table table-responsive table-striped center alphabet-table'>\n<tr>\n";
             $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
             for ($i = 0; $i < count($info['search_filter']) != ""; $i++) {
                 $info['search_table'] .= "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF."?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";

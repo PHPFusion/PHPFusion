@@ -44,8 +44,7 @@ class FaqAdminModel extends FaqServer {
             if (file_exists(LOCALE.LOCALESET.'admin/settings.php')) {
                 $admin_locale_path = LOCALE.LOCALESET.'admin/settings.php';
             }
-            $locale = fusion_get_locale('', FAQ_ADMIN_LOCALE);
-            $locale += fusion_get_locale('', $admin_locale_path);
+            $locale = fusion_get_locale('', [FAQ_LOCALE, $admin_locale_path]);
             self::$admin_locale = $locale;
         }
 

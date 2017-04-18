@@ -35,20 +35,20 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             $data = dbarray($result);
 
             $callback_data = array(
-                "photo_id" => 0,
-                "photo_title" => form_sanitizer($_POST['photo_title'], "", "photo_title"),
-                "album_id" => form_sanitizer($_POST['album_id'], "", "album_id"),
-                "photo_description" => form_sanitizer($_POST['photo_description'], "", "photo_description"),
-                "photo_keywords" => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
-                "photo_order" => form_sanitizer($_POST['photo_order'], "", "photo_order"),
-                "photo_datestamp" => $data['submit_datestamp'],
-                "photo_user" => $data['submit_user'],
+                "photo_id"             => 0,
+                "photo_title"          => form_sanitizer($_POST['photo_title'], "", "photo_title"),
+                "album_id"             => form_sanitizer($_POST['album_id'], "", "album_id"),
+                "photo_description"    => form_sanitizer($_POST['photo_description'], "", "photo_description"),
+                "photo_keywords"       => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
+                "photo_order"          => form_sanitizer($_POST['photo_order'], "", "photo_order"),
+                "photo_datestamp"      => $data['submit_datestamp'],
+                "photo_user"           => $data['submit_user'],
                 "photo_allow_comments" => 0,
-                "photo_allow_ratings" => 0,
-                "photo_views" => 0,
-                "photo_filename" => form_sanitizer($_POST['photo_filename'], "", "photo_filename"),
-                "photo_thumb1" => isset($_POST['photo_thumb1']) ? form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1") : "",
-                "photo_thumb2" => isset($_POST['photo_thumb2']) ? form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2") : "",
+                "photo_allow_ratings"  => 0,
+                "photo_views"          => 0,
+                "photo_filename"       => form_sanitizer($_POST['photo_filename'], "", "photo_filename"),
+                "photo_thumb1"         => isset($_POST['photo_thumb1']) ? form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1") : "",
+                "photo_thumb2"         => isset($_POST['photo_thumb2']) ? form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2") : "",
             );
 
             if (defender::safe()) {
@@ -123,16 +123,16 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $data = dbarray($result);
                 $submit_criteria = unserialize($data['submit_criteria']);
                 $callback_data = array(
-                    "album_id" => $submit_criteria['album_id'],
-                    "photo_title" => $submit_criteria['photo_title'],
-                    "photo_keywords" => $submit_criteria['photo_keywords'],
+                    "album_id"          => $submit_criteria['album_id'],
+                    "photo_title"       => $submit_criteria['photo_title'],
+                    "photo_keywords"    => $submit_criteria['photo_keywords'],
                     "photo_description" => parse_textarea($submit_criteria['photo_description']),
-                    "photo_filename" => $submit_criteria['photo_filename'],
-                    "photo_thumb1" => $submit_criteria['photo_thumb1'],
-                    "photo_thumb2" => $submit_criteria['photo_thumb2'],
-                    "photo_datestamp" => $data['submit_datestamp'],
-                    "photo_user" => $data['user_id'],
-                    "photo_order" => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1
+                    "photo_filename"    => $submit_criteria['photo_filename'],
+                    "photo_thumb1"      => $submit_criteria['photo_thumb1'],
+                    "photo_thumb2"      => $submit_criteria['photo_thumb2'],
+                    "photo_datestamp"   => $data['submit_datestamp'],
+                    "photo_user"        => $data['user_id'],
+                    "photo_order"       => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1
                 );
                 add_to_title($locale['global_201'].$locale['gallery_0100'].$locale['global_200'].$callback_data['photo_title']."?");
                 $l_image = "";
@@ -153,29 +153,29 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_hidden("photo_datestamp", "", $callback_data['photo_datestamp']);
                 echo form_hidden("photo_user", "", $callback_data['photo_user']);
                 echo form_text("photo_title", $locale['photo_0001'], $callback_data['photo_title'], array(
-                    "required" => TRUE,
+                    "required"    => TRUE,
                     "placeholder" => $locale['photo_0002'],
-                    "inline" => TRUE
+                    "inline"      => TRUE
                 ));
-                echo form_select('photo_keywords', $locale['photo_0006'], $callback_data['photo_keywords'], array(
-                    'placeholder' => $locale['photo_0007'],
-                    'inline' => TRUE,
-                    'multiple' => TRUE,
-                    "tags" => TRUE,
-                    'width' => '100%',
+                echo form_select('photo_keywords', $locale['album_0005'], $callback_data['photo_keywords'], array(
+                    'placeholder' => $locale['album_0006'],
+                    'inline'      => TRUE,
+                    'multiple'    => TRUE,
+                    "tags"        => TRUE,
+                    'width'       => '100%',
                 ));
                 echo form_text('photo_order', $locale['photo_0013'], $callback_data['photo_order'], array(
-                    "type" => "number",
+                    "type"   => "number",
                     "inline" => TRUE,
-                    "width" => "100px"
+                    "width"  => "100px"
                 ));
                 $snippetSettings = array(
-                    "preview" => TRUE,
-                    "html" => TRUE,
-                    "autosize" => TRUE,
-                    "form_name" => "inputform",
+                    "preview"     => TRUE,
+                    "html"        => TRUE,
+                    "autosize"    => TRUE,
+                    "form_name"   => "inputform",
                     'placeholder' => $locale['photo_0009'],
-                    "inline" => TRUE,
+                    "inline"      => TRUE,
                 );
                 if (fusion_get_settings("tinymce_enabled")) {
                     $snippetSettings = array("inline" => TRUE, "form_name" => "inputform", 'placeholder' => $locale['photo_0009'],);
@@ -206,7 +206,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 openside("");
                 echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], array(
                     'options' => get_albumOpts(),
-                    'inline' => TRUE
+                    'inline'  => TRUE
                 ));
                 echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], array('class' => 'btn-primary m-r-10'));
                 closeside();

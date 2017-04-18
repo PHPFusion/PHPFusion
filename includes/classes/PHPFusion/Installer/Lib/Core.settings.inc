@@ -108,8 +108,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => "<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>"
             ],
             [
-                'settings_name' => 'opening_page',
-                'settings_value' => 'viewpage.php?page_id=1'
+                'settings_name'  => 'opening_page',
+                'settings_value' => 'home.php'
             ],
             [
                 'settings_name' => 'locale',
@@ -120,8 +120,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'entypo',
-                'settings_value' => 1
+                'settings_name'  => 'entypo',
+                'settings_value' => 0
             ],
             [
                 'settings_name' => 'fontawesome',
@@ -300,10 +300,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'comments_jquery',
-                'settings_value' => 1
-            ],
-            [
                 'settings_name' => 'ratings_enabled',
                 'settings_value' => 1
             ],
@@ -356,16 +352,16 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 1
             ],
             [
-                'settings_name' => 'avatar_width',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_width',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_height',
-                'settings_value' => 100
+                'settings_name'  => 'avatar_height',
+                'settings_value' => 500
             ],
             [
-                'settings_name' => 'avatar_filesize',
-                'settings_value' => 50000
+                'settings_name'  => 'avatar_filesize',
+                'settings_value' => 150000
             ],
             [
                 'settings_name' => 'avatar_ratio',
@@ -772,6 +768,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ]
         ]
     ];
+    // if we're installing
     $table_settings['settings_theme'] = [
         'insert' => [
             [
@@ -1035,16 +1032,16 @@ function get_table_rows($table_name, $localeset = 'English') {
     $table_settings['user_fields'] = [
         'insert' => [
             [
-                'field_name' => 'user_birthdate',
-                'field_title' => $locale['uf_birthdate'],
-                'field_cat' => 3,
-                'field_type' => 'file',
+                'field_name'     => 'user_birthdate',
+                'field_title'    => $locale['uf_birthdate'],
+                'field_cat'      => 1,
+                'field_type'     => 'file',
                 'field_required' => 0,
-                'field_order' => 2,
-                'field_default' => '1900-01-01',
-                'field_options' => '',
-                'field_error' => '',
-                'field_config' => ''
+                'field_order'    => 2,
+                'field_default'  => '1900-01-01',
+                'field_options'  => '',
+                'field_error'    => '',
+                'field_config'   => ''
             ],
             [
                 'field_name' => 'user_location',
@@ -1107,16 +1104,16 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_config' => ''
             ],
             [
-                'field_name' => 'user_web',
-                'field_title' => $locale['uf_web'],
-                'field_cat' => 2,
-                'field_type' => 'file',
+                'field_name'     => 'user_web',
+                'field_title'    => $locale['uf_web'],
+                'field_cat'      => 3,
+                'field_type'     => 'file',
                 'field_required' => 0,
-                'field_order' => 5,
-                'field_default' => '',
-                'field_options' => '',
-                'field_error' => '',
-                'field_config' => ''
+                'field_order'    => 3,
+                'field_default'  => '',
+                'field_options'  => '',
+                'field_error'    => '',
+                'field_config'   => ''
             ],
             [
                 'field_name' => 'user_timezone',
@@ -1161,7 +1158,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'link_name'       => $locale['setup_3300'],
                 'link_cat'        => '0',
-                'link_icon'       => 'php-fusion m-r-5',
+                'link_icon'       => '',
                 'link_url'        => 'index.php',
                 'link_visibility' => '0',
                 'link_position'   => '2',
@@ -1171,16 +1168,16 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_language'   => $localeset,
             ],
             [
-                'link_name' => $locale['setup_3305'],
-                'link_cat' => '0',
-                'link_icon' => '',
-                'link_url' => 'contact.php',
+                'link_name'       => $locale['setup_3305'],
+                'link_cat'        => '0',
+                'link_icon'       => '',
+                'link_url'        => 'contact.php',
                 'link_visibility' => '0',
-                'link_position' => '1',
-                'link_status' => '1',
-                'link_window' => '0',
-                'link_order' => '8',
-                'link_language' => $localeset,
+                'link_position'   => '3',
+                'link_status'     => '1',
+                'link_window'     => '0',
+                'link_order'      => '8',
+                'link_language'   => $localeset,
             ],
             [
                 'link_name' => $locale['setup_3309'],

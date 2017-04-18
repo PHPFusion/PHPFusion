@@ -21,6 +21,7 @@ if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
 } else {
     include INFUSIONS."blog/locale/English/blog_admin.php";
 }
+add_to_title($locale['global_200'].$locale['blog_0700']);
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['blog_0700']);
 if (iMEMBER && $blog_settings['blog_allow_submission']) {
     $criteriaArray = array(
@@ -82,7 +83,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
         }
     }
     if (isset($_GET['submitted']) && $_GET['submitted'] == "b") {
-        add_to_title($locale['global_200'].$locale['blog_0600']);
+        
         echo "<div class='well text-center'><p><strong>".$locale['blog_0701']."</strong></p>";
         echo "<p><a href='submit.php?stype=b'>".$locale['blog_0702']."</a></p>";
         echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
@@ -124,7 +125,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
                 closetable();
             }
         }
-        add_to_title($locale['global_200'].$locale['blog_0600']);
+        
         echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
         echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                                                                                        $locale['blog_0703'])."</div>\n";
@@ -208,7 +209,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 
         echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
 
-        echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0436'], $locale['blog_0436'],
+        echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0141'], $locale['blog_0141'],
                                                                 array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-eye'));
         echo closeform();
 
