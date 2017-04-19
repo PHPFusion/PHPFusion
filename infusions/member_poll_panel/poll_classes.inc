@@ -275,8 +275,8 @@ class MemberPoll {
                                 $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
                             }
 
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".$info_t['poll_table'][$key]['max_vote'];
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].":".showdate("shortdate", $dat['poll_started']);
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_060']." ".$info_t['poll_table'][$key]['max_vote'];
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".showdate("shortdate", $dat['poll_started']);
 
                             if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
                                 $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].":".showdate("shortdate", $dat['poll_ended']);
