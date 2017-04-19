@@ -1230,3 +1230,7 @@ Cellphones
     background-color: inherit;
     border: none;
 }
+
+#navigation-user {
+    margin: 35px 0;
+}
