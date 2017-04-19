@@ -30,7 +30,6 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
             $input_value = construct_array($input_value, "", "|");
         }
     } else {
-        $input_value = [];
         $input_value['0'] = "";
         $input_value['1'] = "";
         $input_value['2'] = "";
