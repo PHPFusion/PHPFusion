@@ -51,6 +51,7 @@ $locale['sel_state'] = "Select Region";
 $locale['sel_user'] = "Please type a user name";
 $locale['add_language'] = "Add Language Translations";
 $locale['add_lang'] = "Add %s";
+$locale['other_states'] = "Other States";
 // Name
 $locale['name'] = "Full Name";
 $locale['username_pretext'] = "Your public username is also the same as your user profile address located at: %s %s";
