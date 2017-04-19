@@ -84,12 +84,12 @@ class InstallerIntroduction extends Install_Core {
         if (!isset($_GET['upgrade'])) {
             /*
             $content .= "<h4>Start your installation from Version 7.02</h4>\n";
-            $content .= "<a class='btn btn-warning btn-md m-b-20' href='./test/install.php'>Install Version 7.02 with mysqli</a>                        
+            $content .= "<a class='btn btn-warning btn-md m-b-20' href='./test/install.php'>Install Version 7.02 with mysqli</a>
             <ul class='m-l-20 m-b-20'>
-            <li><strong>Note:</strong> Like Version 7 requirements - Your Database Must Exist and Empty</li>                                    
-            <li>Don't report any issues in Github with the v7 installer (<strong>including this message</strong>). If it doesn't work for you, try other method.</li>            
-            <li>No need to translate this.</li>                        
-            </ul>            
+            <li><strong>Note:</strong> Like Version 7 requirements - Your Database Must Exist and Empty</li>
+            <li>Don't report any issues in Github with the v7 installer (<strong>including this message</strong>). If it doesn't work for you, try other method.</li>
+            <li>No need to translate this.</li>
+            </ul>
             <br/>Complete source code for this can be found on <a href='https://github.com/php-fusion/PHP-Fusion/blob/7.02.07/setup.php' target='_blank'>Github</a>.
             <hr/>";
             */
@@ -113,10 +113,21 @@ class InstallerIntroduction extends Install_Core {
                                   )
         );
 
+        add_to_jquery('
+            $("#step").attr("disabled", true);
+            $("#license").on("click", function() {
+                if ($(this).is(":checked")) {
+                    $("#step").attr("disabled", false);
+                } else {
+                    $("#step").attr("disabled", true);
+                }
+            });
+        ');
+
         add_to_jquery("
         $('#localeset').bind('change', function() {
-        var value = $(this).val();
-        document.location.href='".FUSION_SELF."?localeset='+value;
+            var value = $(this).val();
+            document.location.href='".FUSION_SELF."?localeset='+value;
         });
         ");
 

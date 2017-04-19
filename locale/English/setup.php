@@ -128,7 +128,11 @@ $locale['setup_1510'] = "Website Email address:";
 $locale['setup_1511'] = "Select Website Region:";
 $locale['setup_1512'] = "Site Language Installations:";
 $locale['setup_1513'] = "Site Owner Name";
-
+// Progress Reports
+$locale['setup_1600'] = "Installing ";
+$locale['setup_1601'] = "Updating table structure on ";
+$locale['setup_1602'] = "Adding new column on ";
+$locale['setup_1603'] = "Populating data ";
 // Step 6 - User details validation
 $locale['setup_5010'] = "User name contains invalid characters.";
 $locale['setup_5011'] = "User name field can not be left empty.";
