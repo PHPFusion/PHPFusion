@@ -26,16 +26,13 @@ function renderNotices($notices) {
     $messages = "";
 
     foreach ($notices as $status => $notice) {
-
         if ($status == "success") {
             // Success messages can be auto closed
             $messages .= "<div id='close-message'>\n";
         }
         $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible' role='alert'>";
         $messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
-        foreach ($notice as $id => $message) {
-            $messages .= $message."<br />";
-        }
+        $messages .= implode("<br/>", $notice);
         $messages .= "</div>\n";
         if ($status == "success") {
             $messages .= "</div>\n";
