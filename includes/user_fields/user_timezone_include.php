@@ -36,6 +36,11 @@ foreach ($timezones as $zone) {
     $user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);
     // Display in profile
 } elseif ($profile_method == "display") {
-    // Insert and update
-    $user_fields = array('title' => $locale['uf_timezone'], 'value' => $field_value ?: $locale['na']);
+    if (!empty($field_value)){
+		$zone = explode('/', $field_value);
+		if (!empty($zone[1])) {
+			$field_value = str_replace('_', ' ', $zone[1]);
+		}
+    	$user_fields = array('title' => $locale['uf_timezone'], 'value' => $field_value);
+    }
 }
