@@ -45,6 +45,7 @@ $locale['ago'] = "ago";
 $locale['street1'] = "Street Address 1";
 $locale['street2'] = "Street Address 2";
 $locale['city'] = "City";
+$locale['states'] = "Other States";
 $locale['postcode'] = "Postcode";
 $locale['sel_country'] = "Select Country";
 $locale['sel_state'] = "Select Region";
