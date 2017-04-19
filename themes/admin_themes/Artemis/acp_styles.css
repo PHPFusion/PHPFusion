@@ -472,7 +472,6 @@ a:hover, a:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
     margin: 25px 27px 0;
     min-height: calc(100vh - 100px);
-    overflow: hidden;
 }
 
 #devlpr .breadcrumb {
