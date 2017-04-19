@@ -108,7 +108,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
         $country_key = str_replace(" ", "-", $countryname);
         $select = ($input_value[2] == $country_key) ? "selected" : '';
-        $html .= "<option value='$country_key' ".$select.">".$countryname."</option>";
+        $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
     }
     $html .= "</select>\n";
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[2])) || $defender->inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
@@ -314,7 +314,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
             $country_key = str_replace(" ", "-", $countryname);
             $select = ($input_value == $country_key) ? "selected" : '';
-            $html .= "<option value='$country_key' ".$select.">".$countryname."</option>";
+            $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
         }
         $html .= "</select>\n";
 
@@ -338,7 +338,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         ".$flag_function."
         $('#".$options['input_id']."').select2({
             $flag_plugin
-            placeholder: 'Country ".($options['required'] == 1 ? '*' : '')."'
+            placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
         });
         ");
 
