@@ -1034,7 +1034,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'field_name'     => 'user_birthdate',
                 'field_title'    => $locale['uf_birthdate'],
-                'field_cat'      => 1,
+                'field_cat'      => 3,
                 'field_type'     => 'file',
                 'field_required' => 0,
                 'field_order'    => 2,
