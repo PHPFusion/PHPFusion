@@ -67,7 +67,7 @@ class MainFrame extends Core {
             add_to_footer("<script src='".THEME."themefactory/lib/js/jquery.nicescroll.min.js'></script>");
             add_to_jquery("
             $('.contentLeft').niceScroll({
-                touchbehavior: true,
+                // touchbehavior: true,
                 cursorborder: 'none',
                 cursorwidth: '8px',
                 background: '#fff',
