@@ -163,7 +163,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 	".$flag_function."
     $('#$input_id-country').select2({
 	$flag_plugin
-	placeholder: 'Country ".($options['required'] == 1 ? '*' : '')."'
+	placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
     });
     $('#".$input_id."-country').bind('change', function(){
     	var ce_id = $(this).val();
