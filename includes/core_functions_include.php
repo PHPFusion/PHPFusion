@@ -1865,12 +1865,15 @@ function fusion_detect_installation() {
  * @return string[]
  */
 function fusion_get_enabled_languages() {
+    $settings = fusion_get_settings();
     static $enabled_languages = NULL;
+
     if ($enabled_languages === NULL) {
-        $settings = fusion_get_settings();
-        $values = explode('.', $settings['enabled_languages']);
-        foreach ($values as $language_name) {
-            $enabled_languages[$language_name] = translate_lang_names($language_name);
+        if (isset($settings['enabled_languages'])) {
+            $values = explode('.', $settings['enabled_languages']);
+            foreach ($values as $language_name) {
+                $enabled_languages[$language_name] = translate_lang_names($language_name);
+            }
         }
     }
 
