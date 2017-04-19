@@ -57,7 +57,7 @@ $calc_c = calculate_byte($dl_settings['download_max_b']);
 $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
 $calc_bb = $dl_settings['download_screen_max_b'] / $calc_cc;
-$choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
+$choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $mime = mimeTypes();
 $mime_opts = array();
 foreach ($mime as $m => $Mime) {
@@ -65,62 +65,60 @@ foreach ($mime as $m => $Mime) {
     $mime_opts[$ext] = $ext;
 }
 echo "<div class='well'>".$locale['download_description']."</div>";
-echo openform('settingsform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-8'>\n";
+echo openform('settingsform', 'post', FUSION_REQUEST);
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");
-echo form_text('download_pagination', $locale['939'], $dl_settings['download_pagination'], array(
+echo form_text('download_pagination', $locale['939'], $dl_settings['download_pagination'], [
     'max_length'  => 4,
     'type'        => 'number',
     'inline'      => TRUE,
     'inner_width' => '150px',
     'width'       => '150px'
-));
+]);
 closeside();
 openside('');
-echo "<div class='row'>\n
-	<label class='control-label col-xs-12 col-sm-3' for='photo_w'>".$locale['934']."</label>\n
-	<div class='col-xs-12 col-sm-9'>\n
-	".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], array(
-        'class' => 'pull-left m-r-10',
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['934']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
+        'class'      => 'pull-left m-r-10',
         'max_length' => 4,
-        'type' => 'number',
-        'width' => '150px'
-    ))."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('download_screen_max_h', '', $dl_settings['download_screen_max_h'], array(
-        'class' => 'pull-left',
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+        <i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('download_screen_max_h', '', $dl_settings['download_screen_max_h'], [
+        'class'      => 'pull-left',
         'max_length' => 4,
-        'type' => 'number',
-        'width' => '150px'
-    ))."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+        <small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
 	</div>\n</div>";
-echo "
-<div class='row'>
-	<label class='label-control col-xs-12 col-sm-3' for='photo_w'>".$locale['937']."</label>
-	<div class='col-xs-12 col-sm-9'>
-	".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], array(
-        'class' => 'pull-left m-r-10',
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['937']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
+        'class'      => 'pull-left m-r-10',
         'max_length' => 4,
-        'type' => 'number',
-        'width' => '150px'
-    ))."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('download_thumb_max_h', '', $dl_settings['download_thumb_max_h'], array(
-        'class' => 'pull-left',
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+        <i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('download_thumb_max_h', '', $dl_settings['download_thumb_max_h'], [
+        'class'      => 'pull-left',
         'max_length' => 4,
-        'type' => 'number',
-        'width' => '150px'
-    ))."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+        <small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
 	</div>
 </div>";
 
-echo "<div class='row'>
-	<label class='label-control col-xs-12 col-sm-3' for='calc_b'>".$locale['930']."</label>
-	<div class='col-xs-12 col-sm-9'>
-	".form_text('calc_b', '', $calc_b, array(
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['930']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('calc_b', '', $calc_b, [
         'required'   => TRUE,
         'type'       => 'number',
         'inline'     => TRUE,
@@ -128,66 +126,67 @@ echo "<div class='row'>
         'width'      => '150px',
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
-    ))."
-	".form_select('calc_c', '', $calc_c, array(
-        'options' => $calc_opts,
+    ])."
+	".form_select('calc_c', '', $calc_c, [
+        'options'     => $calc_opts,
         'placeholder' => $locale['choose'],
-        'class' => 'pull-left',
-        'width' => '180px'
-    ))."
+        'class'       => 'pull-left',
+        'inner_width' => '100%',
+        'width'       => '150px'
+    ])."
 	</div>
 </div>
 ";
 
-echo "<div class='row'>
-	<label class='label-control col-xs-12 col-sm-3' for='calc_bb'>".$locale['936']."</label>
-	<div class='col-xs-12 col-sm-9'>
-	".form_text('calc_bb', '', $calc_bb, array(
-        'required' => TRUE,
-        'type' => 'number',
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_bb'>".$locale['936']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('calc_bb', '', $calc_bb, [
+        'required'   => TRUE,
+        'type'       => 'number',
         'error_text' => $locale['error_rate'],
-        'width' => '150px',
+        'width'      => '150px',
         'max_length' => 4,
-        'class' => 'pull-left m-r-10'
-    ))."
-	".form_select('calc_cc', '', $calc_cc, array(
-        'options' => $calc_opts,
+        'class'      => 'pull-left m-r-10'
+    ])."
+	".form_select('calc_cc', '', $calc_cc, [
+        'options'     => $calc_opts,
         'placeholder' => $locale['choose'],
-        'class' => 'pull-left',
-        'width' => '180px'
-    ))."
+        'class'       => 'pull-left',
+        'inner_width' => '100%',
+        'width'       => '150px'
+    ])."
 	</div>
 </div>";
 closeside();
 openside('');
-echo form_select('download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], array(
-    'inline' => TRUE, 'options' => array($locale['disable'], $locale['enable'])
-));
-echo form_checkbox('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], array('inline' => TRUE));
-echo form_checkbox('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], array('inline' => TRUE));
+echo form_select('download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], [
+    'inline' => TRUE, 'options' => [$locale['disable'], $locale['enable']]]);
+echo form_checkbox('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], ['inline' => TRUE]);
+echo form_checkbox('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], ['inline' => TRUE]);
 closeside();
 
 
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('download_screenshot', $locale['938'], $dl_settings['download_screenshot'], array('options' => $choice_opts));
-echo form_select('download_stats', $locale['940'], $dl_settings['download_stats'], array('options' => $choice_opts));
+echo form_select('download_screenshot', $locale['938'], $dl_settings['download_screenshot'], ['options' => $choice_opts]);
+echo form_select('download_stats', $locale['940'], $dl_settings['download_stats'], ['options' => $choice_opts]);
 closeside();
 openside();
-echo form_select('download_types[]', $locale['932'], $dl_settings['download_types'], array(
-    'options' => $mime_opts,
-    'input_id' => 'dltype',
-    'error_text' => $locale['error_type'],
+echo form_select('download_types[]', $locale['932'], $dl_settings['download_types'], [
+    'options'     => $mime_opts,
+    'input_id'    => 'dltype',
+    'error_text'  => $locale['error_type'],
     'placeholder' => $locale['choose'],
-    'multiple' => TRUE,
-    'tags' => TRUE,
-    'width' => '100%',
-    'delimiter' => '|'
-));
+    'multiple'    => TRUE,
+    'tags'        => TRUE,
+    'width'       => '100%',
+    'delimiter'   => '|'
+]);
 
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();
 
 add_to_jquery("
