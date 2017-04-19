@@ -195,7 +195,7 @@ a:hover, a:focus {
     bottom: 0;
     width: 550px;
     max-width: 100%;
-    z-index: 80;
+    /*z-index: 80;*/
     box-shadow: inset 1px 0 0 #222933;
     overflow-y: auto;
     padding-bottom: 50px;
@@ -322,7 +322,7 @@ a:hover, a:focus {
     min-height: 100vh;
     padding-top: 70px;
     padding-bottom: 50px;
-    z-index: 90;
+    /*z-index: 90;*/
     transition: -webkit-transform .5s;
     transition: transform .5s;
 }
