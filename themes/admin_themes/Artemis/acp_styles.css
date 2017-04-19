@@ -1,6 +1,6 @@
 /* Globals */
 html, body, #tinymce body, .form-control {
-    font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
