@@ -211,7 +211,7 @@ class Locale {
             "Russian" => "Русский",
             "Spanish" => "Español",
             "Swedish" => "Svenska",
-            "Turkish" => "Türkiye",
+            "Turkish" => "Türkçe",
             "Ukrainian" => "Українська",
             "Norwegian" => "Norsk"
         );
