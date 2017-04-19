@@ -45,7 +45,7 @@ require_once $level."maincore.php";
 require_once INCLUDES."geomap/geomap.inc.php";
 $id = (isset($_GET['id']) && ($_GET['id'])) ? form_sanitizer($_GET['id'], "") : '';
 //$id = "Malaysia";
-$states_array[] = array("id" => "Other", "text" => "Other States");
+$states_array[] = array("id" => "Other", "text" => $locale['states']);
 foreach ($states as $key => $value) {
 	if ($id == $key) {
 		if (!empty($value)) {
