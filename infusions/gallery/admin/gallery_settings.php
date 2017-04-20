@@ -171,8 +171,8 @@ echo "<div class='display-block overflow-hide'>
 ";
 closeside();
 openside('');
-echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission']);
-echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required']);
+echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
+echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside("");
