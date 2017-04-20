@@ -67,7 +67,7 @@ $inf_newtable[] = DB_FORUM_VOTES." (
 	vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
 	vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (vote_id)	
+	PRIMARY KEY (vote_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_RANKS." (
@@ -218,7 +218,7 @@ $inf_newtable[] = DB_FORUM_TAGS." (
 
 $inf_newtable[] = DB_FORUM_USER_REP." (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',	
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -226,7 +226,7 @@ $inf_newtable[] = DB_FORUM_USER_REP." (
 	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
 	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (rep_id),	
+	PRIMARY KEY (rep_id),
 	KEY post_id (post_id, user_id, voter_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
@@ -291,7 +291,9 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '1', '1', '".fusion_get_settings('opening_page')."', '2', '".fusion_get_settings('enabled_languages')."')";
 
 if (function_exists("fusion_get_enabled_languages")) {
-    $enabled_languages = array_keys(fusion_get_enabled_languages());
+	$languages = [];
+	$languages = fusion_get_enabled_languages();
+    $enabled_languages = array_keys($languages);
 } else {
     $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 }
