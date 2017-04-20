@@ -361,6 +361,7 @@ class InstallerAdminSetup extends Install_Core {
                         // Update all existing panel and update new enabled language values
                         dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".self::$siteData['enabled_languages']."'");
 
+                        $installed_languages = [];
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
