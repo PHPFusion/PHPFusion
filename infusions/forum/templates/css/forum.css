@@ -212,3 +212,6 @@ a.answer_unchecked:focus {
 	word-wrap: break-word;
 	word-break: break-all;
 }
+.select2-results .select2-highlighted {
+	color: #fff;
+}
