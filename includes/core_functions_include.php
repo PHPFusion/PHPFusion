@@ -1877,7 +1877,7 @@ function fusion_get_enabled_languages() {
         }
     }
 
-    return $enabled_languages;
+    return (array)$enabled_languages;
 }
 
 function fusion_get_detected_language() {

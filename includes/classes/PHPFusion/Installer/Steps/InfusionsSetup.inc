@@ -53,9 +53,7 @@ class InstallerInfusions extends Install_Core {
             define("iUSER_RIGHTS", $userdata['user_rights']);
             define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
             // Get enabled language settings
-            $language_opts = [];
-            $language_opts = fusion_get_enabled_languages();
-            $enabled_languages = array_keys($language_opts);
+            $enabled_languages = array_keys(fusion_get_enabled_languages());
             // If language change is initiated and if the selected language is valid
             if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
                 $lang = stripinput($_GET['lang']);
