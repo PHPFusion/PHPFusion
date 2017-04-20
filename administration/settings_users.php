@@ -1,5 +1,4 @@
 <?php
-<?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
