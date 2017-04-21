@@ -25,8 +25,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
 
     public function display_admin() {
 
-		// Locale
-		$this->locale = self::get_WeblinkAdminLocale();
+	$this->locale = self::get_WeblinkAdminLocale();
 
 		// Back and Check Section
         if (isset($_GET['section']) && $_GET['section'] == "back") {
@@ -38,33 +37,33 @@ class WeblinksAdminView extends WeblinksAdminModel {
         add_to_title($this->locale['WLS_0001']);
 
 		// Handle Breadcrumbs and Titles
-		BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $this->locale['WLS_0001']));
-
 		$weblinkTitle = $this->locale['WLS_0001'];
 		$weblinkCatTitle = $this->locale['WLS_0004'];
+		BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), "title" => $weblinkTitle));
 
-		if ($_GET['section'] == "weblinks") {
-			if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
-				BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks&amp;ref=weblinks_form", "title" => (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003'])));
-				$weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);
-			}
-		}
-
-		if ($_GET['section'] == "weblinks_category") {
-			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", "title" => $this->locale['WLS_0004']));
-			if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
-					BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category&amp;ref=weblink_cat_form", "title" => (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006'])));
-				$weblinkCatTitle = (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006']);
-
-			}
-		}
-
-		if ($_GET['section'] == "submissions") {
-			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions", "title" => $this->locale['WLS_0007']));
-		}
-
-		if ($_GET['section'] == "settings") {
-			BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=settings", "title" => $this->locale['WLS_0008']));
+		if (!empty($_GET['section'])){
+        	switch ($_GET['section']) {
+	            case "weblinks":
+				if (isset($_GET['ref']) && $_GET['ref'] == "weblinks_form") {
+					$weblinkTitle = (empty($_GET['weblink_id']) ? $this->locale['WLS_0002'] : $this->locale['WLS_0003']);
+    	            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $weblinkTitle]);
+				}
+        	        break;
+            	case "weblinks_category":
+                	BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=weblinks_category", 'title' => $weblinkCatTitle]);
+				if (isset($_GET['ref']) && $_GET['ref'] == "weblink_cat_form") {
+					$weblinkCatTitle = (empty($_GET['cat_id']) ? $this->locale['WLS_0005'] : $this->locale['WLS_0006']);
+					BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $weblinkCatTitle]);
+				}
+	                break;
+            	case "settings":
+                	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->locale['WLS_0008']]);
+	                break;
+    	        case "submissions":
+        	        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->locale['WLS_0007']]);
+            	    break;
+	            default:
+    	    }
 		}
 
 		// Handle Tabs
