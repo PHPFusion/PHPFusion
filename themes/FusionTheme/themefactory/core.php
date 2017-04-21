@@ -28,6 +28,7 @@ class Core {
         'headerBg_class'      => '', // use custom header background class
 
         'navbar_class' => '',
+        'nav_offset'   => 60,
 
         'subheader'           => TRUE,
         'subheader_content'   => '',
@@ -176,8 +177,8 @@ class Core {
         if (isset(self::$options[$prop])) { // will return an error if $prop is not available
             return self::$options[$prop];
         } else {
-            print_p($prop);
-            debug_print_backtrace();
+            //print_p($prop);
+            //debug_print_backtrace();
         }
 
         return NULL;
