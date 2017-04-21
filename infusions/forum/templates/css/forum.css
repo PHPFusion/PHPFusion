@@ -184,18 +184,14 @@ PHP-Fusion 9 Core Template Forum CSS
 }
 .forum_sig {
 	display: block;
-	font-style: italic;
 	opacity: 0.8;
-	margin-top:10px;
-	margin-bottom:10px;
-}
-.forum_sig:before {
-	content: "- ";
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 .quote {
 	border-left: 3px solid #ccc;
 	padding: 10px 20px;
-	font-size:11px;
+	font-size: 11px;
 }
 .forum-img-wrapper {
 	display: block;

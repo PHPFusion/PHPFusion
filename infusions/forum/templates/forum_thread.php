@@ -246,7 +246,7 @@ if (!function_exists('render_post_item')) {
                 '{%user_rank%}'          => ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : ''),
                 '{%user_profile_link%}'  => $data['user_profile_link'],
                 '{%user_online_status%}' => "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>",
-                '{%user_signature%}'     => ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".parse_textarea($data['user_sig'])."</div>\n" : ""),
+                '{%user_signature%}'     => ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : ""),
                 '{%checkbox_input%}'     => (iMOD ? $data['post_checkbox'] : ''),
                 '{%post_message%}'       => $data['post_message'],
                 '{%bounty_button%}'      => ($data['post_bounty'] ? "<!---bounty--><a class='btn btn-success pull-right' href='".$data['post_bounty']['link']."'>".$data['post_bounty']['title']."</a><!--//post_bounty-->" : ''),
