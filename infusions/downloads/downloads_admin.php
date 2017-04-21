@@ -29,7 +29,7 @@ $aidlink = fusion_get_aidlink();
 require_once INCLUDES."infusions_include.php";
 
 $dl_settings = get_settings("downloads");
-BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0001']]);
+BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
 if (!empty($_GET['section'])){
 	switch ($_GET['section']) {
