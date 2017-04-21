@@ -314,6 +314,9 @@ class MemberPoll {
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
         $_GET['poll_id'] = isset($_GET['poll_id']) && isnum($_GET['poll_id']) ? $_GET['poll_id'] : 0;
+        if(isset($_GET['section']) && $_GET['section'] == 'poll_vote'){
+         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043']]);
+        }
 
         opentable(self::$locale['POLL_001']);
         $master_tab_title['title'][] = self::$locale['POLL_001'];
@@ -326,7 +329,6 @@ class MemberPoll {
             echo opentab($master_tab_title, $_GET['section'], "poll", TRUE);
                 switch ($_GET['section']) {
                     case "poll_vote":
-                        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][1]]);
                         $this->poll_form();
                         break;
                     default:
