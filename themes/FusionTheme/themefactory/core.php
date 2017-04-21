@@ -27,6 +27,8 @@ class Core {
         'headerBg'            => TRUE, // use header_background
         'headerBg_class'      => '', // use custom header background class
 
+        'navbar_class' => '',
+
         'subheader'           => TRUE,
         'subheader_content'   => '',
         'subheader_container' => TRUE,
