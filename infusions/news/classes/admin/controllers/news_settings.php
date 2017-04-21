@@ -99,14 +99,14 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_thumb_h', '', $news_settings['news_thumb_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "
@@ -119,14 +119,14 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_photo_h', '', $news_settings['news_photo_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "
@@ -139,14 +139,14 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'type'       => 'number',
                 'width' => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_photo_max_h', '', $news_settings['news_photo_max_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "

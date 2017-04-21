@@ -375,12 +375,12 @@ function photo_thumbnail($data) {
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<span> ".$locale['434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='entypo calendar text-lighter'></i></abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='fa fa-calendar text-lighter'></i></abbr></span>";
     $photo_comments = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P' AND comment_item_id='".$data['photo_id']."'");
     $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['436b'] : $locale['436']).$photo_comments : "");
-    echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='entypo icomment text-lighter'></i></abbr> $photo_comments</abbr></span>";
-    echo "<span class='m-r-10'><abbr title='".$locale['434'].$data['user_name']."'><i class='entypo user text-lighter'></i></span>";
-    echo "<span><abbr title='".$locale['435'].$data['photo_views']."'><i class='entypo eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
+    echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='fa fa-comment text-lighter'></i></abbr> $photo_comments</abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['434'].$data['user_name']."'><i class='fa fa-user text-lighter'></i></span>";
+    echo "<span><abbr title='".$locale['435'].$data['photo_views']."'><i class='fa fa-eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
     echo "</div></div>\n";
 }
 

@@ -100,19 +100,19 @@ echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='thumb_w'>".$locale['gallery_0203']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('thumb_w', '', $gll_settings['thumb_w'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
-        <i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('thumb_h', '', $gll_settings['thumb_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['gallery_0204'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>
 	</div>\n
 </div>\n
 ";
@@ -120,38 +120,38 @@ echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['gallery_0205']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('photo_w', '', $gll_settings['photo_w'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
 	".form_text('photo_h', '', $gll_settings['photo_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['gallery_0204'].")</small>\n
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
 	</div>\n
 </div>\n";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['gallery_0206']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
 	".form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['gallery_0204'].")</small>\n
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
 	</div>\n
 </div>\n";
 echo "<div class='display-block overflow-hide'>
@@ -161,11 +161,11 @@ echo "<div class='display-block overflow-hide'>
         'required'   => 1,
         "type"       => "number",
         'error_text' => $locale['error_rate'],
-        'width'      => '150px',
+        'width'      => '100px',
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
-	".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '150px'])."
+	".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'])."
 	</div>\n
 </div>\n
 ";

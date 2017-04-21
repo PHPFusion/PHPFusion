@@ -263,7 +263,7 @@ class Atom {
                 } else {
                     echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array(
                         'class' => 'btn-sm btn-default',
-                        'icon'  => 'entypo upload'
+                        'icon'  => 'fa fa-upload'
                     ));
                 }
                 // dropdown

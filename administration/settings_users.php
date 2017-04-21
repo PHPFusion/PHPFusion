@@ -88,19 +88,19 @@ echo "<div class='display-block overflow-hide'>
 	<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['1008']."</label>
 	<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('avatar_width', '', $settings2['avatar_width'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('avatar_height', '', $settings2['avatar_height'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
 $calc_c = calculate_byte($settings2['avatar_filesize']);

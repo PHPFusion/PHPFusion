@@ -43,7 +43,7 @@ if (!function_exists("render_gallery")) {
                 echo "</div>\n";
                 echo "<div class='panel-footer'>\n";
                 echo "<abbr title='".$locale['464'].showdate("shortdate",
-                        $info['album_datestamp'])."'><i class='entypo calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
+                        $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
                 if (!empty($info['album_edit']) && !empty($info['album_delete'])) {
                     echo "</div>\n<div class='panel-footer'>\n";
                     echo "<a class='btn btn-default' href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
@@ -120,7 +120,7 @@ if (!function_exists('render_photo_album')) {
             echo "</div>\n";
             echo "<div class='panel-footer'>\n";
             echo "<abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
-			<i class='entypo calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
+			<i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
             if (!empty($info['photo_edit']) && !empty($info['photo_delete'])) {
                 echo "</div>\n<div class='panel-footer'>\n";
                 echo "<a class='btn btn-default' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";

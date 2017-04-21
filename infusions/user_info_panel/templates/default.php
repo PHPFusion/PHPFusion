@@ -55,7 +55,7 @@ if (!function_exists('display_user_info_panel')) {
                 <?php if (!empty($info['submissions'])) : ?>
                 <ul class='block'>
                     <li>
-                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='pull-right entypo upload-cloud'></i></a>
+                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
                             <ul id='collapse' class='panel-collapse collapse block'>
                                 <?php
                                 foreach ($info['submissions'] as $modules) {

@@ -117,13 +117,13 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
     $html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-doc_date_issue' value='".$input_value[4]."' class='form-control textbox' placeholder='".$locale['doc_date_issue'].($options['required'] ? ' *' : '')."' />\n";
-    $html .= "<span class='input-group-addon '><i class='entypo calendar'></i></span>\n";
+    $html .= "<span class='input-group-addon '><i class='fa fa-calendar'></i></span>\n";
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name[4])) || $defender->inputHasError($input_name[4])) ? "<div id='".$input_id."-doc_issue-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n</div>\n";
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
     $html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-doc_date_expire' value='".$input_value[5]."' class='form-control textbox' placeholder='".$locale['doc_date_expire']."' />\n";
-    $html .= "<span class='input-group-addon '><i class='entypo calendar'></i></span>\n";
+    $html .= "<span class='input-group-addon '><i class='fa fa-calendar'></i></span>\n";
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name[5])) || $defender->inputHasError($input_name[5])) ? "<div id='".$input_id."-doc_expire-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n</div>\n";
     $html .= "</div>\n"; // close inner row

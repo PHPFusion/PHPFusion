@@ -130,7 +130,7 @@ if (!function_exists('render_downloads')) {
                     echo "<div class='pull-right'>\n";
 
                     if ($dl_settings['download_stats']) {
-                        echo "<div class='m-t-10 m-r-10'><i class='entypo down-circled'></i>".$data['download_count']."</div>\n";
+                        echo "<div class='m-t-10 m-r-10'><i class='fa fa-download fa-fw'></i>".$data['download_count']."</div>\n";
                         echo "<div class='m-r-10'><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
                         echo "<div class='m-r-10'><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
                     }

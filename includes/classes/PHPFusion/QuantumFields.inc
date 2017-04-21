@@ -1410,7 +1410,7 @@ class QuantumFields extends \SqlHandler {
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', array(
             'class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
-            'icon'  => 'entypo plus-circled'
+            'icon'  => 'fa fa-plus-circle'
         ));
         if (!empty($this->cat_list)) {
             echo "<div class='row m-t-20'>\n";

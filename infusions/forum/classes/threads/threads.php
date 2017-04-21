@@ -840,7 +840,7 @@ class ForumThreads extends ForumServer {
                     'id'    => "post_".$pdata['post_id']
                 );
                 $post_marker = "<a class='marker' href='".$marker['link']."' id='".$marker['id']."'>".$marker['title']."</a>";
-                $post_marker .= "<a title='".$locale['forum_0241']."' href='#top'><i class='entypo up-open'></i></a>\n";
+                $post_marker .= "<a title='".$locale['forum_0241']."' href='#top'><i class='fa fa-angle-up'></i></a>\n";
 
                 // Post Attachments
                 $post_attachments = '';
@@ -854,7 +854,7 @@ class ForumThreads extends ForumServer {
                                 if (in_array($attachData['attach_mime'], img_mimeTypes())) {
                                     $aImage .= display_image_attach($attachData['attach_name'], "50", "50", $pdata['post_id'])."\n";
                                 } else {
-                                    $aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;getfiles=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
+                                    $aFiles .= "<div class='display-inline-block'><i class='fa fa-paperclip'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;getfiles=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
                                     $aFiles .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attachData['attach_name']))." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
                                 }
                             }

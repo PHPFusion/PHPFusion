@@ -81,37 +81,37 @@ echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['934']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('download_screen_max_h', '', $dl_settings['download_screen_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>\n</div>";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['937']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
-        'class'      => 'pull-left m-r-10',
+        'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('download_thumb_max_h', '', $dl_settings['download_thumb_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-        <small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
 
@@ -123,7 +123,7 @@ echo "<div class='display-block overflow-hide'>
         'type'       => 'number',
         'inline'     => TRUE,
         'error_text' => $locale['error_rate'],
-        'width'      => '150px',
+        'width'      => '100px',
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
@@ -132,7 +132,7 @@ echo "<div class='display-block overflow-hide'>
         'placeholder' => $locale['choose'],
         'class'       => 'pull-left',
         'inner_width' => '100%',
-        'width'       => '150px'
+        'width'       => '180px'
     ])."
 	</div>
 </div>
@@ -145,7 +145,7 @@ echo "<div class='display-block overflow-hide'>
         'required'   => TRUE,
         'type'       => 'number',
         'error_text' => $locale['error_rate'],
-        'width'      => '150px',
+        'width'      => '100px',
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
@@ -154,7 +154,7 @@ echo "<div class='display-block overflow-hide'>
         'placeholder' => $locale['choose'],
         'class'       => 'pull-left',
         'inner_width' => '100%',
-        'width'       => '150px'
+        'width'       => '180px'
     ])."
 	</div>
 </div>";

@@ -56,7 +56,7 @@ class adminDashboard extends resource {
                         echo "<h4 class='text-right m-t-0 m-b-0'>".number_format($members[$panel])."</h4>\n";
                         echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale[$block['title']]."</strong></span>\n";
                         $content_ = "<div class='text-right text-uppercase'>\n";
-                        $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='entypo right-open-mini'></i></a>\n";
+                        $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='fa fa-angle-right'></i></a>\n";
                         $content_ .= "</div>\n";
                     closeside(checkrights('M') ? $content_ : '');
                     echo "</div>\n";
@@ -221,7 +221,7 @@ class adminDashboard extends resource {
                             }
                         }
                         echo "</div>\n";
-                        $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '';
+                        $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='fa fa-angle-right'></i></div>\n" : '';
                     } else {
                         echo "<div class='text-center'>".$locale['284']."</div>\n";
                     }
@@ -241,7 +241,7 @@ class adminDashboard extends resource {
                                 <ul class='dropdown-menu'>
                                 <li><a title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-eye fa-fw m-r-10'></i>".$locale['274']."</a></li>
                                 <li><a title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-edit fa-fw m-r-10'></i>".$locale['275']."</a></li>
-                                <li><a title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-trash fa-fw m-r-10'></i>".$locale['276']."</a></li>                                
+                                <li><a title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-trash fa-fw m-r-10'></i>".$locale['276']."</a></li>
                                 </ul>
                                 ";
                             echo "</div>\n";
