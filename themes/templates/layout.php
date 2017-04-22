@@ -88,7 +88,7 @@ if (!defined("THEME_BODY")) {
 
 if (iADMIN) {
     if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-        //addNotice("danger", fusion_get_locale('global_198'), 'all');
+        addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
         addNotice("warning", fusion_get_locale('global_190'), 'all');
