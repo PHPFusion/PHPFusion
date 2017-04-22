@@ -41,7 +41,7 @@ abstract class Weblinks extends WeblinksServer {
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link" => INFUSIONS."weblinks/weblinks.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name")
             )
         );
 
@@ -279,10 +279,10 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-           set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+           set_title(SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name"));
            BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link" => INFUSIONS."weblinks/weblinks.php",
-                "title" => SiteLinks::get_current_SiteLinks("", "link_name")
+                "title" => SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name")
             ));
 
             // Predefined variables, do not edit these values
