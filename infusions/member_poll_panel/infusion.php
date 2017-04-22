@@ -59,7 +59,7 @@ $inf_newtable[] = DB_POLLS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Automatic enable of the latest articles panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3407']."', '".$inf_folder."', '', '1', '5', 'file', '0', '0', '1', '', '3')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3407']."', '".$inf_folder."', '', '1', '5', 'file', '0', '0', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
