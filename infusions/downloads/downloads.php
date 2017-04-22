@@ -36,12 +36,9 @@ require_once INFUSIONS."downloads/classes/Functions.php";
 require_once INFUSIONS."downloads/classes/OpenGraphDownloads.php";
 
 $dl_settings = get_settings("downloads");
-if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
-    add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-}
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
     'link'  => INFUSIONS.'downloads/downloads.php',
-    'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+    'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name")
 ]);
 
 $result = NULL;
@@ -167,9 +164,14 @@ if (isset($_GET['download_id'])) {
             $info['download_title'] = $data['download_title'];
             $info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id'],
+                'title' => $data['download_cat_name']
+            ]);
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."downloads/downloads.php?download_id=".$_GET['download_id'],
                 'title' => $data['download_title']
             ]);
+            set_title(\PHPFusion\SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name").$locale['global_201']);
             add_to_title($data['download_title']);
             add_to_meta($data['download_title'].($data['download_keywords'] ? ",".$data['download_keywords'] : ''));
             if ($data['download_keywords'] !== "") {
