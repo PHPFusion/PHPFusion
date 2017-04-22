@@ -84,7 +84,13 @@ echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['serveroffset']))."</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $userdata['user_timezone']))."</div>\n";
+echo "<div class='panel-body text-left'>";
+if (column_exists('users', 'user_timezone')) {
+    echo showdate($settings_main['longdate'], time(), array('tz_override' => $userdata['user_timezone']));
+} else {
+    echo $locale['na'];
+}
+echo "</div>\n";
 echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['timeoffset']))."</div>\n";
 echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['default_timezone']))."</div>\n";
 echo "</div>\n";
