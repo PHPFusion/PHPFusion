@@ -72,8 +72,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
-        set_title($data['photo_title'].$locale['global_201']);
-        add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
+        set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name"));
+        add_to_title($locale['global_201'].$data['photo_title']);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            'link'  => INFUSIONS."gallery/gallery.php",
+            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name")
+        ]);
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
             'title' => $data['album_title']
@@ -184,12 +188,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         if (dbrows($result) > 0) {
             $info = dbarray($result);
 
-            set_title($info['album_title'].$locale['global_201']);
-            add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
+            set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name"));
+            add_to_title($locale['global_201'].$info['album_title']);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php',
-                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/gallery/gallery.php", "link_name")
             ]);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
