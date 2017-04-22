@@ -2162,11 +2162,6 @@ div.mce-edit-area {
     height: auto;
 }
 
-.modal-center {
-    top: 0 !important;
-    margin-top: 200px !important;
-}
-
 .well, .well-hover:hover, .well-hover:focus {
     background: #F4F5F5;
     border: 0;

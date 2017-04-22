@@ -82,9 +82,9 @@ class adminPanel extends resource {
                 if (fusion_get_settings("rendertime_enabled")) : ?>
                     <li><?php echo showrendertime() ?></li>
                     <li><?php echo showMemoryUsage() ?></li>
-                    <li><?php $locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
+                    <li><?php fusion_get_locale('copyright').showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
                 <?php endif; ?>
-                <li class="pull-right"><strong>Artemis <?php echo $locale['render_engine'] ?> 3.2</strong></li>
+                <li class="pull-right"><strong>Artemis <?php echo fusion_get_locale('render_engine') ?> 3.2</strong></li>
             </ul>
         </footer>
         <?php
@@ -95,14 +95,14 @@ class adminPanel extends resource {
      */
     private function do_interface_js() {
         add_to_jquery("
-        menuToggle('".self::$locale['admin_collapse']."');        
+        menuToggle('".self::$locale['admin_collapse']."');
         $('.menu-action').bind('click', function (e) {
             menu_wrap.toggleClass('collapsed');
             body_wrap.toggleClass('collapsed');
             app_wrap.toggleClass('collapsed');
             menuToggle('".self::$locale['admin_collapse']."');
             e.preventDefault();
-        });        
+        });
         $('#search_app').bind('keyup', function(e) {
             var data = {
                 'appString' : $(this).val(),
