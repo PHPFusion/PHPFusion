@@ -14,7 +14,7 @@ setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
 $locale['region'] = "GB";
 $locale['xml_lang'] = "en";
-$locael['short_lang_name'] = "en";
+$locale['short_lang_name'] = "en";
 $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
