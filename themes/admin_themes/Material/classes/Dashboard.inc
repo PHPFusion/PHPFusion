@@ -238,7 +238,8 @@ class Dashboard {
                                         echo '<strong>'.profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']).' </strong>';
                                         echo $locale['273'].' <a href="'.sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id']).'"><strong>'.$comments_type[$comment_data['comment_type']].'</strong></a> ';
                                         echo timer($comment_data['comment_datestamp']).'<br/>';
-                                        echo '<span class="text-smaller">'.trimlink(parse_textarea($comment_data['comment_message'], TRUE, FALSE), 120).'</span>';
+                                        $comment = trimlink(parse_textarea($comment_data['comment_message'], FALSE, FALSE), 130);
+                                        echo '<span class="text-smaller">'.parse_textarea($comment, TRUE, FALSE).'</span>';
                                     echo '</div>';
                                 }
 
