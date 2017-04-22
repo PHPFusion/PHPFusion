@@ -418,7 +418,6 @@ $locale['he'] = "He";
 $locale['she'] = "She";
 $locale['it'] = "It";
 //Tables
-$locale['status'] = "Status";
 $locale['order'] = "Order";
 $locale['sort'] = "Sort";
 $locale['id'] = "ID";
@@ -433,7 +432,7 @@ $locale['root'] = "As Parent";
 $locale['choose-user'] = "Please Choose a User...";
 $locale['choose-location'] = "Please Choose a Location";
 $locale['parent'] = "Create as New Parent..";
-$locale['order'] = "Item Ordering";
+$locale['item_order'] = "Item Ordering";
 $locale['status'] = "Status";
 $locale['note'] = "Make a note of this item";
 $locale['publish'] = "Publish";
