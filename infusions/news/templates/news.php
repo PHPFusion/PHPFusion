@@ -324,17 +324,30 @@ if (!function_exists('render_news_item')) {
         echo "<div class='news_news text-dark m-t-20 m-b-20 overflow-hide'>\n";
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_image_align']." news-image-overlay' href='".$data['news_image_src']."'>
-            <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
-        } elseif (!empty($data['news_cat_name']) && !empty($data['news_cat_image_src'])) {
-            echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['news_cat_id']."'>
-            <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
-            </a>";
+            <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; width: 30%; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
         }
         echo $data['news_news'];
         echo $data['news_extended'];
         echo "</div>\n";
         echo $data['news_pagenav'];
-        echo "<div style='clear:both;'></div>\n";
+
+        if (!empty($data['news_gallery'])) {
+            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
+            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
+            echo '<hr/>';
+            openside(fusion_get_locale('news_0019')) ?>
+            <div class='post-gallery'>
+                <?php foreach ($data['news_gallery'] as $news_image_id => $news_image) : ?>
+                    <div class='post-gallery-item overflow-hide ' style='margin: -1px; width: 33%; max-height: <?php echo $thumb_height ?>px'>
+                        <div class='center-xy'>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <?php closeside();
+        }
+
         echo "<div class='well m-t-15 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-15'></i>".profile_link($data['user_id'], $data['user_name'],
                                                                                               $data['user_status'])."</span>\n";
