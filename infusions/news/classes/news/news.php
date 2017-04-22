@@ -409,11 +409,11 @@ abstract class News extends NewsServer {
 
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title($data['news_cat_name']);
-            add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
+            set_title(SiteLinks::get_current_SiteLinks('infusions/news/news.php', "link_name").self::$locale['global_201']);
+            add_to_title($data['news_cat_name']);
             BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'news/news.php',
-                'title' => SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name")
+                'title' => SiteLinks::get_current_SiteLinks('infusions/news/news.php', "link_name")
             ]);
             // Predefined variables, do not edit these values
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
@@ -532,7 +532,6 @@ abstract class News extends NewsServer {
                 }
             }
         } elseif (isset($crumb['title'])) {
-            add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
@@ -546,7 +545,7 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'news/news.php', "link_name"));
+        set_title(SiteLinks::get_current_SiteLinks('infusions/news/news.php', "link_name"));
 
         BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'news/news.php',
@@ -581,7 +580,7 @@ abstract class News extends NewsServer {
 
             $_GET['cat_id'] = $data['news_cat_id'];
 
-            set_title($news_subject.self::$locale['global_201'].self::$locale['news_0004']);
+            add_to_title(self::$locale['global_201'].$news_subject);
 
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
             $this->news_cat_breadcrumbs($news_cat_index);
