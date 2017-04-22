@@ -711,9 +711,9 @@ class Moderator {
                             echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
                             if ($pdata['num_posts'] != $post_count) {
                                 $remove_first_post = TRUE;
-                                echo $locale['forum_0305']."<br />\n"; // trying to remove first post with other post in the thread
+                                echo str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['forum_0305'])."<br />\n"; // trying to remove first post with other post in the thread
                             } else {
-                                echo $locale['forum_0306']."<br />\n"; // confirm ok to remove first post.
+                                echo str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['forum_0306'])."<br />\n"; // confirm ok to remove first post.
                             }
                             if ($remove_first_post && count($array_post) == 1) {
                                 echo "<br /><strong>".$locale['forum_0307']."</strong><br /><br />\n"; // no post to move.
