@@ -44,7 +44,7 @@ function showrendertime($queries = TRUE) {
         if (isset($_SESSION['performance'])) {
             $average_speed = substr(array_sum($_SESSION['performance']) / count($_SESSION['performance']), 0, 7);
             $previous_render = array_values(array_slice($_SESSION['performance'], -2, 1, TRUE));
-            $diff = $render_time - (!empty($previous_render) ? $previous_render[0] : 0);
+            $diff = (float)$render_time - (!empty($previous_render) ? (float)$previous_render[0] : 0);
         }
 
         $res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
@@ -1006,15 +1006,15 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("        
-                $('#".$id." > li').on('click', function() {            
-                    var cookieName = '".$this->cookie_name."';          
-                    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');            
+                \PHPFusion\OutputHandler::addToJQuery("
+                $('#".$id." > li').on('click', function() {
+                    var cookieName = '".$this->cookie_name."';
+                    var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
                     Cookies.set(cookieName, cookieValue);
                 });
-                var cookieName = 'tab_js-".$id."';        
-                if (Cookies.get(cookieName)) {            
-                    $('#".$id."').find('#'+Cookies.get(cookieName)).click();            
+                var cookieName = 'tab_js-".$id."';
+                if (Cookies.get(cookieName)) {
+                    $('#".$id."').find('#'+Cookies.get(cookieName)).click();
                 }
                 ");
             }
