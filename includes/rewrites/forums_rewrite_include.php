@@ -33,7 +33,7 @@ $regex = array(
     "%post_id%"      => "([0-9]+)",
     "%rowstart%"     => "([0-9]+)",
     "%action%"       => "(reply|new|edit|newpoll)",
-    "%sort_action%"  => "(oldest|latest)",
+    "%sort_action%"  => "(oldest|latest|high)",
     "%section%"      => "(participated|latest|tracked|unanswered|unsolved)",
     "%quote_id%"     => "([0-9]+)",
     "%error_code%"   => "([0-9]+)",
@@ -136,7 +136,7 @@ $pattern += array(
     "forum/thread/view-%pid%/%thread_id%/%thread_name%"                             => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
     // valid request for router
     "forum/thread/view-%pid%/%thread_id%/%thread_name%#post_%post_id%"              => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
-    "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"              => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"              => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%%&amp;pid=%pid%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"                              => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
     "print/F/%rowstart%/%thread_id%/%thread_name%"                                  => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
 );
