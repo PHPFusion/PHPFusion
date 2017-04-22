@@ -283,6 +283,9 @@ $locale['setup_3642'] = "Miscellaneous Information";
 $locale['setup_3643'] = "Options";
 $locale['setup_3644'] = "Statistics";
 $locale['setup_3645'] = "Privacy";
+// Stage 6 - Forum Tags
+$locale['setup_3660'] = "Site Information";
+$locale['setup_3661'] = "Discussions regarding the management of this website";
 
 // Stage 6 - User Fields
 require_once(dirname(__FILE__)."/user_fields/user_aim.php");
