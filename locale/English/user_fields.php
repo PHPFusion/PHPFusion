@@ -135,7 +135,6 @@ $locale['u174'] = "Add another member.";
 // Avatar upload
 $locale['u180'] = "There is an error uploading avatar image";
 
-
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
 $locale['u186'] = "Click Browse to upload an image";
@@ -161,3 +160,5 @@ Note: you have to be logged in to proceed.\n
 Regards,
 [SITEUSERNAME]\n\r
 [SITENAME]";
+
+$locale['u210'] = "User Reputation";

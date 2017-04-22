@@ -173,22 +173,23 @@ class UserFieldsInput {
 
             // Compulsory Core Fields
             return array(
-                'user_id' => 0,
+                'user_id'         => 0,
                 'user_hide_email' => $this->_userHideEmail,
-                'user_avatar' => '',
-                'user_posts' => 0,
-                'user_threads' => 0,
-                'user_joined' => time(),
-                'user_lastvisit' => 0,
-                'user_ip' => USER_IP,
-                'user_ip_type' => USER_IP_TYPE,
-                'user_rights' => '',
-                'user_groups' => '',
-                'user_level' => USER_LEVEL_MEMBER,
-                'user_status' => $userStatus,
-                'user_theme' => 'Default',
-                'user_language' => LANGUAGE,
-                "user_timezone" => fusion_get_settings("timeoffset")
+                'user_avatar'     => '',
+                'user_posts'      => 0,
+                'user_threads'    => 0,
+                'user_joined'     => time(),
+                'user_lastvisit'  => 0,
+                'user_ip'         => USER_IP,
+                'user_ip_type'    => USER_IP_TYPE,
+                'user_rights'     => '',
+                'user_groups'     => '',
+                'user_level'      => USER_LEVEL_MEMBER,
+                'user_status'     => $userStatus,
+                'user_theme'      => 'Default',
+                'user_language'   => LANGUAGE,
+                'user_timezone'   => fusion_get_settings('timeoffset'),
+                'user_reputation' => 0
             );
 
         }
@@ -569,6 +570,7 @@ class UserFieldsInput {
             $this->_setValidationError();
         }
         $this->_setUserAvatar();
+        $this->_setUserReputation();
         $quantum = new QuantumFields();
         $quantum->setCategoryDb(DB_USER_FIELD_CATS);
         $quantum->setFieldDb(DB_USER_FIELDS);
@@ -751,6 +753,10 @@ class UserFieldsInput {
                 }
             }
         }
+    }
+
+    private function _setUserReputation() {
+        $this->data['user_reputation'] = !empty($_POST['user_reputation']) ? $_POST['user_reputation'] : 0;
     }
 
     public function setUserNameChange($value) {
