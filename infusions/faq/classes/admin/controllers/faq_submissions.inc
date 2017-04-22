@@ -69,7 +69,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 if (isset($_POST['publish_submission'])) {
                     dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."' AND submit_type='q'");
                     dbquery_insert(DB_FAQS, $SaveinputArray, "save");
-                    addNotice("success", (!$SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
+                    addNotice("success", ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
                     redirect(clean_request("", array("submit_id"), FALSE));
                 }
 
