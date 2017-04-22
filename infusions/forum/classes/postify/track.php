@@ -40,6 +40,8 @@ class Postify_Track extends Forum_Postify {
                 $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
                 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
                 if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
+                    $description = '';
+
                     switch ($_GET['post']) {
                         case 'on':
                             if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".fusion_get_userdata('user_id')."'")) {
