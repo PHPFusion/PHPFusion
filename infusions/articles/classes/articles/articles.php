@@ -169,7 +169,7 @@ abstract class Articles extends ArticlesServer {
             LEFT JOIN ".DB_RATINGS." AS ar ON ar.rating_item_id=a.article_id AND ar.rating_type='A'
             LEFT JOIN ".DB_COMMENTS." AS ad ON ad.comment_item_id=a.article_id AND ad.comment_type='A' AND ad.comment_hidden='0'
             ".(multilang_table("AR") ? "WHERE a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")."
-             a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."            
+             a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY a.article_id
             ORDER BY ".self::check_ArticlesFilter()."
@@ -352,10 +352,10 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery($select, $bind);
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
+            set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
+                "title" => SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name")
             ));
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
@@ -416,8 +416,8 @@ abstract class Articles extends ArticlesServer {
             $crumb = &$crumb;
             if (isset($index[get_parent($index, $id)])) {
 
-                $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent 
-                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")." 
+                $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent
+                FROM ".DB_ARTICLE_CATS.(multilang_table("AR") ? " WHERE  article_cat_language='".LANGUAGE."' AND " : "WHERE ")."
                 article_cat_id=:id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility")." ",
                         [
                             ':id'     => $id,
@@ -474,7 +474,7 @@ abstract class Articles extends ArticlesServer {
         $settings = fusion_get_settings();
         BreadCrumbs::getInstance()->addBreadCrumb(array(
             "link"  => INFUSIONS."articles/articles.php",
-            "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name")
+            "title" => SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name")
         ));
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
@@ -498,7 +498,9 @@ abstract class Articles extends ArticlesServer {
             $_GET['cat_id'] = $data['article_cat_id'];
 
             $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
-            set_title($article_subject);
+
+            set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name").self::$locale['global_201']);
+            add_to_title($article_subject);
 
             $this->article_cat_breadcrumbs($article_cat_index);
 
@@ -524,7 +526,6 @@ abstract class Articles extends ArticlesServer {
             redirect(INFUSIONS."articles/articles.php");
         }
 
-        add_to_title(self::$locale['global_201'].SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', "link_name"));
         return (array)$info;
 
     }
