@@ -1046,7 +1046,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'field_name' => 'user_location',
                 'field_title' => $locale['uf_location'],
-                'field_cat' => 2,
+                'field_cat' => 3,
                 'field_type' => 'file',
                 'field_required' => 0,
                 'field_order' => 2,
