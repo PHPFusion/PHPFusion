@@ -1776,12 +1776,7 @@ function fusion_get_language_switch() {
     if (empty($language_link)) {
         $enabled_languages = fusion_get_enabled_languages();
         foreach ($enabled_languages as $language => $language_name) {
-
             $link = clean_request('lang='.$language, array('lang'), FALSE);
-
-            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
-                $link = str_replace(fusion_get_settings("site_path"), "", $link);
-            }
             $language_switch[$language] = array(
                 "language_name"   => $language_name,
                 "language_icon_s" => BASEDIR."locale/$language/$language-s.png",

@@ -26,42 +26,31 @@ class Core {
         'header_content'      => '', // content in the header
         'headerBg'            => TRUE, // use header_background
         'headerBg_class'      => '', // use custom header background class
-
         'navbar_class' => '',
         'nav_offset'   => 60,
-
         'subheader'           => TRUE,
         'subheader_content'   => '',
         'subheader_container' => TRUE,
-
         'subheader_class'     => '', // sets the class to the subheader
         'body_class'          => '', // set body section class
         'body_container'      => TRUE, // whether is a container or full grid
-
         'breadcrumbs'         => FALSE, // show breadcrumbs
-
         'right'               => TRUE, // RIGHT
         'left'                => TRUE, // LEFT
-
         'left_pre_content'    => '',
         'left_post_content'   => '',
-
         'user_1'              => TRUE,
         'user_1_content'      => '',
         'user_1_container'    => TRUE,
-
         'user_2'              => TRUE,
         'user_2_content'      => '',
         'user_2_container'    => TRUE,
-
         'user_3'              => TRUE,
         'user_3_content'      => '',
         'user_3_container'    => TRUE,
-
         'user_4'              => TRUE,
         'user_4_content'      => '',
         'user_4_container'    => TRUE,
-
         /*
         * AU_CENTER
         */
