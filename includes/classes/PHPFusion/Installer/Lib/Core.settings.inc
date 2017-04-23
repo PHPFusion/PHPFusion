@@ -396,8 +396,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 0
             ],
             [
-                'settings_name' => 'captcha',
-                'settings_value' => 'grecaptcha'
+                'settings_name'  => 'captcha',
+                'settings_value' => 'securimage3'
             ],
             [
                 'settings_name' => 'password_algorithm',
