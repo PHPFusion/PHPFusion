@@ -45,15 +45,14 @@ class Postify_Reply extends Forum_Postify {
                 throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
             }
 
-            if (self::$forum_settings['thread_notify']) {
-
+            if (self::$forum_settings['thread_notify'] && isnum($_GET['thread_id'])) {
                 // Find all users to notify
                 $notify_query = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
 				WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
                 $notify_bind = [
-                    ':thread_id' => $_GET['thread_id'],
+                    ':thread_id' => intval($_GET['thread_id']),
                     ':my_id'     => fusion_get_userdata('user_id'),
                     ':status'    => 1,
                 ];
