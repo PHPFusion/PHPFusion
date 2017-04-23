@@ -263,12 +263,12 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         add_to_jquery("
         $('#".$options['input_id']."').blur(function(ev) {
             var Inner_Object = $(this).parent('div').find('.label-danger');
-            var Outer_Object = $(this).parent('div').find('.input-error');            
+            var Outer_Object = $(this).parent('div').find('.input-error');
             if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
                 var ErrorText = '".$options['regex_error_text']."';
-                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';                        
+                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';
                 if (Inner_Object.length > 0) {
-                    object.html(ErrorText);                
+                    object.html(ErrorText);
                 } else {
                     $(this).after(function() {
                         return ErrorDOM;
@@ -284,7 +284,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.
         add_to_jquery("
-        $('#".$options['input_id']."').val(' ');        
+        $('#".$options['input_id']."').val(' ');
         setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
         ");
     }
