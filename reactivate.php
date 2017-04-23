@@ -34,9 +34,13 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
             if ($data['user_actiontime'] > time()) {
                 dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit=".time()." WHERE user_id='".$_GET['user_id']."'");
                 unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
-                $message = str_replace("[USER_NAME]", $data['user_name'], $locale['505']);
+                $message = str_replace(
+                    ["[USER_NAME]", '[SITENAME]', '[SITEUSERNAME]'],
+                    [$data['user_name'], fusion_get_settings('sitename'), fusion_get_settings('siteusername')],
+                    $locale['505']
+                );
                 require_once INCLUDES."sendmail_include.php";
-                sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), $locale['504'], $message);
+                sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['504']), $message);
                 redirect(BASEDIR."login.php");
             } else {
                 redirect(FUSION_SELF."?error=1");
@@ -50,11 +54,15 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
 } elseif (isset($_GET['error']) && isnum($_GET['error'])) {
     opentable($locale['500']);
     if ($_GET['error'] == 1) {
-        echo $locale['501'];
+        echo str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
     } elseif ($_GET['error'] == 2) {
-        echo $locale['502'];
+        echo str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
     } elseif ($_GET['error'] == 3) {
-        echo $locale['503'];
+        echo str_replace(
+            ['[LINK]', '[/LINK]', '[SITEEMAIL]'],
+            ["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
+            $locale['503']
+        );
     } else {
         redirect(BASEDIR."index.php");
     }
