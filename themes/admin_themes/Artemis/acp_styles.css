@@ -518,7 +518,7 @@ a:hover, a:focus {
 /* opentable */
 #devlpr #main_content .content header {
     margin-top: 30px;
-    padding: 0 30px;
+    padding: 30px 30px 0;
 }
 
 #devlpr #main_content .content header > h2 {
