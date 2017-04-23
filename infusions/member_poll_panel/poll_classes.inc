@@ -544,7 +544,7 @@ class MemberPoll {
             $i = 0;
             while ($i < $_POST['opt_count']) {
                 foreach ($_POST['poll_opt_'.$i] as $key => $value) {
-                    $this->data['poll_opt'][$i][$key] = stripinput($_POST['poll_opt_'.$i][$key]);
+                    $this->data['poll_opt'][$i][$key] = (!empty($_POST['poll_opt_'.$i][$key]) ? stripinput($_POST['poll_opt_'.$i][$key]) : '');
                 }
                 $i++;
             }
