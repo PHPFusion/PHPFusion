@@ -34,7 +34,7 @@ if (!defined("IN_FUSION")) {
  * @return bool
  */
 if (!function_exists('sendemail')) {
-    function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "plain", $cc = "", $bcc = "") {
+    function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "html", $cc = "", $bcc = "") {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
         require_once CLASSES."PHPMailer/PHPMailerAutoload.php";

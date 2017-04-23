@@ -1284,6 +1284,9 @@ Cellphones
     color: #fff;
 }
 
+.select2-result-unselectable.select2-disabled > .select2-result-label:hover {
+    color: inherit !important;
+}
 .search table {
     background-color: inherit;
     border: none;

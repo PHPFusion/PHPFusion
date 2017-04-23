@@ -385,9 +385,10 @@ class ForumThreads extends ForumServer {
              */
             if (iMOD) {
 
-                $this->moderator()->setForumId($this->thread_data['forum_id']);
+                $this->moderator()->setForumID($this->thread_data['forum_id']);
                 $this->moderator()->setThreadId($this->thread_data['thread_id']);
                 $this->moderator()->set_modActions();
+
                 /**
                  * Thread moderation form template
                  */
