@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\BreadCrumbs;
@@ -261,7 +262,6 @@ class ForumThreads extends ForumServer {
     }
 
     private static $custom_query = '';
-
 
     /**
      * Thread Class constructor - This builds all essential data on load.
@@ -556,27 +556,33 @@ class ForumThreads extends ForumServer {
         $userid = !empty($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
         $data = [];
         $query = !empty(self::$custom_query) ? self::$custom_query : "SELECT t.*, f.*,
-				#f2.forum_name 'forum_cat_name', f2.forum_access 'parent_access',
 				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
-				IF (n.thread_id > 0, 1 , 0) as user_tracked,
+				IF (n.thread_id > 0, 1 , 0) 'user_tracked',
 				count(v.vote_user) 'thread_rated',
 				count(p.forum_vote_user_id) 'poll_voted'
 				FROM ".DB_FORUM_THREADS." t
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
 				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
-				#LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id ##--------------this is wrong, as it only checks its own parent. it does not check ancestor root.
 				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
 				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
 				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
 				".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ")."
 				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'";
+
         $result = dbquery($query);
-        if (dbrows($result) > 0) {
+        if (dbrows($result)) {
             $data = dbarray($result);
-            Moderator::define_forum_mods($data);
+            if ($data['forum_id']) {
+                Moderator::define_forum_mods($data);
+
+                return (array)$data;
+            } else {
+                redirect(FORUM.'index.php');
+            }
+        } else {
+            redirect(FORUM.'index.php');
         }
 
-        return (array)$data;
     }
 
     /**
@@ -592,6 +598,7 @@ class ForumThreads extends ForumServer {
             redirect(FORUM.'index.php');
         } // exit no.2
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $array['last_post_id'] ? $_GET['rowstart'] : 0; // secure against XSS
+
         return (array)$array;
     }
 
@@ -629,6 +636,7 @@ class ForumThreads extends ForumServer {
 
     /**
      * Get the relevant permissions of the current thread permission configuration
+     *
      * @param null $key
      *
      * @return null

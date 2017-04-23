@@ -1707,7 +1707,8 @@ function define_site_language($lang) {
 
 // Set the requested language
 function set_language($lang) {
-    $userdata = fusion_get_userdata();
+    global $userdata;
+
     if (valid_language($lang)) {
         if (iMEMBER) {
             dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");

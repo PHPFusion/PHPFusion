@@ -177,19 +177,21 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 }
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
-if (count($enabled_languages) > 1) {
-    require __DIR__.'/includes/core_mlang_hub_include.php';
-}
-if (!defined('LANGUAGE') && !defined('LOCALESET')) {
-    define('LANGUAGE', $current_user_language);
-    define('LOCALESET', $current_user_language.'/');
-}
 
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang'])) {
-    $lang = stripinput($_GET['lang']);
-    set_language($lang);
-    redirect(clean_request('', ['lang'], FALSE));
+    $current_user_language = stripinput($_GET['lang']);
+    set_language($current_user_language);
+    //redirect(clean_request('', ['lang'], FALSE));
+} else {
+    if (count($enabled_languages) > 1) {
+        require __DIR__.'/includes/core_mlang_hub_include.php';
+    }
+}
+
+if (!defined('LANGUAGE') && !defined('LOCALESET')) {
+    define('LANGUAGE', $current_user_language);
+    define('LOCALESET', $current_user_language.'/');
 }
 
 // IP address functions
