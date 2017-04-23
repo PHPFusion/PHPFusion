@@ -68,19 +68,17 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
     }
 
     $data = array(
-        'blog_id'      => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
-        'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-        'blog_cat'     => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
-
-        'blog_blog'     => form_sanitizer($blog_blog, '', 'blog_blog'),
-        'blog_extended' => form_sanitizer($blog_extended, '', 'blog_extended'),
-
-        'blog_keywords'       => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-        'blog_ialign'         => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
-        'blog_image'          => "",
-        'blog_start'          => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
-        'blog_end'            => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
-        'blog_visibility'     => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
+        'blog_id'         => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
+        'blog_subject'    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
+        'blog_cat'        => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
+        'blog_blog'       => form_sanitizer($blog_blog, '', 'blog_blog'),
+        'blog_extended'   => form_sanitizer($blog_extended, '', 'blog_extended'),
+        'blog_keywords'   => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
+        'blog_ialign'     => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
+        'blog_image'      => "",
+        'blog_start'      => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
+        'blog_end'        => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
+        'blog_visibility' => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
         'blog_draft'          => isset($_POST['blog_draft']) ? "1" : "0",
         'blog_sticky'         => isset($_POST['blog_sticky']) ? "1" : "0",
         "blog_breaks"         => isset($_POST['line_breaks']) ? TRUE : FALSE,
