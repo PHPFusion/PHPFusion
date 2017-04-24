@@ -42,7 +42,7 @@ class Images {
         $maxed_out_settings = [
             'max_width'  => 24000,
             'max_height' => 24000,
-            'max_byte'   => 2 * 1000 * 1000 * 1000 * 1000
+            'max_byte'   => 3 * 1000 * 1000 * 100
         ];
 
         $folders = [
