@@ -285,7 +285,7 @@ class fusion_panel_admin {
             }
 
             // Regulate Panel Ordering
-            $result = dbquery("SELECT * FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
+            $result = dbquery("SELECT panel_id, panel_side FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
             if (dbrows($result)) {
                 $current_side = 0;
                 while ($data = dbarray($result)) {
