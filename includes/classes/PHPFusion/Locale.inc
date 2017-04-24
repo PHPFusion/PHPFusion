@@ -157,23 +157,25 @@ class Locale {
      */
     public static function translate_country_names($country) {
         $translated_countries = array(
-            "China" => "中国",
-            "Czech republic" => "Česko",
-            "Denmark" => "Danmark",
-            "Finland" => "Suomi",
-            "Hungary" => "Magyarország",
-            "Hong Kong" => "香港",
+            "China"           => "中国",
+            "Czech Republic"  => "Česko",
+            "Denmark"         => "Danmark",
+            "Finland"         => "Suomi",
+            "Hungary"         => "Magyarország",
+            "Hong Kong"       => "香港",
             "The Netherlands" => "Nederland",
-            "Norway" => "Norge",
-            "Poland" => "Polska",
-            "Italy" => "Italia",
-            "Germany" => "Deutschland",
-            "Russia" => "Россия",
-            "Taiwan" => "台湾",
-            "Ukraine" => "Україна",
-            "Sweden" => "Sverige"
+            "Norway"          => "Norge",
+            "Poland"          => "Polska",
+            "Italy"           => "Italia",
+            "Germany"         => "Deutschland",
+            "Russia"          => "Россия",
+            "Taiwan"          => "台湾",
+            "Ukraine"         => "Україна",
+            "Sweden"          => "Sverige",
+            "Slovakia"        => "Slovensko",
         );
-        if ($translated_countries[$country] != '') {
+
+        if (!empty($translated_countries[$country])) {
             return $translated_countries[$country];
         } else {
             return $country;
@@ -209,7 +211,7 @@ class Locale {
             "Russian" => "Русский",
             "Spanish" => "Español",
             "Swedish" => "Svenska",
-            "Turkish" => "Türkiye",
+            "Turkish" => "Türkçe",
             "Ukrainian" => "Українська",
             "Norwegian" => "Norsk"
         );

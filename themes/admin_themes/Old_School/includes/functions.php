@@ -82,7 +82,7 @@ function render_dashboard() {
                     echo "<h4 class='text-right m-t-0 m-b-0'>".number_format($members[$panel])."</h4>\n";
                     echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale[$block['title']]."</strong></span>\n";
                     $content_ = "<div class='text-right text-uppercase'>\n";
-                    $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='entypo right-open-mini'></i></a>\n";
+                    $content_ .= "<a class='text-smaller' href='".ADMIN."members.php".$aidlink.$block['link']."'>".$locale['255']." <i class='fa fa-angle-right'></i></a>\n";
                     $content_ .= "</div>\n";
                 closeside(checkrights('M') ? $content_ : '');
                 echo "</div>\n";
@@ -247,7 +247,7 @@ function render_dashboard() {
                         }
                     }
                     echo "</div>\n";
-                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '';
+                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='fa fa-angle-right'></i></div>\n" : '';
                 } else {
                     echo "<div class='text-center'>".$locale['284']."</div>\n";
                 }
@@ -262,13 +262,14 @@ function render_dashboard() {
                         echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
                         echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<div id='comment_action-$i' class='btn-group pull-right display-none' style='position:absolute; right: 30px; margin-top:25px;'>\n
-                            <a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo eye'></i></a>
-                            <a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo pencil'></i></a>
-                            <a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo trash'></i></a></div>\n";
+                            <a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-eye'></i></a>
+                            <a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-pencil'></i></a>
+                            <a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-trash'></i></a></div>\n";
                         echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
                         echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
-                        echo "<span class='text-smaller text-lighter'>".trimlink(parse_textarea($comment_data['comment_message'], TRUE, FALSE), 70)."</span>\n";
+                        $comment = trimlink(parse_textarea($comment_data['comment_message'], FALSE, FALSE), 70);
+                        echo "<span class='text-smaller text-lighter'>".parse_textarea($comment, TRUE, FALSE)."</span>\n";
                         echo "</div>\n";
                         echo "<!--End Comment Item-->\n";
                     }

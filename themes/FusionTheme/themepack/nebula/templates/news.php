@@ -257,9 +257,9 @@ class News extends Core {
             <div class='post-gallery'>
                 <?php $animate_delay = 200; ?>
                 <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                    <div class='pull-left post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 33%; height: <?php echo $thumb_height ?>px' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                    <div class='post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 33%; max-height: <?php echo $thumb_height ?>px' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
                         <div class='center-xy'>
-                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE) ?>
+                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
                         </div>
                     </div>
                     <?php $animate_delay = $animate_delay + 150; ?>

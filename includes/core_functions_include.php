@@ -563,9 +563,10 @@ function cache_bbcode() {
  * Parse and force image/ to IMAGES directory
  * Neutralize all image dir levels and convert image to pf image folder
  *
- * @param $data - text of paragraphs texts
+ * @param        $data
+ * @param string $prefix_
  *
- * @return string
+ * @return mixed
  */
 function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
@@ -1707,7 +1708,8 @@ function define_site_language($lang) {
 
 // Set the requested language
 function set_language($lang) {
-    $userdata = fusion_get_userdata();
+    global $userdata;
+
     if (valid_language($lang)) {
         if (iMEMBER) {
             dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
@@ -1776,12 +1778,7 @@ function fusion_get_language_switch() {
     if (empty($language_link)) {
         $enabled_languages = fusion_get_enabled_languages();
         foreach ($enabled_languages as $language => $language_name) {
-
             $link = clean_request('lang='.$language, array('lang'), FALSE);
-
-            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
-                $link = str_replace(fusion_get_settings("site_path"), "", $link);
-            }
             $language_switch[$language] = array(
                 "language_name"   => $language_name,
                 "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
@@ -1865,16 +1862,19 @@ function fusion_detect_installation() {
  * @return string[]
  */
 function fusion_get_enabled_languages() {
+    $settings = fusion_get_settings();
     static $enabled_languages = NULL;
+
     if ($enabled_languages === NULL) {
-        $settings = fusion_get_settings();
-        $values = explode('.', $settings['enabled_languages']);
-        foreach ($values as $language_name) {
-            $enabled_languages[$language_name] = translate_lang_names($language_name);
+        if (isset($settings['enabled_languages'])) {
+            $values = explode('.', $settings['enabled_languages']);
+            foreach ($values as $language_name) {
+                $enabled_languages[$language_name] = translate_lang_names($language_name);
+            }
         }
     }
 
-    return $enabled_languages;
+    return (array)$enabled_languages;
 }
 
 function fusion_get_detected_language() {

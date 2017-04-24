@@ -43,7 +43,7 @@ if (!function_exists("render_gallery")) {
                 echo "</div>\n";
                 echo "<div class='panel-footer'>\n";
                 echo "<abbr title='".$locale['464'].showdate("shortdate",
-                        $info['album_datestamp'])."'><i class='entypo calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
+                        $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
                 if (!empty($info['album_edit']) && !empty($info['album_delete'])) {
                     echo "</div>\n<div class='panel-footer'>\n";
                     echo "<a class='btn btn-default' href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
@@ -84,7 +84,7 @@ if (!function_exists('render_photo_album')) {
         if ($info['album_description']) {
             echo "<div class='m-t-20'>\n";
             echo "<!--photogallery_album_desc-->\n";
-            echo "<span class='album_description'>\n".nl2br(parseubb($info['album_description']))."</span><br/>\n";
+            echo "<span class='album_description'>\n".parse_textarea($info['album_description'], TRUE, TRUE, FALSE, '', TRUE)."</span><br/>\n";
             echo "</div>\n";
         }
         echo "</div>\n";
@@ -120,7 +120,7 @@ if (!function_exists('render_photo_album')) {
             echo "</div>\n";
             echo "<div class='panel-footer'>\n";
             echo "<abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
-			<i class='entypo calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
+			<i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
             if (!empty($info['photo_edit']) && !empty($info['photo_delete'])) {
                 echo "</div>\n<div class='panel-footer'>\n";
                 echo "<a class='btn btn-default' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
@@ -169,7 +169,7 @@ if (!function_exists('render_photo')) {
         echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
         echo "</div>\n";
         if ($info['photo_description']) {
-            echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+            echo "<span class='photo_description list-group-item'>".parse_textarea($info['photo_description'], TRUE, TRUE, TRUE, '', TRUE)."</span>";
         }
         echo "<div class='list-group-item m-b-20'>\n";
         echo "<div class='row'>\n";

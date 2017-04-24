@@ -144,7 +144,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</tr>\n";
         echo "</tbody>\n</table>\n";
         echo "<div style='text-align:center'><br />\n";
-        echo "<div class='btn-group'>\n";
+        echo "<div class='btn-group m-b-0 m-r-5'>\n";
         echo "<input type='button' class='btn btn-default' onclick=\"setChecked('rightsform','rights[]',1);\" value='".$locale['445']."' />\n";
         echo "<input type='button' class='btn btn-default' onclick=\"setCheckedSecure('rightsform','rights[]',1);\" value='".$locale['450']."' />\n";
         echo "<input type='button' class='btn btn-default' onclick=\"setChecked('rightsform','rights[]',0);\" value='".$locale['446']."' />\n";

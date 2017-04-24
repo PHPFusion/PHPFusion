@@ -396,8 +396,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 0
             ],
             [
-                'settings_name' => 'captcha',
-                'settings_value' => 'grecaptcha'
+                'settings_name'  => 'captcha',
+                'settings_value' => 'securimage3'
             ],
             [
                 'settings_name' => 'password_algorithm',
@@ -901,6 +901,9 @@ function get_table_rows($table_name, $localeset = 'English') {
     ];
     $table_settings['panels'] = [
         'insert' => [
+            // Panel Side Left Arrangements
+
+            // LEFT
             [
                 'panel_name' => $locale['setup_3400'],
                 'panel_filename' => 'css_navigation_panel',
@@ -927,7 +930,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_url_list' => 'home.php',
                 'panel_restriction' => 2
             ],
-
             [
                 'panel_name' => $locale['setup_3401'],
                 'panel_filename' => 'online_users_panel',
@@ -941,6 +943,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_url_list' => '',
                 'panel_restriction' => 3
             ],
+            // U_CENTER
             [
                 'panel_name' => $locale['setup_3404'],
                 'panel_filename' => 'welcome_message_panel',
@@ -954,6 +957,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_url_list' => 'home.php',
                 'panel_restriction' => 2
             ],
+            // RIGHT
             [
                 'panel_name' => $locale['setup_3406'],
                 'panel_filename' => 'user_info_panel',
@@ -968,7 +972,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_restriction' => 3
             ]
         ]
-
     ];
     $table_settings['user_field_cats'] = [
         'insert' => [
@@ -1034,7 +1037,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'field_name'     => 'user_birthdate',
                 'field_title'    => $locale['uf_birthdate'],
-                'field_cat'      => 1,
+                'field_cat'      => 3,
                 'field_type'     => 'file',
                 'field_required' => 0,
                 'field_order'    => 2,
@@ -1046,7 +1049,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'field_name' => 'user_location',
                 'field_title' => $locale['uf_location'],
-                'field_cat' => 2,
+                'field_cat' => 3,
                 'field_type' => 'file',
                 'field_required' => 0,
                 'field_order' => 2,

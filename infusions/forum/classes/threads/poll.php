@@ -339,7 +339,7 @@ class Poll {
                                 dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."'");
                                 dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$thread_data['thread_id']."', '".fusion_get_userdata("user_id")."', '".USER_IP."', '".USER_IP_TYPE."')");
                                 addNotice('success', $locale['forum_0614']);
-                                redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                                redirect(INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
                             } else {
                                 addNotice("danger", $locale['forum_0617']);
                             }

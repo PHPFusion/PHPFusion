@@ -32,6 +32,7 @@ if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
 } else {
     define('GALLERY_LOCALE', INFUSIONS."gallery/locale/English/gallery.php");
 }
+
 if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
     define('GALLERY_ADMIN_LOCALE', INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php");
 } else {

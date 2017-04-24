@@ -255,8 +255,7 @@ class Errors {
                 </div>
                 <div class='m-t-10 display-inline-block' style='width:300px'>
                     <?php
-                    echo openform('logform', 'post',
-                        FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
+                    echo openform('logform', 'post', ADMIN.'errors.php'.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
                     echo form_hidden('error_id', '', $data['error_id']);
                     echo form_select('error_status', $locale['mark_as'], $data['error_status'], array(
                         "inline"  => TRUE,
@@ -321,7 +320,8 @@ class Errors {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
 
-        $html = openform('error_logform', 'post', FORM_REQUEST, array("class" => "text-center well m-t-5 m-b-5"));
+        // Use clean request for absolute escape from SEO converging form path
+        $html = openform('error_logform', 'post', clean_request('', [], FALSE), array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE));

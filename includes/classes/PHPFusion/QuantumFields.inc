@@ -1410,7 +1410,7 @@ class QuantumFields extends \SqlHandler {
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', array(
             'class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
-            'icon'  => 'entypo plus-circled'
+            'icon'  => 'fa fa-plus-circle'
         ));
         if (!empty($this->cat_list)) {
             echo "<div class='row m-t-20'>\n";
@@ -1752,7 +1752,7 @@ class QuantumFields extends \SqlHandler {
             'input_id'    => !empty($options['input_id']) ? $options['input_id'] : $input_name,
         );
         $required = $options['required'];
-        $html .= "<div id='".$options['input_id']."-field' class='form-group m-t-10 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
+        $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix m-t-10".($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'>\n";
         $html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-10 p-b-10'>";
         $main_html = '';
@@ -1778,7 +1778,7 @@ class QuantumFields extends \SqlHandler {
         $html .= $main_html.$sub_html;
 
         if (count($language_opts) > 1) {
-            $html .= "<div class='dropdown'>\n";
+            $html .= "<div class='dropdown m-b-15'>\n";
             $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
             $html .= "<ul class='dropdown-menu'>\n";
             foreach ($language_opts as $Lang => $LangName) {

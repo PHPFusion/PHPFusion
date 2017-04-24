@@ -37,33 +37,35 @@ class FaqAdminView extends FaqAdminModel {
         add_to_title($this->locale['faq_0000']);
 
         // Handle Breadcrumbs and Titles
-        BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink(), "title" => $this->locale['faq_0001']));
-
         $faqTitle = $this->locale['faq_0000'];
-        if ($_GET['section'] == 'faq') {
-            if (isset($_GET['ref'])) {
-                switch ($_GET['ref']) {
-                    case 'faq_form':
-                        $faqTitle = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0004'] : $this->locale['faq_0003']);
-                        BreadCrumbs::getInstance()->addBreadCrumb(
-                            array(
-                                'link'  => INFUSIONS.'faq/faq_admin.php'.fusion_get_aidlink().'&amp;section=faq&amp;ref=faq_form',
-                                'title' => $faqTitle
-                            )
-                        );
-                        break;
-                    case 'faq_cat_form':
-                        $faqTitle = (!empty($_GET['faq_cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
-                        BreadCrumbs::getInstance()->addBreadCrumb(
-                            array(
-                                'link'  => INFUSIONS.'faq/faq_admin.php'.fusion_get_aidlink().'&amp;section=faq&amp;ref=faq_form',
-                                'title' => $faqTitle
-                            )
-                        );
-                        break;
-                }
-            }
-        }
+        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+
+		if (!empty($_GET['section'])){
+			switch ($_GET['section']) {
+			    case "settings":
+		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0006']]);
+			        break;
+			    case "submissions":
+		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0005']]);
+			        break;
+			    default:
+			}
+
+        	if ($_GET['section'] == 'faq') {
+            	if (isset($_GET['ref'])) {
+                	switch ($_GET['ref']) {
+                    	case 'faq_form':
+                        	$faqTitle = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0004'] : $this->locale['faq_0003']);
+	                        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+    	                    break;
+        	            case 'faq_cat_form':
+            	            $faqTitle = (!empty($_GET['faq_cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
+                	        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+                    	    break;
+	                }
+    	        }
+        	}
+		}
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
@@ -90,20 +92,9 @@ class FaqAdminView extends FaqAdminModel {
         switch ($_GET['section']) {
             case 'submissions':
                 FaqSubmissionsAdmin::getInstance()->displayFaqAdmin();
-                BreadCrumbs::getInstance()->addBreadCrumb(
-                    array(
-                        'link'  => INFUSIONS.'faq/faq_admin.php'.fusion_get_aidlink().'&amp;section=submissions',
-                        'title' => $this->locale['faq_0005']
-                    )
-                );
                 break;
             case 'settings':
                 FaqSettingsAdmin::getInstance()->displayFaqAdmin();
-                BreadCrumbs::getInstance()->addBreadCrumb(
-                    array(
-                        'link'  => INFUSIONS.'faq/faq_admin.php'.fusion_get_aidlink().'&amp;section=settings',
-                        'title' => $this->locale['faq_0006'])
-                );
                 break;
             default:
                 FaqAdmin::getInstance()->displayFaqAdmin();

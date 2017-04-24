@@ -85,14 +85,13 @@ class Forum_Postify extends ForumServer {
         if ($_GET['error'] < 3) {
             if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
                 addNotice('danger', 'URL Error');
-                if (fusion_get_settings('site_seo')) redirect(fusion_get_settings('siteurl').'infusions/forum/index.php');
-                redirect(FORUM.'index.php');
+                redirect(self::$default_redirect_link);
             }
             $link[] = ['url' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 'title' => self::$locale['forum_0548']];
             redirect(FORUM.'viewthread.php?thread_id='.$_GET['thread_id'], 3);
         }
-        $link[] = ['url' => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
-        $link[] = ['url' => INFUSIONS."forum/index.php", 'title' => self::$locale['forum_0550']];
+        $link[] = ['url' => FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => self::$locale['forum_0549']];
+        $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
 
         return (array)$link;
     }

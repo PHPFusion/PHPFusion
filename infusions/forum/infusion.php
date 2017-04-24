@@ -67,7 +67,7 @@ $inf_newtable[] = DB_FORUM_VOTES." (
 	vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
 	vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (vote_id)	
+	PRIMARY KEY (vote_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_RANKS." (
@@ -218,7 +218,7 @@ $inf_newtable[] = DB_FORUM_TAGS." (
 
 $inf_newtable[] = DB_FORUM_USER_REP." (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',	
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -226,7 +226,7 @@ $inf_newtable[] = DB_FORUM_USER_REP." (
 	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
 	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (rep_id),	
+	PRIMARY KEY (rep_id),
 	KEY post_id (post_id, user_id, voter_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
@@ -320,7 +320,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', '-101', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', '-101', '".$language."')";
 
-        $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['setup_3660']."', '".$locale['setup_3661']."', '#2e8c65', '1', '".$language."')";
 
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/index.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/newthread.php' AND link_language='".$language."'";

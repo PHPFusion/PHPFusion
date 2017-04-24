@@ -70,7 +70,7 @@ if (!function_exists('display_profile_form')) {
     function display_profile_form(array $info = array()) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
-        <!---HTML---->
+        <!--HTML-->
         {%tab_header%}
         <!--editprofile_pre_idx-->
         <div id='profile_form' class='row m-t-20'>
@@ -80,6 +80,7 @@ if (!function_exists('display_profile_form')) {
                 {%user_name_field%}
                 {%user_email_field%}
                 {%user_hide_email_field%}
+                {%user_reputation_field%}
                 {%user_avatar_field%}
                 {%user_password_field%}
                 {%user_admin_password_field%}
@@ -92,7 +93,7 @@ if (!function_exists('display_profile_form')) {
         </div>
         <!--editprofile_sub_idx-->
         {%tab_footer%}
-        <!---//HTML---->
+        <!--//HTML-->
         <?php
     }
 }

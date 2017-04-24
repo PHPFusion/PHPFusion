@@ -48,8 +48,10 @@ if ($settings['tinymce_enabled'] == 1) {
 }
 
 $blog_settings = get_settings("blog");
-add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
+
+set_title($locale['blog_1000']);
+
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
 $info = array(
@@ -176,10 +178,6 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             }
             $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
             $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
-            if (defined('IN_PERMALINK')) {
-                $item['blog_blog'] = strtr($item['blog_blog'], [fusion_get_settings('site_path') => '']);
-                $item['blog_extended'] = strtr($item['blog_extended'], [fusion_get_settings('site_path') => '']);
-            }
 
             $item['blog_image_link'] = '';
             $item['blog_thumb_1_link'] = '';
@@ -250,11 +248,14 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             if ($item['blog_pagecount'] > 1) {
                 $info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
             }
+
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                 'title' => $item['blog_subject']
             ]);
-            set_title($item['blog_subject']);
+
+            set_title($locale['blog_1000'].$locale['global_201']);
+            add_to_title($item['blog_subject']);
 
             if (!empty($item['blog_keywords'])) {
                 set_meta("keywords", $item['blog_keywords']);
@@ -456,10 +457,6 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
             $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
             $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
-            if (defined('IN_PERMALINK')) {
-                $blog_blog = strtr($blog_blog, [fusion_get_settings('site_path') => '']);
-                $blog_extended = strtr($blog_extended, [fusion_get_settings('site_path') => '']);
-            }
 
             $cdata = array(
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],

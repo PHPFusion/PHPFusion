@@ -84,83 +84,75 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
         openside('');
         echo form_text('news_pagination', $locale['669c'], $news_settings['news_pagination'], [
-            			'inline'     => TRUE,
-            			'max_length' => 4,
-            			'width'      => '150px',
-            			'type'       => 'number'
+            			'inline'      => TRUE,
+            			'max_length'  => 4,
+            			'width'       => '150px',
+            			'inner_width' => '150px',
+            			'type'        => 'number'
         	]);
-        echo "
-<div class='row'>
-	<div class='col-xs-12 col-sm-3'>
-		<label for='news_thumb_w'>".$locale['601']."</label>
-	</div>
-	<div class='col-xs-12 col-sm-9'>
+        echo "<div class='display-block overflow-hide'>
+	<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='news_thumb_w'>".$locale['601']."</label>
+	<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('news_thumb_w', '', $news_settings['news_thumb_w'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_thumb_h', '', $news_settings['news_thumb_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "
-<div class='row'>
-	<div class='col-xs-12 col-sm-3'>
-		<label for='news_photo_w'>".$locale['602']."</label>
-	</div>
-	<div class='col-xs-12 col-sm-9'>
+<div class='display-block overflow-hide'>
+		<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='news_photo_w'>".$locale['602']."</label>
+	<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('news_photo_w', '', $news_settings['news_photo_w'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_photo_h', '', $news_settings['news_photo_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "
-<div class='row'>
-	<div class='col-xs-12 col-sm-3'>
-		<label for='blog_thumb_w'>".$locale['603']."</label>
-	</div>
-	<div class='col-xs-12 col-sm-9'>
+<div class='display-block overflow-hide'>
+		<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_thumb_w'>".$locale['603']."</label>
+	<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width' => '150px'
             ])."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
 	".form_text('news_photo_max_h', '', $news_settings['news_photo_max_h'], [
                 'class'      => 'pull-left',
                 'max_length' => 4,
                 'type'       => 'number',
                 'width'      => '150px'
             ])."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
 	</div>
 </div>";
         echo "
-<div class='row'>
-	<div class='col-xs-12 col-sm-3'>
-		<label for='calc_b'>".$locale['605']."</label>
-	</div>
-	<div class='col-xs-12 col-sm-9'>
+<div class='display-block overflow-hide'>
+		<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['605']."</label>
+	<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	".form_text('calc_b', '', $calc_b, [
                 'required'   => TRUE,
                 'type'       => 'number',
@@ -173,6 +165,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'options'     => $calc_opts,
                 'placeholder' => $locale['choose'],
                 'width'       => '180px',
+                'inner_width' => '100%',
                 'class'       => 'pull-left'
             ])."
 	</div>

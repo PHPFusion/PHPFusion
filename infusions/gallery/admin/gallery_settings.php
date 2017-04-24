@@ -84,125 +84,115 @@ if (isset($_POST['delete_watermarks'])) {
         }
     }
 }
-echo openform('settingsform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
+echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='well'>".$locale['gallery_0022']."</div>";
-$choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
+$choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
-echo "<div class='row'><div class='col-xs-12 col-sm-8'>\n";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], array(
-    'max_length' => 2,
-    'inline'     => 1,
-    'width'      => '100px',
-    "type"       => "number",
-));
-echo "
-<div class='row m-0'>\n
-	<label class='label-control col-xs-12 col-sm-3 p-l-0' for='thumb_w'>".$locale['gallery_0203']."</label>\n
-	<div class='col-xs-12 col-sm-9 p-l-0'>\n
-	".form_text('thumb_w', '', $gll_settings['thumb_w'], array(
-        'class'      => 'pull-left m-r-10',
-        'max_length' => 4,
-        "type"       => "number",
-        'width'      => '150px'
-    ))."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
-	".form_text('thumb_h', '', $gll_settings['thumb_h'], array(
+echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], [
+    'max_length' => 2, 'inline' => 1, 'width' => '100px', 'type' => 'number', 'inner_width' => '150px'
+]);
+
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='thumb_w'>".$locale['gallery_0203']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('thumb_w', '', $gll_settings['thumb_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
-    ))."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
+    ])."
+        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
+	".form_text('thumb_h', '', $gll_settings['thumb_h'], [
+        'class'      => 'pull-left',
+        'max_length' => 4,
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>
 	</div>\n
 </div>\n
 ";
-echo "
-<div class='row m-0'>\n
-	<label class='label-control col-xs-12 col-sm-3 p-l-0' for='photo_max_w'>".$locale['gallery_0205']."</label>\n
-	<div class='col-xs-12 col-sm-9 p-l-0'>\n
-	".form_text('photo_w', '', $gll_settings['photo_w'], array(
-        'class'      => 'pull-left m-r-10',
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['gallery_0205']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('photo_w', '', $gll_settings['photo_w'], [
+        'class'      => 'pull-left',
         'max_length' => 4,
-        "type"       => "number",
+        'type'       => 'number',
         'width'      => '150px'
-    ))."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
-	".form_text('photo_h', '', $gll_settings['photo_h'], array(
+    ])."
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
+	".form_text('photo_h', '', $gll_settings['photo_h'], [
+        'class'      => 'pull-left',
+        'max_length' => 4,
+        'type'       => 'number',
+        'width'      => '150px'
+    ])."
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
+	</div>\n
+</div>\n";
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['gallery_0206']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
-    ))."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
-	</div>\n
-</div>\n";
-echo "
-<div class='row m-0'>\n
-	<label class='label-control col-xs-12 col-sm-3 p-l-0' for='photo_w'>".$locale['gallery_0206']."</label>\n
-	<div class='col-xs-12 col-sm-9 p-l-0'>\n
-	".form_text('photo_max_w', '', $gll_settings['photo_max_w'], array(
-        'class'      => 'pull-left m-r-10',
-        'max_length' => 4,
-        "type"       => "number",
-        'width'      => '150px'
-    ))."
-	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
-	".form_text('photo_max_h', '', $gll_settings['photo_max_h'], array(
+    ])."
+	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
+	".form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
-    ))."
-	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
+    ])."
+	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
 	</div>\n
 </div>\n";
-echo "
-<div class='row m-0'>\n
-	<label class='col-xs-12 col-sm-3 p-l-0' for='calc_b'>".$locale['gallery_0207']."</label>\n
-	<div class='col-xs-12 col-sm-9 p-l-0'>\n
-	".form_text('calc_b', '', $calc_b, array(
+echo "<div class='display-block overflow-hide'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['gallery_0207']."</label>
+    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+	".form_text('calc_b', '', $calc_b, [
         'required'   => 1,
         "type"       => "number",
         'error_text' => $locale['error_rate'],
-        'width'      => '150px',
+        'width'      => '100px',
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
-    ))."
-	".form_select('calc_c', '', $calc_c, array('options' => $calc_opts, 'class' => 'pull-left', 'width' => '180px'))."
+    ])."
+	".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'])."
 	</div>\n
 </div>\n
 ";
 closeside();
 openside('');
-echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission']);
-echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required']);
+echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
+echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside("");
-echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], array(
-    "options" => array("0" => $locale['disable'], "1" => $locale['enable']),
-    "width"   => "100%",
-));
+echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], [
+    'options' => ['0' => $locale['disable'], '1' => $locale['enable']], 'width' => '100%',
+]);
 echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text']);
 echo form_checkbox('photo_watermark_save', $locale['gallery_0215'], $gll_settings['photo_watermark_save']);
-echo form_text('photo_watermark_image', $locale['gallery_0212'], $gll_settings['photo_watermark_image'], array(
+echo form_text('photo_watermark_image', $locale['gallery_0212'], $gll_settings['photo_watermark_image'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-));
-echo form_colorpicker('photo_watermark_text_color1', $locale['gallery_0208'], $gll_settings['photo_watermark_text_color1'], array(
+]);
+echo form_colorpicker('photo_watermark_text_color1', $locale['gallery_0208'], $gll_settings['photo_watermark_text_color1'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-    //"format"=>"rgb",
-));
-echo form_colorpicker('photo_watermark_text_color2', $locale['gallery_0209'], $gll_settings['photo_watermark_text_color2'], array(
+]);
+echo form_colorpicker('photo_watermark_text_color2', $locale['gallery_0209'], $gll_settings['photo_watermark_text_color2'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-    //"format"=>"rgb",
-));
-echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $gll_settings['photo_watermark_text_color3'], array(
+]);
+echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $gll_settings['photo_watermark_text_color3'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-    //"format"=>"rgb",
-));
+]);
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
 $mime_opts = array();
@@ -212,7 +202,7 @@ foreach ($mime as $m => $Mime) {
 }
 sort($mime_opts);
 echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['gallery_file_types'],
-    array(
+    [
         'options'     => $mime_opts,
         'error_text'  => $locale['error_type'],
         'placeholder' => $locale['choose'],
@@ -220,16 +210,14 @@ echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['g
         'tags'        => TRUE,
         'width'       => '100%',
         'delimiter'   => '|'
-    ));
-echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
-echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], array(
-    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
-    'class'      => 'btn-danger',
-    'icon'       => 'fa fa-trash'
-));
+    ]);
+echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
+    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'btn-danger', 'icon' => 'fa fa-trash'
+]);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();
 add_to_jquery("
         $('#photo_watermark').bind('change', function(){

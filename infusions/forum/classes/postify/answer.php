@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums\Postify;
 
 use PHPFusion\BreadCrumbs;
@@ -55,12 +56,13 @@ class Postify_Answer extends Forum_Postify {
                 // 3 scenarios
                 // 1 - thread has been answered -- if current post id is not an answer, means moved answer.
                 // 3. thread has been answered -- if current post is an answer, means remove answer.
-
                 // 2 - thread has not been answered -- selecting is acccepting answer
 
                 if ($thread_data['thread_answered']) {
+
                     // If post is an answer, remove the answer, and refund the points.
                     if ($thread_data['post_answer']) {
+
                         // Refunding points
                         dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:user_id", [
                             ':points'  => self::$forum_settings['answering_points'],
@@ -97,7 +99,9 @@ class Postify_Answer extends Forum_Postify {
 
                         $title = self::$locale['forum_4004'];
                         $description = self::$locale['forum_4005'];
+
                     } else {
+
                         $c_result = dbquery("
                             SELECT r.rep_id, p.post_id, p.thread_id, p.post_author 
                             FROM ".DB_FORUM_POSTS." p  
@@ -119,7 +123,7 @@ class Postify_Answer extends Forum_Postify {
                                 // remove points from the previous user
                                 dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation-:points WHERE user_id=:user_id", [
                                     ':points'  => self::$forum_settings['answering_points'],
-                                    ':user_id' => $c_data['user_id']
+                                    ':user_id' => $c_data['post_author']
                                 ]);
                                 // remove the current answer record
                                 dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE rep_id=:rep_id", [':rep_id' => $c_data['rep_id']]);

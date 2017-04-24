@@ -33,13 +33,21 @@ class Postify_Track extends Forum_Postify {
      * Tracking on or off
      */
     public function execute() {
+
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => parent::$locale['forum_0552']]);
+
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
+
         if (!empty($thread_data)) {
+
             if (self::$forum_settings['thread_notify']) {
-                $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
+
+                $thread_data['thread_link'] = FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].'&pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'];
+
                 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
                 if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
+                    $description = '';
+
                     switch ($_GET['post']) {
                         case 'on':
                             if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".fusion_get_userdata('user_id')."'")) {
@@ -61,12 +69,18 @@ class Postify_Track extends Forum_Postify {
                         'description' => $description,
                         'link'        => $link
                     ]);
+
                     redirect($thread_data['thread_link'], 3);
+
                 } else {
+
                     redirect($thread_data['thread_link']);
+
                 }
             } else {
+
                 redirect($thread_data['thread_link'], 3);
+
             }
         } else {
             redirect(self::$default_redirect_link);

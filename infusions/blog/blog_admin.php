@@ -19,31 +19,35 @@ require_once "../../maincore.php";
 pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
 
-if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
-    include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
-} else {
-    include INFUSIONS."blog/locale/English/blog_admin.php";
-}
-
-if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    include LOCALE.LOCALESET."admin/settings.php";
-} else {
-    include LOCALE."English/admin/settings.php";
-}
+$locale = fusion_get_locale('', [
+                                LOCALE.LOCALESET."admin/settings.php",
+                                INFUSIONS."blog/locale/".LOCALESET."blog_admin.php"
+                            ]);
 
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
- //Do not delete a week
-if (empty($blog_settings['blog_file_types'])){
-   	$inputSettings = array(
-       "settings_name" => 'blog_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "blog",
-       );
-       dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
-       $blog_settings = get_settings("blog");
-}
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']]);
+$aidlink = fusion_get_aidlink();
+ 
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.fusion_get_aidlink(), 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
+if (!empty($_GET['section'])){
+	switch ($_GET['section']) {
+	    case "blog_form":
+	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0401']]);
+	        break;
+	    case "blog_category":
+	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0502']]);
+	        break;
+	    case "settings":
+	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0406']]);
+	        break;
+	    case "submissions":
+	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
+	        break;
+	    default:
+	}
+}
 
 if (isset($_POST['cancel'])) {
     redirect(FUSION_SELF.$aidlink);
@@ -96,18 +100,15 @@ opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', TRUE);
 switch ($_GET['section']) {
     case "blog_form":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
         include "admin/blog.php";
         break;
     case "blog_category":
         include "admin/blog_cat.php";
         break;
     case "settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][4]]);
         include "admin/blog_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
         include "admin/blog_submissions.php";
         break;
     default:

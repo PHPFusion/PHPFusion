@@ -16,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\News;
 
 class NewsAdmin extends NewsAdminModel {
@@ -72,13 +73,13 @@ class NewsAdmin extends NewsAdminModel {
             $news_news = '';
             if ($_POST['news_news']) {
                 $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : stripslashes($_POST['news_news'])));
+                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : $_POST['news_news']));
             }
 
             $news_extended = '';
             if ($_POST['news_extended']) {
                 $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N,
-                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : stripslashes($_POST['news_extended'])));
+                    (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : $_POST['news_extended']));
             }
 
             $this->news_data = array(
@@ -210,7 +211,7 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
-    $news_settings = self::get_news_settings();
+        $news_settings = self::get_news_settings();
 
         $news_cat_opts = [];
         $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_name";
@@ -232,7 +233,7 @@ class NewsAdmin extends NewsAdminModel {
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
             'height'      => '200px',
-			'file_filter' => explode(',', $news_settings['news_file_types']),
+            'file_filter' => explode(',', $news_settings['news_file_types']),
         );
         if (fusion_get_settings('tinymce_enabled')) {
             $snippetSettings = array('required' => TRUE, 'height' => '200px', 'type' => 'tinymce', 'tinymce' => 'advanced', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
@@ -248,7 +249,7 @@ class NewsAdmin extends NewsAdminModel {
                 'path'        => [IMAGES, IMAGES_N, IMAGES_NC],
                 'wordcount'   => TRUE,
                 'height'      => '300px',
-				'file_filter' => explode(',', $news_settings['news_file_types']),
+                'file_filter' => explode(',', $news_settings['news_file_types']),
             );
         } else {
             $extendedSettings = array('type' => 'tinymce', 'tinymce' => 'advanced', 'height' => '300px', 'file_filter' => explode(',', $news_settings['news_file_types']), 'path' => [IMAGES, IMAGES_N, IMAGES_NC]);
@@ -346,7 +347,7 @@ class NewsAdmin extends NewsAdminModel {
                                 'thumbnail2_h'     => $news_settings['news_photo_h'],
                                 'type'             => 'image',
                                 'class'            => 'm-b-0',
-            					'valid_ext'        => $news_settings['news_file_types'],
+                                'valid_ext'        => $news_settings['news_file_types'],
                                 'template'         => 'thumbnail'
                             )
                         );
@@ -1085,15 +1086,15 @@ class NewsAdmin extends NewsAdminModel {
                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($_GET['news_id'])."'");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
-                    	if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
-                    	    unlink(IMAGES_N.$data['news_image']);
-                    	}
-                    	if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
-                    	    unlink(IMAGES_N_T.$data['news_image_t1']);
-                    	}
-                    	if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
-                    	    unlink(IMAGES_N_T.$data['news_image_t2']);
-                    	}
+                        if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+                            unlink(IMAGES_N.$data['news_image']);
+                        }
+                        if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                            unlink(IMAGES_N_T.$data['news_image_t1']);
+                        }
+                        if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                            unlink(IMAGES_N_T.$data['news_image_t2']);
+                        }
                     }
                 }
 

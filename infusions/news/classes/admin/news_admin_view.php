@@ -37,7 +37,7 @@ class NewsAdminView extends NewsAdminModel {
 
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
         add_to_title($locale['news_0001']);
 
         if (!empty($_GET['ref'])) {
@@ -68,6 +68,20 @@ class NewsAdminView extends NewsAdminModel {
                 $news_cat_title = $locale['news_0021'];
             }
         }
+		if (!empty($_GET['section'])){
+        	switch ($_GET['section']) {
+	            case "news_category":
+    	            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
+        	        break;
+            	case "settings":
+                	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
+	                break;
+    	        case "submissions":
+        	        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
+            	    break;
+	            default:
+    	    }
+        }
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
         $master_title['title'][] = $news_cat_title;
         $master_title['id'][] = 'news_category';
@@ -79,21 +93,17 @@ class NewsAdminView extends NewsAdminModel {
         $master_title['id'][] = 'settings';
         $master_title['icon'][] = 'fa fa-cogs';
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_title]);
-
         opentable($locale['news_0001']);
 
         echo opentab($master_title, $_GET['section'], "news_admin", TRUE, '', 'section');
         switch ($_GET['section']) {
             case "news_category":
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "settings":
                 NewsSettingsAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "submissions":
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:

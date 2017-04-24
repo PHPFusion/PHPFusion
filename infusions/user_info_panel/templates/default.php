@@ -39,8 +39,8 @@ if (!function_exists('display_user_info_panel')) {
             </div>
             <div class='user_pm_notice'>{%user_pm_notice%}</div>
             <div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>
-            <strong>{%user_nav_title%}</strong><br/>
             <div id='navigation-user'>
+                <strong>{%user_nav_title%}</strong><br/>
                 <ul class='block'>
                     <li><a href='{%edit_profile_link%}'>{%edit_profile_title%} <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a></li>
                     <li><a href='{%pm_link%}'>{%pm_title%} <i class='fa fa-envelope-o fa-pull-right'></i></a></li>
@@ -55,7 +55,7 @@ if (!function_exists('display_user_info_panel')) {
                 <?php if (!empty($info['submissions'])) : ?>
                 <ul class='block'>
                     <li>
-                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='pull-right entypo upload-cloud'></i></a>
+                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
                             <ul id='collapse' class='panel-collapse collapse block'>
                                 <?php
                                 foreach ($info['submissions'] as $modules) {

@@ -109,6 +109,6 @@ $locale['photo_0022'] = "Photo Moved Up";
 $locale['photo_0023'] = "Photo Moved Down";
 $locale['photo_0024'] = "Photo deleted";
 $locale['photo_0025'] = "Purge All Photos";
-$locale['photo_0026'] = "&lt;strong&gt;WARNING:&lt;/strong&gt; Purge actions will &lt;strong&gt;permanently remove all photos&lt;/strong&gt; in this album. Are you sure?";
+$locale['photo_0026'] = "[STRONG]WARNING:[/STRONG] Purge actions will [STRONG]permanently remove all photos[/STRONG] in this album. Are you sure?";
 $locale['photo_0027'] = "Confirm Purge";
 $locale['photo_0028'] = "Cancel";

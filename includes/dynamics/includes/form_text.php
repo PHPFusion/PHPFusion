@@ -168,8 +168,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ').'</script>');
     }
 
-
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group".($options['inline'] ? ' overflow-hide' : '').($error_class ? ' '.$error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
@@ -264,12 +263,12 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         add_to_jquery("
         $('#".$options['input_id']."').blur(function(ev) {
             var Inner_Object = $(this).parent('div').find('.label-danger');
-            var Outer_Object = $(this).parent('div').find('.input-error');            
+            var Outer_Object = $(this).parent('div').find('.input-error');
             if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
                 var ErrorText = '".$options['regex_error_text']."';
-                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';                        
+                var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';
                 if (Inner_Object.length > 0) {
-                    object.html(ErrorText);                
+                    object.html(ErrorText);
                 } else {
                     $(this).after(function() {
                         return ErrorDOM;
@@ -285,7 +284,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.
         add_to_jquery("
-        $('#".$options['input_id']."').val(' ');        
+        $('#".$options['input_id']."').val(' ');
         setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
         ");
     }

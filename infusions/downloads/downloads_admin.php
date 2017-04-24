@@ -19,16 +19,36 @@
 require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
+use \PHPFusion\BreadCrumbs;
 
 $downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
 $settings_locale = file_exists(LOCALE.LOCALESET."admin/settings.php") ? LOCALE.LOCALESET."admin/settings.php" : LOCALE."English/admin/settings.php";
 $locale = fusion_get_locale('', [$downloads_locale, $settings_locale]);
+$aidlink = fusion_get_aidlink();
 
 require_once INCLUDES."infusions_include.php";
 
 $dl_settings = get_settings("downloads");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'downloads/downloads_admin.php'.$aidlink, 'title' => $locale['download_0001']]);
+BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
+if (!empty($_GET['section'])){
+	switch ($_GET['section']) {
+    	case "download_form":
+        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' =>$locale['download_0002']]);
+	        break;
+    	case "download_category":
+        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
+	        break;
+    	case "download_settings":
+        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
+	        break;
+    	case "submissions":
+        	BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
+	        break;
+    	default:
+        	break;
+	}
+}
 $allowed_section = array("downloads", "download_form", "download_settings", "download_category", "submissions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
@@ -60,7 +80,6 @@ opentable($locale['download_0001']);
 echo opentab($master_tab_title, $_GET['section'], "download_admin", TRUE);
 switch ($_GET['section']) {
     case "download_form":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][1]]);
         if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
             include "admin/downloads.php";
         } else {
@@ -71,15 +90,12 @@ switch ($_GET['section']) {
         }
         break;
     case "download_category":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][2]]);
         include "admin/download_cats.php";
         break;
     case "download_settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_tab_title['title'][4]]);
         include "admin/download_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
         include "admin/download_submissions.php";
         break;
     default:

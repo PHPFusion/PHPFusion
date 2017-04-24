@@ -17,7 +17,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 require_once THEMES."templates/global/home.php";
 require_once INCLUDES."infusions_include.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');

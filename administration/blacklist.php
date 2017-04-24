@@ -225,7 +225,7 @@ class Blaclist {
         echo form_hidden('blacklist_id', '', $this->data['blacklist_id']);
         echo form_hidden('blacklist_datestamp', '', $this->data['blacklist_datestamp']);
 
-        echo form_text('blacklist_ip', self::$locale['BLS_034'], $this->data['blacklist_ip'], array('required' => TRUE, 'inline' => TRUE));
+        echo form_text('blacklist_ip', str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], self::$locale['BLS_034']), $this->data['blacklist_ip'], array('required' => TRUE, 'inline' => TRUE));
 
         echo form_text('blacklist_email', self::$locale['BLS_035'], $this->data['blacklist_email'], array('required' => TRUE, 'inline' => TRUE, 'type' => 'text', 'error_text' => self::$locale['BLS_016']));
 

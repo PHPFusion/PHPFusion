@@ -245,7 +245,9 @@ class Members {
                 case 'registered':
                     $default_sorting = "u.user_joined $default_sort_order, $default_sorting";
                     break;
-                // $default_sorting by default is case 'user_name'
+                case 'name':
+                    $default_sorting = "u.user_name $default_sort_order, $default_sorting";
+                    break;
             }
         }
 

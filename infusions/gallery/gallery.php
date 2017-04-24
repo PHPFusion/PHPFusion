@@ -72,8 +72,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
-        set_title($data['photo_title'].$locale['global_201']);
-        add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
+        set_title($locale['465']);
+        add_to_title($locale['global_201'].$data['photo_title']);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            'link'  => INFUSIONS."gallery/gallery.php",
+            'title' => $locale['465']
+        ]);
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
             'title' => $data['album_title']
@@ -134,10 +138,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             "photo_ratings"     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0',
         );
 
-        if (defined('IN_PERMALINK')) {
-            $info['photo_description'] = strtr($info['photo_description'], [fusion_get_settings('site_path') => '']);
-        }
-
         if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
             if (isset($prev) && isset($first)) {
                 $info['nav']['first'] = array(
@@ -184,12 +184,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         if (dbrows($result) > 0) {
             $info = dbarray($result);
 
-            set_title($info['album_title'].$locale['global_201']);
-            add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name"));
+            set_title($locale['465']);
+            add_to_title($locale['global_201'].$info['album_title']);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php',
-                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
+                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/gallery/gallery.php", "link_name")
             ]);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
@@ -375,12 +375,12 @@ function photo_thumbnail($data) {
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<span> ".$locale['434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='entypo calendar text-lighter'></i></abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['403'].showdate("shortdate", $data['photo_datestamp'])."' class='fa fa-calendar text-lighter'></i></abbr></span>";
     $photo_comments = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P' AND comment_item_id='".$data['photo_id']."'");
     $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['436b'] : $locale['436']).$photo_comments : "");
-    echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='entypo icomment text-lighter'></i></abbr> $photo_comments</abbr></span>";
-    echo "<span class='m-r-10'><abbr title='".$locale['434'].$data['user_name']."'><i class='entypo user text-lighter'></i></span>";
-    echo "<span><abbr title='".$locale['435'].$data['photo_views']."'><i class='entypo eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
+    echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='fa fa-comment text-lighter'></i></abbr> $photo_comments</abbr></span>";
+    echo "<span class='m-r-10'><abbr title='".$locale['434'].$data['user_name']."'><i class='fa fa-user text-lighter'></i></span>";
+    echo "<span><abbr title='".$locale['435'].$data['photo_views']."'><i class='fa fa-eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
     echo "</div></div>\n";
 }
 

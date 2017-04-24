@@ -67,7 +67,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         </div>
         <?php
         echo openform("settingsform", "post", FUSION_REQUEST, ['class' => 'spacer-sm']);
-        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], array("inline" => true, "max_length" => 4, "width" => "150px", "type" => "number"));
+        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], array('inline' => true, 'max_length' => 4, 'inner_width' => '250px', 'width' => '150px', 'type' => 'number'));
         echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
         echo form_select("article_extended_required", $this->locale['article_0403'], $article_settings['article_extended_required'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
         echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success"));

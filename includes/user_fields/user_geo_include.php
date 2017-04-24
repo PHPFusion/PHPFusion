@@ -26,10 +26,8 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
     if ($field_value) {
         $address = explode('|', $field_value);
-        $field_value = '';
-        foreach ($address as $value) {
-            $field_value .= "$value<br/>\n";
-        }
+        !empty($address[2]) ? $address[2] = translate_country_names($address[2]) : "";
+        $field_value = implode("<br>", $address);
     } else {
         $field_value = $locale['na'];
     }

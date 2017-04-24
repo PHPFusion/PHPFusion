@@ -67,10 +67,11 @@ echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-
-echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
-echo "<script type='text/javascript'>!window.jQuery && document.write('<script src=\'".INCLUDES."jquery/jquery.min.js\'><\/script>');</script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n"; // Use .min.js only in production manually
+if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
+    echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
+}
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo "</head>\n";
 
 /**
@@ -87,13 +88,13 @@ if (!defined("THEME_BODY")) {
 
 if (iADMIN) {
     if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-        //addNotice("danger", fusion_get_locale('global_198'), 'all');
+        addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
         addNotice("warning", fusion_get_locale('global_190'), 'all');
     }
     if (!fusion_get_userdata('user_admin_password')) {
-        addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='edit_profile.php'>", "</a>"), fusion_get_locale('global_199')), 'all');
+        addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."edit_profile.php'>", "</a>"), fusion_get_locale('global_199')), 'all');
     }
 }
 

@@ -85,7 +85,7 @@ if (!function_exists('display_blog_item')) {
 
         echo "<div class='clearfix'>
 				<div class='btn-group pull-right'>
-				<a class='btn btn-default btn-sm' href='".$data['print_link']."'><i class='entypo print'></i> ".$locale['print']."</a>";
+				<a class='btn btn-default btn-sm' href='".$data['print_link']."'><i class='fa fa-print'></i> ".$locale['print']."</a>";
         if ($data['admin_link']) {
             $admin_actions = $data['admin_link'];
             echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'><i class='fa fa-pencil'></i> ".$locale['edit']."</a>\n";

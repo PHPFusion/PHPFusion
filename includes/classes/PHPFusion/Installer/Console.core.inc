@@ -102,7 +102,6 @@ class Console_Core extends Install_Core {
         $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".IMAGES."favicons/apple-touch-icon-120x120.png'/>\n";
         $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".IMAGES."favicons/apple-touch-icon-76x76.png'/>\n";
         $html .= "<link rel='shortcut icon' href='".IMAGES."favicons/favicon.ico'/>\n";
-        $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-96x96.png' sizes='96x96'/>\n";
         $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-16x16.png' sizes='16x16'/>\n";
         $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-32x32.png' sizes='32x32'/>\n";
         $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>\n";

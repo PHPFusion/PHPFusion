@@ -82,8 +82,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         define('DATEPICKER', TRUE);
         add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
+
+        if (file_exists(DYNAMICS."assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
+            $lang = $locale['datepicker'];
+        } else {
+            $lang = 'en-gb';
+        }
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
+
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -121,7 +129,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     if (!empty($input_value)) {
         if ($options['type'] == "timestamp") {
-            $input_value = date($options['date_format_php'], $input_value);
+            $input_value = date($options['date_format_php'], isnum($input_value) ? $input_value : strtotime(str_replace('-','/', $input_value)));
         } elseif ($options['type'] == "date") {
             if (stristr($input_value, $options['delimiter'])) {
                 $input_value = explode($options['delimiter'], $input_value);
@@ -188,7 +196,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html = "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."'>\n";
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<div class='input-group date' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html .= "<div class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
     $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
     $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";

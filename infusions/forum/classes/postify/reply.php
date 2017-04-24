@@ -30,11 +30,13 @@ use PHPFusion\BreadCrumbs;
 class Postify_Reply extends Forum_Postify {
 
     public function execute() {
+
         add_to_title(self::$locale['global_201'].self::$locale['forum_0360']);
+
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
-        $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id",
-                [':thread_id' => $_GET['thread_id']])
-        );
+
+        $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
+
         $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
 
         if ($_GET['error'] < 2) {
@@ -43,23 +45,24 @@ class Postify_Reply extends Forum_Postify {
                 throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
             }
 
-            if (self::$forum_settings['thread_notify']) {
-
+            if (self::$forum_settings['thread_notify'] && isnum($_GET['thread_id'])) {
                 // Find all users to notify
                 $notify_query = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
-				WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status
-                ";
+				WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
                 $notify_bind = [
-                    ':thread_id' => $_GET['thread_id'],
+                    ':thread_id' => intval($_GET['thread_id']),
                     ':my_id'     => fusion_get_userdata('user_id'),
                     ':status'    => 1,
                 ];
                 $notify_result = dbquery($notify_query, $notify_bind);
+
                 if (dbrows($notify_result)) {
+
                     $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
                     require_once INCLUDES.'sendmail_include.php';
+
                     $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
                     if (dbrows($template_result) > 0) {
                         $template_data = dbarray($template_result);
@@ -99,11 +102,6 @@ class Postify_Reply extends Forum_Postify {
                             }
                         }
                     }
-
-                    /*
-                     * This resets notification after being emailed once. No, must keep emailing him.
-                    dbquery("UPDATE ".DB_FORUM_THREAD_NOTIFY." SET notify_status='0' WHERE thread_id=:thread_id AND notify_user!=:my_id", [':thread_id' => $_GET['thread_id'],':my_id' => fusion_get_userdata('user_id')]);
-                    */
                 }
             }
 

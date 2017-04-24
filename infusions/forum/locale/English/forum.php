@@ -117,8 +117,8 @@ $locale['forum_0271'] = "There are no post in this thread anymore. Please return
 $locale['forum_0301'] = "Select new forum";
 $locale['forum_0302'] = "Next";
 $locale['forum_0303'] = "Select new thread";
-$locale['forum_0305'] = "You are trying to move the first post in this thread!&lt;br /&gt;The first post &lt;strong&gt;will not be moved&lt;/strong&gt; and has been removed from list because there are still posts left in the thread.";
-$locale['forum_0306'] = "You are trying to move the first post in this thread!&lt;br /&gt;The first post &lt;strong&gt;will be moved&lt;/strong&gt; and thread will be deleted.";
+$locale['forum_0305'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will not be moved[/STRONG] and has been removed from list because there are still posts left in the thread.";
+$locale['forum_0306'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will be moved[/STRONG] and thread will be deleted.";
 $locale['forum_0307'] = "No posts to move.";
 $locale['forum_0308'] = "No threads in this forum.";
 $locale['forum_0309'] = "Back to thread.";
@@ -253,13 +253,11 @@ $locale['forum_0630'] = "Poll will only be created when thread is added";
 $locale['forum_0640'] = "Merged on";
 $locale['forum_0650'] = "Flood control nice message.";
 $locale['forum_0660'] = "Thread Reply Notification - {THREAD_SUBJECT}";
-$locale['forum_0661'] = "Hello {USERNAME},
-&#092;nA reply has been posted in the forum thread &quot;{THREAD_SUBJECT}&quot; which you are tracking at {SITENAME}. You can use the following link to view the reply:
-&#092;n{THREAD_URL}
-&#092;nIf you no longer wish to watch this thread you can click the &quot;Stop tracking this thread&quot; link located at the top of the thread.
-&#092;nRegards,
-&#092;n{SITEUSERNAME}
-&#092;n";
+$locale['forum_0661'] = "Hello {USERNAME},A reply has been posted in the forum thread \"{THREAD_SUBJECT}\" which you are tracking at {SITENAME}. You can use the following link to view the reply:
+{THREAD_URL}
+If you no longer wish to watch this thread you can click the \"Stop tracking this thread\" link located at the top of the thread.
+Regards,
+{SITEUSERNAME}";
 $locale['forum_0701'] = "The Thread has been deleted.";
 $locale['forum_0704'] = "Are you sure you want to delete this Thread?";
 $locale['forum_0705'] = "Unable to remove thread because thread does not exist";

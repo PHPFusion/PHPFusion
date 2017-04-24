@@ -424,7 +424,7 @@ class SeptenaryComponents {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
         echo "<div class='pull-right'>\n";
-        echo "<a href='#top'><i style='font-size:50px;' class='entypo mid-opacity up-circled'></i></a>\n";
+        echo "<a href='#top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
         echo "</div>\n";
         echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
 	    <p>".showcopyright()."</p>

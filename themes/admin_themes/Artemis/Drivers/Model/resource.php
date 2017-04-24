@@ -119,7 +119,12 @@ abstract class resource extends Admins {
 
         $aidlink = fusion_get_aidlink();
         $userdata = fusion_get_userdata();
-        $locale = fusion_get_locale('', THEMES."admin_themes/Artemis/locale/".LANGUAGE.".php");
+
+        if (file_exists(THEMES."admin_themes/Artemis/locale/".LANGUAGE.".php")) {
+            $locale = fusion_get_locale('', THEMES."admin_themes/Artemis/locale/".LANGUAGE.".php");
+        } else {
+            $locale = fusion_get_locale('', THEMES."admin_themes/Artemis/locale/English.php");
+        }
 
         if (!empty($locale) && empty(self::$locale)) {
             foreach ($locale as $locale_key => $locale_value) {

@@ -173,7 +173,7 @@ if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id'
 		from ".DB_PHOTOS." where album_id='".intval($_GET['cat_id'])."'");
         if (dbrows($photoResult) > 0) {
             if (!isset($_POST['purge_confirm'])) {
-                echo $locale['photo_0026']."<br/><br/>\n";
+                echo str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['photo_0026'])."<br/><br/>\n";
                 echo openform("purgephotos", "post", FUSION_REQUEST);
                 echo form_button("purge_confirm", $locale['photo_0027'], $locale['photo_0027'], array("class" => "btn-danger m-r-10"));
                 echo form_button("cancel", $locale['photo_0028'], $locale['photo_0028'], array("class" => "btn-default m-r-10"));

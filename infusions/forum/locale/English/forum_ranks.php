@@ -31,6 +31,6 @@ $locale['435'] = "Edit";
 $locale['436'] = "Delete";
 $locale['437'] = "No Forum Ranks defined.";
 $locale['438'] = "Type / Count";
-$locale['450'] = "Forum ranks are currently disabled.&lt;br /&gt;Please go to the %s Admin Panel to enable.";
+$locale['450'] = "Forum ranks are currently disabled.<br/>Please go to the %s Admin Panel to enable.";
 $locale['451'] = "Forum Settings";
 $locale['forum_rank_0100'] = "Forum ranks are used to micro-manage forum users and shows their performance and activity";

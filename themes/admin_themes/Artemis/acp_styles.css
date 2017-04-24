@@ -1,6 +1,6 @@
 /* Globals */
 html, body, #tinymce body, .form-control {
-    font: 14px/16px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -195,7 +195,7 @@ a:hover, a:focus {
     bottom: 0;
     width: 550px;
     max-width: 100%;
-    z-index: 80;
+    /*z-index: 80;*/
     box-shadow: inset 1px 0 0 #222933;
     overflow-y: auto;
     padding-bottom: 50px;
@@ -322,7 +322,7 @@ a:hover, a:focus {
     min-height: 100vh;
     padding-top: 70px;
     padding-bottom: 50px;
-    z-index: 90;
+    /*z-index: 90;*/
     transition: -webkit-transform .5s;
     transition: transform .5s;
 }
@@ -472,7 +472,6 @@ a:hover, a:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
     margin: 25px 27px 0;
     min-height: calc(100vh - 100px);
-    overflow: hidden;
 }
 
 #devlpr .breadcrumb {
@@ -519,7 +518,7 @@ a:hover, a:focus {
 /* opentable */
 #devlpr #main_content .content header {
     margin-top: 30px;
-    padding: 0 30px;
+    padding: 30px 30px 0;
 }
 
 #devlpr #main_content .content header > h2 {
@@ -1081,7 +1080,6 @@ input[type="submit"].btn.btn-mini {
     white-space: nowrap;
     vertical-align: middle;
     zoom: 1;
-    height: 25px;
     margin-bottom: 20px;
 }
 
@@ -2162,11 +2160,6 @@ div.mce-edit-area {
 .file-caption > .file-caption-name {
     padding: 8px 0 3px;
     height: auto;
-}
-
-.modal-center {
-    top: 0 !important;
-    margin-top: 200px !important;
 }
 
 .well, .well-hover:hover, .well-hover:focus {

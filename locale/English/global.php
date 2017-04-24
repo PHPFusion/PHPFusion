@@ -14,7 +14,7 @@ setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
 $locale['region'] = "GB";
 $locale['xml_lang'] = "en";
-$locael['short_lang_name'] = "en";
+$locale['short_lang_name'] = "en";
 $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
@@ -51,6 +51,7 @@ $locale['sel_state'] = "Select Region";
 $locale['sel_user'] = "Please type a user name";
 $locale['add_language'] = "Add Language Translations";
 $locale['add_lang'] = "Add %s";
+$locale['other_states'] = "Other States";
 // Name
 $locale['name'] = "Full Name";
 $locale['username_pretext'] = "Your public username is also the same as your user profile address located at: %s %s";
@@ -417,7 +418,6 @@ $locale['he'] = "He";
 $locale['she'] = "She";
 $locale['it'] = "It";
 //Tables
-$locale['status'] = "Status";
 $locale['order'] = "Order";
 $locale['sort'] = "Sort";
 $locale['id'] = "ID";
@@ -432,7 +432,7 @@ $locale['root'] = "As Parent";
 $locale['choose-user'] = "Please Choose a User...";
 $locale['choose-location'] = "Please Choose a Location";
 $locale['parent'] = "Create as New Parent..";
-$locale['order'] = "Item Ordering";
+$locale['item_order'] = "Item Ordering";
 $locale['status'] = "Status";
 $locale['note'] = "Make a note of this item";
 $locale['publish'] = "Publish";

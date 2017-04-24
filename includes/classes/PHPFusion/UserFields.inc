@@ -43,7 +43,8 @@ class UserFields extends QuantumFields {
         "user_email"          => '',
         'user_hide_email'     => 0,
         "user_language"       => LANGUAGE,
-        'user_timezone'       => 'Europe/London'
+        'user_timezone'       => 'Europe/London',
+        'user_reputation'     => 0
     );
     /* Quantum Fields Extensions */
     public $system_title = '';
@@ -134,6 +135,7 @@ class UserFields extends QuantumFields {
             'user_email'          => '',
             'user_hide_email'     => '',
             'user_avatar'         => '',
+            'user_reputation'     => '',
             'validate'            => '',
             'terms'               => ''
         ];
@@ -147,13 +149,16 @@ class UserFields extends QuantumFields {
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
+            if (db_exists(DB_PREFIX.'forums')) {
+                $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->userData['user_reputation'];
+            }
 
             if (iADMIN || $this->_userNameChange) {
                 $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, array(
                     'max_length' => 30,
                     'required'   => 1,
                     'error_text' => $locale['u122'],
-                    'inline'     => 1
+                    'inline'     => TRUE
                 ));
             }
 
@@ -163,7 +168,7 @@ class UserFields extends QuantumFields {
                 $this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', array(
                         'type'              => 'password',
                         'autocomplete_off'  => 1,
-                        'inline'            => 1,
+                        'inline'            => TRUE,
                         'max_length'        => 64,
                         'error_text'        => $locale['u134'].$locale['u143a'],
                         'required'          => $this->admin_mode ? FALSE : TRUE,
@@ -173,7 +178,7 @@ class UserFields extends QuantumFields {
                 $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', array(
                         'type'             => 'password',
                         'autocomplete_off' => 1,
-                        'inline'           => 1,
+                        'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133'],
                         'required'         => $this->admin_mode ? FALSE : TRUE
@@ -184,7 +189,7 @@ class UserFields extends QuantumFields {
                 $this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', array(
                         'type'             => 'password',
                         'autocomplete_off' => 1,
-                        'inline'           => 1,
+                        'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133']
                     )
@@ -192,7 +197,7 @@ class UserFields extends QuantumFields {
                 $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', array(
                         'type'              => 'password',
                         'autocomplete_off'  => 1,
-                        'inline'            => 1,
+                        'inline'            => TRUE,
                         'max_length'        => 64,
                         'error_text'        => $locale['u133'],
                         'password_strength' => TRUE
@@ -202,21 +207,21 @@ class UserFields extends QuantumFields {
                         'class'            => 'm-b-0',
                         'type'             => 'password',
                         'autocomplete_off' => 1,
-                        'inline'           => 1,
+                        'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133']
                     )
                 );
                 $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password']);
             }
-            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
+            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
             // Admin Password - not available for everyone except edit profile.
             if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
                 if ($this->userData['user_admin_password']) {
                     $this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144a'], '', array(
                             'type'             => 'password',
                             'autocomplete_off' => 1,
-                            'inline'           => 1,
+                            'inline'           => TRUE,
                             'max_length'       => 64,
                             'error_text'       => $locale['u136']
                         )
@@ -224,7 +229,7 @@ class UserFields extends QuantumFields {
                     $this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', array(
                             'type'             => 'password',
                             'autocomplete_off' => 1,
-                            'inline'           => 1,
+                            'inline'           => TRUE,
                             'max_length'       => 64,
                             'error_text'       => $locale['u136']
                         )
@@ -233,7 +238,7 @@ class UserFields extends QuantumFields {
                     $this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144'], '', array(
                             'type'             => 'password',
                             'autocomplete_off' => 1,
-                            'inline'           => 1,
+                            'inline'           => TRUE,
                             'max_length'       => 64,
                             'error_text'       => $locale['u136']
                         )
@@ -243,7 +248,7 @@ class UserFields extends QuantumFields {
                         'class'            => 'm-b-0',
                         'type'             => 'password',
                         'autocomplete_off' => 1,
-                        'inline'           => 1,
+                        'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u136']
                     )
@@ -257,7 +262,7 @@ class UserFields extends QuantumFields {
                 array(
                     'type'             => 'password',
                     'autocomplete_off' => 1,
-                    'inline'           => 1,
+                    'inline'           => TRUE,
                     'max_length'       => 64,
                     'error_text'       => $locale['u133']
                 )
@@ -267,14 +272,14 @@ class UserFields extends QuantumFields {
             if (!$this->registration) {
 
                 if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
-                    $this->info['user_avatar'] = "                    
+                    $this->info['user_avatar'] = "
                     <div class='row'>\n
                     <div class='col-xs-12 col-sm-3'><strong>".$locale['u185']."</strong></div>
                     <div class='col-xs-12 col-sm-9'>
                         <div class='p-l-10'>
                         <label for='user_avatar_upload'>".display_avatar($this->userData, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $locale['u187'], '', array('reverse_label' => TRUE))."
-                        </div>                    
-                    </div></div>                    
+                        </div>
+                    </div></div>
                     ";
                 } else {
                     $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', array(
@@ -300,7 +305,7 @@ class UserFields extends QuantumFields {
             $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, array(
                     'type'       => 'email',
                     "required"   => TRUE,
-                    'inline'     => 1,
+                    'inline'     => TRUE,
                     'max_length' => '100',
                     'error_text' => $locale['u126']
                 )
@@ -317,6 +322,15 @@ class UserFields extends QuantumFields {
                     ),
                 )
             );
+
+            if (iSUPERADMIN) {
+                $this->info['user_reputation'] = form_text('user_reputation', $locale['u210'], $user_reputation, array(
+                        'type'   => 'number',
+                        'inline' => TRUE
+                    )
+                );
+            }
+
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();
             }
@@ -383,6 +397,7 @@ class UserFields extends QuantumFields {
                 '{%user_email_field%}'          => $this->info['user_email'],
                 '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
                 '{%user_avatar_field%}'         => $this->info['user_avatar'],
+                '{%user_reputation_field%}'     => $this->info['user_reputation'],
                 '{%user_password_field%}'       => $this->info['user_password'],
                 '{%user_admin_password_field%}' => $this->info['user_admin_password'],
                 '{%custom_fields%}'             => $user_fields,
@@ -518,10 +533,10 @@ class UserFields extends QuantumFields {
 
         // removed -- ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
         $query = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
-                  FROM ".DB_USER_FIELDS." field 
-                  INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat) 
-                  INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id) 
-                  WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01) $registration_cond 
+                  FROM ".DB_USER_FIELDS." field
+                  INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
+                  INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
+                  WHERE (cat.field_cat_id=:index00 OR root.field_cat_id=:index01) $registration_cond
                   ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order
                   ";
         $bind = [

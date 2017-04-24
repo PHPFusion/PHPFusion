@@ -27,16 +27,27 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 $locale = fusion_get_locale('', GALLERY_ADMIN_LOCALE) + $locale;
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
-//Do not delete a week
-if (empty($gll_settings['gallery_file_types'])) {
-    $inputSettings = array(
-        "settings_name" => 'gallery_file_types', "settings_value" => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "settings_inf" => "gallery",
-    );
-    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "save", array("primary_key" => "settings_name"));
-    $gll_settings = get_settings("gallery");
+if (!empty($_GET['section'])){
+	switch ($_GET['section']) {
+    	case "photo_form":
+        	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
+	        break;
+    	case "album_form":
+        	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
+	        break;
+    	case "actions":
+        	break;
+	    case "settings":
+    	    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
+        	break;
+	    case "submissions":
+    	    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
+        	break;
+	    default:
+	}
 }
 
 add_to_head("
@@ -113,24 +124,18 @@ opentable($locale['gallery_0001']);
 echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20", 'section', ['album_id']);
 switch ($_GET['section']) {
     case "photo_form":
-        // make breadcrumb
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][1]]);
-        // include file
         include "admin/photos.php";
         break;
     case "album_form":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][2]]);
         include "admin/gallery_cat.php";
         break;
     case "actions":
         include "admin/gallery_actions.php";
         break;
     case "settings":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]]);
         include "admin/gallery_settings.php";
         break;
     case "submissions":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
         include "admin/photo_submissions.php";
         break;
     default:

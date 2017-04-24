@@ -313,7 +313,7 @@ class Search_Engine extends Search_Model {
         $info = [
             'openform' => openform('advanced_search_form', 'post', BASEDIR.'search.php'),
             'closeform' => closeform(),
-            'search_form_stext' => form_text('stext', $locale['400'], urldecode(self::get_param('stext')), array('inline'=> FALSE, 'placeholder'=>$locale['401'])),
+            'search_form_stext' => form_text('stext', str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']), urldecode(self::get_param('stext')), array('inline'=> FALSE, 'placeholder'=>$locale['401'])),
             'search_form_button' => form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary')),
             'search_form_method' => form_checkbox('method', '', self::get_param('method'),
                                                        array(
@@ -334,7 +334,7 @@ class Search_Engine extends Search_Model {
          */
         echo $info['openform'];
         echo strtr(Search::render_search(), array(
-            '{%title%}' => self::$locale['400'],
+            '{%title%}' => str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']),
             '{%search_text%}' => $info['search_form_stext'],
             '{%search_button%}' => $info['search_form_button'],
             '{%search_method%}' => $info['search_form_method'],

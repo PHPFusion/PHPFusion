@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (iADMIN) {
+if (iSUPERADMIN || iADMIN) {
     $text = preg_replace('#\[hide\](.*?)\[/hide\]#si',
                          '<div class=\'quote\'><strong>'.$locale['bb_hide'].'</strong><br /><span style=\'color:red;font-weight:bold\'>\1</span></div>',
                          $text);

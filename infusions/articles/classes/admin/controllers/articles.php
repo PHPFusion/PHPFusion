@@ -22,7 +22,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     private static $instance = NULL;
     private $locale = array();
     private $form_action = FUSION_REQUEST;
-
+    private $articleSettings = array();
     private $article_data = array();
 
     public static function getInstance() {
@@ -72,8 +72,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Data
-        $this->article_data['article_breaks'] = (fusion_get_settings("tinymce_enabled") ? "n" : "y");
         $this->article_data += $this->default_article_data;
+
         self::articleContent_form();
     }
 
@@ -87,12 +87,12 @@ class ArticlesAdmin extends ArticlesAdminModel {
             // Check posted Informations
             $article_snippet = "";
             if ($_POST['article_snippet']) {
-                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_snippet']) : stripslashes($_POST['article_snippet'])));
+                $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_snippet']) : $_POST['article_snippet']));
             }
 
             $article_article = "";
             if ($_POST['article_article']) {
-                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_article']) : stripslashes($_POST['article_article'])));
+                $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['article_article']) : $_POST['article_article']));
             }
 
             $this->article_data = array(
@@ -149,9 +149,15 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = array(
-                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0254'],
-                "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true,
-                'path'       => [IMAGES, IMAGES_A]
+                "required"    => true,
+                "preview"     => true,
+                "type"        => 'bbcode',
+                "autosize"    => true,
+                "placeholder" => $this->locale['article_0254'],
+                "error_text"  => $this->locale['article_0271'],
+                "form_name"   => "articleform",
+                "wordcount"   => true,
+                'path'        => array()
             );
             $articleExtendedSettings = array(
                 "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0253'],
@@ -167,31 +173,24 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo openform("articleform", "post", $this->form_action);
         self::display_articleButtons("formstart", true);
         echo form_hidden("article_id", "", $this->article_data['article_id']);
-
-        echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array(
-            "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
-        ));
+        echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array("required" => true, "max_length" => 200, "error_text" => $this->locale['article_0270']));
         echo form_select("article_keywords", $this->locale['article_0260'], $this->article_data['article_keywords'], array(
             "max_length" => 320, "placeholder" => $this->locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
         ));
-
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <?php
             openside($this->locale['article_0261']);
-
             echo form_select_tree("article_cat", $this->locale['article_0101'], $this->article_data['article_cat'], array(
                 "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
                 "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
             ),
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );
-
             echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], array(
                 "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
             ));
-
             if (multilang_table("AR")) {
                 echo form_select("article_language", $this->locale['language'], $this->article_data['article_language'], array(
                     "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
@@ -199,39 +198,31 @@ class ArticlesAdmin extends ArticlesAdminModel {
             } else {
                 echo form_hidden("article_language", "", $this->article_data['article_language']);
             }
-
             echo form_datepicker("article_datestamp", $this->locale['article_0203'], $this->article_data['article_datestamp'], array(
                 "inline" => TRUE, "inner_width" => "100%"
             ));
-
             closeside();
             ?>
             </div>
-
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <?php
             openside($this->locale['article_0262']);
-
             echo form_checkbox("article_draft", $this->locale['article_0256'], $this->article_data['article_draft'], array(
                 "class" => "m-b-5", "reverse_label" => TRUE
             ));
-
             if (fusion_get_settings("tinymce_enabled") != 1) {
                 echo form_checkbox("article_breaks", $this->locale['article_0257'], $this->article_data['article_breaks'], array(
                     "value" => "y", "class" => "m-b-5", "reverse_label" => TRUE
                 ));
             }
-
             echo form_checkbox("article_allow_comments", $this->locale['article_0258'], $this->article_data['article_allow_comments'], array(
                 "class"   => "m-b-5", "reverse_label" => TRUE,
                 "ext_tip" => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['comments'])."</div>" : "")
             ));
-
             echo form_checkbox("article_allow_ratings", $this->locale['article_0259'], $this->article_data['article_allow_ratings'], array(
                 "class"   => "m-b-5", "reverse_label" => TRUE,
                 "ext_tip" => (!fusion_get_settings("ratings_enabled") ? "<div class='alert alert-warning'>".sprintf($this->locale['article_0274'], $this->locale['ratings'])."</div>" : "")
             ));
-
             closeside();
             ?>
             </div>
@@ -247,7 +238,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
     /**
      * Generate sets of push buttons for article Content form
      *
-     * @param $unique_id
+     * @param      $unique_id
+     * @param bool $breaker
      */
     private function display_articleButtons($unique_id, $breaker = true) {
         ?>
