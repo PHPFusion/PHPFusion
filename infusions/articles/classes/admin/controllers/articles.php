@@ -149,9 +149,15 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = array(
-                "required"   => true, "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0254'],
-                "error_text" => $this->locale['article_0271'], "form_name" => "articleform", "wordcount" => true,
-                'path'       => [IMAGES, IMAGES_A]
+                "required"    => true,
+                "preview"     => true,
+                "html"        => true,
+                "autosize"    => true,
+                "placeholder" => $this->locale['article_0254'],
+                "error_text"  => $this->locale['article_0271'],
+                "form_name"   => "articleform",
+                "wordcount"   => true,
+                'path'        => array()
             );
             $articleExtendedSettings = array(
                 "required"   => ($this->articleSettings['article_extended_required'] ? true : false), "preview" => true, "html" => true, "autosize" => true, "placeholder" => $this->locale['article_0253'],
