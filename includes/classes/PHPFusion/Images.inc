@@ -19,6 +19,7 @@
 namespace PHPFusion;
 
 class Images {
+
     private static $locale = array();
     private static $settings = array();
     private static $instances = array();
@@ -29,7 +30,7 @@ class Images {
         'folders'     => array(),
     ];
 
-    public function get_server_limits($val) {
+    private static function get_server_limits($val) {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
         switch ($last) {
@@ -44,13 +45,13 @@ class Images {
         return $val;
     }
 
-    public function max_server_upload() {
+    public static function max_server_upload() {
         //select maximum upload size
-        $max_upload = $this->get_server_limits(ini_get('upload_max_filesize'));
+        $max_upload = self::get_server_limits(ini_get('upload_max_filesize'));
         //select post limit
-        $max_post = $this->get_server_limits(ini_get('post_max_size'));
+        $max_post = self::get_server_limits(ini_get('post_max_size'));
         //select memory limit
-        $memory_limit = $this->get_server_limits(ini_get('memory_limit'));
+        $memory_limit = self::get_server_limits(ini_get('memory_limit'));
 
         // return the smallest of them, this defines the real limit
         return min($max_upload, $max_post, $memory_limit);
@@ -72,7 +73,7 @@ class Images {
         $maxed_out_settings = [
             'max_width'  => 24000,
             'max_height' => 24000,
-            'max_byte'   => ($this->max_server_upload() ?: 3 * 1000 * 1000 * 100)
+            'max_byte'   => (self::max_server_upload() ?: 3 * 1000 * 1000 * 100)
         ];
 
         $folders = [
