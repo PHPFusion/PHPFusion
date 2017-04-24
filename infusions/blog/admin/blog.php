@@ -57,28 +57,28 @@ if (fusion_get_settings('tinymce_enabled') != 1) {
 
 if (isset($_POST['save']) or isset($_POST['preview'])) {
 
-    $blog_blog = '';
+    $blog_blog = "";
     if ($_POST['blog_blog']) {
-        $blog_blog = parse_textarea($_POST['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+        $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_blog']) : $_POST['blog_blog']));
     }
 
-    $blog_extended = '';
+    $blog_extended = "";
     if ($_POST['blog_extended']) {
-        $blog_extended = parse_textarea($_POST['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+        $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['blog_extended']) : $_POST['blog_extended']));
     }
 
     $data = array(
-        'blog_id'         => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
-        'blog_subject'    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-        'blog_cat'        => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
-        'blog_blog'       => form_sanitizer($blog_blog, '', 'blog_blog'),
-        'blog_extended'   => form_sanitizer($blog_extended, '', 'blog_extended'),
-        'blog_keywords'   => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-        'blog_ialign'     => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
-        'blog_image'      => "",
-        'blog_start'      => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
-        'blog_end'        => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
-        'blog_visibility' => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
+        'blog_id'             => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
+        'blog_subject'        => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
+        'blog_cat'            => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
+        'blog_blog'           => form_sanitizer($blog_blog, '', 'blog_blog'),
+        'blog_extended'       => form_sanitizer($blog_extended, '', 'blog_extended'),
+        'blog_keywords'       => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
+        'blog_ialign'         => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
+        'blog_image'          => "",
+        'blog_start'          => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
+        'blog_end'            => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
+        'blog_visibility'     => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
         'blog_draft'          => isset($_POST['blog_draft']) ? "1" : "0",
         'blog_sticky'         => isset($_POST['blog_sticky']) ? "1" : "0",
         "blog_breaks"         => isset($_POST['line_breaks']) ? TRUE : FALSE,

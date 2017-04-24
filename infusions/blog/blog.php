@@ -48,8 +48,10 @@ if ($settings['tinymce_enabled'] == 1) {
 }
 
 $blog_settings = get_settings("blog");
-set_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/blog/blog.php', "link_name"));
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks('infusions/blog/blog.php', "link_name")]);
+
+set_title($locale['blog_1000']);
+
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
 $info = array(
@@ -255,7 +257,8 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
                 'link'  => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                 'title' => $item['blog_subject']
             ]);
-            set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/blog/blog.php', "link_name").$locale['global_201']);
+
+            set_title($locale['blog_1000'].$locale['global_201']);
             add_to_title($item['blog_subject']);
 
             if (!empty($item['blog_keywords'])) {
