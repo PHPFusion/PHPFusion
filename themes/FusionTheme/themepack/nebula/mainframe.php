@@ -119,21 +119,21 @@ class MainFrame extends Core {
         echo "</div>\n"; // row
         echo "</div>\n"; // container
         $menu_config = [
-            'container'         => TRUE,
-            'navbar_class'      => 'navbar-default',
-            'language_switcher' => TRUE,
-            'searchbar'         => TRUE,
+            'container'         => ($this->getParam('navbar_container') ?: FALSE),
+            'navbar_class'      => ($this->getParam('navbar_class') ?: 'navbar-default'),
+            'language_switcher' => ($this->getParam('navbar_language_switch') ?: FALSE),
+            'searchbar'         => ($this->getParam('navbar_searchbar') ?: FALSE),
             'caret_icon'        => 'fa fa-angle-down',
             'show_banner'       => FALSE,
             'grouping'          => fusion_get_settings('links_grouping'),
             'links_per_page'    => fusion_get_settings('links_per_page'),
-            'show_header'       => TRUE
+            'show_header'       => ($this->getParam('navbar_show_header') ?: FALSE)
         ];
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
         add_to_jquery("
             $('#".SiteLinks::MenuDefaultID."').affix({
                 offset: {
-                    top: 100,
+                    top: '".$this->getParam('nav_offset')."',
                     bottom: function () {
                         return (this.bottom = $('.footer').outerHeight(true))
                     }

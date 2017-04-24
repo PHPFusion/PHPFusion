@@ -22,92 +22,71 @@ class Core {
      * readme.md
      */
     private static $options = array(
-        'header'              => TRUE, // has header
-        'header_content'      => '', // content in the header
-        'header_container'    => TRUE,
-        'headerBg'            => TRUE, // use header_background
-        'headerBg_class'      => '', // use custom header background class
-        'navbar_class'        => '',
-        'navbar_container'    => TRUE,
-        'nav_offset'          => 60,
-        'subheader'           => TRUE,
-        'subheader_content'   => '',
-        'subheader_container' => TRUE,
-        'subheader_class'     => '', // sets the class to the subheader
-        'body_class'          => '', // set body section class
-        'body_container'      => TRUE, // whether is a container or full grid
-        'breadcrumbs'         => FALSE, // show breadcrumbs
-        'right'               => TRUE, // RIGHT
-        'left'                => TRUE, // LEFT
-        'left_pre_content'    => '',
-        'left_post_content'   => '',
-        'user_1'              => TRUE,
-        'user_1_content'      => '',
-        'user_1_container'    => TRUE,
-        'user_2'              => TRUE,
-        'user_2_content'      => '',
-        'user_2_container'    => TRUE,
-        'user_3'              => TRUE,
-        'user_3_content'      => '',
-        'user_3_container'    => TRUE,
-        'user_4'              => TRUE,
-        'user_4_content'      => '',
-        'user_4_container'    => TRUE,
-        /*
-        * AU_CENTER
-        */
-        'top_1'               => TRUE, //status
-        'top_1_content'       => '',
-        'top_1_container'     => TRUE,
-
-        'bottom_1'            => TRUE, //status
-        'bottom_1_content'    => '',
-        'bottom_1_container'  => TRUE,
-
-        /*
-         * AU_CENTER
-         */
-        'upper'               => TRUE, //status
-        'upper_content'       => '',
-        'upper_container'     => TRUE,
-
-        /*
-         * U_CENTER
-         * Not available for nebula
-         */
-        'u_center'            => TRUE,
-        'u_center_content'    => '',
-        'u_center_container'  => TRUE,
-
-        /*
-         * BL_CENTER
-         */
-        'bl_center'           => TRUE,
-        'bl_center_content'   => '',
-        'bl_center_container' => TRUE,
-
-        /*
-         * L_CENTER
-         * Not available for nebula
-         */
-        'l_center'            => TRUE,
-        'l_center_content'    => '',
-        'l_center_container'  => TRUE,
-
-        'footer'              => TRUE, // has footer
-        'footer_container'    => TRUE,
-
-        'copyright'           => TRUE,
-        'copyright_container' => TRUE,
-        'right_span'          => 3,
-        'right_class'         => '',
-        'left_span'           => 2,
-        'left_class'          => '',
-        'main_span'           => '',
-        'main_class'          => '',
-        'right_is_affix'      => FALSE, // @todo: auto affix
-        'right_pre_content'   => '', // right side top content
-        'right_post_content'  => '', // right side bottom content
+        'header'                 => TRUE, // has header
+        'header_content'         => '', // content in the header
+        'header_container'       => TRUE,
+        'headerBg'               => TRUE, // use header_background
+        'headerBg_class'         => '', // use custom header background class
+        'navbar_class'           => '',
+        'navbar_container'       => TRUE,
+        'navbar_language_switch' => TRUE,
+        'navbar_searchbar'       => TRUE,
+        'navbar_show_header'     => TRUE,
+        'nav_offset'             => 60,
+        'subheader'              => TRUE,
+        'subheader_content'      => '',
+        'subheader_container'    => TRUE,
+        'subheader_class'        => '', // sets the class to the subheader
+        'body_class'             => '', // set body section class
+        'body_container'         => TRUE, // whether is a container or full grid
+        'breadcrumbs'            => FALSE, // show breadcrumbs
+        'right'                  => TRUE, // RIGHT
+        'left'                   => TRUE, // LEFT
+        'left_pre_content'       => '',
+        'left_post_content'      => '',
+        'user_1'                 => TRUE,
+        'user_1_content'         => '',
+        'user_1_container'       => TRUE,
+        'user_2'                 => TRUE,
+        'user_2_content'         => '',
+        'user_2_container'       => TRUE,
+        'user_3'                 => TRUE,
+        'user_3_content'         => '',
+        'user_3_container'       => TRUE,
+        'user_4'                 => TRUE,
+        'user_4_content'         => '',
+        'user_4_container'       => TRUE,
+        'top_1'                  => TRUE, //status
+        'top_1_content'          => '',
+        'top_1_container'        => TRUE,
+        'bottom_1'               => TRUE, //status
+        'bottom_1_content'       => '',
+        'bottom_1_container'     => TRUE,
+        'upper'                  => TRUE, //status
+        'upper_content'          => '',
+        'upper_container'        => TRUE,
+        'u_center'               => TRUE,
+        'u_center_content'       => '',
+        'u_center_container'     => TRUE,
+        'bl_center'              => TRUE,
+        'bl_center_content'      => '',
+        'bl_center_container'    => TRUE,
+        'l_center'               => TRUE,
+        'l_center_content'       => '',
+        'l_center_container'     => TRUE,
+        'footer'                 => TRUE, // has footer
+        'footer_container'       => TRUE,
+        'copyright'              => TRUE,
+        'copyright_container'    => TRUE,
+        'right_span'             => 3,
+        'right_class'            => '',
+        'left_span'              => 2,
+        'left_class'             => '',
+        'main_span'              => '',
+        'main_class'             => '',
+        'right_is_affix'         => FALSE, // @todo: auto affix
+        'right_pre_content'      => '', // right side top content
+        'right_post_content'     => '', // right side bottom content
     );
 
     private static $instance = NULL;
