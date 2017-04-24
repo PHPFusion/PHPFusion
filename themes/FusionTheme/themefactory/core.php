@@ -24,10 +24,12 @@ class Core {
     private static $options = array(
         'header'              => TRUE, // has header
         'header_content'      => '', // content in the header
+        'header_container'    => TRUE,
         'headerBg'            => TRUE, // use header_background
         'headerBg_class'      => '', // use custom header background class
-        'navbar_class' => '',
-        'nav_offset'   => 60,
+        'navbar_class'        => '',
+        'navbar_container'    => TRUE,
+        'nav_offset'          => 60,
         'subheader'           => TRUE,
         'subheader_content'   => '',
         'subheader_container' => TRUE,

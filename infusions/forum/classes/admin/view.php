@@ -680,7 +680,7 @@ class ForumAdminView extends ForumAdminInterface {
     }
 
     public function display_forum_admin() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         opentable(self::$locale['forum_root']);
 
@@ -841,18 +841,10 @@ class ForumAdminView extends ForumAdminInterface {
                 'disable_opts'    => $self_id,
                 'hide_disabled'   => 1
             ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id).
-
-            form_select('forum_type', self::$locale['forum_009'], $this->data['forum_type'],
-                array("options" => $type_opts)).
-
-            form_select('forum_language', self::$locale['forum_010'], $this->data['forum_language'],
-                array("options" => $language_opts)).
-
+            form_select('forum_type', self::$locale['forum_009'], $this->data['forum_type'], array("options" => $type_opts)).
+            form_select('forum_language', self::$locale['forum_010'], $this->data['forum_language'], array("options" => $language_opts)).
             form_text('forum_order', self::$locale['forum_043'], $this->data['forum_order'], array('number' => 1)).
-
-            form_button('save_forum',
-                $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'],
-                self::$locale['forum_000'], array('class' => 'btn btn-sm btn-success'));
+            form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], array('class' => 'btn btn-sm btn-success'));
         echo "</div>\n";
         echo "</div>\n</div>\n";
 
@@ -882,8 +874,7 @@ class ForumAdminView extends ForumAdminInterface {
         } else {
 
             openside(self::$locale['forum_028a']);
-            echo "<div class='row spacer-xs'>\n";
-            echo "<div class='col-xs-12 col-sm-2' style='border-right:1px solid #ddd'>\n";
+            echo "<div class='pull-left m-r-15 p-r-15'>\n";
             echo form_fileinput('forum_image', '', '', [
                 "upload_path"      => $forum_image_path,
                 "thumbnail"        => TRUE,
@@ -895,7 +886,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'template'         => 'thumbnail',
                 'ext_tip'          => sprintf(self::$locale['forum_015'], parsebytesize($forum_settings['forum_attachmax'])),
             ]);
-            echo "</div><div class='col-xs-12 col-sm-8'>\n";
+            echo "</div><div class='pull-left'>\n";
             echo form_select('forum_image_header', self::$locale['forum_056'], '', array(
                 'inline'  => FALSE,
                 'options' => array(
@@ -908,7 +899,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'inline'      => FALSE,
                 'ext_tip'     => self::$locale['forum_016']
             ));
-            echo "</div></div>\n";
+            echo "</div>\n";
             closeside();
         }
         echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
