@@ -46,12 +46,10 @@ table td {
     width: auto;
     background: inherit;
 }
-
 .select2-results table img {
     width: 32px !important;
     height: auto !important;
 }
-
 .select2-results > .select2-highlighted table {
     color: #fff !important;
 }
