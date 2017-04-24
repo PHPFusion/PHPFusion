@@ -15,16 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer;
 
 use PHPFusion\Database\DatabaseFactory;
 
+/**
+ * Class Requirements
+ * The requirements checks on server system
+ *
+ * @package PHPFusion\Installer
+ */
 class Requirements extends Install_Core {
 
-    /*
-    * Get System Requirements for PHP-Fusion 9
-    * @return mixed
-    */
+    /**
+     * Get System Requirements for PHP-Fusion 9
+     *
+     * @return array
+     */
     public static function get_system_requirements() {
         // Web server information.
         $software = $_SERVER['SERVER_SOFTWARE'];
@@ -35,6 +43,7 @@ class Requirements extends Install_Core {
         );
 
         // Tests clean URL support.
+        // $requirements['apache'] output if rewrite server is bad.
         if (!extension_loaded('rewrite') && strpos($software, 'Apache') !== FALSE) {
             $apache_version_string = 'Apache';
             // Determine the Apache version number: major, minor and revision.
@@ -43,39 +52,39 @@ class Requirements extends Install_Core {
                 // Major version number
                 if ($matches[1] < 2) {
                     $requirements['apache_version'] = array(
-                        'title' => 'Apache',
-                        'version' => $apache_version_string,
-                        'description' => self::$locale['setup_0109'],
+                        'title'        => 'Apache',
+                        'version'      => $apache_version_string,
+                        'description'  => self::$locale['setup_0109'],
                         'severability' => -10
                     );
                 } elseif ($matches[1] == 2) {
                     if (!isset($matches[2])) {
                         $requirements['apache_version'] = array(
-                            'title' => 'Apache',
-                            'version' => $apache_version_string,
-                            'description' => self::$locale['setup_0120'],
+                            'title'        => 'Apache',
+                            'version'      => $apache_version_string,
+                            'description'  => self::$locale['setup_0120'],
                             'severability' => -10
                         );
                     } elseif ($matches[2] < 2) {
                         $requirements['apache_version'] = array(
-                            'title' => 'Apache',
-                            'version' => $apache_version_string,
-                            'description' => self::$locale['setup_0109'],
+                            'title'        => 'Apache',
+                            'version'      => $apache_version_string,
+                            'description'  => self::$locale['setup_0109'],
                             'severability' => -10
                         );
                     } elseif ($matches[2] == 2) {
                         if (!isset($matches[3])) {
                             $requirements['apache_version'] = array(
-                                'title' => 'Apache',
-                                'version' => $apache_version_string,
-                                'description' => self::$locale['setup_0110'],
+                                'title'        => 'Apache',
+                                'version'      => $apache_version_string,
+                                'description'  => self::$locale['setup_0110'],
                                 'severability' => -10
                             );
                         } elseif ($matches[3] < 16) {
                             $requirements['apache_version'] = array(
-                                'title' => 'Apache',
-                                'version' => $apache_version_string,
-                                'description' => self::$locale['setup_0109'],
+                                'title'        => 'Apache',
+                                'version'      => $apache_version_string,
+                                'description'  => self::$locale['setup_0109'],
                                 'severability' => -10
                             );
                         }
@@ -83,15 +92,16 @@ class Requirements extends Install_Core {
                 }
             } else {
                 $requirements['apache_version'] = array(
-                    'title' => 'Apache',
-                    'version' => $apache_version_string,
-                    'description' => self::$locale['setup_0110'],
+                    'title'        => 'Apache',
+                    'version'      => $apache_version_string,
+                    'description'  => self::$locale['setup_0110'],
                     'severability' => -10
                 );
             }
         }
 
         // Test PHP version and show link to phpinfo() if it's available
+        // $requirements['php'] output
         $phpversion = $phpversion_label = phpversion();
         if (function_exists('phpinfo')) {
             $requirements['php'] = array(
@@ -100,21 +110,20 @@ class Requirements extends Install_Core {
             );
         } else {
             $requirements['php'] = array(
-                'title' => self::$locale['setup_0051'],
-                'value' => $phpversion_label,
-                'description' => self::$locale['setup_0112'],
+                'title'        => self::$locale['setup_0051'],
+                'value'        => $phpversion_label,
+                'description'  => self::$locale['setup_0112'],
                 'severability' => -5
             );
         }
-
         if (version_compare($phpversion, '5.5.21') < 0) {
             $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
         }
 
-        // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
-        // statements.
+        // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple statements.
+        // $requirements['php_extensions'] output
         $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
         $missing_extensions = array();
         $required_extensions = array(
@@ -137,11 +146,10 @@ class Requirements extends Install_Core {
                 $missing_extensions[] = $extension;
             }
         }
-
         if (!empty($missing_extensions)) {
             $requirements['php_extensions'] = array(
-                'description' => self::$locale['setup_0114'],
-                'value' => implode(', ', $missing_extensions),
+                'description'  => self::$locale['setup_0114'],
+                'value'        => implode(', ', $missing_extensions),
                 'severability' => -10,
             );
         } else {
@@ -149,11 +157,12 @@ class Requirements extends Install_Core {
         }
 
         // Check to see if OPcache is installed.
+        // $requirements['php_opcache']
         $opcache_enabled = (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled']);
         if (!$opcache_enabled) {
             $requirements['php_opcache'] = array(
-                'value' => self::$locale['setup_0115a'],
-                'description' => self::$locale['setup_0116'],
+                'value'        => self::$locale['setup_0115a'],
+                'description'  => self::$locale['setup_0116'],
                 'severability' => -1,
             );
         } else {
@@ -161,13 +170,13 @@ class Requirements extends Install_Core {
         }
         $requirements['php_opcache']['title'] = self::$locale['setup_0053'];
 
-        // Test for PDO (database).
-        // Make sure PDO is available.
+        // Test for PDO (database). Making sure PDO is available
+        // $requirements['database_extensions']
         $database_ok = extension_loaded('pdo');
         if (!$database_ok) {
             $requirements['database_extensions'] = array(
-                'value' => self::$locale['setup_0115a'],
-                'description' => self::$locale['setup_0118'],
+                'value'        => self::$locale['setup_0115a'],
+                'description'  => self::$locale['setup_0118'],
                 'severability' => -1,
             );
         } else {
@@ -176,6 +185,7 @@ class Requirements extends Install_Core {
         $requirements['database_extensions']['title'] = self::$locale['setup_0054'];
 
         // Test PHP memory_limit
+        // $requirements['php_memory_limit']
         $memory_limit = ini_get('memory_limit');
         $requirements['php_memory_limit'] = [
             'title' => self::$locale['setup_0055'],
@@ -186,7 +196,7 @@ class Requirements extends Install_Core {
         }
         if (!$memory_limit_value || $memory_limit_value < 64) {
             $requirements['php_memory_limit'] = [
-                'description' => self::$locale['setup_0119a'],
+                'description'  => self::$locale['setup_0119a'],
                 'severability' => -5,
             ];
             if (php_ini_loaded_file() == get_cfg_var('cfg_file_path')) {
@@ -199,6 +209,7 @@ class Requirements extends Install_Core {
         }
 
         // Xdebug max nesting level.
+        // $requirements['xdebug_max_nesting_level']
         if (extension_loaded('xdebug')) {
             // Setting this value to 256 was considered adequate on Xdebug 2.3
             // (see http://bugs.xdebug.org/bug_view_page.php?bug_id=00001100)
@@ -206,8 +217,8 @@ class Requirements extends Install_Core {
             $current_nesting_level = ini_get('xdebug.max_nesting_level');
             if ($current_nesting_level < $minimum_nesting_level) {
                 $requirements['xdebug_max_nesting_level'] = [
-                    'title' => self::$locale['setup_0130'],
-                    'value' => self::$locale['setup_0131'].' '.$current_nesting_level,
+                    'title'       => self::$locale['setup_0130'],
+                    'value'       => self::$locale['setup_0131'].' '.$current_nesting_level,
                     'description' => strtr(self::$locale['setup_0132'], [
                         '{%code%}' => "<code>xdebug.max_nesting_level=".$minimum_nesting_level."</code>"
                     ])
@@ -216,19 +227,16 @@ class Requirements extends Install_Core {
         }
 
         // Check system core files and folders
+        // $requirements['files_check']
         $check_arr = array(
             "administration/db_backups" => FALSE,
-            "images" => FALSE,
-            "images/imagelist.js" => FALSE,
-            "images/avatars" => FALSE,
-            //"config_temp.php" => FALSE,
-            "robots.txt" => FALSE,
+            "images"                    => FALSE,
+            "images/imagelist.js"       => FALSE,
+            "images/avatars"            => FALSE,
+            "robots.txt"                => FALSE,
         );
-
         foreach ($check_arr as $key => $value) {
-
-            $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key,
-                                                                                                                                                            0777) && is_writable(BASEDIR.$key));
+            $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) ? TRUE : FALSE;
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
                 $requirements['files_check']['sub'][$key]['severability'] = -10;
@@ -242,7 +250,7 @@ class Requirements extends Install_Core {
             $requirements['files_check']['description'] = self::$locale['setup_0135'];
         }
 
-        return $requirements;
+        return (array)$requirements;
     }
 
     /*
@@ -276,9 +284,9 @@ class Requirements extends Install_Core {
             require_once INCLUDES."db_handlers/all_functions_include.php";
 
             $validation[1] = [
-                'result' => 1,
+                'result'      => 1,
                 'description' => self::$locale['setup_0144'],
-                'elapsed' => microtime(TRUE) - $microtime
+                'elapsed'     => microtime(TRUE) - $microtime
             ];
 
             DatabaseFactory::setDefaultDriver(intval(isset(self::$connection['pdo_enabled']) && self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
@@ -290,45 +298,45 @@ class Requirements extends Install_Core {
 
             if ($db_connect) {
                 $validation[2] = [
-                    'result' => 1,
+                    'result'      => 1,
                     'description' => self::$locale['setup_0138'],
-                    'elapsed' => microtime(TRUE) - $microtime
+                    'elapsed'     => microtime(TRUE) - $microtime
                 ];
 
                 if ($db_select) {
 
                     $validation[3] = [
-                        'result' => 1,
+                        'result'      => 1,
                         'description' => self::$locale['setup_0139'],
-                        'elapsed' => microtime(TRUE) - $microtime
+                        'elapsed'     => microtime(TRUE) - $microtime
                     ];
                     if (!check_table($system['db_prefix'])) {
                         $validation[4] = [
-                            'result' => 1,
+                            'result'      => 1,
                             'description' => self::$locale['setup_0140'],
-                            'elapsed' => microtime(TRUE) - $microtime
+                            'elapsed'     => microtime(TRUE) - $microtime
                         ];
                         if (test_table($system['db_prefix'])) {
                             $validation[5] = [
-                                'result' => 1,
+                                'result'      => 1,
                                 'description' => self::$locale['setup_0141'],
-                                'elapsed' => microtime(TRUE) - $microtime
+                                'elapsed'     => microtime(TRUE) - $microtime
                             ];
 
                             if (write_config($system)) {
                                 $validation[6] = [
-                                    'result' => 1,
+                                    'result'      => 1,
                                     'description' => self::$locale['setup_0142'],
-                                    'elapsed' => microtime(TRUE) - $microtime
+                                    'elapsed'     => microtime(TRUE) - $microtime
                                 ];
 
                             } else {
 
                                 //Please ensure config.php is writable
                                 $validation[6] = [
-                                    'result' => 0,
+                                    'result'      => 0,
                                     'description' => $locale['setup_1307'],
-                                    'elapsed' => microtime(TRUE) - $microtime
+                                    'elapsed'     => microtime(TRUE) - $microtime
                                 ];
                             }
 
@@ -336,9 +344,9 @@ class Requirements extends Install_Core {
 
                             //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
                             $validation[5] = [
-                                'result' => 1,
+                                'result'      => 1,
                                 'description' => self::$locale['setup_1315'],
-                                'elapsed' => microtime(TRUE) - $microtime
+                                'elapsed'     => microtime(TRUE) - $microtime
                             ];
 
                         }
@@ -349,39 +357,38 @@ class Requirements extends Install_Core {
                          * We will not stop the installer and let it proceed with schema scans
                          */
                         $validation[4] = [
-                            'result' => 1,
+                            'result'      => 1,
                             'description' => self::$locale['setup_0143'],
                             //$locale['setup_1313'],
-                            'elapsed' => microtime(TRUE) - $microtime
+                            'elapsed'     => microtime(TRUE) - $microtime
                         ];
 
                     }
 
-
                 } else {
                     //The specified MySQL database does not exist.
                     $validation[3] = [
-                        'result' => 0,
+                        'result'      => 0,
                         'description' => self::$locale['setup_1311'],
-                        'elapsed' => microtime(TRUE) - $microtime
+                        'elapsed'     => microtime(TRUE) - $microtime
                     ];
 
                 }
             } else {
                 //Unable to connect with MySQL database.
                 $validation[2] = [
-                    'result' => 0,
+                    'result'      => 0,
                     'description' => self::$locale['setup_1310'],
-                    'elapsed' => microtime(TRUE) - $microtime
+                    'elapsed'     => microtime(TRUE) - $microtime
                 ];
 
             }
         } else {
             //Please make sure you have filled out all the MySQL connection fields
             $validation[1] = [
-                'result' => 0,
+                'result'      => 0,
                 'description' => self::$locale['setup_1317'],
-                'elapsed' => microtime(TRUE) - $microtime
+                'elapsed'     => microtime(TRUE) - $microtime
             ];
 
         }
@@ -409,12 +416,13 @@ function check_table($db_prefix) {
     return dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
 }
 
+/**
+ * Write htaccess file based on the configuration
+ * @param array $system
+ *
+ * @return bool
+ */
 function write_config(array $system = array()) {
-
-    if (!file_exists(BASEDIR.'config.php')) {
-        //touch(BASEDIR.'config_temp.php');
-    }
-
     // Force underscore between prefix and cookie name
     if (!empty($system['cookie_prefix'])) {
         $cookie_prefix_last = $system['cookie_prefix'][strlen($system['cookie_prefix']) - 1];
@@ -428,7 +436,6 @@ function write_config(array $system = array()) {
             $system['db_prefix'] = $system['db_prefix']."_";
         }
     }
-
     $config = "<?php\n";
     $config .= "// database settings\n";
     $config .= "\$db_host = '".$system['db_host']."';\n";
