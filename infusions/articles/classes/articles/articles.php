@@ -37,12 +37,12 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
+        set_title(self::$locale['article_0000']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks(INFUSIONS.'articles/articles.php', 'link_name')
+                "title" => self::$locale['article_0000']
             )
         );
 
@@ -219,7 +219,6 @@ abstract class Articles extends ArticlesServer {
     private static function get_ArticlesData(array $data) {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
-        $article_settings = self::get_article_settings();
 
         if (!empty($data)) {
 
@@ -232,10 +231,7 @@ abstract class Articles extends ArticlesServer {
             // Article Texts
             $data['article_snippet'] = parse_textarea($data['article_snippet'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
             $data['article_article'] = parse_textarea($data['article_article'], TRUE, TRUE, TRUE, FALSE, $data['article_breaks'] == "y" ? TRUE : FALSE);
-            if (defined('IN_PERMALINK')) {
-                $data['article_snippet'] = strtr($data['article_snippet'], [fusion_get_settings('site_path') => '']);
-                $data['article_article'] = strtr($data['article_article'], [fusion_get_settings('site_path') => '']);
-            }
+
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
             // Handle Text
@@ -352,10 +348,10 @@ abstract class Articles extends ArticlesServer {
         $result = dbquery($select, $bind);
         if (dbrows($result)) {
             $data = dbarray($result);
-            set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name"));
+            set_title(self::$locale['article_0000']);
             BreadCrumbs::getInstance()->addBreadCrumb(array(
                 "link"  => INFUSIONS."articles/articles.php",
-                "title" => SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name")
+                "title" => self::$locale['article_0000']
             ));
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
@@ -471,10 +467,10 @@ abstract class Articles extends ArticlesServer {
     public function set_ArticlesItemInfo($article_id) {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
-        $settings = fusion_get_settings();
+
         BreadCrumbs::getInstance()->addBreadCrumb(array(
             "link"  => INFUSIONS."articles/articles.php",
-            "title" => SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name")
+            "title" => self::$locale['article_0000']
         ));
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
@@ -499,7 +495,7 @@ abstract class Articles extends ArticlesServer {
 
             $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
 
-            set_title(SiteLinks::get_current_SiteLinks('infusions/articles/articles.php', "link_name").self::$locale['global_201']);
+            set_title(self::$locale['article_0000'].self::$locale['global_201']);
             add_to_title($article_subject);
 
             $this->article_cat_breadcrumbs($article_cat_index);
