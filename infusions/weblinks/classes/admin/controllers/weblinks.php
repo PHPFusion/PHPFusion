@@ -22,7 +22,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     private static $instance = NULL;
     private $locale = array();
     private $form_action = FUSION_REQUEST;
-
+    private $weblinksSettings = array();
     private $weblink_data = array();
 
     public static function getInstance() {
@@ -105,6 +105,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     dbquery_insert(DB_WEBLINKS, $this->weblink_data, "update");
                     addNotice("success", $this->locale['WLS_0031']);
 
+
 				// Create
                 } else {
                     $this->weblink_data['weblink_id'] = dbquery_insert(DB_WEBLINKS, $this->weblink_data, "save");
@@ -115,7 +116,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 if (isset($_POST['save_and_close'])) {
                     redirect(clean_request("", array("ref", "action", "weblink_id"), FALSE));
                 } else {
-                    redirect(FUSION_REQUEST);
+                    redirect(clean_request('action=edit&weblink_id='.$this->weblink_data['weblink_id'], array('action', 'weblink_id'), FALSE));
                 }
             }
         }
@@ -202,8 +203,10 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     /**
-     * Generate sets of push buttons for article Content form
-     * @param $unique_id
+     * Generate sets of push buttons for weblinks content form
+     *
+     * @param      $unique_id
+     * @param bool $breaker
      */
     private function display_weblinkButtons($unique_id, $breaker = true) {
 		echo "<div class='m-t-20'>\n";
