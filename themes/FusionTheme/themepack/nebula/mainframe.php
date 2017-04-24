@@ -17,16 +17,20 @@
 +--------------------------------------------------------*/
 namespace ThemePack\Nebula;
 
-use PHPFusion\Panels;
 use PHPFusion\SiteLinks;
 use ThemeFactory\Core;
 use ThemeFactory\Lib\Installer\HomeInstall;
 
+/**
+ * Nebula Theme Package
+ * Class MainFrame
+ *
+ * @package ThemePack\Nebula
+ */
 class MainFrame extends Core {
 
     public function __construct($license = FALSE) {
         self::set_body_span();
-
         /**
          * First time installation on default install.
          * Install Page Composer Data Request
@@ -115,7 +119,6 @@ class MainFrame extends Core {
         echo "</div>\n"; // col-sm-9
         echo "</div>\n"; // row
         echo "</div>\n"; // container
-
         $menu_config = [
             'container'         => TRUE,
             'navbar_class'      => 'navbar-default',
@@ -127,7 +130,6 @@ class MainFrame extends Core {
             'links_per_page'    => fusion_get_settings('links_per_page'),
             'show_header'       => TRUE
         ];
-
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
         add_to_jquery("
             $('#".SiteLinks::MenuDefaultID."').affix({
@@ -139,7 +141,6 @@ class MainFrame extends Core {
                 }
             })
         ");
-
         // AU_CENTER
         if ((defined('AU_CENTER') && AU_CENTER || ($this->getParam('upper_content')) && $this->getParam('upper'))) :
             echo "<div class='showcase'>\n";
@@ -153,10 +154,8 @@ class MainFrame extends Core {
             }
             echo "</div>\n";
         endif;
-
         echo "</div>\n";
         echo "</header>\n";
-
         if ($this->getParam('subheader_content') || $this->getParam('breadcrumbs') === TRUE) :
             echo "<div class='nebulaSubheader'>\n";
             echo "<div class='container'>\n";
@@ -173,7 +172,6 @@ class MainFrame extends Core {
     }
 
     private function NebulaTop() {
-
         if ($this->getParam('top_1') && $this->getParam('top_1_content')) :
             echo "<section class='nebulaContentTop'>\n";
             if ($this->getParam('top_1_container')) :
@@ -185,11 +183,9 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-
         echo showbanners(1);
         $side_span = 3;
         $main_span = 12;
-
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
             $main_span = $main_span - $side_span;
         }
@@ -214,11 +210,9 @@ class MainFrame extends Core {
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
             $main_span = $main_span - $side_span;
         }
-
         if ($this->getParam('body_container') == TRUE) :
             echo "<div class='container'>\n";
         endif;
-
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
         // U_CENTER
@@ -231,7 +225,6 @@ class MainFrame extends Core {
             echo L_CENTER;
         endif;
         echo "</div>\n";
-
         if (defined('RIGHT') && $this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
             echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
             echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
@@ -245,8 +238,6 @@ class MainFrame extends Core {
     }
 
     private function NebulaFooter() {
-
-        // 1 extra custom Positions - bl_bottom_1
         if ($this->getParam('bottom_1') && $this->getParam('bottom_1_content')) :
             echo "<section class='nebulaContentBottom'>\n"; //nebulaContentBottom
             if ($this->getParam('bottom_1_container') === TRUE) :
@@ -258,7 +249,6 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-
         // BL CENTER
         if (defined('BL_CENTER') && BL_CENTER && $this->getParam('bl_center')) :
             echo "<section class='nebulaBottom'>\n";
@@ -271,30 +261,24 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
-
         if (defined('USER1') && USER1 || defined('USER2') && USER2 || defined('USER3') && USER3 || defined('USER4') && USER4) :
             echo "<div class='row'>\n";
             echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
             echo defined('USER1') && USER1 ? USER1 : '';
             echo "</div>\n";
-
             echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
             echo defined('USER2') && USER2 ? USER2 : '';
             echo "</div>\n";
-
             echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
             echo defined('USER3') && USER3 ? USER3 : '';
             echo "</div>\n";
-
             echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
             echo defined('USER4') && USER4 ? USER4 : '';
             echo "</div>\n";
             echo "</div>\n";
         endif;
-
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
         echo "<div class='about_theme'>\n";
@@ -325,7 +309,6 @@ class MainFrame extends Core {
         echo "<p>".fusion_get_settings('description')."</p>\n";
         echo stripslashes(strip_tags(fusion_get_settings('footer')));
         echo "<p>".showcopyright()."</p>\n";
-
         echo "</div>\n";
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
@@ -333,7 +316,6 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo showbanners(2);
         echo "</section>\n";
-
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
         echo "<div class='col-xs-12 col-sm-4'><h4 class='m-b-0'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4>\n";
@@ -352,7 +334,6 @@ class MainFrame extends Core {
             echo $footer_errors;
             echo "</p>\n";
         endif;
-
         echo "</div>\n";
         echo "</section>\n";
     }
