@@ -56,8 +56,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
     echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
 }
-echo "<script type='text/javascript'>!window.jQuery && document.write('<script src=\'".fusion_get_settings('siteurl')."includes/jquery/jquery.min.js\'></script>');</script>\n";
-
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
