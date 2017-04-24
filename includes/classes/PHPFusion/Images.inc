@@ -29,7 +29,7 @@ class Images {
         'folders'     => array(),
     ];
 
-    private function get_server_limits($val) {
+    public function get_server_limits($val) {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
         switch ($last) {
@@ -44,7 +44,7 @@ class Images {
         return $val;
     }
 
-    private function max_server_upload() {
+    public function max_server_upload() {
         //select maximum upload size
         $max_upload = $this->get_server_limits(ini_get('upload_max_filesize'));
         //select post limit
@@ -57,6 +57,7 @@ class Images {
     }
 
     public function __construct() {
+
         require_once INCLUDES."infusions_include.php";
 
         $settings_inf = [
