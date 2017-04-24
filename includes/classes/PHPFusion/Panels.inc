@@ -70,7 +70,8 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC";
+	
+		$panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
         $param = [
             ':panel_status' => 1,
         ];
