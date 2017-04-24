@@ -39,36 +39,33 @@ class Images {
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/image_uploads.php");
 
         self::$settings = fusion_get_settings();
+        $maxed_out_settings = [
+            'max_width'  => 24000,
+            'max_height' => 24000,
+            'max_byte'   => 2 * 1000 * 1000 * 1000 * 1000
+        ];
 
         $folders = [
             "images" => [
                 'locale'  => self::$locale['422'],
                 'link'    => IMAGES,
                 'count'   => TRUE,
-                'fileinp' => [
-                    'max_width'  => 1800,
-                    'max_height' => 1600,
-                    'max_byte'   => 2000000,
-                    ],
+                'fileinp' => $maxed_out_settings,
                 ],
             "imagesa" => [
                 'locale'  => self::$locale['423'],
                 'link'    => IMAGES_A,
                 'count'   => db_exists(DB_ARTICLES),
-                'fileinp' => [
-                    'max_width'  => 1800,
-                    'max_height' => 1600,
-                    'max_byte'   => 500000,
-                    ],
+                'fileinp' => $maxed_out_settings,
                 ],
             "imagesn" => [
                 'locale'  => self::$locale['424'],
                 'link'    => IMAGES_N,
                 'count'   => db_exists(DB_NEWS),
                 'fileinp' => [
-                    'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : '',
-                    'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : '',
-                    'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b']: '',
+                    'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
+                    'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
+                    'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
                     ],
                 ],
             "imagesnc" => [
@@ -76,19 +73,19 @@ class Images {
                 'link'    => IMAGES_NC,
                 'count'   => db_exists(DB_NEWS),
                 'fileinp' => [
-                    'max_width'  => 40,
-                    'max_height' => 40,
-                    'max_byte'   => 1800,
-                    ],
+                    'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
+                    'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
+                    'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
+                ],
                 ],
             "imagesb" => [
                 'locale'  => self::$locale['428'],
                 'link'    => IMAGES_B,
                 'count'   => db_exists(DB_BLOG),
                 'fileinp' => [
-                    'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : '',
-                    'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : '',
-                    'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : '',
+                    'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
+                    'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
+                    'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
                     ],
                 ],
             "imagesbc" => [
@@ -96,14 +93,15 @@ class Images {
                 'link'    => IMAGES_BC,
                 'count'   => db_exists(DB_BLOG),
                 'fileinp' => [
-                    'max_width'  => 40,
-                    'max_height' => 40,
-                    'max_byte'   => 1800,
+                    'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
+                    'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
+                    'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
                     ],
                 ],
         ];
 
         $this->data['folders'] = $folders;
+
         if (isset($_GET['ifolder']) && ctype_alnum($_GET['ifolder']) == 1 && isset($folders[$_GET['ifolder']]['link'])) {
             $_GET['ifolder'] = stripinput($_GET['ifolder']);
             $this->data['afolder'] = $folders[$_GET['ifolder']]['link'];
@@ -129,7 +127,7 @@ class Images {
             $this->data['image_count'] = count($this->data['image_list']);
         }
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'images.php'.fusion_get_aidlink(), 'title' => self::$locale['460']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'images.php'.fusion_get_aidlink(), 'title' => self::$locale['460']]);
     }
 
     public static function getInstance($key = 'default') {
@@ -241,7 +239,7 @@ class Images {
     }
 
     public function add_image_form() {
-        $aidlink = fusion_get_aidlink();
+
         if (isset($_POST['uploadimage'])) {
             $data = [
                 'myfile' => ''
