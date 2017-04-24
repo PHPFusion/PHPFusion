@@ -30,7 +30,6 @@ table td {
     background-color: rgba(255, 255, 255, .05);
     color: #676767;
 }
-
 .table-striped > tbody > tr:nth-child(odd) > th {
     background-color: rgba(0, 0, 0, .05);
 }
@@ -38,7 +37,21 @@ table td {
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
     background-color: rgba(0, 0, 0, .05);
 }
-
 .alphabet-table tr > td {
     padding: 8px !important;
+}
+
+.select2-results table {
+    border: 0;
+    width: auto;
+    background: inherit;
+}
+
+.select2-results table img {
+    width: 32px !important;
+    height: auto !important;
+}
+
+.select2-results > .select2-highlighted table {
+    color: #fff !important;
 }
