@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 use PHPFusion\Rewrite\Router;
@@ -65,31 +66,36 @@ class Panels {
 
     /**
      * Cache panels
+     *
      * @return array
      */
     public static function cachePanels() {
-
-        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages, panel_order FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
-        $p_result = dbquery($panel_query);
-        if (multilang_table("PN")) {
+        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC";
+        $param = [
+            ':panel_status' => 1,
+        ];
+        $p_result = dbquery($panel_query, $param);
+        if (dbrows($p_result)) {
+            $panel_side = 0;
+            $panel_order = 0;
             while ($panel_data = dbarray($p_result)) {
-                $p_langs = explode('.', $panel_data['panel_languages']);
-                if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
-                    self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
+                if ($panel_data['panel_side'] !== $panel_side) {
+                    $panel_data['panel_order'] = 0;
+                }
+                $panel_side = $panel_data['panel_side'];
+                $panel_order = $panel_order + 1;
+                $panel_data['panel_order'] = $panel_order;
+                if (multilang_table('PN')) {
+                    $p_langs = explode('.', $panel_data['panel_languages']);
+                    if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
+                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
+                    }
+                } else {
+                    if (checkgroup($panel_data['panel_access'])) {
+                        self::$panels_cache[$panel_data['panel_side']][$panel_data['panel_order']] = $panel_data;
+                    }
                 }
             }
-        } else {
-            while ($panel_data = dbarray($p_result)) {
-                if (checkgroup($panel_data['panel_access'])) {
-                    self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
-                }
-            }
-        }
-
-        // sort the panels
-        ksort(self::$panels_cache);
-        foreach (self::$panels_cache as $_side => $_panels) {
-            self::$panels_cache[$_side] = sort_tree($_panels, 'panel_order');
         }
 
         return (array)self::$panels_cache;
@@ -98,7 +104,7 @@ class Panels {
     /**
      * Add Panel to List of Panels to be cached
      *
-*@param $panel_name
+     * @param $panel_name
      * @param $panel_content
      * @param $panel_side
      * @param $panel_access
@@ -124,7 +130,9 @@ class Panels {
 
     /**
      * Display a panel given a panel id
+     *
      * @param $panel_id
+     *
      * @return string
      */
     public static function display_panel($panel_id) {
@@ -158,6 +166,7 @@ class Panels {
 
     /**
      * Get excluded panel list
+     *
      * @return array
      */
     public static function getPanelExcluded() {
@@ -166,7 +175,9 @@ class Panels {
 
     /**
      * Get all available panels
+     *
      * @param string $excluded_panels
+     *
      * @return array
      */
     public static function get_available_panels($excluded_panels = '') {
@@ -197,6 +208,7 @@ class Panels {
 
     /**
      * Hides panel
+     *
      * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
      */
     public function hide_panel($side) {
@@ -336,7 +348,9 @@ class Panels {
     /**
      * Check panel exclusions in certain page, which will be dropped sooner or later
      * Because we will need page composition database soon
+     *
      * @param $side
+     *
      * @return bool
      */
     private static function check_panel_status($side) {
