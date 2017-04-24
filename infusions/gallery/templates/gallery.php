@@ -84,7 +84,7 @@ if (!function_exists('render_photo_album')) {
         if ($info['album_description']) {
             echo "<div class='m-t-20'>\n";
             echo "<!--photogallery_album_desc-->\n";
-            echo "<span class='album_description'>\n".nl2br(parseubb($info['album_description']))."</span><br/>\n";
+            echo "<span class='album_description'>\n".parse_textarea($info['album_description'], TRUE, TRUE, FALSE, '', TRUE)."</span><br/>\n";
             echo "</div>\n";
         }
         echo "</div>\n";
@@ -169,7 +169,7 @@ if (!function_exists('render_photo')) {
         echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
         echo "</div>\n";
         if ($info['photo_description']) {
-            echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+            echo "<span class='photo_description list-group-item'>".parse_textarea($info['photo_description'], TRUE, TRUE, TRUE, '', TRUE)."</span>";
         }
         echo "<div class='list-group-item m-b-20'>\n";
         echo "<div class='row'>\n";

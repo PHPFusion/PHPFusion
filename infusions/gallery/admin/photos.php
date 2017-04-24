@@ -75,10 +75,9 @@ function photo_form() {
                 "photo_thumb2"         => "",
             );
             if (empty($data['photo_order'])) {
-                $data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS."
-				where album_id='".$data['album_id']."'"), 0) + 1;
+                $data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id='".$data['album_id']."'"), 0) + 1;
             }
-            if (defender::safe()) {
+            if (\defender::safe()) {
                 if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
                     $upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
                     if (empty($upload['error'])) {
@@ -213,7 +212,7 @@ function photo_form() {
         $snippetSettings = array(
             "required"    => FALSE,
             "preview"     => TRUE,
-            "html"        => TRUE,
+            "type"        => 'bbcode',
             "autosize"    => TRUE,
             "form_name"   => "photoform",
             'placeholder' => $locale['photo_0009'],

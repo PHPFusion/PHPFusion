@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace ThemePack\Nebula\Templates;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -57,13 +58,12 @@ class Gallery {
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         self::$gallery_settings = get_settings('gallery');
-
         $html .= "<!--pre_album_info-->\n";
         $html .= "<div class='clearfix'>\n";
         $html .= "<h3 class='spacer-sm'>".$info['album_title']."</h3>\n";
         if ($info['album_description']) {
             $html .= "<div class='spacer-xs'>\n";
-            $html .= "<span class='album_description'>\n".nl2br(parseubb($info['album_description']))."</span><br/>\n";
+            $html .= "<span class='album_description'>\n".parse_textarea($info['album_description'], TRUE, TRUE, TRUE, '', TRUE)."</span><br/>\n";
             $html .= "</div>\n";
         }
         if (isset($info['album_stats'])) {
@@ -116,7 +116,7 @@ class Gallery {
         $html .= "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
         $html .= "</div>\n";
         if ($info['photo_description']) {
-            $html .= "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+            $html .= "<span class='photo_description list-group-item'>".parse_textarea($info['photo_description'], TRUE, TRUE, TRUE, '', TRUE)."</span>";
         }
         $html .= "<div class='list-group-item m-b-20'>\n";
         $html .= "<div class='row'>\n";
