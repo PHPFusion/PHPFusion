@@ -66,7 +66,6 @@ class MainFrame extends Core {
 
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
-
             add_to_footer("<script src='".THEME."themefactory/lib/js/wow.min.js'></script>");
             add_to_footer("<script src='".THEME."themefactory/lib/js/jquery.nicescroll.min.js'></script>");
             add_to_jquery("
