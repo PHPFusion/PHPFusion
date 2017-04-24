@@ -121,14 +121,13 @@ function photo_form() {
             if (defender::safe()) {
                 if (dbcount("(photo_id)", DB_PHOTOS, "photo_id='".intval($data['photo_id'])."'")) {
                     // update album
-                    $result = dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '',
-                        'update');
+                    dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '', 'update');
                     dbquery_insert(DB_PHOTOS, $data, "update");
                     addNotice('success', $locale['photo_0015']);
                     redirect(FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']);
                 } else {
                     // create album
-                    $result = dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', 0, "photo_id", FALSE, FALSE, FALSE, '', 'save');
+                    dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', 0, "photo_id", FALSE, FALSE, FALSE, '', 'save');
                     dbquery_insert(DB_PHOTOS, $data, "save");
                     addNotice('success', $locale['photo_0016']);
                     redirect(FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']);
@@ -218,6 +217,7 @@ function photo_form() {
             "autosize"    => TRUE,
             "form_name"   => "photoform",
             'placeholder' => $locale['photo_0009'],
+            'path'        => array()
         );
         if (fusion_get_settings("tinymce_enabled")) {
             $snippetSettings = array("form_name" => "inputform", "required" => FALSE, "inline" => TRUE, 'placeholder' => $locale['photo_0009'],);

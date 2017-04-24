@@ -82,7 +82,7 @@ if (isset($_POST['save_album'])) {
             }
         }
     }
-    if (defender::safe()) {
+    if (\defender::safe()) {
         if (dbcount("(album_id)", DB_PHOTO_ALBUMS, "album_id='".intval($data['album_id'])."'")) {
             // update album
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE,
@@ -122,7 +122,7 @@ echo form_text('album_title', $locale['album_0001'], $data['album_title'], array
 ));
 echo form_textarea('album_description', $locale['album_0003'], $data['album_description'], array(
     'placeholder' => $locale['album_0004'],
-    'inline'      => 1
+    'inline'      => TRUE,
 ));
 if ($data['album_image'] || $data['album_thumb1']) {
     echo "<div class='well col-sm-offset-3'>\n";
@@ -163,7 +163,6 @@ if ($data['album_image'] || $data['album_thumb1']) {
 }
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
-
 echo form_select('album_access', $locale['album_0007'], $data['album_access'], array(
     'options' => fusion_get_groups(),
     'inline'  => TRUE
