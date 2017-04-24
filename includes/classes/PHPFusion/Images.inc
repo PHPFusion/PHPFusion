@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 class Images {
@@ -22,11 +23,38 @@ class Images {
     private static $settings = array();
     private static $instances = array();
     private $data = [
-        'image_list' => 0,
+        'image_list'  => 0,
         'image_count' => 0,
-        'afolder' => "",
-        'folders' => array(),
+        'afolder'     => "",
+        'folders'     => array(),
     ];
+
+    private function get_server_limits($val) {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val) - 1]);
+        switch ($last) {
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
+
+    private function max_server_upload() {
+        //select maximum upload size
+        $max_upload = $this->get_server_limits(ini_get('upload_max_filesize'));
+        //select post limit
+        $max_post = $this->get_server_limits(ini_get('post_max_size'));
+        //select memory limit
+        $memory_limit = $this->get_server_limits(ini_get('memory_limit'));
+
+        // return the smallest of them, this defines the real limit
+        return min($max_upload, $max_post, $memory_limit);
+    }
 
     public function __construct() {
         require_once INCLUDES."infusions_include.php";
@@ -39,26 +67,27 @@ class Images {
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/image_uploads.php");
 
         self::$settings = fusion_get_settings();
+
         $maxed_out_settings = [
             'max_width'  => 24000,
             'max_height' => 24000,
-            'max_byte'   => 3 * 1000 * 1000 * 100
+            'max_byte'   => ($this->max_server_upload() ?: 3 * 1000 * 1000 * 100)
         ];
 
         $folders = [
-            "images" => [
+            "images"   => [
                 'locale'  => self::$locale['422'],
                 'link'    => IMAGES,
                 'count'   => TRUE,
                 'fileinp' => $maxed_out_settings,
-                ],
-            "imagesa" => [
+            ],
+            "imagesa"  => [
                 'locale'  => self::$locale['423'],
                 'link'    => IMAGES_A,
                 'count'   => db_exists(DB_ARTICLES),
                 'fileinp' => $maxed_out_settings,
-                ],
-            "imagesn" => [
+            ],
+            "imagesn"  => [
                 'locale'  => self::$locale['424'],
                 'link'    => IMAGES_N,
                 'count'   => db_exists(DB_NEWS),
@@ -66,8 +95,8 @@ class Images {
                     'max_width'  => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
                     'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
-                    ],
                 ],
+            ],
             "imagesnc" => [
                 'locale'  => self::$locale['427'],
                 'link'    => IMAGES_NC,
@@ -77,8 +106,8 @@ class Images {
                     'max_height' => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_h'] : 0,
                     'max_byte'   => !empty($settings_inf['news']) ? $settings_inf['news']['news_photo_max_b'] : 0,
                 ],
-                ],
-            "imagesb" => [
+            ],
+            "imagesb"  => [
                 'locale'  => self::$locale['428'],
                 'link'    => IMAGES_B,
                 'count'   => db_exists(DB_BLOG),
@@ -86,8 +115,8 @@ class Images {
                     'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
                     'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
-                    ],
                 ],
+            ],
             "imagesbc" => [
                 'locale'  => self::$locale['429'],
                 'link'    => IMAGES_BC,
@@ -96,8 +125,8 @@ class Images {
                     'max_width'  => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_w'] : 0,
                     'max_height' => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_h'] : 0,
                     'max_byte'   => !empty($settings_inf['blog']) ? $settings_inf['blog']['blog_photo_max_b'] : 0,
-                    ],
                 ],
+            ],
         ];
 
         $this->data['folders'] = $folders;
@@ -116,7 +145,7 @@ class Images {
                 self::delete_images($_GET['view']);
                 break;
             case 'update':
-    			include INCLUDES."buildlist.php";
+                include INCLUDES."buildlist.php";
                 break;
             default:
                 break;
@@ -149,42 +178,42 @@ class Images {
 
     public function display_admin() {
         opentable(self::$locale['460']);
-            $allowed_section = array("list", "upload", 'edit');
-            if (isset($_GET['section']) && $_GET['section'] == "back") {
-                redirect(clean_request("", array("section", "action", "view"), FALSE));
-            }
-            $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'list';
-            $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $_GET['ifolder'] : '';
+        $allowed_section = array("list", "upload", 'edit');
+        if (isset($_GET['section']) && $_GET['section'] == "back") {
+            redirect(clean_request("", array("section", "action", "view"), FALSE));
+        }
+        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'list';
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $_GET['ifolder'] : '';
 
-            if ($edit) {
-                $tab_title['title'][] = self::$locale['back'];
-                $tab_title['id'][] = "back";
-                $tab_title['icon'][] = "fa fa-fw fa-arrow-left";
-            }
+        if ($edit) {
+            $tab_title['title'][] = self::$locale['back'];
+            $tab_title['id'][] = "back";
+            $tab_title['icon'][] = "fa fa-fw fa-arrow-left";
+        }
 
-            $tab_title['title'][] = $edit ? self::$locale['440'] : self::$locale['460'];
-            $tab_title['id'][]    = $edit ? 'edit' : 'list';
-            $tab_title['icon'][]  = $edit ? 'fa fa-eye' : 'fa fa-picture-o';
+        $tab_title['title'][] = $edit ? self::$locale['440'] : self::$locale['460'];
+        $tab_title['id'][] = $edit ? 'edit' : 'list';
+        $tab_title['icon'][] = $edit ? 'fa fa-eye' : 'fa fa-picture-o';
 
-            $tab_title['title'][] = self::$locale['420'];
-            $tab_title['id'][]    = 'upload';
-            $tab_title['icon'][]  = 'fa fa-plus';
+        $tab_title['title'][] = self::$locale['420'];
+        $tab_title['id'][] = 'upload';
+        $tab_title['icon'][] = 'fa fa-plus';
 
-            echo opentab($tab_title, $_GET['section'], 'list', TRUE);
+        echo opentab($tab_title, $_GET['section'], 'list', TRUE);
 
-            switch ($_GET['section']) {
-                case "upload":
-                    $this->add_image_form();
+        switch ($_GET['section']) {
+            case "upload":
+                $this->add_image_form();
                 break;
-                case "edit":
-                    $this->edit_image();
+            case "edit":
+                $this->edit_image();
                 break;
-                default:
+            default:
                 $this->image_list();
                 break;
-            }
+        }
 
-            echo closetab();
+        echo closetab();
         closetable();
     }
 
@@ -211,26 +240,26 @@ class Images {
 
         echo "<div class='text-center well'>";
         echo "<div class='btn-group'>\n";
-            foreach ($this->data['folders'] as $key => $value) {
-                if ($value['count'] != 0) {
-                    echo "<a class='btn btn-default ".($_GET['ifolder'] == $key ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=$key'>".$value['locale']."</a>\n";
-                }
+        foreach ($this->data['folders'] as $key => $value) {
+            if ($value['count'] != 0) {
+                echo "<a class='btn btn-default ".($_GET['ifolder'] == $key ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=$key'>".$value['locale']."</a>\n";
             }
+        }
         echo "</div>\n</div>\n";
         if ($this->data['image_list']) {
-        echo "<table class='table table-responsive table-hover'>\n<tr>\n";
+            echo "<table class='table table-responsive table-hover'>\n<tr>\n";
             for ($i = 0; $i < $this->data['image_count']; $i++) {
-            $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
-            $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
-                         echo "<tr>\n<td >".$this->data['image_list'][$i]."</td>\n";
+                $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
+                $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
+                echo "<tr>\n<td >".$this->data['image_list'][$i]."</td>\n";
                 echo "<td align='right' width='1%' style='white-space:nowrap'>\n";
                 echo "<a href='".$edit_link."'>".self::$locale['461']."</a> -\n";
                 echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['462']."</a></td>\n";
                 echo "</tr>\n";
             }
-        echo "</table>\n";
+            echo "</table>\n";
             if (self::$settings['tinymce_enabled'] == 1) {
-            	$upd_link = clean_request("action=update", array("action"), FALSE);
+                $upd_link = clean_request("action=update", array("action"), FALSE);
                 echo "<div class='text-center well'><a href='".$upd_link."'>".self::$locale['464']."</a></div>\n";
             }
         } else {
@@ -254,7 +283,7 @@ class Images {
                         if (self::$settings['tinymce_enabled'] == 1) {
                             include INCLUDES."buildlist.php";
                         }
-                       if (\defender::safe()) {
+                        if (\defender::safe()) {
                             addNotice('success', self::$locale['420']);
                             redirect(clean_request("", array("section"), FALSE));
                         }
