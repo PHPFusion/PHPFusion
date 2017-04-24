@@ -151,7 +151,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             $articleSnippetSettings = array(
                 "required"    => true,
                 "preview"     => true,
-                "html"        => true,
+                "type"        => 'bbcode',
                 "autosize"    => true,
                 "placeholder" => $this->locale['article_0254'],
                 "error_text"  => $this->locale['article_0271'],
@@ -173,27 +173,21 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo openform("articleform", "post", $this->form_action);
         self::display_articleButtons("formstart", true);
         echo form_hidden("article_id", "", $this->article_data['article_id']);
-
-        echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array(
-            "required" => true, "max_lenght" => 200, "error_text" => $this->locale['article_0270']
-        ));
+        echo form_text("article_subject", $this->locale['article_0100'], $this->article_data['article_subject'], array("required" => true, "max_length" => 200, "error_text" => $this->locale['article_0270']));
         echo form_select("article_keywords", $this->locale['article_0260'], $this->article_data['article_keywords'], array(
             "max_length" => 320, "placeholder" => $this->locale['article_0260a'], "width" => "100%", "inner_width" => "100%", "tags" => TRUE, "multiple" => TRUE
         ));
-
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <?php
             openside($this->locale['article_0261']);
-
             echo form_select_tree("article_cat", $this->locale['article_0101'], $this->article_data['article_cat'], array(
                 "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
                 "query"    => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
             ),
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );
-
             echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], array(
                 "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
             ));
