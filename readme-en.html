@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
     <title>PHP-Fusion Readme</title>
-    <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+    <meta charset='utf-8'>
 
     <style type='text/css'>
         body {
@@ -114,7 +114,7 @@
         <p><strong>Warning</strong><br/>
             You are breaking international law if you remove our footer copyright notice without a valid license:</p>
         <hr/>
-        <p>Powered by <a href='https://www.php-fusion.co.uk'>PHP-Fusion</a> copyright &copy; 2015 PHP-Fusion Inc.<br/>
+        <p>Powered by <a href='https://www.php-fusion.co.uk'>PHP-Fusion</a> copyright &copy; 2017 PHP-Fusion Inc.<br/>
             Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html' target='_blank'>GNU
                 Affero GPL</a> v3.</p>
         <hr/>
@@ -129,7 +129,7 @@
             <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Defender</strong><br/>Automatic form sanitation system for your fields
                 with form token support.
             </div>
-            <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Dynamics</strong><br/>Automatic form API & database handler system.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Dynamics</strong><br/>Automatic form API &amp; database handler system.</div>
             <div class='item'><strong style='padding-bottom:5px;'>Dynamic User Fields</strong><br/>Arrange, connect to 3d party and even categorize
                 your Users Profiles with tabs.
             </div>
@@ -148,13 +148,13 @@
         </div>
 
         <div class='wrapper'>
-            <div class='item'><strong style='padding-bottom:5px;'>Atom Theme Engine</strong><br/>CSS Overrides for any given Theme for itï¿½s default
+            <div class='item'><strong style='padding-bottom:5px;'>Atom Theme Engine</strong><br/>CSS Overrides for any given Theme for it's default
                 CSS classes.
             </div>
             <div class='item'><strong style='padding-bottom:5px;'>Notification email templating</strong><br/>Enabled for contact, forum notifications
                 and PM emails.
             </div>
-            <div class='item'><strong style='padding-bottom:5px;'>Responsiveness</strong><br/>Mobile & Pad friendly with native Bootstrap enabled in
+            <div class='item'><strong style='padding-bottom:5px;'>Responsiveness</strong><br/>Mobile &amp; Pad friendly with native Bootstrap enabled in
                 the system by default.
             </div>
         </div>
@@ -169,7 +169,7 @@
         </div>
 
         <div class='wrapper'>
-            <div class='item'><strong style='padding-bottom:5px;'>Portable & Multisite</strong><br/>You can have gathered landing pages with multisite
+            <div class='item'><strong style='padding-bottom:5px;'>Portable &amp; Multisite</strong><br/>You can have gathered landing pages with multisite
                 functions.
             </div>
             <div class='item'><strong style='padding-bottom:5px;'>BBCodes</strong><br/>A BBCode system that is modular and flexible.</div>
@@ -231,21 +231,21 @@
     <div class='tbl2'>GENERAL INSTALLATION AND GUIDELINES FOR MANUAL INSTALLATION</div>
     <div class='tbl1'>Requirements for this version
         <p>- PHP 5.5.08 or higher<br/>
-		   - MySQL 5.1 or higher<br/>
-		   - Apache 2.2 or higher<br/>
-		   - Nginx 1.0 or higher
-		   - mod_rewrite or equivalent for SEO
-		
-		<hr/>
-		   
+           - MySQL 5.1 or higher<br/>
+           - Apache 2.2 or higher<br/>
+           - Nginx 1.0 or higher
+           - mod_rewrite or equivalent for SEO
+        </p>
+        <hr/>
+
         <p>You have to create a MySQL database. You can do this via your web-hosting control panel or phpMyAdmin.
             Make sure you have your MySQL access details at hand including the hostname, user name, password and database
-            name as you will need to specify these during setup.
+            name as you will need to specify these during setup.</p>
         <hr/>
         <p><strong>1.</strong> Upload the contents of the files folder to your web server.</p>
 
         <p><strong>2.</strong> Unless you run PHP-Fusion on a local server, in most cases you
-            will need to CHMOD the following files and folders to 777:
+            will need to CHMOD the following files and folders to 777:</p>
 
         <ul style='list-style-type:disc'>
             <li>administration/db_backups/</li>
@@ -254,11 +254,11 @@
             <li>images/avatars/</li>
             <li>robots.txt</li>
         </ul>
-        </p><p>
+
+        <p>
             <strong>Infusions shipped with the Core requires the following folders to be CHMODed to 777</strong>
         </p>
 
-        <p>
         <ul style='list-style-type:disc'>
             <li>/infusions/blog/images/</li>
             <li>/infusions/blog/images/thumbs/</li>
@@ -276,7 +276,6 @@
             <li>/infusions/gallery/submissions/</li>
             <li>/infusions/gallery/submissions/images/</li>
         </ul>
-        </p>
 
         <p><strong>Note</strong>: <br/>Some hosts does not allow CHMOD 777, in that case you can use CHMOD 755 if CHMOD 777 fails.</p>
 
@@ -304,13 +303,13 @@
         <hr/>
 
         <p>Make sure that your hosting environment meets the requirements for this version: <br/>
-			- PHP 5.5.08 or higher<br/>
-			- MySQL 5.1 or higher</p>
+            - PHP 5.5.08 or higher<br/>
+            - MySQL 5.1 or higher</p>
         <hr/>
         <p>This upgrade procedure can be very demanding depending on how much content your have. <br/>
             Please note that all User Fields will not be upgraded. A new set of standard fields will be installed. <br/>
-			The same goes for your Site links. A new set of default Site Links will be inserted.
-			</p>
+            The same goes for your Site links. A new set of default Site Links will be inserted.
+            </p>
         <hr/>
         <p>PHP-Fusion 9.0 is in many parts compatible with version 7.02.07, <br/> however be ready for issues and re-populate your site with older
             Addon content slowly.<br/>
@@ -326,10 +325,10 @@
             <li><strong>1</strong> &middot; You must first upload all PHP-Fusion 9 files. Replace all files when requested.</li>
             <br/>
 
-            <li><strong>2</strong> &middot; 
-				Navigate to your site´s www.site.com and add /install.php like, www.site.com/install.php <br />
-				The installer will now start and auto-detect your PHP-Fusion 7 version.<br />
-				Do your base upgrade in English.
+            <li><strong>2</strong> &middot;
+                Navigate to your site's www.site.com and add /install.php like, www.site.com/install.php <br />
+                The installer will now start and auto-detect your PHP-Fusion 7 version.<br />
+                Do your base upgrade in English.
             </li>
             <br/></ul>
 
@@ -349,7 +348,7 @@
             </li>
             <br/>
             <li><strong>6</strong> &middot; Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except
-											images, infusions folders, config.php and the new .htaccess file.
+                                            images, infusions folders, config.php and the new .htaccess file.
             </li>
         </ul>
 
@@ -404,11 +403,8 @@
         various Documentation sections from the documentation menu that suit your needs.<br/>
     </div>
 
-
     <div class='tbl2'>ACKNOWLEDGEMENTS</div>
     <div class='tbl1'>
-
-        <p>
 
         <div style='float:left;width:26%;padding-left:150px;min-height:25px;margin:7px;'>
             <strong>Project Manager</strong><br/>Joakim Falk {Falk} <br/>falk@php-fusion.co.uk
@@ -416,14 +412,13 @@
         <div style='float:left;width:46%;min-height:25px;margin:7px;'><strong>Lead Developer</strong><br/>
             Frederick MC Chan {Chan} <br/>chan@php-fusion.co.uk
         </div>
-        </p>
         <div style='clear:both;'></div>
         <hr/>
-        <p><strong>A special thank you goes in no particular order to , </strong><br/><br/>
+        <p><strong>A special thank you goes in no particular order to, </strong><br/><br/>
             Robert Gaudyn {Wooya} - Inspired Multilingal features, Initial Panels Admin handler design, RSS Panel, Panel positioning ideas, New user
             info panel base layout.<br/>
             Ankur - Initial design SEO Engine.<br/>
-			RobiNN - Multiple fixes provided.<br/>
+            RobiNN - Multiple fixes provided.<br/>
             Rizado - Locale, User Fields, Date/Time system, Translate system.<br/>
             Rimelek - Database Factory, Improvements on Defender, Dynamics.<br/>
             Tyler Hurlbut - Initial design for Fusion Dynamics, and jQuery output handler.<br/>
@@ -442,7 +437,7 @@
             Routh - Help with upgrade script testing, Multiple fixes provided.<br/>
             MiChAeLoKGB - BBCode Fixes provided.<br/>
             Keddy - Multiple fixes provided.<br/>
-			Helmuth Mikkelsen Beta testing and error reporting.<br/>
+            helmuth - Beta testing and error reporting.<br/>
             janmol {Jan.M} - Beta testing and error reporting.<br/>
             Kvido - Beta testing and error reporting.<br/>
             Alex L - Beta testing and error reporting.<br/>
@@ -457,5 +452,6 @@
             Some do full translations while others do some minor adjustments either by forums or directly by github.<br/>
             Remember to give your self credits in the global.php as the inital locale author.<br/>
     </div>
+</div>
 </body>
 </html>
