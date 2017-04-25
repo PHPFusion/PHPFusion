@@ -874,7 +874,7 @@ class UserFields extends QuantumFields {
                 }
             }
             if (iADMIN && checkrights("UG") && $user_groups_opts) {
-                $submit_link = FUSION_SELF."?lookup=".$this->userData['user_id'];
+                $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
                 if (isset($_GET['step']) && $_GET['step'] == "view") {
                     $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
                 }
