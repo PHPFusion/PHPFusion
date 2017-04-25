@@ -19,14 +19,6 @@
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
-// Upgrade 1.2 --- why DROP Column weblink_cat_sorting? What about v7 data? Did we migrated data before dropping user's column?
-if (column_exists(DB_WEBLINK_CATS, "weblink_cat_sorting", FALSE)) {
-    /**
-     * I'm keeping this before we proceed further.
-     */
-    //$inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_sorting";
-}
-
 $check_wbl12 = [
     'weblink_language'   => " ADD weblink_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_count",
     'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
@@ -81,4 +73,24 @@ foreach ($check_array as $key => $value) {
 
 // Remove old cats link and update new path for admin link
 $inf_deldbrow[] = DB_PREFIX."admin WHERE admin_link='weblink_cats.php'";
+
 $inf_updatedbrow[] = DB_PREFIX."admin SET admin_image='../infusions/weblinks/weblink.png', admin_link='../infusions/weblinks/weblinks_admin.php' WHERE admin_link='weblinks.php'";
+
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='weblinks.php'";
+$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
+if (!empty($enabled_languages)) {
+    foreach ($enabled_languages as $language) {
+        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
+        // add new language records
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$language."')";
+        // drop deprecated language records
+        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php' AND link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l' AND link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_WEBLINKS." WHERE weblink_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_WEBLINK_CATS." WHERE weblink_cat_language='".$language."'";
+    }
+} else {
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".LANGUAGE."')";
+}

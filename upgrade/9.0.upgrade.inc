@@ -215,12 +215,6 @@ define('DB_WEBLINKS', DB_PREFIX."weblinks");
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
-/*
- * @todo: fix bugs (27/11/16)
- * Bugs tested and found:
- * - Administration Panel links is outdated
- */
-
 $del_table = array();
 /*
 if (db_exists(DB_PREFIX.'articles')) {
@@ -445,7 +439,6 @@ if (db_exists(DB_SETTINGS)) {
             $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
         }
     }
-
 }
 
 // Insert Multi Language rights and status
@@ -571,30 +564,16 @@ if (db_exists(DB_ADMIN)) {
     foreach ($new_icon_array as $admin_rights => $icon_file) {
         $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
     }
-
 }
 
 if (db_exists(DB_PREFIX.'site_links')) {
-// Upgrade site links
-    $up_array = array();
-    db_exists(DB_ARTICLES) ? $up_array = ['articles.php' => 'infusions/articles/articles.php',] : '';
-    db_exists(DB_DOWNLOADS) ? $up_array = ['downloads.php' => 'infusions/downloads/downloads.php',] : '';
-    db_exists(DB_FAQS) ? $up_array = ['faq.php' => 'infusions/faq/faq.php',] : '';
-    db_exists(DB_FORUMS) ? $up_array = ['forum/index.php' => 'infusions/forum/index.php',] : '';
-    db_exists(DB_PHOTO_ALBUMS) ? $up_array = ['photogallery.php' => 'infusions/gallery/gallery.php',] : '';
-    db_exists(DB_WEBLINKS) ? $up_array = ['weblinks.php' => 'infusions/weblinks/weblinks.php',] : '';
+
     $del_array[] = 'news_cats.php';
     if (!empty($del_array)) {
         foreach ($del_array as $key => $value) {
-            $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url ='$value'");
+            $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url ='$value'";
         }
     }
-    if (!empty($up_array)) {
-        foreach ($up_array as $keys => $values) {
-            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_url='$values' WHERE link_url='$keys'");
-        }
-    }
-
     // Sets all links to active
     if (column_exists(DB_SITE_LINKS, 'link_status', FALSE)) {
         $result = dbquery("SELECT link_id, link_visibility, link_status FROM ".DB_SITE_LINKS);
