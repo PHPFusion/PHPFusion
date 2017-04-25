@@ -32,7 +32,7 @@ $check_array = [
     'points_to_downvote' => 100,
 ];
 foreach ($check_array as $name => $val) {
-    if (!dbcount("(setting_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
+    if (!dbcount("(settings_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
     }
 }

@@ -220,7 +220,9 @@ $settings = fusion_get_settings();
  * Bugs tested and found:
  * - Administration Panel links is outdated
  */
+
 $del_table = array();
+/*
 if (db_exists(DB_PREFIX.'articles')) {
     if (empty(dbcount("(article_id)", DB_ARTICLES))) {
         $result = dbquery("DROP TABLE ".DB_ARTICLES);
@@ -317,6 +319,7 @@ if (db_exists(DB_PREFIX.'polls')) {
         $del_table[] = 'polls.php';
     }
 }
+*/
 
 if (db_exists(DB_PREFIX.'users')) {
     // Modify All Users Level > 0
@@ -352,8 +355,9 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
 
 // Perform data tally from 7.02.07
 if (db_exists(DB_MESSAGES)) {
+
     $result = dbquery("SELECT * FROM ".DB_MESSAGES);
-    if (dbrows($result) > 0) {
+    if (dbrows($result)) {
         while ($data = dbarray($result)) {
             $inf_updatedbrow[] = DB_MESSAGES." SET message_user = '".$data['message_to']."' WHERE message_id = '".$data['message_id']."'";
         }
@@ -362,7 +366,6 @@ if (db_exists(DB_MESSAGES)) {
     // Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
     $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS);
     while ($data = dbarray($result)) {
-
         $new_rights = str_replace(".S13", "", $data['user_rights']);
         $new_rights = str_replace(".AC", "", $new_rights);
         $new_rights = str_replace(".DC", "", $new_rights);

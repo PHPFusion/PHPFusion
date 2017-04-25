@@ -183,10 +183,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @param string $host Server domain or IP followed by an optional port definition
      * @param string $user
      * @param string $pass Password
-     * @param string $db The name of the database
-     * @param array  $options Currently only one option exists: charset
-     * @throws SelectionException When the selection of the database was unsuccessful
-     * @throws ConnectionException When the connection could not be established
+     * @param string $db   The name of the database
+     * @param array  $options
+     *
+     * @throws \ErrorException  When the connection could not be established
      */
     protected function connect($host, $user, $pass, $db, array $options = array()) {
         $options += array(

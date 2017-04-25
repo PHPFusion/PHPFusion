@@ -33,7 +33,7 @@ $check_array = [
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
-        $inf_altertable[] = DB_PHOTO_ALBUMS.$value;
+        dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ".$value);
     }
 }
 // Make sure access table are support for new levels

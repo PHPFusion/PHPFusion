@@ -306,12 +306,10 @@ class InstallerDbSetup extends Install_Core {
                         }
                     }
                 }
-
                 /*
                  * Generate final message
                  */
                 $errors = Batch_Core::getInstance()->ProgressHasError();
-                $errors = 1;
                 if (!$errors) {
                     if (!$debug_process) {
                         \PHPFusion\Installer\write_config(self::$connection);

@@ -57,19 +57,20 @@ if (db_exists($db_prefix."thread_notify")) {
 }
 
 // Install a forum voting table
-if (!db_exists($db_prefix."forum_votes")) {
-    $inf_newtable[] = $db_prefix."forum_votes (
-			forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
-			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+if (!db_exists($db_prefix.'forum_votes')) {
+    $table_query = $db_prefix."forum_votes (
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+    vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    dbquery("CREATE TABLE ".$table_query);
 }
 // Install a new thread tags table
-if (!db_exists($db_prefix."forum_thread_tags")) {
-    $inf_newtable[] = $db_prefix."forum_thread_tags (
+if (!db_exists($db_prefix.'forum_thread_tags')) {
+    $table_query = $db_prefix."forum_thread_tags (
     tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	tag_title VARCHAR(100) NOT NULL DEFAULT '',
 	tag_description VARCHAR(250) NOT NULL DEFAULT '',
@@ -78,11 +79,13 @@ if (!db_exists($db_prefix."forum_thread_tags")) {
 	tag_language VARCHAR(100) NOT NULL DEFAULT '',
 	PRIMARY KEY (tag_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    dbquery("CREATE TABLE ".$table_query);
 }
 
 // Install a new mood table
 if (!db_exists($db_prefix."forum_post_mood")) {
-    $inf_newtable[] = $db_prefix."forum_post_mood (
+
+    $table_query = $db_prefix."forum_post_mood (
     mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	mood_name TEXT NOT NULL,
 	mood_description TEXT NOT NULL,
@@ -92,10 +95,11 @@ if (!db_exists($db_prefix."forum_post_mood")) {
 	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (mood_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    dbquery("CREATE TABLE ".$table_query);
 }
 // Install a new post notification table
 if (!db_exists($db_prefix."forum_post_notify")) {
-    $inf_newtable[] = $db_prefix."forum_post_notify (
+    $table_query = $db_prefix."forum_post_notify (
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -104,6 +108,7 @@ if (!db_exists($db_prefix."forum_post_notify")) {
 	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
 	KEY notify_datestamp (notify_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    dbquery("CREATE TABLE ".$table_query);
 }
 /*
  * Modify Forum Table
@@ -290,14 +295,18 @@ $check_array = [
     'forum_rank_style'           => 0,
 ];
 foreach ($check_array as $name => $val) {
-    if (!dbcount("(setting_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
+    if (!dbcount("(settings_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
     }
 }
+
 // Add forum default thread tag //FORUM_LOCALE
-if (!dbcount("(tag_title)", DB_FORUM_TAGS)) {
-    $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
+if (db_exists(DB_FORUM_TAGS)) {
+    if (!dbcount("(tag_title)", DB_FORUM_TAGS)) {
+        $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
+    }
 }
+
 if (function_exists("fusion_get_enabled_languages")) {
     $enabled_languages = array_keys(fusion_get_enabled_languages());
 } else {
