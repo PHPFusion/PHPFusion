@@ -181,6 +181,7 @@ if (dbrows($result)) {
 }
 
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='news.php'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='news_cats.php'";
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
