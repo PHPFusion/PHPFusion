@@ -30,7 +30,6 @@ class Requirements extends Install_Core {
 
     /**
      * Get System Requirements for PHP-Fusion 9
-     *
      * @return array
      */
     public static function get_system_requirements() {
@@ -256,8 +255,9 @@ class Requirements extends Install_Core {
         return (array)$requirements;
     }
 
-    /*
-     * Validate the system for consistency
+    /**
+     * Validates the system for consistency
+     * @return array
      */
     public static function get_system_validation() {
 
@@ -298,16 +298,13 @@ class Requirements extends Install_Core {
             $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
-
             if ($db_connect) {
                 $validation[2] = [
                     'result'      => 1,
                     'description' => self::$locale['setup_0138'],
                     'elapsed'     => microtime(TRUE) - $microtime
                 ];
-
                 if ($db_select) {
-
                     $validation[3] = [
                         'result'      => 1,
                         'description' => self::$locale['setup_0139'],
@@ -325,16 +322,13 @@ class Requirements extends Install_Core {
                                 'description' => self::$locale['setup_0141'],
                                 'elapsed'     => microtime(TRUE) - $microtime
                             ];
-
                             if (write_config($system)) {
                                 $validation[6] = [
                                     'result'      => 1,
                                     'description' => self::$locale['setup_0142'],
                                     'elapsed'     => microtime(TRUE) - $microtime
                                 ];
-
                             } else {
-
                                 //Please ensure config.php is writable
                                 $validation[6] = [
                                     'result'      => 0,
@@ -342,9 +336,7 @@ class Requirements extends Install_Core {
                                     'elapsed'     => microtime(TRUE) - $microtime
                                 ];
                             }
-
                         } else {
-
                             //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
                             $validation[5] = [
                                 'result'      => 1,
@@ -354,7 +346,6 @@ class Requirements extends Install_Core {
 
                         }
                     } else {
-
                         //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
                         /*
                          * We will not stop the installer and let it proceed with schema scans
@@ -362,12 +353,10 @@ class Requirements extends Install_Core {
                         $validation[4] = [
                             'result'      => 1,
                             'description' => self::$locale['setup_0143'],
-                            //$locale['setup_1313'],
                             'elapsed'     => microtime(TRUE) - $microtime
                         ];
 
                     }
-
                 } else {
                     //The specified MySQL database does not exist.
                     $validation[3] = [
@@ -375,7 +364,6 @@ class Requirements extends Install_Core {
                         'description' => self::$locale['setup_1311'],
                         'elapsed'     => microtime(TRUE) - $microtime
                     ];
-
                 }
             } else {
                 //Unable to connect with MySQL database.
@@ -384,7 +372,6 @@ class Requirements extends Install_Core {
                     'description' => self::$locale['setup_1310'],
                     'elapsed'     => microtime(TRUE) - $microtime
                 ];
-
             }
         } else {
             //Please make sure you have filled out all the MySQL connection fields
@@ -393,10 +380,9 @@ class Requirements extends Install_Core {
                 'description' => self::$locale['setup_1317'],
                 'elapsed'     => microtime(TRUE) - $microtime
             ];
-
         }
 
-        return $validation;
+        return (array)$validation;
     }
 
 }

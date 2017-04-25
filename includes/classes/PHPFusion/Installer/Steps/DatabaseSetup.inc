@@ -115,7 +115,7 @@ class InstallerDbSetup extends Install_Core {
      * @throws \Exception
      */
     private function dispatch_tables() {
-
+        $debug_process = FALSE;
         $content = '';
         if (isset($_POST['step'])) {
 
@@ -173,140 +173,159 @@ class InstallerDbSetup extends Install_Core {
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
                 $final_message = self::$locale['setup_1210'];
+
                 // Go for point system differentiation
                 $current_count = 0;
                 if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
+
                     $final_message = self::$locale['setup_1211'];
-                    /*
-                     * Create missing new tables
-                     */
+
+                    // Create missing new tables
                     if (!empty($to_create)) {
                         $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
-                        foreach ($to_create as $table_name => $table_process) {
-                            $current_count = $current_count + 1;
-                            $microtime = microtime(TRUE);
-                            if ($result = dbquery($table_process)) {
-                                $microtime = microtime(TRUE) - $microtime;
+                        if (!$debug_process) {
+                            foreach ($to_create as $table_name => $table_process) {
+                                $current_count = $current_count + 1;
+                                $microtime = microtime(TRUE);
+                                if ($result = dbquery($table_process)) {
+                                    $microtime = microtime(TRUE) - $microtime;
+                                }
+                                $message .= $table_name." created<br/>\n";
+                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                             }
-                            $message .= $table_name." created<br/>\n";
-                            //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
+                            //addNotice("success", $message);
+                        } else {
+                            print_p('Create:');
+                            print_p($to_create);
                         }
-                        //addNotice("success", $message);
                     }
 
-                    /*
-                     * Alterations of inconsistent columns.
-                     * Table_processes is an array, and must be looped
-                     */
+                    // Alterations of inconsistent columns - varchar(200) to text
                     if (!empty($to_alter_column)) {
                         $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
-                        foreach ($to_alter_column as $table_name => $table_processes) {
-                            $current_count = $current_count + 1;
-                            if (!empty($table_processes)) {
-                                foreach ($table_processes as $table_alter) {
-                                    $microtime = microtime(TRUE);
-                                    if ($result = dbquery($table_alter)) {
-                                        $microtime = microtime(TRUE) - $microtime;
+                        if (!$debug_process) {
+                            foreach ($to_alter_column as $table_name => $table_processes) {
+                                $current_count = $current_count + 1;
+                                if (!empty($table_processes)) {
+                                    foreach ($table_processes as $table_alter) {
+                                        $microtime = microtime(TRUE);
+                                        if ($result = dbquery($table_alter)) {
+                                            $microtime = microtime(TRUE) - $microtime;
+                                        }
+                                        $message .= $table_name." altered<br/>\n";
                                     }
-                                    $message .= $table_name." altered<br/>\n";
+                                }
+                                //addNotice("info", $message);
+                            }
+                        } else {
+                            print_p('Alter Column:');
+                            print_p($to_alter_column);
+                        }
+                    }
+                    // Adding missing columns on a specific table
+                    if (!empty($to_add_column)) {
+                        $message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
+                        if (!$debug_process) {
+                            foreach ($to_add_column as $table_name => $table_processes) {
+                                $current_count = $current_count + 1;
+                                if (!empty($table_processes)) {
+                                    foreach ($table_processes as $table_add) {
+                                        $microtime = microtime(TRUE);
+                                        if ($result = dbquery($table_add)) {
+                                            $microtime = microtime(TRUE) - $microtime;
+                                            $message .= $table_name." altered<br/>\n";
+                                        }
+                                        //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
+                                    }
                                 }
                             }
                             //addNotice("info", $message);
+                        } else {
+                            print_p('Add Column:');
+                            print_p($to_add_column);
                         }
                     }
-
-                    /*
-                     * Adding missing columns on a specific table
-                     * Table processes is an array, and must be looped
-                     */
-                    if (!empty($to_add_column)) {
-                        $message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
-                        foreach ($to_add_column as $table_name => $table_processes) {
-                            $current_count = $current_count + 1;
-                            if (!empty($table_processes)) {
-                                foreach ($table_processes as $table_add) {
-                                    $microtime = microtime(TRUE);
-                                    if ($result = dbquery($table_add)) {
-                                        $microtime = microtime(TRUE) - $microtime;
-                                        $message .= $table_name." altered<br/>\n";
-                                    }
-                                    //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
-                                }
-                            }
-                        }
-                        //addNotice("info", $message);
-                    }
-
-                    /*
-                     * Insert default rows on all required tables
-                     */
+                    // Insert default rows on all required tables
                     if (!empty($to_insert_rows)) {
                         $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
-                        foreach ($to_insert_rows as $table_name => $row_inserts) {
-                            $current_count = $current_count + 1;
-                            $microtime = microtime(TRUE);
-                            if ($result = dbquery($row_inserts)) {
-                                $microtime = microtime(TRUE) - $microtime;
-                                $message .= $table_name." inserted<br/>\n";
-                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
+                        if (!$debug_process) {
+                            foreach ($to_insert_rows as $table_name => $row_inserts) {
+                                $current_count = $current_count + 1;
+                                $microtime = microtime(TRUE);
+                                if ($result = dbquery($row_inserts)) {
+                                    $microtime = microtime(TRUE) - $microtime;
+                                    $message .= $table_name." inserted<br/>\n";
+                                    //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
+                                }
                             }
+                            //addNotice("info", $message);
+                        } else {
+                            print_p('Insert Rows:');
+                            print_p($to_insert_rows);
                         }
-                        //addNotice("info", $message);
                     }
-
+                    //Checking for upgrade
                     $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
                         $message = "<strong>Building version upgrades...</strong>\n";
-                        foreach ($to_upgrade as $filename => $file_upgrades) {
-
-                            $current_count = $current_count + 1;
-                            $microtime = microtime(TRUE);
-                            if (!empty($file_upgrades)) {
-
-                                foreach ($file_upgrades as $callback_method => $upgrades) {
-                                    if (!empty($upgrades)) {
-                                        self::$allow_delete = TRUE;
-                                        $method = $callback_method."_infuse";
-                                        if (method_exists($this, $method)) {
-                                            //dynamically select object pairing dynamic assigned function on dynamic callback.
-                                            $sql = [
-                                                $callback_method => $upgrades
-                                            ];
-                                            $error = $this->$method($sql);
+                        if (!$debug_process) {
+                            foreach ($to_upgrade as $filename => $file_upgrades) {
+                                $current_count = $current_count + 1;
+                                $microtime = microtime(TRUE);
+                                if (!empty($file_upgrades)) {
+                                    foreach ($file_upgrades as $callback_method => $upgrades) {
+                                        if (!empty($upgrades)) {
+                                            self::$allow_delete = TRUE;
+                                            $method = $callback_method."_infuse";
+                                            if (method_exists($this, $method)) {
+                                                //dynamically select object pairing dynamic assigned function on dynamic callback.
+                                                $sql = [
+                                                    $callback_method => $upgrades
+                                                ];
+                                                $error = $this->$method($sql);
+                                            }
                                         }
                                     }
                                 }
+                                $microtime = microtime(TRUE) - $microtime;
+                                //$message .= "Building version upgrades -".$filename;
+                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                             }
-                            $microtime = microtime(TRUE) - $microtime;
-                            //$message .= "Building version upgrades -".$filename;
-                            //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
-                        }
-
-                        if (!$error) {
-                            $message = "<strong>Updating your OS to latest version.</strong>\n";
-                            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
-                                ':version_value' => $filename,
-                                ':version_col' => 'version'
-                            ));
-                            //addNotice('warning', $message);
+                            if (!$error) {
+                                $message = "<strong>Updating your OS to latest version.</strong>\n";
+                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                                    ':version_value' => $filename,
+                                    ':version_col'   => 'version'
+                                ));
+                                //addNotice('warning', $message);
+                            }
+                        } else {
+                            print_p('To Upgrade:');
+                            print_p($to_upgrade);
                         }
                     }
                 }
+
                 /*
                  * Generate final message
                  */
                 $errors = Batch_Core::getInstance()->ProgressHasError();
+                $errors = 1;
                 if (!$errors) {
-                    \PHPFusion\Installer\write_config(self::$connection);
-		            require_once(INCLUDES.'htaccess_include.php');
-		            write_htaccess();
-                    if (!empty($to_upgrade)) {
-                        self::installer_step(self::STEP_INFUSIONS);
+                    if (!$debug_process) {
+                        \PHPFusion\Installer\write_config(self::$connection);
+                        require_once(INCLUDES.'htaccess_include.php');
+                        write_htaccess();
+                        if (!empty($to_upgrade)) {
+                            self::installer_step(self::STEP_INFUSIONS);
+                        } else {
+                            self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                        }
+                        redirect(FUSION_REQUEST);
                     } else {
-                        self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                        print_p('Debug print end.');
                     }
-                    redirect(FUSION_REQUEST);
                 }
             } else {
                 foreach ($validate as $validate_result) {
@@ -317,13 +336,11 @@ class InstallerDbSetup extends Install_Core {
                 $this->installer_step(self::STEP_DB_SETTINGS_FORM);
                 redirect(FUSION_REQUEST);
             }
-
             return $content;
         } else {
             $this->installer_step(self::STEP_DB_SETTINGS_FORM);
             redirect(FUSION_REQUEST);
         }
     }
-
 
 }
