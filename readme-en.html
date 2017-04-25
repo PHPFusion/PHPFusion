@@ -304,16 +304,16 @@
         <hr/>
 
         <p>Make sure that your hosting environment meets the requirements for this version: <br/>
-            - PHP 5.3 or higher<br/>
-            - MySQL 4.1 or higher</p>
+			- PHP 5.5.08 or higher<br/>
+			- MySQL 5.1 or higher</p>
         <hr/>
         <p>This upgrade procedure can be very demanding depending on how much content your have. <br/>
-            User Fields will not be upgraded. A New set of standard fields will be installed instead.( This can change )</p>
+            User Fields will not be upgraded. A New set of standard fields will be installed instead.</p>
         <hr/>
-        <p>PHP-Fusion 9.0 is for most parts compatible with version 7.02.07, <br/> however be ready for issues and re-populate your site with older
+        <p>PHP-Fusion 9.0 is in many parts compatible with version 7.02.07, <br/> however be ready for issues and re-populate your site with older
             Addon content slowly.<br/>
-            There have been a massive amount of changes to all Core systems, meaning that some Addons Mods, Infusions, Panels or Themes may not work
-            properly.</p>
+            There have been a massive amount of changes to all Core systems, meaning that some Addons Mods, Infusions, Panels and Themes may not work
+            as intended.</p>
         <hr/>
         <p><strong>The upgrade will be in two steps</strong> <br/> <br/> You need to follow these instructions precisely.</p>
 
@@ -321,77 +321,38 @@
 
         <ul style='list-style-type:none'>
 
-            <li><strong>1</strong> &middot; You must first upload the upgrade script from the folder named <strong>upgrade 7.02.07 to
-                9.0</strong><br/>
-                The content in administration folder goes to the content in your sites administration folder.<br/>
-                The content of locale folder goes to the root of your siteï¿½s locale folder.<br/>
-                Replace all files when requested.
-            </li>
+            <li><strong>1</strong> &middot; You must first upload all PHP-Fusion 9 files. Replace all files when requested.</li>
             <br/>
 
-            <li><strong>2</strong> &middot; Login to your site as the Super Administrator. Under the System
-                Admin tab of the Admin Panel, click on Upgrade then click the button marked
-                Upgrade. YOU MUST perform the upgrade first of all.<br/>
-                The upgrade process will automatically complete.<br/>
-                When you see your maintain mode screen, the site is ready for stage 2.
+            <li><strong>2</strong> &middot; 
+				Navigate to your site´s www.site.com and add /install.php like, www.site.com/install.php <br />
+				The installer will now start and auto-detect your PHP-Fusion 7 version.<br />
+				Do your base upgrade in English.
             </li>
             <br/></ul>
 
         <p><strong>Step 2</strong></p>
         <ul style='list-style-type:none'>
-            <li><strong>1</strong> &middot; Delete all files in your Infusions folder ( remember to save what need to be saved )</li>
+            <li><strong>1</strong> &middot; Approve our License Agreements</li>
             <br/>
-            <li><strong>2</strong> &middot; Upload the PHP-Fusion 9s infusions folder content to your now empty infusions folder</li>
+            <li><strong>2</strong> &middot; Folder Diagnostics, make sure all the listed folders have the correct rights</li>
             <br/>
-            <li><strong>3</strong> &middot; Images in the images folder from articles can remain if you want. But if you move it to the new
-                infusions/articles/images folder you also need to edit your articles using them.
+            <li><strong>3</strong> &middot; Database Settings, all should be pre-filled. We recommend PDO as driver if it exists.
             </li>
             <br/>
-            <li><strong>4</strong> &middot; Images in the images folder from news can remain if you want. But if you move it to the new
-                infusions/news/images folder you also need to edit your news items using them.
+            <li><strong>4</strong> &middot; Admin and Site Details, complete all the fields and create a new Superadmin account.
             </li>
             <br/>
-            <li><strong>5</strong> &middot; News category images are more tricky if you have your own customized categories. We recommend that you
-                move images/news_cats to infusions/news/news_cats and manually edit each news cat your have from the administration to attach your
-                images to these with itï¿½s new paths.
+            <li><strong>5</strong> &middot; Configure Core Systems, Click on the upgrade button for each Infusion you have.
             </li>
             <br/>
-            <li><strong>6</strong> &middot; Images/ranks have been moved to infusions/forum/ranks any customized ranks need to be manually moved to
-                here and then edit each rank to match the new paths.
-            </li>
-            <br/>
-            <li><strong>7</strong> &middot; Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except
-                downloads, forum/attachments, images, infusions folders, config.php and the new .htaccess file.
-            </li>
-            <br/>
-            <li><strong>8</strong> &middot; Upload the complete PHP-Fusion 9 pack to your server and replace any files requested.</li>
-            <br/>
-            <li><strong>9</strong> &middot; When the upload is complete, <br/> Go back to your Administration > System Administration > Upgrade <br/>
-                You can now click Migrate Albums to 9 folder, Migrate Downloads to 9 folder and Migrate forum attachments to 9 folder. <br/> Click on
-                them in any order but wait for the scripts to finnish. <br/> Depending on content each proccess can take quite a while.
+            <li><strong>6</strong> &middot; Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except
+											images, infusions folders, config.php and the new .htaccess file.
             </li>
         </ul>
-        <p>CHMOD the following files and folders to 777:</p>
-        <ul style='list-style-type:disc'>
-            <li>/infusions/blog/images/</li>
-            <li>/infusions/blog/images/thumbs/</li>
-            <li>/infusions/blog/blog_cats/</li>
-            <li>/infusions/downloads/files/</li>
-            <li>/infusions/downloads/images/</li>
-            <li>/infusions/downloads/submissions/</li>
-            <li>/infusions/downloads/submissions/images/</li>
-            <li>/infusions/forum/attachments/</li>
-            <li>/infusions/news/images/</li>
-            <li>/infusions/news/images/thumbs/</li>
-            <li>/infusions/news/news_cats/</li>
-            <li>/infusions/gallery/photos/</li>
-            <li>/infusions/gallery/photos/thumbs/</li>
-            <li>/infusions/gallery/submissions/</li>
-            <li>/infusions/gallery/submissions/images/</li>
-        </ul>
+
         <hr/>
-        <p>Your site should now be fully upgraded and ready to run PHP-Fusion 9, do not forget to lift the Maintenance mode. (Admin Dashboard >
-            Settings > Security Settings).</p>
+        <p>Your site should now be fully upgraded and ready to run PHP-Fusion 9.</p>
         <hr/>
         <p>In order to further optimize your site you can enter the System Administration > Infusions and defuse the Infusions that are of no use to
             you.</p>

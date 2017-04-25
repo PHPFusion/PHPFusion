@@ -86,7 +86,7 @@ class Text extends \Defender\Validation  {
             \defender::stop();
             \defender::setInputError(self::$inputName);
         }
-        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
+        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
             self::$inputValue)) {
             return self::$inputValue;
         }
