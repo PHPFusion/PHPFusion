@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'\upgrade_functions_include.php';
+require_once dirname(__FILE__).'/upgrade_functions_include.php';
 
 ini_set('display_errors', FALSE);
 // [9.0][insertdbrow][12]
