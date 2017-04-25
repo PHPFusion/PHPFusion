@@ -30,19 +30,24 @@ class Images {
         'folders'     => array(),
     ];
 
+    /**
+     * @param $val
+     *
+     * @return int
+     */
     private static function get_server_limits($val) {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
         switch ($last) {
             case 'g':
-                $val *= 1024;
+                $val = (int)$val * 1024;
             case 'm':
-                $val *= 1024;
+                $val = (int)$val * 1024;
             case 'k':
-                $val *= 1024;
+                $val = (int)$val * 1024;
         }
 
-        return $val;
+        return (int)$val;
     }
 
     public static function max_server_upload() {
