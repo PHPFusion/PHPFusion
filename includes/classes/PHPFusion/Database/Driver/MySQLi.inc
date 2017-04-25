@@ -184,7 +184,7 @@ class MySQLi extends AbstractDatabaseDriver {
         }
         $result = mysqli_query($this->connection, $query);
         if (!$result) {
-            trigger_error(mysqli_error($this->connection)." <strong>@ ".$query."</strong>", E_USER_ERROR);
+            trigger_error(mysqli_error($this->connection)." <strong>@ ".$query."</strong>", E_USER_NOTICE);
         }
 
         return $result ?: FALSE;

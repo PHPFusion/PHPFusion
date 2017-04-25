@@ -33,7 +33,7 @@ $locale['setup_0113'] = "Your PHP installation is too old. PHP-Fusion requires a
 $locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in the following list";
 $locale['setup_0115'] = "Enabled";
 $locale['setup_0115a'] = "Not Enabled";
-$locale['setup_0116'] = "PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPcache</a> installed on your server.";
+$locale['setup_0116'] = "PHP OPcode caching can improve your site's performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPcache</a> installed on your server.";
 $locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension.";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";

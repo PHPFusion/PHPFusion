@@ -16,9 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.0.5';
+$inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
-
 $check_array = [
     'blog_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];

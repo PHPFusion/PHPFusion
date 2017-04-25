@@ -20,6 +20,11 @@ namespace PHPFusion\Weblinks;
 use PHPFusion\SiteLinks;
 use \PHPFusion\BreadCrumbs;
 
+/**
+ * Class Weblinks
+ *
+ * @package PHPFusion\Weblinks
+ */
 abstract class Weblinks extends WeblinksServer {
 
     private static $locale = array();
@@ -36,12 +41,12 @@ abstract class Weblinks extends WeblinksServer {
 
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
-        set_title(SiteLinks::get_current_SiteLinks('infusions/weblinks/weblinks.php', "link_name"));
+        set_title(self::$locale['web_0000']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(
             array(
-                "link" => INFUSIONS."weblinks/weblinks.php",
-                "title" => SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name")
+                "link"  => INFUSIONS."weblinks/weblinks.php",
+                "title" => self::$locale['web_0000']
             )
         );
 
@@ -100,10 +105,10 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
                 $info['weblink_categories'][$cdata['weblink_cat_id']] = array(
-                    "link" => INFUSIONS."weblinks/weblinks.php?cat_id=".$cdata['weblink_cat_id'],
-                    "name" => $cdata['weblink_cat_name'],
-                    "description" => $cdata['weblink_cat_description'],
-                    "count" => ($cdata['weblink_status'] == 1) ? $cdata['weblink_count'] : 0
+                    "link"        => INFUSIONS."weblinks/weblinks.php?cat_id=".$cdata['weblink_cat_id'],
+                    "name"        => $cdata['weblink_cat_name'],
+                    "description" => parse_textarea($cdata['weblink_cat_description'], TRUE, TRUE, FALSE, '', TRUE),
+                    "count"       => ($cdata['weblink_status'] == 1) ? $cdata['weblink_count'] : 0
                 );
             }
         }
@@ -117,7 +122,6 @@ abstract class Weblinks extends WeblinksServer {
      * @return array
      */
     public function get_WeblinkItems($filter = array()) {
-        $weblink_settings = self::get_weblink_settings();
 
         $info['weblink_total_rows'] = dbcount("(weblink_id)", DB_WEBLINKS, groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
 
@@ -156,8 +160,7 @@ abstract class Weblinks extends WeblinksServer {
         $weblink_settings = self::get_weblink_settings();
 
         return "
-            SELECT
-                a.*, ac.*
+            SELECT a.*, ac.*
             FROM ".DB_WEBLINKS." a
             LEFT JOIN ".DB_WEBLINK_CATS." ac ON ac.weblink_cat_id=a.weblink_cat
             WHERE a.weblink_status='1' AND ".groupaccess("a.weblink_visibility")." AND ac.weblink_cat_status='1' AND ".groupaccess("ac.weblink_cat_visibility")."
@@ -201,14 +204,11 @@ abstract class Weblinks extends WeblinksServer {
     private static function get_WeblinksData(array $data) {
 
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
-        $weblink_settings = self::get_weblink_settings();
 
         if (!empty($data)) {
-
             // Page Nav
             $articlePagenav = "";
             $pagecount = 1;
-
 
             // Admin Informations
             $adminActions = array();
@@ -231,12 +231,13 @@ abstract class Weblinks extends WeblinksServer {
                 "weblinks_url" => INFUSIONS."weblinks/weblinks.php?weblink_id=".$data['weblink_id'],
                 "weblinks_cat_url" => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'],
                 "admin_actions" => $adminActions,
-
                 # Page Nav
                 "page_count" => $pagecount,
                 "weblink_pagenav" => $articlePagenav
             );
-            $data['weblink_description'] = parse_textarea($data['weblink_description'], FALSE, FALSE, TRUE);
+
+            $data['weblink_description'] = parse_textarea($data['weblink_description'], FALSE, FALSE, FALSE, '', TRUE);
+
             $info += $data;
 
             return (array) $info;
@@ -279,10 +280,10 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-           set_title(SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name"));
+            set_title(self::$locale['web_0000']);
            BreadCrumbs::getInstance()->addBreadCrumb(array(
-                "link" => INFUSIONS."weblinks/weblinks.php",
-                "title" => SiteLinks::get_current_SiteLinks("infusions/weblinks/weblinks.php", "link_name")
+               "link"  => INFUSIONS."weblinks/weblinks.php",
+               "title" => self::$locale['web_0000']
             ));
 
             // Predefined variables, do not edit these values
@@ -291,7 +292,7 @@ abstract class Weblinks extends WeblinksServer {
             // build categorial data.
             $info['weblink_cat_id'] = $data['weblink_cat_id'];
             $info['weblink_cat_name'] = $data['weblink_cat_name'];
-            $info['weblink_cat_description'] = nl2br(parse_textarea($data['weblink_cat_description']));
+            $info['weblink_cat_description'] = parse_textarea($data['weblink_cat_description'], TRUE, TRUE, TRUE, '', TRUE);
             $info['weblink_cat_language'] = $data['weblink_cat_language'];
 
             $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
@@ -329,8 +330,9 @@ abstract class Weblinks extends WeblinksServer {
     }
 
     /**
-     * Articles Category Breadcrumbs Generator
-     * @param $article_cat_index - hierarchy array
+     * Weblinks Category Breadcrumbs Generator
+     *
+     * @param $weblink_cat_index
      */
     private function weblink_cat_breadcrumbs($weblink_cat_index) {
 

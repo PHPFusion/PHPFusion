@@ -323,7 +323,7 @@ class UserFields extends QuantumFields {
                 )
             );
 
-            if (iSUPERADMIN) {
+            if (iSUPERADMIN && db_exists(DB_PREFIX.'forums')) {
                 $this->info['user_reputation'] = form_text('user_reputation', $locale['u210'], $user_reputation, array(
                         'type'   => 'number',
                         'inline' => TRUE

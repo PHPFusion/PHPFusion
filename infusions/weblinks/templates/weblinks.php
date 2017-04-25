@@ -35,8 +35,10 @@ if (!function_exists("display_main_weblinks")) {
             echo "<div class='row'>";
             foreach ($info['weblink_categories'] as $cat_id => $cat_data) {
                 echo "<div id='".$cat_id."' class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>";
+                echo "<div class='spacer-xs'>\n";
                     echo "<a class='display-block' href='".$cat_data['link']."'>".$cat_data['name']." (".$cat_data['count'].")</a>\n";
-                    echo htmlspecialchars_decode($cat_data['description']);
+                echo $cat_data['description'];
+                echo "</div>\n";
                 echo "</div>";
             }
             echo "</div>";
@@ -64,7 +66,7 @@ if (!function_exists("render_weblinks_item")) {
                                 echo '<i class="fa fa-fw fa-link"></i>';
                                 echo '<a target="_blank" href="'.INFUSIONS.'weblinks/weblinks.php?weblink_id='.$info['weblink_id'].'" class="strong">'.$info['weblink_name'].'</a>';
                             echo '</h4>';
-                            echo $info['weblink_description'] ? '<div class="weblink_text m-t-5">'.trim_text(htmlspecialchars_decode($info['weblink_description']), 250).'</div>' : '';
+                echo $info['weblink_description'] ? '<div class="weblink_text m-t-5">'.parse_textarea($info['weblink_description'], FALSE, FALSE, TRUE, '', TRUE).'</div>' : '';
                             echo '<div class="weblink-category m-t-5">';
                                 echo '<i class="fa fa-fw fa-folder"></i>';
                                 echo '<a href="'.INFUSIONS.'weblinks/weblinks.php?cat_id='.$info['weblink_cat'].'">'.$info['weblink_cat_name'].'</a>';
