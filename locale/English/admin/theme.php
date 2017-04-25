@@ -116,7 +116,6 @@ $locale['theme_4013'] = "Link Color";
 $locale['theme_4014'] = "Text Styling";
 $locale['theme_4015'] = "Horizontal Text Styling";
 $locale['theme_4016'] = "Link Styling";
-$locale['theme_4016'] = "Horizontal Text Styling";
 
 $locale['theme_5000'] = "Normal";
 $locale['theme_5001'] = "Bold";
