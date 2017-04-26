@@ -689,6 +689,23 @@ Alert
     text-align: center;
 }
 
+.admin-message.alert-danger {
+    background-color: #c9342f;
+    background-repeat: no-repeat;
+    background: -webkit-linear-gradient(top, #dd5959 0%, #c15252 100%);
+    background: -moz-linear-gradient(top, #dd5959 0%, #c15252 100%);
+    background: -o-linear-gradient(top, #dd5959 0%, #c15252 100%);
+    background: linear-gradient(top, #dd5959 0%, #c15252 100%);
+    -webkit-box-shadow: 0 0 0 1px #c15252, 0 1px 2px rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0 0 0 1px #c15252, 0 1px 2px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 1px #c15252, 0 1px 2px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    display: block;
+    font-size: 15px;
+    line-height: 20px;
+    color: #fff;
+}
+
 .row.container {
     padding: 0;
     margin: auto;

@@ -116,7 +116,7 @@ class Console_Core extends Install_Core {
         $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
         $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.css' rel='stylesheet' />";
         $html .= OutputHandler::$pageHeadTags;
-        $html .= "</head>\n<body>\n";
+        $html .= "</head>\n<body".(!isset($_GET['upgrade']) ? " class='install'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {

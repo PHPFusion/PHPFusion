@@ -1,6 +1,7 @@
 body {
     position: relative;
-    font: 13px 'Ubuntu', Arial, 'Helvetica Nueu', Helvetica, sans-serif !important;
+    font: 13px 'Ubuntu', 'Helvetica Nueu', Helvetica, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
     color: #fff;
     padding: 5% 0%;
     background: #DFDFDF;
@@ -16,6 +17,26 @@ body {
     min-height: 100vh;
 }
 
+body.install {
+    background-size: cover;
+    min-height: 600px;
+    height: 100%;
+    position: relative;
+    height: 100%;
+    background: #0E233B;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -o-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #294566), color-stop(1, #0c1f38));
+    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
+    background-image: radial-gradient(ellipse farthest-corner at center, #294566 0%, #0c1f38 100%);
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 .pf-logo {
     z-index: 300;
     margin-top: -136px;
