@@ -161,7 +161,6 @@ PHP-Fusion 9 Core Template Forum CSS
 .post_message {
 	margin: 15px 0;
 	word-wrap: break-word;
-	word-break: break-all;
 }
 .post_items, .forum-list {
 	margin:25px 0 10px;
