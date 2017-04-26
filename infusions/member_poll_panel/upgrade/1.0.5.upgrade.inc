@@ -45,7 +45,13 @@ if (dbrows($result)) {
         $poll_opts = [];
         foreach ($enabled_languages as $language => $language_name) {
             $poll_title[$language] = $pollData['poll_title'];
-            $poll_opts[$language] = $pollData['poll_opt']; // this has a int key before language
+            // poll_opt_1 to poll_opt_9
+            for ($x = 1; $x <= 9; $x++) {
+                $opts_column = 'poll_opt_'.$x;
+                if (!empty($pollData[$opts_column])) {
+                    $poll_opts[$x][$language] = $pollData[$opts_column];
+                }
+            }
         }
         $poll_title = serialize($poll_title);
         $poll_opts = serialize($poll_opts);
