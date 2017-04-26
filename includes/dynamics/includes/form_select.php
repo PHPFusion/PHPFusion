@@ -301,6 +301,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."includes/" : INCLUDES;
+    $root_img = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl') : '';
     $path = $options['file'] ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
     if (!empty($input_value)) {
         // json mode.
@@ -322,7 +323,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 			if(!item.id) {return item.text;}
 			var avatar = item.avatar;
 			var level = item.level;
-			return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".$root_prefix.IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
+			return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".$root_img.IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
 		}
 		$('#".$options['input_id']."').select2({
 		$length
