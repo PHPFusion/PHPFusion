@@ -212,7 +212,7 @@ class News extends Core {
                 <ul class='meta-right'>
                     <li><i class='fa fa-eye'></i> <?php echo number_format($news['news_reads']) ?></li>
                     <li>
-                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>' href='<?php echo $news['print_link'] ?>'>
+                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>' href='<?php echo $news['print_link'] ?>' target='_blank'>
                             <i class='fa fa-print'></i>
                             <?php echo fusion_get_locale('news_0002') ?>
                         </a>

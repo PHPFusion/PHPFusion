@@ -235,11 +235,9 @@ if (!function_exists('render_news')) {
             echo "</div>\n";
             echo "</article>\n";
         } else {
-
-
             echo "<!--news_prepost_".$info['news_id']."-->\n";
             echo "<article class='panel panel-default' style='min-height:290px'>\n";
-            echo "<div class='overflow-hide' style='height: ".$news_settings['news_thumb_h']."px'>\n";
+            echo "<div class='overflow-hide'>\n";
             echo "<div class='image-header'>\n";
             echo $info['news_image'];
             echo "</div>\n";
@@ -260,7 +258,7 @@ if (!function_exists('render_news')) {
             echo "<span class='m-r-10'><i class='fa fa-eye'></i> ".number_format($info['news_reads'])."</span>";
             echo $info['news_display_comments'];
             echo $info['news_display_ratings'];
-            echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='fa fa-print'></i></a>";
+            echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."' target='_blank'><i class='fa fa-print'></i></a>";
             if (!empty($info['admin_actions'])) {
                 $admin_actions = $info['admin_actions'];
                 echo "<a class='pull-right' title='".$locale['news_0003']."' href='".$admin_actions['edit']."' title='".$locale['news_0003']."' /><i class='fa fa-pencil'></i></a>\n";
@@ -355,7 +353,7 @@ if (!function_exists('render_news_item')) {
         echo "<span class='news-action'><i class='fa fa-eye m-r-15'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
         echo $data['news_display_comments'];
         echo $data['news_display_ratings'];
-        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print m-r-15'></i>".$locale['print']."</a>";
+        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."' target='_blank'><i class='fa fa-print'></i>".$locale['print']."</a>";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
