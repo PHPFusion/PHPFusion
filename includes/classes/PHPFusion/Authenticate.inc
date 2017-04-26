@@ -48,17 +48,13 @@ class Authenticate {
         switch ($settings['login_method']) {
             case 1:
                 $where = "user_email";
-                $error = "error_input_email";
                 break;
             case 2:
                 $where = (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $inputUserName) ? "user_email" : "user_name");
-                $error = "error_input_username";
                 break;
         }
-        $auth_sql = "SELECT * FROM ".DB_USERS." WHERE ".$where."=:param LIMIT 1";
-        $auth_param = [':param' => $inputUserName];
-        $result = dbquery($auth_sql, $auth_param);
-        if (dbrows($result)) {
+        $result = dbquery("SELECT * FROM ".DB_USERS." WHERE ".$where."='".$inputUserName."' LIMIT 1");
+        if (dbrows($result) == 1) {
             $user = dbarray($result);
             // Initialize password auth
             $passAuth = new PasswordAuth();
@@ -72,14 +68,9 @@ class Authenticate {
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
                     $user['user_password'] = $passAuth->getNewHash();
-                    dbquery("UPDATE ".DB_USERS." SET user_algo=:algo, user_salt=:salt, user_password=:password WHERE user_id=:user_id",
-                        [
-                            ':algo'     => $user['user_algo'],
-                            ':salt'     => $user['user_salt'],
-                            ':password' => $user['user_password'],
-                            ':user_id'  => $user['user_id']
-                        ]
-                    );
+                    $result = dbquery("UPDATE ".DB_USERS."
+						SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
+						WHERE user_id='".$user['user_id']."'");
                 }
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
                     Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
@@ -88,7 +79,7 @@ class Authenticate {
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
-                    if (($user['user_status'] == 3 && $user['user_actiontime'] < TIME) || $user['user_status'] == 7) {
+                    if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
                         $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
                         if ($user['user_status'] == 3) {
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
@@ -107,11 +98,9 @@ class Authenticate {
                     }
                 }
             } else {
-                addNotice('danger', fusion_get_locale('password_invalid'), 'all');
                 redirect(Authenticate::getRedirectUrl(1));
             }
         } else {
-            addNotice('danger', fusion_get_locale($error), 'all');
             redirect(Authenticate::getRedirectUrl(1));
         }
     }
