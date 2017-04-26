@@ -40,7 +40,6 @@ $check_array = [
     'news_cat_visibility' => " ADD news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER news_cat_image",
     'news_cat_draft' => " ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility",
     'news_cat_sticky' => " ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft",
-    // Add multilang support
     'news_cat_language' => " ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_cat_sticky",
 ];
 foreach ($check_array as $key => $value) {

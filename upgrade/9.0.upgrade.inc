@@ -489,13 +489,14 @@ if (db_exists(DB_ADMIN)) {
     // Remove the deprecated administration links
     $del_table = [
         'settings_photo.php',
-        'settings_forum.pohp',
+        'settings_forum.php',
         'user_field_cats.php',
+        'settings_dl.php',
         'settings_ipp.php',
         'submissions.php'
     ];
-    foreach ($del_table as $value) {
-        $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='$value'";
+    foreach ($del_table as $link) {
+        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link=:url", [':url' => $link]);
     }
 
     // Add new core administration links
