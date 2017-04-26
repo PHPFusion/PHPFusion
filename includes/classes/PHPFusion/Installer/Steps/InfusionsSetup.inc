@@ -138,25 +138,13 @@ class InstallerInfusions extends Install_Core {
                 $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
             }
             $content .= "</div>\n</div>\n";
-
-            // The URL will change. No need for this.
-            //$content .= "<div class='well text-center m-t-10'>\n";
-            //$content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-            //$content .= "</div>\n";
-
             self::$step = array(
                 1 => array(
                     'class' => 'pull-right btn-success',
                     'name'  => 'step',
-                    'label' => self::$locale['setup_1019'],
+                    'label' => self::$locale['setup_0120'],
                     'value' => self::STEP_EXIT
                 ),
-                /*2 => array(
-                    'name' => 'step',
-                    'class' => 'm-l-15 btn-default',
-                    'label' => self::$locale['setup_0124'],
-                    'value' => self::STEP_INTRO
-                )*/
             );
         }
 
