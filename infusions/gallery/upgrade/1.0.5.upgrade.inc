@@ -117,14 +117,14 @@ $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$language."')";
 
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/gallery.php' AND link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_PHOTO_ALBUMS." WHERE album_language='".$language."'"; //will not be able to delete photos tied to it.
     }
 } else {
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$enabled_languages[$i]."')";
 }
