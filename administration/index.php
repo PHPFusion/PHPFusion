@@ -54,7 +54,7 @@ if (db_exists(DB_PREFIX.'forums')) {
     ];
     $forum['count'] = dbcount("(forum_id)", DB_PREFIX.'forums');
     if (db_exists(DB_PREFIX.'forum_threads')) {
-        $forum['thread'] = dbcount("(post_id)", DB_PREFIX.'forum_threads');
+        $forum['thread'] = dbcount("(thread_id)", DB_PREFIX.'forum_threads');
     }
     if (db_exists(DB_PREFIX.'forum_posts')) {
         $forum['post'] = dbcount("(post_id)", DB_PREFIX.'forum_posts');
