@@ -35,3 +35,24 @@ if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
 
 // update new path for admin link
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.png', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='polls.php'";
+
+// Poll Entries Upgrade to Serialized Fields
+$result = dbquery("SELECT * FROM ".DB_POLLS." ORDER BY poll_id ASC");
+if (dbrows($result)) {
+    $enabled_languages = fusion_get_enabled_languages();
+    while ($pollData = dbarray($result)) {
+        $poll_title = [];
+        $poll_opts = [];
+        foreach ($enabled_languages as $language => $language_name) {
+            $poll_title[$language] = $pollData['poll_title'];
+            $poll_opts[$language] = $pollData['poll_opt']; // this has a int key before language
+        }
+        $poll_title = serialize($poll_title);
+        $poll_opts = serialize($poll_opts);
+        dbquery("UPDATE ".DB_POLLS." SET poll_title=:title, poll_opt=:opt WHERE poll_id=:id", [
+            ':id'    => $pollData['poll_id'],
+            ':title' => $poll_title,
+            ':opt'   => $poll_opts
+        ]);
+    }
+}

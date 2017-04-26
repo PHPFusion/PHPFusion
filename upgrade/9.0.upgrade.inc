@@ -597,8 +597,12 @@ if (db_exists(DB_PREFIX.'panels')) {
         $inf_altertable[] = DB_PANELS." ADD panel_status tinyint(1) NOT NULL DEFAULT '1' AFTER panel_display";
     }
     // Alter all panel settings
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='1'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='forum_threads_list_panel'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='member_poll_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
+
 }
 
 if (db_exists(DB_USER_FIELD_CATS)) {
