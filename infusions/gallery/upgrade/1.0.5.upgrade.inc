@@ -102,7 +102,7 @@ $result = dbquery("SELECT album_id, album_thumb FROM ".DB_PHOTO_ALBUMS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
         if ($data['album_thumb']) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."' WHERE album_id='".$data['album_id']."'";
+            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."', album_language='".fusion_get_settings('locale')."' WHERE album_id='".$data['album_id']."'";
         }
     }
 }
