@@ -96,6 +96,15 @@ if (iMEMBER) {
         }
     }
 
+    $submit_link = '';
+    if (iADMIN && checkrights("SU")) {
+	$subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
+	if ($subm_count) {
+		$submit_link = "<br /><a href='".ADMIN."submissions.php".fusion_get_aidlink()."' class='side'>".
+                sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129']);
+	}
+    }
+
     $info = [
             'forum_exists'         => $forum_exists,
             'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
@@ -106,6 +115,7 @@ if (iMEMBER) {
             'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
             'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
             'submissions'          => $submissions_link_arr,
+            'submit'               => $submit_link,
         ] + $userdata;
 
     ob_start();
@@ -133,6 +143,7 @@ if (iMEMBER) {
         '{%acp_title%}'            => (iADMIN ? $locale['UM083'] : ''),
         '{%logout_link%}'          => BASEDIR."index.php?logout=yes",
         '{%logout_title%}'         => $locale['UM084'],
+        '{%submit%}'               => $info['submit'],
     ]);
 
 } else {
