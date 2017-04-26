@@ -37,7 +37,7 @@ class Page extends Core {
 
         // Uncomment this to allow User Use Right Panel
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-		
+
         // cp_idx
         if (!empty($info['error'])) :
             echo "<div class='well text-center'>".$info['error']."</div>\n";
