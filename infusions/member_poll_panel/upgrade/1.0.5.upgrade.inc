@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
+
 if (!column_exists(DB_POLL_VOTES, 'vote_user_ip', FALSE)) {
     $inf_altertable[] = DB_POLL_VOTES." ADD vote_user_ip VARCHAR(45) NOT NULL DEFAULT '' AFTER vote_user";
 }
@@ -24,7 +25,8 @@ if (!column_exists(DB_POLL_VOTES, 'vote_user_ip_type', FALSE)) {
     $inf_altertable[] = DB_POLL_VOTES." ADD vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4' AFTER vote_user_ip";
 }
 if (!column_exists(DB_POLLS, 'poll_opt', FALSE)) {
-    $inf_altertable[] = DB_POLLS." ADD poll_opt TEXT NOT NULL AFTER poll_title";
+    $poll_opt_alter = DB_POLLS." ADD poll_opt TEXT NOT NULL AFTER poll_title";
+    dbquery("ALTER TABLE ".$poll_opt_alter);
 }
 if (!column_exists(DB_POLLS, 'poll_visibility', FALSE)) {
     $inf_altertable[] = DB_POLLS." ADD poll_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER poll_ended";
@@ -37,6 +39,27 @@ if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.png', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='polls.php'";
 
 // Poll Entries Upgrade to Serialized Fields
+/*
+* `pfdemos_v7_Default`.`demos6ef8L_polls`
+$demos6ef8L_polls = array(
+        array(
+            'poll_id' => '1',
+            'poll_title' => 'This is system polls',
+            'poll_opt_0' => 'One',
+            'poll_opt_1' => 'Two',
+            'poll_opt_2' => 'Three',
+            'poll_opt_3' => 'Four',
+            'poll_opt_4' => 'Five',
+            'poll_opt_5' => 'Six',
+            'poll_opt_6' => 'Seven',
+            'poll_opt_7' => 'Eight',
+            'poll_opt_8' => 'Nine',
+            'poll_opt_9' => 'Ten',
+            'poll_started' => '1406431772',
+            'poll_ended' => '0'
+        )
+    );
+*/
 $result = dbquery("SELECT * FROM ".DB_POLLS." ORDER BY poll_id ASC");
 if (dbrows($result)) {
     $enabled_languages = fusion_get_enabled_languages();
