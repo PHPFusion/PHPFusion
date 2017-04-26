@@ -19,10 +19,13 @@
 $inf_version = '1.1';
 
 if (column_exists(DB_SHOUTBOX, 'shout_hidden', FALSE)) {
-    $inf_altertable[] = DB_SHOUTBOX." CHANGE shout_hidden shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0'";
+    $column_add = DB_SHOUTBOX." CHANGE shout_hidden shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0'";
+    dbquery("ALTER TABLE ".$column_add);
 }
 if (!column_exists(DB_SHOUTBOX, 'shout_language')) {
-    $inf_altertable[] = DB_SHOUTBOX." ADD shout_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER shout_hidden";
+    $column_add = DB_SHOUTBOX." ADD shout_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER shout_hidden";
+    dbquery("ALTER TABLE ".$column_add);
 }
+
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('hidden_shouts', '0', 'shoutbox_panel')";
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/shoutbox_panel/shouts.png', admin_page='5' WHERE admin_link='../infusions/shoutbox_panel/shoutbox_admin.php'";
