@@ -100,7 +100,7 @@ if (iMEMBER) {
     if (iADMIN && checkrights("SU")) {
 	$subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
 	if ($subm_count) {
-		$submit_link = "<br /><a href='".ADMIN."submissions.php".fusion_get_aidlink()."' class='side'>".
+    		$submit_link = "<br /><a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
                 sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129']);
 	}
     }
