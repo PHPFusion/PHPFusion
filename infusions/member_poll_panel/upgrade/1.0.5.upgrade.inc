@@ -39,27 +39,6 @@ if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.png', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='polls.php'";
 
 // Poll Entries Upgrade to Serialized Fields
-/*
-* `pfdemos_v7_Default`.`demos6ef8L_polls`
-$demos6ef8L_polls = array(
-        array(
-            'poll_id' => '1',
-            'poll_title' => 'This is system polls',
-            'poll_opt_0' => 'One',
-            'poll_opt_1' => 'Two',
-            'poll_opt_2' => 'Three',
-            'poll_opt_3' => 'Four',
-            'poll_opt_4' => 'Five',
-            'poll_opt_5' => 'Six',
-            'poll_opt_6' => 'Seven',
-            'poll_opt_7' => 'Eight',
-            'poll_opt_8' => 'Nine',
-            'poll_opt_9' => 'Ten',
-            'poll_started' => '1406431772',
-            'poll_ended' => '0'
-        )
-    );
-*/
 $result = dbquery("SELECT * FROM ".DB_POLLS." ORDER BY poll_id ASC");
 if (dbrows($result)) {
     $enabled_languages = fusion_get_enabled_languages();
