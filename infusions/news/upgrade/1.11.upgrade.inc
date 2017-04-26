@@ -22,15 +22,14 @@ $check_array = [
     // Add support for keywords in news items
     'news_keywords' => " ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended",
     'news_language' => " ADD news_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_allow_ratings",
-    // Add multilang support
-    // News gallery
     'news_image_align' => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
     'news_image_full_default' => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
     'news_image_front_default' => " ADD news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_full_default",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS, $key)) {
-        $inf_altertable[] = DB_NEWS.$value;
+        $alter_table = DB_NEWS.$value;
+        dbquery("ALTER TABLE ".$alter_table);
     }
 }
 
@@ -83,13 +82,15 @@ $check_array = [
     'news_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('news');
+
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'news')";
     }
 }
 if (!db_exists(DB_NEWS_IMAGES)) {
-    $inf_newtable[] = DB_NEWS_IMAGES." (
+
+    $create_table = DB_NEWS_IMAGES." (
     news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_image VARCHAR(100) NOT NULL DEFAULT '',
@@ -99,13 +100,14 @@ if (!db_exists(DB_NEWS_IMAGES)) {
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (news_image_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    dbquery("CREATE TABLE ".$create_table);
 
     // Port Photos into New Tables
     $query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS;
     $result = dbquery($query);
-    if (dbrows($result) > 0) {
+    if (dbrows($result)) {
         while ($data = dbarray($result)) {
-            $inf_insertdbrow[] = DB_NEWS_IMAGES." (news_id, news_image, news_image_t1, news_image_t2, news_image_user, news_image_datestamp) VALUES (
+            $insert_rows = DB_NEWS_IMAGES." (news_id, news_image, news_image_t1, news_image_t2, news_image_user, news_image_datestamp) VALUES (
             '".$data['news_id']."',
             '".$data['news_image']."',
             '".$data['news_image_t1']."',
@@ -113,18 +115,32 @@ if (!db_exists(DB_NEWS_IMAGES)) {
             '".$data['news_image_user']."',
             '".$data['news_image_datestamp']."'
             )";
+            dbquery("INSERT INTO ".$insert_rows);
+            $id = dblastid();
+            // We update news column
+            dbquery("UPDATE ".DB_NEWS." SET news_image_align=:align, news_image_full_default=:id, news_image_front_default=:id2",
+                [
+                    ':align' => 'news-img-center',
+                    ':id'    => $id,
+                    ':id2'   => $id
+                ]
+            );
+            // Now we move all the images over
+            if (file_exists(IMAGES."news/".$data['news_image'])) {
+                rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
+            }
+            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
+                rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
+            }
+            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
+                rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
+            }
         }
-	    if (file_exists(IMAGES."news/".$data['news_image'])) {
-    		rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
-    	}
-	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
-        	rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
-    	}
-	    if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
-        	rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
-    	}
     }
 }
+
+// Check all images
+
 
 // Drop existing columns
 $check_array = [
