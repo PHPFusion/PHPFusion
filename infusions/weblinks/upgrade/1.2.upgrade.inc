@@ -44,19 +44,39 @@ foreach ($check_wblC12 as $key => $value) {
     }
 }
 
-// Set weblink visibility
-if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
-	$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
-	if (dbrows($result) > 0) {
-	    while ($data = dbarray($result)) {
-	        $inf_updatedbrow[] = DB_WEBLINKS." SET weblink_visibility='-".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'";
-	    }
-	}
+$inf_updatedbrow[] = DB_WEBLINKS." SET weblink_status='1'";
+$inf_updatedbrow[] = DB_WEBLINK_CATS." SET weblink_cat_status='1'";
+
+// Added weblink_cat_visibility by now.
+// Need to check and add weblink category access and copy value to new weblink_cat_visibility
+
+$result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ORDER by weblink_cat_id ASC");
+if (dbrows($result)) {
+    while ($wcData = dbarray($result)) {
+        if (!empty($wcData['weblink_cat_access'])) {
+            // copy the data over
+            switch ($wcData['weblink_cat_access']) {
+                case 101:
+                    $wcData['weblink_cat_visibility'] = USER_LEVEL_MEMBER;
+                    break;
+                case 102:
+                    $wcData['weblink_cat_visibility'] = USER_LEVEL_ADMIN;
+                    break;
+                case 103:
+                    $wcData['weblink_cat_visibility'] = USER_LEVEL_SUPER_ADMIN;
+                    break;
+                default:
+                    $wcData['weblink_cat_visibility'] = $wcData['weblink_cat_access'];
+            }
+            // Update category visibility
+            $inf_updatedbrow[] = DB_WEBLINK_CATS." SET weblink_cat_visibility ='".$wcData['weblink_cat_visibility']."' WHERE weblink_cat_id='".$wcData['weblink_cat_id']."'";
+            // Update entries visibility
+            $inf_updatedbrow[] = DB_WEBLINKS." SET weblink_visibility='".$wcData['weblink_cat_visibility']."' WHERE weblink_cat='".$wcData['weblink_cat_id']."'";
+        }
+    }
 }
 
-if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
-    $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access";
-}
+$inf_dropcol[] = ['table' => DB_WEBLINK_CATS, 'column' => 'weblink_cat_access'];
 
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('weblinks');

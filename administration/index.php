@@ -28,7 +28,6 @@ if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
  * $admin_sections are generated from navigation.php
  * $admin_pages are generated from navigation.php
  */
-
 $admin_images = TRUE;
 
 // Members stats
@@ -42,8 +41,7 @@ $members['security_ban'] = dbcount("(user_id)", DB_USERS, "user_status='4'");
 $members['cancelled'] = dbcount("(user_id)", DB_USERS, "user_status='5'");
 if (fusion_get_settings("enable_deactivation") == "1") {
     $time_overdue = time() - (86400 * fusion_get_settings("deactivation_period"));
-    $members['inactive'] = dbcount("(user_id)", DB_USERS,
-                                   "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
+    $members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
 // Get Core Infusion´s stats
 if (db_exists(DB_PREFIX.'forums')) {
