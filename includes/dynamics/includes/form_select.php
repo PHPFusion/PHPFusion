@@ -300,8 +300,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= $options['inline'] ? "</div>\n" : '';
 
     $html .= "</div>\n";
-    $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings("siteurl") : '';
-    $path = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
+    $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."includes/" : INCLUDES;
+    $path = $options['file'] ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
     if (!empty($input_value)) {
         // json mode.
         $encoded = $options['file'] ? $options['file'] : user_search($input_value);

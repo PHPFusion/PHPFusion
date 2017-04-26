@@ -700,7 +700,7 @@ class UserFields extends QuantumFields {
         $user_groups = array_filter($user_groups);
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
-                $grp_html .= "<span class='user_group'><a href='".FUSION_SELF."?group_id=".$user_groups[$i]."'>".getgroupname($user_groups[$i])."</a></span>";
+                $grp_html .= "<span class='user_group'><a href='".BASEDIR."profile.php?group_id=".$user_groups[$i]."'>".getgroupname($user_groups[$i])."</a></span>";
             }
             $this->info['core_field']['profile_user_group']['value'] = $grp_html;
         } else {
@@ -874,7 +874,7 @@ class UserFields extends QuantumFields {
                 }
             }
             if (iADMIN && checkrights("UG") && $user_groups_opts) {
-                $submit_link = FUSION_SELF."?lookup=".$this->userData['user_id'];
+                $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
                 if (isset($_GET['step']) && $_GET['step'] == "view") {
                     $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
                 }
