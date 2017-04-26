@@ -23,4 +23,5 @@ if (column_exists(DB_SHOUTBOX, 'shout_hidden', FALSE)) {
 if (!column_exists(DB_SHOUTBOX, 'shout_language')) {
     $inf_altertable[] = DB_SHOUTBOX." ADD shout_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER shout_hidden";
 }
-$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/shoutbox_panel/shouts.png' WHERE admin_link='../infusions/shoutbox_panel/shoutbox_admin.php'";
+
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/shoutbox_panel/shouts.png', admin_page='5' WHERE admin_link='../infusions/shoutbox_panel/shoutbox_admin.php'";
