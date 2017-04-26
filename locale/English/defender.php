@@ -3,6 +3,7 @@ $locale['validate'] = "Please check and revalidate the field.";
 $locale['error_request'] = "There was an error while processing your request"; // to be moved
 $locale['regex_error'] = "Please check and revalidate the %s field"; // to be moved
 // Text fields errors
+$locale['error_input_username'] = "Please enter a valid username";
 $locale['error_input_default'] = "Please fill out this field";
 $locale['error_input_password'] = "Please enter a valid password";
 $locale['error_input_email'] = "Please enter a valid email";

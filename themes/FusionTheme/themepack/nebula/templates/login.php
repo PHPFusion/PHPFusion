@@ -27,7 +27,7 @@ use ThemeFactory\Core;
 class Login {
 
     public static function login_form($info) {
-
+        echo renderNotices(getNotices(array('all', FUSION_SELF)));
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();

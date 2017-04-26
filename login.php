@@ -29,16 +29,16 @@ if (!iMEMBER) {
         }
         switch ($_GET['error']) {
             case 1:
-                addNotice("warning", $locale['global_196']);
+                addNotice("danger", $locale['error_input_username']);
                 break;
             case 2:
-                addNotice("warning", $locale['global_192']);
+                addNotice("danger", $locale['global_192']);
                 break;
             case 3:
                 if (isset($_COOKIE[COOKIE_PREFIX."user"])) {
                     redirect($action_url);
                 } else {
-                    addNotice("warning", $locale['global_193']);
+                    addNotice("danger", $locale['global_193']);
                 }
                 break;
             case 4:
@@ -59,8 +59,7 @@ if (!iMEMBER) {
 								LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
 								WHERE s.suspended_user='".$id."'
 								ORDER BY s.suspend_date DESC LIMIT 1"));
-                            addNotice("danger", $locale['global_407'].showdate('shortdate',
-                                                                               $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
+                            addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
                             break;
                         case 4:
                             addNotice("danger", $locale['global_409']);
@@ -74,6 +73,9 @@ if (!iMEMBER) {
                     }
                 }
                 break;
+                break;
+            case 5:
+                addNotice('danger', $locale['error_input_password']);
         }
     }
     switch (fusion_get_settings("login_method")) {
