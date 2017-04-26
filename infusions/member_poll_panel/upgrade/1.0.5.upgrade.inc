@@ -47,11 +47,10 @@ if (dbrows($result)) {
         $poll_opts = [];
         foreach ($enabled_languages as $language => $language_name) {
             $poll_title[$language] = $pollData['poll_title'];
-            // poll_opt_1 to poll_opt_9
-            for ($x = 1; $x <= 9; $x++) {
+            for ($x = 0; $x <= 10; $x++) {
                 $opts_column = 'poll_opt_'.$x;
                 if (!empty($pollData[$opts_column])) {
-                    $poll_opts[$x][$language] = $pollData[$opts_column];
+                    $poll_opts[$x + 1][$language] = $pollData[$opts_column];
                 }
             }
         }
