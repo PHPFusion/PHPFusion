@@ -168,8 +168,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     redirect(clean_request('', array('submit_id'), FALSE));
                 }
 
-            }
-            /* elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+            } elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 
                 $bind = [':submit_id' => $_GET['submit_id']];
                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE submit_id=:submit_id", $bind);
@@ -184,7 +183,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submit_id", $bind);
                 addNotice("success", self::$locale['news_0145']);
                 redirect(clean_request("", array("submit_id"), FALSE));
-            } */
+            }
 
             $submit_query = "SELECT ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
                         FROM ".DB_SUBMISSIONS." ts
