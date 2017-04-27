@@ -74,7 +74,7 @@ if (db_exists(DB_WEBLINKS)) {
         }
 
         if ($rows != 0) {
-            $item_count = "<a href='".BASEDIR."search.php?stype=weblinks&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=weblinks&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
@@ -100,7 +100,7 @@ if (db_exists(DB_WEBLINKS)) {
                         '{%item_url%}'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
                         '{%item_image%}'       => '',
                         '{%item_title%}'       => $data['weblink_name'].' '.$new,
-                        '{%item_description%}' => $desc,
+                        '{%item_description%}' => strip_tags($desc),
                     ]
                 );
             }
