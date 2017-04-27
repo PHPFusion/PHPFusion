@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: edit_profile.php
 | Author: PHP-Fusion Development Team
@@ -21,7 +21,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 include THEMES."templates/global/profile.php";
 
 if (!iMEMBER) {
-	redirect("index.php");
+    redirect("index.php");
 }
 
 add_to_title($locale['global_200'].$locale['u102']);
@@ -31,26 +31,26 @@ $errors = array();
 $_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
 if (isset($_POST['update_profile'])) {
-	$userInput = new PHPFusion\UserFieldsInput();
-	$userInput->setUserNameChange(fusion_get_settings('userNameChange')); // accept or not username change.
-	$userInput->verifyNewEmail = TRUE;
+    $userInput = new PHPFusion\UserFieldsInput();
+    $userInput->setUserNameChange(fusion_get_settings('userNameChange')); // accept or not username change.
+    $userInput->verifyNewEmail = TRUE;
     $userInput->userData = fusion_get_userdata();
-	$userInput->saveUpdate();
-	if (defender::safe()) {
+    $userInput->saveUpdate();
+    if (defender::safe()) {
         redirect(FUSION_REQUEST);
-	}
+    }
 } elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
-	$userInput = new PHPFusion\UserFieldsInput();
-	$userInput->verifyCode($_GET['code']);
+    $userInput = new PHPFusion\UserFieldsInput();
+    $userInput->verifyCode($_GET['code']);
     redirect(FUSION_REQUEST);
 }
 
 if (fusion_get_settings('email_verification') == 1) {
-	$result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
-	if (dbrows($result)) {
-		$data = dbarray($result);
+    $result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
+    if (dbrows($result)) {
+        $data = dbarray($result);
         $info['email_notification'] = sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201'];
-	}
+    }
 }
 $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
@@ -61,7 +61,5 @@ $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
-$info += $userFields->get_profile_input();
-render_userform($info);
-
+$userFields = $userFields->display_profile_input($info);
 require_once THEMES."templates/footer.php";

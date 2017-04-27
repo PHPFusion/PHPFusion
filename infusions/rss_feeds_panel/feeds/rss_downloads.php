@@ -21,40 +21,39 @@ require_once dirname(__FILE__)."../../../../maincore.php";
 header('Content-Type: application/rss+xml; charset='.$locale['charset'].'');
 
 if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-	include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
+    include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
 } else {
-	include INFUSIONS."rss_feeds_panel/locale/English.php";
+    include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
 
 if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
-
-	$result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_DOWNLOAD_CATS." tbl1
+    $result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_DOWNLOAD_CATS." tbl1
 	RIGHT JOIN ".DB_DOWNLOADS." tbl2 ON tbl1.download_cat_id=tbl2.download_cat
-	WHERE ".groupaccess('download_visibility').(multilang_table("DL")?" AND download_cat_language='".LANGUAGE."'":"")."
+	WHERE ".groupaccess('download_visibility').(multilang_table("DL") ? " AND download_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY tbl2.download_count DESC LIMIT 0,10");
 
-	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-	echo "<rss version=\"2.0\">\n\n <channel>\n";
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n";
 
-	if (dbrows($result) != 0) {
+    if (dbrows($result) != 0) {
 
-		echo "<title>".$settings['sitename'].$locale['rss003'].(multilang_table("DL")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n<link>".$settings['siteurl']."</link>\n";
-		echo "<description>".$settings['description']."</description>\n";
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_downloads'].(multilang_table("DL") ? $locale['rss_in'].LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
+        echo "<description>".$settings['description']."</description>\n";
 
-		while ($row=dbarray($result)) {
-			$rsid = intval($row['download_id']);
-			$rtitle = $row['download_title'];
-			$description = stripslashes(nl2br($row['download_description']));
-			$description = strip_tags($description, "<a><p><br /><br /><hr />");
-			echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
-			echo "<link>".$settings['siteurl']."infusions/downloads/downloads.php?download_id=".$rsid."</link>\n";
-			echo "<description>".htmlspecialchars($description)."</description>\n";
-			echo "</item>\n\n";
-		}
-	} else {
-		echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+        while ($row = dbarray($result)) {
+            $rsid = intval($row['download_id']);
+            $rtitle = $row['download_title'];
+            $description = stripslashes(nl2br($row['download_description']));
+            $description = strip_tags($description, "<a><p><br /><br /><hr />");
+            echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
+            echo "<link>".$settings['siteurl']."infusions/downloads/downloads.php?download_id=".$rsid."</link>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
+            echo "</item>\n\n";
+        }
+    } else {
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_downloads']."</title>\n
 		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss008']."</description>\n";
-	}
-	echo "</channel></rss>";
+		<description>".$locale['rss_nodata']."</description>\n";
+    }
+    echo "</channel>\n</rss>";
 }

@@ -21,47 +21,35 @@
  * @param array $info - Form fields
  */
 if (!function_exists("display_maintenance")) {
-    function display_maintenance(array $info)
-    {
-        ?>
-        <section class="maintenance container">
-            <?php
-            $notices = getNotices();
-            if ($notices) echo renderNotices($notices);
-            ?>
-            <div class="m-t-20 jumbotron text-center">
-                <img src='<?php echo fusion_get_settings("sitebanner")?>' alt='<?php echo fusion_get_settings("sitename")?>' />
-                <?php
-                echo "<h1><strong>".fusion_get_settings("sitename")."</strong></h1>\n";
-                $message = fusion_get_settings("maintenance_message");
-                if (!empty($message)) {
-                    echo "<h1 class='m-b-20'>".stripslashes(nl2br(fusion_get_settings("maintenance_message")))."</h1>\n";
-                }
-                if (!empty($info)) {
-                    ?>
-                    <hr/>
-                    <div class="well clearfix m-t-20 p-20 p-b-0">
-                        <?php echo $info['open_form']; ?>
-                        <div class="col-xs-12 col-sm-4">
-                            <?php echo $info['user_name']; ?>
-                        </div>
-                        <div class="col-xs-12 col-sm-4">
-                            <?php echo $info['user_pass']; ?>
-                        </div>
-                        <div class="col-xs-12 col-sm-4">
-                            <?php echo $info['login_button']; ?>
-                        </div>
-                    </div>
-                    <?php echo $info['close_form'];
-                }
-                ?>
-            </div>
-            <div class="text-center">
-                <?php echo showcopyright(); ?>
-                <?php echo showcounter(); ?>
-                <?php echo showMemoryUsage(); ?>
-            </div>
-        </section>
-        <?php
+    function display_maintenance(array $info) {
+		echo "<section class='maintenance container'>\n";
+		$notices = getNotices();
+		if ($notices) {
+			echo renderNotices($notices);
+		}
+		echo "<div class='m-t-20 jumbotron text-center'>\n";
+		echo "<img src='".fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>\n";
+		echo "<h1><strong>".fusion_get_settings("sitename")."</strong></h1>\n";
+		$message = fusion_get_settings("maintenance_message");
+		if (!empty($message)) {
+			echo "<h1 class='m-b-20'>".stripslashes(nl2br(fusion_get_settings("maintenance_message")))."</h1>\n";
+		}
+		if (!empty($info)) {
+			echo "<hr/>\n";
+			echo "<div class='well clearfix m-t-20 p-20 p-b-0'>\n";
+			echo $info['open_form'];
+			echo "<div class='col-xs-12 col-sm-4'>".$info['user_name']."</div>\n";
+			echo "<div class='col-xs-12 col-sm-4'>".$info['user_pass']."</div>\n";
+			echo "<div class='col-xs-12 col-sm-4'>".$info['login_button']."</div>\n";
+			echo "</div>\n";
+			echo $info['close_form'];
+		}
+		echo "</div>\n";
+		echo "<div class='text-center'>\n";
+		echo showcopyright();
+		echo showcounter();
+		echo showMemoryUsage();
+		echo "</div>\n";
+        echo "</section>\n";
     }
 }

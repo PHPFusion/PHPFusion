@@ -2,9 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: UserFields.php
+| Filename: user_fields.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,7 +20,7 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/fields.php";
 $user_field = new PHPFusion\QuantumFields();
 $user_field->setSystemTitle($locale['202']);
-$user_field->setAdminRights('UFC');
+$user_field->setAdminRights('UF');
 $user_field->setCategoryDb(DB_USER_FIELD_CATS);
 $user_field->setFieldDb(DB_USER_FIELDS);
 $user_field->setMethod('input');

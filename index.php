@@ -16,56 +16,51 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-
 $settings = fusion_get_settings();
-
-if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
-
+if ($settings['site_seo'] && !isset($_GET['aid'])) {
     define("IN_PERMALINK", TRUE);
-
-    $router = new PHPFusion\Rewrite\Router();
-
+    $router = PHPFusion\Rewrite\Router::getRouterInstance();
     $router->rewritePage();
-
     $filepath = $router->getFilePath();
-
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         redirect(PERMALINK_CURRENT_PATH);
-    }
-    else if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
-        $lang = stripinput($_GET['lang']);
-        set_language($lang);
-        $redirectPath = clean_request("", array("lang"), FALSE);
-        redirect($redirectPath);
-    }
-    else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
-        $userdata = Authenticate::logOut();
-        redirect(BASEDIR."index.php");
-    } else if (!empty($filepath)) {
-        if ($filepath == "index.php") {
-            redirect($settings['opening_page']);
-        } else {
-            require_once $filepath;
-        }
     } else {
-        if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
-            or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
-            or $_SERVER['REQUEST_URI'] == $settings['site_path']
-        ) {
-			redirect($settings['opening_page']);
+        if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+            $lang = stripinput($_GET['lang']);
+            set_language($lang);
+            $redirectPath = clean_request("", array("lang"), FALSE);
+            redirect($redirectPath);
         } else {
-            $router->setPathtofile("error.php");
-            $params = array(
-                "code" => "404",
-            );
-            $router->setGetParameters($params);
-            $router->setservervars();
-            $router->setquerystring();
-            require_once fusion_get_settings("site_url")."error.php";
+            if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+                $userdata = Authenticate::logOut();
+                redirect(BASEDIR.$settings['opening_page']);
+            } else {
+                if (!empty($filepath)) {
+                    if ($filepath == "index.php") {
+                        redirect(BASEDIR.$settings['opening_page']);
+                    } else {
+                        require_once $filepath;
+                    }
+                } else {
+                    if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
+                        or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
+                        or $_SERVER['REQUEST_URI'] == $settings['site_path']
+                    ) {
+                        redirect(BASEDIR.$settings['opening_page']);
+                    } else {
+                        $router->setPathtofile("error.php");
+                        $params = array(
+                            "code" => "404",
+                        );
+                        $router->setGetParameters($params);
+                        $router->setservervars();
+                        $router->setquerystring();
+                        require_once BASEDIR."error.php";
+                    }
+                }
+            }
         }
     }
-} else if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-	redirect("home.php");
 } else {
-	redirect($settings['opening_page']);
+    redirect(BASEDIR.$settings['opening_page']);
 }

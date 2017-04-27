@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/news/news_view.php
-| Author: Frederick MC Chan
+| Filename: news/classes/news/news_view.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion\News;
+use PHPFusion\OpenGraph;
+use PHPFusion\OpenGraphNews;
 
 /**
  * Controller package for if/else
@@ -26,24 +28,21 @@ namespace PHPFusion\News;
 class NewsView extends News {
 
     public function display_news() {
-
         if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
-
             // Item Result
             $info = $this->set_NewsItemInfo($_GET['readmore']);
             render_news_item($info);
-
+	        OpenGraphNews::ogNews($_GET['readmore']);
         } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-
             // Category Result
             $info = $this->set_NewsCatInfo($_GET['cat_id']);
-            render_main_news($info);
-
+            display_main_news($info);
+	        OpenGraphNews::ogNewsCat($_GET['cat_id']);
         } else {
-
             // All Results
             $info = $this->set_NewsInfo();
-            render_main_news($info);
+            display_main_news($info);
         }
     }
+
 }

@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: filter.inc.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 function filter_query($request_key, $field_name) {
 	if (isset($_GET[$request_key]) && isnum($_GET[$request_key])) {
@@ -76,14 +92,11 @@ function filter_show($row_start_key = FALSE, $items_per_page_key = FALSE) {
 
 // Making Page Navigation
 function makepagenav_filter($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
-	global $locale, $aidlink;
 	if (!defined("PAGENAV")) {
 		define("PAGENAV", TRUE);
 		add_to_head("<script src='".INCLUDES."filter/paginator.js'></script>");
 	}
-	$html = makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array = FALSE);
-	//$html .= makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array=false);
-	return $html;
+	return makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array = FALSE);
 }
 
 function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {

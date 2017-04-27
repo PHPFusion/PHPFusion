@@ -716,7 +716,6 @@
                         // apply event handling to headers
                         // this is to big, perhaps break it out?
                         $headers.click(
-
                             function (e) {
                                 var totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
                                 if (!this.sortDisabled && totalRows > 0) {
@@ -790,7 +789,7 @@
                                 }
                             });
                         // apply easy methods that trigger binded events
-                        $this.bind("update",function () {
+                        $this.bind("update", function () {
                             var me = this;
                             setTimeout(function () {
                                 // rebuild parsers.
@@ -799,14 +798,14 @@
                                 // rebuild the cache map
                                 cache = buildCache(me);
                             }, 1);
-                        }).bind("updateCell",function (e, cell) {
+                        }).bind("updateCell", function (e, cell) {
                             var config = this.config;
                             // get position from the dom.
                             var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
                             // update cache
                             cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(
                                 getElementText(config, cell), cell);
-                        }).bind("sorton",function (e, list) {
+                        }).bind("sorton", function (e, list) {
                             $(this).trigger("sortStart");
                             config.sortList = list;
                             // update and store the sortlist
@@ -817,9 +816,9 @@
                             setHeadersCss(this, $headers, sortList, sortCSS);
                             // sort the table and append it to the dom
                             appendToTable(this, multisort(this, sortList, cache));
-                        }).bind("appendCache",function () {
+                        }).bind("appendCache", function () {
                             appendToTable(this, cache);
-                        }).bind("applyWidgetId",function (e, id) {
+                        }).bind("applyWidgetId", function (e, id) {
                             getWidgetById(id).format(this);
                         }).bind("applyWidgets", function () {
                             // apply widgets
@@ -1027,8 +1026,8 @@
                 if (!$tr.hasClass(table.config.cssChildRow)) row++;
                 odd = (row % 2 == 0);
                 $tr.removeClass(
-                        table.config.widgetZebra.css[odd ? 0 : 1]).addClass(
-                        table.config.widgetZebra.css[odd ? 1 : 0])
+                    table.config.widgetZebra.css[odd ? 0 : 1]).addClass(
+                    table.config.widgetZebra.css[odd ? 1 : 0])
             });
             if (table.config.debug) {
                 $.tablesorter.benchmark("Applying Zebra widget", time);

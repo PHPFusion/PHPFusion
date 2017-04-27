@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
+| Filename: photogallery_rewrite_include.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,11 +16,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
-	"%album_id%" => "([0-9]+)",
-	"%album_title%" => "([0-9a-zA-Z._\W]+)",
+    "%album_id%" => "([0-9]+)",
+    "%album_title%" => "([0-9a-zA-Z._\W]+)",
     "%photo_id%" => "([0-9]+)",
     "%photo_title%" => "([0-9a-zA-Z._\W]+)",
     "%rowstart%" => "([0-9]+)",

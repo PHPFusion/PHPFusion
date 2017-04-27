@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__."/../../../maincore.php";
-if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
+if (!db_exists(DB_FORUMS)) {
+    redirect(BASEDIR."error.php?code=404");
+}
 require_once THEMES."templates/admin_header.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INCLUDES.'infusions_include.php';

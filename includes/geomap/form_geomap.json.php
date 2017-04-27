@@ -3,12 +3,15 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_geomap.json.php
 | Author : Frederick MC Chan
 +--------------------------------------------------------+
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+
 | Registered in php-fusion.co.uk under the username of:
-| Falk (Sweden), Basti (Germany), Thomas-SVK (Slovakia),
+| Falk (Sweden) + Rest not covered by community,
+| Basti (Germany), Thomas-SVK (Slovakia),
 | afoster (USA), Kamillo (Poland), Dimki (Greece),
 | Creatium (Lithuania), douwe_yntema (Netherlands),
 | JoiNNN (Romania), EphyxHU (Hungary), afaaro (Somalia),
@@ -42,7 +45,7 @@ require_once $level."maincore.php";
 require_once INCLUDES."geomap/geomap.inc.php";
 $id = (isset($_GET['id']) && ($_GET['id'])) ? form_sanitizer($_GET['id'], "") : '';
 //$id = "Malaysia";
-$states_array[] = array("id" => "Other", "text" => "Other States");
+$states_array[] = array("id" => "Other", "text" => fusion_get_locale('other_states'));
 foreach ($states as $key => $value) {
 	if ($id == $key) {
 		if (!empty($value)) {

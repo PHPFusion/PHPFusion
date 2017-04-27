@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
-	include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+    include INFUSIONS."blog/locale/".LOCALESET."blog.php";
 } else {
-	include INFUSIONS."blog/locale/English/blog.php";
+    include INFUSIONS."blog/locale/English/blog.php";
 }
 
 openside($locale['blog_1004']);
@@ -38,12 +40,13 @@ if (dbrows($result)) {
         foreach ($blog_months as $blog_month => $blog_entries) {
             echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
             foreach ($blog_entries as $blog_entry) {
-                echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'] ,25)."</a></li>";
+                echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'],
+                                                                                                                             25)."</a></li>";
             }
         }
     }
     echo "</ul>\n";
 } else {
-	echo $locale['blog_3000'];
+    echo $locale['blog_3000'];
 }
 closeside();

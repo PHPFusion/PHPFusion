@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
+| Filename: photogallery_rewrite_info.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,6 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 $permalink_name = $locale['pl_gallery_title'];
 $permalink_desc = $locale['pl_gallery_desc'];

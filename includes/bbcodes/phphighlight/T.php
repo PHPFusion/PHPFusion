@@ -26,42 +26,42 @@
  * @since       PHP 5
  */
 if (!defined('T_ML_COMMENT')) {
-	define('T_ML_COMMENT', T_COMMENT);
+    define('T_ML_COMMENT', T_COMMENT);
 }
 if (!defined('T_DOC_COMMENT')) {
-	define('T_DOC_COMMENT', T_ML_COMMENT);
+    define('T_DOC_COMMENT', T_ML_COMMENT);
 }
 if (!defined('T_OLD_FUNCTION')) {
-	define('T_OLD_FUNCTION', -1);
+    define('T_OLD_FUNCTION', -1);
 }
 if (!defined('T_ABSTRACT')) {
-	define('T_ABSTRACT', -1);
+    define('T_ABSTRACT', -1);
 }
 if (!defined('T_CATCH')) {
-	define('T_CATCH', -1);
+    define('T_CATCH', -1);
 }
 if (!defined('T_FINAL')) {
-	define('T_FINAL', -1);
+    define('T_FINAL', -1);
 }
 if (!defined('T_INSTANCEOF')) {
-	define('T_INSTANCEOF', -1);
+    define('T_INSTANCEOF', -1);
 }
 if (!defined('T_PRIVATE')) {
-	define('T_PRIVATE', -1);
+    define('T_PRIVATE', -1);
 }
 if (!defined('T_PROTECTED')) {
-	define('T_PROTECTED', -1);
+    define('T_PROTECTED', -1);
 }
 if (!defined('T_PUBLIC')) {
-	define('T_PUBLIC', -1);
+    define('T_PUBLIC', -1);
 }
 if (!defined('T_THROW')) {
-	define('T_THROW', -1);
+    define('T_THROW', -1);
 }
 if (!defined('T_TRY')) {
-	define('T_TRY', -1);
+    define('T_TRY', -1);
 }
 if (!defined('T_CLONE')) {
-	define('T_CLONE', -1);
+    define('T_CLONE', -1);
 }
 

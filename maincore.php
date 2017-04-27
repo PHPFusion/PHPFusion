@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: maincore.php
 | Author: PHP-Fusion Development Team
-| Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,12 +15,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
-define("IN_FUSION", TRUE);
-
 use PHPFusion\Authenticate;
-require __DIR__.'/includes/core_resources_include.php';
 
+// Uncomment to compress and minify PHP-Fusion
+//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Minify PHP output
+
+// Uncomment to see server errors without modifying php.ini
+ini_set('display_errors', '1');
+
+if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
+    die();
+}
+
+if (!defined('IN_FUSION')) {
+    define('IN_FUSION', TRUE);
+}
+
+require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
@@ -35,11 +45,18 @@ unset($db_host, $db_user, $db_pass);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 if (empty($settings)) {
-    die("Settings do not exist, please check your config.php file or run install/index-php again.");
+    if (file_exists(BASEDIR.'install.php')) {
+        if (file_exists(BASEDIR.'config.php')) {
+            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.TIME.'.php');
+        }
+        redirect(BASEDIR.'install.php');
+    }
+    die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
 // Settings dependent functions
-date_default_timezone_set($settings['default_timezone']);
+date_default_timezone_set('UTC');
+//date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 
@@ -77,22 +94,23 @@ $mysql_queries_time = array();
 $locale = array();
 
 // Calculate ROOT path for Permalinks
-$current_path = $_SERVER['REQUEST_URI'];
+$current_path = html_entity_decode($_SERVER['REQUEST_URI']);
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
-    $current_path = str_replace($settings['site_path'], "", $current_path);
+    $current_path = str_replace($settings['site_path'], '', $current_path);
 } else {
     $current_path = ltrim($current_path, "/");
 }
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
+define('FORM_REQUEST', fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? PERMALINK_CURRENT_PATH : FUSION_REQUEST);
 //BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
 //E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
-if(explode("?", PERMALINK_CURRENT_PATH)){
-	$filelink=explode("?", PERMALINK_CURRENT_PATH);
-	define("FUSION_FILELINK", $filelink[0]);
-	}else{
-	define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
+if (explode("?", PERMALINK_CURRENT_PATH)) {
+    $filelink = explode("?", PERMALINK_CURRENT_PATH);
+    define("FUSION_FILELINK", $filelink[0]);
+} else {
+    define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
 }
 
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
@@ -102,7 +120,7 @@ for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
 }
 define("ROOT", $root);
 
-$root_count = $count-substr_count(BASEDIR, "/");
+$root_count = $count - substr_count(BASEDIR, "/");
 $fusion_root = '';
 for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
     $fusion_root .= "../";
@@ -112,7 +130,7 @@ define("FUSION_ROOT", $fusion_root);
 // Calculate current true url
 $script_url = explode("/", $_SERVER['PHP_SELF']);
 $url_count = count($script_url);
-$base_url_count = substr_count(BASEDIR, "/")+1;
+$base_url_count = substr_count(BASEDIR, "/") + 1;
 $current_page = "";
 while ($base_url_count != 0) {
     $current = $url_count - $base_url_count;
@@ -128,17 +146,16 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-
     $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
-
     $userdata = $auth->getUserData();
     unset($auth, $_POST['user_name'], $_POST['user_pass']);
     redirect(FUSION_REQUEST);
 } elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-    redirect(BASEDIR."index.php");
+
+    redirect(BASEDIR.$settings['opening_page']);
 } else {
-    $userdata = Authenticate::validateAuthUser(); // ok userdata never add _1.
+    $userdata = Authenticate::validateAuthUser();
 }
 
 // User level, Admin Rights & User Group definitions
@@ -150,38 +167,31 @@ define("iUSER", $userdata['user_level']);
 define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
-// Get enabled language settings
+// Main language detection procedure
+static $current_user_language = [];
+if (iMEMBER && valid_language($userdata['user_language'])) {
+    $current_user_language = $userdata['user_language'];
+} else {
+    $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
+    $current_user_language = ($langData['user_language'] ?: fusion_get_settings('locale'));
+}
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
-// If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
-    $lang = stripinput($_GET['lang']);
-    set_language($lang);
-    $redirectPath = clean_request("", array("lang"), FALSE);
-    redirect($redirectPath);
-}
 
-// Main language detection procedure
-if (iMEMBER && valid_language($userdata['user_language'])) {
-    define("LANGUAGE", $userdata['user_language']);
-    define("LOCALESET", $userdata['user_language']."/");
+// If language change is initiated and if the selected language is valid
+if (isset($_GET['lang'])) {
+    $current_user_language = stripinput($_GET['lang']);
+    set_language($current_user_language);
+    //redirect(clean_request('', ['lang'], FALSE));
 } else {
-    $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-    if ($data['user_language']) {
-        define("LANGUAGE", $data['user_language']);
-        define("LOCALESET", $data['user_language']."/");
+    if (count($enabled_languages) > 1) {
+        require __DIR__.'/includes/core_mlang_hub_include.php';
     }
 }
 
-// Check if definitions have been set, if not set the default language to system language
-if (!defined("LANGUAGE")) {
-    define("LANGUAGE", $settings['locale']);
-    define("LOCALESET", $settings['locale']."/");
-}
-
-// Language detection hub for multilingual content, detect, set correct language if it is not set
-if (count($enabled_languages) > 1) {
-    require __DIR__.'/includes/core_mlang_hub_include.php';
+if (!defined('LANGUAGE') && !defined('LOCALESET')) {
+    define('LANGUAGE', $current_user_language);
+    define('LOCALESET', $current_user_language.'/');
 }
 
 // IP address functions
@@ -190,28 +200,27 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-// Redirects to the index if the URL is invalid (eg. file.php/folder/)
-if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
-    redirect($settings['siteurl']);
-}
-
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
 
+$defender = defender::getInstance();
+
+if (!defined('FUSION_ALLOW_REMOTE')) {
+    new \Defender\Token();
+}
+\Defender\ImageValidation::ValidateExtensions();
+
 // Define aidlink
 if (iADMIN) {
-
     //@todo: to remove this part for non-global approach
-
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
     $token_time = time();
     $algo = fusion_get_settings('password_algorithm');
-    $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
-    $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
-    $_SESSION['aid'] = $userdata['user_id'] . "." . $token_time . "." . hash_hmac($algo, $key, $salt);
-
+    $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
+    $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
+    $_SESSION['aid'] = $userdata['user_id'].".".$token_time.".".hash_hmac($algo, $key, $salt);
 }
 
 // PHP-Fusion user cookie functions
@@ -223,53 +232,14 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 $lastvisited = Authenticate::setLastVisitCookie();
 
 
-// Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
-if ($settings['mime_check'] == "1") {
-    if (isset($_FILES) && count($_FILES)) {
-        require_once INCLUDES."mimetypes_include.php";
-        $mime_types = mimeTypes();
-        foreach ($_FILES as $each) {
-            if (isset($each['name']) && strlen($each['tmp_name'])) {
-                $file_info = pathinfo($each['name']);
-                $extension = $file_info['extension'];
-                if (array_key_exists($extension, $mime_types)) {
-                    if (is_array($mime_types[$extension])) {
-                        $valid_mimetype = FALSE;
-                        foreach ($mime_types[$extension] as $each_mimetype) {
-                            if ($each_mimetype == $each['type']) {
-                                $valid_mimetype = TRUE;
-                                break;
-                            }
-                        }
-                        if (!$valid_mimetype) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                        unset($valid_mimetype);
-                    } else {
-                        if ($mime_types[$extension] != $each['type']) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                    }
-                }
-                unset($file_info, $extension);
-            }
-        }
-        unset($mime_types);
-    }
-}
-
-$defender = new defender;
-
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-$defender->debug_notice = FALSE; // turn this off after beta.
-$defender->sniff_token();
-$dynamic = new dynamics();
-$dynamic->boot();
-$fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
+new Dynamics();
+
+$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 
 // Set theme using $_GET as well.
 // Set theme
@@ -282,3 +252,5 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
     redirect(clean_request("", array("themes"), FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
+
+\PHPFusion\Installer\Infusion_core::load_Configuration();

@@ -5,6 +5,13 @@ $locale['401'] = "Main";
 $locale['402'] = "Site name";
 $locale['403'] = "Site URL";
 $locale['404'] = "Site Logo";
+$locale['404left'] = "Left";
+$locale['404center'] = "Center";
+$locale['404right'] = "Right";
+$locale['404XS'] = "Logo Position XS";
+$locale['404SM'] = "Logo Position SM";
+$locale['404MD'] = "Logo Position MD";
+$locale['404LG'] = "Logo Position LG";
 $locale['405'] = "Site e-mail address";
 $locale['406'] = "Your name";
 $locale['407'] = "Site introduction:";
@@ -21,6 +28,7 @@ $locale['417'] = "Site locale:";
 $locale['418'] = "Site theme:";
 $locale['418a'] = "Site Admin Theme:";
 $locale['419'] = "Default search location:";
+$locale['419a'] = "Entire Site";
 $locale['420'] = "Exclude Left Panels:";
 $locale['421'] = "Exclude Upper Panels:";
 $locale['422'] = "Exclude Lower Panels:";
@@ -46,6 +54,10 @@ $locale['439'] = "Normalize Friendly URLs:";
 $locale['440'] = "Enable SEO Debug Mode:";
 $locale['441'] = "Enable Entypo";
 $locale['442'] = "Enable Font-Awesome";
+$locale['443a'] = "Exclude User 1 Panels";
+$locale['443b'] = "Exclude User 2 Panels";
+$locale['443c'] = "Exclude User 3 Panels";
+$locale['443d'] = "Exclude User 4 Panels";
 
 // Time & Date Settings
 $locale['450'] = "Time and Date";
@@ -64,6 +76,7 @@ $locale['462'] = "Server offset";
 $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
+$locale['466'] = "Default for New Users";
 
 // Registration Settings
 $locale['550'] = "Registration";
@@ -91,13 +104,16 @@ $locale['653'] = "Leave empty if not required.";
 $locale['654'] = "Bad word replacement:";
 $locale['655'] = "Allow Guests to post?";
 $locale['656'] = "Enable avatar comments?";
+$locale['656a'] = "Enable Jquery comments?";
+$locale['656b'] = "Please set to high number comments per page if turn on Jquery for best view";
+
 $locale['657'] = "Maintenance mode:";
 $locale['658'] = "Maintenance mode message:";
 $locale['659'] = "Bad words filter enabled?";
 $locale['660'] = "Flood interval (seconds):";
 $locale['661'] = "Leave empty for immediate upload/download of backups.";
 $locale['662'] = "TinyMCE Editor";
-$locale['663'] = "For Article, Blog and News Administration only.";
+$locale['663'] = "For Custom Pages, Articles, Blogs and News Administration only.";
 $locale['664'] = "SMTP Host";
 $locale['665'] = "Leave empty if sendmail is enabled.";
 $locale['666'] = "SMTP Username";
@@ -152,7 +168,7 @@ $locale['694'] = "Allow PHP Execution";
 $locale['695'] = "WARNING! Allowing PHP execution will open the system to SQL vulnerabilities.";
 $locale['696'] = "Please enter your public and private reCAPTCHA key!";
 
-$locale['913'] = "Comments per page";
+$locale['913'] = "Base Comments per Page";
 
 $locale['955'] = "Original";
 $locale['956'] = "Square";
@@ -218,6 +234,8 @@ $locale['1013'] = "Delete Users";
 $locale['1014'] = "Users can log in on different devices simultaneously?";
 $locale['1014a'] = "Disable for better security";
 
+$locale['1020'] = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+
 // Social integration
 $locale['1030'] = "Create OpenGraph meta tags for Social networks";
 $locale['1031'] = "Allow index URLs in BB Codes";
@@ -256,7 +274,6 @@ $locale['news_description'] = "The configuration settings for News system";
 $locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed";
 $locale['forum_description'] = "The configuration settings for Forum system";
 $locale['download_description'] = "The configuration settings for Download system";
-$locale['eshop_description'] = "The configuration settings for Eshop system";
 $locale['language_description'] = "The configuration settings for default multi-language system";
 $locale['photo_description'] = "The configuration settings for default Photo Gallery system";
 $locale['main_description'] = "The configuration settings for the main system";
@@ -269,7 +286,6 @@ $locale['user_description'] = "The configuration settings for Users Management s
 $locale['theme_description'] = "The configuration settings for Themes";
 $locale['blog_settings'] = "Blog Settings";
 $locale['download_settings'] = "Download Settings";
-$locale['eshop_settings'] = "Eshop Settings";
 $locale['forum_settings'] = "Forum Settings";
 $locale['ipp_settings'] = "Items Per Page Settings";
 $locale['photo_settings'] = "Gallery Settings";
@@ -283,5 +299,4 @@ $locale['time_settings'] = "Time Date Settings";
 $locale['user_settings'] = "User Management Settings";
 $locale['theme_settings'] = "Theme Settings";
 
-$locale['securimage'] = "Secure Image";
-$locale['securimage2'] = "Secure Image v.2";
+$locale['securimage3'] = "Secure Image v.3";

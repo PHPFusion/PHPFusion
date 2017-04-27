@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2016 PHP-Fusion Inc.
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Name: Septenary Theme
@@ -22,6 +22,7 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion;
+use PHPFusion\Rewrite\Router;
 
 /**
  * Class SeptenaryComponents
@@ -31,64 +32,7 @@ namespace PHPFusion;
 class SeptenaryComponents {
 
     protected static $locale = array();
-
-    /**
-     * Open Section
-     * @param            $class
-     * @param bool|FALSE $box
-     */
-    public static function open_grid($class, $box = FALSE) {
-        echo "<div class='".$class."'>\n";
-        echo ($box) ? "<div class='container'>\n" : '';
-    }
-
-    /**
-     * Close Section
-     * @param bool|FALSE $box
-     */
-    public static function close_grid($box = FALSE) {
-        echo "</div>\n";
-        echo ($box) ? "</div>\n" : '';
-    }
-
-    /**
-     * Displays Septenary Footer
-     */
-    protected function displayFooter() {
-        $locale = self::$locale;
-        $settings = fusion_get_settings();
-
-        $this->open_grid('footer', true);
-        echo "<div class='footer-row row'>\n";
-        echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3'>\n";
-        echo "<img style='width:80%;' alt='".$locale['sept_011']."' class='img-responsive' src='".THEME."images/htmlcss.jpg' />";
-        echo "</div>\n";
-        echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
-        echo "<div class='pull-right'>\n";
-        echo "<a href='#top'><i style='font-size:50px;' class='entypo mid-opacity up-circled'></i></a>\n";
-        echo "</div>\n";
-        echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
-	    <p>".showcopyright()."</p>
-	    <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
-	    <p>";
-        if ($settings['visitorcounter_enabled']) {
-            echo "<p>".showcounter()."</p>\n";
-        }
-        if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] == '2') {
-            // Make showing of queries and memory usage separate settings
-            echo showrendertime();
-            echo showMemoryUsage();
-        }
-        $footer_errors = showFooterErrors();
-        if (!empty($footer_errors)) {
-            echo "<div>\n".showFooterErrors()."</div>\n";
-        }
-
-        echo "</p>\n";
-        echo "</div>\n";
-        echo "</div>\n";
-        $this->close_grid(1);
-    }
+    private static $custom_header_html = "";
 
     /**
      * Legacy opentable function
@@ -114,13 +58,15 @@ class SeptenaryComponents {
     public static function openside($title, $collapse = FALSE, $state = "on") {
         global $panel_collapse;
 
+        $boxname = str_replace(" ", "", $title);
+        $boxname .= $boxname."-".str_shuffle(mt_rand(0, 30).time());
+
         $panel_collapse = $collapse;
 
         echo "<div class='heading'>\n";
         echo "<div style='margin-left: 10px;'>".$title."</div>\n";
         echo "</div>\n";
         if ($collapse == TRUE) {
-            $boxname = str_replace(" ", "", $title);
             echo "<div class='pull-right' style='padding-top: 10px;'>".panelbutton($state, $boxname)."</div>\n";
         }
         echo "<div class='content'>\n";
@@ -151,16 +97,94 @@ class SeptenaryComponents {
             }
             self::$locale = $locale;
         }
+
         return self::$locale;
     }
 
+    /**
+     * Sets custom header html
+     * @param $html
+     */
+    public static function set_header_html($html) {
+        self::$custom_header_html = $html;
+    }
+
+    /**
+     * Calculation of Bootstrap Grid Span
+     * @param int $sm_default
+     * @param int $md_default
+     * @param int $lg_default
+     * @return string
+     */
+    public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
+
+        $default_side_span_sm = $sm_default; // <---- change this to change the sidebar width on tablet
+        $default_side_span_md = $md_default; //<--- change this to change the sidebar width on laptop
+        $default_side_span_lg = $lg_default; // <---- change this to change the sidebar width on desktop
+        $how_many_sides_are_visible = 0;
+
+        if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) {
+            $how_many_sides_are_visible++;
+        }
+
+        if ($how_many_sides_are_visible > 0) {
+            $span = array(
+                'col-xs-' => 12,
+                'col-sm-' => 12 - ($how_many_sides_are_visible * $default_side_span_sm),
+                'col-md-' => 12 - ($how_many_sides_are_visible * $default_side_span_md),
+                'col-lg-' => 12 - ($how_many_sides_are_visible * $default_side_span_lg),
+            );
+        } else {
+            $span = array(
+                'col-xs-' => 12,
+                'col-sm-' => 12,
+                'col-md-' => 12,
+                'col-lg-' => 12,
+            );
+        }
+        $css = '';
+        foreach ($span as $css_class => $css_value) {
+            $css .= $css_class.$css_value." ";
+        }
+
+        return $css;
+    }
+
+    /**
+     * Theme Output Replacement
+     * @param $output
+     * @return array
+     */
+    public static function theme_output($output) {
+
+        $search = array(
+            "@><img src='reply' alt='(.*?)' style='border:0px' />@si",
+            "@><img src='newthread' alt='(.*?)' style='border:0px;?' />@si",
+            "@><img src='web' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
+            "@><img src='pm' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
+            "@><img src='quote' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
+            "@><img src='forum_edit' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
+            "@<a href='".ADMIN."comments.php(.*?)&amp;ctype=(.*?)&amp;cid=(.*?)'>(.*?)</a>@si"
+        );
+        $replace = array(
+            ' class="big button"><span class="reply-button icon"></span>$1',
+            ' class="big button"><span class="newthread-button icon"></span>$1',
+            ' class="button" rel="nofollow" title="$1"><span class="web-button icon"></span>Web',
+            ' class="button" title="$1"><span class="pm-button icon"></span>PM',
+            ' class="button" title="$1"><span class="quote-button icon"></span>$1',
+            ' class="negative button" title="$1"><span class="edit-button icon"></span>$1',
+            '<a href="'.ADMIN.'comments.php$1&amp;ctype=$2&amp;cid=$3" class="big button"><span class="settings-button icon"></span>$4</a>'
+        );
+        $output = preg_replace($search, $replace, $output);
+
+        return $output;
+    }
 
     /**
      * Septenary Header
      */
     public function displayHeader() {
-        global $aidlink;
-
+        $aidlink = fusion_get_aidlink();
         $userdata = fusion_get_userdata();
         $locale = self::$locale;
 
@@ -173,7 +197,11 @@ class SeptenaryComponents {
 
         echo "<div class='display-inline-block' style='width:30%; float:right;'>\n";
         echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                      array('class' => 'm-b-10'));
+                      array(
+                          'class' => 'm-b-10',
+                          'remote_url' => fusion_get_settings('site_path')."search.php"
+                      )
+        );
         echo form_text('stext', '', '', array(
             'placeholder' => $locale['sept_006'],
             'append_button' => TRUE,
@@ -181,7 +209,7 @@ class SeptenaryComponents {
             "append_form_value" => $locale['sept_006'],
             "append_value" => "<i class='fa fa-search'></i> ".$locale['sept_006'],
             "append_button_name" => "search",
-            'class' =>'no-border m-b-0',
+            'class' => 'no-border m-b-0',
         ));
         echo closeform();
         echo "</div>\n";
@@ -229,7 +257,7 @@ class SeptenaryComponents {
 
         $this->open_grid('section-2', 1);
         echo "<div class='header-nav'>\n";
-        echo showsublinks('')."\n";
+        echo showsublinks('', 'navbar-default', ['show_header' => TRUE])."\n";
         echo "</div>\n";
         $this->close_grid();
         echo "</div>\n";
@@ -238,14 +266,23 @@ class SeptenaryComponents {
         echo "</header>\n";
     }
 
-    private static $custom_header_html = "";
+    /**
+     * Open Section
+     * @param            $class
+     * @param bool|FALSE $box
+     */
+    public static function open_grid($class, $box = FALSE) {
+        echo "<div class='".$class."'>\n";
+        echo ($box) ? "<div class='container'>\n" : '';
+    }
 
     /**
-     * Sets custom header html
-     * @param $html
+     * Close Section
+     * @param bool|FALSE $box
      */
-    public static function set_header_html($html) {
-        self::$custom_header_html = $html;
+    public static function close_grid($box = FALSE) {
+        echo "</div>\n";
+        echo ($box) ? "</div>\n" : '';
     }
 
     /**
@@ -266,7 +303,13 @@ class SeptenaryComponents {
 
         } else {
 
-            if ($settings['opening_page'] == FUSION_SELF) {
+            $file_path = str_replace(ltrim(fusion_get_settings('site_path'),'/'), '', preg_replace('/^\//', '', FUSION_REQUEST));
+            if ($settings['site_seo'] && defined('IN_PERMALINK')) {
+                require_once CLASSES.'PHPFusion/Rewrite/Router.inc';
+                $file_path = Router::getRouterInstance()->getCurrentURL();
+            }
+
+            if ($settings['opening_page'] == $file_path) {
                 echo "<div class='text-center logo'>\n";
                 if ($settings['sitebanner']) {
                     echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
@@ -277,17 +320,17 @@ class SeptenaryComponents {
                 echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
                 //echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
                 $modules = array(
-                    DB_NEWS => db_exists(DB_NEWS),
-                    DB_PHOTO_ALBUMS => db_exists(DB_PHOTO_ALBUMS),
-                    DB_FORUMS => db_exists(DB_FORUMS),
-                    DB_DOWNLOADS => db_exists(DB_DOWNLOADS)
+                    DB_PREFIX.'news' => db_exists(DB_PREFIX.'news'),
+                    DB_PREFIX.'photos' => db_exists(DB_PREFIX.'photos'),
+                    DB_PREFIX.'forums' => db_exists(DB_PREFIX.'forums'),
+                    DB_PREFIX.'downloads' => db_exists(DB_PREFIX.'downloads')
                 );
                 $sum = array_sum($modules);
                 if ($sum) {
                     $size = 12 / $sum;
                     $sizeClasses = 'col-sm-'.$size.' col-md-'.$size.' col-lg-'.$size;
                     echo "<div class='section-2-row row'>\n";
-                    if ($modules[DB_NEWS]) {
+                    if ($modules[DB_PREFIX.'news']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."news/news.php'>\n";
                         echo "<i class='fa fa-newspaper-o fa-2x'></i>\n";
@@ -295,7 +338,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_PHOTO_ALBUMS]) {
+                    if ($modules[DB_PREFIX.'photos']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."gallery/gallery.php'>\n";
                         echo "<i class='fa fa-camera-retro fa-2x'></i>\n";
@@ -303,7 +346,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_FORUMS]) {
+                    if ($modules[DB_PREFIX.'forums']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."forum/index.php'>\n";
                         echo "<i class='fa fa-comments fa-2x'></i>\n";
@@ -311,7 +354,7 @@ class SeptenaryComponents {
                         echo "</a>\n";
                         echo "</div>\n";
                     }
-                    if ($modules[DB_DOWNLOADS]) {
+                    if ($modules[DB_PREFIX.'downloads']) {
                         echo "<div class='$sizeClasses section-2-tab text-center'>\n";
                         echo "<a href='".INFUSIONS."downloads/downloads.php'>\n";
                         echo "<i class='fa fa-download fa-2x'></i>\n";
@@ -349,66 +392,61 @@ class SeptenaryComponents {
     }
 
     /**
-     * Calculation of Bootstrap Grid Span
-     * @param int $sm_default
-     * @param int $md_default
-     * @param int $lg_default
-     * @return string
+     * Displays Septenary Footer
      */
-    public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
-        $default_side_span_sm = $sm_default; // <---- change this to change the sidebar width on tablet
-        $default_side_span_md = $md_default; //<--- change this to change the sidebar width on laptop
-        $default_side_span_lg = $lg_default; // <---- change this to change the sidebar width on desktop
-        $how_many_sides_are_visible = 0;
+    protected function displayFooter() {
+        $locale = self::$locale;
+        $settings = fusion_get_settings();
 
-        if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) $how_many_sides_are_visible++;
+        $this->open_grid('footer', TRUE);
 
-        if ($how_many_sides_are_visible > 0) {
-            $span =  array(
-                'col-xs-' => 12,
-                'col-sm-' => 12-($how_many_sides_are_visible*$default_side_span_sm),
-                'col-md-' => 12-($how_many_sides_are_visible*$default_side_span_md),
-                'col-lg-' => 12-($how_many_sides_are_visible*$default_side_span_lg),
-            );
-        } else {
-            $span = array(
-                'col-xs-' => 12,
-                'col-sm-' => 12,
-                'col-md-' => 12,
-                'col-lg-' => 12,
-            );
+        echo "<div class='row m-b-20'>\n";
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER1') && USER1 ? USER1 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER2') && USER2 ? USER2 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER3') && USER3 ? USER3 : '';
+            echo "</div>\n";
+
+            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+                echo defined('USER4') && USER4 ? USER4 : '';
+            echo "</div>\n";
+        echo "</div>\n";
+
+        echo "<div class='footer-row row'>\n";
+        echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3'>\n";
+        echo "<img style='width:80%;' alt='".$locale['sept_011']."' class='img-responsive' src='".THEME."images/htmlcss.jpg' />";
+        echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
+        echo "<div class='pull-right'>\n";
+        echo "<a href='#top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
+        echo "</div>\n";
+        echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
+	    <p>".showcopyright()."</p>
+	    <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
+	    <p>";
+        if ($settings['visitorcounter_enabled']) {
+            echo "<p>".showcounter()."</p>\n";
         }
-        $css = '';
-        foreach($span as $css_class => $css_value) {
-            $css .= $css_class.$css_value." ";
+        if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] == '2') {
+            // Make showing of queries and memory usage separate settings
+            echo showrendertime();
+            echo showMemoryUsage();
         }
-        return $css;
-    }
+        $footer_errors = showFooterErrors();
+        if (!empty($footer_errors)) {
+            echo "<div>\n".showFooterErrors()."</div>\n";
+        }
 
-    /**
-     * Theme Output Replacement
-     * @param $output
-     * @return array
-     */
-    public static function theme_output($output) {
-
-        $search = array("@><img src='reply' alt='(.*?)' style='border:0px' />@si",
-                        "@><img src='newthread' alt='(.*?)' style='border:0px;?' />@si",
-                        "@><img src='web' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-                        "@><img src='pm' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-                        "@><img src='quote' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
-                        "@><img src='forum_edit' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
-                        "@<a href='".ADMIN."comments.php(.*?)&amp;ctype=(.*?)&amp;cid=(.*?)'>(.*?)</a>@si");
-        $replace = array(' class="big button"><span class="reply-button icon"></span>$1',
-                         ' class="big button"><span class="newthread-button icon"></span>$1',
-                         ' class="button" rel="nofollow" title="$1"><span class="web-button icon"></span>Web',
-                         ' class="button" title="$1"><span class="pm-button icon"></span>PM',
-                         ' class="button" title="$1"><span class="quote-button icon"></span>$1',
-                         ' class="negative button" title="$1"><span class="edit-button icon"></span>$1',
-                         '<a href="'.ADMIN.'comments.php$1&amp;ctype=$2&amp;cid=$3" class="big button"><span class="settings-button icon"></span>$4</a>');
-        $output = preg_replace($search, $replace, $output);
-
-        return $output;
+        echo "</p>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+        $this->close_grid(1);
     }
 
 }

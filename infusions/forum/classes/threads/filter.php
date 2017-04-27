@@ -30,29 +30,50 @@ class ThreadFilter {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
-        $time = isset($_GET['time']) ? $_GET['time'] : '';
-        $type = isset($_GET['type']) ? $_GET['type'] : '';
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
-        $order = isset($_GET['order']) ? $_GET['order'] : '';
+        $time_array = array(
+            'today' => strtotime('today'),
+            '2days' => strtotime('-2 days'),
+            '1week' => strtotime('-1 week'),
+            '2week' => strtotime('-2 weeks'),
+            '1month' => strtotime('-2 months'),
+            '2month' => strtotime('-2 months'),
+            '3month' => strtotime('-2 months'),
+            '6month' => strtotime('-6 months'),
+            '1year' => strtotime('-1 year'),
+        );
+
+        $type_array = array(
+            'all' => '',
+            'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
+            'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
+            'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
+            'solved' => "AND t.thread_answered = '1'",
+            'unsolved' => "AND t.thread_answered = '0'",
+        );
+
+        $sort_array = array(
+            'author' => 't.thread_author',
+            'time' => 't.thread_lastpost',
+            'subject' => 't.thread_subject',
+            'reply' => 't.thread_postcount',
+            'view' => 't.thread_views'
+        );
+
+        $order_array = array(
+            'ascending' => 'ASC',
+            'descending' => 'DESC'
+        );
+
+        $time = (isset($_GET['time']) && isset($time_array[$_GET['time']]) ? $_GET['time'] : '');
+        $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
+        $sort = (isset($_GET['sort']) && isset($sort_array[$_GET['sort']]) ? $_GET['sort'] : '');
+        $order = (isset($_GET['order']) && isset($order_array[$_GET['order']]) ? $_GET['order'] : '');
 
         $timeCol = '';
         $typeCol = '';
+
         if ($time) {
-
-            $time_array = array(
-                'today' => strtotime('today'),
-                '2days' => strtotime('-2 days'),
-                '1week' => strtotime('-1 week'),
-                '2week' => strtotime('-2 weeks'),
-                '1month' => strtotime('-2 months'),
-                '2month' => strtotime('-2 months'),
-                '3month' => strtotime('-2 months'),
-                '6month' => strtotime('-6 months'),
-                '1year' => strtotime('-1 year'),
-            );
-
             $time_stop = $time_array['today'];
-
             foreach ($time_array as $key => $value) {
                 if ($time == $key) {
                     $time_stop = prev($time_array);
@@ -71,34 +92,16 @@ class ThreadFilter {
         }
 
         if ($type) {
-            $type_array = array(
-                'all' => '',
-                'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
-                'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
-                'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
-                'solved' => "AND t.thread_answered = '1'",
-                'unsolved' => "AND t.thread_answered = '0'",
-            );
-            $typeCol = $type_array[$type];
+
+            $typeCol = isset($type_array[$type]) ? $type_array[$type] : 'all';
         }
 
         $sortCol = "ORDER BY t.thread_lastpost ";
         $orderCol = 'DESC';
         if ($sort) {
-            $sort_array = array(
-                'author' => 't.thread_author',
-                'time' => 't.thread_lastpost',
-                'subject' => 't.thread_subject',
-                'reply' => 't.thread_postcount',
-                'view' => 't.thread_views'
-            );
             $sortCol = "ORDER BY ".$sort_array[$sort]." ";
         }
         if ($order) {
-            $order_array = array(
-                'ascending' => 'ASC',
-                'descending' => 'DESC'
-            );
             $orderCol = $order_array[$order];
         }
 
@@ -121,8 +124,8 @@ class ThreadFilter {
         $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 
         $this->filter_info['time'] = array(
-            $locale['forum_3006'] => $baseLink,
-            $locale['forum_3007'] => $timeLink.'&amp;time=today', // must be static.
+            $locale['forum_0211'] => $baseLink,
+            $locale['forum_0212'] => $timeLink.'&amp;time=today', // must be static.
             $locale['forum_3008'] => $timeLink.'&amp;time=2days',
             $locale['forum_3009'] => $timeLink.'&amp;time=1week',
             $locale['forum_3010'] => $timeLink.'&amp;time=2week',
@@ -136,29 +139,29 @@ class ThreadFilter {
         $typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
 
         $this->filter_info['type'] = array(
-            $locale['forum_3000'] => $typeLink.'&amp;type=all',
-            $locale['forum_3001'] => $typeLink.'&amp;type=discussions',
-            $locale['forum_3002'] => $typeLink.'&amp;type=attachments',
-            $locale['forum_3003'] => $typeLink.'&amp;type=poll',
-            $locale['forum_3004'] => $typeLink.'&amp;type=solved',
-            $locale['forum_3005'] => $typeLink.'&amp;type=unsolved',
+            $locale['forum_0390'] => $typeLink.'&amp;type=all',
+            $locale['forum_0222'] => $typeLink.'&amp;type=discussions',
+            $locale['forum_0223'] => $typeLink.'&amp;type=attachments',
+            $locale['forum_0224'] => $typeLink.'&amp;type=poll',
+            $locale['forum_0378'] => $typeLink.'&amp;type=solved',
+            $locale['forum_0379'] => $typeLink.'&amp;type=unsolved',
         );
 
         $sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
 
         $this->filter_info['sort'] = array(
-            $locale['forum_3016'] => $sortLink.'&amp;sort=author',
-            $locale['forum_3017'] => $sortLink.'&amp;sort=time',
-            $locale['forum_3018'] => $sortLink.'&amp;sort=subject',
-            $locale['forum_3019'] => $sortLink.'&amp;sort=reply',
-            $locale['forum_3020'] => $sortLink.'&amp;sort=view',
+            $locale['forum_0052'] => $sortLink.'&amp;sort=author',
+            $locale['forum_0381'] => $sortLink.'&amp;sort=time',
+            $locale['forum_0051'] => $sortLink.'&amp;sort=subject',
+            $locale['forum_0054'] => $sortLink.'&amp;sort=reply',
+            $locale['forum_0053'] => $sortLink.'&amp;sort=view',
         );
 
         $orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
 
         $this->filter_info['order'] = array(
-            $locale['forum_3021'] => $orderLink.'&amp;order=descending',
-            $locale['forum_3022'] => $orderLink.'&amp;order=ascending'
+            $locale['forum_0230'] => $orderLink.'&amp;order=descending',
+            $locale['forum_0231'] => $orderLink.'&amp;order=ascending'
         );
 
     }

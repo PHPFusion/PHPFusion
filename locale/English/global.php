@@ -2,20 +2,26 @@
 /**
  * English Locale
  *
- * @locale charset      ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
- * @locale region       ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
- * @locale select2      refer to path includes/dynamics/select2/select2_locale_{value}.js
- * @locale tinymce      refer to path includes/jscripts/tinymce/langs/{value}.js
+ * @locale charset           ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
+ * @locale region            ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
+ * @locale tinymce           refer to path includes/jscripts/tinymce/langs/{value}.js
+ * @locale select2           refer to path includes/dynamics/select2/select2_locale_{value}.js
+ * @locale phpmailer         refer to path includes/classes/PHPMailer/language/phpmailer.lang-{value}.php
+ * @locale password_strength refer to path includes/dynamics/password/lang/{value}.js
  * @package locale/English
  */
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
 $locale['region'] = "GB";
 $locale['xml_lang'] = "en";
+$locale['short_lang_name'] = "en";
 $locale['tinymce'] = "en";
 $locale['select2'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en-gb";
+$locale['datepicker_js'] = "M-DD-YYYY H:mm:ss";
+$locale['datepicker_php'] = "m-d-Y H:i:s";
+$locale['password_strength'] = "en";
 // Full & Short Months
 $locale['months'] = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";
@@ -41,10 +47,11 @@ $locale['street2'] = "Street Address 2";
 $locale['city'] = "City";
 $locale['postcode'] = "Postcode";
 $locale['sel_country'] = "Select Country";
-$locale['sel_state'] = "Select State";
+$locale['sel_state'] = "Select Region";
 $locale['sel_user'] = "Please type a user name";
 $locale['add_language'] = "Add Language Translations";
 $locale['add_lang'] = "Add %s";
+$locale['other_states'] = "Other States";
 // Name
 $locale['name'] = "Full Name";
 $locale['username_pretext'] = "Your public username is also the same as your user profile address located at: %s %s";
@@ -91,6 +98,7 @@ $locale['global_013'] = "No Members Online";
 $locale['global_014'] = "Total Members";
 $locale['global_015'] = "Unactivated Members";
 $locale['global_016'] = "Newest Member";
+$locale['global_017'] = "Toggle Navigation";
 // Forum Side panel
 $locale['global_020'] = "Forum Threads";
 $locale['global_021'] = "Latest Discussions";
@@ -102,7 +110,6 @@ $locale['global_028'] = "Unsolved Questions";
 // Comments Side panel
 $locale['global_025'] = "Latest Comments";
 $locale['global_026'] = "No comments available";
-$locale['global_027'] = "Comments have been updated";
 // Articles Side panel
 $locale['global_030'] = "Latest Articles";
 $locale['global_031'] = "No Articles available";
@@ -181,6 +188,7 @@ $locale['global_105'] = "Not a member yet? [LINK]Click here[/LINK] to register."
 $locale['global_106'] = "[LINK]Forgot Password?[/LINK]";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
+$locale['global_109'] = "Sign Up";
 // Member User Menu
 $locale['global_120'] = "Customize your Profile Page";
 $locale['global_121'] = "Private Messages";
@@ -198,10 +206,11 @@ $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
 $locale['UM061b'] = "Username or Email";
 $locale['UM062'] = "Password";
-$locale['UM063'] = "Remember Me";
+$locale['UM063'] = "Remember me on this computer";
 $locale['UM064'] = "Login";
 $locale['UM065'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
 $locale['UM066'] = "Forgotten your password?\n[LINK]Request a new one[/LINK].";
+$locale['UM067'] = "(not recommended on public or shared computer)";
 $locale['UM080'] = "Edit Profile";
 $locale['UM081'] = "Private Messages";
 $locale['UM082'] = "Members List";
@@ -219,6 +228,7 @@ $locale['UM092'] = "Submit Article";
 $locale['UM093'] = "Submit Photo";
 $locale['UM094'] = "Submit Download";
 $locale['UM095'] = "Submit Blog";
+$locale['UM102'] = "Submit FAQ";
 // User Panel
 $locale['UM096'] = "Welcome: ";
 $locale['UM097'] = "Personal menu";
@@ -239,6 +249,7 @@ $locale['global_172'] = "Render time: %s seconds";
 $locale['global_173'] = "Queries";
 $locale['global_174'] = "Memory used";
 $locale['global_175'] = "Average: %s seconds";
+$locale['global_176'] = "Privacy Policy";
 // Admin Navigation
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
@@ -251,10 +262,8 @@ $locale['global_193'] = "Could not set document cookie. Please make sure you hav
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
-
 $locale['global_197'] = "Please wait while we transfer you...\n\n[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
-
-$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
+$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE INSTALL-PHP FILE IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
 //Titles
 $locale['global_200'] = " - ";
@@ -309,14 +318,12 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
 Regards,\n[SITEUSERNAME]";
-
 $locale['global_456'] = "New password notification for [SITENAME]";
 $locale['global_457'] = "Hi USER_NAME,
 \n\nA new password has been set for your account at [SITENAME]. Please find the enclosed new login details:\n\n
 Username: USER_NAME\nPassword: [PASSWORD]\n\nRegards,\n[SITEUSERNAME]";
 $locale['global_458'] = "New password has been set for USER_NAME";
 $locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
-
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
@@ -328,15 +335,18 @@ $locale['global_465'] = "TB";
 $locale['global_500'] = "You are being redirected to %s, please wait. If you're not redirected, click here.";
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
+$locale['global_601'] = "You must enter a correct validation code";
 $locale['recaptcha'] = "en";
 // Site links
 $locale['global_700'] = "Show More";
 //Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
+$locale['global_901'] = "Insert Media";
 //Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
 $locale['global_ML102'] = "Site language";
+$locale['global_ML103'] = "Switch Language";
 // Flood Control
 $locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %s.";
 $locale['no_image'] = "No Image";
@@ -372,6 +382,8 @@ $locale['back'] = "Back";
 $locale['forward'] = "Forward";
 $locale['go'] = "Go";
 $locale['cancel'] = "Cancel";
+$locale['clear'] = "Clear";
+$locale['move'] = "Move";
 $locale['move_up'] = "Move up";
 $locale['move_down'] = "Move down";
 $locale['load_more'] = "Load more Items";
@@ -380,6 +392,7 @@ $locale['load_end'] = "Load from Beginning";
 $locale['add'] = "Add";
 $locale['save'] = "Save";
 $locale['save_changes'] = "Save Changes";
+$locale['save_and_close'] = "Save and Close";
 $locale['confirm'] = "Confirm";
 $locale['update'] = "Update";
 $locale['updated'] = "Updated";
@@ -393,7 +406,8 @@ $locale['reactivate'] = "Reactivate";
 $locale['user'] = "User";
 $locale['promote'] = "Promote";
 $locale['show'] = "Show";
-
+$locale['actions'] = "Actions";
+$locale['language'] = "Language";
 // Persons & Identifiers
 $locale['you'] = "You";
 $locale['me'] = "Me";
@@ -403,9 +417,7 @@ $locale['us'] = "Us";
 $locale['he'] = "He";
 $locale['she'] = "She";
 $locale['it'] = "It";
-
 //Tables
-$locale['status'] = "Status";
 $locale['order'] = "Order";
 $locale['sort'] = "Sort";
 $locale['id'] = "ID";
@@ -420,11 +432,11 @@ $locale['root'] = "As Parent";
 $locale['choose-user'] = "Please Choose a User...";
 $locale['choose-location'] = "Please Choose a Location";
 $locale['parent'] = "Create as New Parent..";
-$locale['order'] = "Item Ordering";
+$locale['item_order'] = "Item Ordering";
 $locale['status'] = "Status";
 $locale['note'] = "Make a note of this item";
-$locale['publish'] = "Published";
-$locale['unpublish'] = "Unpublished";
+$locale['publish'] = "Publish";
+$locale['unpublish'] = "Unpublish";
 $locale['sticky'] = "Sticky";
 $locale['unsticky'] = "Unsticky";
 $locale['draft'] = "Draft";
@@ -446,6 +458,7 @@ $locale['nopreview'] = "There is nothing to Preview";
 $locale['mark_as'] = "Mark As";
 $locale['preview'] = "Preview";
 $locale['custom'] = "Custom";
+$locale['submit'] = "Submit";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
@@ -490,5 +503,9 @@ $locale['fmt_views'] = "view|views";
 $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
+$locale['fmt_points'] = "point|points";
+$locale['fmt_admin'] = "admin|admins";
+$locale['fmt_group'] = "group|groups";
+$locale['fmt_category'] = "category|categories";
 // include Defender locales
 include __DIR__."/defender.php";

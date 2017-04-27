@@ -58,6 +58,8 @@ $locale['u111'] = "%u user";
 $locale['u112'] = "%u users";
 $locale['u113'] = "User Name";
 $locale['u114'] = "User Type";
+$locale['u115'] = "Language";
+$locale['u116'] = "There are no group members.";
 // User name and email
 $locale['u120'] = "User name contains invalid characters.";
 $locale['u121'] = "The chosen user name is already taken by another user.";
@@ -133,7 +135,6 @@ $locale['u174'] = "Add another member.";
 // Avatar upload
 $locale['u180'] = "There is an error uploading avatar image";
 
-
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
 $locale['u186'] = "Click Browse to upload an image";
@@ -143,10 +144,12 @@ $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
 $locale['u192'] = "Terms of Agreement";
 $locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
+$locale['u193a'] = "Updated";
+$locale['u193b'] = "I agree";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation
-$locale['u200'] = "A verify email has been sent to your new email address (%s).";
+$locale['u200'] = "A verify email has been sent to your new email address (%s). Please check your email.";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
 $locale['u202'] = "E-mail address verify - [SITENAME]";
 $locale['u203'] = "Hello [USER_NAME],\n
@@ -157,3 +160,5 @@ Note: you have to be logged in to proceed.\n
 Regards,
 [SITEUSERNAME]\n\r
 [SITENAME]";
+
+$locale['u210'] = "User Reputation";

@@ -4,9 +4,9 @@
     z-index: 1;
     display: block;
     width: 100%;
-    margin-top: -100%;
     padding: 15px;
     background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.6);
+    margin-top: -100%;
     color: #FFF !important;
     text-decoration: none !important;
 }
@@ -33,18 +33,6 @@
     color: rgb(21, 133, 212) !important;
 }
 
-.news-img-header {
-    max-height: 150px;
-}
-
-.img-link > img {
-    width: 100%;
-}
-
-.news-img-header > a > img.img-responsive {
-    min-width: 100%;
-}
-
 .news-avatar {
     background-color: #FFF; position: relative; margin-bottom: 20px; margin-top: -15px; padding-top: 5px; padding-right: 5px; z-index: 100;
 }
@@ -58,6 +46,13 @@
     margin: 5px;
 }
 
+.image-header img {
+    width: auto;
+    min-height: 100%;
+    max-width: inherit;
+    margin: 0 auto;
+    position: relative;
+}
 .comments-item {
     text-decoration: none !important;
 }

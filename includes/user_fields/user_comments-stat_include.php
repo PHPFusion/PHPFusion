@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_comments-stat_include.php
 | Author: PHP-Fusion Development Team
@@ -15,13 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if ($profile_method == "input") {
-	$user_fields = '';
-	if (defined('ADMIN_PANEL')) {
-	$user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_comments-stat']."</div>";
-	}
+    $user_fields = '';
+    if (defined('ADMIN_PANEL')) {
+        $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_comments-stat']."</div>";
+    }
 } elseif ($profile_method == "display") {
-	$user_fields = array('title'=>$locale['uf_comments-stat'], 'value'=>number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$user_data['user_id']."'"))."");
+    $user_fields = array(
+        'title' => $locale['uf_comments-stat'],
+        'value' => number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".intval($_GET['lookup'])."'")).""
+    );
 }

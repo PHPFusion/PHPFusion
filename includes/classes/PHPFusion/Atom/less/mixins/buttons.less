@@ -51,46 +51,50 @@
 }
 
 // Background Fills
-.background(0, @start: #fff){
-  background:@start !important;
+.background(0, @start: #fff) {
+  background: @start !important;
 }
+
 //horizontal
-.background(1, @start: #fff){
+.background(1, @start: #fff) {
   background: @start !important;
   background: -moz-linear-gradient(left, @start 0%, darken(@start, 20%) 100%) !important;
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%,@start), color-stop(100%,darken(@start, 20%))) !important;
-  background: -webkit-linear-gradient(left, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -o-linear-gradient(left, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -ms-linear-gradient(left, @start 0%,darken(@start, 20%) 100%) !important;
-  background: linear-gradient(to right, @start 0%,darken(@start, 20%) 100%) !important;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,@start), color-stop(100%, darken(@start, 20%))) !important;
+  background: -webkit-linear-gradient(left, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -o-linear-gradient(left, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -ms-linear-gradient(left, @start 0%, darken(@start, 20%) 100%) !important;
+  background: linear-gradient(to right, @start 0%, darken(@start, 20%) 100%) !important;
 }
+
 //vertical
-.background(2, @start: #fff){
+.background(2, @start: #fff) {
   background: @start !important;
   background: -moz-linear-gradient(top, @start 0%, darken(@start, 20%) 100%) !important;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,darken(@start, 20%))) !important;
-  background: -webkit-linear-gradient(top, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -o-linear-gradient(top, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -ms-linear-gradient(top, @start 0%,darken(@start, 20%) 100%) !important;
-  background: linear-gradient(to bottom, @start 0%,darken(@start, 20%) 100%) !important;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%, darken(@start, 20%))) !important;
+  background: -webkit-linear-gradient(top, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -o-linear-gradient(top, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -ms-linear-gradient(top, @start 0%, darken(@start, 20%) 100%) !important;
+  background: linear-gradient(to bottom, @start 0%, darken(@start, 20%) 100%) !important;
 }
+
 // radial
-.background(3, @start: #fff){
+.background(3, @start: #fff) {
   background: @start !important;
-  background: -moz-radial-gradient(center, ellipse cover, @start 0%, #ffffff 100%) !important;
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@start), color-stop(100%,darken(@start, 20%))) !important;
-  background: -webkit-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -o-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -ms-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%) !important;
-  background: radial-gradient(ellipse at center, @start 0%,darken(@start, 20%) 100%) !important;
+  background: -moz-radial-gradient(center, ellipse cover, @start 0%, #fff 100%) !important;
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@start), color-stop(100%, darken(@start, 20%))) !important;
+  background: -webkit-radial-gradient(center, ellipse cover, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -o-radial-gradient(center, ellipse cover, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -ms-radial-gradient(center, ellipse cover, @start 0%, darken(@start, 20%) 100%) !important;
+  background: radial-gradient(ellipse at center, @start 0%, darken(@start, 20%) 100%) !important;
 }
+
 // diagonal
-.background(4, @start: #fff){
+.background(4, @start: #fff) {
   background: @start !important;
   background: -moz-linear-gradient(-45deg, @start 0%, darken(@start, 20%) 100%) !important;
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,@start), color-stop(100%,darken(@start, 20%))) !important;
-  background: -webkit-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -o-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%) !important;
-  background: -ms-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%) !important;
-  background: linear-gradient(135deg, @start 0%,darken(@start, 20%) 100%) !important;
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,@start), color-stop(100%, darken(@start, 20%))) !important;
+  background: -webkit-linear-gradient(-45deg, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -o-linear-gradient(-45deg, @start 0%, darken(@start, 20%) 100%) !important;
+  background: -ms-linear-gradient(-45deg, @start 0%, darken(@start, 20%) 100%) !important;
+  background: linear-gradient(135deg, @start 0%, darken(@start, 20%) 100%) !important;
 }

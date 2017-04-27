@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
+| Filename: search_rewrite_include.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,19 +17,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $regex = array(
-	"%stext%" => "([0-9a-zA-Z._\W]+)",
-    "%stype%"  => "([0-9a-zA-Z._]+)",
+    "%stext%" => "([0-9a-zA-Z._\W]+)",
+    "%stype%" => "([0-9a-zA-Z._]+)",
     "%method%" => "([0-9a-zA-Z._]+)",
-	"%datelimit%" => "([0-9]+)",
-	"%fields%" => "([0-9]+)",
-	"%sort%" => "([\p{L}a-zA-Z]+)",
-	"%order%" => "([0-9]+)",
-	"%chars%" => "([\p{L}a-zA-Z]+)",
-	"%forum_id%" => "([0-9]+)",
+    "%datelimit%" => "([0-9]+)",
+    "%fields%" => "([0-9]+)",
+    "%sort%" => "([\p{L}a-zA-Z]+)",
+    "%order%" => "([0-9]+)",
+    "%chars%" => "([\p{L}a-zA-Z]+)",
+    "%forum_id%" => "([0-9]+)",
 );
 
 $pattern = array(
-	"search" => "search.php",
-	"search/%stype%" => "search.php?stype=%stype%",
+    "search" => "search.php",
+    "search/%stype%" => "search.php?stype=%stype%",
     "search/%stype%/%method%/%datelimit%/%fields%/%sort%/%order%/%chars%/%forum_id%" => "search.php?stype=%stype%&amp;stext=%stext%&amp;method=%method%&amp;datelimit=%datelimit%&amp;fields=%fields%&amp;sort=%sort%&amp;order=%order%&amp;chars=%chars%&amp;forum_id=%forum_id%",
 );

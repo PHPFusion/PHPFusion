@@ -19,17 +19,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 require_once INCLUDES."captchas/grecaptcha/recaptchalib.php"; //a required library from Google
-$resp = null; $error = null;
+$resp = NULL;
+$error = NULL;
 // this is required to work with localhost
 $googleArray = array(
-	"ip" => fusion_get_settings("siteurl"), //$_SERVER["REMOTE_ADDR"],
-	"captcha" => !empty($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : FALSE,
-	"secret" =>	fusion_get_settings("recaptcha_private")
+    "ip" => fusion_get_settings("siteurl"), //$_SERVER["REMOTE_ADDR"],
+    "captcha" => !empty($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : FALSE,
+    "secret" => fusion_get_settings("recaptcha_private")
 );
-$reCaptcha = new ReCaptcha($googleArray['secret']);
+$reCaptcha = ReCaptcha::getInstance($googleArray['secret']);
 $resp = $reCaptcha->verifyResponse($googleArray['ip'], $googleArray['captcha']);
-if ($resp != null && $resp->success && $error == null) {
-	$_CAPTCHA_IS_VALID = true;
+if ($resp != NULL && $resp->success && $error == NULL) {
+    $_CAPTCHA_IS_VALID = TRUE;
 }

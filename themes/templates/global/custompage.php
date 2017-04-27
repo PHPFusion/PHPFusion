@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: themes/templates/global/home.php
+| Filename: themes/templates/global/custompage.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,9 +20,9 @@
  * Default template for custom page
  * @param $info
  */
-if (!function_exists("render_custompage")) {
-    function render_custompage($info) {
-		echo render_breadcrumbs();
+if (!function_exists("display_page")) {
+    function display_page($info) {
+        echo render_breadcrumbs();
         opentable($info['title']);
         echo "<!--cp_idx-->\n";
         if (!empty($info['error'])) {
@@ -30,18 +30,22 @@ if (!function_exists("render_custompage")) {
             echo $info['error'];
             echo "</div>\n";
         } else {
-            echo $info['body'][$_GET['rowstart']];
+            echo $info['body'];
         }
         closetable();
+    }
+}
 
-        if (!empty($info['pagenav'])) {
-            echo "<div class='display-block text-center m-t-5'>\n";
-            echo $info['pagenav'];
+if (!function_exists("display_page_content")) {
+    function display_page_content($info) {
+        echo "<!--cp_idx-->\n";
+        if (!empty($info['error'])) {
+            echo "<div class='well text-center'>\n";
+            echo $info['error'];
             echo "</div>\n";
+        } else {
+            echo $info['body'][$info['rowstart']];
+            echo $info['pagenav'];
         }
-
-        echo "<!--cp_sub_idx-->\n";
-        echo $info['show_comments'];
-        echo $info['show_ratings'];
     }
 }

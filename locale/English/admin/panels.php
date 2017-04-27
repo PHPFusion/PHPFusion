@@ -20,7 +20,11 @@ $locale['424'] = "PHP";
 $locale['425'] = "Lower Center";
 $locale['426'] = "Below header";
 $locale['427'] = "Above footer";
-// Panel Options
+$locale['428a'] = "User 1";
+$locale['428b'] = "User 2";
+$locale['428c'] = "User 3";
+$locale['428d'] = "User 4";
+// Panel Options1
 $locale['430'] = "Move to left";
 $locale['431'] = "Move to right";
 $locale['432'] = "Move up";
@@ -56,8 +60,10 @@ $locale['463'] = "Examples:";
 $locale['464'] = "Exclude on these pages only";
 $locale['465'] = "Include on these pages only";
 $locale['466'] = "Panel Language:";
-$locale['467'] = "Display on home page only";
+$locale['467'] = "Display on Opening Page only";
 $locale['468'] = "Panel Type";
+$locale['469'] = "None";
+$locale['469a'] = "Content";
 // Update/Add new Panel Errors
 $locale['470'] = "Panel name not defined";
 $locale['471'] = "Panel name in use";
@@ -83,3 +89,4 @@ $locale['603'] = "Used panels";
 $locale['604'] = "Panels";
 $locale['605'] = "Panel";
 $locale['606'] = "Site content";
+$locale['607'] = "File";

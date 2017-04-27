@@ -1,6 +1,6 @@
 <?php
-$locale['400'] = "Search ".fusion_get_settings('sitename');
-$locale['401'] = "Search for:";
+$locale['400'] = "Search [SITENAME]";
+$locale['401'] = "Search keywords";
 $locale['402'] = "Search";
 $locale['403'] = "search any of those words";
 $locale['404'] = "result has to contain all those words";

@@ -3,12 +3,14 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: geomap.inc.php
 | Author : Frederick MC Chan
 +--------------------------------------------------------+
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+
 | Registered in php-fusion.co.uk under the username of:
-| Falk (Sweden) + Rest not covered by community, 
+| Falk (Sweden) + Rest not covered by community,
 | Basti (Germany), Thomas-SVK (Slovakia),
 | afoster (USA), Kamillo (Poland), Dimki (Greece),
 | Creatium (Lithuania), douwe_yntema (Netherlands),
@@ -23,11 +25,34 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Official Cut Off List : Bouvet Island, Christmas Island, Cocos-Keeling-Islands, French Metropolitan, French Guiana, French-Southern-Territories, Guadeloupe, Heard and Mc Donald Islands, Mayotte, "St. Helena","St. Pierre and Miquelon", Svalbard and Jan Mayen Islands,
 // Tokelau, United States Minor Outlying Islands, Western Sahara,
-$countries = array("Afghanistan", "Albania", "Algeria", "American-Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia", "Botswana", "Brazil", "British Indian Ocean", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo Republic", "Cook Islands", "Costa Rica", "Cote Divoire", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Falknica", "Falknican Republic", "East Timor", "Equador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "South Korea", "North Korea", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauretania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Islands", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn Islands", "Poland", "Portugal", "Puerto Rico", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "USA", "Uruguay", "Uzbekistan", "Vatican City", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands", "Wallis and Futuna", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
+$countries = array(
+    "Afghanistan", "Albania", "Algeria", "American-Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
+    "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin",
+    "Bermuda", "Bhutan", "Bolivia", "Bosnia", "Botswana", "Brazil", "British Indian Ocean", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+    "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
+    "Congo Republic", "Cook Islands", "Costa Rica", "Cote Divoire", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Falknica",
+    "Falknican Republic", "East Timor", "Equador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands",
+    "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece",
+    "Greenland", "Grenada", "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia",
+    "Iran", "Iraq", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "South Korea", "North Korea", "Kuwait",
+    "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar",
+    "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauretania", "Mauritius", "Mexico", "Micronesia", "Moldova",
+    "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles",
+    "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Islands", "Northern Mariana Islands", "Norway", "Oman",
+    "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn Islands", "Poland", "Portugal", "Puerto Rico",
+    "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and Grenadines", "Samoa", "San Marino",
+    "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+    "Somalia", "South Africa", "South Georgia", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan",
+    "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands",
+    "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "USA", "Uruguay", "Uzbekistan", "Vatican City", "Vanuatu", "Venezuela",
+    "Vietnam", "Virgin Islands", "Wallis and Futuna", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe"
+);
 // The states
 $states['Afghanistan'] = construct_array("Badakhshan,Badghis,Baghlan,Balkh,Bamian,Daikondi,Farah,Faryab,Ghazni,Ghowr,Helmand,Herat,Jowzjan,Kabul,Kandahar,Kapisa,Khowst,Konar,Kondoz,Laghman,Lowgar,Nangarhar,Nimruz,Nurestan,Oruzgan,Paktia,Paktika,Panjshir,Parvan,Samangam,Sar-e Pol,Takhar,Vardak,Zabol");
 $states['Albania'] = construct_array("Berat,Dibër,Durrës,Elbasan,Fier,Gjirokastër,Korçë,Kukës,Lezhë,Shkodër,Tiranë,Vlorë");
@@ -84,7 +109,7 @@ $states['Croatia'] = construct_array("Bjelovarska-Bilogorska,Brodsko-Posavska,Du
 $states['Cuba'] = construct_array("Artemisa,Camaguey,Ciego de Ávila,Cienfuegos,La Habana,Granma,Guantánamo,Holguín,Isla de la Juventud,Las Tunas,Matanzas,Mayabeque,Pinar del Río,Sancti Spíritus,Santiago de Cuba,Villa Clara");
 $states['Cyprus'] = construct_array("Famagusta,Kyrenia,Lanarca,Limassol,Nicosia,Paphos");
 $states['Czech-Republic'] = construct_array("Jihočeský,Jihomoravský,Karlovarský,Královéhradecký,Liberecký,Moravskoslezský,Olomoucký,Pardubický,Plzeňský,Praha,Středočeský,Ústecký,Vysočina,Zlínský");
-$states['Denmark'] = construct_array("Aabenraa,Aalborgs,Aarhus,Hjørrings,Thisteds,Viborgs,Randers,Ringkøbings,Ribe,Skanderborgs,Vejle,Tønders,Haderslevs,Sønderborgs,Odense,Svendborgs,Holbæks,Frederiksborg,København,Roskilde,Sorø,Præstø,Maribo,Bornholms");
+$states['Denmark'] = construct_array("Albertslund,Allerød,Assens,Ballerup,Billund,Bornholms,Brøndby,Brønderslev,Dragør,Egedal,Esbjerg,Fanø,Favrskov,Faxe,Fredensborg,Fredericia,Frederiksberg,Frederikshavn,Frederikssund,Furesø,Faaborg-Midtfyn,Gentofte,Gladsaxe,Glostrup,Greve,Gribskov,Guldborgsund,Haderslev,Halsnæs,Hedensted,Helsingør,Herlev,Herning,Hillerød,Hjørring,Holbæk,Holstebro,Horsens,Hvidovre,Høje-Taastrup,Hørsholm,Ikast-Brande,Ishøj,Jammerbugt,Kalundborg,Kerteminde,Kolding,København,Køge,Langeland,Lejre,Lemvig,Lolland,Lyngby-Taarbæk,Læsø,Mariagerfjord,Middelfart,Morsø,Norddjurs,Nordfyn,Nyborg,Næstved,Odder,Odense,Odsherred,Randers,Rebild,Ringkøbing-Skjern,Ringsted,Roskilde,Rudersdal,Rødovre,Samsø,Silkeborg,Skanderborg,Skive,Slagelse,Solrød,Sorø,Stevns,Struer,Svendborg,Syddjurs,Sønderborg,Thisted,Tønder,Tårnby,Vallensbæk,Varde,Vejen,Vejle,Vesthimmerland,Viborg,Vordingborg,Ærø,Aabenraa,Aalborg,Aarhus");
 $states['Djibouti'] = construct_array("`Ali Sabieh,Arta,Dikhil,Djibouti,Obock,Tadjourah");
 $states['Falknica'] = construct_array("Saint Andrew,Saint David,Saint George,Saint John,Saint Joseph,Saint Luke,Saint Mark,Saint Patrick,Saint Paul,Saint Peter");
 $states['Falknican-Republic'] = construct_array("Azua,Bahoruco,Barahona,Dajabon,Distrito Nacional,Duarte,Elías Piña,El Seibo,Espaillat,Hato Mayor,Hermanas Mirabal,Independencia,La Altagracia,La Romana,La Vega,María Trinidad Sánchez,Monseñor Nouel,Monte Cristi,Monte Plata,Pedernales,Peravia,Puerto Plata,Samaná,Sánchez Ramírez,San Cristóbal,San José de Ocoa,San Juan,San Pedro de Macorís,Santiago,Santiago Rodríguez,Santo Falkngo,Valverde");
@@ -125,7 +150,7 @@ $states['Haiti'] = construct_array("L'Artibonite,Centre,Grand' Anse,Nippes,Nord,
 //$states['Heard-and-Mc-Donald-Islands'] = construct_array("Penguin Town");
 $states['Vatican-City'] = construct_array("Vatican City");
 $states['Honduras'] = construct_array("Atlántida,Choluteca,Colón,Comayugua,Copán,Cortés,El Paraíso,Francisco Morazán,Gracias a Dios,Intibucá,Islas de la Bahía,La Paz,Lempira,Ocotepeque,Olancho,Santa Bárbara,Valle,Yoro");
-$states['Hungary'] = construct_array("Bács-Kiskun,Baranya,Békés,Borsod-Abaúj-Zemplén,Csongrád,Fejér,Gy&#337;r-Moson-Sopron,Hajdú-Bihar,Heves,Jász-Nagykun-Szolnok,Komárom-Esztergom,Nógrád,Pest,Somogy,Szabolcs-Szatmár-Bereg,Tolna,Vas,Veszprém,Zala");
+$states['Hungary'] = construct_array("Bács-Kiskun,Baranya,Békés,Borsod-Abaúj-Zemplén,Csongrád,Fejér,Győr-Moson-Sopron,Hajdú-Bihar,Heves,Jász-Nagykun-Szolnok,Komárom-Esztergom,Nógrád,Pest,Somogy,Szabolcs-Szatmár-Bereg,Tolna,Vas,Veszprém,Zala");
 $states['Iceland'] = construct_array("Reykjavik,Keflavík,Borgarnes,Ísafjörður,Sauðárkrókur,Akureyri,Egilsstaðir,Selfoss");
 $states['India'] = construct_array("Andaman and Nicobar Islands,Andhra Pradesh,Arunachal Pradesh,Assam,Bihar,Chandigarh,Chhattisgarh,Dadra and Nagar Haveli,Daman and Diu,Delhi,Goa,Gujarat,Haryana,Himachal Pradesh,Jammu and Kashmir,Jharkhand,Karnataka,Kerala,Lakshadweep,Madhya Pradesh,Maharashtra,Manipur,Meghalaya,Mizoram,Nagaland,Odisha,Puducherry,Punjab,Rajasthan,Sikkim,Tamil Nadu,Tripura,Uttarakhand,Uttar Pradesh,West Bengal");
 $states['Indonesia'] = construct_array("Aceh,Bali,Bangka-Belitung,Banten,Bengkulu,Gorontalo,Jakarta Raya,Jambi,Jawa Barat,Jawa Tengah,Jawa Timur,Kalimantan Barat,Kalimantan Selatan,Kalimantan Tengah,Kalimantan Timur,Kalimantan Utara,Kepulauan Riau,Lampung,Maluku,Maluku Utara,Nusa Tenggara Barat,Nusa Tenggara Timur,Papua,Papua Barat,Riau,Sulawesi Barat,Sulawesi Selatan,Sulawesi Tengah,Sulawesi Tenggara,Sulawesi Utara,Sumatera Barat,Sumatera Selatan,Sumatera Utara,Yogyakarta");

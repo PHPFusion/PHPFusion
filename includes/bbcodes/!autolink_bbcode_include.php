@@ -18,91 +18,98 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\BBCode\Autolink;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
-	function bbcode_off($text, $part) {
-		if ($part == 1) {
-			$text = str_replace("[", " &#91;", $text);
-			$text = str_replace("]", "&#93; ", $text);
-		} elseif ($part == 2) {
-			$text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink">(.*?)</a>^si', '\1', $text);
-			$text = str_replace(" &#91;", "&#91;", $text);
-			$text = str_replace("&#93; ", "&#93;", $text);
-		}
-		return $text;
-	}
+    function bbcode_off($text, $part) {
+        if ($part == 1) {
+            $text = str_replace("[", " &#91;", $text);
+            $text = str_replace("]", "&#93; ", $text);
+        } elseif ($part == 2) {
+            $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow">(.*?)</a>^si', '\1', $text);
+            $text = str_replace(" &#91;", "&#91;", $text);
+            $text = str_replace("&#93; ", "&#93;", $text);
+        }
 
-	function callbackPreCode($matches) {
-		return '[code]'.bbcode_off($matches[1], 1).'[/code]';
-	}
+        return $text;
+    }
 
-	function callbackPostCode($matches) {
-		return '[code]'.bbcode_off($matches[1], 2).'[/code]';
-	}
+    function callbackPreCode($matches) {
+        return '[code]'.bbcode_off($matches[1], 1).'[/code]';
+    }
 
-	function callbackPreGeshi($matches) {
-		return '[geshi='.$matches[1].']'.bbcode_off($matches[2], '1').'[/geshi]';
-	}
+    function callbackPostCode($matches) {
+        return '[code]'.bbcode_off($matches[1], 2).'[/code]';
+    }
 
-	function callbackPostGeshi($matches) {
-		return '[geshi='.$matches[1].']'.bbcode_off($matches[2], 2).'[/geshi]';
-	}
+    function callbackPreGeshi($matches) {
+        return '[geshi='.$matches[1].']'.bbcode_off($matches[2], '1').'[/geshi]';
+    }
 
-	function callbackPrePHP($matches) {
-		return '[php]'.bbcode_off($matches[1], 1).'[/php]';
-	}
+    function callbackPostGeshi($matches) {
+        return '[geshi='.$matches[1].']'.bbcode_off($matches[2], 2).'[/geshi]';
+    }
 
-	function callbackPostPHP($matches) {
-		return '[php]'.bbcode_off($matches[1], 2).'[/php]';
-	}
+    function callbackPrePHP($matches) {
+        return '[php]'.bbcode_off($matches[1], 1).'[/php]';
+    }
 
-	function callbackURLWithProtocol($matches) {
-		$len = strlen($matches[2]);
-		return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink">'
-		.trimlink($matches[2], 20)
-		.($len > 30	? substr($matches[2], $len - 10, $len) : '').'</a>';
-	}
+    function callbackPostPHP($matches) {
+        return '[php]'.bbcode_off($matches[1], 2).'[/php]';
+    }
 
-	function callbackURLWithoutProtocol($matches) {
-		$len = strlen($matches[2]);
-		return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink">'
-		.trimlink($matches[2], 20)
-		.(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
-	}
+    function callbackURLWithProtocol($matches) {
+        $len = strlen($matches[2]);
 
-	function callbackMail($matches) {
-		return hide_email($matches[0]);
-	}
+        return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
+        .trimlink($matches[2], 20)
+        .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+    }
 
-	function run($text) {
-		$containsCode = strpos($text, '[code]') !== FALSE;
-		$containsGeshi = strpos($text, '[geshi]') !== FALSE;
-		$containsPHP = strpos($text, '[php]') !== FALSE;
-		if ($containsCode) {
-			$text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPreCode', $text);
-		}
-		if ($containsGeshi) {
-			$text = preg_replace_callback('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', __NAMESPACE__.'\callbackPreGeshi', $text);
-		}
-		if ($containsPHP) {
-			$text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPrePHP', $text);
-		}
-		$text = str_replace(array("]", "&gt;", "[", "&lt;"), array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), $text);
-		$text = preg_replace_callback('#(^|[\n ])((http|https|ftp|ftps)://[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithProtocol', $text);
-		$text = preg_replace_callback('#(^|\s)((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithoutProtocol', $text);
-		$text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
-		if ($containsCode) {
-			$text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPostCode', $text);
-		}
-		if ($containsGeshi) {
-			$text = preg_replace_callback('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', __NAMESPACE__.'\callbackPostGeshi', $text);
-		}
-		if ($containsPHP) {
-			$text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPostPHP', $text);
-		}
-		return str_replace(array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), array("]", "&gt;", "[", "&lt;"), $text);
-	}
+    function callbackURLWithoutProtocol($matches) {
+        $len = strlen($matches[2]);
+
+        return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
+        .trimlink($matches[2], 20)
+        .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+    }
+
+    function callbackMail($matches) {
+        return hide_email($matches[0]);
+    }
+
+    function run($text) {
+        $containsCode = strpos($text, '[code]') !== FALSE;
+        $containsGeshi = strpos($text, '[geshi]') !== FALSE;
+        $containsPHP = strpos($text, '[php]') !== FALSE;
+        if ($containsCode) {
+            $text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPreCode', $text);
+        }
+        if ($containsGeshi) {
+            $text = preg_replace_callback('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', __NAMESPACE__.'\callbackPreGeshi', $text);
+        }
+        if ($containsPHP) {
+            $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPrePHP', $text);
+        }
+        $text = str_replace(array("]", "&gt;", "[", "&lt;"), array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), $text);
+        $text = preg_replace_callback('#(^|[\n ])((http|https|ftp|ftps)://[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si',
+                                      __NAMESPACE__.'\callbackURLWithProtocol', $text);
+        $text = preg_replace_callback('#(^|\s)((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithoutProtocol', $text);
+        $text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
+        if ($containsCode) {
+            $text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPostCode', $text);
+        }
+        if ($containsGeshi) {
+            $text = preg_replace_callback('#\[geshi=(.*?)\](.*?)\[/geshi\]#si', __NAMESPACE__.'\callbackPostGeshi', $text);
+        }
+        if ($containsPHP) {
+            $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPostPHP', $text);
+        }
+
+        return str_replace(array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), array("]", "&gt;", "[", "&lt;"), $text);
+    }
 }
 
 $text = run($text);

@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2014 PHP-Fusion
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_blacklist_include_var.php
 | Author: Chan (Frederick MC Chan)
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $user_field_api_version = "1.02.00";
 $user_field_name = $locale['uf_blacklist'];

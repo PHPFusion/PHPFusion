@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_sig_include_var.php
-| Author: Digitanium
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Version of the user fields api
 $user_field_api_version = "1.01.00";

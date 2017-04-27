@@ -1,0 +1,62 @@
+/**
+Morphs Mobile Icons
+**/
+
+.navbar-toggle {
+    border: none;
+    background: transparent !important;
+}
+
+.navbar-toggle:hover {
+    background: transparent !important;
+}
+
+.navbar-toggle .icon-bar {
+    width: 22px;
+    transition: all 0.2s;
+}
+
+.navbar-toggle .top-bar {
+    transform: rotate(45deg);
+    transform-origin: 10% 10%;
+}
+
+.navbar-toggle .middle-bar {
+    opacity: 0;
+}
+
+.navbar-toggle .bottom-bar {
+    transform: rotate(-45deg);
+    transform-origin: 10% 90%;
+}
+
+.navbar-toggle.collapsed .top-bar {
+    transform: rotate(0);
+}
+
+.navbar-toggle.collapsed .middle-bar {
+    opacity: 1;
+}
+
+.navbar-toggle.collapsed .bottom-bar {
+    transform: rotate(0);
+}
+
+.carousel-caption {
+    position: absolute;
+    z-index: 1;
+}
+
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    z-index: 0;
+}
+
+.bbcode-popup img {
+    width: auto;
+}
+
+.editor-wrapper input[type=image] {
+    width: 22px;
+    margin-right: 10px;
+    margin-top: 5px;
+}

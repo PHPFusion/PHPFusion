@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/admin/post.php
+| Filename: classes/admin/mood.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -37,13 +37,12 @@ class ForumAdminMood extends ForumAdminInterface {
 
 
     public function viewMoodAdmin() {
-
-        global $aidlink;
-        pageAccess('FR');
-        add_breadcrumb(array(
+        $aidlink = fusion_get_aidlink();
+        pageAccess('F');
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fmd',
                            'title' => self::$locale['forum_admin_004']
-                       ));
+                       ]);
 
         echo "<div class='well'>".self::$locale['forum_090']."</div>\n";
 
@@ -57,8 +56,7 @@ class ForumAdminMood extends ForumAdminInterface {
 
         $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab['id']) ? $_GET['ref'] : "mood_list";
 
-        echo opentab($tab, $_GET['ref'], "mood_admin", TRUE, "m-t-10", "ref");
-
+        echo opentab($tab, $_GET['ref'], "mood_admin", TRUE, "nav-tabs m-t-10", "ref", ['mood_id', 'action']);
         switch ($_GET['ref']) {
             case "mood_form" :
                 $this->displayMoodForm();
@@ -68,41 +66,6 @@ class ForumAdminMood extends ForumAdminInterface {
                 break;
         }
         echo closetab();
-
-    }
-
-    /**
-     * Post execution of forum mood
-     */
-    protected function post_Mood() {
-        $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
-        if (isset($_POST['cancel_mood'])) {
-            redirect(clean_request('', array('mood_id', 'ref'), FALSE));
-        }
-
-        if (isset($_POST['save_mood'])) {
-            $this->data = array(
-                "mood_id" => form_sanitizer($_POST['mood_id'], 0, 'mood_id'),
-                "mood_name" => form_sanitizer($_POST['mood_name'], '', 'mood_name', TRUE),
-                "mood_description" => form_sanitizer($_POST['mood_description'], '', 'mood_description', TRUE),
-                "mood_icon" => form_sanitizer($_POST['mood_icon'], '', 'mood_icon'),
-                "mood_status" => form_sanitizer($_POST['mood_status'], '', 'mood_status'),
-                "mood_notify" => form_sanitizer($_POST['mood_notify'], '', 'mood_notify'),
-                "mood_access" => form_sanitizer($_POST['mood_access'], '', 'mood_access'),
-            );
-
-            if (\defender::safe()) {
-                if (!empty($this->data['mood_id'])) {
-                    dbquery_insert(DB_FORUM_MOODS, $this->data, 'update');
-                    addNotice('success', $locale['forum_notice_16']);
-                } else {
-                    dbquery_insert(DB_FORUM_MOODS, $this->data, 'save');
-                    addNotice('success', $locale['forum_notice_15']);
-                }
-                redirect(clean_request('', array('mood_id', 'ref'), FALSE));
-            }
-
-        }
 
     }
 
@@ -125,7 +88,7 @@ class ForumAdminMood extends ForumAdminInterface {
         if (!empty($_GET['action'])) {
 
             $validMoodID = isset($_GET['mood_id']) && isnum($_GET['mood_id'])
-            && !empty(dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id=".$_GET['mood_id'])) ? TRUE : FALSE;
+            && dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id=".$_GET['mood_id']) ? TRUE : FALSE;
 
             switch ($_GET['action']) {
                 case 'edit':
@@ -142,9 +105,9 @@ class ForumAdminMood extends ForumAdminInterface {
                         redirect(clean_request('', array('ref', 'mood_id'), FALSE));
                     }
                     break;
-                case 'delete':
+                case 'delet':
                     if ($validMoodID) {
-                        addNotice('success', $locale['forum_notice_014']);
+                        addNotice('success', $locale['forum_notice_14']);
                         dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['mood_id'])."'");
                     } else {
                         redirect(clean_request('', array('ref', 'mood_id'), FALSE));
@@ -189,11 +152,45 @@ class ForumAdminMood extends ForumAdminInterface {
                 'options' => $groups,
                 'inline' => TRUE,
                 'type' => 'radio'
-            )).
-            form_button('save_mood', !empty($this->data['mood_id']) ? $locale['forum_106'] : $locale['forum_105'],
-                        $locale['save_changes'], array('class' => 'btn-primary m-r-10')).
-            form_button('cancel_mood', $locale['cancel'], $locale['cancel']).
-            closeform();
+            ));
+            echo form_button('save_mood', !empty($this->data['mood_id']) ? $locale['forum_106'] : $locale['forum_105'], $locale['save_changes'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('cancel_mood', $locale['cancel'], $locale['cancel'], array('icon' => 'fa fa-times'));
+            echo closeform();
+    }
+
+    /**
+     * Post execution of forum mood
+     */
+    protected function post_Mood() {
+        $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
+        if (isset($_POST['cancel_mood'])) {
+            redirect(clean_request('', array('mood_id', 'ref'), FALSE));
+        }
+
+        if (isset($_POST['save_mood'])) {
+            $this->data = array(
+                "mood_id" => form_sanitizer($_POST['mood_id'], 0, 'mood_id'),
+                "mood_name" => form_sanitizer($_POST['mood_name'], '', 'mood_name', TRUE),
+                "mood_description" => form_sanitizer($_POST['mood_description'], '', 'mood_description', TRUE),
+                "mood_icon" => form_sanitizer($_POST['mood_icon'], '', 'mood_icon'),
+                "mood_status" => form_sanitizer($_POST['mood_status'], '', 'mood_status'),
+                "mood_notify" => form_sanitizer($_POST['mood_notify'], '', 'mood_notify'),
+                "mood_access" => form_sanitizer($_POST['mood_access'], '', 'mood_access'),
+            );
+
+            if (\defender::safe()) {
+                if (!empty($this->data['mood_id'])) {
+                    dbquery_insert(DB_FORUM_MOODS, $this->data, 'update');
+                    addNotice('success', $locale['forum_notice_16']);
+                } else {
+                    dbquery_insert(DB_FORUM_MOODS, $this->data, 'save');
+                    addNotice('success', $locale['forum_notice_15']);
+                }
+                redirect(clean_request('', array('mood_id', 'ref'), FALSE));
+            }
+
+        }
+
     }
 
     /**
@@ -235,7 +232,7 @@ class ForumAdminMood extends ForumAdminInterface {
                 <?php while ($data = dbarray($mood_result)) :
                     $edit_link = clean_request("ref=mood_form&action=edit&mood_id=".$data['mood_id'],
                                                array("ref", "action", "mood_id"), FALSE);
-                    $delete_link = clean_request("ref=mood_form&action=delete&mood_id=".$data['mood_id'],
+                    $delete_link = clean_request("ref=mood_form&action=delet&mood_id=".$data['mood_id'],
                                                  array("ref", "action", "mood_id"), FALSE);
                     ?>
                     <tr>

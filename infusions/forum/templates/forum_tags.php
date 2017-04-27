@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: forum_tags.php
-| Author: Frederick MC Chan (Chan)
+| Filename: forum/templates/forum_tags.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (!function_exists("display_forum_tags")) {
 
     function display_forum_tags($info) {
-
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
 
         echo render_breadcrumbs();
@@ -29,11 +31,9 @@ if (!function_exists("display_forum_tags")) {
 
             // thread design
             echo "<!--pre_forum-->\n";
-            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0002']."</div>\n";
 
-            echo "<div class='filter'>\n";
             forum_filter($info);
-            echo "</div>\n";
 
             if (!empty($info['threads']['pagenav'])) {
                 echo "<div class='text-right'>\n";
@@ -71,24 +71,25 @@ if (!function_exists("display_forum_tags")) {
             }
 
 
-
         } else {
 
             ?>
             <div class="row m-0">
                 <?php if (!empty($info['tags'])) : ?>
                     <?php unset($info['tags'][0]) ?>
-                    <?php foreach($info['tags'] as $tag_id => $tag_data): ?>
-                        <div class="col-xs-12 col-sm-4" style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
+                    <?php foreach ($info['tags'] as $tag_id => $tag_data): ?>
+                        <div class="col-xs-12 col-sm-4"
+                             style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
                             <a href="<?php echo $tag_data['tag_link'] ?>">
                                 <div class="panel-body">
                                     <h4 class="text-white"><?php echo $tag_data['tag_title'] ?></h4>
+
                                     <p class="text-white"><?php echo $tag_data['tag_description'] ?></p>
                                 </div>
                                 <hr/>
                                 <?php if (!empty($tag_data['threads'])) : ?>
-                                <span class="tag_result text-white">
-                                    <?php echo trim_text($tag_data['threads']['thread_subject'], 10)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
+                                    <span class="tag_result text-white">
+                                    <?php echo trim_text($tag_data['threads']['thread_subject'], 100)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
                                 </span>
                                 <?php endif; ?>
                             </a>

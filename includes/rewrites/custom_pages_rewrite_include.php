@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
+| Filename: custom_pages_rewrite_include.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
     "%page_id%" => "([0-9]+)",
@@ -27,13 +30,14 @@ $regex = array(
 );
 
 $pattern = array(
+    'pages/%page_id%/%page_title%' => 'viewpage.php?page_id=%page_id%',
     "pages/%page_id%/row-%rowstart%/c-%comment%/comments-%c_start%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;comment=%comment%&amp;c_start=%c_start%",
     "pages/%page_id%/language-%lang%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;lang=%lang%",
     "pages/%page_id%/%page_title%" => "viewpage.php?page_id=%page_id%",
     "pages/%page_id%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
     "pages/%page_id%/comments-%c_start%-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;c_start=%c_start%",
     "pages/%page_id%/comments-%c_start%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
-	);
+);
 
 $pattern_tables["%page_id%"] = array(
     "table" => DB_CUSTOM_PAGES,

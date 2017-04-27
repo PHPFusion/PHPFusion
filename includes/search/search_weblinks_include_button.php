@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_weblinks_include_button.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,12 +15,34 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+namespace PHPFusion\Search;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
 if (db_exists(DB_WEBLINKS)) {
-include LOCALE.LOCALESET."search/weblinks.php";
-$form_elements['weblinks']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-$form_elements['weblinks']['disabled'] = array();
-$form_elements['weblinks']['display'] = array();
-$form_elements['weblinks']['nodisplay'] = array();
-$radio_button['weblinks'] = "<label><input type='radio' name='stype' value='weblinks'".($_GET['stype'] == "weblinks" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['w400']."</label>";
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
+    $form_elements += array(
+        'weblinks' => array(
+            'enabled' => array(
+                '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
+                '7' => 'chars'
+            ),
+            'disabled' => array(),
+            'display' => array(),
+            'nodisplay' => array(),
+        )
+    );
+    $radio_button += array(
+        'weblinks' => form_checkbox('stype', fusion_get_locale('w400', LOCALE.LOCALESET."search/weblinks.php"), Search_Engine::get_param('stype'),
+                                    array(
+                                        'type' => 'radio',
+                                        'value' => 'weblinks',
+                                        'reverse_label' => TRUE,
+                                        'onclick' => 'display(this.value)',
+                                        'input_id' => 'weblinks'
+                                    )
+        )
+    );
 }

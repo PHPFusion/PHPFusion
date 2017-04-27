@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/server.php
-| Author: Frederick MC Chan
+| Filename: news/classes/server.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,22 +18,35 @@
 
 namespace PHPFusion\News;
 
-abstract class NewsServer {
-    public static $news_instance = NULL;
+class NewsServer {
+
+    protected static $news_settings = array();
+    private static $news_instance = NULL;
+    private static $news_admin_instance = NULL;
 
     public static function News() {
-        if (empty(self::$news_instance)) {
+        if (self::$news_instance === NULL) {
             self::$news_instance = new NewsView();
         }
-        return (object) self::$news_instance;
+
+        return self::$news_instance;
     }
 
-    public static $news_settings = array();
+    public static function NewsAdmin() {
+        if (self::$news_admin_instance === NULL) {
+            self::$news_admin_instance = new NewsAdminView();
+        }
 
-    public static function get_news_settings() {
-        if (empty( self::$news_settings )) {
+        return self::$news_admin_instance;
+    }
+
+    public static function get_news_settings($key = NULL) {
+        if (empty(self::$news_settings)) {
             self::$news_settings = get_settings("news");
         }
-        return self::$news_settings;
+
+        return $key === NULL ? self::$news_settings : (isset(self::$news_settings[$key]) ? self::$news_settings[$key] : NULL);
     }
+
+
 }

@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: forum_input.php
-| Author: Frederick MC Chan (Chan)
+| Filename: forum/templates/forum_input.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (!function_exists( "display_forum_postform" )) {
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
+if (!function_exists("display_forum_postform")) {
 
     function display_forum_postform($info) {
 
@@ -32,7 +35,7 @@ if (!function_exists( "display_forum_postform" )) {
         echo $info['openform'];
         echo $info['forum_field'];
         echo $info['subject_field'];
-        echo $info['tags_field'];
+        echo !empty($info['tags_field']) ? $info['tags_field'] : "";
         echo $info['message_field'];
         echo $info['edit_reason_field'];
         echo $info['forum_id_field'];
@@ -83,7 +86,7 @@ if (!function_exists( "display_forum_postform" )) {
 
 }
 
-if (!function_exists ("display_forum_pollform")) {
+if (!function_exists("display_forum_pollform")) {
 
     function display_forum_pollform($info) {
         echo render_breadcrumbs();
@@ -99,39 +102,55 @@ if (!function_exists ("display_forum_pollform")) {
 
 }
 
+if (!function_exists('display_form_bountyform')) {
+
+    function display_forum_bountyform($info) {
+        echo render_breadcrumbs();
+        opentable($info['title']);
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo "<!--pre_form-->\n";
+        echo $info['field']['openform'];
+        echo $info['field']['bounty_select'];
+        echo $info['field']['bounty_description'];
+        echo $info['field']['bounty_button'];
+        echo $info['field']['closeform'];
+        closetable();
+    }
+}
+
 
 if (!function_exists("display_quickReply")) {
 
     function display_quickReply($info) {
+
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
-
-        $qr_form = "<!--sub_forum_thread-->\n";
-        $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$info['thread_id'];
-        $qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
-        $qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
-        $qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
-                                  array('bbcode' => true,
-                                        'required' => true,
-                                        'autosize' => true,
-                                        'preview' => true,
-                                        'form_name' => 'quick_reply_form'
+        $html = "<!--sub_forum_thread-->\n";
+        $html .= openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
+        $html .= "<h4>".$locale['forum_0168']."</h4>\n";
+        $html .= form_textarea('post_message', '', '',
+                                  array(
+                                      'placeholder' => $locale['forum_0601']."...",
+                                      'bbcode'      => TRUE,
+                                      'required'    => TRUE,
+                                      'preview'     => TRUE,
+                                      'form_name'   => 'quick_reply_form',
+                                      'height'      => '250px'
                                   ));
-        $qr_form .= "<div class='m-t-10 pull-right'>\n";
-        $qr_form .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
-        $qr_form .= "</div>\n";
-        $qr_form .= "<div class='overflow-hide'>\n";
-        $qr_form .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+        $html .= "<div class='m-t-10 pull-right'>\n";
+        $html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary m-r-10'));
+        $html .= "</div>\n";
+        $html .= "<div class='overflow-hide'>\n";
+        $html .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
         if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-            $qr_form .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $html .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
         }
         if ($forum_settings['thread_notify']) {
-            $qr_form .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $html .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
         }
-        $qr_form .= "</div>\n";
-        $qr_form .= closeform();
-
-        return (string) $qr_form;
+        $html .= "</div>\n";
+        $html .= closeform();
+        return (string)$html;
     }
 }

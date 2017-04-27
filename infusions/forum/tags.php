@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: tags.php
-| Author: Frederick MC Chan (Chan)
+| Filename: forum/tags.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
+if (!db_exists(DB_FORUMS)) {
+    redirect(BASEDIR."error.php?code=404");
+}
 
 require_once THEMES."templates/header.php";
 require_once "infusion_db.php";

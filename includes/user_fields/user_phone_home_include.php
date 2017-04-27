@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_phone_home_include.php
 | Author: Chubatyj Vitalij (Rizado)
@@ -15,13 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if ($profile_method == "input") {
-	$options += array('inline'=>true, "type"=>"number", 'max_length'=>20, 'max_width'=>'200px');
-	$user_fields = form_text('user_phone_home',$locale['uf_phone_home'], $field_value, $options);
+    $options += array('inline' => TRUE, "type" => "number", 'max_length' => 20);
+    $user_fields = form_text('user_phone_home', $locale['uf_phone_home'], $field_value, $options);
 } elseif ($profile_method == "display") {
-	if ($field_value) {
-		$user_fields = array('title'=>$locale['uf_phone_home'], 'value'=>$field_value);
-	}
+    $user_fields = array('title' => $locale['uf_phone_home'], 'value' => $field_value ?: "");
+
 }

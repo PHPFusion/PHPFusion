@@ -5,6 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
+| Filename: faq_rewrite_include.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,23 +16,28 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
-	"%faq_cat_id%" => "([0-9]+)", 
-	"%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
+    "%faq_cat_id%"   => "([0-9]+)",
+    "%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
+    "%type%"         => "(FQ)",
+    "%stype%"        => "(q)",
 );
 
 $pattern = array(
-	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
+    "print/%type%/%cat_id%"                                             => "print.php?type=%type%&amp;item_id=%cat_id%",
+    "submit/%stype%/frequently-asked-questions"                         => "submit.php?stype=%stype%",
+    "submit/%stype%/frequently-asked-questions/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=FQ",
+    "frequently-asked-questions"                                        => "infusions/faq/faq.php",
+    "frequently-asked-questions/category/%faq_cat_id%"                  => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
 );
 
-$pattern_tables["%faq_cat_id%"] = array(
-    "table" => DB_FAQ_CATS,
-    "primary_key" => "faq_cat_id",
-    "id" => array("%faq_cat_id%" => "faq_cat_id"),
-    "columns" => array(
-        "%faq_cat_name%" => "faq_cat_name",
-    )
+$pattern_tables["%cat_id%"] = array(
+    "table"       => DB_FAQS,
+    "primary_key" => "faq_id",
+    "id"          => array("%faq_id%" => "cat_id"),
+    "columns"     => array()
 );

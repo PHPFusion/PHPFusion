@@ -25,7 +25,7 @@ use PHPFusion\OutputHandler;
  * @param string $title
  */
 function set_title($title = "") {
-	OutputHandler::setTitle($title);
+    OutputHandler::setTitle($title);
 }
 
 /**
@@ -34,7 +34,7 @@ function set_title($title = "") {
  * @param string $addition
  */
 function add_to_title($addition = "") {
-	OutputHandler::addToTitle($addition);
+    OutputHandler::addToTitle($addition);
 }
 
 /**
@@ -44,7 +44,7 @@ function add_to_title($addition = "") {
  * @param string $content
  */
 function set_meta($name, $content = "") {
-	OutputHandler::setMeta($name, $content);
+    OutputHandler::setMeta($name, $content);
 }
 
 /**
@@ -54,7 +54,7 @@ function set_meta($name, $content = "") {
  * @param string $addition
  */
 function add_to_meta($name, $addition = "") {
-	OutputHandler::addToMeta($name, $addition);
+    OutputHandler::addToMeta($name, $addition);
 }
 
 /**
@@ -63,7 +63,7 @@ function add_to_meta($name, $addition = "") {
  * @param string $tag
  */
 function add_to_head($tag = "") {
-	OutputHandler::addToHead($tag);
+    OutputHandler::addToHead($tag);
 }
 
 /**
@@ -72,7 +72,7 @@ function add_to_head($tag = "") {
  * @param string $tag
  */
 function add_to_footer($tag = "") {
-	OutputHandler::addToFooter($tag);
+    OutputHandler::addToFooter($tag);
 }
 
 /**
@@ -83,7 +83,7 @@ function add_to_footer($tag = "") {
  * @param string $modifiers Regexp modifiers
  */
 function replace_in_output($target, $replace, $modifiers = "") {
-	OutputHandler::replaceInOutput($target, $replace, $modifiers);
+    OutputHandler::replaceInOutput($target, $replace, $modifiers);
 }
 
 /**
@@ -92,7 +92,7 @@ function replace_in_output($target, $replace, $modifiers = "") {
  * @param callback $callback The name of a function or other callable object
  */
 function add_handler($callback) {
-	OutputHandler::addHandler($callback);
+    OutputHandler::addHandler($callback);
 }
 
 /**
@@ -102,7 +102,7 @@ function add_handler($callback) {
  * @return string
  */
 function handle_output($output) {
-	return OutputHandler::handleOutput($output);
+    return OutputHandler::handleOutput($output);
 }
 
 /**
@@ -111,5 +111,5 @@ function handle_output($output) {
  * @param string $tag
  */
 function add_to_jquery($tag = "") {
-	OutputHandler::addToJQuery($tag);
+    OutputHandler::addToJQuery($tag);
 }

@@ -4,7 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 9.00
+| File Category: Core Rewrite Modules
+| Filename: homepage_rewrite_include.php
 | Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,24 +16,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
-    "%time%" => "([0-9]+)",
+    "%time%"    => "([0-9]+)",
     "%section%" => "([0-9]+)",
-    "%logout%" => "(yes)"
+    "%logout%"  => "(yes)"
 );
 
 $pattern = array(
-    "home" => "index.php",
-    "homepage" => "home.php",
-    "login-to-website" => "login.php",
-    "maintenance" => "maintenance.php",
+    // "home"                   => "index.php", // Enable this if your main page is index.php
+    "homepage"               => "home.php",
+    "login"                  => "login.php",
+    "logout/%logout%"        => "index.php?logout=%logout%",
+    "maintenance"            => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",
-    "edit-profile"     => "edit_profile.php",
-    "website-members"  => "members.php",
-    "logout-from-website/%logout%" => "index.php?logout=%logout%",
-    "create/ref=%time%" => "register.php?ref=%time%",
-	"contact" => "contact.php",
-	"registration" => "register.php",
+    "edit-profile"           => "edit_profile.php",
+    "website-members"        => "members.php",
+    "create/ref=%time%"      => "register.php?ref=%time%",
+    "contact"                => "contact.php",
+    "registration"           => "register.php",
 );

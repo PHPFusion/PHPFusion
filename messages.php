@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: messages.php
 | Author: PHP-Fusion Development Team
@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-if (!iMEMBER) {	redirect("index.php"); }
+if (!iMEMBER) {
+    redirect("index.php");
+}
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";

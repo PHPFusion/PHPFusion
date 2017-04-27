@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_yahoo_include.php
-| Author: Digitanium
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,22 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
+$icon = "<img src='".IMAGES."user_fields/social/yahoo.svg'/>";
 // Display user field input
 if ($profile_method == "input") {
-	$options += array('inline'		=> TRUE,
-					 'max_length'	=> 100,
-					 'width'		=> '200px',
-					 'regex'		=> '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-					 // TODO: Change the error text in case a value was entered but is not valid
-					 'error_text'	=> $locale['uf_yahoo_error']
-					 );
-	$user_fields = form_text('user_yahoo', $locale['uf_yahoo'], $field_value, $options);
-
+    $options = array(
+            'inline'           => TRUE,
+            'max_length'       => 100,
+            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+            'error_text'       => $locale['uf_yahoo_error'],
+            'regex_error_text' => $locale['uf_yahoo_error_1'],
+            'placeholder'      => $locale['uf_yahoo_id'],
+            'label_icon'       => $icon,
+        ) + $options;
+    $user_fields = form_text('user_yahoo', $locale['uf_yahoo'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
-	if ($field_value) {
-		$user_fields = array('title'=>$locale['uf_yahoo'], 'value'=>$field_value);
-	}
+    $user_fields = array('title' => $icon.$locale['uf_yahoo'], 'value' => $field_value ?: "");
 }

@@ -21,7 +21,7 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
         $array = array();
         $button_class = "btn-default";
         $button_img = "pictogram-popup pictogram-white";
-        $button_text =  $locale['show'];
+        $button_text = $locale['show'];
         $hide_footer = "";
     } else {
         $button_class = (array_key_exists('button_class', $array)) ? $array['button_class'] : "btn-default";
@@ -43,7 +43,7 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
     if (isset($hide_footer) && ($hide_footer !== "1")) {
         $html .= "<div class='modal-footer'>";
         $html .= '<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'.$locale['close'].'</button>';
-		$html .= '<button type="submit" class="btn btn-primary">'.$locale['save'].'</button>';
+        $html .= '<button type="submit" class="btn btn-primary">'.$locale['save'].'</button>';
         $html .= "</div>";
     }
     $html .= "</div>";

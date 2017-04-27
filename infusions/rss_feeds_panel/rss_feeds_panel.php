@@ -17,45 +17,60 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 include INCLUDES."infusions_include.php";
 
 if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-	include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
+    include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
 } else {
-	include INFUSIONS."rss_feeds_panel/locale/English.php";
+    include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
 
-if (file_exists(INFUSIONS."rss_feeds_panel/images/".LANGUAGE)) {
-	set_image("rss_article" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_articles.gif");
-	set_image("rss_blog" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_blog.gif");
-	set_image("rss_downloads" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_downloads.gif");
-	set_image("rss_forums" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_forums.gif");
-	set_image("rss_news" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_news.gif");
-	set_image("rss_weblinks" , INFUSIONS."rss_feeds_panel/images/".LANGUAGE."/rss_weblinks.gif");
-		
-	}
-
-openside($locale['rss009']);
-echo "<p style='text-align: center;'>\n";
-if (db_exists(DB_NEWS)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_news.php'>".get_image("rss_news",$locale['rss004'],"","","class='img-responsive'")."</a>\n";
+add_to_head('<style type="text/css">
+.rss-button {
+    background: #FF9800;
+    padding: 1px 15px;
+    color: #fff !important;
+    border-radius: 4px;
+    margin: 3px 0;
+    display: block;    
 }
+.rss-button:hover,
+.rss-button:focus {
+    background: #F57C00;
+    color: #fff;
+    text-decoration: none;
+}
+.rss-button .fa {
+    padding-right: 5px;
+}
+</style>');
+
+openside($locale['rss_title']);
+if (db_exists(DB_ARTICLES)) {
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_articles'].'</a>';
+}
+
 if (db_exists(DB_BLOG)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_blog.php'>".get_image("rss_blog",$locale['rss000'],"","","class='img-responsive'")."</a>\n";
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_blog'].'</a>';
 }
-if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_articles.php'>".get_image("rss_article",$locale['rss002'],"","","class='img-responsive'")."</a>\n";
+
+if (db_exists(DB_DOWNLOADS)) {
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_downloads.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_downloads'].'</a>';
 }
-if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_downloads.php'>".get_image("rss_downloads",$locale['rss003'],"","","class='img-responsive'")."</a>\n";
+
+if (db_exists(DB_FORUMS)) {
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_forums'].'</a>';
 }
-if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'>".get_image("rss_weblinks",$locale['rss005'],"","","class='img-responsive'")."</a>\n";
+
+if (db_exists(DB_NEWS)) {
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_news.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_news'].'</a>';
 }
-if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
-	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'>".get_image("rss_forums",$locale['rss001'],"","","class='img-responsive'")."</a>\n";
+
+if (db_exists(DB_WEBLINKS)) {
+    echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_weblinks'].'</a>';
 }
-echo "</p>\n";
 closeside();

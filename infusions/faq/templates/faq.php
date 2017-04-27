@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: templates/faq.php
+| Filename: faq.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,58 +15,71 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// Main View
-if (!function_exists("render_faq")) {
-	function render_faq($info) {
-		opentable($info['faq_title']);
-		echo "<!--pre_faq_idx-->\n";
-		if (!empty($info['items']) && count($info['items'])) {
-			echo "<div class='list-group'>\n";
-			foreach ($info['items'] as $data) {
-				echo "<div class='list-group-item'>\n";
-				echo "<h4 style='width:100%'><a href='".$data['faq_link']."'>".$data['faq_cat_name']."</a><span class='badge pull-right'>".$data['faq_count']."</span></h4>\n";
-				if ($data['faq_cat_description']) {
-					echo $data['faq_cat_description'];
-				}
-				echo "</div>\n";
-			}
-			echo "</div>\n";
-		} else {
-			echo "<div class='well text-center'>".$info['nofaqs']."</div>\n";
-		}
-		closetable();
-	}
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
 }
-// Category View
+
+if (!function_exists("display_main_faq")) {
+    /**
+     * Page Template
+     * @param $info
+     */
+    function display_main_faq($info) {
+        $locale = fusion_get_locale();
+
+        opentable($locale['faq_0000']);
+        echo render_breadcrumbs();
+
+        echo "<h3 class='m-b-20'>".$locale['faq_0001']."</h3>\n";
+        if (!empty($info['faq_categories'])) {
+            foreach ($info['faq_categories'] as $cat_id => $cat_data) {
+                echo "<div class='m-t-10' id='cat-".$cat_id."'>\n";
+                echo "<a class='text-bold' href='".INFUSIONS."faq/faq.php?cat_id=".$cat_id."' title=".$cat_data['faq_cat_name'].">".$cat_data['faq_cat_name']."</a><br/>";
+                echo $cat_data['faq_cat_description'];
+                echo "</div>\n";
+            }
+        }
+        closetable();
+    }
+}
+
 if (!function_exists("render_faq_item")) {
-	function render_faq_item($info) {
-		global $locale;
-		echo "<span id='content'></span>\n";
-		opentable($locale['401'].": ".$info['faq_cat_name']);
-		echo "<a href='".INFUSIONS."faq/faq.php'>".$locale['400']."</a> &gt; <a href='".$info['faq_link']."'>".$info['faq_cat_name']."</a>\n";
-		if (!empty($info['nofaq_items'])) {
-			echo "<div class='well text-center m-t-20'>".$info['nofaq_items']."</div>\n";
-		} else {
-			echo "<div class='row m-t-20'>\n";
-			echo "<div class='col-xs-12 col-sm-3'>\n";
-			if (!empty($info['items'])) {
-				echo "<ul>\n";
-				foreach ($info['items'] as $data) {
-					echo "<li><a href='".FUSION_REQUEST."#faq_".$data['faq_id']."'>".$data['faq_question']."</a></li>\n";
-				}
-				echo "</ul>\n";
-			}
-			echo "</div>\n";
-			echo "<div class='col-xs-12 col-sm-9'>\n";
-			foreach ($info['items'] as $data) {
-				echo "<a class='pull-right btn btn-xs btn-default' href='".FUSION_REQUEST."#content'><i class='fa fa-arrow-up'></i> ".$locale['402']."</a>\n";
-				echo "<h4 id='faq_".$data['faq_id']."'>".$data['faq_question']."</h4>\n";
-				echo nl2br(parse_textarea($data['faq_answer']));
-				echo "<hr/>\n";
-			}
-			echo "</div>\n";
-			echo "</div>\n";
-		}
-		closetable();
-	}
+    function render_faq_item($info) {
+        $locale = fusion_get_locale();
+
+        opentable($locale['faq_0000']);
+        echo render_breadcrumbs();
+
+        if (!empty($info['faq_items'])) {
+            echo "<h4 class='spacer-sm'>".$info['faq_categories'][$info['faq_get']]['faq_cat_name']."</h4>\n";
+            add_to_jquery('$(".top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},100);});');
+
+            foreach ($info['faq_items'] as $faq_id => $faq_data) {
+                echo "<div id='faq-item-".$faq_id."'>";
+                $faq_admin = '';
+                $faq_print = "<a target='_blank' href='".BASEDIR."print.php?type=FQ&amp;item_id=".$faq_data['faq_id']."' title=".$locale['print'].">".$locale['print']."</a>\n";
+                if (iADMIN && checkrights("FQ")) {
+                    $faq_admin = "&middot; <a href='".INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=edit&amp;cat_id=".$faq_data['faq_cat_id']."&amp;faq_id=".$faq_data['faq_id']."' title='".$locale['edit']."'>".$locale['edit']."</a>";
+                }
+
+                echo "<a data-toggle='collapse' href='#".$faq_id."' aria-expanded='false' aria-controls='".$faq_id."'>";
+                    echo "<h4 class='display-inline-block'>".$faq_data['faq_question']."</h4>";
+                echo "<a class='pull-right top' href='#' title=".$locale['faq_0002']."><i class='fa fa-arrow-up'></i></a>\n";
+                echo "</a>";
+
+                echo "<div class='collapse' id='".$faq_id."'>";
+                    echo $faq_data['faq_answer'];
+
+                    echo "<div>";
+                    echo $faq_print;
+                    echo $faq_admin;
+                    echo "</div>";
+                echo "</div>";
+                echo "</div>";
+            }
+        } else {
+            echo "<div class='well text-center'>".$locale['faq_0112']."</div>";
+        }
+        closetable();
+    }
 }

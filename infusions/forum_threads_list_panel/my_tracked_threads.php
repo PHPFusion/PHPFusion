@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: my_tracked_threads.php
 | Author: Robert Gaudyn (Wooya)
@@ -16,19 +16,25 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
+if (!db_exists(DB_FORUMS)) {
+    redirect(BASEDIR."error.php?code=404");
+}
 
-if (!iMEMBER) {	redirect(BASEDIR."index.php"); }
+if (!iMEMBER) {
+    redirect(BASEDIR."index.php");
+}
 
 require_once THEMES."templates/header.php";
 
-if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
-	$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
-	redirect(FUSION_SELF);
+if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY,
+                                                                "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")
+) {
+    $result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
+    redirect(FUSION_SELF);
 }
 
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-	$_GET['rowstart'] = 0;
+    $_GET['rowstart'] = 0;
 }
 
 opentable($locale['global_056']);
@@ -40,7 +46,7 @@ $result = dbquery("SELECT tn.thread_id FROM ".DB_FORUM_THREAD_NOTIFY." tn
 $rows = dbrows($result);
 
 if ($rows) {
-	$result = dbquery("
+    $result = dbquery("
 		SELECT tf.forum_access, tn.thread_id, tn.notify_datestamp, tn.notify_user,
 		tt.thread_subject, tt.forum_id, tt.thread_lastpost, tt.thread_lastuser, tt.thread_postcount,
 		tu.user_id AS user_id1, tu.user_name AS user_name1, tu.user_status AS user_status1, 
@@ -56,31 +62,34 @@ if ($rows) {
 		ORDER BY tn.notify_datestamp DESC
 		LIMIT ".$_GET['rowstart'].",10
 	");
-	echo "<table class='tbl-border' cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
-	echo "<td class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_050']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";
-	echo "</tr>\n";
-	$i = 0;
-	while ($data = dbarray($result)) {
-		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-		echo "<tr>\n<td class='".$row_color."'><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
-		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])."</td>\n";
-		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />
+    echo "<table class='tbl-border' cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
+    echo "<td class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
+    echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_050']."</strong></td>\n";
+    echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
+    echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
+    echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";
+    echo "</tr>\n";
+    $i = 0;
+    while ($data = dbarray($result)) {
+        $row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
+        echo "<tr>\n<td class='".$row_color."'><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
+        echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id1'], $data['user_name1'],
+                                                                                                     $data['user_status1'])."</td>\n";
+        echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id2'], $data['user_name2'],
+                                                                                                     $data['user_status2'])."<br />
 		".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
-		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
-		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'><a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
-		echo "</tr>\n";
-		$i++;
-	}
-	echo "</table>\n";
-	closetable();
-	echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?")."</div>\n";
+        echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".($data['thread_postcount'] - 1)."</td>\n";
+        echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'><a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
+        echo "</tr>\n";
+        $i++;
+    }
+    echo "</table>\n";
+    closetable();
+    echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3,
+                                                                    INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?")."</div>\n";
 } else {
-	echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
-	closetable();
+    echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
+    closetable();
 }
 
 require_once THEMES."templates/footer.php";

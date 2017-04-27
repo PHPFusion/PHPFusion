@@ -4,7 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 9.00
+| File Category: Core Rewrite Modules
+| Filename: rss_rewrite_info.php
 | Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,6 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 $permalink_name = $locale['pl_rss_title'];
 $permalink_desc = $locale['pl_rss_desc'];

@@ -19,38 +19,40 @@
 require_once dirname(__FILE__)."../../../../maincore.php";
 header('Content-Type: application/rss+xml; charset='.$locale['charset'].'');
 
-if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {	
-	include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php"; 
-} else {	
-	include INFUSIONS."rss_feeds_panel/locale/English.php"; } 
-
-if (db_exists(DB_NEWS)) { 
-$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".groupaccess('news_visibility').(multilang_table("NS")?" AND news_language='".LANGUAGE."'":"")."	ORDER BY news_datestamp DESC LIMIT 0,10");
-$rssimage = $settings['siteurl'].$settings['sitebanner'];
-
-echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-echo "<rss version=\"2.0\">\n\n	<image>\n <url>$rssimage</url>\n </image>\n	<channel>\n";
-
-if (dbrows($result) != 0) {		echo "<title>".$settings['sitename'].$locale['rss004'].(multilang_table("NS")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
-
-echo "<link>".$settings['siteurl']."</link>\n 
-	  <description>".$settings['description']."</description>\n";
-	  
-while ($row=dbarray($result)) {
-	$rsid = intval($row['news_id']);
-	$rtitle = $row['news_subject'];
-	$description = stripslashes(nl2br($row['news_news']));
-	$description = strip_tags($description, "<a><p><br /><br /><hr />");
-	echo "<item>\n";
-	echo "<title>".htmlspecialchars($rtitle)."</title>\n";
-	echo "<link>".$settings['siteurl']."infusions/news/news.php?readmore=".$rsid."</link>\n";
-	echo "<description>".htmlspecialchars($description)."</description>\n";
-	echo "</item>\n";
-	}
-} else {		
-echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n 
-	  <link>".$settings['siteurl']."</link>\n 
-	  <description>".$locale['rss008']."</description>\n";
+if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
+    include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
+} else {
+    include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
-echo "</channel></rss>";
+
+if (db_exists(DB_NEWS)) {
+    $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".groupaccess('news_visibility').(multilang_table("NS") ? " AND news_language='".LANGUAGE."'" : "")."	ORDER BY news_datestamp DESC LIMIT 0,10");
+    $rssimage = $settings['siteurl'].$settings['sitebanner'];
+
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<image>\n<url>$rssimage</url>\n</image>\n<channel>\n";
+
+    if (dbrows($result) != 0) {
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_news'].(multilang_table("NS") ? $locale['rss_in'].LANGUAGE : "")."</title>\n";
+
+        echo "<link>".$settings['siteurl']."</link>\n
+	  <description>".$settings['description']."</description>\n";
+
+        while ($row = dbarray($result)) {
+            $rsid = intval($row['news_id']);
+            $rtitle = $row['news_subject'];
+            $description = stripslashes(nl2br($row['news_news']));
+            $description = strip_tags($description, "<a><p><br /><br /><hr />");
+            echo "<item>\n";
+            echo "<title>".htmlspecialchars($rtitle)."</title>\n";
+            echo "<link>".$settings['siteurl']."infusions/news/news.php?readmore=".$rsid."</link>\n";
+            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
+            echo "</item>\n";
+        }
+    } else {
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_news']."</title>\n
+	  <link>".$settings['siteurl']."</link>\n
+	  <description>".$locale['rss_nodata']."</description>\n";
+    }
+    echo "</channel>\n</rss>";
 }

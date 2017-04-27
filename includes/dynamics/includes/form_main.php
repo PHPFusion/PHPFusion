@@ -27,26 +27,31 @@
  * @return string
  */
 function openform($form_name, $method, $action_url, array $options = array()) {
-    global $defender;
-    $method = (strtolower($method) == 'post') ? 'post' : 'get';
-    $options = array(
-        'form_id' => !empty($options['form_id']) ? $options['form_id'] : $form_name,
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'enctype' => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
-        'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 1,
-    );
 
-    $class = "";
-    if (!$defender->safe()) {
-        $class .= "class='warning ".$options['class']."' ";
+    $method = (strtolower($method) == 'post') ? 'post' : 'get';
+
+    $default_options = array(
+        'form_id'    => !empty($options['form_id']) ? $options['form_id'] : $form_name,
+        'class'      => !empty($options['class']) ? $options['class'] : '',
+        'enctype'    => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
+        'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 5,
+        'remote_url' => !empty($options['remote_url']) ? $options['remote_url'] : '',
+        'inline'     => FALSE,
+        'on_submit'  => '',
+    );
+    $options += $default_options;
+
+    $class = '';
+    if (!\defender::safe()) {
+        $class .= "warning ".$options['class'];
     } elseif (!empty($options['class'])) {
-        $class .= "class='".$options['class']."'";
+        $class .= $options['class'];
     }
 
-    $action_prefix = fusion_get_settings("site_seo") && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
-    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_prefix.$action_url."' ".$class." ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
+    //$action_prefix = fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '')." ".($options['on_submit'] ? "onSubmit='".$options['on_submit']."'" : '').">\n";
     if ($method == 'post') {
-        $token = $defender->generate_token($options['form_id'], $options['max_tokens']);
+        $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
         $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
     }
@@ -55,7 +60,5 @@ function openform($form_name, $method, $action_url, array $options = array()) {
 }
 
 function closeform() {
-    $html = "</form>\n";
-
-    return $html;
+    return "</form>\n";
 }

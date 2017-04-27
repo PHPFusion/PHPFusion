@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_news_include_button.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,12 +15,34 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+namespace PHPFusion\Search;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
 if (db_exists(DB_NEWS)) {
-include LOCALE.LOCALESET."search/news.php";
-$form_elements['news']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-$form_elements['news']['disabled'] = array();
-$form_elements['news']['display'] = array();
-$form_elements['news']['nodisplay'] = array();
-$radio_button['news'] = "<label><input type='radio' name='stype' value='news'".($_GET['stype'] == "news" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['n400']."</label>";
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
+    $form_elements += array(
+        'news' => array(
+            'enabled' => array(
+                '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
+                '7' => 'chars'
+            ),
+            'disabled' => array(),
+            'display' => array(),
+            'nodisplay' => array(),
+        )
+    );
+    $radio_button += array(
+        'news' => form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/news.php"), Search_Engine::get_param('stype'),
+                                array(
+                                    'type' => 'radio',
+                                    'value' => 'news',
+                                    'reverse_label' => TRUE,
+                                    'onclick' => 'display(this.value)',
+                                    'input_id' => 'news'
+                                )
+        )
+    );
 }

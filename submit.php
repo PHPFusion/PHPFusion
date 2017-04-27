@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: submit.php
 | Author: PHP-Fusion Development Team
@@ -16,48 +16,34 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-if (!iMEMBER) {	redirect("index.php"); }
-
-require_once THEMES."templates/header.php";
-include_once INCLUDES."bbcode_include.php";
-include_once INCLUDES."infusions_include.php";
-
-
-$submit_info = array();
-
-$stype = "";
-
-$modules = array(
-	'n' => db_exists(DB_NEWS),
-	'p' => db_exists(DB_PHOTO_ALBUMS),
-	'a' => db_exists(DB_ARTICLES),
-	'd' => db_exists(DB_DOWNLOADS),
-	'l' => db_exists(DB_WEBLINKS),
-    'b' => db_exists(DB_BLOG)
-);
-
-$sum = array_sum($modules);
-
-if ($sum or isset($_GET['stype']) && !empty($modules[$_GET['stype']])) {
-
-    $stype = $_GET['stype'];
-
-    if ($stype === "l") {
-        include INFUSIONS."weblinks/weblink_submit.php";
-    } elseif ($stype === "n") {
-        include INFUSIONS."news/news_submit.php";
-    } elseif ($stype === "b") {
-        include INFUSIONS."blog/blog_submit.php";
-    } elseif ($stype === "a") {
-        include INFUSIONS."articles/article_submit.php";
-    } elseif ($stype === "p") {
-        include INFUSIONS."gallery/photo_submit.php";
-    } elseif ($stype === "d") {
-        include INFUSIONS."downloads/download_submit.php";
-    } else {
-        redirect("index.php");
-    }
-} else {
+if (!iMEMBER) {
     redirect("index.php");
+}
+require_once THEMES."templates/header.php";
+include_once INCLUDES."infusions_include.php";
+$modules = array(
+    'n' => db_exists(DB_NEWS),
+    'p' => db_exists(DB_PHOTO_ALBUMS),
+    'a' => db_exists(DB_ARTICLES),
+    'd' => db_exists(DB_DOWNLOADS),
+    'l' => db_exists(DB_WEBLINKS),
+    'b' => db_exists(DB_BLOG),
+    'q' => db_exists(DB_FAQS)
+);
+$submit_types = array(
+    'n' => array('link' => INFUSIONS."news/news_submit.php"),
+    'p' => array('link' => INFUSIONS."gallery/photo_submit.php"),
+    'a' => array('link' => INFUSIONS."articles/article_submit.php"),
+    'd' => array('link' => INFUSIONS."downloads/download_submit.php"),
+    'l' => array('link' => INFUSIONS."weblinks/weblink_submit.php"),
+    'b' => array('link' => INFUSIONS."blog/blog_submit.php"),
+    'q' => array('link' => INFUSIONS."faq/faq_submit.php"),
+);
+$_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) && isset($submit_types[$_GET['stype']]) ? $_GET['stype'] : "";
+$sum = array_sum($modules);
+if ($sum && $_GET['stype']) {
+   require_once $submit_types[$_GET['stype']]['link'];
+} else {
+    redirect('index.php');
 }
 require_once THEMES."templates/footer.php";

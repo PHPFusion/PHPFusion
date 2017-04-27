@@ -4,9 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: errors.php
-| Author: Joakim Falk (Falk)
-| Author: Robert Gaudyn (Wooya)
+| Filename: error.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -24,62 +23,78 @@ require_once THEMES."templates/global/error.php";
  * @param string $output
  * @return mixed
  */
-function replaceDir($output="") {
+function replaceDir($output = "") {
     $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-	if (!function_exists("replaceHTMLTags")) {
-		function replaceHTMLTags($m) {
-			$pathInfo = pathinfo($_SERVER['REQUEST_URI']);
-			$pathDepth =  (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/")-1);
-            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth): "";
-            $replace = $m[1]."=".$m[2]."./".($actualDepth).$m[3];
-			return $replace;
-		}
-	}
-	return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
-}
+    if (!function_exists("replaceHTMLTags")) {
+        function replaceHTMLTags($m) {
+            return $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
+        }
+    }
 
+    return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
+}
 add_handler("replaceDir");
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
 
-$data = array(
-    "title" => $locale['errunk'],
-    "image" => IMAGES."unknown.png"
+$default = array(
+    'title' => $locale['errunk'],
+    'image_src' => IMAGES."error/unknown.png",
+    'status' => '505',
+    'back' => [
+        'url' => BASEDIR.'index.php',
+        'title' => $locale['errret']
+    ]
 );
 
 if (isset($_GET['code'])) {
-    switch($_GET['code']) {
+    switch ($_GET['code']) {
         case 401:
             header("HTTP/1.1 401 Unauthorized");
-            $data = array(
-                "title" => $locale['err401'],
-                "image" => IMAGES."error/401.png"
+            $info = array(
+                'title' => $locale['err401'],
+                'image_src' => IMAGES.'error/401.png',
+                'status' => 401
             );
             break;
         case 403:
             header("HTTP/1.1 403 Forbidden");
-            $data = array(
-                "title" => $locale['err403'],
-                "image" => IMAGES."error/403.png"
+            $info = array(
+                'title' => $locale['err403'],
+                'image_src' => IMAGES.'error/403.png',
+                'status' => 403,
             );
             break;
         case 404:
             header("HTTP/1.1 404 Not Found");
-            $data = array(
-                "title" => $locale['err404'],
-                "image" => IMAGES."error/404.png"
+            $info = array(
+                'title' => $locale['err404'],
+                'image_src' => IMAGES.'error/404.png',
+                'status' => 404,
             );
             break;
         case 500:
             header("HTTP/1.1 500 Internal Server Error");
-            $data = array(
-                "title" => $locale['err500'],
-                "image" => IMAGES."error/500.png"
+            $info = array(
+                'title' => $locale['err500'],
+                'image_src' => IMAGES.'error/500.png',
+                'status' => 500,
             );
             break;
     }
 }
 
-display_error_page($data);
-
+$info += $default;
+\PHPFusion\Panels::getInstance()->hide_panel('LEFT');
+\PHPFusion\Panels::getInstance()->hide_panel('RIGHT');
+ob_start();
+display_error_page($info);
+echo strtr(ob_get_clean(), [
+    '{%title%}' => $info['title'],
+    '{%message%}' => $locale['errmsg'],
+    '{%image_src%}' => $info['image_src'],
+    '{%error_code%}' => $info['status'],
+    '{%back_link%}' => $info['back']['url'],
+    '{%back_title%}' => $info['back']['title']
+]);
 require_once THEMES."templates/footer.php";

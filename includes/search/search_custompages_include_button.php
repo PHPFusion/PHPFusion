@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_custompages_include_button.php
-| Author: Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,10 +15,29 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET."search/custompages.php";
-$form_elements['custompages']['enabled'] = array("fields1", "fields2", "fields3", "order1", "order2", "chars");
-$form_elements['custompages']['disabled'] = array("datelimit", "sort");
-$form_elements['custompages']['display'] = array();
-$form_elements['custompages']['nodisplay'] = array();
-$radio_button['custompages'] = "<label><input type='radio' name='stype' value='custompages'".($_GET['stype'] == "custompages" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['c400']."</label>";
+namespace PHPFusion\Search;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
+$form_elements = &$form_elements;
+$radio_button = &$radio_button;
+$form_elements += array(
+    'custompages' => array(
+        'enabled' => array('0' => 'fields1', '1' => 'fields2', '2' => 'fields3', '3' => 'order1', '4' => 'order2', '5' => 'chars'),
+        'disabled' => array('0' => 'datelimit', '1' => 'sort'),
+        'display' => array(),
+        'nodisplay' => array(),
+    )
+);
+$radio_button += array(
+    'custompages' => form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), Search_Engine::get_param('stype'),
+                                   array(
+                                       'type' => 'radio',
+                                       'value' => 'custompages',
+                                       'reverse_label' => TRUE,
+                                       'onclick' => 'display(this.value)',
+                                       'input_id' => 'custompages'
+                                   )
+    )
+);

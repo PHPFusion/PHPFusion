@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Forum.php
+| Filename: tags.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -38,16 +38,14 @@ class ThreadTags extends ForumServer {
         if ($setTitle == TRUE) {
             set_title($locale['forum_0000']);
             add_to_title($locale['global_201'].$locale['forum_tag_0100']);
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => FORUM."index.php",
                                'title' => $locale['forum_0000']
-                           )
-            );
-            add_breadcrumb(array(
+                           ]);
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => FORUM."tags.php",
                                'title' => $locale['forum_tag_0100']
-                           )
-            );
+                           ]);
         }
 
         $thread_result = NULL;
@@ -62,11 +60,10 @@ class ThreadTags extends ForumServer {
                 $data = dbarray($tag_result);
 
                 add_to_title($locale['global_201'].$data['tag_title']);
-                add_breadcrumb(array(
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                    'link' => FORUM."tags.php?tag_id=".$data['tag_id'],
                                    'title' => $data['tag_title']
-                               )
-                );
+                               ]);
                 if (!empty($data['tag_description'])) set_meta('description', $data['tag_description']);
 
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
@@ -253,9 +250,10 @@ class ThreadTags extends ForumServer {
                             'file' => $threads['attach_files'] >0 ? "<i class='".self::get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon' => $icon,
                         ),
-                        "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
+                        "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
                         "thread_author" => $author,
                         "thread_last" => array(
+                            'user' => $author,
                             'avatar' => display_avatar($lastuser, '30px', '', '', ''),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time' => $threads['post_datestamp'],
@@ -301,7 +299,7 @@ class ThreadTags extends ForumServer {
 
     public function cache_tags() {
 
-        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1
+        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status='1'
             ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")."
             ORDER BY tag_title ASC";
 
@@ -357,6 +355,8 @@ class ThreadTags extends ForumServer {
 
     /**
      * Displays current thread tags
+     * @param $thread_tags - tagID (SQL data in DB_FORUM_THREADS `thread_tags`)
+     * @return string
      */
     public function display_thread_tags($thread_tags) {
         $html = "";

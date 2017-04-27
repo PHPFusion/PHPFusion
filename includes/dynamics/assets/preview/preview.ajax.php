@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: preview.ajax.php
 | Author: Frederick MC CHan (Chan)
@@ -44,7 +44,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES_N, $images, $text);
         $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+    echo nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset'])) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
     $text = htmlspecialchars($text);
 	$text = parseubb(parsesmileys($text));
@@ -54,7 +54,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES_N, $images, $text);
         $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+    echo nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset'])) ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
     $text = htmlspecialchars($text);
 	$text = parsesmileys($text);

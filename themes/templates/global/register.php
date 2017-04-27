@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: global/register.php
 | Author: PHP-Fusion Development Team
@@ -15,11 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 if (!function_exists("display_registerform")) {
-	function display_registerform($info) {
-		global $locale;
-		opentable($locale['u101']);
+    function display_registerform($info) {
+        global $locale;
+        opentable($locale['u101']);
         // page navigation
         $open = "";
         $close = "";
@@ -29,7 +31,7 @@ if (!function_exists("display_registerform")) {
                 $tab_title['id'][$page_section['id']] = $page_section['id'];
                 $tab_title['icon'][$page_section['id']] = '';
             }
-            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
+            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
             $close = closetab();
         }
         echo $open;
@@ -65,11 +67,15 @@ if (!function_exists("display_registerform")) {
             }
 
             if (!empty($info['user_field'])) {
-                foreach($info['user_field'] as $field => $fieldData) {
-                    if (!empty($fieldData['title'])) echo $fieldData['title'];
-                    if (!empty($fieldData['fields']) && is_array($fieldData['fields']))  {
-                        foreach($fieldData['fields'] as $cField => $cFieldData) {
-                            if (!empty($cFieldData)) echo $cFieldData;
+                foreach ($info['user_field'] as $field => $fieldData) {
+                    if (!empty($fieldData['title'])) {
+                        echo $fieldData['title'];
+                    }
+                    if (!empty($fieldData['fields']) && is_array($fieldData['fields'])) {
+                        foreach ($fieldData['fields'] as $cField => $cFieldData) {
+                            if (!empty($cFieldData)) {
+                                echo $cFieldData;
+                            }
                         }
                     }
                 }
@@ -91,6 +97,6 @@ if (!function_exists("display_registerform")) {
             echo "<!--editprofile_sub_idx-->";
         }
         echo $close;
-		closetable();
-	}
+        closetable();
+    }
 }

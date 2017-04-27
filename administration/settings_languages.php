@@ -54,13 +54,14 @@ if (dbrows($inf_result) > 0) {
     }
 }
 
-add_breadcrumb(array('link' => ADMIN."settings_languages.php".$aidlink, 'title' => $locale['682ML']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
 
 if (isset($_POST['savesettings'])) {
     $inputData = array(
         "localeset" => form_sanitizer($_POST['localeset'], fusion_get_settings('locale'), "localeset"),
         "old_localeset" => form_sanitizer($_POST['old_localeset'], fusion_get_settings('locale'), "old_localeset"),
-        "enabled_languages" => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "", "enabled_languages") : fusion_get_settings('locale'),
+        "enabled_languages" => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "",
+                                                                                   "enabled_languages") : fusion_get_settings('locale'),
         // returns Chinese_Simplified,English,Malay
         "old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
         // returns Chinese_Simplified.English.Malay
@@ -299,7 +300,7 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
 $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
 while ($data = dbarray($result)) {
-    echo "<input type='checkbox' value='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> ".$data['mlt_title']." <br />";
+    echo "<input type='checkbox' value='".$data['mlt_rights']."' id='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> <label for='".$data['mlt_rights']."' class='m-b-0'>".$data['mlt_title']."</label><br />";
 }
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";

@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
-    global $defender, $locale;
+    $defender = \defender::getInstance();
+    $locale = fusion_get_locale();
+
     $title = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $html = '';
     // NOTE (remember to parse readback value as of '|' seperator)
@@ -31,21 +33,21 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     }
 
     $options += array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-        'width' => !empty($options['width']) ? $options['width'] : '100%',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) ? $options['inline'] : '',
+        'input_id' => $input_name,
+        'required' => FALSE,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '100%',
+        'class' => '',
+        'inline' => '',
         'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['firstname_error'],
         'error_text_2' => !empty($options['error_text']) ? $options['error_text_2'] : $locale['lastname_error'],
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
+        'tip' => '',
+        'safemode' => FALSE,
     );
     $error_class = $defender->inputHasError($input_name.'-firstname') || $defender->inputHasError($input_name.'-lastname') ? "has-error " : "";
-    $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."
+    $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";

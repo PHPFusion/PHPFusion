@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
++--------------------------------------------------------+
 | Filename: includes/core_functions_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
@@ -15,14 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
+// Better to call this file as core_runtime_include.php
 use PHPFusion\Database\DatabaseFactory;
 
 require_once __DIR__.'/autoloader.php';
-require_once __DIR__.'/core_functions_include.php';
 require_once fusion_detect_installation();
-require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__.'/multisite_include.php';
 
 // Database handler functions
@@ -35,22 +36,21 @@ require_once __DIR__.'/multisite_include.php';
  * @todo: missing doc - usage to set true false otherwise.. ?
  * @todo: add a form_select("debug_sql", "Debug SQL?", fusion_get_settings("debug_sql"), array(
  *      "options" => array($locale['disable'], $locale['enable']),
- * 		"inline"=>true)); into administration/security_settings.php
+ *        "inline"=>true)); into administration/security_settings.php
  */
-DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
-	'host' => $db_host,
-	'user' => $db_user,
-	'password' => $db_pass,
-	'database' => $db_name,
-	'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+    'host' => $db_host,
+    'user' => $db_user,
+    'password' => $db_pass,
+    'database' => $db_name,
+    'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 ));
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/translate_include.php";
-require_once __DIR__."/notify/notify.inc.php";
 require_once __DIR__."/sqlhandler.inc.php";
-require_once __DIR__."/defender.inc.php";
-require_once __DIR__."/dynamics/dynamics.inc.php";
+require_once __DIR__."/defender.inc";
+require_once __DIR__."/dynamics.inc";

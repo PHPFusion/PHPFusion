@@ -10,10 +10,12 @@
  * For more Yii related demos visit http://demos.krajee.com
  */
 .file-preview-frame, .file-preview-image, .file-preview-other {
-    height: 160px;
+    /* height: 160px; -- causing modern template oversized picture overflow */
     vertical-align: middle
 }
-
+.file-input .input-group-btn {
+    width: 1% !important;
+}
 .file-loading {
     top: 0;
     right: 0;

@@ -18,8 +18,8 @@
             var f;
             return b[a] ? f = b[a].cloneNode() : e.test(a) ? f = (b[a] = c(a)).cloneNode() : f = c(a), f.canHaveChildren && !d.test(a) ? g.appendChild(f) : f
         }, a.createDocumentFragment = Function("h,f", "return function(){var n=f.cloneNode(),c=n.createElement;h.shivMethods&&(" + i().join().replace(/\w+/g, function (a) {
-            return c(a), g.createElement(a), 'c("' + a + '")'
-        }) + ");return n}")(l, g)
+                return c(a), g.createElement(a), 'c("' + a + '")'
+            }) + ");return n}")(l, g)
     }
 
     function k(a) {
@@ -33,15 +33,21 @@
         c.innerHTML = "<xyz></xyz>", f = "hidden"in c, f && typeof injectElementWithStyles == "function" && injectElementWithStyles("#modernizr{}", function (b) {
             b.hidden = !0, f = (a.getComputedStyle ? getComputedStyle(b, null) : b.currentStyle).display == "none"
         }), g = c.childNodes.length == 1 || function () {
-            try {
-                b.createElement("a")
-            } catch (a) {
-                return!0
-            }
-            var c = b.createDocumentFragment();
-            return typeof c.cloneNode == "undefined" || typeof c.createDocumentFragment == "undefined" || typeof c.createElement == "undefined"
-        }()
+                try {
+                    b.createElement("a")
+                } catch (a) {
+                    return !0
+                }
+                var c = b.createDocumentFragment();
+                return typeof c.cloneNode == "undefined" || typeof c.createDocumentFragment == "undefined" || typeof c.createElement == "undefined"
+            }()
     })();
-    var l = {elements: c.elements || "abbr article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video", shivCSS: c.shivCSS !== !1, shivMethods: c.shivMethods !== !1, type: "default", shivDocument: k};
+    var l = {
+        elements: c.elements || "abbr article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video",
+        shivCSS: c.shivCSS !== !1,
+        shivMethods: c.shivMethods !== !1,
+        type: "default",
+        shivDocument: k
+    };
     a.html5 = l, k(b)
 })(this, document)
