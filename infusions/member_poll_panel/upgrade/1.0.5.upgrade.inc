@@ -48,14 +48,10 @@ if (dbrows($result)) {
         foreach ($enabled_languages as $language => $language_name) {
             $poll_title[$language] = $pollData['poll_title'];
             for ($x = 0; $x <= 10; $x++) {
-			
                 $opts_column = 'poll_opt_'.$x;
-				$next_num = $x + 1;
-				
                 if (!empty($pollData[$opts_column])) {
-					$poll_opts[$next_num][$language] = $pollData[$opts_column];
+                    $poll_opts[$x + 1][$language] = $pollData[$opts_column];
                 }
-				
             }
         }
         $poll_title = serialize($poll_title);
