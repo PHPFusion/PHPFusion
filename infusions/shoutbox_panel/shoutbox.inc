@@ -356,7 +356,7 @@ class Shoutbox {
     public function sbForm() {
         defined('ADMIN_PANEL') ? fusion_confirm_exit() : "";
         openside(self::$locale['SB_title']);
-        if (iGUEST && empty(self::$sb_settings['hidden_shouts'])) {
+        if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
             echo openform(self::$default_params['sbform_name'], 'post', $this->postLink);
@@ -375,7 +375,6 @@ class Shoutbox {
             } else {
                 echo form_hidden('shout_language', '', $this->data['shout_language']);
             }
-
             if (iMEMBER && self::$sb_settings['hidden_shouts']) {
                 echo "<div class='btn-group dropup'>
                 ".form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary'))."
