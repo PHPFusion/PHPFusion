@@ -20,7 +20,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_PHOTOS)) {
-
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
     $form_elements += array(
         'photos' => array(
             'enabled' => array(

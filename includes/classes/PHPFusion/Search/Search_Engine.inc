@@ -39,6 +39,7 @@ class Search_Engine extends Search_Model {
     protected static $search_item = '';
     protected static $search_item_list = '';
     protected static $search_item_image = '';
+    public static $locale = array();
 
     /**
      * Returns params
@@ -72,87 +73,18 @@ class Search_Engine extends Search_Model {
     public static function getInstance() {
         if (self::$search_instance === NULL) {
             self::$search_instance = new Static();
+            self::$search_instance->init();
         }
         return self::$search_instance;
     }
-    /**
-     * Constructor
-     */
+
+    private function __sleep() {
+    }
+
     protected function __construct() {
-        $search_modules = self::load_search_modules();
-
-        // Formats POST
-        if (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) {
-            self::$rowstart = $_GET['rowstart'];
-        }
-        // Formats sText
-        if (isset($_POST['stext'])) {
-            if (is_array($_POST['stext'])) {
-                redirect(FUSION_SELF);
-            } else {
-                self::$search_text = urlencode(stripinput($_POST['stext']));
-            }
-        } elseif (isset($_GET['stext']) && $_GET['stext']) {
-            self::$search_text = urlencode(stripinput($_GET['stext']));
-        }
-        // Formats Search Method
-        if (isset($_POST['method']) && in_array($_POST['method'], array('OR', 'AND'))) {
-            self::$search_method = $_POST['method'];
-        } elseif (isset($_GET['method']) && in_array($_GET['method'], array('OR', 'AND'))) {
-            self::$search_method = $_GET['method'];
-        }
-        // Formats search date limit
-        if (isset($_POST['datelimit']) && isnum($_POST['datelimit'])) {
-            self::$search_date_limit = $_POST['datelimit'];
-        } elseif (isset($_GET['datelimit']) && isnum($_GET['datelimit'])) {
-            self::$search_date_limit = $_GET['datelimit'];
-        }
-        // Fields
-        if (isset($_POST['fields']) && isnum($_POST['fields'])) {
-            self::$search_fields = $_POST['fields'];
-        } elseif (isset($_GET['fields']) && isnum($_GET['fields'])) {
-            self::$search_fields = $_GET['fields'];
-        }
-        // Sorting
-        if (isset($_POST['sort']) && in_array($_POST['sort'], array("datestamp", "subject", "author"))) {
-            self::$search_sort = $_POST['sort'];
-        } elseif ((isset($_GET['sort']) && in_array($_GET['sort'], array('datestamp', 'subject', 'author')))) {
-            self::$search_sort = $_GET['sort'];
-        }
-        // Orders
-        if (isset($_POST['order']) && isnum($_POST['order'])) {
-            self::$search_order = $_POST['order'];
-        } elseif (isset($_GET['order']) && isnum($_GET['order'])) {
-            self::$search_order = $_GET['order'];
-        }
-        // Characters
-        if (isset($_POST['chars']) && isnum($_POST['chars'])) {
-            self::$search_chars = ($_POST['chars'] > 200 ? 200 : $_POST['chars']);
-        } elseif (isset($_GET['chars']) && isnum($_GET['chars'])) {
-            self::$search_chars = ($_GET['chars'] > 200 ? 200 : $_GET['chars']);
-        }
-        // Forum ID
-        if (isset($_POST['forum_id']) && isnum($_POST['forum_id'])) {
-            self::$forum_id = $_POST['forum_id'];
-        } elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
-            self::$forum_id = $_GET['forum_id'];
-        }
-        // Prepare SType
-        if (isset($_GET['stype']) || isset($_GET['stype']) && in_array(isset($_GET['stype']), $search_modules)) {
-            if (isset($_GET['stype']) && in_array($_GET['stype'], $search_modules) || isset($_POST['stype']) && in_array($_POST['stype'], $search_modules)) {
-                self::$search_type = (isset($_POST['stype']) ? lcfirst($_POST['stype']) : (isset($_GET['stype']) ? lcfirst($_GET['stype']) : lcfirst(str_replace('.php', '', fusion_get_settings('default_search')))));
-            }
-        } else {
-            self::$search_type = (isset($_POST['stype']) && in_array($_POST['stype'], $search_modules, TRUE)) ? $_POST['stype'] : lcfirst(str_replace('.php', '', fusion_get_settings('default_search')));
-        }
-
-        // Memory Limits
-        $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit"))) * 1024 * 1024;
-        $memory_limit = !isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024 ? 8 * 1024 * 1024 : $memory_limit;
-        self::$memory_limit = $memory_limit - ceil($memory_limit / 4);
-        // Locale
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
     }
+
     /**
      * Returns the search locale
      * @return array|null|string
@@ -184,16 +116,17 @@ class Search_Engine extends Search_Model {
                                'reverse_label' => TRUE
                            )
         )."</td>\n</tr>\n</table>\n";
+
         /*
          * Date limit
          */
         $date_opts = array(
-            '0' => $locale['421'],
-            '86400' => $locale['422'],
-            '604800' => $locale['423'],
-            '1209600' => $locale['424'],
-            '2419200' => $locale['425'],
-            '7257600' => $locale['426'],
+            '0'        => $locale['421'],
+            '86400'    => $locale['422'],
+            '604800'   => $locale['423'],
+            '1209600'  => $locale['424'],
+            '2419200'  => $locale['425'],
+            '7257600'  => $locale['426'],
             '14515200' => $locale['427'],
         );
         $disabled_status = FALSE;
@@ -222,22 +155,20 @@ class Search_Engine extends Search_Model {
         $search_areas .= "<td>";
         $search_areas .= form_checkbox('fields', $locale['430'], self::get_param('fields'),
                            array(
-                               'type' => 'radio',
-                               'value' => '2',
+                               'type'          => 'radio',
+                               'value'         => '2',
                                'reverse_label' => TRUE,
-                               'input_id' => 'fields1',
-                               'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1",
-                                                                                                                                                 $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                               'input_id'      => 'fields1',
+                               'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
                            )
         );
         $search_areas .= form_checkbox('fields', $locale['431'], self::get_param('fields'),
                            array(
-                               'type' => 'radio',
-                               'value' => '1',
+                               'type'          => 'radio',
+                               'value'         => '1',
                                'reverse_label' => TRUE,
-                               'input_id' => 'fields2',
-                               'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2",
-                                                                                                                                                 $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                               'input_id'      => 'fields2',
+                               'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
                            )
         );
         $search_areas .= form_checkbox('fields', $locale['432'], self::get_param('fields'),

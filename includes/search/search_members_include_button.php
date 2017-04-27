@@ -19,7 +19,8 @@ namespace PHPFusion\Search;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
+$form_elements = &$form_elements;
+$radio_button = &$radio_button;
 $form_elements += array(
     'members' => array(
         'enabled' => array('0' => 'order1', '1' => 'order2'),

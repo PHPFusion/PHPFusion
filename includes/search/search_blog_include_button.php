@@ -22,9 +22,8 @@ if (!defined("IN_FUSION")) {
 }
 
 if (db_exists(DB_BLOG)) {
-
-    $search = Search_Engine::getInstance();
-
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
     $form_elements += array(
         'blog' => array(
             'enabled' => array(
@@ -37,7 +36,7 @@ if (db_exists(DB_BLOG)) {
         )
     );
     $radio_button += array(
-        'blog' => form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/blog.php"), $search::get_param('stype'),
+        'blog' => form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/blog.php"), Search_Engine::get_param('stype'),
                                 array(
                                     'type' => 'radio',
                                     'value' => 'blog',

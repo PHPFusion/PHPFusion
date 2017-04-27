@@ -20,7 +20,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$search = Search_Engine::getInstance();
+$form_elements = &$form_elements;
+$radio_button = &$radio_button;
 $form_elements += array(
     'custompages' => array(
         'enabled' => array('0' => 'fields1', '1' => 'fields2', '2' => 'fields3', '3' => 'order1', '4' => 'order2', '5' => 'chars'),
@@ -30,7 +31,7 @@ $form_elements += array(
     )
 );
 $radio_button += array(
-    'custompages' => form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), $search::get_param('stype'),
+    'custompages' => form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), Search_Engine::get_param('stype'),
                                    array(
                                        'type' => 'radio',
                                        'value' => 'custompages',
