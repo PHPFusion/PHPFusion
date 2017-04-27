@@ -540,12 +540,10 @@ class MemberPoll {
         if (isset($_POST['addoption'])) {
             $this->data['poll_title'] = stripinput($_POST['poll_title']);
             $this->data['poll_visibility'] = stripinput($_POST['poll_visibility']);
-            //print_p($_POST);
             $i = 0;
             while ($i < $_POST['opt_count']) {
-                foreach ($_POST['poll_opt_'.$i] as $key => $value) {
-                    $this->data['poll_opt'][$i][$key] = stripinput($value);
-                }
+                $opt_field = "poll_opt_".$i;
+                $this->data['poll_opt'][$i] = \defender::sanitize_array($_POST[$opt_field]);
                 $i++;
             }
             // Add new selection
