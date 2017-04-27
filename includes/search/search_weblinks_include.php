@@ -90,14 +90,13 @@ if (db_exists(DB_WEBLINKS)) {
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
                 $text_c = Search_Engine::search_stringscount($data['weblink_description']);
-
                 $desc = '';
                 if ($text_frag != "") {
                     $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
                 }
                 $desc .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
-
-                $search_result .= strtr(Search::render_search_item(), [
+                $tr = Search::render_search_item(TRUE);
+                $search_result .= strtr($tr, [
                         '{%item_url%}'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
                         '{%item_image%}'       => '',
                         '{%item_title%}'       => $data['weblink_name'].' '.$new,

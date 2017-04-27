@@ -106,18 +106,15 @@ class Search extends Search_Engine {
     /*
      * Template for search Simple Items
      */
-    public static function render_search_item() {
-        if (self::$search_item) {
-            return self::$search_item;
-        }
+    public static function render_search_item($new_window = FALSE) {
         if (function_exists('render_search_item')) {
-            return (string)self::render_search_item();
+            return (string)self::render_search_item($new_window);
         }
         return "
         <li>
         <div class='clearfix'>
         <div class='pull-left m-r-10'>{%item_image%}</div>
-        <div class='overflow-hide'><span class='va' style='height:30px;'></span><span class='va'><a href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></span></div>
+        <div class='overflow-hide'><span class='va' style='height:30px;'></span><span class='va'><a ".($new_window ? "target='_blank' " : ' ')."href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></span></div>
         </div>
         </a>
         </li>
