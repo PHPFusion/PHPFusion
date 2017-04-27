@@ -167,7 +167,7 @@ class MemberPoll {
     private static function delete_poll($id) {
         if (self::verify_poll($id)) {
             dbquery("DELETE FROM ".DB_POLLS." WHERE poll_id='".intval($id)."'");
-            addNotice('warning', self::$locale['POLL_007']);
+            addNotice('success', self::$locale['POLL_007']);
             redirect(clean_request("", array("section=poll", "aid"), TRUE));
         }
     }
@@ -175,7 +175,7 @@ class MemberPoll {
     private static function start_poll($id) {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_started='".time()."' WHERE poll_id='".intval($id)."'");
-            addNotice('warning', self::$locale['POLL_008']);
+            addNotice('success', self::$locale['POLL_008']);
             redirect(clean_request("", array("section=poll", "aid"), TRUE));
         }
     }
@@ -184,7 +184,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_id='".intval($id)."'");
 
-            addNotice('warning', self::$locale['POLL_009']);
+            addNotice('success', self::$locale['POLL_009']);
             redirect(clean_request("", array("section=poll", "aid"), TRUE));
         }
     }
@@ -193,7 +193,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='0' WHERE poll_id='".intval($id)."'");
 
-            addNotice('warning', self::$locale['POLL_010']);
+            addNotice('success', self::$locale['POLL_010']);
             redirect(clean_request("", array("section=poll", "aid"), TRUE));
         }
     }
@@ -225,7 +225,6 @@ class MemberPoll {
                     $data[$id]['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
                 }
             }
-
             return $data;
         } else {
             return FALSE;
@@ -240,7 +239,6 @@ class MemberPoll {
         $info['vote'] = $this->_countPoll("");
         $info_f = array();
         $info_t = array();
-
         if (!empty($data)) {
             $i = 0;
             $ii = 0;
