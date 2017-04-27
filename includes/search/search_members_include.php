@@ -46,7 +46,7 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
         );
         if ($rows != 0) {
 
-            $item_count = "<a href='".FUSION_SELF."?stype=members&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['m401'] : $locale['m402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=members&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['m401'] : $locale['m402'])." ".$locale['522']."</a><br />\n";
             $order_by = array(
                 '0' => ' DESC',
                 '1' => ' ASC',

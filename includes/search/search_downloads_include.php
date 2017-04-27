@@ -74,7 +74,7 @@ if (db_exists(DB_DOWNLOADS)) {
         }
         if ($rows != 0) {
 
-            $item_count = "<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=downloads&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery("SELECT td.*, tdc.*, user_id, user_name, user_status, user_avatar, user_joined, user_level
             FROM ".DB_DOWNLOADS." td

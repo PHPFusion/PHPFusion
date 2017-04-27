@@ -80,7 +80,7 @@ if (db_exists(DB_PHOTOS)) {
         }
         if ($rows != 0) {
 
-            $item_count = "<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=photos&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$date_search.$sortby.$limit, $param);
 

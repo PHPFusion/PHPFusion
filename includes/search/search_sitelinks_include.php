@@ -73,7 +73,7 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
                 "link_window" => FALSE,
             );
 
-            $item_count = "<a href='".FUSION_SELF."?stype=sitelinks&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['s401'] : $locale['s402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=sitelinks&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['s401'] : $locale['s402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$sortby.$limit, $param);
 

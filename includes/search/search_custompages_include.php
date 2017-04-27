@@ -68,7 +68,7 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
 
         if ($rows != 0) {
 
-            $item_count = "<a href='".FUSION_SELF."?stype=custompages&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=custompages&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
             $result = dbquery($query.$sortby.$limit, Search_Engine::get_param('search_param'));
 
             $search_result = '';

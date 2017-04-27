@@ -74,7 +74,7 @@ if (db_exists(DB_NEWS)) {
         }
         if ($rows != 0) {
             require_once INFUSIONS.'news/classes/autoloader.php';
-            $item_count = "<a href='".FUSION_SELF."?stype=news&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=news&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status,
                 ni.news_image, ni.news_image_t1, ni.news_image_t2
