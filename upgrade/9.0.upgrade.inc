@@ -702,8 +702,8 @@ if (db_exists(DB_INFUSIONS)) {
             'check'  => 'weblinks'
         ],
         DB_PREFIX."shoutbox" => [
-            'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '0')",
-            'check'  => 'shoutbox'
+            'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox_panel', '0')",
+            'check'  => 'shoutbox_panel'
         ],
         DB_PREFIX."polls"    => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '0')",
