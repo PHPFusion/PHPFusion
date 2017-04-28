@@ -397,6 +397,7 @@ if (db_exists(DB_SETTINGS)) {
         'serveroffset'       => 'Europe/London',
         'opening_page'       => 'home.php',
         'captcha'            => 'securimage3',
+        'UserName_ban'       => '',
     ];
     foreach ($update_settings_tbl as $key => $value) {
         if (isset($settings[$key])) {
