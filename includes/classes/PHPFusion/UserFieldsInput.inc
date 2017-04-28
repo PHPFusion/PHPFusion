@@ -201,6 +201,7 @@ class UserFieldsInput {
      */
     private function _settUserName() {
         global $locale, $defender;
+	$uban = explode(',', fusion_get_settings('UserName_ban'));
 
         $this->_userName = "";
         if (isset($_POST['user_name'])) {
@@ -212,6 +213,12 @@ class UserFieldsInput {
                     $defender->stop();
                     $defender->setInputError('user_name');
                     $defender->setErrorText('user_name', $locale['u120']);
+
+                } elseif(in_array($this->_userName, $uban)) {
+                    // Check for contains username
+                    $defender->stop();
+                    $defender->setInputError('user_name');
+                    $defender->setErrorText('user_name', $locale['u119']);
 
                 } else {
 
