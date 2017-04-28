@@ -397,7 +397,6 @@ if (db_exists(DB_SETTINGS)) {
         'serveroffset'       => 'Europe/London',
         'opening_page'       => 'home.php',
         'captcha'            => 'securimage3',
-        'UserName_ban'       => '',
     ];
     foreach ($update_settings_tbl as $key => $value) {
         if (isset($settings[$key])) {
@@ -434,6 +433,7 @@ if (db_exists(DB_SETTINGS)) {
         'logoposition_sm'   => 'logo-sm-left',
         'logoposition_md'   => 'logo-md-left',
         'logoposition_lg'   => 'logo-lg-left',
+        'UserName_ban'       => '',
     ];
     foreach ($insert_settings_tbl as $key => $value) {
         if (!isset($settings[$key])) {
