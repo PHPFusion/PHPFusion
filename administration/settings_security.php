@@ -194,8 +194,8 @@ echo form_textarea('bad_words', $locale['651'], $Security_settings['bad_words'],
     'placeholder' => $locale['652'],
     'autosize' => TRUE
 ));
-echo form_textarea('UserName_ban', $locale['648'], $Security_settings['UserName_ban'], array(
-    'placeholder' => $locale['649'],
+echo form_textarea('UserName_ban', $locale['649'], $Security_settings['UserName_ban'], array(
+    'placeholder' => $locale['411'],
     'autosize' => TRUE
 ));
 closeside();
