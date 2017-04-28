@@ -29,6 +29,14 @@ include LOCALE.LOCALESET."admin/upgrade.php";
 opentable($locale['U_0000']);
 
 echo '<div class="well text-center">'.$locale['U_0001'].'</div>';
+$check_array = [
+    'UserName_ban'                  => '',
+];
+foreach ($check_array as $name => $val) {
+    if (!dbcount("(settings_name)", DB_SETTINGS, "settings_name=:col_name", [':col_name' => $name])) {
+		dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('UserName_ban', '')");
+    }
+}
 
 closetable();
 require_once THEMES."templates/footer.php";
