@@ -28,49 +28,52 @@ if ($temp = opendir(INCLUDES."captchas/")) {
         }
     }
 }
-    $Security_settings = array(
-        "captcha" => fusion_get_settings('captcha'),
-        "recaptcha_public" => fusion_get_settings('recaptcha_public'),
-        "recaptcha_private" => fusion_get_settings('recaptcha_private'),
-        "recaptcha_theme" => fusion_get_settings('recaptcha_theme'),
-        "recaptcha_type" => fusion_get_settings('recaptcha_type'),
-        "privacy_policy" => fusion_get_settings('privacy_policy'),
-        "allow_php_exe" => fusion_get_settings('allow_php_exe'),
-        "flood_interval" => fusion_get_settings('flood_interval'),
-        "flood_autoban" => fusion_get_settings('flood_autoban'),
-        "maintenance_level" => fusion_get_settings('maintenance_level'),
-        "maintenance" => fusion_get_settings('maintenance'),
-        "maintenance_message" => fusion_get_settings('maintenance_message'),
-        "bad_words_enabled" => fusion_get_settings('bad_words_enabled'),
-        "bad_words" => fusion_get_settings('bad_words'),
-        "bad_word_replace" => fusion_get_settings('bad_word_replace'),
-    );
+
+$Security_settings = array(
+    "captcha"             => fusion_get_settings('captcha'),
+    "recaptcha_public"    => fusion_get_settings('recaptcha_public'),
+    "recaptcha_private"   => fusion_get_settings('recaptcha_private'),
+    "recaptcha_theme"     => fusion_get_settings('recaptcha_theme'),
+    "recaptcha_type"      => fusion_get_settings('recaptcha_type'),
+    "privacy_policy"      => fusion_get_settings('privacy_policy'),
+    "allow_php_exe"       => fusion_get_settings('allow_php_exe'),
+    "flood_interval"      => fusion_get_settings('flood_interval'),
+    "flood_autoban"       => fusion_get_settings('flood_autoban'),
+    "maintenance_level"   => fusion_get_settings('maintenance_level'),
+    "maintenance"         => fusion_get_settings('maintenance'),
+    "maintenance_message" => fusion_get_settings('maintenance_message'),
+    "bad_words_enabled"   => fusion_get_settings('bad_words_enabled'),
+    "bad_words"           => fusion_get_settings('bad_words'),
+    "bad_word_replace"    => fusion_get_settings('bad_word_replace'),
+    "UserName_ban"        => fusion_get_settings('UserName_ban')
+);
 
 if (isset($_POST['savesettings'])) {
     $privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
     $maintenance_message = addslash(descript($_POST['maintenance_message']));
     // Save settings after validation
     $Security_settings = array(
-        "captcha" => form_sanitizer($_POST['captcha'], "", "captcha"),
-        "privacy_policy" => $privacy_policy,
-        "allow_php_exe" => form_sanitizer($_POST['allow_php_exe'], 0, "allow_php_exe"),
-        "flood_interval" => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
-        "flood_autoban" => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
-        "maintenance_level" => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
-        "maintenance" => form_sanitizer($_POST['maintenance'], 0, "maintenance"),
+        "captcha"             => form_sanitizer($_POST['captcha'], "", "captcha"),
+        "privacy_policy"      => $privacy_policy,
+        "allow_php_exe"       => form_sanitizer($_POST['allow_php_exe'], 0, "allow_php_exe"),
+        "flood_interval"      => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
+        "flood_autoban"       => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
+        "maintenance_level"   => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
+        "maintenance"         => form_sanitizer($_POST['maintenance'], 0, "maintenance"),
         "maintenance_message" => form_sanitizer($_POST['maintenance_message'], "", "maintenance_message"),
-        "bad_words_enabled" => form_sanitizer($_POST['bad_words_enabled'], 0, "bad_words_enabled"),
-        "bad_words" => form_sanitizer($_POST['bad_words'], "", "bad_words"),
-        "bad_word_replace" => form_sanitizer($_POST['bad_word_replace'], "", "bad_word_replace"),
+        "bad_words_enabled"   => form_sanitizer($_POST['bad_words_enabled'], 0, "bad_words_enabled"),
+        "bad_words"           => form_sanitizer($_POST['bad_words'], "", "bad_words"),
+        "bad_word_replace"    => form_sanitizer($_POST['bad_word_replace'], "", "bad_word_replace"),
+        "UserName_ban"        => form_sanitizer($_POST['UserName_ban'], "", "UserName_ban")
     );
     // Validate extra fields
     if ($Security_settings['captcha'] == "grecaptcha") {
         // appends captcha settings
         $Security_settings += array(
-            "recaptcha_public" => form_sanitizer($_POST['recaptcha_public'], "", "recaptcha_public"),
+            "recaptcha_public"  => form_sanitizer($_POST['recaptcha_public'], "", "recaptcha_public"),
             "recaptcha_private" => form_sanitizer($_POST['recaptcha_private'], "", "recaptcha_private"),
-            "recaptcha_theme" => form_sanitizer($_POST['recaptcha_theme'], "", "recaptcha_theme"),
-            "recaptcha_type" => form_sanitizer($_POST['recaptcha_type'], "", "recaptcha_type"),
+            "recaptcha_theme"   => form_sanitizer($_POST['recaptcha_theme'], "", "recaptcha_theme"),
+            "recaptcha_type"    => form_sanitizer($_POST['recaptcha_type'], "", "recaptcha_type"),
         );
     }
     if (\defender::safe()) {
@@ -210,17 +213,17 @@ closetable();
 add_to_jquery("
 val = $('#captcha').select2().val();
 if (val == 'grecaptcha') {
-	$('#extDiv').slideDown('slow');
+    $('#extDiv').slideDown('slow');
 } else {
-	$('#extDiv').slideUp('slow');
+    $('#extDiv').slideUp('slow');
 }
 $('#captcha').bind('change', function() {
-	var val = $(this).select2().val();
-	if (val == 'grecaptcha') {
-		$('#extDiv').slideDown('slow');
-	} else {
-		$('#extDiv').slideUp('slow');
-	}
+    var val = $(this).select2().val();
+    if (val == 'grecaptcha') {
+        $('#extDiv').slideDown('slow');
+    } else {
+        $('#extDiv').slideUp('slow');
+    }
 });
 ");
 require_once THEMES."templates/footer.php";
