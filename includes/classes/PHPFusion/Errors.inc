@@ -434,7 +434,7 @@ class Errors {
         $aidlink = fusion_get_aidlink();
         $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        $version = 9.02;
+        $version = 9.03;
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
         return "
