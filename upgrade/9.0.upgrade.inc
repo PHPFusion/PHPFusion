@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'\upgrade_functions_include.php';
+require_once dirname(__FILE__).'/upgrade_functions_include.php';
 
 ini_set('display_errors', FALSE);
 // [9.0][insertdbrow][12]
@@ -214,12 +214,6 @@ define('DB_NEWS', DB_PREFIX."news");
 define('DB_WEBLINKS', DB_PREFIX."weblinks");
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
-
-/*
- * @todo: fix bugs (27/11/16)
- * Bugs tested and found:
- * - Administration Panel links is outdated
- */
 
 $del_table = array();
 /*
@@ -445,7 +439,6 @@ if (db_exists(DB_SETTINGS)) {
             $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
         }
     }
-
 }
 
 // Insert Multi Language rights and status
@@ -496,13 +489,14 @@ if (db_exists(DB_ADMIN)) {
     // Remove the deprecated administration links
     $del_table = [
         'settings_photo.php',
-        'settings_forum.pohp',
+        'settings_forum.php',
         'user_field_cats.php',
+        'settings_dl.php',
         'settings_ipp.php',
         'submissions.php'
     ];
-    foreach ($del_table as $value) {
-        $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='$value'";
+    foreach ($del_table as $link) {
+        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link=:url", [':url' => $link]);
     }
 
     // Add new core administration links
@@ -571,30 +565,16 @@ if (db_exists(DB_ADMIN)) {
     foreach ($new_icon_array as $admin_rights => $icon_file) {
         $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
     }
-
 }
 
 if (db_exists(DB_PREFIX.'site_links')) {
-// Upgrade site links
-    $up_array = array();
-    db_exists(DB_ARTICLES) ? $up_array = ['articles.php' => 'infusions/articles/articles.php',] : '';
-    db_exists(DB_DOWNLOADS) ? $up_array = ['downloads.php' => 'infusions/downloads/downloads.php',] : '';
-    db_exists(DB_FAQS) ? $up_array = ['faq.php' => 'infusions/faq/faq.php',] : '';
-    db_exists(DB_FORUMS) ? $up_array = ['forum/index.php' => 'infusions/forum/index.php',] : '';
-    db_exists(DB_PHOTO_ALBUMS) ? $up_array = ['photogallery.php' => 'infusions/gallery/gallery.php',] : '';
-    db_exists(DB_WEBLINKS) ? $up_array = ['weblinks.php' => 'infusions/weblinks/weblinks.php',] : '';
+
     $del_array[] = 'news_cats.php';
     if (!empty($del_array)) {
         foreach ($del_array as $key => $value) {
-            $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url ='$value'");
+            $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url ='$value'";
         }
     }
-    if (!empty($up_array)) {
-        foreach ($up_array as $keys => $values) {
-            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_url='$values' WHERE link_url='$keys'");
-        }
-    }
-
     // Sets all links to active
     if (column_exists(DB_SITE_LINKS, 'link_status', FALSE)) {
         $result = dbquery("SELECT link_id, link_visibility, link_status FROM ".DB_SITE_LINKS);
@@ -617,8 +597,16 @@ if (db_exists(DB_PREFIX.'panels')) {
         $inf_altertable[] = DB_PANELS." ADD panel_status tinyint(1) NOT NULL DEFAULT '1' AFTER panel_display";
     }
     // Alter all panel settings
-    $inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='1'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='2'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='3'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='4'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='5'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_status='1', panel_restriction='3' WHERE panel_side='6'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='forum_threads_list_panel'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='member_poll_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
+
 }
 
 if (db_exists(DB_USER_FIELD_CATS)) {
@@ -714,8 +702,8 @@ if (db_exists(DB_INFUSIONS)) {
             'check'  => 'weblinks'
         ],
         DB_PREFIX."shoutbox" => [
-            'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '0')",
-            'check'  => 'shoutbox'
+            'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox_panel', '0')",
+            'check'  => 'shoutbox_panel'
         ],
         DB_PREFIX."polls"    => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '0')",

@@ -21,6 +21,9 @@ if (!defined("IN_FUSION")) {
 
 function write_htaccess() {
     $site_path = fusion_get_settings('site_path');
+    if (empty($site_path)) {
+        $site_path = '/';
+    }
     $settings_seo = dbresult(dbquery("SELECT settings_value FROM ".DB_PREFIX."settings WHERE settings_name=:settings_name", [':settings_name' => 'site_seo']), 0);
     if (!file_exists(BASEDIR.'.htaccess')) {
         if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {

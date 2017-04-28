@@ -106,21 +106,22 @@ class Search extends Search_Engine {
     /*
      * Template for search Simple Items
      */
-    public static function render_search_item() {
-        if (self::$search_item) {
-            return self::$search_item;
-        }
+    public static function render_search_item($new_window = FALSE) {
         if (function_exists('render_search_item')) {
-            return (string)self::render_search_item();
+            return (string)self::render_search_item($new_window);
         }
         return "
+        <!---results-->
         <li>
-        <div class='clearfix'>
-        <div class='pull-left m-r-10'>{%item_image%}</div>
-        <div class='overflow-hide'><span class='va' style='height:30px;'></span><span class='va'><a href='{%item_url%}'><strong>{%item_title%}</strong><br/>{%item_description%}</a></span></div>
-        </div>
-        </a>
+            <div class='clearfix'>
+                <div class='pull-left m-r-10'>{%item_image%}</div>
+                <div class='overflow-hide'>
+                    <span class='va' style='height:30px;'></span>
+                    <a ".($new_window ? "target='_blank' " : ' ')." href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>{%item_description%}
+                </div>
+            </div>
         </li>
+        <!---//results-->
         ";
     }
 
@@ -137,14 +138,14 @@ class Search extends Search_Engine {
         }
         return "
         <li class='spacer-xs'>
-        <div class='clearfix'>
-        <div class='pull-left m-r-10'>{%item_image%}</div>
-        <div class='overflow-hide'><a href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>
-        {%item_description%}
-        {%item_search_context%}
-        {%item_search_criteria%}
-        </div>
-        </div>
+            <div class='clearfix'>
+                <div class='pull-left m-r-10'>{%item_image%}</div>
+                <div class='overflow-hide'><a href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>
+                {%item_description%}
+                {%item_search_context%}
+                {%item_search_criteria%}
+                </div>
+            </div>            
         </li>
         ";
     }
@@ -176,15 +177,17 @@ class Search extends Search_Engine {
         if (function_exists('render_search_item')) {
             return (string)render_search_item_wrapper();
         }
-        return "<div class='panel panel-default'>\n
-        <div class='panel-body'>
-        <h4>{%image%} {%search_title%}</h4>
-        </div>\n
-        <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET."{%search_result%}</div></div>
-        <div class='panel-body'>
-        <ul class='block spacer-xs'>{%search_content%}</ul>
-        </div>\n
-        </div>\n
+
+        return "
+        <div class='panel panel-default'>
+            <div class='panel-body'>
+                <h4>{%image%} {%search_title%}</h4>
+            </div>
+            <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET."{%search_result%}</div></div>
+            <div class='panel-body'>
+                <ul class='block spacer-xs'>{%search_content%}</ul>
+            </div>
+        </div>
         ";
     }
 }

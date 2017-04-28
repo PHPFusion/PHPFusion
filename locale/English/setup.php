@@ -2,7 +2,7 @@
 $locale['setup_0000'] = "PHP-Fusion Install";
 $locale['setup_0002'] = "Welcome to PHP-Fusion Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
-$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a>";
+$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>Terms and Conditions of Use</a>";
 $locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href=\"https://www.php-fusion.co.uk/requirements\">system requirements</a> page for more information.";
 $locale['setup_0007'] = "Systems with OPcache installed must have <a href=\"http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments\">opcache.save_comments</a> enabled.";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";

@@ -35,15 +35,15 @@ foreach ($modules as $k => $v) {
         $installedModules[$k] = $v[0];
     }
 }
-if (iMEMBER) {
 
+if (iMEMBER) {
     $messages_count = dbquery("SELECT
-	SUM(message_folder=0) AS inbox_count,
-	SUM(message_folder=1) AS outbox_count,
-	SUM(message_folder=2) AS archive_count,
-	SUM(message_read=0 AND message_folder=0) AS unread_count
-	FROM ".DB_MESSAGES."
-	WHERE message_to=:user_id", array(':user_id' => $userdata['user_id']));
+    SUM(message_folder=0) AS inbox_count,
+    SUM(message_folder=1) AS outbox_count,
+    SUM(message_folder=2) AS archive_count,
+    SUM(message_read=0 AND message_folder=0) AS unread_count
+    FROM ".DB_MESSAGES."
+    WHERE message_to=:user_id", array(':user_id' => $userdata['user_id']));
 
     $messages_count = dbarray($messages_count);
     $inbox_count = (int)$messages_count['inbox_count'];
@@ -96,17 +96,27 @@ if (iMEMBER) {
         }
     }
 
+    $submit_link = '';
+    if (iADMIN && checkrights("SU")) {
+        $subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
+        if ($subm_count) {
+                $submit_link = "<a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
+                    sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129'])."</a>";
+        }
+    }
+
     $info = [
-            'forum_exists'         => $forum_exists,
-            'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
-            'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
-            'user_level'           => $userdata['user_level'],
-            'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
-            'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
-            'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
-            'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
-            'submissions'          => $submissions_link_arr,
-        ] + $userdata;
+        'forum_exists'         => $forum_exists,
+        'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
+        'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
+        'user_level'           => $userdata['user_level'],
+        'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
+        'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
+        'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
+        'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
+        'submissions'          => $submissions_link_arr,
+        'submit'               => $submit_link,
+    ] + $userdata;
 
     ob_start();
     display_user_info_panel($info);
@@ -133,6 +143,7 @@ if (iMEMBER) {
         '{%acp_title%}'            => (iADMIN ? $locale['UM083'] : ''),
         '{%logout_link%}'          => BASEDIR."index.php?logout=yes",
         '{%logout_title%}'         => $locale['UM084'],
+        '{%submit%}'               => $info['submit'],
     ]);
 
 } else {

@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
     <title>PHP-Fusion Readme</title>
-    <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+    <meta charset='utf-8'>
 
     <style type='text/css'>
         body {
@@ -114,7 +114,7 @@
         <p><strong>Warning</strong><br/>
             You are breaking international law if you remove our footer copyright notice without a valid license:</p>
         <hr/>
-        <p>Powered by <a href='https://www.php-fusion.co.uk'>PHP-Fusion</a> copyright &copy; 2015 PHP-Fusion Inc.<br/>
+        <p>Powered by <a href='https://www.php-fusion.co.uk'>PHP-Fusion</a> copyright &copy; 2017 PHP-Fusion Inc.<br/>
             Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html' target='_blank'>GNU
                 Affero GPL</a> v3.</p>
         <hr/>
@@ -129,8 +129,8 @@
             <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Defender</strong><br/>Automatic form sanitation system for your fields
                 with form token support.
             </div>
-            <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Dynamics</strong><br/>Automatic form API & database handler system.</div>
-            <div class='item'><strong style='padding-bottom:5px;'>Dynamic User Fields</strong><br/>Arrange, connect to 3d party and even categorize
+            <div class='item'><strong style='padding-bottom:5px;'>PHP-Fusion Dynamics</strong><br/>Automatic form API &amp; database handler system.</div>
+            <div class='item'><strong style='padding-bottom:5px;'>Dynamic User Fields</strong><br/>Arrange, connect to 3d party and categorize
                 your Users Profiles with tabs.
             </div>
         </div>
@@ -148,13 +148,12 @@
         </div>
 
         <div class='wrapper'>
-            <div class='item'><strong style='padding-bottom:5px;'>Atom Theme Engine</strong><br/>CSS Overrides for any given Theme for itï¿½s default
-                CSS classes.
+            <div class='item'><strong style='padding-bottom:5px;'>Atom Theme Engine</strong><br/>CSS Overrides for any v9 based Boostrap Theme.
             </div>
             <div class='item'><strong style='padding-bottom:5px;'>Notification email templating</strong><br/>Enabled for contact, forum notifications
                 and PM emails.
             </div>
-            <div class='item'><strong style='padding-bottom:5px;'>Responsiveness</strong><br/>Mobile & Pad friendly with native Bootstrap enabled in
+            <div class='item'><strong style='padding-bottom:5px;'>Responsiveness</strong><br/>Mobile &amp; Pad friendly with native Bootstrap enabled in
                 the system by default.
             </div>
         </div>
@@ -169,7 +168,7 @@
         </div>
 
         <div class='wrapper'>
-            <div class='item'><strong style='padding-bottom:5px;'>Portable & Multisite</strong><br/>You can have gathered landing pages with multisite
+            <div class='item'><strong style='padding-bottom:5px;'>Portable &amp; Multisite</strong><br/>You can have gathered landing pages with multisite
                 functions.
             </div>
             <div class='item'><strong style='padding-bottom:5px;'>BBCodes</strong><br/>A BBCode system that is modular and flexible.</div>
@@ -231,21 +230,21 @@
     <div class='tbl2'>GENERAL INSTALLATION AND GUIDELINES FOR MANUAL INSTALLATION</div>
     <div class='tbl1'>Requirements for this version
         <p>- PHP 5.5.08 or higher<br/>
-		   - MySQL 5.1 or higher<br/>
-		   - Apache 2.2 or higher<br/>
-		   - Nginx 1.0 or higher
-		   - mod_rewrite or equivalent for SEO
-		
-		<hr/>
-		   
+           - MySQL 5.1 or higher<br/>
+           - Apache 2.2 or higher<br/>
+           - Nginx 1.0 or higher
+           - mod_rewrite or equivalent for SEO
+        </p>
+        <hr/>
+
         <p>You have to create a MySQL database. You can do this via your web-hosting control panel or phpMyAdmin.
             Make sure you have your MySQL access details at hand including the hostname, user name, password and database
-            name as you will need to specify these during setup.
+            name as you will need to specify these during setup.</p>
         <hr/>
         <p><strong>1.</strong> Upload the contents of the files folder to your web server.</p>
 
         <p><strong>2.</strong> Unless you run PHP-Fusion on a local server, in most cases you
-            will need to CHMOD the following files and folders to 777:
+            will need to CHMOD the following files and folders to 777:</p>
 
         <ul style='list-style-type:disc'>
             <li>administration/db_backups/</li>
@@ -254,11 +253,11 @@
             <li>images/avatars/</li>
             <li>robots.txt</li>
         </ul>
-        </p><p>
+
+        <p>
             <strong>Infusions shipped with the Core requires the following folders to be CHMODed to 777</strong>
         </p>
 
-        <p>
         <ul style='list-style-type:disc'>
             <li>/infusions/blog/images/</li>
             <li>/infusions/blog/images/thumbs/</li>
@@ -276,7 +275,6 @@
             <li>/infusions/gallery/submissions/</li>
             <li>/infusions/gallery/submissions/images/</li>
         </ul>
-        </p>
 
         <p><strong>Note</strong>: <br/>Some hosts does not allow CHMOD 777, in that case you can use CHMOD 755 if CHMOD 777 fails.</p>
 
@@ -304,13 +302,15 @@
         <hr/>
 
         <p>Make sure that your hosting environment meets the requirements for this version: <br/>
-			- PHP 5.5.08 or higher<br/>
-			- MySQL 5.1 or higher</p>
+            - PHP 5.5.08 or higher<br/>
+            - MySQL 5.1 or higher</p>
         <hr/>
         <p>This upgrade procedure can be very demanding depending on how much content your have. <br/>
             Please note that all User Fields will not be upgraded. A new set of standard fields will be installed. <br/>
-			The same goes for your Site links. A new set of default Site Links will be inserted.
-			</p>
+            The same goes for your Site links. A new set of default Site Links will be inserted.  <br/>
+			Panels have two new positions and new settings. All existing Panels will be updated. Per default all Panels will be activated in all site areas. <br/>
+			If you have custom PHP codes in Panels or Custom Pages, you must enable PHP Code Execution. Admin > Settings > Security Settings > Allow PHP Execution.<br/>
+            </p>
         <hr/>
         <p>PHP-Fusion 9.0 is in many parts compatible with version 7.02.07, <br/> however be ready for issues and re-populate your site with older
             Addon content slowly.<br/>
@@ -326,10 +326,10 @@
             <li><strong>1</strong> &middot; You must first upload all PHP-Fusion 9 files. Replace all files when requested.</li>
             <br/>
 
-            <li><strong>2</strong> &middot; 
-				Navigate to your site´s www.site.com and add /install.php like, www.site.com/install.php <br />
-				The installer will now start and auto-detect your PHP-Fusion 7 version.<br />
-				Do your base upgrade in English.
+            <li><strong>2</strong> &middot;
+                Navigate to your site's www.site.com and add /install.php like, www.site.com/install.php <br />
+                The installer will now start and auto-detect your PHP-Fusion 7 version.<br />
+                Do your base upgrade in English.
             </li>
             <br/></ul>
 
@@ -349,12 +349,1608 @@
             </li>
             <br/>
             <li><strong>6</strong> &middot; Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except
-											images, infusions folders, config.php and the new .htaccess file.
+                                            images, infusions folders, config.php and the new .htaccess file.
             </li>
         </ul>
 
-        <hr/>
-        <p>Your site should now be fully upgraded and ready to run PHP-Fusion 9.</p>
+        <p align='center'>Your site should now be fully upgraded and ready to run PHP-Fusion 9.</p>
+		<hr/>
+		<p>Here is a complete list of old files that can and should be removed from your previous system.</p>
+		<hr/>
+		<div style='height:100px; padding:20px;overflow:auto;'>
+			articles.php <br />
+			downloads.php <br />
+			faq.php <br />
+			news.php <br />
+			news_cats.php <br />
+			photo.php <br />
+			photogallery.php <br />
+			readarticle.php <br />
+			setup.php <br />
+			setuser.php <br />
+			showphoto.php <br />
+			weblinks.php <br />
+			administration\articles.php <br />
+			administration\article_cats.php <br />
+			administration\downloads.php <br />
+			administration\download_cats.php <br />
+			administration\faq.php <br />
+			administration\forums.php <br />
+			administration\forums_prune.php <br />
+			administration\forum_ranks.php <br />
+			administration\navigation.php <br />
+			administration\news.php <br />
+			administration\news_cats.php <br />
+			administration\panel_editor.php <br />
+			administration\photoalbums.php <br />
+			administration\photos.php <br />
+			administration\polls.php <br />
+			administration\settings_dl.php <br />
+			administration\settings_forum.php <br />
+			administration\settings_ipp.php <br />
+			administration\settings_news.php <br />
+			administration\settings_photo.php <br />
+			administration\site_links_updater.php <br />
+			administration\submissions.php <br />
+			administration\user_field_cats.php <br />
+			administration\weblinks.php <br />
+			administration\weblink_cats.php <br />
+			administration\images\admins.gif <br />
+			administration\images\admin_pass.gif <br />
+			administration\images\articles.gif <br />
+			administration\images\article_cats.gif <br />
+			administration\images\banners.gif <br />
+			administration\images\bbcode.gif <br />
+			administration\images\bbcodes.gif <br />
+			administration\images\blacklist.gif <br />
+			administration\images\c-pages.gif <br />
+			administration\images\db_backup.gif <br />
+			administration\images\dl.gif <br />
+			administration\images\dl_cats.gif <br />
+			administration\images\errors.gif <br />
+			administration\images\faq.gif <br />
+			administration\images\forums.gif <br />
+			administration\images\forum_ranks.gif <br />
+			administration\images\images.gif <br />
+			administration\images\infusions.gif <br />
+			administration\images\infusion_panel.gif <br />
+			administration\images\members.gif <br />
+			administration\images\news.gif <br />
+			administration\images\news_cats.gif <br />
+			administration\images\panels.gif <br />
+			administration\images\photoalbums.gif <br />
+			administration\images\phpinfo.gif <br />
+			administration\images\polls.gif <br />
+			administration\images\registration.gif <br />
+			administration\images\robots.gif <br />
+			administration\images\security.gif <br />
+			administration\images\settings.gif <br />
+			administration\images\settings_dl.gif <br />
+			administration\images\settings_forum.gif <br />
+			administration\images\settings_ipp.gif <br />
+			administration\images\settings_misc.gif <br />
+			administration\images\settings_news.gif <br />
+			administration\images\settings_pm.gif <br />
+			administration\images\settings_time.gif <br />
+			administration\images\settings_users.gif <br />
+			administration\images\shout.gif <br />
+			administration\images\site_links.gif <br />
+			administration\images\smileys.gif <br />
+			administration\images\submissions.gif <br />
+			administration\images\upgrade.gif <br />
+			administration\images\user_fields.gif <br />
+			administration\images\user_fields_cats.gif <br />
+			administration\images\user_groups.gif <br />
+			administration\images\wl.gif <br />
+			administration\images\wl_cats.gif <br />
+			downloads\index.php <br />
+			downloads\images <Folder> <br />
+			forum <Folder> <br />
+			ftp_upload <Folder> <br />
+			images\arrow.png <br />
+			images\dl_calendar.png <br />
+			images\dl_download.png <br />
+			images\dl_downloads.png <br />
+			images\dl_homepage.png <br />
+			images\dl_info.png <br />
+			images\dl_screenshot.png <br />
+			images\dl_stats.png <br />
+			images\edit.png <br />
+			images\favicon.ico
+			images\go_first.png <br />
+			images\go_last.png <br />
+			images\go_next.png <br />
+			images\go_previous.png <br />
+			images\no.png <br />
+			images\php_save.png <br />
+			images\printer.png <br />
+			images\rss.gif <br />
+			images\star.png <br />
+			images\tick.png <br />
+			images\warn.png <br />
+			images\watermark.png <br />
+			images\yes.png <br />
+			images\articles <Folder> <br />
+			images\news <Folder> <br />
+			images\photoalbum <Folder> <br />
+			images\ranks <Folder> <br />
+			images\smiley\angry.gif <br />
+			images\smiley\cool.gif <br />
+			images\smiley\frown.gif <br />
+			images\smiley\grin.gif <br />
+			images\smiley\pfft.gif <br />
+			images\smiley\sad.gif <br />
+			images\smiley\shock.gif <br />
+			images\smiley\smile.gif <br />
+			images\smiley\wink.gif <br />
+			includes\class.php <br />mailer.php <br />
+			includes\class.smtp.php <br />
+			includes\forum_include.php <br />
+			includes\jscript.js <br />
+			includes\bbcodes\allegro_bbcode_include.php <br />
+			includes\bbcodes\allegro_bbcode_include_var.php <br />
+			includes\bbcodes\alt_bbcode_include.php <br />
+			includes\bbcodes\alt_bbcode_include_var.php <br />
+			includes\bbcodes\ebay_bbcode_include.php <br />
+			includes\bbcodes\ebay_bbcode_include_var.php <br />
+			includes\bbcodes\gg_bbcode_include.php <br />
+			includes\bbcodes\gg_bbcode_include_var.php <br />
+			includes\bbcodes\googlevideo_bbcode_include.php <br />
+			includes\bbcodes\googlevideo_bbcode_include_var.php <br />
+			includes\bbcodes\movie_bbcode_include.php <br />
+			includes\bbcodes\movie_bbcode_include_var.php <br />
+			includes\bbcodes\tlen_bbcode_include.php <br />
+			includes\bbcodes\tlen_bbcode_include_var.php <br />
+			includes\bbcodes\images\allegro.png <br />
+			includes\bbcodes\images\alt.png <br />
+			includes\bbcodes\images\b.png <br />
+			includes\bbcodes\images\bcolor.png <br />
+			includes\bbcodes\images\big.png <br />
+			includes\bbcodes\images\center.png <br />
+			includes\bbcodes\images\code.png <br />
+			includes\bbcodes\images\code_save.png <br />
+			includes\bbcodes\images\color.png <br />
+			includes\bbcodes\images\ebay.png <br />
+			includes\bbcodes\images\flash.png <br />
+			includes\bbcodes\images\geshi.png <br />
+			includes\bbcodes\images\geshi_save.png <br />
+			includes\bbcodes\images\gg.png <br />
+			includes\bbcodes\images\google.png <br />
+			includes\bbcodes\images\googlevideo.png <br />
+			includes\bbcodes\images\hide.png <br />
+			includes\bbcodes\images\i.png <br />
+			includes\bbcodes\images\icq.png <br />
+			includes\bbcodes\images\img.png <br />
+			includes\bbcodes\images\justify.png <br />
+			includes\bbcodes\images\left.png <br />
+			includes\bbcodes\images\mail.png <br />
+			includes\bbcodes\images\movie.png <br />
+			includes\bbcodes\images\mp.png <br />
+			includes\bbcodes\images\olist.png <br />
+			includes\bbcodes\images\php.png <br />
+			includes\bbcodes\images\php_save.png <br />
+			includes\bbcodes\images\quote.png <br />
+			includes\bbcodes\images\right.png <br />
+			includes\bbcodes\images\search.png <br />
+			includes\bbcodes\images\size.png <br />
+			includes\bbcodes\images\small.png <br />
+			includes\bbcodes\images\small.png <br />
+			includes\bbcodes\images\smiley.png <br />
+			includes\bbcodes\images\tlen.png <br />
+			includes\bbcodes\images\u.png <br />
+			includes\bbcodes\images\ulist.png <br />
+			includes\bbcodes\images\url.png <br />
+			includes\bbcodes\images\yahoo.png <br />
+			includes\bbcodes\images\youtube.png <br />
+			includes\captchas\recaptcha\captcha_check.php <br />
+			includes\captchas\recaptcha\captcha_display.php <br />
+			includes\captchas\recaptcha\index.php <br />
+			includes\captchas\recaptcha\recaptchalib.php <br />
+			includes\captchas\securimage\captcha_check.php <br />
+			includes\captchas\securimage\captcha_display.php <br />
+			includes\captchas\securimage\elephant.ttf <br />
+			includes\captchas\securimage\index.php <br />
+			includes\captchas\securimage\LICENSE.txt
+			includes\captchas\securimage\securimage.php <br />
+			includes\captchas\securimage\securimage_play.php <br />
+			includes\captchas\securimage\securimage_show.php <br />
+			includes\captchas\securimage\audio <Folder> <br />
+			includes\captchas\securimage\gdfonts\automatic.gdf <br />
+			includes\captchas\securimage\gdfonts\bubblebath.gdf <br />
+			includes\captchas\securimage\gdfonts\caveman.gdf <br />
+			includes\captchas\securimage\gdfonts\crass.gdf <br />
+			includes\captchas\securimage\gdfonts\index.php <br />
+			includes\captchas\securimage\images\audio_icon.gif <br />
+			includes\captchas\securimage\images\index.php <br />
+			includes\captchas\securimage\images\refresh.gif <br />
+			includes\captchas\securimage\captcha_check.php <br />
+			includes\captchas\securimage\captcha_display.php <br />
+			includes\captchas\securimage\index.php <br />
+			includes\captchas\securimage\securimage.php <br />
+			includes\captchas\securimage\securimage_play.php <br />
+			includes\captchas\securimage\securimage_play.swf <br />
+			includes\captchas\securimage\securimage_show.php <br />
+			includes\captchas\securimage\audio <Folder> <br />
+			includes\captchas\securimage\backgrounds\index.php <br />
+			includes\captchas\securimage\backgrounds\GIF\bg.gif <br />
+			includes\captchas\securimage\backgrounds\GIF\bg.gif <br />
+			includes\captchas\securimage\backgrounds\GIF\bg.gif <br />
+			includes\captchas\securimage\backgrounds\GIF\bg.gif <br />
+			includes\captchas\securimage\backgrounds\GIF\bg.gif <br />
+			includes\captchas\securimage\backgrounds\GIF\index.php <br />
+			includes\captchas\securimage\backgrounds\PNG\bg.png <br />
+			includes\captchas\securimage\backgrounds\PNG\bg.png <br />
+			includes\captchas\securimage\backgrounds\PNG\bg.png <br />
+			includes\captchas\securimage\backgrounds\PNG\bg.png <br />
+			includes\captchas\securimage\backgrounds\PNG\index.php <br />
+			includes\captchas\securimage\gd_fonts\automatic.gdf <br />
+			includes\captchas\securimage\gd_fonts\bubblebath.gdf <br />
+			includes\captchas\securimage\gd_fonts\caveman.gdf <br />
+			includes\captchas\securimage\gd_fonts\crass.gdf <br />
+			includes\captchas\securimage\gd_fonts\index.php <br />
+			includes\captchas\securimage\images\audio_icon.gif <br />
+			includes\captchas\securimage\images\index.php <br />
+			includes\captchas\securimage\images\refresh.gif <br />
+			includes\captchas\securimage\ttf_fonts <Folder> <br />
+			includes\captchas\securimage\ttf_fonts\AHGBold.ttf <br />
+			includes\captchas\securimage\ttf_fonts\arlrndbld.ttf <br />
+			includes\captchas\securimage\ttf_fonts\BasculaCollege.ttf <br />
+			includes\captchas\securimage\ttf_fonts\Cartoon_Regular.ttf <br />
+			includes\captchas\securimage\ttf_fonts\elephant.ttf <br />
+			includes\captchas\securimage\ttf_fonts\HappySans.ttf <br />
+			includes\captchas\securimage\ttf_fonts\index.php <br />
+			includes\captchas\securimage\ttf_fonts\Kingthings.ttf <br />
+			includes\captchas\securimage\ttf_fonts\LLCOOPER.ttf <br />
+			includes\captchas\securimage\ttf_fonts\Tusj.ttf <br />
+			includes\captchas\securimage\words\index.php <br />
+			includes\captchas\securimage\words\words.txt
+			includes\classes\Authenticate.class.php <br />
+			includes\classes\LostPassword.class.php <br />
+			includes\classes\PasswordAuth.class.php <br />
+			includes\classes\RemoteFileReader.class.php <br />
+			includes\classes\SubCats.class.php <br />
+			includes\classes\UserFields.class.php <br />
+			includes\classes\UserFieldsInput.class.php <br />
+			includes\classes\VersionFileReader.class.php <br />
+			includes\jscripts\tiny_mce\index.php <br />
+			includes\jscripts\tiny_mce\license.txt
+			includes\jscripts\tiny_mce\tiny_mce.js <br />
+			includes\jscripts\tiny_mce\tiny_mce_popup.js <br />
+			includes\jscripts\tiny_mce\tiny_mce_src.js <br />
+			includes\jscripts\tiny_mce\langs <Folder> <br />
+			includes\jscripts\tiny_mce\langs\en.js <br />
+			includes\jscripts\tiny_mce\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advhr <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advhr\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\advhr\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\advhr\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advhr\rule.htm <br />
+			includes\jscripts\tiny_mce\plugins\advhr\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advhr\css\advhr.css <br />
+			includes\jscripts\tiny_mce\plugins\advhr\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advhr\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advhr\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advhr\js\rule.js <br />
+			includes\jscripts\tiny_mce\plugins\advhr\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advhr\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\advhr\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advimage <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advimage\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\advimage\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\advimage\image.htm <br />
+			includes\jscripts\tiny_mce\plugins\advimage\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advimage\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advimage\css\advimage.css <br />
+			includes\jscripts\tiny_mce\plugins\advimage\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advimage\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advimage\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advimage\img\sample.gif <br />
+			includes\jscripts\tiny_mce\plugins\advimage\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advimage\js\image.js <br />
+			includes\jscripts\tiny_mce\plugins\advimage\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advimage\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advimage\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\advimage\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advlink <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advlink\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\advlink\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\advlink\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advlink\link.htm <br />
+			includes\jscripts\tiny_mce\plugins\advlink\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advlink\css\advlink.css <br />
+			includes\jscripts\tiny_mce\plugins\advlink\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advlink\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advlink\js\advlink.js <br />
+			includes\jscripts\tiny_mce\plugins\advlink\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advlink\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advlink\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\advlink\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\advlist <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\advlist\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\advlist\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\advlist\index.php <br />
+			includes\jscripts\tiny_mce\plugins\autoresize <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\autoresize\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\autoresize\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\autoresize\index.php <br />
+			includes\jscripts\tiny_mce\plugins\autosave <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\autosave\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\autosave\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\autosave\index.php <br />
+			includes\jscripts\tiny_mce\plugins\autosave\images <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\autosave\images\index.php <br />
+			includes\jscripts\tiny_mce\plugins\autosave\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\autosave\langs\en.js <br />
+			includes\jscripts\tiny_mce\plugins\autosave\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\bbcode <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\bbcode\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\bbcode\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\bbcode\index.php <br />
+			includes\jscripts\tiny_mce\plugins\contextmenu <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\contextmenu\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\contextmenu\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\contextmenu\index.php <br />
+			includes\jscripts\tiny_mce\plugins\directionality <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\directionality\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\directionality\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\directionality\index.php <br />
+			includes\jscripts\tiny_mce\plugins\emotions <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\emotions\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\emotions\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\emotions\emotions.htm <br />
+			includes\jscripts\tiny_mce\plugins\emotions\index.php <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-cool.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-cry.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-embarassed.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-foot-in-mouth.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-frown.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-innocent.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-kiss.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-laughing.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-money-mouth.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-sealed.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-smile.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-surprised.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-tongue-out.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-undecided.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-wink.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\img\smiley-yell.gif <br />
+			includes\jscripts\tiny_mce\plugins\emotions\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\emotions\js\emotions.js <br />
+			includes\jscripts\tiny_mce\plugins\emotions\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\emotions\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\emotions\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\emotions\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\example <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\example\dialog.htm <br />
+			includes\jscripts\tiny_mce\plugins\example\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\example\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\example\index.php <br />
+			includes\jscripts\tiny_mce\plugins\example\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\example\img\example.gif <br />
+			includes\jscripts\tiny_mce\plugins\example\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\example\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\example\js\dialog.js <br />
+			includes\jscripts\tiny_mce\plugins\example\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\example\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\example\langs\en.js <br />
+			includes\jscripts\tiny_mce\plugins\example\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\example\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\fullpage <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\fullpage.htm <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\index.php <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\css\fullpage.css <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\js\fullpage.js <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\fullpage\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\fullscreen <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\fullscreen\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\fullscreen\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\fullscreen\fullscreen.htm <br />
+			includes\jscripts\tiny_mce\plugins\fullscreen\index.php <br />
+			includes\jscripts\tiny_mce\plugins\iespell <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\iespell\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\iespell\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\iespell\index.php <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\index.php <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\template.htm <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\index.php <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\index.php <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\window.css <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\alert.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\button.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\buttons.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\confirm.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\corners.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\horizontal.gif <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\inlinepopups\skins\clearlooks\img\vertical.gif <br />
+			includes\jscripts\tiny_mce\plugins\insertdatetime <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\insertdatetime\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\insertdatetime\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\insertdatetime\index.php <br />
+			includes\jscripts\tiny_mce\plugins\layer <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\layer\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\layer\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\layer\index.php <br />
+			includes\jscripts\tiny_mce\plugins\legacyoutput <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\legacyoutput\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\legacyoutput\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\legacyoutput\index.php <br />
+			includes\jscripts\tiny_mce\plugins\media <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\media\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\media\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\media\index.php <br />
+			includes\jscripts\tiny_mce\plugins\media\media.htm <br />
+			includes\jscripts\tiny_mce\plugins\media\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\media\css\content.css <br />
+			includes\jscripts\tiny_mce\plugins\media\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\media\css\media.css <br />
+			includes\jscripts\tiny_mce\plugins\media\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\media\img\flash.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\img\flv_player.swf <br />
+			includes\jscripts\tiny_mce\plugins\media\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\media\img\quicktime.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\img\realmedia.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\img\shockwave.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\img\trans.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\img\windowsmedia.gif <br />
+			includes\jscripts\tiny_mce\plugins\media\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\media\js\embed.js <br />
+			includes\jscripts\tiny_mce\plugins\media\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\media\js\media.js <br />
+			includes\jscripts\tiny_mce\plugins\media\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\media\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\media\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\nonbreaking <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\nonbreaking\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\nonbreaking\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\nonbreaking\index.php <br />
+			includes\jscripts\tiny_mce\plugins\noneditable <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\noneditable\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\noneditable\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\noneditable\index.php <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\index.php <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\css\content.css <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\img\pagebreak.gif <br />
+			includes\jscripts\tiny_mce\plugins\pagebreak\img\trans.gif <br />
+			includes\jscripts\tiny_mce\plugins\paste <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\paste\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\paste\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\paste\index.php <br />
+			includes\jscripts\tiny_mce\plugins\paste\pastetext.htm <br />
+			includes\jscripts\tiny_mce\plugins\paste\pasteword.htm <br />
+			includes\jscripts\tiny_mce\plugins\paste\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\paste\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\paste\js\pastetext.js <br />
+			includes\jscripts\tiny_mce\plugins\paste\js\pasteword.js <br />
+			includes\jscripts\tiny_mce\plugins\paste\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\paste\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\paste\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\preview <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\preview\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\preview\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\preview\example.htm <br />l
+			includes\jscripts\tiny_mce\plugins\preview\index.php <br />
+			includes\jscripts\tiny_mce\plugins\preview\preview.htm <br />l
+			includes\jscripts\tiny_mce\plugins\preview\jscripts <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\preview\jscripts\embed.js <br />
+			includes\jscripts\tiny_mce\plugins\preview\jscripts\index.php <br />
+			includes\jscripts\tiny_mce\plugins\print <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\print\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\print\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\print\index.php <br />
+			includes\jscripts\tiny_mce\plugins\save <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\save\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\save\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\save\index.php <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\index.php <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\searchreplace.htm <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\css\searchreplace.css <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\js\searchreplace.js <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\searchreplace\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\classes <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\classes\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\classes\utils <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\classes\utils\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\css\content.css <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\img <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\img\index.php <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\img\wline.gif <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\includes <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\spellchecker\includes\index.php <br />
+			includes\jscripts\tiny_mce\plugins\style <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\style\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\style\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\style\index.php <br />
+			includes\jscripts\tiny_mce\plugins\style\props.htm <br />
+			includes\jscripts\tiny_mce\plugins\style\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\style\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\style\css\props.css <br />
+			includes\jscripts\tiny_mce\plugins\style\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\style\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\style\js\props.js <br />
+			includes\jscripts\tiny_mce\plugins\style\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\style\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\style\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\tabfocus <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\tabfocus\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\tabfocus\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\tabfocus\index.php <br />
+			includes\jscripts\tiny_mce\plugins\table <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\table\cell.htm <br />
+			includes\jscripts\tiny_mce\plugins\table\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\table\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\table\index.php <br />
+			includes\jscripts\tiny_mce\plugins\table\merge_cells.htm <br />
+			includes\jscripts\tiny_mce\plugins\table\row.htm <br />
+			includes\jscripts\tiny_mce\plugins\table\table.htm <br />
+			includes\jscripts\tiny_mce\plugins\table\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\table\css\cell.css <br />
+			includes\jscripts\tiny_mce\plugins\table\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\table\css\row.css <br />
+			includes\jscripts\tiny_mce\plugins\table\css\table.css <br />
+			includes\jscripts\tiny_mce\plugins\table\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\table\js\cell.js <br />
+			includes\jscripts\tiny_mce\plugins\table\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\table\js\merge_cells.js <br />
+			includes\jscripts\tiny_mce\plugins\table\js\row.js <br />
+			includes\jscripts\tiny_mce\plugins\table\js\table.js <br />
+			includes\jscripts\tiny_mce\plugins\table\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\table\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\table\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\template <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\template\blank.htm <br />
+			includes\jscripts\tiny_mce\plugins\template\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\template\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\template\index.php <br />
+			includes\jscripts\tiny_mce\plugins\template\template.htm <br />
+			includes\jscripts\tiny_mce\plugins\template\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\template\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\template\css\template.css <br />
+			includes\jscripts\tiny_mce\plugins\template\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\template\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\template\js\template.js <br />
+			includes\jscripts\tiny_mce\plugins\template\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\template\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\template\langs\index.php <br />
+			includes\jscripts\tiny_mce\plugins\visualchars <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\visualchars\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\visualchars\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\visualchars\index.php <br />
+			includes\jscripts\tiny_mce\plugins\wordcount <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\wordcount\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\wordcount\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\wordcount\index.php <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\abbr.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\acronym.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\attributes.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\cite.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\del.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\editor_plugin.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\editor_plugin_src.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\index.php <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\ins.htm <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\css <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\css\attributes.css <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\css\index.php <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\css\popup.css <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\abbr.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\acronym.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\attributes.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\cite.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\del.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\element_common.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\index.php <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\js\ins.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\langs <Folder> <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\plugins\xhtmlxtras\langs\index.php <br />
+			includes\jscripts\tiny_mce\themes <Folder> <br />
+			includes\jscripts\tiny_mce\themes\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\about.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\anchor.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\charmap.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\color_picker.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\editor_template.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\editor_template_src.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\image.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\link.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\source_editor.htm <br />
+			includes\jscripts\tiny_mce\themes\advanced\img <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\img\colorpicker.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\img\icons.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\img\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\js <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\about.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\anchor.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\charmap.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\color_picker.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\image.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\link.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\js\source_editor.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\langs <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\langs\en.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\langs\en_dlg.js <br />
+			includes\jscripts\tiny_mce\themes\advanced\langs\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\content.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\dialog.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\ui.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\buttons.png <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\items.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\menu_arrow.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\menu_check.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\progress.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\default\img\tabs.gif <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\content.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\dialog.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\index.php <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\ui.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\ui_black.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\ui_silver.css <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\img <Folder> <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\img\button_bg.png <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\img\button_bg_black.png <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\img\button_bg_silver.png <br />
+			includes\jscripts\tiny_mce\themes\advanced\skins\ok\img\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\editor_template.js <br />
+			includes\jscripts\tiny_mce\themes\simple\editor_template_src.js <br />
+			includes\jscripts\tiny_mce\themes\simple\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\img <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\img\icons.gif <br />
+			includes\jscripts\tiny_mce\themes\simple\img\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\langs <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\langs\en.js <br />
+			includes\jscripts\tiny_mce\themes\simple\langs\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\skins <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\default <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\default\content.css <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\default\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\default\ui.css <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\content.css <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\index.php <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\ui.css <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\img <Folder> <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\img\button_bg.png <br />
+			includes\jscripts\tiny_mce\themes\simple\skins\ok\img\index.php <br />
+			includes\jscripts\tiny_mce\utils <Folder> <br />
+			includes\jscripts\tiny_mce\utils\editable_selects.js <br />
+			includes\jscripts\tiny_mce\utils\form_utils.js <br />
+			includes\jscripts\tiny_mce\utils\index.php <br />
+			includes\jscripts\tiny_mce\utils\mctabs.js <br />
+			includes\jscripts\tiny_mce\utils\validate.js <br />
+			includes\language <Folder> <br />
+			includes\language\index.php <br />
+			includes\language\phpmailer.lang-ar.php <br />
+			includes\language\phpmailer.lang-br.php <br />
+			includes\language\phpmailer.lang-ca.php <br />
+			includes\language\phpmailer.lang-ch.php <br />
+			includes\language\phpmailer.lang-cz.php <br />
+			includes\language\phpmailer.lang-de.php <br />
+			includes\language\phpmailer.lang-dk.php <br />
+			includes\language\phpmailer.lang-en.php <br />
+			includes\language\phpmailer.lang-es.php <br />
+			includes\language\phpmailer.lang-et.php <br />
+			includes\language\phpmailer.lang-fa.php <br />
+			includes\language\phpmailer.lang-fi.php <br />
+			includes\language\phpmailer.lang-fo.php <br />
+			includes\language\phpmailer.lang-fr.php <br />
+			includes\language\phpmailer.lang-hu.php <br />
+			includes\language\phpmailer.lang-it.php <br />
+			includes\language\phpmailer.lang-ja.php <br />
+			includes\language\phpmailer.lang-nl.php <br />
+			includes\language\phpmailer.lang-no.php <br />
+			includes\language\phpmailer.lang-pl.php <br />
+			includes\language\phpmailer.lang-ro.php <br />
+			includes\language\phpmailer.lang-ru.php <br />
+			includes\language\phpmailer.lang-se.php <br />
+			includes\language\phpmailer.lang-sk.php <br />
+			includes\language\phpmailer.lang-tr.php <br />
+			includes\language\phpmailer.lang-zh.php <br />
+			includes\language\phpmailer.lang-zh_cn.php <br />
+			includes\user_fields\user_offset_include.php <br />
+			includes\user_fields\user_offset_include_var.php <br />
+			locale\English\articles.php <br />
+			locale\English\downloads.php <br />
+			locale\English\faq.php <br />
+			locale\English\news_cats.php <br />
+			locale\English\photogallery.php <br />
+			locale\English\submit.php <br />
+			locale\English\weblinks.php <br />
+			locale\English\admin\article-cats.php <br />
+			locale\English\admin\articles.php <br />
+			locale\English\admin\download-cats.php <br />
+			locale\English\admin\downloads.php <br />
+			locale\English\admin\faq.php <br />
+			locale\English\admin\forums.php <br />
+			locale\English\admin\forum_ranks.php <br />
+			locale\English\admin\news-cats.php <br />
+			locale\English\admin\news.php <br />
+			locale\English\admin\photoalbums.php <br />
+			locale\English\admin\photos.php <br />
+			locale\English\admin\polls.php <br />
+			locale\English\admin\user_fields-cats.php <br />
+			locale\English\admin\user_fields.php <br />
+			locale\English\admin\weblinks.php <br />
+			locale\English\bbcodes\allegro.php <br />
+			locale\English\bbcodes\alt.php <br />
+			locale\English\bbcodes\gg.php <br />
+			locale\English\bbcodes\googlevideo.php <br />
+			locale\English\bbcodes\movie.php <br />
+			locale\English\bbcodes\tlen.php <br />
+			locale\English\forum <Folder> <br />
+			locale\English\forum\index.php <br />
+			locale\English\forum\main.php <br />
+			locale\English\forum\options.php <br />
+			locale\English\forum\post.php <br />
+			locale\English\user_fields\user_offset.php <br />
+			themes\functions.php <br />
+			themes\point <Folder> <br />
+			themes\point\index.php <br />
+			themes\point\styles.css <br />
+			themes\point\theme.php <br />
+			themes\point\colour <Folder> <br />
+			themes\point\colour\blue.css <br />
+			themes\point\colour\blue.gif <br />
+			themes\point\colour\green.css <br />
+			themes\point\colour\green.gif <br />
+			themes\point\colour\index.php <br />
+			themes\point\colour\red.css <br />
+			themes\point\colour\red.gif <br />
+			themes\point\fontsize <Folder> <br />
+			themes\point\fontsize\index.php <br />
+			themes\point\fontsize\large.css <br />
+			themes\point\fontsize\less.gif <br />
+			themes\point\fontsize\more.gif <br />
+			themes\point\fontsize\normal.css <br />
+			themes\point\fontsize\reset.gif <br />
+			themes\point\fontsize\small.css <br />
+			themes\point\forum <Folder> <br />
+			themes\point\forum\aim.gif <br />
+			themes\point\forum\edit.gif <br />
+			themes\point\forum\email.gif <br />
+			themes\point\forum\folder.gif <br />
+			themes\point\forum\folderhot.gif <br />
+			themes\point\forum\folderlock.gif <br />
+			themes\point\forum\foldernew.gif <br />
+			themes\point\forum\icq.gif <br />
+			themes\point\forum\index.php <br />
+			themes\point\forum\ip.gif <br />
+			themes\point\forum\msn.gif <br />
+			themes\point\forum\newthread.gif <br />
+			themes\point\forum\pm.gif <br />
+			themes\point\forum\quote.gif <br />
+			themes\point\forum\reply.gif <br />
+			themes\point\forum\stickythread.gif <br />
+			themes\point\forum\web.gif <br />
+			themes\point\forum\yahoo.gif <br />
+			themes\point\forum\French <Folder> <br />
+			themes\point\forum\French\aim.gif <br />
+			themes\point\forum\French\edit.gif <br />
+			themes\point\forum\French\email.gif <br />
+			themes\point\forum\French\folder.gif <br />
+			themes\point\forum\French\folderhot.gif <br />
+			themes\point\forum\French\folderlock.gif <br />
+			themes\point\forum\French\foldernew.gif <br />
+			themes\point\forum\French\icq.gif <br />
+			themes\point\forum\French\index.php <br />
+			themes\point\forum\French\ip.gif <br />
+			themes\point\forum\French\msn.gif <br />
+			themes\point\forum\French\newthread.gif <br />
+			themes\point\forum\French\pm.gif <br />
+			themes\point\forum\French\quote.gif <br />
+			themes\point\forum\French\reply.gif <br />
+			themes\point\forum\French\stickythread.gif <br />
+			themes\point\forum\French\web.gif <br />
+			themes\point\forum\French\yahoo.gif <br />
+			themes\point\images <Folder> <br />
+			themes\point\images\blank.gif <br />
+			themes\point\images\blue_bg.gif <br />
+			themes\point\images\blue_bgh.gif <br />
+			themes\point\images\borderl.gif <br />
+			themes\point\images\borderr.gif <br />
+			themes\point\images\bullet.gif <br />
+			themes\point\images\bulletb.gif <br />
+			themes\point\images\button.gif <br />
+			themes\point\images\down.gif <br />
+			themes\point\images\green_bg.gif <br />
+			themes\point\images\green_bgh.gif <br />
+			themes\point\images\index.php <br />
+			themes\point\images\lborder.gif <br />
+			themes\point\images\lborderl.gif <br />
+			themes\point\images\lborderr.gif <br />
+			themes\point\images\left.gif <br />
+			themes\point\images\panel_off.gif <br />
+			themes\point\images\panel_on.gif <br />
+			themes\point\images\pollbar.gif <br />
+			themes\point\images\printer.gif <br />
+			themes\point\images\red_bg.gif <br />
+			themes\point\images\red_bgh.gif <br />
+			themes\point\images\right.gif <br />
+			themes\point\images\spacer.gif <br />
+			themes\point\images\uborder.gif <br />
+			themes\point\images\uborderl.gif <br />
+			themes\point\images\uborderr.gif <br />
+			themes\point\images\up.gif <br />
+			themes\Aer <Folder> <br />
+			themes\Aer\index.php <br />
+			themes\Aer\styles.css <br />
+			themes\Aer\theme.php <br />
+			themes\Aer\colour <Folder> <br />
+			themes\Aer\colour\blue.css <br />
+			themes\Aer\colour\blue.png <br />
+			themes\Aer\colour\green.css <br />
+			themes\Aer\colour\green.png <br />
+			themes\Aer\colour\index.php <br />
+			themes\Aer\colour\red.css <br />
+			themes\Aer\colour\red.png <br />
+			themes\Aer\columns <Folder> <br />
+			themes\Aer\columns\both.css <br />
+			themes\Aer\columns\both.png <br />
+			themes\Aer\columns\index.php <br />
+			themes\Aer\columns\left.css <br />
+			themes\Aer\columns\left.png <br />
+			themes\Aer\columns\none.css <br />
+			themes\Aer\columns\none.png <br />
+			themes\Aer\columns\right.css <br />
+			themes\Aer\columns\right.png <br />
+			themes\Aer\fontsize <Folder> <br />
+			themes\Aer\fontsize\index.php <br />
+			themes\Aer\fontsize\less.png <br />
+			themes\Aer\fontsize\more.png <br />
+			themes\Aer\fontsize\reset.png <br />
+			themes\Aer\forum <Folder> <br />
+			themes\Aer\forum\index.php <br />
+			themes\Aer\forum\blue <Folder> <br />
+			themes\Aer\forum\blue\edit.gif <br />
+			themes\Aer\forum\blue\folder.gif <br />
+			themes\Aer\forum\blue\folderlock.gif <br />
+			themes\Aer\forum\blue\foldernew.gif <br />
+			themes\Aer\forum\blue\index.php <br />
+			themes\Aer\forum\blue\newthread.gif <br />
+			themes\Aer\forum\blue\pm.gif <br />
+			themes\Aer\forum\blue\quote.gif <br />
+			themes\Aer\forum\blue\reply.gif <br />
+			themes\Aer\forum\blue\stickythread.gif <br />
+			themes\Aer\forum\blue\web.gif <br />
+			themes\Aer\forum\green <Folder> <br />
+			themes\Aer\forum\green\edit.gif <br />
+			themes\Aer\forum\green\folder.gif <br />
+			themes\Aer\forum\green\folderlock.gif <br />
+			themes\Aer\forum\green\foldernew.gif <br />
+			themes\Aer\forum\green\index.php <br />
+			themes\Aer\forum\green\newthread.gif <br />
+			themes\Aer\forum\green\pm.gif <br />
+			themes\Aer\forum\green\quote.gif <br />
+			themes\Aer\forum\green\reply.gif <br />
+			themes\Aer\forum\green\stickythread.gif <br />
+			themes\Aer\forum\green\web.gif <br />
+			themes\Aer\forum\red <Folder> <br />
+			themes\Aer\forum\red\edit.gif <br />
+			themes\Aer\forum\red\folder.gif <br />
+			themes\Aer\forum\red\folderlock.gif <br />
+			themes\Aer\forum\red\foldernew.gif <br />
+			themes\Aer\forum\red\index.php <br />
+			themes\Aer\forum\red\newthread.gif <br />
+			themes\Aer\forum\red\pm.gif <br />
+			themes\Aer\forum\red\quote.gif <br />
+			themes\Aer\forum\red\reply.gif <br />
+			themes\Aer\forum\red\stickythread.gif <br />
+			themes\Aer\forum\red\web.gif <br />
+			themes\Aer\images <Folder> <br />
+			themes\Aer\images\bbg.png <br />
+			themes\Aer\images\blank.gif <br />
+			themes\Aer\images\button.gif <br />
+			themes\Aer\images\cbl.png <br />
+			themes\Aer\images\cbl.png <br />
+			themes\Aer\images\cbr.png <br />
+			themes\Aer\images\cbr.png <br />
+			themes\Aer\images\closer.png <br />
+			themes\Aer\images\ctl.png <br />
+			themes\Aer\images\ctl.png <br />
+			themes\Aer\images\ctr.png <br />
+			themes\Aer\images\ctr.png <br />
+			themes\Aer\images\down.gif <br />
+			themes\Aer\images\index.php <br />
+			themes\Aer\images\lbg.png <br />
+			themes\Aer\images\left.gif <br />
+			themes\Aer\images\navbg.css <br />
+			themes\Aer\images\navbgh.css <br />
+			themes\Aer\images\panel_off.gif <br />
+			themes\Aer\images\panel_on.gif <br />
+			themes\Aer\images\printer.gif <br />
+			themes\Aer\images\rbg.png <br />
+			themes\Aer\images\right.gif <br />
+			themes\Aer\images\shadowl.png <br />
+			themes\Aer\images\shadowr.png <br />
+			themes\Aer\images\spacer.gif <br />
+			themes\Aer\images\subheadbg.png <br />
+			themes\Aer\images\tabbg.png <br />
+			themes\Aer\images\tabhbg.png <br />
+			themes\Aer\images\tabhl.png <br />
+			themes\Aer\images\tabl.png <br />
+			themes\Aer\images\tbg.png <br />
+			themes\Aer\images\up.gif <br />
+			themes\Aer\images\blue <Folder> <br />
+			themes\Aer\images\blue\headbg.css <br />
+			themes\Aer\images\blue\index.php <br />
+			themes\Aer\images\green <Folder> <br />
+			themes\Aer\images\green\headbg.css <br />
+			themes\Aer\images\green\index.php <br />
+			themes\Aer\images\red <Folder> <br />
+			themes\Aer\images\red\headbg.css <br />
+			themes\Aer\images\red\index.php <br />
+			themes\Atlantis <Folder> <br />
+			themes\Atlantis\index.php <br />
+			themes\Atlantis\styles.css <br />
+			themes\Atlantis\theme.php <br />
+			themes\Atlantis\forum <Folder> <br />
+			themes\Atlantis\forum\aim.gif <br />
+			themes\Atlantis\forum\edit.gif <br />
+			themes\Atlantis\forum\folder.gif <br />
+			themes\Atlantis\forum\folderhot.gif <br />
+			themes\Atlantis\forum\folderlock.gif <br />
+			themes\Atlantis\forum\foldernew.gif <br />
+			themes\Atlantis\forum\icq.gif <br />
+			themes\Atlantis\forum\index.php <br />
+			themes\Atlantis\forum\ip.gif <br />
+			themes\Atlantis\forum\jabber.gif <br />
+			themes\Atlantis\forum\msn.gif <br />
+			themes\Atlantis\forum\newthread.gif <br />
+			themes\Atlantis\forum\pm.gif <br />
+			themes\Atlantis\forum\quote.gif <br />
+			themes\Atlantis\forum\reply.gif <br />
+			themes\Atlantis\forum\skype.gif <br />
+			themes\Atlantis\forum\stickythread.gif <br />
+			themes\Atlantis\forum\web.gif <br />
+			themes\Atlantis\forum\yahoo.gif <br />
+			themes\Atlantis\images <Folder> <br />
+			themes\Atlantis\images\admin.gif <br />
+			themes\Atlantis\images\cont_b.css <br />
+			themes\Atlantis\images\cont_t.css <br />
+			themes\Atlantis\images\down.gif <br />
+			themes\Atlantis\images\index.php <br />
+			themes\Atlantis\images\left.gif <br />
+			themes\Atlantis\images\login.gif <br />
+			themes\Atlantis\images\logout.gif <br />
+			themes\Atlantis\images\mainheader_bg.css <br />
+			themes\Atlantis\images\panel_off.gif <br />
+			themes\Atlantis\images\panel_on.gif <br />
+			themes\Atlantis\images\pm.gif <br />
+			themes\Atlantis\images\pollbar.gif <br />
+			themes\Atlantis\images\pollbar.css <br />
+			themes\Atlantis\images\printer.gif <br />
+			themes\Atlantis\images\profile.gif <br />
+			themes\Atlantis\images\right.gif <br />
+			themes\Atlantis\images\side_bg.css <br />
+			themes\Atlantis\images\side_bl.css <br />
+			themes\Atlantis\images\side_br.css <br />
+			themes\Atlantis\images\side_tl.gif <br />
+			themes\Atlantis\images\side_tl.css <br />
+			themes\Atlantis\images\side_tr.gif <br />
+			themes\Atlantis\images\side_tr.css <br />
+			themes\Atlantis\images\subheader_bg.css <br />
+			themes\Atlantis\images\subheader_l.css <br />
+			themes\Atlantis\images\subheader_r.css <br />
+			themes\Atlantis\images\up.gif <br />
+			themes\Atlantis\images\userbar_shadow.css <br />
+			themes\Fumaeleon <Folder> <br />
+			themes\Fumaeleon\index.php <br />
+			themes\Fumaeleon\styles.css <br />
+			themes\Fumaeleon\theme.php <br />
+			themes\Fumaeleon\colour <Folder> <br />
+			themes\Fumaeleon\colour\blue.css <br />
+			themes\Fumaeleon\colour\blue.gif <br />
+			themes\Fumaeleon\colour\brown.css <br />
+			themes\Fumaeleon\colour\brown.gif <br />
+			themes\Fumaeleon\colour\green.css <br />
+			themes\Fumaeleon\colour\green.gif <br />
+			themes\Fumaeleon\colour\grey.css <br />
+			themes\Fumaeleon\colour\grey.gif <br />
+			themes\Fumaeleon\colour\index.php <br />
+			themes\Fumaeleon\colour\lilac.css <br />
+			themes\Fumaeleon\colour\lilac.gif <br />
+			themes\Fumaeleon\colour\red.css <br />
+			themes\Fumaeleon\colour\red.gif <br />
+			themes\Fumaeleon\fontsize <Folder> <br />
+			themes\Fumaeleon\fontsize\index.php <br />
+			themes\Fumaeleon\fontsize\large.css <br />
+			themes\Fumaeleon\fontsize\less.gif <br />
+			themes\Fumaeleon\fontsize\more.gif <br />
+			themes\Fumaeleon\fontsize\normal.css <br />
+			themes\Fumaeleon\fontsize\reset.gif <br />
+			themes\Fumaeleon\fontsize\small.css <br />
+			themes\Fumaeleon\forum <Folder> <br />
+			themes\Fumaeleon\forum\aim.gif <br />
+			themes\Fumaeleon\forum\edit.gif <br />
+			themes\Fumaeleon\forum\email.gif <br />
+			themes\Fumaeleon\forum\folder.gif <br />
+			themes\Fumaeleon\forum\folderhot.gif <br />
+			themes\Fumaeleon\forum\folderlock.gif <br />
+			themes\Fumaeleon\forum\foldernew.gif <br />
+			themes\Fumaeleon\forum\icq.gif <br />
+			themes\Fumaeleon\forum\index.php <br />
+			themes\Fumaeleon\forum\ip.gif <br />
+			themes\Fumaeleon\forum\msn.gif <br />
+			themes\Fumaeleon\forum\newthread.gif <br />
+			themes\Fumaeleon\forum\pm.gif <br />
+			themes\Fumaeleon\forum\quote.gif <br />
+			themes\Fumaeleon\forum\reply.gif <br />
+			themes\Fumaeleon\forum\stickythread.gif <br />
+			themes\Fumaeleon\forum\web.gif <br />
+			themes\Fumaeleon\forum\yahoo.gif <br />
+			themes\Fumaeleon\images <Folder> <br />
+			themes\Fumaeleon\images\blank.gif <br />
+			themes\Fumaeleon\images\borderl.gif <br />
+			themes\Fumaeleon\images\borderr.gif <br />
+			themes\Fumaeleon\images\bullet.gif <br />
+			themes\Fumaeleon\images\bulletb.gif <br />
+			themes\Fumaeleon\images\button.gif <br />
+			themes\Fumaeleon\images\down.gif <br />
+			themes\Fumaeleon\images\index.php <br />
+			themes\Fumaeleon\images\lborder.gif <br />
+			themes\Fumaeleon\images\lborderl.gif <br />
+			themes\Fumaeleon\images\lborderr.gif <br />
+			themes\Fumaeleon\images\left.gif <br />
+			themes\Fumaeleon\images\panel_off.gif <br />
+			themes\Fumaeleon\images\panel_on.gif <br />
+			themes\Fumaeleon\images\pollbar.gif <br />
+			themes\Fumaeleon\images\printer.gif <br />
+			themes\Fumaeleon\images\right.gif <br />
+			themes\Fumaeleon\images\spacer.gif <br />
+			themes\Fumaeleon\images\uborder.gif <br />
+			themes\Fumaeleon\images\uborderl.gif <br />
+			themes\Fumaeleon\images\uborderr.gif <br />
+			themes\Fumaeleon\images\up.gif <br />
+			themes\Fumaeleon\images\colours <Folder> <br />
+			themes\Fumaeleon\images\colours\index.php <br />
+			themes\Fumaeleon\images\colours\blue <Folder> <br />
+			themes\Fumaeleon\images\colours\blue\index.php <br />
+			themes\Fumaeleon\images\colours\blue\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\blue\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\blue\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\blue\preview.gif <br />
+			themes\Fumaeleon\images\colours\blue\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\brown <Folder> <br />
+			themes\Fumaeleon\images\colours\brown\index.php <br />
+			themes\Fumaeleon\images\colours\brown\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\brown\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\brown\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\brown\preview.gif <br />
+			themes\Fumaeleon\images\colours\brown\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\fusion <Folder> <br />
+			themes\Fumaeleon\images\colours\fusion\index.php <br />
+			themes\Fumaeleon\images\colours\fusion\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\fusion\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\fusion\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\fusion\preview.gif <br />
+			themes\Fumaeleon\images\colours\fusion\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\green <Folder> <br />
+			themes\Fumaeleon\images\colours\green\index.php <br />
+			themes\Fumaeleon\images\colours\green\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\green\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\green\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\green\preview.gif <br />
+			themes\Fumaeleon\images\colours\green\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\grey <Folder> <br />
+			themes\Fumaeleon\images\colours\grey\index.php <br />
+			themes\Fumaeleon\images\colours\grey\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\grey\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\grey\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\grey\preview.gif <br />
+			themes\Fumaeleon\images\colours\grey\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\lilac <Folder> <br />
+			themes\Fumaeleon\images\colours\lilac\index.php <br />
+			themes\Fumaeleon\images\colours\lilac\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\lilac\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\lilac\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\lilac\preview.gif <br />
+			themes\Fumaeleon\images\colours\lilac\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\orange <Folder> <br />
+			themes\Fumaeleon\images\colours\orange\index.php <br />
+			themes\Fumaeleon\images\colours\orange\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\orange\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\orange\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\orange\preview.gif <br />
+			themes\Fumaeleon\images\colours\orange\rscorner.gif <br />
+			themes\Fumaeleon\images\colours\red <Folder> <br />
+			themes\Fumaeleon\images\colours\red\index.php <br />
+			themes\Fumaeleon\images\colours\red\lhcorner.gif <br />
+			themes\Fumaeleon\images\colours\red\lscorner.gif <br />
+			themes\Fumaeleon\images\colours\red\mcorner.gif <br />
+			themes\Fumaeleon\images\colours\red\preview.gif <br />
+			themes\Fumaeleon\images\colours\red\rscorner.gif <br />
+			themes\Gillette <Folder> <br />
+			themes\Gillette\index.php <br />
+			themes\Gillette\styles.css <br />
+			themes\Gillette\theme.php <br />
+			themes\Gillette\forum <Folder> <br />
+			themes\Gillette\forum\blank_button.gif <br />
+			themes\Gillette\forum\edit.gif <br />
+			themes\Gillette\forum\email.gif <br />
+			themes\Gillette\forum\folder.gif <br />
+			themes\Gillette\forum\folderhot.gif <br />
+			themes\Gillette\forum\folderlock.gif <br />
+			themes\Gillette\forum\foldernew.gif <br />
+			themes\Gillette\forum\index.php <br />
+			themes\Gillette\forum\newthread.gif <br />
+			themes\Gillette\forum\pm.gif <br />
+			themes\Gillette\forum\profile.gif <br />
+			themes\Gillette\forum\quote.gif <br />
+			themes\Gillette\forum\reply.gif <br />
+			themes\Gillette\forum\stickythread.gif <br />
+			themes\Gillette\forum\web.gif <br />
+			themes\Gillette\images <Folder> <br />
+			themes\Gillette\images\blank.gif <br />
+			themes\Gillette\images\bullet.gif <br />
+			themes\Gillette\images\bulletb.gif <br />
+			themes\Gillette\images\button.gif <br />
+			themes\Gillette\images\cap-left.gif <br />
+			themes\Gillette\images\cap-right.gif <br />
+			themes\Gillette\images\cap.gif <br />
+			themes\Gillette\images\down.gif <br />
+			themes\Gillette\images\edit.gif <br />
+			themes\Gillette\images\fusion.gif <br />
+			themes\Gillette\images\gradient.gif <br />
+			themes\Gillette\images\header-bg.gif <br />
+			themes\Gillette\images\index.php <br />
+			themes\Gillette\images\left.gif <br />
+			themes\Gillette\images\panel_off.gif <br />
+			themes\Gillette\images\panel_on.gif <br />
+			themes\Gillette\images\pollbar.gif <br />
+			themes\Gillette\images\printer.gif <br />
+			themes\Gillette\images\right.gif <br />
+			themes\Gillette\images\side-left.gif <br />
+			themes\Gillette\images\side-right.gif <br />
+			themes\Gillette\images\side.gif <br />
+			themes\Gillette\images\subheader-left.gif <br />
+			themes\Gillette\images\subheader-mid.gif <br />
+			themes\Gillette\images\subheader-right.gif <br />
+			themes\Gillette\images\up.gif <br />
+			themes\Modern <Folder> <br />
+			themes\Modern\index.php <br />
+			themes\Modern\styles.css <br />
+			themes\Modern\theme.php <br />
+			themes\Modern\forum <Folder> <br />
+			themes\Modern\forum\edit.png <br />
+			themes\Modern\forum\email.png <br />
+			themes\Modern\forum\folder.gif <br />
+			themes\Modern\forum\folder.png <br />
+			themes\Modern\forum\folderhot.png <br />
+			themes\Modern\forum\folderlock.png <br />
+			themes\Modern\forum\foldernew.png <br />
+			themes\Modern\forum\index.php <br />
+			themes\Modern\forum\newthread.png <br />
+			themes\Modern\forum\pm.png <br />
+			themes\Modern\forum\profile.png <br />
+			themes\Modern\forum\quote.png <br />
+			themes\Modern\forum\reply.png <br />
+			themes\Modern\forum\stickythread.png <br />
+			themes\Modern\forum\web.png <br />
+			themes\Modern\images <Folder> <br />
+			themes\Modern\images\blank.gif <br />
+			themes\Modern\images\down.png <br />
+			themes\Modern\images\index.php <br />
+			themes\Modern\images\left.png <br />
+			themes\Modern\images\right.png <br />
+			themes\Modern\images\search.png <br />
+			themes\Modern\images\up.png <br />
+			themes\Modern\psd <Folder> <br />
+			themes\Modern\psd\edit.psd
+			themes\Modern\psd\email.psd
+			themes\Modern\psd\index.php <br />
+			themes\Modern\psd\newthread.psd
+			themes\Modern\psd\pm.psd
+			themes\Modern\psd\profile.psd
+			themes\Modern\psd\quote.psd
+			themes\Modern\psd\reply.psd
+			themes\Modern\psd\web.psd
+			themes\Pastel <Folder> <br />
+			themes\Pastel\index.php <br />
+			themes\Pastel\styles.css <br />
+			themes\Pastel\theme.php <br />
+			themes\Pastel\colour <Folder> <br />
+			themes\Pastel\colour\blue.css <br />
+			themes\Pastel\colour\blue.gif <br />
+			themes\Pastel\colour\grey.css <br />
+			themes\Pastel\colour\grey.gif <br />
+			themes\Pastel\colour\index.php <br />
+			themes\Pastel\colour\olive.css <br />
+			themes\Pastel\colour\olive.gif <br />
+			themes\Pastel\colour\red.css <br />
+			themes\Pastel\colour\red.gif <br />
+			themes\Pastel\fontsize <Folder> <br />
+			themes\Pastel\fontsize\index.php <br />
+			themes\Pastel\fontsize\less.gif <br />
+			themes\Pastel\fontsize\more.gif <br />
+			themes\Pastel\fontsize\reset.gif <br />
+			themes\Pastel\forum <Folder> <br />
+			themes\Pastel\forum\aim.gif <br />
+			themes\Pastel\forum\edit.gif <br />
+			themes\Pastel\forum\email.gif <br />
+			themes\Pastel\forum\folder.gif <br />
+			themes\Pastel\forum\folderhot.gif <br />
+			themes\Pastel\forum\folderlock.gif <br />
+			themes\Pastel\forum\foldernew.gif <br />
+			themes\Pastel\forum\icq.gif <br />
+			themes\Pastel\forum\index.php <br />
+			themes\Pastel\forum\ip.gif <br />
+			themes\Pastel\forum\msn.gif <br />
+			themes\Pastel\forum\newthread.gif <br />
+			themes\Pastel\forum\pm.gif <br />
+			themes\Pastel\forum\quote.gif <br />
+			themes\Pastel\forum\reply.gif <br />
+			themes\Pastel\forum\stickythread.gif <br />
+			themes\Pastel\forum\web.gif <br />
+			themes\Pastel\forum\yahoo.gif <br />
+			themes\Pastel\forum\French <Folder> <br />
+			themes\Pastel\forum\French\aim.gif <br />
+			themes\Pastel\forum\French\edit.gif <br />
+			themes\Pastel\forum\French\email.gif <br />
+			themes\Pastel\forum\French\folder.gif <br />
+			themes\Pastel\forum\French\folderhot.gif <br />
+			themes\Pastel\forum\French\folderlock.gif <br />
+			themes\Pastel\forum\French\foldernew.gif <br />
+			themes\Pastel\forum\French\icq.gif <br />
+			themes\Pastel\forum\French\index.php <br />
+			themes\Pastel\forum\French\ip.gif <br />
+			themes\Pastel\forum\French\msn.gif <br />
+			themes\Pastel\forum\French\newthread.gif <br />
+			themes\Pastel\forum\French\pm.gif <br />
+			themes\Pastel\forum\French\quote.gif <br />
+			themes\Pastel\forum\French\reply.gif <br />
+			themes\Pastel\forum\French\stickythread.gif <br />
+			themes\Pastel\forum\French\web.gif <br />
+			themes\Pastel\forum\French\yahoo.gif <br />
+			themes\Pastel\images <Folder> <br />
+			themes\Pastel\images\admin.gif <br />
+			themes\Pastel\images\blank.gif <br />
+			themes\Pastel\images\borderl.gif <br />
+			themes\Pastel\images\borderr.gif <br />
+			themes\Pastel\images\bullet.gif <br />
+			themes\Pastel\images\bulletb.gif <br />
+			themes\Pastel\images\button.gif <br />
+			themes\Pastel\images\down.gif <br />
+			themes\Pastel\images\index.php <br />
+			themes\Pastel\images\lborder.gif <br />
+			themes\Pastel\images\lborderl.gif <br />
+			themes\Pastel\images\lborderr.gif <br />
+			themes\Pastel\images\left.gif <br />
+			themes\Pastel\images\navcorner_blue.gif <br />
+			themes\Pastel\images\navcorner_grey.gif <br />
+			themes\Pastel\images\navcorner_olive.gif <br />
+			themes\Pastel\images\navcorner_red.gif <br />
+			themes\Pastel\images\panel_off.gif <br />
+			themes\Pastel\images\panel_on.gif <br />
+			themes\Pastel\images\pollbar.gif <br />
+			themes\Pastel\images\printer.gif <br />
+			themes\Pastel\images\right.gif <br />
+			themes\Pastel\images\spacer.gif <br />
+			themes\Pastel\images\uborder.gif <br />
+			themes\Pastel\images\uborderl.gif <br />
+			themes\Pastel\images\uborderr.gif <br />
+			themes\Pastel\images\up.gif <br />
+			themes\Phos <Folder> <br />
+			themes\Phos\index.php <br />
+			themes\Phos\styles.css <br />
+			themes\Phos\theme.php <br />
+			themes\Phos\colour <Folder> <br />
+			themes\Phos\colour\blue.css <br />
+			themes\Phos\colour\blue.gif <br />
+			themes\Phos\colour\green.css <br />
+			themes\Phos\colour\green.gif <br />
+			themes\Phos\colour\index.php <br />
+			themes\Phos\colour\red.css <br />
+			themes\Phos\colour\red.gif <br />
+			themes\Phos\columns <Folder> <br />
+			themes\Phos\columns\both.css <br />
+			themes\Phos\columns\both.gif <br />
+			themes\Phos\columns\index.php <br />
+			themes\Phos\columns\left.css <br />
+			themes\Phos\columns\left.gif <br />
+			themes\Phos\columns\none.css <br />
+			themes\Phos\columns\none.gif <br />
+			themes\Phos\columns\right.css <br />
+			themes\Phos\columns\right.gif <br />
+			themes\Phos\fontsize <Folder> <br />
+			themes\Phos\fontsize\index.php <br />
+			themes\Phos\fontsize\less.gif <br />
+			themes\Phos\fontsize\more.gif <br />
+			themes\Phos\fontsize\reset.gif <br />
+			themes\Phos\forum <Folder> <br />
+			themes\Phos\forum\index.php <br />
+			themes\Phos\forum\blue <Folder> <br />
+			themes\Phos\forum\blue\edit.gif <br />
+			themes\Phos\forum\blue\folder.gif <br />
+			themes\Phos\forum\blue\folderlock.gif <br />
+			themes\Phos\forum\blue\foldernew.gif <br />
+			themes\Phos\forum\blue\index.php <br />
+			themes\Phos\forum\blue\newthread.gif <br />
+			themes\Phos\forum\blue\pm.gif <br />
+			themes\Phos\forum\blue\quote.gif <br />
+			themes\Phos\forum\blue\reply.gif <br />
+			themes\Phos\forum\blue\stickythread.gif <br />
+			themes\Phos\forum\blue\web.gif <br />
+			themes\Phos\forum\blue\French <Folder> <br />
+			themes\Phos\forum\blue\French\edit.gif <br />
+			themes\Phos\forum\blue\French\folder.gif <br />
+			themes\Phos\forum\blue\French\folderlock.gif <br />
+			themes\Phos\forum\blue\French\foldernew.gif <br />
+			themes\Phos\forum\blue\French\index.php <br />
+			themes\Phos\forum\blue\French\newthread.gif <br />
+			themes\Phos\forum\blue\French\pm.gif <br />
+			themes\Phos\forum\blue\French\quote.gif <br />
+			themes\Phos\forum\blue\French\reply.gif <br />
+			themes\Phos\forum\blue\French\stickythread.gif <br />
+			themes\Phos\forum\blue\French\web.gif <br />
+			themes\Phos\forum\green <Folder> <br />
+			themes\Phos\forum\green\edit.gif <br />
+			themes\Phos\forum\green\folder.gif <br />
+			themes\Phos\forum\green\folderlock.gif <br />
+			themes\Phos\forum\green\foldernew.gif <br />
+			themes\Phos\forum\green\index.php <br />
+			themes\Phos\forum\green\newthread.gif <br />
+			themes\Phos\forum\green\pm.gif <br />
+			themes\Phos\forum\green\quote.gif <br />
+			themes\Phos\forum\green\reply.gif <br />
+			themes\Phos\forum\green\stickythread.gif <br />
+			themes\Phos\forum\green\web.gif <br />
+			themes\Phos\forum\green\French <Folder> <br />
+			themes\Phos\forum\green\French\edit.gif <br />
+			themes\Phos\forum\green\French\folder.gif <br />
+			themes\Phos\forum\green\French\folderlock.gif <br />
+			themes\Phos\forum\green\French\foldernew.gif <br />
+			themes\Phos\forum\green\French\index.php <br />
+			themes\Phos\forum\green\French\newthread.gif <br />
+			themes\Phos\forum\green\French\pm.gif <br />
+			themes\Phos\forum\green\French\quote.gif <br />
+			themes\Phos\forum\green\French\reply.gif <br />
+			themes\Phos\forum\green\French\stickythread.gif <br />
+			themes\Phos\forum\green\French\web.gif <br />
+			themes\Phos\forum\red <Folder> <br />
+			themes\Phos\forum\red\edit.gif <br />
+			themes\Phos\forum\red\folder.gif <br />
+			themes\Phos\forum\red\folderlock.gif <br />
+			themes\Phos\forum\red\foldernew.gif <br />
+			themes\Phos\forum\red\index.php <br />
+			themes\Phos\forum\red\newthread.gif <br />
+			themes\Phos\forum\red\pm.gif <br />
+			themes\Phos\forum\red\quote.gif <br />
+			themes\Phos\forum\red\reply.gif <br />
+			themes\Phos\forum\red\stickythread.gif <br />
+			themes\Phos\forum\red\web.gif <br />
+			themes\Phos\forum\red\French <Folder> <br />
+			themes\Phos\forum\red\French\edit.gif <br />
+			themes\Phos\forum\red\French\folder.gif <br />
+			themes\Phos\forum\red\French\folderlock.gif <br />
+			themes\Phos\forum\red\French\foldernew.gif <br />
+			themes\Phos\forum\red\French\index.php <br />
+			themes\Phos\forum\red\French\newthread.gif <br />
+			themes\Phos\forum\red\French\pm.gif <br />
+			themes\Phos\forum\red\French\quote.gif <br />
+			themes\Phos\forum\red\French\reply.gif <br />
+			themes\Phos\forum\red\French\stickythread.gif <br />
+			themes\Phos\forum\red\French\web.gif <br />
+			themes\Phos\images <Folder> <br />
+			themes\Phos\images\admin.gif <br />
+			themes\Phos\images\blank.gif <br />
+			themes\Phos\images\bullet.gif <br />
+			themes\Phos\images\bulletb.gif <br />
+			themes\Phos\images\button.gif <br />
+			themes\Phos\images\down.gif <br />
+			themes\Phos\images\header_bg.css <br />
+			themes\Phos\images\index.php <br />
+			themes\Phos\images\left.gif <br />
+			themes\Phos\images\navcap_l.css <br />
+			themes\Phos\images\navcap_r.css <br />
+			themes\Phos\images\navtab_bg.css <br />
+			themes\Phos\images\navtab_hbg.css <br />
+			themes\Phos\images\navtab_hl.css <br />
+			themes\Phos\images\navtab_l.css <br />
+			themes\Phos\images\panelbody_bg.css <br />
+			themes\Phos\images\panelbody_l.css <br />
+			themes\Phos\images\panelbody_r.css <br />
+			themes\Phos\images\panelcap_bg.css <br />
+			themes\Phos\images\panelcap_l.css <br />
+			themes\Phos\images\panelcap_r.css <br />
+			themes\Phos\images\panel_off.gif <br />
+			themes\Phos\images\panel_on.gif <br />
+			themes\Phos\images\pollbar.gif <br />
+			themes\Phos\images\printer.gif <br />
+			themes\Phos\images\right.gif <br />
+			themes\Phos\images\spacer.gif <br />
+			themes\Phos\images\tab_bg.css <br />
+			themes\Phos\images\tab_l.gif <br />
+			themes\Phos\images\tab_l.css <br />
+			themes\Phos\images\up.gif <br />
+			themes\Phos\images\blue <Folder> <br />
+			themes\Phos\images\blue\body_bg.css <br />
+			themes\Phos\images\blue\cont_bb.css <br />
+			themes\Phos\images\blue\cont_bb.png <br />
+			themes\Phos\images\blue\cont_bl.css <br />
+			themes\Phos\images\blue\cont_bl.png <br />
+			themes\Phos\images\blue\cont_br.css <br />
+			themes\Phos\images\blue\cont_br.png <br />
+			themes\Phos\images\blue\corner_bl.css <br />
+			themes\Phos\images\blue\corner_bl.png <br />
+			themes\Phos\images\blue\corner_br.css <br />
+			themes\Phos\images\blue\corner_br.png <br />
+			themes\Phos\images\blue\corner_tl.css <br />
+			themes\Phos\images\blue\corner_tr.css <br />
+			themes\Phos\images\blue\header_bl.css <br />
+			themes\Phos\images\blue\header_br.css <br />
+			themes\Phos\images\blue\header_bt.css <br />
+			themes\Phos\images\blue\index.php <br />
+			themes\Phos\images\blue\navitem_hl.css <br />
+			themes\Phos\images\blue\navitem_hr.css <br />
+			themes\Phos\images\blue\navitem_l.css <br />
+			themes\Phos\images\blue\navitem_r.css <br />
+			themes\Phos\images\blue\tab_r.css <br />
+			themes\Phos\images\green <Folder> <br />
+			themes\Phos\images\green\body_bg.css <br />
+			themes\Phos\images\green\cont_bb.css <br />
+			themes\Phos\images\green\cont_bb.png <br />
+			themes\Phos\images\green\cont_bl.css <br />
+			themes\Phos\images\green\cont_bl.png <br />
+			themes\Phos\images\green\cont_br.css <br />
+			themes\Phos\images\green\cont_br.png <br />
+			themes\Phos\images\green\corner_bl.css <br />
+			themes\Phos\images\green\corner_bl.png <br />
+			themes\Phos\images\green\corner_br.css <br />
+			themes\Phos\images\green\corner_br.png <br />
+			themes\Phos\images\green\corner_tl.css <br />
+			themes\Phos\images\green\corner_tr.css <br />
+			themes\Phos\images\green\header_bl.css <br />
+			themes\Phos\images\green\header_br.css <br />
+			themes\Phos\images\green\header_bt.css <br />
+			themes\Phos\images\green\index.php <br />
+			themes\Phos\images\green\navitem_hl.css <br />
+			themes\Phos\images\green\navitem_hr.css <br />
+			themes\Phos\images\green\navitem_l.css <br />
+			themes\Phos\images\green\navitem_r.css <br />
+			themes\Phos\images\green\tab_r.css <br />
+			themes\Phos\images\red <Folder> <br />
+			themes\Phos\images\red\body_bg.css <br />
+			themes\Phos\images\red\cont_bb.css <br />
+			themes\Phos\images\red\cont_bb.png <br />
+			themes\Phos\images\red\cont_bl.css <br />
+			themes\Phos\images\red\cont_bl.png <br />
+			themes\Phos\images\red\cont_br.css <br />
+			themes\Phos\images\red\cont_br.png <br />
+			themes\Phos\images\red\corner_bl.css <br />
+			themes\Phos\images\red\corner_bl.png <br />
+			themes\Phos\images\red\corner_br.css <br />
+			themes\Phos\images\red\corner_br.png <br />
+			themes\Phos\images\red\corner_tl.css <br />
+			themes\Phos\images\red\corner_tr.css <br />
+			themes\Phos\images\red\header_bl.css <br />
+			themes\Phos\images\red\header_br.css <br />
+			themes\Phos\images\red\header_bt.css <br />
+			themes\Phos\images\red\index.php <br />
+			themes\Phos\images\red\navitem_hl.css <br />
+			themes\Phos\images\red\navitem_hr.css <br />
+			themes\Phos\images\red\navitem_l.css <br />
+			themes\Phos\images\red\navitem_r.css <br />
+			themes\Phos\images\red\tab_r.css <br />
+			themes\Stylo <Folder> <br />
+			themes\Stylo\functions.php <br />
+			themes\Stylo\index.php <br />
+			themes\Stylo\styles.css <br />
+			themes\Stylo\theme.php <br />
+			themes\Stylo\colour <Folder> <br />
+			themes\Stylo\colour\blue.css <br />
+			themes\Stylo\colour\blue.png <br />
+			themes\Stylo\colour\green.css <br />
+			themes\Stylo\colour\green.png <br />
+			themes\Stylo\colour\grey.css <br />
+			themes\Stylo\colour\grey.png <br />
+			themes\Stylo\colour\index.php <br />
+			themes\Stylo\colour\lilac.css <br />
+			themes\Stylo\colour\lilac.png <br />
+			themes\Stylo\colour\orange.css <br />
+			themes\Stylo\colour\orange.png <br />
+			themes\Stylo\colour\red.css <br />
+			themes\Stylo\colour\red.png <br />
+			themes\Stylo\forum <Folder> <br />
+			themes\Stylo\forum\blank_button.gif <br />
+			themes\Stylo\forum\buttons_bg.png <br />
+			themes\Stylo\forum\folder.gif <br />
+			themes\Stylo\forum\folderhot.gif <br />
+			themes\Stylo\forum\folderlock.gif <br />
+			themes\Stylo\forum\foldernew.gif <br />
+			themes\Stylo\forum\index.php <br />
+			themes\Stylo\forum\stickythread.png <br />
+			themes\Stylo\images <Folder> <br />
+			themes\Stylo\images\blank.gif <br />
+			themes\Stylo\images\bullet.gif <br />
+			themes\Stylo\images\bulletb.gif <br />
+			themes\Stylo\images\down.png <br />
+			themes\Stylo\images\index.php <br />
+			themes\Stylo\images\left.png <br />
+			themes\Stylo\images\panel_off.gif <br />
+			themes\Stylo\images\panel_on.gif <br />
+			themes\Stylo\images\pollbar.gif <br />
+			themes\Stylo\images\right.png <br />
+			themes\Stylo\images\subfooter-mid.gif <br />
+			themes\Stylo\images\up.png <br />
+			themes\Stylo\images\icons <Folder> <br />
+			themes\Stylo\images\icons\article_edit.png <br />
+			themes\Stylo\images\icons\author.png <br />
+			themes\Stylo\images\icons\buttons_icons.png <br />
+			themes\Stylo\images\icons\cat.png <br />
+			themes\Stylo\images\icons\comments.png <br />
+			themes\Stylo\images\icons\date.png <br />
+			themes\Stylo\images\icons\get_info.png <br />
+			themes\Stylo\images\icons\index.php <br />
+			themes\Stylo\images\icons\info.png <br />
+			themes\Stylo\images\icons\news_edit.png <br />
+			themes\Stylo\images\icons\printer.png <br />
+			themes\Stylo\images\icons\quote_icon.png <br />
+			themes\Stylo\images\icons\reads.png <br />
+			themes\Stylo\images\icons\search.png <br />
+			themes\Stylo\images\icons\sticky.png <br />
+			themes\templates\admin_header_mce.php <br />
+			themes\templates\header_mce.php <br />
+			themes\templates\panels.css <br />
+			themes\templates\panels.php <br />
+			themes\templates\setup_styles.css <br />
+			themes\templates\site_links.css <br />
+		</div>
+		<div style='clear:both;'></div>
         <hr/>
         <p>In order to further optimize your site you can enter the System Administration > Infusions and defuse the Infusions that are of no use to
             you.</p>
@@ -404,11 +2000,8 @@
         various Documentation sections from the documentation menu that suit your needs.<br/>
     </div>
 
-
     <div class='tbl2'>ACKNOWLEDGEMENTS</div>
     <div class='tbl1'>
-
-        <p>
 
         <div style='float:left;width:26%;padding-left:150px;min-height:25px;margin:7px;'>
             <strong>Project Manager</strong><br/>Joakim Falk {Falk} <br/>falk@php-fusion.co.uk
@@ -416,14 +2009,13 @@
         <div style='float:left;width:46%;min-height:25px;margin:7px;'><strong>Lead Developer</strong><br/>
             Frederick MC Chan {Chan} <br/>chan@php-fusion.co.uk
         </div>
-        </p>
         <div style='clear:both;'></div>
         <hr/>
-        <p><strong>A special thank you goes in no particular order to , </strong><br/><br/>
+        <p><strong>A special thank you goes in no particular order to, </strong><br/><br/>
             Robert Gaudyn {Wooya} - Inspired Multilingal features, Initial Panels Admin handler design, RSS Panel, Panel positioning ideas, New user
             info panel base layout.<br/>
             Ankur - Initial design SEO Engine.<br/>
-			RobiNN - Multiple fixes provided.<br/>
+            RobiNN - Multiple fixes provided.<br/>
             Rizado - Locale, User Fields, Date/Time system, Translate system.<br/>
             Rimelek - Database Factory, Improvements on Defender, Dynamics.<br/>
             Tyler Hurlbut - Initial design for Fusion Dynamics, and jQuery output handler.<br/>
@@ -442,7 +2034,7 @@
             Routh - Help with upgrade script testing, Multiple fixes provided.<br/>
             MiChAeLoKGB - BBCode Fixes provided.<br/>
             Keddy - Multiple fixes provided.<br/>
-			Helmuth Mikkelsen Beta testing and error reporting.<br/>
+            helmuth - Beta testing and error reporting.<br/>
             janmol {Jan.M} - Beta testing and error reporting.<br/>
             Kvido - Beta testing and error reporting.<br/>
             Alex L - Beta testing and error reporting.<br/>
@@ -457,5 +2049,6 @@
             Some do full translations while others do some minor adjustments either by forums or directly by github.<br/>
             Remember to give your self credits in the global.php as the inital locale author.<br/>
     </div>
+</div>
 </body>
 </html>

@@ -27,7 +27,7 @@ use ThemeFactory\Core;
 class Login {
 
     public static function login_form($info) {
-
+        echo renderNotices(getNotices(array('all', FUSION_SELF)));
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
@@ -62,8 +62,9 @@ class Login {
                 <div class="col-xs-12 col-sm-5 login-column">
                     <div class="login-panel center-x" style="height:100vh; overflow: hidden;">
                         <div class="center-y">
-                            <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>" alt="<?php echo fusion_get_settings("sitename") ?>">
-
+                            <a href="<?php echo BASEDIR."index.php" ?>">
+                                <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>" alt="<?php echo fusion_get_settings("sitename") ?>">
+                            </a>
                             <h2><?php echo fusion_get_settings("sitename") ?></h2>
                         <?php
                         echo $info['open_form'];

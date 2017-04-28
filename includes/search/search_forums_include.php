@@ -79,7 +79,7 @@ if (db_exists(DB_FORUMS)) {
 
         if ($rows != 0) {
 
-            $item_count = "<a href='".FUSION_SELF."?stype=forums&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=forums&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
 
             // Change from forum post to forum thread searching.
 

@@ -312,13 +312,6 @@ input[type=text]:focus {
     padding: 30px 50px;
 }
 
-.section-2-tab .entypo {
-    font-size: 50px;
-    font-weight: 300 !important;
-    display: block;
-    margin-bottom: 10px;
-}
-
 .section-2-tab.active, .section-2-tab:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
@@ -546,7 +539,11 @@ nav {
 }
 
 .leftbar a {
-    color: #FFF !important;
+    color: #FFF;
+}
+
+.leftbar .btn-default {
+    color: #333;
 }
 
 .leftbar .shoutboxwrapper a.btn {
@@ -564,6 +561,15 @@ nav {
     background-color: rgb(58, 68, 75);
     padding: 20px 20px 20px;
     margin: 0px -15px 0px;
+}
+
+.leftbar .panel {
+    color: #555;
+}
+
+.leftbar .block {
+    -webkit-border-radius: 0;
+    border-radius: 0;
 }
 
 #navigation h2,

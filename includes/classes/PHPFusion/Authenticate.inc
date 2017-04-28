@@ -98,7 +98,7 @@ class Authenticate {
                     }
                 }
             } else {
-                redirect(Authenticate::getRedirectUrl(1));
+                redirect(Authenticate::getRedirectUrl(5));
             }
         } else {
             redirect(Authenticate::getRedirectUrl(1));

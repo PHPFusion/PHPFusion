@@ -24,7 +24,8 @@ if (!defined("IN_FUSION")) {
 }
 
 if (db_exists(DB_FORUMS)) {
-
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
     $result = dbquery("
             SELECT f.forum_id, f.forum_name, f2.forum_name 'forum_cat_name'
             FROM ".DB_FORUMS." f

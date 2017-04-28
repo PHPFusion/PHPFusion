@@ -71,13 +71,13 @@ class Postify_Answer extends Forum_Postify {
 
                         dbquery("DELETE FROM ".DB_FORUM_USER_REP." WHERE thread_id=:thread_id AND voter_id=:voter_id AND user_id=:user_id AND rep_answer=:answer",
                             [
-                                'post_id'     => $thread_data['post_id'],
-                                'thread_id'   => $thread_data['thread_id'],
-                                'forum_id'    => $thread_data['forum_id'],
-                                'points_gain' => self::$forum_settings['answering_points'],
-                                'voter_id'    => fusion_get_userdata('user_id'),
-                                'user_id'     => $thread_data['post_author'],
-                                'answer'      => 1,
+                                //':post_id'     => $thread_data['post_id'],
+                                ':thread_id' => $thread_data['thread_id'],
+                                //':forum_id'    => $thread_data['forum_id'],
+                                //':points_gain' => self::$forum_settings['answering_points'],
+                                ':voter_id'  => fusion_get_userdata('user_id'),
+                                ':user_id'   => $thread_data['post_author'],
+                                ':answer'    => 1,
                             ]
                         );
 

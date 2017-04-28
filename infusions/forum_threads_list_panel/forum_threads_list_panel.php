@@ -34,7 +34,7 @@ if (!$inf_settings) {
 global $lastvisited;
 
 if (!isset($lastvisited) || !isnum($lastvisited)) {
-    $lastvisited = time();
+    $lastvisited = TIME;
 }
 $result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_lastpost, f.forum_postcount,
     f.forum_threadcount, f.forum_lastuser, f.forum_access,
@@ -77,7 +77,7 @@ if (dbrows($result)) {
                         echo "</td>\n";
                         echo "<td>".$thread_poll."
                         <a class='strong' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a>
-                        <br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)."</a></td>\n";
+                        <br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)."</a></td>\n";
                         echo "<td>".$data['thread_views']."</td>\n";
                         echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
                         echo "<td>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";

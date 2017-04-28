@@ -74,7 +74,7 @@ if (db_exists(DB_WEBLINKS)) {
         }
 
         if ($rows != 0) {
-            $item_count = "<a href='".FUSION_SELF."?stype=weblinks&amp;stext=".$_POST['stext']."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
+            $item_count = "<a href='".BASEDIR."search.php?stype=weblinks&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
 
@@ -90,18 +90,17 @@ if (db_exists(DB_WEBLINKS)) {
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
                 $text_c = Search_Engine::search_stringscount($data['weblink_description']);
-
                 $desc = '';
                 if ($text_frag != "") {
                     $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
                 }
                 $desc .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
-
-                $search_result .= strtr(Search::render_search_item(), [
+                $tr = Search::render_search_item(TRUE);
+                $search_result .= strtr($tr, [
                         '{%item_url%}'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
                         '{%item_image%}'       => '',
                         '{%item_title%}'       => $data['weblink_name'].' '.$new,
-                        '{%item_description%}' => $desc,
+                        '{%item_description%}' => strip_tags($desc),
                     ]
                 );
             }

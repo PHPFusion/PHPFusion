@@ -65,12 +65,10 @@ if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/articles/articles.svg', admin_link='../infusions/articles/articles_admin.php' WHERE admin_rights='A'";
 
 // Update the existing one, then add the remaining one.
-$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url='infusions/articles/articles.php' WHERE link_url='articles.php'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='articles.php'";
 
 // Multilanguage Sitelinks
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
-$site_language = fusion_get_settings('locale');
-unset($enabled_languages[$site_language]);
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale("", LOCALE.$language."/setup.php");

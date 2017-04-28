@@ -107,16 +107,15 @@ class ImageRepo {
             'news' => db_exists('news')
         );
 
-        $selects = array(
-            "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN
-        );
-
-        if ($installedTables['blog']) {
-            $selects[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
-        }
-
-        if ($installedTables['news']) {
-            $selects[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? " where news_cat_language='".LANGUAGE."'" : "");
+        $selects = "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN;
+        $result = dbquery($selects);
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                $image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.png");
+                if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
+                    self::$imagePaths[$data['prefix'].$data['name']] = $image;
+                }
+            }
         }
 
         //smiley
@@ -127,25 +126,32 @@ class ImageRepo {
             }
         }
 
-        $union = implode(' union ', $selects);
-        $result = dbquery($union);
-        while ($data = dbarray($result)) {
-            $image = "";
-            switch ($data['prefix']) {
-                case 'ac_':
-                    $image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.png");
-                    break;
-                case 'nc_':
-                default :
-                    $image = file_exists(INFUSIONS.'news/news_cats/'.$data['image']) ? INFUSIONS.'news/news_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
-                    break;
-                case 'bl_':
-                    $image = file_exists(INFUSIONS.'blog/blog_cats/'.$data['image']) ? INFUSIONS.'blog/blog_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
-                    break;
-            }
-            // Set image
-            if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
-                self::$imagePaths[$data['prefix'].$data['name']] = $image;
+        $selects_ = [];
+        if ($installedTables['blog']) {
+            $selects_[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
+        }
+
+        if ($installedTables['news'] && column_exists(DB_NEWS_CATS, 'news_cat_language', FALSE)) {
+            $selects_[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? " where news_cat_language='".LANGUAGE."'" : "");
+        }
+
+        if (!empty($selects_)) {
+            $union = implode(' union ', $selects_);
+            $result = dbquery($union);
+            while ($data = dbarray($result)) {
+                switch ($data['prefix']) {
+                    case 'nc_':
+                    default :
+                        $image = file_exists(INFUSIONS.'news/news_cats/'.$data['image']) ? INFUSIONS.'news/news_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
+                        break;
+                    case 'bl_':
+                        $image = file_exists(INFUSIONS.'blog/blog_cats/'.$data['image']) ? INFUSIONS.'blog/blog_cats/'.$data['image'] : IMAGES."imagenotfound.jpg";
+                        break;
+                }
+                // Set image
+                if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
+                    self::$imagePaths[$data['prefix'].$data['name']] = $image;
+                }
             }
         }
     }

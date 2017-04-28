@@ -130,6 +130,7 @@ class Infusion_Core {
                                             $error = self::$instance->$method($upgrades);
                                         }
                                         if ($error) {
+                                            \defender::stop();
                                             addNotice('danger', self::$locale['403']);
 
                                             return $error;
@@ -169,7 +170,6 @@ class Infusion_Core {
             }
         }
 
-        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         redirect(FUSION_REQUEST);
     }
 
@@ -276,19 +276,19 @@ class Infusion_Core {
         $inf_folder = "";
         $inf_image = "";
         $inf_newtable = array();
-        $inf_insertdbrow = array();
-        $inf_updatedbrow = array();
-        $inf_droptable = array();
         $inf_altertable = array();
-        $inf_deldbrow = array();
+        $inf_newcol = array();
+        $inf_updatedbrow = array();
         $inf_sitelink = array();
         $inf_adminpanel = array();
         $inf_mlt = array();
         $mlt_insertdbrow = array();
-        $mlt_deldbrow = array();
-        $inf_delfiles = array();
-        $inf_newcol = array();
+        $inf_insertdbrow = array();
         $inf_dropcol = array();
+        $inf_droptable = array();
+        $inf_delfiles = array();
+        $inf_deldbrow = array();
+        $mlt_deldbrow = array();
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
@@ -314,19 +314,19 @@ class Infusion_Core {
                 'image'           => $inf_image ? $inf_image : 'infusion_panel.png',
                 'folder'          => $inf_folder,
                 'newtable'        => $inf_newtable,
-                'newcol'          => $inf_newcol,
-                'dropcol'         => $inf_dropcol,
-                'insertdbrow'     => $inf_insertdbrow,
-                'droptable'       => $inf_droptable,
                 'altertable'      => $inf_altertable,
-                'deldbrow'        => $inf_deldbrow,
+                'newcol'          => $inf_newcol,
                 'sitelink'        => $inf_sitelink,
                 'adminpanel'      => $inf_adminpanel,
                 'mlt'             => $inf_mlt,
+                'insertdbrow'     => $inf_insertdbrow,
+                'updatedbrow'     => $inf_updatedbrow,
                 'mlt_insertdbrow' => $mlt_insertdbrow,
+                'deldbrow'        => $inf_deldbrow,
                 'mlt_deldbrow'    => $mlt_deldbrow,
                 'delfiles'        => $inf_delfiles,
-                'updatedbrow'     => $inf_updatedbrow
+                'dropcol'         => $inf_dropcol,
+                'droptable'       => $inf_droptable,
             );
 
             $folder = str_replace(INFUSIONS, '', $folder);
@@ -437,24 +437,38 @@ class Infusion_Core {
                 }
             }
         }
-
         if ($inf['droptable'] && is_array($inf['droptable'])) {
             foreach ($inf['droptable'] as $droptable) {
                 dbquery("DROP TABLE IF EXISTS ".$droptable);
             }
         }
-
         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
             ':folder' => $infData['inf_folder']
         ));
         addNotice("success", sprintf(self::$locale['424'], $inf['title']));
-
-        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         redirect(FUSION_REQUEST);
     }
 
-    // Method: Multilanguage multiple insert rows
+    // Method: drop column
+    protected function dropcol_infuse($inf) {
+        $error = FALSE;
+        if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
+            foreach ($inf['dropcol'] as $dropCol) {
+                if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
+                    $columns = fieldgenerator($dropCol['table']);
+                    if (in_array($dropCol['column'], $columns)) {
+                        if (!dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column'])) {
+                            $error = TRUE;
+                        }
+                    }
+                }
+            }
+        }
 
+        return $error;
+    }
+
+    // Method: Multilanguage multiple insert rows
     protected function sitelink_infuse($inf) {
         $error = FALSE;
         if ($inf['sitelink'] && is_array($inf['sitelink'])) {

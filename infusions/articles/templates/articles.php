@@ -187,7 +187,7 @@ if (!function_exists("render_article")) {
                                 <?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>
                             </a>
                         <?php } ?>
-                        <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
+                        <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
                         <?php if (!empty($info['admin_actions'])) { ?>
                             <a href="<?php echo $info['admin_actions']['edit']['link']; ?>" title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i> <?php echo $locale['edit']; ?></a>
                         <?php } ?>
@@ -233,7 +233,7 @@ if (!function_exists("render_article")) {
                         </a>
                     <?php } ?>
 
-                    <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>"><i class="fa fa-fw fa-print m-l-10"></i></a>
+                    <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i></a>
 
                     <?php if (!empty($info['admin_actions'])) { ?>
                         <a href="<?php echo $info['admin_actions']['edit']['link']; ?>" title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i></a>
@@ -287,7 +287,7 @@ if (!function_exists("render_article_item")) {
                     <i class="fa fa-fw fa-bar-chart m-l-10"></i> <?php echo format_word($data['article_count_votes'], $locale['fmt_rating']); ?>
                 <?php } ?>
 
-                <i class="fa fa-fw fa-print m-l-10"></i> <a href="<?php echo $data['print_link']; ?>" title="<?php echo $locale['print']; ?>"><?php echo $locale['print']; ?></a>
+                <i class="fa fa-fw fa-print m-l-10"></i> <a href="<?php echo $data['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><?php echo $locale['print']; ?></a>
 
                 <?php if (!empty($data['admin_actions'])) { ?>
                     <hr>

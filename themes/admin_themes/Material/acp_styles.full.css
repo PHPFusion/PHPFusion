@@ -1183,6 +1183,9 @@ select,
 .select2-container-multi .select2-choices .select2-search-field input {
   padding: 3px  !important;
 }
+.select2-results .select2-highlighted table {
+  color: #616161;
+}
 .btn-group {
   margin-bottom: 5px;
 }

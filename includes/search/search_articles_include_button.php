@@ -22,9 +22,8 @@ if (!defined("IN_FUSION")) {
 }
 
 if (db_exists(DB_ARTICLES)) {
-
-    $search = Search_Engine::getInstance(); // if i do this, the whole thing resets
-
+    $form_elements = &$form_elements;
+    $radio_button = &$radio_button;
     $form_elements += array(
         'articles' => array(
             'enabled' => array(
@@ -38,7 +37,7 @@ if (db_exists(DB_ARTICLES)) {
     );
 
     $radio_button += array(
-        'articles' => form_checkbox('stype', fusion_get_locale('a400', LOCALE.LOCALESET."search/articles.php"), $search::get_param('stype'),
+        'articles' => form_checkbox('stype', fusion_get_locale('a400', LOCALE.LOCALESET."search/articles.php"), Search_Engine::get_param('stype'),
                                     array(
                                         'type' => 'radio',
                                         'value' => 'articles',
