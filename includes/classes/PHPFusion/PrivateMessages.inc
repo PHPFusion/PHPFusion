@@ -662,8 +662,11 @@ class PrivateMessages {
                                 $send_email = $pmStatus['user_pm_email_notify'];
 
                                 if ($send_email == "2") {
-                                    $message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
-                                    $message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+									$message_content = str_replace(
+									['[SUBJECT]','[USER]','[LINK]','[/LINK]','[SITENAME]',],
+									[$subject,$userdata['user_name'],"<a href='".fusion_get_settings('siteurl')."messages.php'>","</a>",fusion_get_settings('sitename')],
+									$locale['626']);
+
                                     $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
                                     if (dbrows($template_result)) {
                                         $template_data = dbarray($template_result);
