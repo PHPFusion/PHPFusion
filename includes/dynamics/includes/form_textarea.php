@@ -79,6 +79,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
 
+        $options['tinymce_spellcheck'] = $options['tinymce_spellcheck'] == TRUE ? 'true' : 'false';
+
         $tinymce_list = array();
         if (!empty($options['path'])) {
             $image_list = [];
@@ -144,7 +146,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
+                browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 width: '100%',
@@ -190,7 +193,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
+                browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                entity_encoding: 'raw',
                 menubar: false,
                 statusbar: false,
                 content_css: '".$options['tinymce_css']."',
@@ -235,7 +239,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 content_css: '".$options['tinymce_css']."',
                 theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
+                browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 setup: function(ed) {
