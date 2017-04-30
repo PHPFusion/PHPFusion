@@ -87,7 +87,7 @@ if (db_exists(DB_PHOTOS)) {
             $search_result = '';
             while ($data = dbarray($result)) {
                 $search_result = "";
-                if ($data['photo_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
+                if ($data['photo_datestamp'] + 604800 > time() + ((float)$settings['timeoffset'] * 3600)) {
                     $new = " <span class='small'>".$locale['p403']."</span>";
                 } else {
                     $new = "";
@@ -98,16 +98,13 @@ if (db_exists(DB_PHOTOS)) {
                 $subj_c = Search_Engine::search_stringscount($data['photo_title']) + Search_Engine::search_stringscount($data['album_title']);
                 $text_c = Search_Engine::search_stringscount($data['photo_description']) + Search_Engine::search_stringscount($data['album_description']);
 
-                $search_result .= "<table width='100%'>";
-                $search_result .= "<tr><td width='".$settings['thumb_w']."'>";
-                $photodir = PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : "");
-                $image_link = INFUSIONS.'gallery/photogallery.php?photo_id='.$data['photo_id'];
+                $image_link = INFUSIONS.'gallery/gallery.php?photo_id='.$data['photo_id'];
 
-                if ($data['photo_thumb1'] != "" && file_exists($photodir.$data['photo_thumb1'])) {
-                    $image = "<img src='".$photodir.$data['photo_thumb1']."' style='border:none' alt='".$data['photo_title']."' />";
+                if ($data['photo_thumb1'] != "" && file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
+                    $image = "<img src='".IMAGES_G_T.$data['photo_thumb1']."' style='border:none' alt='".$data['photo_title']."' />";
                 } else {
-                    if ($data['photo_thumb2'] != "" && file_exists($photodir.$data['photo_thumb2'])) {
-                        $image = "<img src='".$photodir.$data['photo_thumb2']."' style='border:none' alt='".$data['photo_title']."' />";
+                    if ($data['photo_thumb2'] != "" && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
+                        $image = "<img src='".IMAGES_G_T.$data['photo_thumb2']."' style='border:none' alt='".$data['photo_title']."' />";
                     } else {
                         $image = "<img src='".get_image("imagenotfound")."' style='border:none' alt='".$data['photo_title']."' />";
                     }
@@ -120,19 +117,21 @@ if (db_exists(DB_PHOTOS)) {
                 $desc .= "<span class='small'><font class='alt'>".$locale['p405']."</font> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_image(), [
-                        '{%item_url%}'         => $image_link."&sref=search",
-                        '{%item_target%}'      => '',
-                        '{%item_image%}'       => $image,
-                        '{%item_title%}'       => $data['photo_title']."</a>".$new." (".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],
-                        '{%item_description%}' => $desc
+                        '{%item_url%}'             => $image_link."&sref=search",
+                        '{%item_target%}'          => '',
+                        '{%item_image%}'           => $image,
+                        '{%item_title%}'           => $data['photo_title']."</a>".$new." ".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],
+                        '{%item_description%}'     => $desc,
+                        '{%item_search_criteria%}' => '',
+                        '{%item_search_context%}'  => ''
                     ]
                 );
 
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_PG')."' alt='".$locale['p400']."' style='width:32px;'/>",
+            $formatted_result = strtr(Search::render_search_item_wrapper(), [
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_PH')."' alt='".$locale['p400']."' style='width:32px;'/>",
                 '{%icon_class%}'     => "fa fa-retro-camera fa-lg fa-fw",
                 '{%search_title%}'   => $locale['p400'],
                 '{%search_result%}'  => $item_count,
