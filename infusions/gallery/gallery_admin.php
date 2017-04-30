@@ -51,7 +51,7 @@ if (!empty($_GET['section'])){
 }
 
 add_to_head("
-<style>           
+<style>
 .panel-default > .panel-image-wrapper {
     height: 150px;
     max-height: 150px;
@@ -61,16 +61,16 @@ add_to_head("
 .panel-default .album_title {
     width: 100%;
     margin-bottom: 5px;
-    padding-bottom: 5px;                
+    padding-bottom: 5px;
     height: 50px;
     overflow:hidden;
     text-overflow: ellipsis;
     content: \"\";
-    position:relative;    
+    position:relative;
 }
 .panel-default .album_title,
 .panel-default .album_link {
-    text-decoration: none;   
+    text-decoration: none;
 }
 .panel-default .album_title:hover, .panel-default .album_title:focus {
     color: #333;
@@ -151,6 +151,22 @@ require_once THEMES."templates/footer.php";
 /**
  * Gallery Photo Listing UI
  */
+function rating_vote($id, $type) {
+            $count_db = dbarray(dbquery("SELECT
+				IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
+				FROM ".DB_RATINGS."
+				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+             "));
+return $count_db['total_votes'];
+}
+function rating_count($id, $type) {
+            $count_db = dbarray(dbquery("SELECT
+				COUNT(rating_id) AS rating_count
+				FROM ".DB_RATINGS."
+				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+             "));
+return $count_db['rating_count'];
+}
 function gallery_photo_listing() {
 
     $locale = fusion_get_locale();
@@ -165,14 +181,11 @@ function gallery_photo_listing() {
 		select photos.*,
 		album.*,
 		photos.photo_user as user_id, u.user_name, u.user_status, u.user_avatar,
-		count(comment_id) as comment_count,
-		sum(rating_vote) as total_votes,
-		count(rating_id) as rating_count
+		count(comment_id) as comment_count
 		FROM ".DB_PHOTOS." photos
 		INNER JOIN ".DB_PHOTO_ALBUMS." album on photos.album_id = album.album_id
 		INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
-		LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = 'PH'
-		LEFT JOIN ".DB_RATINGS." rating on rating.rating_item_id = photos.photo_id AND rating_type = 'PH'
+		LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = 'P'
 		WHERE ".groupaccess('album.album_access')." and photos.album_id = '".intval($_GET['album_id'])."'
 		GROUP BY photo_id
 		ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
@@ -203,7 +216,8 @@ function gallery_photo_listing() {
             echo "<a class='m-t-10 btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=purge&amp;cat_id=".$_GET['album_id']."'>".$locale['photo_0025']."</a>\n";
             echo "<div class='row m-t-20'>\n";
             $i = 1;
-            while ($data = dbarray($result)) {
+            while ($data = dbarray($result)) {            	$rcount = rating_count($data['photo_id'], 'P');
+            	$vcount = rating_vote($data['photo_id'], 'P');
                 echo "<div class='col-xs-12' style='float:left; width:20%; padding:0 15px;'>\n";
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
@@ -226,7 +240,7 @@ function gallery_photo_listing() {
                 echo "</div>\n";
                 echo "<div class='display-block'>\n";
                 echo "<span class='m-r-10'>\n<i class='fa fa-comments-o' title='".$locale['comments']."'></i> ".$data['comment_count']."</span>\n";
-                echo "<span class='m-r-5'>\n<i class='fa fa-star' title='".$locale['ratings']."'></i> ".($data['rating_count'] > 0 ? $data['total_votes'] / $data['rating_count'] * 10 : 0)." /10</span>\n";
+                echo "<span class='m-r-5'>\n<i class='fa fa-star' title='".$locale['ratings']."'></i> ".($rcount > 0 ? $rcount / $vcount * 10 : 0)." /10</span>\n";
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "</div>\n";
@@ -261,7 +275,7 @@ function gallery_album_listing() {
         // get albums.
         $gallery_sql = "SELECT album.album_id, album.album_title, album.album_image, album.album_thumb2, album.album_thumb1, album.album_order, album.album_user as user_id,
 		u.user_name, u.user_status, u.user_avatar,
-		count(photo.photo_id) as photo_count
+		COUNT(photo.photo_id) AS photo_count
 		FROM ".DB_PHOTO_ALBUMS." album
 		LEFT JOIN ".DB_PHOTOS." photo on photo.album_id=album.album_id
 		INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
