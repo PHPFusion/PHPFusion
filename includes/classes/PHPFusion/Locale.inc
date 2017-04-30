@@ -97,6 +97,11 @@ class Locale {
                 $words_array = explode("|", $words);
                 $result = $words_array[$form];
                 break;
+            case 'German':
+                $form = $count == 1 ? 0 : 1;
+                $words_array = explode("|", $words);
+                $result = $words_array[$form];
+                break;
             case 'Russian':
                 $fcount = $count % 100;
                 $a = $fcount % 10;
