@@ -66,6 +66,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'wordcount'           => FALSE,
         'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
         'tinymce_theme'       => 'modern',
+        'tinymce_spellcheck'  => TRUE,
     );
 
     $options += $default_options;
