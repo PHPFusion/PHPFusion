@@ -281,7 +281,7 @@ class UserGroups {
                 break;
         }
 
-        opentable(self::$locale['GRP_400']);
+        opentable(self::$locale['GRP_420']);
         echo opentab($master_tab_title, $_GET['section'], "usergroup", TRUE, FALSE, 'section', ['action']).$view.closetab();
         closetable();
     }
