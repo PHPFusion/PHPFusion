@@ -26,7 +26,7 @@ class fileWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\Wi
         if (file_exists($url)) {
             include $url;
         } else {
-            echo "<div class='alert alert-warning'>".fusion_get_locale('0105', WIDGETS.'file/locale/'.LANGUAGE.'.php')."</div>\n";
+            echo "<div class='alert alert-warning'>".fusion_get_locale('f0105', WIDGETS.'file/locale/'.LANGUAGE.'.php')."</div>\n";
         }
 
         return ob_get_clean();
