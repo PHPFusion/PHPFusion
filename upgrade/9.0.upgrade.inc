@@ -321,7 +321,7 @@ if (db_exists(DB_PREFIX.'users')) {
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
             if ($data['user_level']) { // will omit 0
-                $result = dbquery("UPDATE ".DB_USERS." SET user_level='-".$data['user_level']."' WHERE user_id='".$data['user_id']."'");
+                dbquery("UPDATE ".DB_USERS." SET user_level='-".$data['user_level']."' WHERE user_id='".$data['user_id']."'");
             }
         }
     }
