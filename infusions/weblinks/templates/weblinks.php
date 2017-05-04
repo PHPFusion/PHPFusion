@@ -86,7 +86,7 @@ if (!function_exists("render_weblinks_item")) {
             }
             echo "</div>";
         } else {
-            echo "<div class='well text-center m-t-15'>".$locale['web_0061']."</div>";
+            echo "<div class='well text-center m-t-15'>".$locale['web_0062']."</div>";
         }
         closetable();
     }
