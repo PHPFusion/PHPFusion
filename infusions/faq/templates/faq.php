@@ -60,6 +60,7 @@ if (!function_exists("render_faq_item")) {
                 $faq_print = "<a target='_blank' href='".BASEDIR."print.php?type=FQ&amp;item_id=".$faq_data['faq_id']."' title=".$locale['print'].">".$locale['print']."</a>\n";
                 if (iADMIN && checkrights("FQ")) {
                     $faq_admin = "&middot; <a href='".INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=edit&amp;cat_id=".$faq_data['faq_cat_id']."&amp;faq_id=".$faq_data['faq_id']."' title='".$locale['edit']."'>".$locale['edit']."</a>";
+                    $faq_admin .= " &middot; <a href='".INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$faq_data['faq_id']."' title='".$locale['delete']."'>".$locale['delete']."</a>";
                 }
 
                 echo "<a data-toggle='collapse' href='#".$faq_id."' aria-expanded='false' aria-controls='".$faq_id."'>";

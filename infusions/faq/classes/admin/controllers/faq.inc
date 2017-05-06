@@ -605,7 +605,7 @@ class FaqAdmin extends FaqAdminModel {
             while ($cdata = dbarray($result)) {
 
                 $edit_link = clean_request("section=faq&ref=faq_form&action=edit&faq_id=".$cdata['faq_id'], $_trash, FALSE);
-                $delete_link = clean_request("section=faq&ref=faq_form&action=delete&faq_id=".$cdata['faq_id'], $_trash, FALSE);
+                $delete_link = clean_request("section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
                         <td>".form_checkbox("faq_id[]", "", "", array("value" => $cdata['faq_id'], "class" => "m-0"))."</td>
@@ -682,7 +682,7 @@ class FaqAdmin extends FaqAdminModel {
             $faq_id = intval($_GET['faq_id']);
             if (dbcount("(faq_id)", DB_FAQS, "faq_id='$faq_id'") && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$faq_id."'")) {
                 dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id='".intval($faq_id)."'");
-                addNotice("warning", $this->locale['faq_0032']);
+                addNotice("success", $this->locale['faq_0032']);
             } else {
                 addNotice("warning", $this->locale['faq_0035']);
                 addNotice("warning", $this->locale['faq_0036']);
