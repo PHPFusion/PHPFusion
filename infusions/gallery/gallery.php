@@ -257,7 +257,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 "name" => $locale['delete']
                             );
                         }
-                        if ($data['photo_allow_comments']) {                        	$count_v = sum_db($data['photo_id'], 'P');
+                        if ($data['photo_allow_comments']) {
+                        	$count_v = sum_db($data['photo_id'], 'P');
                         	$count_c = count_db($data['photo_id'], 'P');
                             $data += array(
                                 "photo_votes"    => $count_v > 0 ? $count_v : '0',
@@ -323,7 +324,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                         "name" => $locale['edit']
                     );
                     $data['album_delete'] = array(
-                        "link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=album_form&amp;action=delete&amp;cat_id=".$data['album_id'],
+                        "link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id'],
                         "name" => $locale['delete']
                     );
                 }

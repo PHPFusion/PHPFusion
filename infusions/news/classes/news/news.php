@@ -328,7 +328,7 @@ abstract class News extends NewsServer {
                         'title' => self::$locale['edit']
                     ),
                     "delete" => array(
-                        'link'  => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=news_form&amp;news_id=".$data['news_id'],
+                        'link'  => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'],
                         'title' => self::$locale['delete']
                     )
                 );
