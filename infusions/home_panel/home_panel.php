@@ -26,24 +26,25 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
 $configs = array();
 $configs[DB_NEWS] = array(
     'select'              => "SELECT
-	ns.news_id as id, ns.news_subject as title, ns.news_news as content,
-	ns.news_datestamp as datestamp, us.user_id, us.user_name,
-	us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
-	ni.news_image as image,
-	nc.news_cat_image as cat_image,
-	count(c1.comment_id) as comment_count,
-	count(r1.rating_id) as rating_count
-	FROM ".DB_NEWS." as ns
-	LEFT JOIN ".DB_NEWS_IMAGES." as ni ON ni.news_id=ns.news_id
-	LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
-	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = ns.news_id and c1.comment_type = 'NS')
-	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS')
-	INNER JOIN ".DB_USERS." as us ON ns.news_name = us.user_id
-	WHERE (".time()." > ns.news_start OR ns.news_start = 0)
-	AND (".time()." < ns.news_end OR ns.news_end = 0)
-	AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
-	group by ns.news_id
-	ORDER BY ns.news_datestamp DESC LIMIT 3",
+    ns.news_id as id, ns.news_subject as title, ns.news_news as content,
+    ns.news_datestamp as datestamp, us.user_id, us.user_name,
+    us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
+    ni.news_image as image,
+    nc.news_cat_image as cat_image,
+    count(c1.comment_id) as comment_count,
+    count(r1.rating_id) as rating_count
+    FROM ".DB_NEWS." as ns
+    LEFT JOIN ".DB_NEWS_IMAGES." as ni ON ni.news_id=ns.news_id
+    LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
+    LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = ns.news_id and c1.comment_type = 'NS')
+    LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS')
+    INNER JOIN ".DB_USERS." as us ON ns.news_name = us.user_id
+    WHERE (".time()." > ns.news_start OR ns.news_start = 0)
+    AND ns.news_draft = 0
+    AND (".time()." < ns.news_end OR ns.news_end = 0)
+    AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
+    group by ns.news_id
+    ORDER BY ns.news_datestamp DESC LIMIT 3",
     'locale'              => array(
         'norecord'   => $locale['home_0050'],
         'blockTitle' => $locale['home_0000'],
@@ -54,14 +55,15 @@ $configs[DB_NEWS] = array(
 );
 $configs[DB_ARTICLES] = array(
     'select'              => "SELECT
-	ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
-	ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
-	us.user_id, us.user_name, us.user_status
-	FROM ".DB_ARTICLES." as ar
-	INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
-	INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
-	WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
-	ORDER BY ar.article_datestamp DESC LIMIT 3",
+    ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
+    ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
+    us.user_id, us.user_name, us.user_status
+    FROM ".DB_ARTICLES." as ar
+    INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
+    INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
+    WHERE ar.article_draft = 0
+    AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
+    ORDER BY ar.article_datestamp DESC LIMIT 3",
     'locale'              => array(
         'norecord'   => $locale['home_0051'],
         'blockTitle' => $locale['home_0001'],
@@ -72,23 +74,24 @@ $configs[DB_ARTICLES] = array(
 );
 $configs[DB_BLOG] = array(
     'select'              => "SELECT
-	bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
-	bl.blog_datestamp as datestamp, us.user_id, us.user_name,
-	us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
-	bl.blog_image as image,
-	bc.blog_cat_image as cat_image,
-	count(c1.comment_id) as comment_count,
-	count(r1.rating_id) as rating_count
-	FROM ".DB_BLOG." as bl
-	LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat
-	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = bl.blog_id and c1.comment_type = 'BL')
-	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = bl.blog_id AND r1.rating_type = 'BL')
-	INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id
-	WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
-	AND (".time()." < bl.blog_end OR bl.blog_end = 0)
-	AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
-	group by bl.blog_id
-	ORDER BY bl.blog_datestamp DESC LIMIT 3",
+    bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
+    bl.blog_datestamp as datestamp, us.user_id, us.user_name,
+    us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
+    bl.blog_image as image,
+    bc.blog_cat_image as cat_image,
+    count(c1.comment_id) as comment_count,
+    count(r1.rating_id) as rating_count
+    FROM ".DB_BLOG." as bl
+    LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat
+    LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = bl.blog_id and c1.comment_type = 'BL')
+    LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = bl.blog_id AND r1.rating_type = 'BL')
+    INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id
+    WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
+    AND bl.blog_draft = 0
+    AND (".time()." < bl.blog_end OR bl.blog_end = 0)
+    AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
+    group by bl.blog_id
+    ORDER BY bl.blog_datestamp DESC LIMIT 3",
     'locale'              => array(
         'norecord'   => $locale['home_0052'],
         'blockTitle' => $locale['home_0002']
@@ -99,20 +102,20 @@ $configs[DB_BLOG] = array(
 );
 $configs[DB_DOWNLOADS] = array(
     'select'              => "SELECT
-	dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
-	dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
-	us.user_id, us.user_name, us.user_status,
-	dl.download_image as image,
-	count(c1.comment_id) as comment_count,
-	count(r1.rating_id) as rating_count
-	FROM ".DB_DOWNLOADS." dl
-	INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
-	INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
-	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = dl.download_id and c1.comment_type = 'D')
-	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = dl.download_id AND r1.rating_type = 'D')
-	WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
-	group by dl.download_id
-	ORDER BY dl.download_datestamp DESC LIMIT 3",
+    dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
+    dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
+    us.user_id, us.user_name, us.user_status,
+    dl.download_image as image,
+    count(c1.comment_id) as comment_count,
+    count(r1.rating_id) as rating_count
+    FROM ".DB_DOWNLOADS." dl
+    INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
+    INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
+    LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = dl.download_id and c1.comment_type = 'D')
+    LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = dl.download_id AND r1.rating_type = 'D')
+    WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
+    group by dl.download_id
+    ORDER BY dl.download_datestamp DESC LIMIT 3",
     'locale'              => array(
         'norecord'   => $locale['home_0053'],
         'blockTitle' => $locale['home_0003']
