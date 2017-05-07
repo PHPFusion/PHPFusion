@@ -37,7 +37,11 @@ class MemberPoll {
     );
 
     public function __construct() {
-        self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php");
+        if (file_exists(INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php")) {
+            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php");
+        } else {
+            self::$locale = fusion_get_locale("", INFUSIONS."member_poll_panel/locale/English.php");
+        }
 
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 

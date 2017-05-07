@@ -43,7 +43,12 @@ class Shoutbox {
 
     public function __construct() {
         require_once INCLUDES."infusions_include.php";
-        self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
+
+        if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
+            self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
+        } else {
+            self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/English.php");
+        }
 
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];

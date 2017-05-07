@@ -95,7 +95,11 @@ class Core {
     public static $locale = array();
 
     private function __construct() {
-        self::$locale = fusion_get_locale('', THEME.'locale/'.LANGUAGE.'.php');
+        if (file_exists(THEME.'locale/'.LANGUAGE.'.php')) {
+            self::$locale = fusion_get_locale('', THEME.'locale/'.LANGUAGE.'.php');
+        } else {
+            self::$locale = fusion_get_locale('', THEME.'locale/English.php');
+        }
 
         if (empty(self::$module_list)) {
             // Get Theme Factory Modules
