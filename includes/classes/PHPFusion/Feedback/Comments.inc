@@ -406,7 +406,7 @@ class Comments {
             $data['comment_ratings'] = '';
             if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
                 $data['comment_ratings'] .= "<p class='ratings'>\n";
-                $remainder = 5 - $data['ratings'];
+                $remainder = 5 - (int)$data['ratings'];
                 for ($i = 1; $i <= $data['ratings']; $i++) {
                     $data['comment_ratings'] .= "<i class='fa fa-star text-warning'></i>\n";
                 }
