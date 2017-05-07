@@ -26,7 +26,9 @@ if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
 }
 
 openside($locale['blog_1004']);
-$result = dbquery("SELECT blog_id,blog_subject,blog_datestamp FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." ORDER BY blog_datestamp DESC");
+$result = dbquery("
+    SELECT blog_id,blog_subject,blog_datestamp FROM ".DB_BLOG." 
+    ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."  AND blog_draft = 0 ORDER BY blog_datestamp DESC");
 if (dbrows($result)) {
     echo "<ul class='blog_archive_inner'>\n";
     $data = array();
