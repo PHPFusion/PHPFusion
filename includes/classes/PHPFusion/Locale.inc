@@ -88,42 +88,20 @@ class Locale {
         // Format the result
         switch ($options['language']) {
             case 'English':
-                $form = $count == 1 ? 0 : 1;
-                $words_array = explode("|", $words);
-                $result = $words_array[$form];
-                break;
             case 'Danish':
-                $form = $count == 1 ? 0 : 1;
-                $words_array = explode("|", $words);
-                $result = $words_array[$form];
-                break;
             case 'German':
                 $form = $count == 1 ? 0 : 1;
                 $words_array = explode("|", $words);
                 $result = $words_array[$form];
                 break;
+            case 'Czech':
+            case 'Slovak':
             case 'Russian':
-                $fcount = $count % 100;
-                $a = $fcount % 10;
-                $b = floor($fcount / 10);
-                $form = 2;
-                if ($b != 1) {
-                    if ($a == 1) {
-                        $form = 0;
-                    } elseif ($a >= 2 && $a <= 4) {
-                        $form = 1;
-                    }
-                }
-                $words_array = explode("|", $words);
-                $result = $words_array[$form];
-                break;
             case 'Ukranian':
                 $fcount = $count % 100;
                 $a = $fcount % 10;
                 $b = floor($fcount / 10);
-
                 $form = 2;
-
                 if ($b != 1) {
                     if ($a == 1) {
                         $form = 0;
@@ -134,7 +112,7 @@ class Locale {
                 $words_array = explode("|", $words);
                 $result = $words_array[$form];
                 break;
-            default : // never plural language - i.e. chinese is here
+            default: // never plural language - i.e. chinese is here
                 $words_array = explode("|", $words);
                 $result = $words_array[0];
         }
@@ -166,18 +144,19 @@ class Locale {
             "Czech Republic"  => "Česko",
             "Denmark"         => "Danmark",
             "Finland"         => "Suomi",
-            "Hungary"         => "Magyarország",
+            "Germany"         => "Deutschland",
             "Hong Kong"       => "香港",
-            "The Netherlands" => "Nederland",
+            "Hungary"         => "Magyarország",
+            "Italy"           => "Italia",
             "Norway"          => "Norge",
             "Poland"          => "Polska",
-            "Italy"           => "Italia",
-            "Germany"         => "Deutschland",
+            "Romania"         => "Rom&#226;nia",
             "Russia"          => "Россия",
-            "Taiwan"          => "台湾",
-            "Ukraine"         => "Україна",
-            "Sweden"          => "Sverige",
             "Slovakia"        => "Slovensko",
+            "Sweden"          => "Sverige",
+            "Taiwan"          => "台湾",
+            "The Netherlands" => "Nederland",
+            "Ukraine"         => "Україна",
         );
 
         if (!empty($translated_countries[$country])) {
@@ -199,26 +178,28 @@ class Locale {
      */
     public static function translate_lang_names($key = NULL) {
         $translated_langs = array(
+            "Chinese_Simplified"  => "中文-简体",
             "Chinese_Traditional" => "中文-繁体",
-            "Chinese_Simplified" => "中文-简体",
-            "Czech" => "Čeština",
-            "Danish" => "Dansk",
-            "Dutch" => "Nederlands",
-            "English" => "English",
-            "French" => "Francais",
-            "German" => "Deutsch",
-            "Hungarian" => "Magyar",
-            "Italian" => "Italiano",
-            "Lithuanian" => "Lietuvių",
-            "Malay" => "Melayu",
-            "Persian" => "Persian",
-            "Polish" => "Polski",
-            "Russian" => "Русский",
-            "Spanish" => "Español",
-            "Swedish" => "Svenska",
-            "Turkish" => "Türkçe",
-            "Ukrainian" => "Українська",
-            "Norwegian" => "Norsk"
+            "Czech"               => "Čeština",
+            "Danish"              => "Dansk",
+            "Dutch"               => "Nederlands",
+            "English"             => "English",
+            "French"              => "Francais",
+            "German"              => "Deutsch",
+            "Hungarian"           => "Magyar",
+            "Italian"             => "Italiano",
+            "Lithuanian"          => "Lietuvių",
+            "Malay"               => "Melayu",
+            "Norwegian"           => "Norsk",
+            "Persian"             => "Persian",
+            "Polish"              => "Polski",
+            "Romanian"            => "Rom&#226;n&#259;",
+            "Russian"             => "Русский",
+            "Slovak"              => "Slovenčina",
+            "Spanish"             => "Español",
+            "Swedish"             => "Svenska",
+            "Turkish"             => "Türkçe",
+            "Ukrainian"           => "Українська",
         );
 
         return $key === NULL ? $translated_langs : (isset($translated_langs[$key]) ? $translated_langs[$key] : $key);
