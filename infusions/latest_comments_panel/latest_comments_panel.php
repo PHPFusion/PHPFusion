@@ -57,7 +57,7 @@ if (dbrows($result)) {
 				$news_data = dbarray($results);
 				$comment = trimlink($data['comment_message'], 23);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='N' AND comment_id<=".$data['comment_id']);
-				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".floor($commentStart / $comments_per_page) * $comments_per_page : "";
+				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
 				$output['subject'] = THEME_BULLET." ".trimlink($news_data['news_subject'], 23);
 				$output['comment'] = "<a href='".INFUSIONS."news/news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a>\n";
 				$i++;
@@ -81,7 +81,7 @@ if (dbrows($result)) {
 				$article_data = dbarray($results);
 				$comment = trimlink($data['comment_message'], 23);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='A' AND comment_id<=".$data['comment_id']);
-				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".floor($commentStart / $comments_per_page) * $comments_per_page : "";
+				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
 				$output['subject'] = THEME_BULLET." ".trimlink($article_data['article_subject'], 23);
 				$output['comment'] = "<a href='".INFUSIONS."articles/articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a>\n";
 				$i++;
@@ -105,7 +105,7 @@ if (dbrows($result)) {
 				$photo_data = dbarray($results);
 				$comment = trimlink($data['comment_message'], 23);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='P' AND comment_id<=".$data['comment_id']);
-				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".floor($commentStart / $comments_per_page) * $comments_per_page : "";
+				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
 				$output['subject'] = THEME_BULLET." ".trimlink($photo_data['photo_title'], 23);
 				$output['comment'] = "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a>\n";
 				$i++;
@@ -129,7 +129,7 @@ if (dbrows($result)) {
 				$download_data = dbarray($results);
 				$comment = trimlink($data['comment_message'], 23);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);
-				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".floor($commentStart / $comments_per_page) * $comments_per_page : "";
+				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
 				$output['subject'] = THEME_BULLET." ".trimlink($download_data['download_title'], 23);
 				$output['comment'] = "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a>\n";
 				$i++;
@@ -153,7 +153,7 @@ if (dbrows($result)) {
 				$download_data = dbarray($results);
 				$comment = trimlink($data['comment_message'], 23);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='B' AND comment_id<=".$data['comment_id']);
-				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".floor($commentStart / $comments_per_page) * $comments_per_page : "";
+				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
 				$output['subject'] = THEME_BULLET." ".trimlink($download_data['blog_subject'], 23);
 				$output['comment'] = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a>\n";
 				$i++;
