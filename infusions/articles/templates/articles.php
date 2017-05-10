@@ -95,8 +95,8 @@ if (!function_exists("display_main_articles")) {
                     <?php echo openform("viewform", "post", FUSION_REQUEST, array("max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10")); ?>
                     <div class="btn-group">
                         <?php $active = isset($_COOKIE['fusion_articles_view']) && isnum($_COOKIE['fusion_articles_view']) && $_COOKIE['fusion_articles_view'] == 2 ? 2 : 1; ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i>", "1", array("class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i>", "2", array("class" => "btn-sm btn-default nsv".($active == "2" ? " active" : ""), "alt" => $locale['article_0041'])); ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i> ".$locale['article_0040'], "1", array("class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i> ".$locale['article_0041'], "2", array("class" => "btn-sm btn-default nsv".($active == "2" ? " active" : ""), "alt" => $locale['article_0041'])); ?>
                     </div>
                     <?php echo closeform(); ?>
 
