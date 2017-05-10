@@ -164,11 +164,12 @@ if (dbrows($result)) {
         }
 
     }
-foreach ($infos as $config) {
-    echo "<div class='text-left'>".$config['subject']."</div>\n";
-    echo "<div class='text-left'>".$config['comment']."</div>\n";
-    }
-
+if (!empty($infos){
+	foreach ($infos as $config) {
+    	echo "<div class='text-left'>".$config['subject']."</div>\n";
+	    echo "<div class='text-left'>".$config['comment']."</div>\n";
+    	}
+	}
 } else {
 	echo "<div class='text-center'>".$locale['global_026']."</div>\n";
 }
