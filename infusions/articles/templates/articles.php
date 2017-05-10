@@ -53,7 +53,7 @@ if (!function_exists("display_main_articles")) {
                     <div class="pull-right">
                         <a class="btn btn-sm btn-default" href="<?php echo INFUSIONS."articles/articles.php"; ?>" title="<?php echo $locale['article_0001']; ?>"><i class="fa fa-fw fa-desktop"></i> <?php echo $locale['article_0001']; ?></a>
                         <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#articlescat" aria-expanded="true" aria-controls="articlescat" title="<?php echo $locale['article_0002']; ?>">
-                            <i class="fa fa-fw fa-folder"></i>
+                            <i class="fa fa-fw fa-folder"></i> <?php echo $locale['article_0002']; ?>
                         </button>
                     </div>
                     <div class="overflow-hide">
