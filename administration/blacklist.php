@@ -19,6 +19,8 @@ require_once "../maincore.php";
 pageAccess('B');
 require_once THEMES."templates/admin_header.php";
 
+use \PHPFusion\BreadCrumbs;
+
 class Blaclist {
     private static $instance = NULL;
     private static $locale = array();
@@ -50,7 +52,7 @@ class Blaclist {
                 break;
         }
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'blacklist.php'.fusion_get_aidlink(), "title"=> self::$locale['BLS_000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'blacklist.php'.fusion_get_aidlink(), "title"=> self::$locale['BLS_000']]);
         self::set_adminsdb();
     }
 
@@ -77,7 +79,7 @@ class Blaclist {
             }
 
             $this->data = array(
-                'blacklist_id'        => form_sanitizer($_POST['blacklist_id'], 0, "blacklist_id"),
+                'blacklist_id'        => !empty($_POST['blacklist_id']) ? form_sanitizer($_POST['blacklist_id'], 0, "blacklist_id") : '',
                 'blacklist_user_id'   => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : "",
                 'blacklist_ip'        => form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip'),
                 'blacklist_ip_type'   => $blacklist_ip_type,
@@ -115,7 +117,7 @@ class Blaclist {
     private static function delete_blacklist($id) {
         if (self::verify_blacklist($id)) {
             dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".intval($id)."'");
-            addNotice('warning', self::$locale['BLS_013']);
+            addNotice('success', self::$locale['BLS_013']);
             redirect(clean_request("", array("section=blacklist", "aid"), TRUE));
         }
     }
@@ -159,11 +161,11 @@ class Blaclist {
             echo opentab($master_tab_title, $_GET['section'], "blacklist", TRUE);
             switch ($_GET['section']) {
                case "blacklist_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][1]]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][1]]);
                 $this->blacklistForm();
                 break;
             default:
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][0]]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][0]]);
                 $this->blacklist_listing();
                 break;
             }
@@ -184,7 +186,7 @@ class Blaclist {
         echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
 
         if ($rows > 0) {
-            echo "<div class='row m-t-20'>\n";
+            echo "<div class='m-t-20'>\n";
             echo "<table class='table table-hover table-striped'>\n";
             echo "<tr>\n";
             echo "<td class='col-xs-2'>".self::$locale['BLS_030']."</th>\n";
@@ -225,9 +227,9 @@ class Blaclist {
         echo form_hidden('blacklist_id', '', $this->data['blacklist_id']);
         echo form_hidden('blacklist_datestamp', '', $this->data['blacklist_datestamp']);
 
-        echo form_text('blacklist_ip', str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], self::$locale['BLS_034']), $this->data['blacklist_ip'], array('required' => TRUE, 'inline' => TRUE));
+        echo form_text('blacklist_ip', str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], self::$locale['BLS_034']), $this->data['blacklist_ip'], array('inline' => TRUE));
 
-        echo form_text('blacklist_email', self::$locale['BLS_035'], $this->data['blacklist_email'], array('required' => TRUE, 'inline' => TRUE, 'type' => 'text', 'error_text' => self::$locale['BLS_016']));
+        echo form_text('blacklist_email', self::$locale['BLS_035'], $this->data['blacklist_email'], array('inline' => TRUE, 'type' => 'text', 'error_text' => self::$locale['BLS_016']));
 
         echo form_textarea('blacklist_reason', self::$locale['BLS_036'], $this->data['blacklist_reason'], array('inline' => TRUE, 'autosize' => TRUE));
 
