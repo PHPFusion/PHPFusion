@@ -34,7 +34,11 @@ class Date extends \Defender\Validation {
         if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
             $date = new \DateTime();
             $date_format = $date->createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
-            $timestamp = $date_format->getTimestamp();
+            $timestamp = '';
+            if ($date_format instanceof \DateTime) {
+                $timestamp = $date_format->getTimestamp();
+            }
+
             $dateParams = getdate($timestamp);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
                 switch (self::$inputConfig['type']) {
