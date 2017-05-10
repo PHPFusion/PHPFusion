@@ -420,20 +420,22 @@ class Comments {
 
             $data_api = \defender::encode($options);
 
+            $can_post = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
+
             $comments_html .= "<!---comment-".$data['comment_id']."--->\n";
             ob_start();
             display_comments_list($data);
             $comments_html .= strtr(ob_get_clean(), [
-                    '{%comment_list_id%}'     => 'c'.$data['comment_id'],
-                    '{%user_avatar%}'         => $data['user_avatar'],
-                    '{%user_name%}'           => $data['comment_name'],
-                    '{%comment_date%}'        => $data['comment_datestamp'],
-                    '{%comment_ratings%}'     => $data['comment_ratings'],
-                    '{%comment_subject%}'     => $data['comment_subject'],
-                    '{%comment_message%}'     => $data['comment_message'],
-                    '{%comment_reply_link%}'  => ($this->getParams('comment_allow_reply') ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
-                    '{%comment_edit_link%}'   => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
-                    '{%comment_delete_link%}' => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
+                    '{%comment_list_id%}'      => 'c'.$data['comment_id'],
+                    '{%user_avatar%}'          => $data['user_avatar'],
+                    '{%user_name%}'            => $data['comment_name'],
+                    '{%comment_date%}'         => $data['comment_datestamp'],
+                    '{%comment_ratings%}'      => $data['comment_ratings'],
+                    '{%comment_subject%}'      => $data['comment_subject'],
+                    '{%comment_message%}'      => $data['comment_message'],
+                    '{%comment_reply_link%}'   => ($can_post && $this->getParams('comment_allow_reply') ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
+                    '{%comment_edit_link%}'    => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
+                    '{%comment_delete_link%}'  => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
                     '{%comment_reply_form%}'   => ($data['reply_form'] ?: ''),
                     '{%comment_sub_comments%}' => (isset($c_data[$data['comment_id']]) ? $this->display_all_comments($c_data, $data['comment_id'], $options) : '')
                 ]
