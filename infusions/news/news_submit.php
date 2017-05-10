@@ -87,6 +87,28 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         }
     }
 
+	if (isset($_POST['preview_news'])) {
+            $criteriaArray = array(
+            'news_subject'  => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+            'news_cat'      => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
+            'news_news'     => form_sanitizer($_POST['news_news'], '', 'news_news'),
+            'news_extended' => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
+            'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
+            'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+            'news_image_align' => !empty($_POST['news_image_align']) ? form_sanitizer($_POST['news_image_align'], '', 'news_image_align') : "",
+            );
+            if (\defender::safe() && isset($_POST['preview_news'])) {
+                $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['news_subject']);
+                $footer .= nl2br(parse_textarea($criteriaArray['news_news']));
+                if ($criteriaArray['news_extended']) {
+                    $footer .= "<hr class='m-t-20 m-b-20'>\n";
+                    $footer .= nl2br(parse_textarea($criteriaArray['news_extended']));
+                }
+                $footer .= closemodal();
+                add_to_footer($footer);
+            }
+        }
+
     if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
 
         add_to_title($locale['global_200'].$locale['news_0400']);
