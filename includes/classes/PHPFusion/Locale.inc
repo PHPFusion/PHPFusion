@@ -90,6 +90,7 @@ class Locale {
             case 'English':
             case 'Danish':
             case 'German':
+            case 'Romanian':
                 $form = $count == 1 ? 0 : 1;
                 $words_array = explode("|", $words);
                 $result = $words_array[$form];
@@ -102,6 +103,7 @@ class Locale {
                 $a = $fcount % 10;
                 $b = floor($fcount / 10);
                 $form = 2;
+
                 if ($b != 1) {
                     if ($a == 1) {
                         $form = 0;
@@ -109,6 +111,7 @@ class Locale {
                         $form = 1;
                     }
                 }
+
                 $words_array = explode("|", $words);
                 $result = $words_array[$form];
                 break;
@@ -358,6 +361,7 @@ class Locale {
             'zh' => 'Chinese',
             'zu' => 'Zulu',
         );
+
         $iso_codes = array_flip($language_codes);
         if ($iso_to_lang) {
             return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translate_lang_names($language_codes[$key]) : NULL);
