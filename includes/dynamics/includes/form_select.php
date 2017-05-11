@@ -117,35 +117,60 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         // normal mode
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
+        /**
+         * Have an array that looks like this in 'options' key
+         * array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
+         */
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
-                $chain = '';
                 $select = '';
-                if ($options['keyflip']) { // flip mode = store array values
-                    $chain = $options['chainable'] ? "class='$v'" : '';
-                    if ($input_value !== '') {
-                        $select = ($input_value == $v) ? " selected" : "";
+                if (is_array($v) && isset($v['text'])) {
+                    $html .= "<optgroup label='".$v['text']."'>\n";
+                    if (isset($v['children'])) {
+                        foreach ($v['children'] as $key => $v2) {
+                            if ($options['keyflip']) { // flip mode = store array values
+                                $chain = $options['chainable'] ? "class='$v2'" : '';
+                                if ($input_value !== '') {
+                                    $select = ($input_value == $v2) ? " selected" : "";
+                                }
+                                $html .= "<option value='$v2'".$chain.$select.">".$key."</option>\n";
+                            } else { // normal mode = store array keys
+                                $chain = ($options['chainable']) ? "class='$key'" : '';
+                                $select = '';
+                                if ($input_value !== '') {
+                                    $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                                    $select = (isset($input_value) && $input_value == $key) ? ' selected' : '';
+                                }
+                                $html .= "<option value='$key'".$chain.$select.">$v2</option>\n";
+                            }
+                            unset($key);
+                        }
                     }
-                    $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
-                } else { // normal mode = store array keys
-                    $chain = ($options['chainable']) ? "class='$arr'" : '';
-                    $select = '';
-                    if ($input_value !== '') {
-                        $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                        $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                    $html .= "</optgroup>\n";
+                } else {
+                    if ($options['keyflip']) { // flip mode = store array values
+                        $chain = $options['chainable'] ? "class='$v'" : '';
+                        if ($input_value !== '') {
+                            $select = ($input_value == $v) ? " selected" : "";
+                        }
+                        $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
+                    } else { // normal mode = store array keys
+                        $chain = ($options['chainable']) ? "class='$arr'" : '';
+                        $select = '';
+                        if ($input_value !== '') {
+                            $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                            $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                        }
+                        $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
                     }
-                    $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
+                    unset($arr);
                 }
-                unset($arr);
-            } // end foreach
+            }
         }
         $html .= "</select>\n";
     }
-
     $html .= $options['stacked'];
-
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-
     $html .= $defender->inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
