@@ -179,10 +179,9 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if (isset($_GET['lang'])) {
+if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
     $current_user_language = stripinput($_GET['lang']);
     set_language($current_user_language);
-    //redirect(clean_request('', ['lang'], FALSE));
 } else {
     if (count($enabled_languages) > 1) {
         require __DIR__.'/includes/core_mlang_hub_include.php';
