@@ -36,7 +36,7 @@ function opentable($title, $class = FALSE) {
     <!--- opentable-->
     <div class="panel default <?php echo $class ?>" style="border: none; box-shadow:none;">
     <div class="panel-body p-t-20 p-l-0 p-r-0">
-    <h3><?php echo $title ?></h3>
+    <h3 class="title"><?php echo $title ?></h3>
     <?php
 }
 

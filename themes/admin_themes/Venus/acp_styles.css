@@ -382,7 +382,7 @@ section.login-bg {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddfe1', endColorstr='#d4d6d9', GradientType=0);
 }
 
-h3 {
+.panel .title {
     font-size: 24px;
     font-weight: 600 !important;
     color: #444;
