@@ -185,14 +185,16 @@ echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 echo form_datepicker('blog_start', $locale['blog_0427'], $data['blog_start'],
     array(
         "placeholder" => $locale['blog_0429'],
-        "join_to_id"  => "blog_end"
+        "join_to_id"  => "blog_end",
+        "width"       => "250px"
     )
 );
 echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
 echo form_datepicker('blog_end', $locale['blog_0428'], $data['blog_end'],
     array(
         "placeholder"  => $locale['blog_0429'],
-        "join_from_id" => "blog_start"
+        "join_from_id" => "blog_start",
+        "width"        => "250px"
     )
 );
 echo "</div>\n";

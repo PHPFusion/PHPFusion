@@ -219,9 +219,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ));
             echo "<div class='row m-0'>\n";
             echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-            echo form_datepicker('blog_start', $locale['blog_0427'], $callback_data['blog_start'], array('placeholder' => $locale['blog_0429']));
+            echo form_datepicker('blog_start', $locale['blog_0427'], $callback_data['blog_start'], array('placeholder' => $locale['blog_0429'], 'width' => '250px'));
             echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-            echo form_datepicker('blog_end', $locale['blog_0428'], $callback_data['blog_end'], array('placeholder' => $locale['blog_0429']));
+            echo form_datepicker('blog_end', $locale['blog_0428'], $callback_data['blog_end'], array('placeholder' => $locale['blog_0429'], 'width' => '250px'));
             echo "</div>\n</div>\n";
             openside('');
             if ($callback_data['blog_image'] != "" && $callback_data['blog_image_t1'] != "") {
@@ -272,18 +272,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_select('blog_ialign', $locale['blog_0442'], $callback_data['blog_ialign'], array("options" => $alignOptions));
             }
             closeside();
-            $snippetSettings = array(
-                "required" => TRUE,
-                "preview" => TRUE,
-                "html" => TRUE,
-                "autosize" => TRUE,
-                "placeholder" => $locale['blog_0425a'],
-                "form_name" => "inputform"
-            );
-            if (fusion_get_settings("tinymce_enabled")) {
-                $snippetSettings = array("required" => TRUE);
-            }
-            echo form_textarea('blog_blog', $locale['blog_0425'], $callback_data['blog_blog'], $snippetSettings);
             echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
             openside("");
             echo form_select_tree("blog_cat", $locale['blog_0423'], $callback_data['blog_cat'], array(
@@ -309,8 +297,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_hidden('blog_language', '', $callback_data['blog_language']);
             }
             echo form_hidden('blog_datestamp', '', $callback_data['blog_datestamp']);
-            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye'));
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], array('class' => 'btn-default btn-sm m-r-10', 'icon' => 'fa fa-eye'));
+            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-success btn-sm', 'icon' => 'fa fa-hdd-o'));
             closeside();
             openside("");
             echo "<label><input type='checkbox' name='blog_draft' value='1'".($callback_data['blog_draft'] ? "checked='checked'" : "")." /> ".$locale['blog_0431']."</label><br />\n";
@@ -320,6 +308,19 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             }
             closeside();
             echo "</div></div>\n";
+            $snippetSettings = array(
+                "required" => TRUE,
+                "preview" => TRUE,
+                "html" => TRUE,
+                "autosize" => TRUE,
+                "placeholder" => $locale['blog_0425a'],
+                "form_name" => "inputform"
+            );
+            if (fusion_get_settings("tinymce_enabled")) {
+                $snippetSettings = array("required" => TRUE);
+            }
+            echo form_textarea('blog_blog', $locale['blog_0425'], $callback_data['blog_blog'], $snippetSettings);
+
             $extendedSettings = array();
             if (!fusion_get_settings("tinymce_enabled")) {
                 $extendedSettings = array(
