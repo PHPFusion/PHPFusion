@@ -23,6 +23,9 @@ define('MATERIAL', THEMES.'admin_themes/Material/');
 require_once INCLUDES.'theme_functions_include.php';
 require_once MATERIAL.'theme_autoloader.php';
 
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 function render_admin_panel() {
