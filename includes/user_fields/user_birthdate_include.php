@@ -29,7 +29,7 @@ if ($profile_method == "input") {
     $options += array(
         'inline'          => TRUE,
         'type'            => 'date',
-        'inner_width'     => '250px',
+        'width'           => '250px',
         'showTime'        => FALSE,
         'date_format_js'  => 'YYYY-M-DD',
         'date_format_php' => 'Y-m-d',
