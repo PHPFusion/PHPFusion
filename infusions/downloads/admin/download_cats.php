@@ -131,19 +131,30 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         'resize' => 0,
         'autosize' => TRUE,
     ));
-    echo form_select('download_cat_sort_by', $locale['download_0302'], $data['download_cat_sort_by'], array(
+
+    echo '<div class="row">';
+    echo '<div class="col-xs-12 col-sm-7">';
+    echo '<label class="control-label">'.$locale['download_0302'].'</label>';
+    echo form_select('download_cat_sort_by', '', $data['download_cat_sort_by'], array(
         'options' => array(
             '1' => $locale['download_0303'],
             '2' => $locale['download_0200'],
             '3' => $locale['download_0305']
         ),
-        'class' => 'pull-left m-r-10',
-        'width' => '200px'
+        'class' => 'pull-left',
+        'inner_width' => '200px',
+        'inline' => TRUE
     ));
+    echo '</div><div class="col-xs-12 col-sm-5">';
+    echo '<label class="control-label"><!-- --></label>';
     echo form_select('download_cat_sort_order', '', $data['download_cat_sort_order'], array(
         'options' => array('ASC' => $locale['download_0306'], 'DESC' => $locale['download_0307']),
-        'width' => '200px'
+        'inner_width' => '200px',
+        'inline' => TRUE
     ));
+    echo '</div>';
+    echo '</div>';
+
     closeside();
     echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
     openside('');
