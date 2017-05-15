@@ -394,6 +394,7 @@ class UserGroups {
             $html .= "<thead>\n";
             $html .= "<tr>\n";
             echo "<th>".self::$locale['GRP_446']."</th>\n";
+            $html .= "<th></th>\n";
             $html .= "<th>".self::$locale['GRP_447']."</th>\n";
             $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<tr>\n";
@@ -401,9 +402,9 @@ class UserGroups {
             $html .= "<tbody>\n";
             foreach (self::$GroupUser as $groupusers) {
                 $html .= "<tr>\n";
+                $html .= "<td>".form_checkbox("groups_add[]", '', '', array("inline" => FALSE, 'value' => $groupusers['user_id']))."</td>\n";
                 $html .= "<td>".$groupusers['user_name']."</td>\n";
                 $html .= "<td>".getuserlevel($groupusers['user_level'])."</td>\n";
-                $html .= "<td>".form_checkbox("groups_add[]", '', '', array("inline" => FALSE, 'value' => $groupusers['user_id']))."</td>\n";
                 $html .= "</tr>\n";
             }
             $html .= "</tbody>\n";
@@ -428,17 +429,17 @@ class UserGroups {
             $html .= "<table class='table table-striped table-hover table-responsive'>\n";
             $html .= "<thead>\n";
             $html .= "<tr>\n";
+            $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<th>".self::$locale['GRP_446']."</th>\n";
             $html .= "<th>".self::$locale['GRP_447']."</th>\n";
-            $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<tr>\n";
             $html .= "</thead>\n";
             $html .= "<tbody>\n";
             while ($data = dbarray($result)) {
                 $html .= "<tr>\n";
+                $html .= "<td>".form_checkbox("group[]", '', '', array("inline" => FALSE, 'value' => $data['user_id']))."</td>\n";
                 $html .= "<td>".$data['user_name']."</td>\n";
                 $html .= "<td>".getuserlevel($data['user_level'])."</td>\n";
-                $html .= "<td>".form_checkbox("group[]", '', '', array("inline" => FALSE, 'value' => $data['user_id']))."</td>\n";
                 $html .= "</tr>\n";
             }
             $html .= "</tbody></table>\n";
