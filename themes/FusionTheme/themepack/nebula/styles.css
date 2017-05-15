@@ -42,10 +42,6 @@ a, h4 a:hover, a:hover h5, h5 > a:hover, a:hover h6, h6 > a:hover {
     outline: 0;
 }
 
-ul > li {
-    list-style: none;
-}
-
 .headerBg {
     background: #22498E;
     min-height: 400px;

@@ -673,6 +673,10 @@ li.panel {
     border: 0;
 }
 
+.list-style-none > li {
+    list-style: none;
+}
+
 ul > li {
     padding: 0;
 }

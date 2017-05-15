@@ -1661,6 +1661,6 @@ h4.news-title-info {
     margin-top: 20px;
 }
 
-ol, ul {
-    list-style: none;
+.contentRight .text-dark {
+    color: #fff !important;
 }

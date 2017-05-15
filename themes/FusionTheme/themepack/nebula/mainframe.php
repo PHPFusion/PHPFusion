@@ -100,7 +100,7 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
         echo "<div class='navbar-header navbar-right'>\n";
-        echo "<ul class='navbar-nav'>\n";
+        echo "<ul class='navbar-nav list-style-none'>\n";
         if (iMEMBER) :
             $msg_count = dbcount("('message_id')", DB_MESSAGES, "message_to=:my_id AND message_read=:unread AND message_folder=:inbox", [':inbox' => 0, ':my_id' => fusion_get_userdata('user_id'), ':unread' => 0]);
             echo "<li><a href='".BASEDIR."messages.php'>".fusion_get_locale('global_121').($msg_count ? "<span class='badge m-l-5'>$msg_count</span>" : "")."</a></li>";
