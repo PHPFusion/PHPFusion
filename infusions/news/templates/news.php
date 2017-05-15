@@ -347,13 +347,13 @@ if (!function_exists('render_news_item')) {
         }
 
         echo "<div class='well m-t-15 text-center'>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-15'></i>".profile_link($data['user_id'], $data['user_name'],
+        echo "<span class='news-action'><i class='fa fa-user'></i> ".profile_link($data['user_id'], $data['user_name'],
                                                                                               $data['user_status'])."</span>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-calendar m-r-15'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
-        echo "<span class='news-action'><i class='fa fa-eye m-r-15'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
-        echo $data['news_display_comments'];
-        echo $data['news_display_ratings'];
-        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."' target='_blank'><i class='fa fa-print'></i>".$locale['print']."</a>";
+        echo "<span class='news-action m-l-10'><i class='fa fa-calendar'></i> ".showdate("newsdate", $data['news_datestamp'])."</span>\n";
+        echo "<span class='news-action m-l-10'><i class='fa fa-eye'></i> <span class='text-dark'>".number_format($data['news_reads'])."</span>\n</span>";
+        echo '<i class="fa fa-comments-o m-l-10"></i> '.$data['news_display_comments'];
+        echo '<i class="fa fa-star-o m-l-10"></i> '.$data['news_display_ratings'];
+        echo "<i class='fa fa-print m-l-10'></i> <a title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."' target='_blank'>".$locale['print']."</a>";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";

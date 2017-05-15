@@ -42,7 +42,7 @@ class News extends Core {
 
         ob_start();
         ?>
-        <ul class='list-group-item'>
+        <ul class='list-group-item list-style-none p-b-15'>
             <li class='pull-right m-b-0'>
                 <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
             </li>
