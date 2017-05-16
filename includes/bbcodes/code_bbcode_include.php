@@ -19,22 +19,27 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
-    global $data;
-}
 $code_count = substr_count($text, "[code]"); // obtained
 if ($code_count) {
     add_to_head("<link rel='stylesheet' href='".INCLUDES."bbcodes/code/prism.css' type='text/css'/>");
     add_to_footer("<script src='".INCLUDES."bbcodes/code/prism.js'></script>");
 
     for ($i = 0; $i < $code_count; $i++) {
-
         $text = preg_replace_callback(
             "#\[code\](.*?)\[/code\]#si",
             function ($m) use (&$i) {
-                $code_locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/code.php");
+                if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
+                    $result = dbquery("SELECT p.*, t.thread_id
+                        FROM ".DB_FORUM_POSTS." p
+                        INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
+                        WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0'
+                    ");
 
-                global $data;
+                    $data = dbarray($result);
+                }
+
+
+                $code_locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/code.php");
                 if (preg_match("/\/forum\//i",
                                FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
                 ) { // this one rely on global.

@@ -35,15 +35,12 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
 		WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
-        if (!checkgroup($data['forum_access']) || !$data['forum_cat']) {
-            redirect(BASEDIR."forum/viewthread.php?thread_id=".$_GET['thread_id']);
-        }
         $text = $data['post_message'];
         preg_match_all("#\[code](.*?)\[/code\]#si", $text, $matches, PREG_PATTERN_ORDER);
         if (isset($matches[1][$_GET['code_id']])) {
             $text = unstripinput($matches[1][$_GET['code_id']]);
             $filename = "code_".$_GET['thread_id']."_".$_GET['post_id']."_".$_GET['code_id'].".txt";
-            $object = new httpdownload;
+            $object = new PHPFusion\httpdownload;
             $object->set_bydata($text);
             $object->use_resume = TRUE;
             $object->set_filename($filename);
