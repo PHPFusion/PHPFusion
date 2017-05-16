@@ -727,7 +727,7 @@ class SiteLinks {
                     $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
                     $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class." $tab_index>" : "");
-                    $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                    $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
                     if ($has_child) {
@@ -735,7 +735,7 @@ class SiteLinks {
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
                             $res .= ($itemlink ? "<a ".$itemlink." ".$link_target.">\n" : '');
-                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : "");
+                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
                             $res .= $link_data['link_name'];
                             $res .= ($itemlink ? "\n</a>\n" : '');
                             $res .= "</li>\n";
