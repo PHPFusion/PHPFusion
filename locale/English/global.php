@@ -42,7 +42,6 @@ $locale['second_a'] = "seconds";
 $locale['just_now'] = "just now";
 $locale['now'] = 'now';
 $locale['ago'] = "ago";
-$locale['timer_format'] = "[COUNT] [TIME] [AGO]";
 // Geo
 $locale['street1'] = "Street Address 1";
 $locale['street2'] = "Street Address 2";
