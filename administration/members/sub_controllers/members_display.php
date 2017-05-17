@@ -187,7 +187,7 @@ class Members_Display extends Members_Admin {
                   ";
         $result = dbquery($query, $query_bind);
         $rows = dbrows($result);
-        $page_nav = $rowCount > $rows ? makepagenav($rowstart, $limit, $rows, 5, FUSION_SELF.fusion_get_aidlink()) : '';
+        $page_nav = $rowCount > $rows ? makepagenav($rowstart, $limit, $rowCount, 5, FUSION_SELF.fusion_get_aidlink().'&amp;') : '';
         $interface = new static();
 
         $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map(array($interface, 'list_uri'), $statuses)), $rows, $rowCount);
