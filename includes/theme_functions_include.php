@@ -816,8 +816,8 @@ if (!function_exists("timer")) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = \PHPFusion\Locale::format_word($answer, $unit, array('add_count' => FALSE));
-
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
+                $text = str_replace(['[COUNT]', '[TIME]', '[AGO]'], [$answer, $string, $locale['ago']], $locale['timer_format']);
+                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$text."</abbr>";
             }
         }
 
@@ -870,7 +870,7 @@ if (!function_exists("countdown")) {
             }
         }
         if (!isset($answer)) {
-            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>now</abbr>";
+            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>".$locale['now']."</abbr>";
         }
     }
 }
