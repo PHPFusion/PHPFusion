@@ -146,18 +146,18 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-    $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
-    $userdata = $auth->getUserData();
-    unset($auth, $_POST['user_name'], $_POST['user_pass']);
-    redirect(FUSION_REQUEST);
+    if (\defender::safe()) {
+        $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+        $userdata = $auth->getUserData();
+        unset($auth, $_POST['user_name'], $_POST['user_pass']);
+        redirect(FUSION_REQUEST);
+    }
 } elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-
     redirect(BASEDIR.$settings['opening_page']);
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
-
 // User level, Admin Rights & User Group definitions
 define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
 define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);

@@ -153,7 +153,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files', 'psd|txt|md|php|exe|bat|pdf|js');
         $container_height = 300;
         $image_container_height = floor($container_height / 2.5);
-        $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
+        $html .= "<div id='".$options['input_id']."-media' class='panel panel-default spacer-sm'>";
         $html .= "<div class='panel-body'>\n";
         $html .= "<h5>".$locale['global_901']."</h5>";
         if (!empty($files_list)) {

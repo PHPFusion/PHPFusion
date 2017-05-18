@@ -119,7 +119,7 @@ class Authenticate {
         if (!$userCookie) {
             $cookiePath = COOKIE_PATH; // also allow infusions admin.
             $cookieName = COOKIE_ADMIN;
-            $cookieExpiration = time() + 172800; // 48 hours
+            $cookieExpiration = TIME + 172800; // 48 hours
         }
         $key = hash_hmac($algo, $userID.$cookieExpiration, $salt);
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
@@ -341,13 +341,13 @@ class Authenticate {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
                 list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-                if ($cookieExpiration > time()) {
-                    $result = dbquery("SELECT * FROM ".DB_USERS."
-						WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0'
-						LIMIT 1");
+                if ($cookieExpiration > TIME) {
+                    // must update user_salt
+                    $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
                     if (dbrows($result) == 1) {
                         $user = dbarray($result);
                         Authenticate::_setUserTheme($user);
+                        // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
                         if ($cookieHash == $hash) {
