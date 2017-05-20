@@ -244,7 +244,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         $html .= "<div class='modal-content'>\n";
         if ($title) {
             $html .= "<div class='modal-header'>";
-            $html .= "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n";
+            $html .= ($options['static'] ? "" : "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n");
             $html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
             $html .= "</div>\n";
         }
