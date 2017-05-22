@@ -57,7 +57,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             self::$widget_instance = new static();
 
-            self::$slider_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+            $lang = file_exists(WIDGETS."slider/locale/".LANGUAGE.".php") ? WIDGETS."slider/locale/".LANGUAGE.".php" : WIDGETS."slider/locale/English.php";
+            self::$slider_locale = fusion_get_locale('', $lang);
 
             if (!empty(self::$colData['page_content'])) {
 

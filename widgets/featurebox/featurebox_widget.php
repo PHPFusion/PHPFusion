@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Path Definitions
-$widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
+$lang = file_exists(WIDGETS."featurebox/locale/".LANGUAGE.".php") ? WIDGETS."featurebox/locale/".LANGUAGE.".php" : WIDGETS."featurebox/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
 
 $widget_title = $widget_locale['FBW_0100'];
 $widget_icon = 'featurebox.svg';

@@ -52,8 +52,9 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
     }
 
     public function display_form_input() {
+        $lang = file_exists(WIDGETS."panel/locale/".LANGUAGE.".php") ? WIDGETS."panel/locale/".LANGUAGE.".php" : WIDGETS."panel/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
 
-        $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
         self::$widget_data = array(
             'panel_include' => '',
         );

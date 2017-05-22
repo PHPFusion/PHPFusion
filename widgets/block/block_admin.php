@@ -57,16 +57,16 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
     }
 
     public function display_form_input() {
-
-        $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
+        $lang = file_exists(WIDGETS."block/locale/".LANGUAGE.".php") ? WIDGETS."block/locale/".LANGUAGE.".php" : WIDGETS."block/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
 
         self::$widget_data = array(
-            'block_title' => '',
+            'block_title'       => '',
             'block_description' => '',
-            'block_align' => '',
-            'block_class' => '',
-            'block_padding' => '30px',
-            'block_margin' => '15px 0px',
+            'block_align'       => '',
+            'block_class'       => '',
+            'block_padding'     => '30px',
+            'block_margin'      => '15px 0px',
         );
 
         if (!empty(self::$colData['page_content'])) {
