@@ -38,7 +38,13 @@ class MainFrame extends Core {
         if (iSUPERADMIN) {
             $theme_settings = get_theme_settings('FusionTheme');
             if (!isset($theme_settings['home_installed'])) {
-                $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
+
+                if (file_exists(THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php')) {
+                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
+                } else {
+                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/English.php');
+                }
+
                 if (isset($_POST['install_default_homepage'])) {
                     $val = stripinput($_POST['install_default_homepage']);
                     if ($val == 'yes') {
