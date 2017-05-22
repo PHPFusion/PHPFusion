@@ -405,7 +405,8 @@ class fusion_panel_admin {
         echo "</div>\n";
         //Unused Panels in the directory
         $panel_list = self::panels_list();
-        $title = self::$locale['602'].": ".count($panel_list)." ".(count($panel_list) == 1 ? self::$locale['605'] : self::$locale['604']);
+        $string = \PHPFusion\Locale::format_word(count($panel_list), self::$locale['604']);
+        $title = self::$locale['602'].": ".$string;
         echo "<div class='panel panel-default'>\n";
         echo "<div class='panel-heading'>".$title."</div>\n";
         echo "<div class='panel-body text-dark'>\n";
