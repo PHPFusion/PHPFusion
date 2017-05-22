@@ -73,7 +73,18 @@ if (!function_exists('display_comments_listing')) {
         <?php
     }
 }
-
+/**
+ * No comments text container
+ */
+if (!function_exists('display_no_comments')) {
+    function display_no_comments() {
+        ?>
+        <li>
+            {%comments_undefined_text%}
+        </li>
+        <?php
+    }
+}
 /**
  * Single Comment List {%comments_lists%}
  */

@@ -66,6 +66,9 @@ class Comments {
         'comment_ui_template'              => 'display_comments_ui',
         'comment_template'                 => 'display_comments_section',
         'comment_form_template'            => 'display_comments_form',
+        'comment_bbcode'                   => TRUE,
+        'comment_tinymce'                  => FALSE,
+        'comment_tinymce_skin'             => 'lightgray',
         'comment_custom_script'            => FALSE,
         'comment_post_callback_function'   => '', // trigger custom functions during post comment event
         'comment_edit_callback_function'   => '',  // trigger custom functions during reply event
@@ -249,7 +252,7 @@ class Comments {
                         $_CAPTCHA_INPUT .= "</div>\n";
                     }
 
-                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, '');
 
                     $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
                             ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
@@ -265,13 +268,14 @@ class Comments {
                         '{%comment_subject_input%}' => ($can_post ? $this->getParams('comment_allow_subject') ? form_text('comment_subject', $this->locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id' => $this->getParams('comment_key').'-comment_subject']) : '' : ''),
                         '{%comment_message_input%}' => ($can_post ? form_textarea($edata['comment_cat'] ? 'comment_message_reply' : 'comment_message', '', $edata['comment_message'],
                             array(
-                                'input_id'  => $this->getParams('comment_key')."-comment_message",
-                                'required'  => 1,
-                                'autosize'  => TRUE,
-                                'form_name' => 'inputform',
-                                "tinymce"   => "simple",
-                                'wordcount' => TRUE,
-                                'type'      => 'bbcode',
+                                'input_id'     => $this->getParams('comment_key')."-comment_message",
+                                'required'     => 1,
+                                'autosize'     => TRUE,
+                                'form_name'    => 'inputform',
+                                "tinymce"      => "simple",
+                                'wordcount'    => TRUE,
+                                'type'         => $this->getParams('comment_bbcode') ? 'bbcode' : ($this->getParams('comment_tinymce') ? 'tinymce' : 'text'),
+                                'tinymce_skin' => $this->getParams('comment_tinymce_skin')
                             )
                         ) : $this->locale['c105']),
                         '{%comments_ratings_input%}' => $ratings_input,
@@ -330,10 +334,13 @@ class Comments {
                 // @bug: Split the array into page chunks. [0] for page 1, [1] for page 2
                 // Display comments
                 ob_start();
+                display_no_comments();
+                $no_comments_text = strtr(ob_get_clean(), ['{%comments_undefined_text%}' => $this->locale['c101']]);
+                ob_start();
                 display_comments_listing();
                 $comments = strtr(ob_get_clean(), [
                         '{%comments_page%}'       => ($this->c_arr['c_info']['c_makepagenav'] ? "<div class='text-left'>".$this->c_arr['c_info']['c_makepagenav']."</div>\n" : ''),
-                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->display_all_comments($this->c_arr['c_con'], 0, $this->getParams()) : $this->locale['c101']),
+                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->display_all_comments($this->c_arr['c_con'], 0, $this->getParams()) : $no_comments_text),
                         '{%comments_admin_link%}' => $this->c_arr['c_info']['admin_link'],
                     ]
                 );
