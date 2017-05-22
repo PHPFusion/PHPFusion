@@ -78,10 +78,12 @@ if (isset($_POST['set_default'])) {
     $error = 0;
     $file = BASEDIR."robots.txt";
     $robots_content = "User-agent: *\n";
+    $robots_content .= "Disallow: /config.php\n";
     $robots_content .= "Disallow: /administration/\n";
     $robots_content .= "Disallow: /locale/\n";
     $robots_content .= "Disallow: /themes/\n";
     $robots_content .= "Disallow: /print.php\n";
+    $robots_content .= "Disallow: /infusions/latest_comments_panel/\n";
     if (!is_writable($file)) {
         $defender->stop();
         addNotice("danger", $locale['414']);
