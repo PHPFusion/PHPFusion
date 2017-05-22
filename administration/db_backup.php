@@ -408,9 +408,8 @@ class db_backup {
         echo "</td>\n</tr>\n</tbody>\n</table>\n";
         echo "</td>\n";
         echo "</tr>\n<tr>\n</tbody>\n</table>\n";
-        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], array('class' => 'btn-primary'));
+        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], array('class' => 'btn-primary m-t-10'));
         echo closeform();
-
     }
 
     private function stripsiteinput($text) {
