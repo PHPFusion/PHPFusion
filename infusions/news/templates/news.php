@@ -98,7 +98,6 @@ if (!function_exists('display_main_news')) {
 				";
             echo "</div>\n";
         }
-
         echo "<div class='panel panel-default panel-news-header'>\n";
         echo "<div class='panel-body'>\n";
         echo "<div class='pull-right'>\n";
@@ -112,7 +111,7 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['news_0008'].":</span> <span class='text-dark'>\n
-			".($info['news_last_updated'] > 0 ? showdate('newsdate',$info['news_last_updated']) : $locale['na'])."</span>";
+			".($info['news_last_updated'] > 0 ? $info['news_last_updated'] : $locale['na'])."</span>";
         echo "</div>\n";
         echo "</div>\n";
 
