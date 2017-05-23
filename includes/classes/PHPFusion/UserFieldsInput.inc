@@ -333,7 +333,7 @@ class UserFieldsInput {
                     // Just for validation purposes for example email change
                     $this->_isValidCurrentPassword = 1;
 
-                    // To change password, need to enter password
+                    // Change new password
                     if (!empty($this->_newUserPassword)) {
 
                         $_isValidNewPassword = $passAuth->isValidNewPassword();
@@ -383,6 +383,93 @@ class UserFieldsInput {
             }
         }
     }
+
+    private function _setAdminPassword() {
+        $locale = fusion_get_locale();
+        if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
+
+            $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
+            $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
+            $this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
+            $adminpassAuth = new PasswordAuth();
+
+            if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
+                // New Admin
+                $adminpassAuth->inputPassword = 'fake';
+                $adminpassAuth->inputNewPassword = $this->_userAdminPassword;
+                $adminpassAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+                $valid_current_password = TRUE;
+
+            } else {
+
+                // Old Admin changing password
+                $adminpassAuth->inputPassword = $this->_userAdminPassword; // var1
+                $adminpassAuth->inputNewPassword = $this->_newUserAdminPassword; // var2
+                $adminpassAuth->inputNewPassword2 = $this->_newUserAdminPassword2; // var3
+                $adminpassAuth->currentPasswordHash = $this->userData['user_admin_password'];
+                $adminpassAuth->currentAlgo = $this->userData['user_admin_algo'];
+                $adminpassAuth->currentSalt = $this->userData['user_admin_salt'];
+                $valid_current_password = $adminpassAuth->isValidCurrentPassword();
+            }
+
+            if ($valid_current_password) {
+
+                $this->_isValidCurrentAdminPassword = 1;
+
+                // authenticated. now do the integrity check
+                $_isValidNewPassword = $adminpassAuth->isValidNewPassword();
+                switch ($_isValidNewPassword) {
+                    case '0':
+                        // New password is valid
+                        $new_admin_password = $adminpassAuth->getNewHash();
+                        $new_admin_salt = $adminpassAuth->getNewSalt();
+                        $new_admin_algo = $adminpassAuth->getNewAlgo();
+                        $this->data['user_admin_algo'] = $new_admin_algo;
+                        $this->data['user_admin_salt'] = $new_admin_salt;
+                        $this->data['user_admin_password'] = $new_admin_password;
+                        break;
+                    case '1':
+                        // new password is old password
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password');
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
+                        break;
+                    case '2':
+                        // The two new passwords are not identical
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setInputError('user_admin_password2');
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
+                        \defender::setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
+                        break;
+                    case '3':
+                        // New password contains invalid chars / symbols
+                        \defender::stop();
+                        \defender::setInputError('user_admin_password1');
+                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
+                        break;
+                }
+            } else {
+                \defender::stop();
+                \defender::setInputError('user_admin_password');
+                \defender::setErrorText('user_admin_password', $locale['u149a']);
+            }
+        } else { // check db only - admin cannot save profile page without password
+
+            if (iADMIN) {
+                $require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
+                if (!$require_valid_password) {
+                    // 149 for admin
+                    \defender::stop();
+                    \defender::setInputError('user_admin_password');
+                    \defender::setErrorText('user_admin_password', $locale['u149a']);
+                }
+            }
+        }
+    }
+
 
     private function _getPasswordInput($field) {
         return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
@@ -652,96 +739,6 @@ class UserFieldsInput {
         }
 
         return FALSE;
-    }
-
-    private function _setAdminPassword() {
-        $locale = fusion_get_locale();
-        if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
-            $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
-            $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
-            $this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
-            $passAuth = new PasswordAuth();
-
-            //print_p($this->_userAdminPassword); // this is not available if no password exist
-            //print_p($this->_newUserAdminPassword);
-            //print_p($this->_newUserAdminPassword2);
-
-            if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
-                // New Admin
-                $valid_current_password = 1;
-                $passAuth->inputPassword = 'fake';
-                $passAuth->inputNewPassword = $this->_userAdminPassword;
-                $passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
-
-            } else {
-
-                // Old Admin
-                // Intialize password auth
-                $passAuth->inputPassword = $this->_userAdminPassword; // var1
-                $passAuth->inputNewPassword = $this->_newUserAdminPassword; // var2
-                $passAuth->inputNewPassword2 = $this->_newUserAdminPassword2; // var3
-                $passAuth->currentPasswordHash = $this->userData['user_admin_password'];
-
-                $passAuth->currentAlgo = $this->userData['user_admin_algo'];
-                $passAuth->currentSalt = $this->userData['user_admin_salt'];
-                $valid_current_password = $passAuth->isValidCurrentPassword();
-
-            }
-
-            if ($valid_current_password) {
-                $this->_isValidCurrentAdminPassword = 1;
-                // authenticated. now do the integrity check
-                $_isValidNewPassword = $passAuth->isValidNewPassword();
-                switch ($_isValidNewPassword) {
-                    case '0':
-                        // New password is valid
-                        $new_admin_password = $passAuth->getNewHash();
-                        $new_admin_salt = $passAuth->getNewSalt();
-                        $new_admin_algo = $passAuth->getNewAlgo();
-                        $this->data['user_admin_algo'] = $new_admin_algo;
-                        $this->data['user_admin_salt'] = $new_admin_salt;
-                        $this->data['user_admin_password'] = $new_admin_password;
-                        break;
-                    case '1':
-                        // new password is old password
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password');
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
-                        break;
-                    case '2':
-                        // The two new passwords are not identical
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setInputError('user_admin_password2');
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
-                        \defender::setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
-                        break;
-                    case '3':
-                        // New password contains invalid chars / symbols
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
-                        break;
-                }
-            } else {
-                \defender::stop();
-                \defender::setInputError('user_admin_password');
-                \defender::setErrorText('user_admin_password', $locale['u149a']);
-            }
-        } else { // check db only - admin cannot save profile page without password
-
-            if (iADMIN) {
-                $require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
-                if (!$require_valid_password) {
-                    // 149 for admin
-                    \defender::stop();
-                    \defender::setInputError('user_admin_password');
-                    \defender::setErrorText('user_admin_password', $locale['u149a']);
-                }
-            }
-        }
     }
 
     private function _setUserAvatar() {

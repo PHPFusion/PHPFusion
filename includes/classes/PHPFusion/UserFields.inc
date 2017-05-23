@@ -215,10 +215,13 @@ class UserFields extends QuantumFields {
                 $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password']);
             }
             $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
+
             // Admin Password - not available for everyone except edit profile.
             if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
+                $this->info['user_admin_password'] = form_para($locale['u131'], 'adm_password', 'profile_category_name');
                 if ($this->userData['user_admin_password']) {
-                    $this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144a'], '', array(
+                    // This is for changing password
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144a'], '', array(
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => TRUE,
@@ -235,7 +238,8 @@ class UserFields extends QuantumFields {
                         )
                     );
                 } else {
-                    $this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144'], '', array(
+                    // This is just setting new password off blank records
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144'], '', array(
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => TRUE,
@@ -244,6 +248,7 @@ class UserFields extends QuantumFields {
                         )
                     );
                 }
+
                 $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', array(
                         'class'            => 'm-b-0',
                         'type'             => 'password',
