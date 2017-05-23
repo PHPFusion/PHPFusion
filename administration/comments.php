@@ -66,7 +66,7 @@ $ndata = [
 		':item_id'    => $_GET['comment_item_id'],
 		];
 $comments_query = "SELECT
-			c.comment_id, c.comment_name, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type, u.user_id, u.user_name, u.user_status
+			c.comment_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type, u.user_id, u.user_name, u.user_status
 			FROM ".DB_COMMENTS." AS c
 			LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
 			WHERE c.comment_type=:type AND c.comment_item_id=:item_id
@@ -82,6 +82,7 @@ if (dbrows($result)) {
         echo "</div>\n";
         echo "<strong>".($data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'])."</strong>\n";
         echo "<span>".$locale['global_071'].showdate("longdate", $data['comment_datestamp'])."</span><span class='label label-default m-l-10'>".$locale['432']." ".$data['comment_ip']."</span>\n<br />\n ";
+        echo !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "";
         echo "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."<hr>\n</div>\n";
         echo "</div>\n";
     }
