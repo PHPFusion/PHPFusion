@@ -102,9 +102,9 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                         // move picture to $move_album
                         $target_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($targetAlbum)."'"),
                                 0) + 1;
-                        while ($photo_data = dbarray($result)) {
+                        while ($photo_data = dbarray($photosResult)) {
                             $photo_data['photo_order'] = $target_max_order;
-                            dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_id='".intval($targetAlbum)."' WHERE photo_id='".$photo_data['photo_id']."'");
+                            dbquery("UPDATE ".DB_PHOTOS." SET album_id='".intval($targetAlbum)."' WHERE photo_id='".$photo_data['photo_id']."'");
                             $target_max_order++;
                         }
                         addNotice("success", sprintf($locale['album_0031'], $albumArray[$targetAlbum]));
@@ -124,8 +124,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 purgeAlbumImage($albumData);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
                 redirect(FUSION_SELF.$aidlink);
-            } else {
-                // Confirmation form
+            } else {                // Confirmation form
                 echo openmodal('confirm_steps', $locale['album_0027']);
                 echo openform('inputform', 'post', FUSION_REQUEST);
                 echo form_select('target_album', $locale['choose'], '', array(

@@ -1190,27 +1190,27 @@ select,
   margin-bottom: 5px;
 }
 .file-input {
-  margin-right: -12px  !important;
+  margin-right: -12px !important;
 }
 .file-input .form-control {
   border: 1px solid #ccc;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
   -webkit-box-shadow: none !important;
-          box-shadow: none !important;
-  -webkit-transition: .5s;
-  -o-transition: .5s;
-  transition: .5s;
+  box-shadow: none !important;
 }
 .fileinput-remove-button,
 .btn-file {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  border: 1px solid #949494 !im;
+  border: 1px solid #949494 !important;
 }
 .fileinput-remove-button:hover,
 .fileinput-remove-button:focus,
 .btn-file:hover,
 .btn-file:focus {
-  border: 1px solid #949494;
+  border: 1px solid #949494 !important;
 }
 .btn-modal.btn-file {
   background: #fff;
@@ -1231,7 +1231,7 @@ select,
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   background: #fff;
-  padding: 0 !important
+  padding: 0 !important;
 }
 #comments_per_page {
   width: 100%!important;

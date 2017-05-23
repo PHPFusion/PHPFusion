@@ -53,7 +53,9 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
     }
 
     public function display_form_input() {
-        $widget_locale = fusion_get_locale('', WIDGETS."/file/locale/".LANGUAGE.".php");
+        $lang = file_exists(WIDGETS."file/locale/".LANGUAGE.".php") ? WIDGETS."file/locale/".LANGUAGE.".php" : WIDGETS."file/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
+
         self::$widget_data = array(
             'file_title' => '',
             'file_url'   => '',

@@ -94,8 +94,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
     }
 
     public function display_form_input() {
+        $lang = file_exists(WIDGETS."featurebox/locale/".LANGUAGE.".php") ? WIDGETS."featurebox/locale/".LANGUAGE.".php" : WIDGETS."featurebox/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
 
-        $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
 
         self::$widget_data = array(
             'box_title'              => '',

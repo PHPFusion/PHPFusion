@@ -1443,3 +1443,8 @@ label img, .control-label > img {
     margin-right: 5px;
     width: 24px;
 }
+
+.text-overflow-hide {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
