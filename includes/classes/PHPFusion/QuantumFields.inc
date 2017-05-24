@@ -2173,22 +2173,33 @@ class QuantumFields extends \SqlHandler {
         if ($data['field_order'] == 0 or $data['field_order'] > $max_order) {
             $data['field_order'] = $max_order;
         }
+
         if (self::validate_field($data['field_id'])) {
+
             if ($this->debug) {
                 print_p($this->locale['fields_0661']);
             }
             // update
             // Alter $this->field_db table - change and modify column.
-            $old_record = dbquery("SELECT uf.*, cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
+            $field_query = "SELECT uf.*, cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
 									FROM ".$this->field_db." uf
 									LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
 									LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
-									WHERE uf.field_id='".$data['field_id']."'"); // old database.
-            if (dbrows($old_record) > 0) { // got old field cat
+									WHERE uf.field_id=:field_id";
+            $field_param = [':field_id' => $data['field_id']];
+
+            $old_record = dbquery($field_query, $field_param); // search old database.
+
+            if (dbrows($old_record)) { // got old field cat
+
                 $oldRows = dbarray($old_record);
+
                 $old_table = $oldRows['field_cat_db'] ? DB_PREFIX.$oldRows['field_cat_db'] : DB_USERS; // this was old database
+
                 $old_table_columns = fieldgenerator($old_table);
+
                 // Get current updated field_cat - to compare new cat_db and old cat_db
+
                 $new_result = dbquery("
 				SELECT cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_order,
 				root.field_cat_db, root.field_cat_index
@@ -2196,6 +2207,7 @@ class QuantumFields extends \SqlHandler {
 				LEFT JOIN ".$this->category_db." root on cat.field_parent = root.field_cat_id
 				WHERE cat.field_cat_id='".intval($data['field_cat'])."'
 				");
+
                 $newRows = array();
                 if (dbrows($new_result) > 0) {
                     $newRows = dbarray($new_result);
@@ -2203,20 +2215,29 @@ class QuantumFields extends \SqlHandler {
                 } else {
                     $new_table = DB_USERS;
                 }
+
                 if ($this->debug) {
+                    // Old Table Information
                     print_p($this->locale['fields_0664']);
                     print_p($oldRows);
+
+                    // New Table Information
                     print_p($this->locale['fields_0665']);
                     print_p($newRows);
+
+                    print_p($data['field_cat']);
+                    print_p($oldRows['field_cat']);
                 }
-                if ($data['field_cat'] !== $oldRows['field_cat']) { // old and new mismatch - move to another category
-                    if ($this->debug) {
-                        print_p($this->locale['fields_0666']);
-                    }
-                    // drop the old one if target database aren't the same.
-                    // @todo: Improvements: need to move the whole column along with data instead of just dropping and creating new
-                    if ($new_table !== $old_table) {
-                        print_p($old_table);
+
+                if ($data['field_cat'] != $oldRows['field_cat']) { // old and new mismatch - move to another category and possibly a new table.
+                    // Fork #1 - Update on new table
+                    if ($this->debug) print_p($this->locale['fields_0666']);
+                    /**
+                     * Drop column on old table and Create column on new table
+                     *
+                     * @todo: Improvements: need to move the whole column along with data instead of just dropping and creating new
+                     */
+                    if ($new_table != $old_table) {
                         $new_table_columns = fieldgenerator($new_table);
                         if (!$this->debug) {
                             if (!in_array($data['field_name'], $new_table_columns)) {
@@ -2262,7 +2283,7 @@ class QuantumFields extends \SqlHandler {
                         print_p($this->locale['fields_0668']);
                     }
 
-                    if ($data['field_name'] !== $oldRows['field_name']) {
+                    if ($data['field_name'] != $oldRows['field_name']) {
                         // not same as old record on dbcolumn
                         // Check for possible duplicates in the new field name
                         if (!in_array($data['field_name'], $old_table_columns)) {
