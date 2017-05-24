@@ -1441,7 +1441,7 @@ label image
  */
 label img, .control-label > img {
     margin-right: 5px;
-    width: 24px;
+    max-width: 24px;
 }
 
 .text-overflow-hide {
