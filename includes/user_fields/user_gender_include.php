@@ -20,27 +20,28 @@ if (!defined("IN_FUSION")) {
 }
 
 // Variation Customization
-$gen_set = 2; //0 = Just text; 1 = Emotikum + text; 2 = text + image; 3 = Just images.
+$gen_set = 2; //0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.
 $with_secret = FALSE; // True for additiona unspecified option
 $input_type = 'form_checkbox'; // form_select or form_checkbox (up to you)
 
 // Definitions
 $locale['uf_kep'] = [
-    '0' => '',
-    '1' => ["fa fa-times-circle-o", "fa fa-mars", "fa fa-venus", "fa fa-user-secret"], // Emotikum megadás
-    '2' => ["no", "male", "female", "no"],  // image name
-    '3' => ["no", "male", "female", "no"]  // image name
+    '0' => '', // Text
+    '1' => ["fa fa-user-secret", "fa fa-mars", "fa fa-venus", "fa fa-user-secret"], // Icon
+    '2' => ["unspecified", "male", "female", "unspecified"],  // Image + text
+    '3' => ["unspecified", "male", "female", "unspecified"]  // Image
 ];
+
 for ($i = 0; $i < count($locale['uf_gender_sz']); $i++) {
     switch ($gen_set) {
         case 3:
-            $value = "<img src='".IMAGES."user_fields/".$locale['uf_kep'][$gen_set][$i].".png' width='16' title='".$locale['uf_gender_sz'][$i]."'/>";
+            $value = "<img src='".IMAGES."user_fields/gender/".$locale['uf_kep'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_sz'][$i]."' title='".$locale['uf_gender_sz'][$i]."'/>";
             break;
         case 1:
-            $value = "<i class='".$locale['uf_kep'][$gen_set][$i]." fa-lg m-r-10'></i>".$locale['uf_gender_sz'][$i];
+            $value = "<i class='".$locale['uf_kep'][$gen_set][$i]." fa-fw fa-lg m-r-10'></i>".$locale['uf_gender_sz'][$i];
             break;
         case 2:
-            $value = "<img src='".IMAGES."user_fields/".$locale['uf_kep'][$gen_set][$i].".png' width='16' title='".$locale['uf_gender_sz'][$i]."'/> ".$locale['uf_gender_sz'][$i];
+            $value = "<img src='".IMAGES."user_fields/gender/".$locale['uf_kep'][$gen_set][$i].".png' style='width: 16px;' alt='".$locale['uf_gender_sz'][$i]."' title='".$locale['uf_gender_sz'][$i]."'/> ".$locale['uf_gender_sz'][$i];
             break;
         default:
             $value = $locale['uf_gender_sz'][$i];
@@ -57,7 +58,6 @@ if ($profile_method == "input") {
             'inline'     => TRUE,
             'error_text' => $locale['uf_gender_error'],
             'options'    => $locale['uf_gender_szkep'],
-            'width'      => '200px'
         ] + $options;
     $user_fields = $input_type('user_gender', $locale['uf_gender'], $field_value, $options);
     // Display user field input
