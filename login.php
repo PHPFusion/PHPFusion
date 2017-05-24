@@ -89,7 +89,7 @@ if (!iMEMBER) {
             $placeholder = $locale['global_101a'];
     }
     $info = array(
-        'open_form'    => openform('loginpageform', 'POST', BASEDIR.'login.php'),
+        'open_form'    => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
         'user_name'    => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]),
         'user_pass'    => form_text('user_pass', $locale['global_102'], '', ['placeholder' => $locale['global_102'], 'type' => 'password']),
         'remember_me'  => form_checkbox('remember_me', $locale['global_103'], '', ['reverse_label' => TRUE, 'ext_tip' => $locale['UM067']]),
