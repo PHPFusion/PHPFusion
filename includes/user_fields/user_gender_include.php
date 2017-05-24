@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright � 2002 - 2008 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_gender_include.php
-| Author: Gr@n@dE
-| Homepage: www.granade.eu
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,32 +15,36 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+$gen_set = 1; //0 = Just text; 1 = Emotikum + text; 2 = text + image; 3 = Just images.
+$locale['uf_kep'] = ['0' => "",
+						  '1' => ["fa fa-times-circle-o", "fa fa-mars", "fa fa-venus", "fa fa-user-secret"], // Emotikum megadás
+						  '2' => ["no", "male", "female", "no"],  // image name
+						  '3' => ["no", "male", "female", "no"]  // image name
+						  ];
+
+for ($i = 0; $i < count($locale['uf_gender_sz']); $i++) {
+$locale['uf_gender_szkep'][] = ($gen_set == 0 ? $locale['uf_gender_sz'][$i] : ($gen_set == 1 ? "<i class='".$locale['uf_kep'][$gen_set][$i]." fa-lg m-r-10'></i>".$locale['uf_gender_sz'][$i] :
+($gen_set == 2 ? $locale['uf_gender_sz'][$i] : "")." <img src='".IMAGES."user_fields/".$locale['uf_kep'][$gen_set][$i].".png' width='16' title='".$locale['uf_gender_sz'][$i]."' >"));
 }
 
 if ($profile_method == "input") {
-    $user_fields = form_checkbox('user_gender', $locale['uf_gender_001'], $field_value, ['options' =>
-                                                                                             array(
-                                                                                                 0 => $locale['uf_gender_004'],
-                                                                                                 1 => $locale['uf_gender_002'],
-                                                                                                 2 => $locale['uf_gender_003'],
-                                                                                             ),
-                                                                                         'type'    => 'radio',
-                                                                                         'inline'  => TRUE,
-    ]);
+	$options = array('inline'     => TRUE,
+					 'error_text' => $locale['uf_gender_error'],
+                     'options'    => $locale['uf_gender_sz'],
+					 'width'      => '200px',
+					 ) + $options;
+	(defined("ADMIN_PANEL") ? $options['tip'] = $locale['uf_gender_tipp'] : "");
 
+	$user_fields = form_select('user_gender', $locale['uf_gender'], $field_value, $options);
+
+// Display user field input
 } elseif ($profile_method == "display") {
-
-    if ($user_data['user_gender'] && ($user_data['user_gender'] == 1 || $user_data['user_gender'] == 2)) {
-        $value = ($user_data['user_gender'] == 1 ? $locale['uf_gender_002'] : ($user_data['user_gender'] == 2 ? $locale['uf_gender_003'] : $locale['uf_gender_004']));
-    } else {
-        $value = $locale['uf_gender_004'];
-    }
-
-    $user_fields = array(
-        'title' => $locale['uf_gender_001'],
-        'value' => $value ?: ''
-    );
-
+	if ($field_value) {
+		$user_fields = [
+			'title' => $locale['uf_gender'],
+			'value' => $locale['uf_gender_szkep'][$field_value]
+			];
+	}
 }

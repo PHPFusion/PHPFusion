@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright � 2002 - 2008 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_gender_include_var.php
 | Author: Gr@n@dE
@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+$user_field_api_version = "1.01.00";
 $user_field_name = $locale['uf_gender'];
 $user_field_desc = $locale['uf_gender_desc'];
 $user_field_dbname = "user_gender";
