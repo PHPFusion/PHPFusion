@@ -23,7 +23,8 @@ if (!defined("IN_FUSION")) {
 $regex = array(
     "%time%"    => "([0-9]+)",
     "%section%" => "([0-9]+)",
-    "%logout%"  => "(yes)"
+    "%logout%"  => "(yes)",
+    "%sortby%"  => "([a-zA-Z]+)"
 );
 
 $pattern = array(
@@ -34,6 +35,7 @@ $pattern = array(
     "maintenance"            => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",
     "edit-profile"           => "edit_profile.php",
+    "members/%sortby%"       => "members.php?sortby=%sortby%",
     "website-members"        => "members.php",
     "create/ref=%time%"      => "register.php?ref=%time%",
     "contact"                => "contact.php",

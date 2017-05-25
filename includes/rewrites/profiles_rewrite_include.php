@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 
 $regex = array(
     "%user_id%" => "([0-9]+)",
+    "%group_id%" => "([0-9]+)",
     "%section%" => "([0-9]+)",
     "%user_name%" => "([0-9a-zA-Z._\W]+)",
 );
@@ -29,6 +30,7 @@ $regex = array(
 $pattern = array(
     "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
     "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",
+    "profile/%group_id%"            => "profile.php?group_id=%group_id%",
 
 );
 

@@ -153,10 +153,10 @@ class Members {
             );
 
             $info['search_table'] = "<table class='table table-responsive table-striped center alphabet-table'>\n<tr>\n";
-            $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
+            $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
             for ($i = 0; $i < count($info['search_filter']) != ""; $i++) {
-                $info['search_table'] .= "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF."?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";
-                $info['search_table'] .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
+                $info['search_table'] .= "<td align='center' class='tbl1'><div class='small'><a href='".BASEDIR."members.php?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";
+                $info['search_table'] .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
             }
             $info['search_table'] .= "</tr>\n</table>\n";
 
@@ -168,7 +168,7 @@ class Members {
 
                 if ($current_rows) {
 
-                    $info['page_nav'] = makepagenav($_GET['rowstart'], 24, self::$rows, 3, FUSION_SELF."?sortby=".$_GET['sortby']."&amp;");
+                    $info['page_nav'] = makepagenav($_GET['rowstart'], 24, self::$rows, 3, BASEDIR."members.php?sortby=".$_GET['sortby']."&amp;");
 
                     while ($data = dbarray($result)) {
 
