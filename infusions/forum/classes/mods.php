@@ -296,7 +296,7 @@ class Moderator {
             echo openmodal('deletethread', $locale['forum_0201'], array('class' => 'modal-center'));
             echo "<div class='text-center'><br />\n";
             if (!isset($_POST['deletethread'])) {
-                echo openform('delform', 'post', $this->form_action);
+                echo openform('delform', 'post', $this->form_action."&amp;step=delete");
                 echo $locale['forum_0704']."<br /><br />\n";
                 echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class' => 'm-r-10 btn-danger'));
                 echo form_button('cancelDelete', $locale['no'], $locale['no'], array('class' => 'm-r-10 btn-default'));
