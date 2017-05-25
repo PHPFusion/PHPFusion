@@ -26,19 +26,19 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_FORUMS)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $result = dbquery("
+	$bind = [
+             ':language' => LANGUAGE,
+             ':cat'      => '0',
+             ];
+    $fresult = "
             SELECT f.forum_id, f.forum_name, f2.forum_name 'forum_cat_name'
             FROM ".DB_FORUMS." f
             INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
             ".(multilang_table('FO') ? "WHERE f.forum_language=:language AND " : 'WHERE ').groupaccess('f.forum_access')."
             AND f.forum_cat!=:cat ORDER BY f2.forum_order ASC, f.forum_order ASC
-            ",
-                      [
-                          ':language' => LANGUAGE,
-                          ':cat' => 0,
-                      ]
-    );
-
+            ";
+	$result = dbquery($fresult, $bind);
+    
     $flist = array('0' => fusion_get_locale('f401', LOCALE.LOCALESET."search/forums.php"));
     while ($data2 = dbarray($result)) {
         $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
