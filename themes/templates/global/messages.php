@@ -40,7 +40,7 @@ if (!function_exists('display_inbox')) {
                         '.showdate("shortdate", $data['message_datestamp']).', '.timer($data['message_datestamp']).'
                     </div>
                 </div>
-                '.$data['message']['message_text'].'
+                '.nl2br(parse_textarea($data['message']['message_text'], TRUE, TRUE, FALSE)).'
                 <hr/>
                 '.$info['reply_form'];
 
@@ -83,7 +83,7 @@ if (!function_exists('display_inbox')) {
                                     ))."</td>\n";
                                 echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
                                 echo "<td class='col-xs-7'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
-                                echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
+                                echo "<td>".showdate("shortdate", $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
                             echo '</table>';
@@ -105,7 +105,7 @@ if (!function_exists('display_inbox')) {
                                     ))."</td>\n";
                                 echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
                                 echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
-                                echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
+                                echo "<td>".showdate("shortdate", $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
                             echo '</table>';
@@ -124,7 +124,7 @@ if (!function_exists('display_inbox')) {
                                     ))."</td>\n";
                                 echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
                                 echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
-                                echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
+                                echo "<td>".showdate("shortdate", $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
                             echo '</table>';
