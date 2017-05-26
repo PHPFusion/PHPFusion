@@ -107,7 +107,7 @@ class News extends Core {
                 <div class='post-title'>
                     <h3>
                         <a href='<?php echo $info['news_url'] ?>' rel='bookmark'>
-                            <strong class='m-r-10'><?php echo date('M d', $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
+                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
                         </a>
                     </h3>
                 </div>

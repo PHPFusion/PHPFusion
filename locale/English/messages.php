@@ -1,6 +1,5 @@
 <?php
 // Standard
-$locale['m000'] = "%b-%d";
 $locale['400'] = "Private Messages";
 $locale['401'] = "New Message";
 $locale['402'] = "Inbox";
