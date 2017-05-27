@@ -35,18 +35,19 @@ function get_microtime() {
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *
- * @param      $country_iso = 3-letter ISO 4217
+ * @param      $iso         = 3-letter ISO 4217
  * @param bool $description - set to false for just symbol
  *
  * @return null
  */
-function fusion_get_currency($country_iso = NULL, $description = TRUE) {
+function fusion_get_currency($iso = NULL, $description = TRUE) {
+    static $__currency = array();
     if (empty($locale['charset'])) {
+        // Do not use $__currency and $iso in these 2 files
         include LOCALE.LOCALESET."global.php";
         include LOCALE.LOCALESET."currency.php";
     }
-    static $currency_symbol = array();
-    if (empty($currency_symbol)) {
+    if (empty($__currency)) {
         // Euro Exceptions list
         $currency_exceptions = array(
             "ADF" => "EUR",
@@ -77,15 +78,14 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
             "ESB" => "EUR",
         );
         foreach (array_keys($locale['currency']) as $country_iso) {
-            $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
-            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso], ENT_QUOTES,
-                $locale['charset']) : $iso);
-            $c_text = $locale['currency'][$iso];
-            $currency_symbol[$country_iso] = $description ? $c_text." ($c_symbol)" : $c_symbol;
+            $c_iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
+            $c_symbol = (!empty($locale['currency_symbol'][$c_iso]) ? html_entity_decode($locale['currency_symbol'][$c_iso], ENT_QUOTES, $locale['charset']) : $c_iso);
+            $c_text = $locale['currency'][$c_iso];
+            $__currency[$country_iso] = $description ? $c_text." ($c_symbol)" : $c_symbol;
         }
     }
 
-    return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
+    return $iso === NULL ? $__currency : (isset($currency_symbol[$iso]) ? $currency_symbol[$iso] : NULL);
 }
 
 
