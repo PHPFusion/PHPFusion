@@ -1419,8 +1419,9 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @global string[] $settings
  * @global string[] $userdata
  *
- * @param string    $format shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param int       $val    unix timestamp
+ * @param           $format     shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
+ * @param           $val        unix timestamp
+ * @param array     $options
  *
  * @return string
  */
