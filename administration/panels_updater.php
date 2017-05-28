@@ -17,9 +17,8 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 include LOCALE.LOCALESET."admin/panels.php";
-if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-    redirect("../index.php");
-}
+pageAccess("P");
+
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
     $sql_side = "";
     if (isset($_GET['panel_side']) && isnum($_GET['panel_side'])) {
