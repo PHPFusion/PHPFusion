@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 class UserFieldsInput {
@@ -54,9 +55,9 @@ class UserFieldsInput {
     // Flags
     private $_themeChanged = FALSE;
 
-
     /**
      * Model output
+     *
      * @return array
      */
     public function getData() {
@@ -65,11 +66,13 @@ class UserFieldsInput {
         } elseif (isset($_POST['user_hash'])) {
             $this->data['user_hash'] = form_sanitizer($_POST['user_hash'], '', 'user_hash');
         }
+
         return $this->data;
     }
 
     /**
      * Save User Fields
+     *
      * @return bool - true if successful.
      */
     public function saveInsert() {
@@ -92,6 +95,7 @@ class UserFieldsInput {
 
         /**
          * For validation purposes only to show required field errors
+         *
          * @todo - look further for optimization
          */
         $quantum = new QuantumFields();
@@ -136,7 +140,7 @@ class UserFieldsInput {
                     );
                     $message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
                     sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'],
-                              $subject, $message);
+                        $subject, $message);
 
                     // Administrator complete message
                     $this->_completeMessage = $locale['u172'];
@@ -154,6 +158,7 @@ class UserFieldsInput {
             if ($this->_completeMessage) {
                 addNotice("success", $this->_completeMessage, 'all');
             }
+
             return TRUE;
         }
 
@@ -162,6 +167,7 @@ class UserFieldsInput {
 
     /**
      * Initialise empty fields
+     *
      * @return array
      */
     private function _setEmptyFields() {
@@ -200,8 +206,9 @@ class UserFieldsInput {
      * Handle User Name Input and Validation
      */
     private function _settUserName() {
-        global $locale, $defender;
-	$uban = explode(',', fusion_get_settings('UserName_ban'));
+        $locale = fusion_get_locale();
+        $defender = \defender::getInstance();
+        $uban = explode(',', fusion_get_settings('UserName_ban'));
 
         $this->_userName = "";
         if (isset($_POST['user_name'])) {
@@ -214,7 +221,7 @@ class UserFieldsInput {
                     $defender->setInputError('user_name');
                     $defender->setErrorText('user_name', $locale['u120']);
 
-                } elseif(in_array($this->_userName, $uban)) {
+                } elseif (in_array($this->_userName, $uban)) {
                     // Check for contains username
                     $defender->stop();
                     $defender->setInputError('user_name');
@@ -470,7 +477,6 @@ class UserFieldsInput {
         }
     }
 
-
     private function _getPasswordInput($field) {
         return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
     }
@@ -487,20 +493,19 @@ class UserFieldsInput {
 
         if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
             // override the requirements of password to change email address of a member in admin panel
-            if (iSUPERADMIN or (iADMIN && checkrights('M'))) {
+            if (defined('ADMIN_PANEL') && (iSUPERADMIN or (iADMIN && checkrights('M')))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
             } elseif (!$this->registration) {
                 $this->verify_password();
             }
-
             // Require user password for email change
             if ($this->_isValidCurrentPassword || $this->registration) {
                 // Require a valid email account
                 if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 
                     if (dbcount("(blacklist_id)", DB_BLACKLIST,
-                                ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
-                                array(':email' => $this->_userEmail))) {
+                        ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
+                        array(':email' => $this->_userEmail))) {
                         // this email blacklisted.
                         \defender::stop();
                         \defender::setInputError('user_email');
@@ -554,6 +559,8 @@ class UserFieldsInput {
             $passAuth->inputPassword = $_userPassword;
             $passAuth->currentAlgo = $this->userData['user_algo'];
             $passAuth->currentSalt = $this->userData['user_salt'];
+            $passAuth->currentPasswordHash = $this->userData['user_password'];
+
             if ($passAuth->isValidCurrentPassword()) {
                 $this->_isValidCurrentPassword = 1;
             } else {
@@ -596,7 +603,8 @@ class UserFieldsInput {
 
     // Get New Password Hash and Directly Set New Cookie if Authenticated
     private function _setValidationError() {
-        global $locale, $settings, $defender;
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
         if ($_CAPTCHA_IS_VALID == FALSE) {
@@ -612,16 +620,11 @@ class UserFieldsInput {
      * Sends Verification code when you register
      */
     private function _setEmailVerification() {
-
         $settings = fusion_get_settings();
-
         $locale = fusion_get_locale();
-
         require_once INCLUDES."sendmail_include.php";
-
         $userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
         $activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
-
         $message = str_replace("USER_NAME", $this->_userName, $locale['u152']);
         $message = str_replace("SITENAME", fusion_get_settings("sitename"), $message);
         $message = str_replace("SITEUSERNAME", fusion_get_settings("siteusername"), $message);
@@ -629,8 +632,10 @@ class UserFieldsInput {
         $message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
         $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
         if (!sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
-            $message = str_replace("[LINK]", "<a href='".BASEDIR."contact.php'><strong>", $locale['u154']);
-            $message = str_replace("[/LINK]", "</strong></a>", $message);
+            $message = strtr($locale['u154'], [
+                '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
+                '[/LINK]' => "</strong></a>"
+            ]);
             addNotice('warning', $locale['u153']."<br />".$message, 'all');
         }
         $userInfo = base64_encode(serialize($this->data));
@@ -647,6 +652,7 @@ class UserFieldsInput {
 
     /**
      * Update User Fields
+     *
      * @return bool
      */
     public function saveUpdate() {
@@ -707,9 +713,9 @@ class UserFieldsInput {
                 addNotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
                 $input = array(
                     "mailname" => $this->userData['user_name'],
-                    "email" => $this->userData['user_email'],
-                    "subject" => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
-                    "message" => str_replace(
+                    "email"    => $this->userData['user_email'],
+                    "subject"  => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
+                    "message"  => str_replace(
                         array(
                             "[SITENAME]",
                             "[SITEUSERNAME]",
@@ -726,7 +732,7 @@ class UserFieldsInput {
                     )
                 );
                 if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
-                               $input['message'])
+                    $input['message'])
                 ) {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
