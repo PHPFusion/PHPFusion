@@ -20,25 +20,30 @@ if (!defined("IN_FUSION")) {
 }
 
 if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
-    include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+    $locale += fusion_get_locale("", INFUSIONS."blog/locale/".LOCALESET."blog.php");
 } else {
-    include INFUSIONS."blog/locale/English/blog.php";
+    $locale += fusion_get_locale("", INFUSIONS."blog/locale/English/blog.php");
 }
 
 openside($locale['blog_1004']);
-$result = dbquery("
-    SELECT blog_id,blog_subject,blog_datestamp FROM ".DB_BLOG." 
-    ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."  AND blog_draft = 0 ORDER BY blog_datestamp DESC");
+$blog_result = "SELECT
+				blog_id, blog_subject, blog_datestamp
+				FROM ".DB_BLOG."
+				WHERE blog_draft = 0
+				AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND blog_language='".LANGUAGE."'" : "")."
+				ORDER BY blog_datestamp DESC
+				";
+$result = dbquery($blog_result);
 if (dbrows($result)) {
     echo "<ul class='blog_archive_inner'>\n";
-    $data = array();
+	$data = [];
     while ($row = dbarray($result)) {
         $year = date('Y', $row['blog_datestamp']);
-        $month = date('F', $row['blog_datestamp']);
+        $month = showdate('%b', $row['blog_datestamp']);
         $data[$year][$month][] = $row;
     }
     foreach ($data as $blog_year => $blog_months) {
-        echo "<b>".$blog_year."</b><br />";
+        echo "<div class='text-left'><b>".$blog_year."</b></div>";
         foreach ($blog_months as $blog_month => $blog_entries) {
             echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
             foreach ($blog_entries as $blog_entry) {
@@ -46,9 +51,10 @@ if (dbrows($result)) {
                                                                                                                              25)."</a></li>";
             }
         }
+
     }
     echo "</ul>\n";
 } else {
-    echo $locale['blog_3000'];
+    echo "<div class='text-center'>".$locale['blog_3000']."</div>\n";
 }
 closeside();
