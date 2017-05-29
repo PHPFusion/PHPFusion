@@ -389,6 +389,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => clean_request("", array("archive", "month"), TRUE),
+                "title" => showdate($locale['blog_archive'], $start_time),
             ]);
 
         }
