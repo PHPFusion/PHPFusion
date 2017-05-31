@@ -604,39 +604,33 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
  *
  * @return string
  */
-function parseubb($text, $selected = false) {
-	global $bbcode_cache;
-	
-	if (!$bbcode_cache) { 
-		cache_bbcode(); 
-	}
-	
-	if (is_array($bbcode_cache) && count($bbcode_cache)) {
-		if ($selected) { $sel_bbcodes = explode("|", $selected); }
-		foreach ($bbcode_cache as $bbcode) {
-			if ($selected && in_array($bbcode, $sel_bbcodes)) {
-				if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-					if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-						include (LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-					} elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-						include (LOCALE."English/bbcodes/".$bbcode.".php");
-					}
-					include (INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
-				}
-			} elseif (!$selected) {
-				if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-					if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-						include (LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-					} elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-						include (LOCALE."English/bbcodes/".$bbcode.".php");
-					}
-					include (INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
-				}
-			}
-		}
-	}
-	$text = descript($text, false);
-	return $text;
+function parseubb($text, $selected = "") {
+    $bbcode_cache = array();
+    $bbcode_cache = cache_bbcode();
+    if ($selected) {
+        $sel_bbcodes = explode("|", $selected);
+    }
+    $locale = array();
+    foreach ($bbcode_cache as $bbcode) {
+        if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
+        } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
+        }
+        $locale += fusion_get_locale('', $locale_file);
+        if ($selected && in_array($bbcode, $sel_bbcodes)) {
+            if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
+                include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
+            }
+        } elseif (!$selected) {
+            if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
+                include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
+            }
+        }
+    }
+    $text = descript($text, FALSE);
+
+    return $text;
 }
 
 /**
