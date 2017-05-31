@@ -519,7 +519,6 @@ function displaysmileys($textarea, $form = "inputform") {
         $i++;
         $smileys .= "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
     }
-
     return $smileys;
 }
 
@@ -534,7 +533,6 @@ function fusion_parse_user($user_name) {
     $user_regex = ' @[-0-9A-Z_\.]{1,50}';
     $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
         $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
-
         return render_user_tags($user_name);
     }, $user_name);
 
@@ -542,13 +540,13 @@ function fusion_parse_user($user_name) {
 }
 
 /**
- * Cache bbcode mysql
+ * Cache all installed bbcode
  *
  * @return array
  */
 function cache_bbcode() {
-    static $bbcode_cache = NULL;
-    if ($bbcode_cache === NULL) {
+    static $bbcode_cache = array();
+    if (empty($bbcode_cache)) {
         $bbcode_cache = array();
         $result = dbquery("SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order ASC");
         while ($data = dbarray($result)) {
@@ -556,7 +554,7 @@ function cache_bbcode() {
         }
     }
 
-    return $bbcode_cache;
+    return (array)$bbcode_cache;
 }
 
 /**
@@ -607,6 +605,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
  * @return string
  */
 function parseubb($text, $selected = "") {
+    $bbcode_cache = array();
     $bbcode_cache = cache_bbcode();
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);

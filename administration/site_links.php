@@ -195,22 +195,26 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
      * Site Links Settings Administration Form
      */
     private function display_sitelinks_settings() {
-
-
         fusion_confirm_exit();
-
         add_to_title($this->locale['SL_0041']);
+
+        $settings = fusion_get_settings();
+        if (!isset($settings['link_bbcode'])) {
+            dbquery("INSERT INTO ".DB_SETTINGS." (`settings_name`, `settings_value`) VALUES ('link_bbcode', '0')");
+        }
 
         $settings = array(
             "links_per_page" => fusion_get_settings("links_per_page"),
-            "links_grouping" => fusion_get_settings("links_grouping")
+            "links_grouping" => fusion_get_settings("links_grouping"),
+            'link_bbcode'    => fusion_get_settings('link_bbcode'),
         );
 
         if (isset($_POST['save_settings'])) {
 
             $settings = array(
                 "links_per_page" => form_sanitizer($_POST['links_per_page'], 1, "links_per_page"),
-                "links_grouping" => form_sanitizer($_POST['links_grouping'], 0, "links_grouping")
+                "links_grouping" => form_sanitizer($_POST['links_grouping'], 0, "links_grouping"),
+                'link_bbcode'    => form_sanitizer($_POST['link_bbcode'], 0, 'link_bbcode')
             );
             if (\defender::safe()) {
                 foreach ($settings as $key => $value) {
@@ -219,7 +223,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 addNotice("success", $this->locale['SL_0018']);
                 redirect(FUSION_REQUEST);
             }
-
         }
 
         echo openform("sitelinks_settings", "post", FUSION_REQUEST, array("class" => "m-t-20 m-b-20"));
@@ -227,6 +230,15 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "<div class='well'>\n";
         echo $this->locale['SL_0042'];
         echo "</div>\n";
+
+        echo form_checkbox('link_bbcode', $this->locale['SL_0063'], $settings['link_bbcode'], [
+            'options' => [
+                '0' => $this->locale['no'],
+                1   => $this->locale['yes']
+            ],
+            'type'    => 'radio',
+            'inline'  => true,
+        ]);
 
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'><strong>".$this->locale['SL_0046']."</strong><br/>".$this->locale['SL_0047']."</div>";
         echo "<div class='col-xs-12 col-sm-9'>\n";
@@ -335,7 +347,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
         echo form_hidden('link_id', '', $this->data['link_id']);
-        echo form_textarea('link_name', $this->locale['SL_0020'], $this->data['link_name'], array(
+        echo form_text('link_name', $this->locale['SL_0020'], $this->data['link_name'], array(
             'max_length' => 100,
             'required' => TRUE,
             'error_text' => $this->locale['SL_0085'],

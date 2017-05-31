@@ -587,7 +587,7 @@ class SiteLinks {
                 $li_class = [];
                 $link_data += $default_link_data;
 
-                $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
+                $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
 
                 if (!empty(self::getMenuParam('item_class'))) {
                     $li_class[] = self::getMenuParam('item_class');
@@ -626,6 +626,7 @@ class SiteLinks {
 
                         // The breadcrumbs series of arrays - stable
                         $reference = $this->getLinkInstance();
+
                         if (!empty($reference)) {
 
                             $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
