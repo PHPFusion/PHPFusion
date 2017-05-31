@@ -52,7 +52,7 @@ while ($file = readdir($temp)) {
 }
 closedir($temp);
 // photoalbum -------------------
-if (db_exists(DB_PHOTOS) && db_exists(DB_PHOTO_ALBUMS)) {
+if (infusion_exists('gallery')) {
 $result = dbquery("
 	SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
 	FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."

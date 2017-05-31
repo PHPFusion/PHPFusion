@@ -132,7 +132,7 @@ class Members_Profile extends Members_Admin {
                 /**
                  * @todo: Need to store user content reference column in a table for each infusions
                  */
-                if (db_exists(DB_PHOTOS)) {
+                if (infusion_exists('gallery')) {
                     // Delete photos
                     $result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
                     if (dbrows($result)) {

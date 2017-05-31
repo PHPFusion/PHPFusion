@@ -41,12 +41,14 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
     $new_time = TIME;
     $user_datestamp = array(':user_datestamp' => TIME - 86400);
     $notify_datestamp = array(':notify_datestamp' => TIME - 1209600);
-    if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+    if (infusion_exists('forum')) {
         dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", $notify_datestamp);
     }
+
     dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp <:user_datestamp", $user_datestamp);
     dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp <:user_datestamp", $user_datestamp);
     $usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < NOW()");
+
     if ($usr_inactive) {
         require_once INCLUDES."sendmail_include.php";
         $result = dbquery("SELECT user_id, user_name, user_email FROM ".DB_USERS."

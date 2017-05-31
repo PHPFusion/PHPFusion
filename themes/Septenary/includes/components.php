@@ -320,10 +320,10 @@ class SeptenaryComponents {
                 echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
                 //echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
                 $modules = array(
-                    DB_PREFIX.'news' => db_exists(DB_PREFIX.'news'),
-                    DB_PREFIX.'photos' => db_exists(DB_PREFIX.'photos'),
-                    DB_PREFIX.'forums' => db_exists(DB_PREFIX.'forums'),
-                    DB_PREFIX.'downloads' => db_exists(DB_PREFIX.'downloads')
+                    DB_PREFIX.'news'      => infusion_exists('news'),
+                    DB_PREFIX.'photos'    => infusion_exists('gallery'),
+                    DB_PREFIX.'forums'    => infusion_exists('forum'),
+                    DB_PREFIX.'downloads' => infusion_exists('downloads')
                 );
                 $sum = array_sum($modules);
                 if ($sum) {

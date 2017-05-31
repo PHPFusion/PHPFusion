@@ -21,13 +21,13 @@ include LOCALE.LOCALESET."submissions.php";
 add_to_title(str_replace('...', '', $locale['UM089']));
 
 $modules = array(
-    'n' => db_exists(DB_NEWS),
-    'p' => db_exists(DB_PHOTO_ALBUMS),
-    'a' => db_exists(DB_ARTICLES),
-    'd' => db_exists(DB_DOWNLOADS),
-    'l' => db_exists(DB_WEBLINKS),
-    'b' => db_exists(DB_BLOG),
-    'q' => db_exists(DB_FAQS)
+    'n' => infusion_exists('news'),
+    'p' => infusion_exists('gallery'),
+    'a' => infusion_exists('articles'),
+    'd' => infusion_exists('downloads'),
+    'l' => infusion_exists('weblinks'),
+    'b' => infusion_exists('blog'),
+    'q' => infusion_exists('faq'),
 );
 $sum = array_sum($modules);
 if (!$sum) {
@@ -35,17 +35,17 @@ if (!$sum) {
 }
 
 $submission_types = array(
-    DB_NEWS => array('link' => "submit.php?stype=n", 'title' => $locale['submit_0000']),
-    DB_BLOG => array('link' => "submit.php?stype=b", 'title' => $locale['submit_0005']),
-    DB_ARTICLES => array('link' => "submit.php?stype=a", 'title' => $locale['submit_0001']),
-    DB_DOWNLOADS => array('link' => "submit.php?stype=d", 'title' => $locale['submit_0002']),
-    DB_PHOTOS => array('link' => "submit.php?stype=p", 'title' => $locale['submit_0003']),
-    DB_WEBLINKS => array('link' => "submit.php?stype=l", 'title' => $locale['submit_0004']),
-    DB_FAQS => array('link' => "submit.php?stype=q", 'title' => $locale['submit_0006']),
+    'news'      => array('link' => "submit.php?stype=n", 'title' => $locale['submit_0000']),
+    'blog'      => array('link' => "submit.php?stype=b", 'title' => $locale['submit_0005']),
+    'articles'  => array('link' => "submit.php?stype=a", 'title' => $locale['submit_0001']),
+    'downloads' => array('link' => "submit.php?stype=d", 'title' => $locale['submit_0002']),
+    'gallery'   => array('link' => "submit.php?stype=p", 'title' => $locale['submit_0003']),
+    'weblinks'  => array('link' => "submit.php?stype=l", 'title' => $locale['submit_0004']),
+    'faq'       => array('link' => "submit.php?stype=q", 'title' => $locale['submit_0006']),
 );
 
 foreach ($submission_types as $db => $submit) {
-    if (db_exists($db)) {
+    if (infusion_exists($db)) {
         opentable(sprintf($submit['title'], ''));
         echo "<a href='".$submit['link']."'>".sprintf($submit['title'], str_replace('...', '', $locale['UM089']))."</a>";
         closetable();

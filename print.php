@@ -61,7 +61,7 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
 		case "FQ":
-            if (!db_exists(DB_FAQS)) {
+            if (!infusion_exists('faq')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("
@@ -89,7 +89,7 @@ if (isset($_GET['type'])) {
             }
             break;
 		case "A":
-            if (!db_exists(DB_ARTICLES)) {
+            if (!infusion_exists('articles')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("
@@ -118,7 +118,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "N":
-            if (!db_exists(DB_NEWS)) {
+            if (!infusion_exists('news')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,
@@ -156,7 +156,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "B":
-            if (!db_exists(DB_BLOG)) {
+            if (!infusion_exists('blog')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
@@ -194,7 +194,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "F":
-            if (!db_exists(DB_FORUMS)) {
+            if (!infusion_exists('forum')) {
                 redirect(BASEDIR."error.php?code=404");
             }
             if ((isset($_GET['post']) && isnum($_GET['post'])) && (isset($_GET['nr']) && isnum($_GET['nr']))) {
@@ -290,7 +290,6 @@ if (isset($_GET['type'])) {
     redirect($settings['opening_page']);
 }
 echo "</body>\n</html>";
-
 if (ob_get_length() !== FALSE) {
     ob_end_flush();
 }

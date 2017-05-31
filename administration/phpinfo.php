@@ -69,22 +69,22 @@ if ($_GET['page'] == 1) {
         if ($_GET['page'] == 3) {
             $status = '';
             $folders = array( //path => have to be writeable or not
-                              'administration/db_backups/' => TRUE,
-                              'images/' => TRUE,
-                              'images/imagelist.js' => TRUE,
-                              'images/avatars/' => TRUE,
-                              'infusions/articles/images/' => db_exists(DB_ARTICLES) ? TRUE : FALSE,
-                              'infusions/news/images/' => db_exists(DB_NEWS) ? TRUE : FALSE,
-                              'infusions/news/images/thumbs/' => db_exists(DB_NEWS) ? TRUE : FALSE,
-                              'infusions/news/news_cats/' => db_exists(DB_NEWS_CATS) ? TRUE : FALSE,
-                              'infusions/gallery/photos/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
-                              'infusions/gallery/submissions/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
-                              'infusions/forum/attachments/' => db_exists(DB_FORUMS) ? TRUE : FALSE,
-                              'infusions/downloads/files/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
-                              'infusions/downloads/images/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
-                              'infusions/downloads/submissions/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
-                              'robots.txt' => TRUE,
-                              'config.php' => FALSE
+                              'administration/db_backups/'       => TRUE,
+                              'images/'                          => TRUE,
+                              'images/imagelist.js'              => TRUE,
+                              'images/avatars/'                  => TRUE,
+                              'infusions/articles/images/'       => infusion_exists('articles'),
+                              'infusions/news/images/'           => infusion_exists('news'),
+                              'infusions/news/images/thumbs/'    => infusion_exists('news'),
+                              'infusions/news/news_cats/'        => infusion_exists('news'),
+                              'infusions/gallery/photos/'        => infusion_exists('gallery'),
+                              'infusions/gallery/submissions/'   => infusion_exists('gallery'),
+                              'infusions/forum/attachments/'     => infusion_exists('forum'),
+                              'infusions/downloads/files/'       => infusion_exists('downloads'),
+                              'infusions/downloads/images/'      => infusion_exists('downloads'),
+                              'infusions/downloads/submissions/' => infusion_exists('downloads'),
+                              'robots.txt'                       => TRUE,
+                              'config.php'                       => FALSE
             );
             add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
             //Check file/folder writeable

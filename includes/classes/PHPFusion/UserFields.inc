@@ -149,7 +149,7 @@ class UserFields extends QuantumFields {
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
-            if (db_exists(DB_PREFIX.'forums')) {
+            if (infusion_exists('forum')) {
                 $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->userData['user_reputation'];
             }
 
@@ -328,7 +328,7 @@ class UserFields extends QuantumFields {
                 )
             );
 
-            if (iSUPERADMIN && db_exists(DB_PREFIX.'forums')) {
+            if (iSUPERADMIN && infusion_exists('forum')) {
                 $this->info['user_reputation'] = form_text('user_reputation', $locale['u210'], $user_reputation, array(
                         'type'   => 'number',
                         'inline' => TRUE

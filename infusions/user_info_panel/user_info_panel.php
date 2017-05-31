@@ -21,17 +21,17 @@ $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
 $modules = array(
-    'n' => array($locale['UM090'], DB_PREFIX.'news'),
-    'b' => array($locale['UM095'], DB_PREFIX.'blog'),
-    'l' => array($locale['UM091'], DB_PREFIX.'weblinks'),
-    'a' => array($locale['UM092'], DB_PREFIX.'articles'),
-    'p' => array($locale['UM093'], DB_PREFIX.'photos'),
-    'd' => array($locale['UM094'], DB_PREFIX.'downloads'),
-    'q' => array($locale['UM102'], DB_PREFIX.'faqs')
+    'n' => array($locale['UM090'], infusion_exists('news')),
+    'b' => array($locale['UM095'], infusion_exists('blog')),
+    'l' => array($locale['UM091'], infusion_exists('weblinks')),
+    'a' => array($locale['UM092'], infusion_exists('articles')),
+    'p' => array($locale['UM093'], infusion_exists('photos')),
+    'd' => array($locale['UM094'], infusion_exists('downloads')),
+    'q' => array($locale['UM102'], infusion_exists('faq'))
 );
 $installedModules = array();
 foreach ($modules as $k => $v) {
-    if (db_exists($v[1])) {
+    if (!empty($v[1])) {
         $installedModules[$k] = $v[0];
     }
 }
@@ -50,7 +50,7 @@ if (iMEMBER) {
     $outbox_count = (int)$messages_count['outbox_count'];
     $archive_count = (int)$messages_count['archive_count'];
     $msg_count = (int)$messages_count['unread_count'];
-    $forum_exists = db_exists(DB_PREFIX.'forums') ? TRUE : FALSE;
+    $forum_exists = infusion_exists('forum');
 
     $pm_progress = '';
     if (!iSUPERADMIN) {

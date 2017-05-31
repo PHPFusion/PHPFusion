@@ -21,20 +21,6 @@ pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/theme.php');
 $theme_admin = new \PHPFusion\Atom\Admin();
-/**
- * Auto Upgrade Script -- remove after beta period
- */
-if (!db_exists(DB_SETTINGS_THEME)) {
-    $result = dbquery(
-        "CREATE TABLE ".DB_SETTINGS_THEME."
-		(settings_name VARCHAR(200) NOT NULL DEFAULT '',
-		settings_value TEXT NOT NULL,
-		settings_theme VARCHAR(200) NOT NULL DEFAULT '',
-		PRIMARY KEY (settings_name)
-		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
-	");
-    addNotice('success', "Theme Engine has been upgraded");
-}
 
 opentable($locale['theme_1000']);
 switch ($_GET['action']) {

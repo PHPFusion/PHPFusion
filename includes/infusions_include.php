@@ -114,11 +114,29 @@ if (!function_exists('set_setting')) {
     }
 }
 
+/**
+ * Check whether an infusion is installed or not from the infusions table
+ *
+ * @param $infusion_folder
+ *
+ * @return bool
+ */
 function infusion_exists($infusion_folder) {
-    return dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]);
+    static $inf_exists_check = array();
+    if (empty($inf_exists_check[$infusion_folder])) {
+        $inf_exists_check[$infusion_folder] = dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]) ? TRUE : FALSE;
+    }
+
+    return (boolean)$inf_exists_check[$infusion_folder];
 }
 
-// Get the settings for the infusion from the settings_inf table
+/**
+ * Get the settings for the infusion from the settings_inf table
+ * @param      $settings_inf
+ * @param null $key
+ *
+ * @return mixed|null
+ */
 function get_settings($settings_inf, $key = NULL) {
     static $settings_arr = array();
     if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {

@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_WEBLINKS)) {
+require_once dirname(__FILE__).'/../../maincore.php';
+if (!infusion_exists('weblinks')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";

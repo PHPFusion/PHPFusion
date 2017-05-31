@@ -22,13 +22,13 @@ if (!iMEMBER) {
 require_once THEMES."templates/header.php";
 include_once INCLUDES."infusions_include.php";
 $modules = array(
-    'n' => db_exists(DB_NEWS),
-    'p' => db_exists(DB_PHOTO_ALBUMS),
-    'a' => db_exists(DB_ARTICLES),
-    'd' => db_exists(DB_DOWNLOADS),
-    'l' => db_exists(DB_WEBLINKS),
-    'b' => db_exists(DB_BLOG),
-    'q' => db_exists(DB_FAQS)
+    'n' => infusion_exists('news'),
+    'p' => infusion_exists('gallery'),
+    'a' => infusion_exists('articles'),
+    'd' => infusion_exists('downloads'),
+    'l' => infusion_exists('weblinks'),
+    'b' => infusion_exists('blog'),
+    'q' => infusion_exists('faq')
 );
 $submit_types = array(
     'n' => array('link' => INFUSIONS."news/news_submit.php"),
