@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 class Locale {
@@ -29,31 +30,53 @@ class Locale {
      *
      * Fetch a given locale key
      *
-     * @param null   $key - The key of one setting
+     * @param null   $key          - The key of one setting
      * @param string $include_file - The full path of the file which to be included
+     *
      * @return array|null
      */
-    public static function getLocale($key = NULL, $include_file = "") {
-        global $locale;
-        $is_sanitized = TRUE;
-        if ($include_file) {
-            if (is_array($include_file)) {
-                foreach ($include_file as $file) {
-                    if (is_file($file)) {
-                        //self::$locale_cache[] = $file;
-                        include $file;
-                    }
-                }
-            } else {
-                if (is_file($include_file)) {
-                    //self::$locale_cache[] = $include_file;
-                    include $include_file;
-                }
-            }
+    private static $locale_file = [];
+    private static $locale = [];
+    private static $instance = NULL;
+
+    /**
+     * @return null|static
+     */
+    public static function __getInstance() {
+        if (self::$instance == NULL) {
+            self::$instance = new Static();
         }
 
-        if (!empty($locale) && $is_sanitized == TRUE) {
-            return empty($key) ? $locale : (isset($locale[$key]) ? $locale[$key] : array());
+        return self::$instance;
+    }
+
+    public static function load_locale_file($file) {
+        $locale = &$locale;
+        if (is_file($file)) {
+            include $file;
+            self::$locale = $locale;
+        }
+    }
+
+    public function getLocale($key = NULL, $include_file = "") {
+        global $locale;
+        self::$locale = $locale;
+        $is_sanitized = TRUE;
+        if (!empty($include_file)) {
+            if (is_array($include_file)) {
+                foreach ($include_file as $file) {
+                    if (empty(self::$locale_file[$file])) {
+                        self::$locale_file[$file] = 1;
+                        self::load_locale_file($file);
+                    }
+                }
+            } elseif (empty(self::$locale_file[$include_file])) {
+                self::$locale_file[$include_file] = 1;
+                self::load_locale_file($include_file);
+            }
+        }
+        if (!empty(self::$locale) && $is_sanitized == TRUE) {
+            return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : array());
         }
 
         return NULL;
@@ -63,21 +86,21 @@ class Locale {
      * @param       $count - integer
      * @param       $words - 'member|members';
      * @param array $options
-     *              Indexes:
-     *                  -   add_count ...... true/false (default true) to show integer
+     *                     Indexes:
+     *                     -   add_count ...... true/false (default true) to show integer
      *                     -   html ...... whether to output html as return
-     *                  -   html_template ..... custom html template
-     *                  -   language at use.
+     *                     -   html_template ..... custom html template
+     *                     -   language at use.
      *
      * @return string
      */
     public static function format_word($count, $words, $options = array()) {
 
         $default_options = array(
-            'add_count' => TRUE,
-            'html' => FALSE,
+            'add_count'     => TRUE,
+            'html'          => FALSE,
             'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>",
-            'language' => LANGUAGE,
+            'language'      => LANGUAGE,
         );
 
         $options += $default_options;
@@ -124,10 +147,10 @@ class Locale {
         if ($options['add_count']) {
             if ($options['html'] && !empty($options['html_template'])) {
                 return strtr($options['html_template'],
-                             array(
-                                 "{%count%}" => $count,
-                                 "{%result%}" => $result
-                             )
+                    array(
+                        "{%count%}"  => $count,
+                        "{%result%}" => $result
+                    )
                 );
             } else {
                 return $count.' '.$result;
@@ -139,10 +162,13 @@ class Locale {
 
     /**
      * Given English as base, find out the localized version
+     *
      * @param $country
+     *
      * @return mixed
      */
-    public static function translate_country_names($country) {
+    public
+    static function translate_country_names($country) {
         $translated_countries = array(
             "China"           => "中国",
             "Czech Republic"  => "Česko",
@@ -180,7 +206,8 @@ class Locale {
      *
      * @return array|mixed|null
      */
-    public static function translate_lang_names($key = NULL) {
+    public
+    static function translate_lang_names($key = NULL) {
         $translated_langs = array(
             "Chinese_Simplified"  => "中文-简体",
             "Chinese_Traditional" => "中文-繁体",
@@ -217,7 +244,8 @@ class Locale {
      *
      * @return array|mixed|null
      */
-    public static function get_iso($key = NULL, $iso_to_lang = TRUE) {
+    public
+    static function get_iso($key = NULL, $iso_to_lang = TRUE) {
         /**
          * ISO 639-1 Language Codes
          * References :

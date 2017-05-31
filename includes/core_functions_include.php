@@ -1592,7 +1592,7 @@ function fusion_get_settings($key = NULL) {
  * @return array|null
  */
 function fusion_get_locale($key = NULL, $include_file = "") {
-    return PHPFusion\Locale::getLocale($key, $include_file);
+    return PHPFusion\Locale::__getInstance()->getLocale($key, $include_file);
 }
 
 /**
