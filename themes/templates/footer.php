@@ -22,9 +22,7 @@ if (!defined("IN_FUSION")) {
 require_once INCLUDES."footer_includes.php";
 \PHPFusion\Panels::getInstance()->getSitePanel();
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
-
-//require_once __DIR__.'/cron.php';
-
+require_once __DIR__.'/cron.php';
 if (!isset($fusion_jquery_tags)) {
     $fusion_jquery_tags = '';
 }
@@ -60,12 +58,21 @@ if (!isset($_GET['aid'])) {
 if (isset($permalink)) {
     unset($permalink);
 }
-
 // Output the final complete page content
 echo $output;
-
 remove_notice();
 
+$performance_test = FALSE;
+if ($performance_test) {
+    $performance_log = \PHPFusion\Database\DatabaseFactory::getConnection('default')->getQueryLog();
+    $time = 0;
+    foreach ($performance_log as $logs) {
+        $current_timed = $logs[0];
+        $time = $time + $current_timed;
+    }
+    print_p($time);
+    print_p($performance_log);
+}
 if ((ob_get_length() > 0)) { // length is a number
     ob_end_flush();
 }
