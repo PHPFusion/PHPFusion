@@ -864,7 +864,6 @@ function getcategory($cat) {
  * @return boolean
  */
 function db_exists($table, $updateCache = FALSE) {
-
     if (strpos($table, DB_PREFIX) === FALSE) {
         $table = DB_PREFIX.$table;
     }

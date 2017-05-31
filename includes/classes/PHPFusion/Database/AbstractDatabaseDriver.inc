@@ -303,7 +303,6 @@ abstract class AbstractDatabaseDriver {
         $result = $this->_query($query, $parameters);
         $query_time = round((microtime(TRUE) - $query_time), 7);
         self::$queries[$this->connectionid][count(self::$queries[$this->connectionid]) - 1][0] = $query_time;
-
         return $result ?: FALSE;
     }
 

@@ -114,22 +114,24 @@ if (!function_exists('set_setting')) {
     }
 }
 
-// Get the settings for the infusion from the settings_inf table
-if (!function_exists('get_settings')) {
-    function get_settings($setting_inf) {
-        $settings_arr = array();
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_INF." WHERE settings_inf='".$setting_inf."'");
-        if (dbrows($set_result)) {
-            while ($set_data = dbarray($set_result)) {
-                $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
-            }
+function infusion_exists($infusion_folder) {
+    return dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]);
+}
 
-            return $settings_arr;
-        } else {
-            return FALSE;
+// Get the settings for the infusion from the settings_inf table
+function get_settings($settings_inf, $key = NULL) {
+    static $settings_arr = array();
+    if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
+        $result = dbquery("SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
+        while ($data = dbarray($result)) {
+            $settings_arr[$data['settings_inf']][$data['settings_name']] = $data['settings_value'];
         }
     }
+    if (empty($settings_arr[$settings_inf])) return NULL;
+
+    return $key === NULL ? $settings_arr[$settings_inf] : (isset($settings_arr[$settings_inf][$key]) ? $settings_arr[$settings_inf][$key] : NULL);
 }
+
 
 if (!function_exists('send_pm')) {
     /**

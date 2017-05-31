@@ -53,7 +53,14 @@ if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:onl
 dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (TIME - 60)]);
 
 if (iMEMBER) {
-    dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
+    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",
+        [
+            ':time'    => TIME,
+            ':ip'      => USER_IP,
+            ':ip_type' => USER_IP_TYPE,
+            ':user_id' => fusion_get_userdata('user_id')
+        ]
+    );
 }
 
 ob_start();

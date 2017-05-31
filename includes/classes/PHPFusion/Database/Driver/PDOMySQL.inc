@@ -189,27 +189,29 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @throws \ErrorException  When the connection could not be established
      */
     protected function connect($host, $user, $pass, $db, array $options = array()) {
-        $options += array(
-            'charset' => 'utf8',
-        );
-        try {
-            $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass,
-                                               array(
-                                                   /*
-                                                    * Inserted to solve the issue of the ignored charset in the connection string.
-                                                    * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
-                                                    */
-                                                   PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
-                                               )
+        if ($this->connection === NULL) {
+            $options += array(
+                'charset' => 'utf8',
             );
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
-            $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
-        } catch (PDOException $error) {
-            //$file = debug_print_backtrace();
-            throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
-                ? new SelectionException($error->getMessage(), $error->getCode(), $error)
-                : new \ErrorException($error->getMessage(), $error->getCode(), 1, debug_backtrace()[1]['file']); //new ConnectionException($error->getMessage(), $error->getCode(), $error);
+            try {
+                $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass,
+                    array(
+                        /*
+                         * Inserted to solve the issue of the ignored charset in the connection string.
+                         * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
+                         */
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
+                    )
+                );
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+                $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
+            } catch (PDOException $error) {
+                //$file = debug_print_backtrace();
+                throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
+                    ? new SelectionException($error->getMessage(), $error->getCode(), $error)
+                    : new \ErrorException($error->getMessage(), $error->getCode(), 1, debug_backtrace()[1]['file']); //new ConnectionException($error->getMessage(), $error->getCode(), $error);
+            }
         }
     }
 

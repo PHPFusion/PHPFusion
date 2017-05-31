@@ -103,8 +103,8 @@ class ImageRepo {
         );
         //</editor-fold>
         $installedTables = array(
-            'blog' => db_exists('blog'),
-            'news' => db_exists('news')
+            'blog' => infusion_exists('blog'),
+            'news' => infusion_exists('news')
         );
 
         $selects = "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN;

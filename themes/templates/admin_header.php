@@ -37,7 +37,14 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i",
 }
 
 if (iMEMBER) {
-    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",
+        [
+            ':time'    => TIME,
+            ':ip'      => USER_IP,
+            ':ip_type' => USER_IP_TYPE,
+            ':user_id' => fusion_get_userdata('user_id')
+        ]
+    );
 }
 
 $bootstrap_theme_css_src = '';

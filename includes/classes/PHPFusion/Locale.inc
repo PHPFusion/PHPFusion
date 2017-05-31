@@ -65,9 +65,10 @@ class Locale {
      * @param array $options
      *              Indexes:
      *                  -   add_count ...... true/false (default true) to show integer
-     *                  -   show_html ...... whether to output html as return
+     *                     -   html ...... whether to output html as return
      *                  -   html_template ..... custom html template
      *                  -   language at use.
+     *
      * @return string
      */
     public static function format_word($count, $words, $options = array()) {
