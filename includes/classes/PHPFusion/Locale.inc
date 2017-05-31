@@ -50,6 +50,9 @@ class Locale {
         return self::$instance;
     }
 
+    /**
+     * @param $file
+     */
     public static function load_locale_file($file) {
         $locale = array();
         include $file;
