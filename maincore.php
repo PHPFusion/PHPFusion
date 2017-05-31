@@ -22,6 +22,7 @@ use PHPFusion\Authenticate;
 
 // Uncomment to see server errors without modifying php.ini
 ini_set('display_errors', '1');
+$dbf_performance_log = FALSE;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();

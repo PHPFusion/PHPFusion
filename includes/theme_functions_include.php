@@ -27,12 +27,10 @@ if (!defined("IN_FUSION")) {
  * @return string
  */
 function showrendertime($queries = TRUE) {
-    global $mysql_queries_count;
+    global $dbf_performance_log;
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $db = DatabaseFactory::getConnection();
-    if ($db) {
-        $mysql_queries_count = $db->getGlobalQueryCount();
-    }
+    $mysql_queries_count = DatabaseFactory::getConnection('default')->getGlobalQueryCount();
+
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
         $render_time = substr((microtime(TRUE) - START_TIME), 0, 7);
         $_SESSION['performance'][] = $render_time;
@@ -54,14 +52,16 @@ function showrendertime($queries = TRUE) {
          * Turn this on if you want to see all the SQL.
          * This debugging is for core engineers only. No need for translations.
          */
-        $sql_log = FALSE;
-        if ($sql_log) {
-            $query_log = $db->getQueryLog();
+
+        if ($dbf_performance_log === TRUE) {
+            $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
             $modal = openmodal('querylogsModal', 'SQL Run Time Analysis');
             $modal_body = '';
             $i = 0;
+            $time = 0;
             if (!empty($query_log)) {
                 foreach ($query_log as $connectionID => $sql) {
+                    $current_time = $sql[0];
                     $modal_body .= "<div class='spacer-xs'>\n";
                     $modal_body .= "<h5>SQL#$i : ".$sql[0]." seconds</h5>\n\r";
                     $modal_body .= "[code]".trim($sql[1]).trim($sql[2])."[/code]\n\r";
@@ -70,7 +70,9 @@ function showrendertime($queries = TRUE) {
                     $modal_body .= "</div>\n";
                     $modal_body .= "</div>\n";
                     $i++;
+                    $time = $current_time + $time;
                 }
+                $modal_body .= "<div class='list-group-item'><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></div>";
             }
             $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
             $modal .= closemodal();

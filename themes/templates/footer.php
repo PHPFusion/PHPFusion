@@ -61,18 +61,6 @@ if (isset($permalink)) {
 // Output the final complete page content
 echo $output;
 remove_notice();
-
-$performance_test = FALSE;
-if ($performance_test) {
-    $performance_log = \PHPFusion\Database\DatabaseFactory::getConnection('default')->getQueryLog();
-    $time = 0;
-    foreach ($performance_log as $logs) {
-        $current_timed = $logs[0];
-        $time = $time + $current_timed;
-    }
-    print_p($time);
-    print_p($performance_log);
-}
 if ((ob_get_length() > 0)) { // length is a number
     ob_end_flush();
 }
