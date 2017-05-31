@@ -298,7 +298,10 @@ abstract class AbstractDatabaseDriver {
      * @return mixed The result of the query or FALSE on error
      */
     public function query($query, array $parameters = array()) {
-        self::$queries[$this->connectionid][] = array(0, $query, $parameters, debug_backtrace());
+        $trace = debug_backtrace();
+        $trace_count = count($trace) - 2;
+        //print_p($trace[$trace_count]);
+        self::$queries[$this->connectionid][] = array(0, $query, $parameters, $trace[$trace_count]);
         $query_time = microtime(TRUE);
         $result = $this->_query($query, $parameters);
         $query_time = round((microtime(TRUE) - $query_time), 7);

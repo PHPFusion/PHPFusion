@@ -120,13 +120,15 @@ if (!function_exists('set_setting')) {
  *
  * @return bool
  */
-function infusion_exists($infusion_folder) {
-    static $inf_exists_check = array();
-    if (empty($inf_exists_check[$infusion_folder])) {
-        $inf_exists_check[$infusion_folder] = dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]) ? TRUE : FALSE;
-    }
+if (!function_exists('infusion_exists')) {
+    function infusion_exists($infusion_folder) {
+        static $inf_exists_check = array();
+        if (empty($inf_exists_check[$infusion_folder])) {
+            $inf_exists_check[$infusion_folder] = dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]) ? TRUE : FALSE;
+        }
 
-    return (boolean)$inf_exists_check[$infusion_folder];
+        return (boolean)$inf_exists_check[$infusion_folder];
+    }
 }
 
 /**
@@ -136,17 +138,19 @@ function infusion_exists($infusion_folder) {
  *
  * @return mixed|null
  */
-function get_settings($settings_inf, $key = NULL) {
-    static $settings_arr = array();
-    if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
-        $result = dbquery("SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
-        while ($data = dbarray($result)) {
-            $settings_arr[$data['settings_inf']][$data['settings_name']] = $data['settings_value'];
+if (!function_exists('get_settings')) {
+    function get_settings($settings_inf, $key = NULL) {
+        static $settings_arr = array();
+        if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
+            $result = dbquery("SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
+            while ($data = dbarray($result)) {
+                $settings_arr[$data['settings_inf']][$data['settings_name']] = $data['settings_value'];
+            }
         }
-    }
-    if (empty($settings_arr[$settings_inf])) return NULL;
+        if (empty($settings_arr[$settings_inf])) return NULL;
 
-    return $key === NULL ? $settings_arr[$settings_inf] : (isset($settings_arr[$settings_inf][$key]) ? $settings_arr[$settings_inf][$key] : NULL);
+        return $key === NULL ? $settings_arr[$settings_inf] : (isset($settings_arr[$settings_inf][$key]) ? $settings_arr[$settings_inf][$key] : NULL);
+    }
 }
 
 
