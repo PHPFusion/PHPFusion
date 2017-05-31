@@ -594,9 +594,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
-    if (defined('IN_PERMALINK')) {
-        //$text = strtr($text, [fusion_get_settings('site_path') => '']);
-    }
+
     return (string)$text;
 }
 
