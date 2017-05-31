@@ -51,17 +51,17 @@ class Locale {
     }
 
     public static function load_locale_file($file) {
-        $locale = &$locale;
         if (is_file($file)) {
+            $locale = array();
             include $file;
-            self::$locale = $locale;
+            self::$locale += $locale;
         }
     }
 
     public function getLocale($key = NULL, $include_file = "") {
         global $locale;
         self::$locale = $locale;
-        $is_sanitized = TRUE;
+
         if (!empty($include_file)) {
             if (is_array($include_file)) {
                 foreach ($include_file as $file) {
@@ -70,12 +70,13 @@ class Locale {
                         self::load_locale_file($file);
                     }
                 }
-            } elseif (empty(self::$locale_file[$include_file])) {
+            } elseif (empty(self::$locale[$key]) and empty(self::$locale_file[$include_file])) {
                 self::$locale_file[$include_file] = 1;
                 self::load_locale_file($include_file);
             }
         }
-        if (!empty(self::$locale) && $is_sanitized == TRUE) {
+
+        if (!empty(self::$locale)) {
             return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : array());
         }
 

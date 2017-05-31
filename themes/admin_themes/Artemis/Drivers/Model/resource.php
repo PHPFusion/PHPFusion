@@ -71,8 +71,8 @@ abstract class resource extends Admins {
         }
 
         return array(
-            "title" => fusion_get_locale('artemis_admin', THEMES."admin_themes/Artemis/locale/".LANGUAGE.".php"),
-            "icon" => "<img class='img-responsive' alt='PHP-Fusion 9' src='".IMAGES."php-fusion-icon.png'/>",
+            "title" => self::$locale['artemis_admin'],
+            "icon"  => "<img class='img-responsive' alt='PHP-Fusion 9' src='".IMAGES."php-fusion-icon.png'/>",
         );
     }
 

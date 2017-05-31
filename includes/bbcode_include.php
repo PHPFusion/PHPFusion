@@ -27,19 +27,15 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
     $__BBCODE__ = array();
     $bbcodes = "";
     foreach ($bbcode_cache as $bbcode) {
+        if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
+        } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
+        }
+        $locale = fusion_get_locale('', $locale_file);
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
-            if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-            } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                include(LOCALE."English/bbcodes/".$bbcode.".php");
-            }
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         } elseif (!$selected) {
-            if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-            } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                include(LOCALE."English/bbcodes/".$bbcode.".php");
-            }
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         }
     }
@@ -124,9 +120,10 @@ function strip_bbcodes($text) {
     $bbcode_cache = cache_bbcode();
 
     foreach ($bbcode_cache as $bbcode) {
-        if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-            include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-        }
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'bbcodes/'.$bbcode.'.php');
+        //if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
+        //  include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
+        //}
         include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
     }
     if (!empty($__BBCODE_NOT_QUOTABLE__) and is_array($__BBCODE_NOT_QUOTABLE__)) {

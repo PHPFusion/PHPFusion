@@ -28,6 +28,7 @@ class adminPanel extends resource {
         parent::__construct();
 
         $locale = parent::get_locale();
+
         $this->do_interface_js();
 
         $notices = getNotices();
@@ -82,9 +83,9 @@ class adminPanel extends resource {
                 if (fusion_get_settings("rendertime_enabled")) : ?>
                     <li><?php echo showrendertime() ?></li>
                     <li><?php echo showMemoryUsage() ?></li>
-                    <li><?php fusion_get_locale('copyright').showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
+                    <li><?php self::$locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
                 <?php endif; ?>
-                <li class="pull-right"><strong>Artemis <?php echo fusion_get_locale('render_engine') ?> 3.2</strong></li>
+                <li class="pull-right"><strong>Artemis <?php echo self::$locale['render_engine'] ?> 3.2</strong></li>
             </ul>
         </footer>
         <?php
@@ -242,7 +243,6 @@ class adminPanel extends resource {
         $aidlink = self::get_aidlink();
 
         $page_title = self::get_title();
-
         ?>
         <div class="app_icon">
             <?php echo $page_title['icon'] ?>

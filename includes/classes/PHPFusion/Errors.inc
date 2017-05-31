@@ -57,12 +57,6 @@ class Errors {
     const E_STRICT = 2048;
 
     public function __construct() {
-        if (empty(self::$locale)) {
-            self::$locale = fusion_get_locale('', array(
-                LOCALE.LOCALESET.'admin/errors.php',
-                LOCALE.LOCALESET.'errors.php'
-            ));
-        }
 
         $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
 
@@ -97,6 +91,12 @@ class Errors {
     public static function getInstance($key = 'default') {
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
+            self::$locale = fusion_get_locale('', array(
+                    LOCALE.LOCALESET.'global.php',
+                    LOCALE.LOCALESET.'admin/errors.php',
+                    LOCALE.LOCALESET.'errors.php'
+                )
+            );
         }
 
         return self::$instances[$key];
@@ -166,8 +166,8 @@ class Errors {
      */
     public function display_administration() {
         $aidlink = fusion_get_aidlink();
-
         $locale = self::$locale;
+
 
         define("NO_DEBUGGER", TRUE);
 
@@ -407,11 +407,12 @@ class Errors {
     }
 
     private static function get_logTypes() {
+        $locale = self::$locale;
 
         return array(
-            '0' => self::$locale['ERROR_450'],
-            '1' => self::$locale['ERROR_451'],
-            '2' => self::$locale['ERROR_452']
+            '0' => $locale['ERROR_450'],
+            '1' => $locale['ERROR_451'],
+            '2' => $locale['ERROR_452']
         );
     }
 
@@ -445,7 +446,7 @@ class Errors {
     }
 
     private static function get_errorTypes($type) {
-        $locale = fusion_get_locale('', LOCALE.LOCALESET."errors.php");
+        $locale = self::$locale;
         $error_types = array(
             self::E_ERROR           => array("E_ERROR", $locale['E_ERROR']),
             self::E_WARNING         => array("E_WARNING", $locale['E_WARNING']),

@@ -591,7 +591,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
     $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
     $text = $smileys == TRUE ? parsesmileys($text) : $text;
-    $text = $bbcode == TRUE ? parseubb($text) : $text;
+    //$text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
     if (defined('IN_PERMALINK')) {
@@ -1591,7 +1591,7 @@ function fusion_get_settings($key = NULL) {
  *
  * @return array|null
  */
-function fusion_get_locale($key = NULL, $include_file = "") {
+function fusion_get_locale($key = NULL, $include_file = '') {
     return PHPFusion\Locale::__getInstance()->getLocale($key, $include_file);
 }
 
