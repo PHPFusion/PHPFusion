@@ -45,7 +45,7 @@ if (fusion_get_settings("enable_deactivation") == "1") {
 }
 
 // Get Core Infusion´s stats
-if (db_exists(DB_PREFIX.'forums')) {
+if (infusion_exists('forum')) {
     $forum = [
         'count'  => 0,
         'thread' => 0,
@@ -53,47 +53,43 @@ if (db_exists(DB_PREFIX.'forums')) {
         'users'  => 0
     ];
     $forum['count'] = dbcount("(forum_id)", DB_PREFIX.'forums');
-    if (db_exists(DB_PREFIX.'forum_threads')) {
-        $forum['thread'] = dbcount("(thread_id)", DB_PREFIX.'forum_threads');
-    }
-    if (db_exists(DB_PREFIX.'forum_posts')) {
-        $forum['post'] = dbcount("(post_id)", DB_PREFIX.'forum_posts');
-        $forum['users'] = dbcount("(user_id)", DB_USERS, "user_posts > '0'");
-    }
+    $forum['thread'] = dbcount("(thread_id)", DB_PREFIX.'forum_threads');
+    $forum['post'] = dbcount("(post_id)", DB_PREFIX.'forum_posts');
+    $forum['users'] = dbcount("(user_id)", DB_USERS, "user_posts > '0'");
 }
 
-if (db_exists(DB_PREFIX.'downloads')) {
+if (infusion_exists('downloads')) {
     $download['download'] = dbcount("(download_id)", DB_PREFIX.'downloads');
     $download['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='d'");
     $download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 }
-if (db_exists(DB_PREFIX.'articles')) {
+if (infusion_exists('articles')) {
     $articles['article'] = dbcount("(article_id)", DB_PREFIX.'articles');
     $articles['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='A'");
     $articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
 }
-if (db_exists(DB_PREFIX.'weblinks')) {
+if (infusion_exists('weblinks')) {
     $weblinks['weblink'] = dbcount("(weblink_id)", DB_PREFIX.'weblinks');
     $weblinks['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='L'");
     $weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
 }
-if (db_exists(DB_PREFIX.'news')) {
+if (infusion_exists('news')) {
     $news['news'] = dbcount("(news_id)", DB_PREFIX.'news');
     $news['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='n'");
     $news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
 }
-if (db_exists(DB_PREFIX.'blog')) {
+if (infusion_exists('blog')) {
     $blog['blog'] = dbcount("(blog_id)", DB_PREFIX.'blog');
     $blog['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='b'");
     $blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
 }
-if (db_exists(DB_PREFIX.'photos')) {
+if (infusion_exists('gallery')) {
     $photos['photo'] = dbcount("(photo_id)", DB_PREFIX.'photos');
     $photos['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P'");
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }
 $comments_type = array(
-    'C' => $locale['272a'],
+    'C'  => $locale['272a'],
     'UP' => $locale['UP']
 );
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
@@ -105,7 +101,7 @@ $submit_link = array();
 $submit_link += \PHPFusion\Admins::getInstance()->getSubmitLink();
 
 $link_type = array(
-    'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
+    'C'  => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
     'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
 );
 $link_type += \PHPFusion\Admins::getInstance()->getLinkType();
@@ -172,7 +168,7 @@ if (dbrows($result) > 0 && checkrights('SU')) {
 }
 if ($global_submissions['rows'] > $settings['comments_per_page']) {
     $global_submissions['submissions_nav'] = "<span class='pull-right text-smaller'>".makepagenav($_GET['s_rowstart'], $settings['comments_per_page'],
-                                                                                                  $global_submissions['rows'], 2)."</span>\n";
+            $global_submissions['rows'], 2)."</span>\n";
 }
 // Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {

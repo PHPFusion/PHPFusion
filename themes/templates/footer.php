@@ -114,13 +114,14 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user=:user_id", $user_mysql);
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:user_id", $user_mysql);
 
-                if (db_exists(DB_ARTICLES)) dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", $user_mysql);
-                if (db_exists(DB_NEWS)) dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", $user_mysql);
-                if (db_exists(DB_POLL_VOTES)) dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", $user_mysql);
-                if (db_exists(DB_FORUM_THREADS)) dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", $user_mysql);
-                if (db_exists(DB_FORUM_POSTS)) dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", $user_mysql);
-                if (db_exists(DB_FORUM_THREAD_NOTIFY)) dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", $user_mysql);
-
+                if (infusion_exists('articles')) dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", $user_mysql);
+                if (infusion_exists('news')) dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", $user_mysql);
+                if (infusion_exists('member_poll_panel')) dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", $user_mysql);
+                if (infusion_exists('forum')) {
+                    dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", $user_mysql);
+                }
             }
         }
         if ($usr_deactivate > 10) {

@@ -26,7 +26,7 @@ if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
 }
 $locale = fusion_get_locale("", $locale_path);
 
-if (!db_exists(DB_FORUMS)) {
+if (!infusion_exists('forum')) {
     echo $locale['fmp_0103'];
 } else {
     $moderator_groups = array();

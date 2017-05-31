@@ -116,7 +116,6 @@ if (!function_exists('set_setting')) {
 
 /**
  * Check whether an infusion is installed or not from the infusions table
- *
  * @param $infusion_folder
  *
  * @return bool
