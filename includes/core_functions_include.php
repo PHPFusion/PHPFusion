@@ -591,7 +591,7 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
     $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
     $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
     $text = $smileys == TRUE ? parsesmileys($text) : $text;
-    //$text = $bbcode == TRUE ? parseubb($text) : $text;
+    $text = $bbcode == TRUE ? parseubb($text) : $text;
     $text = fusion_parse_user($text);
     $text = $add_line_breaks ? nl2br($text) : $text;
     if (defined('IN_PERMALINK')) {
@@ -613,23 +613,20 @@ function parseubb($text, $selected = "") {
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
+    $locale = array();
     foreach ($bbcode_cache as $bbcode) {
+        if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
+        } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
+        }
+        $locale += fusion_get_locale('', $locale_file);
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-                if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                    include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-                } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                    include(LOCALE."English/bbcodes/".$bbcode.".php");
-                }
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
             }
         } elseif (!$selected) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-                if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                    include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-                } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                    include(LOCALE."English/bbcodes/".$bbcode.".php");
-                }
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
             }
         }

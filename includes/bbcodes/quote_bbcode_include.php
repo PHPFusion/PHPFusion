@@ -18,9 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'bbcodes/quote.php');
-debug_print_backtrace();
 $before = "<div class='quote extended'><p class='citation'>";
 $endbefore = "</p><blockquote>";
 $after = "</blockquote></div>";
