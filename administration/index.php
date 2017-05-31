@@ -16,11 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+if (!iADMIN || fusion_get_userdata('user_rights') == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
-
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
 }
