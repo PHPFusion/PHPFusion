@@ -126,7 +126,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
                     // Create
                 } else {
-                    $this->data['article_name'] = fusion_get_userdata("user_id");
+                    $this->article_data['article_name'] = fusion_get_userdata("user_id");
                     $this->article_data['article_id'] = dbquery_insert(DB_ARTICLES, $this->article_data, "save");
                     addNotice("success", $this->locale['article_0030']);
                 }
