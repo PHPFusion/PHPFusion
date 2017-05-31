@@ -28,6 +28,7 @@ if (!defined("IN_FUSION")) {
  */
 function showrendertime($queries = TRUE) {
     global $dbf_performance_log;
+
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $mysql_queries_count = DatabaseFactory::getConnection('default')->getGlobalQueryCount();
 
@@ -52,8 +53,7 @@ function showrendertime($queries = TRUE) {
          * Turn this on if you want to see all the SQL.
          * This debugging is for core engineers only. No need for translations.
          */
-
-        if ($dbf_performance_log === TRUE) {
+        if ($dbf_performance_log) {
             $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
             $modal = openmodal('querylogsModal', 'SQL Run Time Analysis');
             $modal_body = '';
