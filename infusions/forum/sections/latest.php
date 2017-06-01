@@ -19,6 +19,7 @@ require_once INCLUDES."mimetypes_include.php";
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
 
+$default_max_count = 200; // Hardcoded to fetch only latest 200 posts
 $count_sql = '';
 $last_bind = [
     ':hidden' => 0,
@@ -27,21 +28,22 @@ $latest_sql = "SELECT t.*, tf.*
 	FROM ".DB_FORUM_THREADS." t
 	INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id	
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden";
-if (!empty($_POST['filter'])) {
-    $count_sql = " AND t.thread_lastpost < :time";
+if (!empty($_POST['filter_date'])) {
+    $time_sql = " AND t.thread_lastpost < :time";
     $latest_sql .= $count_sql;
-    $last_bind[':time'] = (TIME - ($_POST['filter'] * 24 * 3600));
+    $last_bind[':time'] = (TIME - ($_POST['filter_date'] * 24 * 3600));
 }
-
-$thread_count = dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : '').groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden $count_sql", $last_bind);
+$thread_count = dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : '').groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden $time_sql", $last_bind);
+$thread_count = $default_max_count > $thread_count ? $thread_count : $default_max_count;
 $last_bind[':rowstart'] = isset($_GET['v_rowstart']) && $_GET['v_rowstart'] <= $thread_count ? $_GET['v_rowstart'] : 0;
-
 $last_bind[':threads_pp'] = $forum_settings['threads_per_page'];
 $latest_sql .= " GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT :rowstart, :threads_pp";
 
 if ($thread_count) {
     $result = dbquery($latest_sql, $last_bind);
     $this->forum_info['thread_rows'] = dbrows($result);
+    $this->forum_info['pagenav'] = '';
+
     if (dbrows($result)) {
         $opts = array(
             '0'   => $locale['forum_p999'],
@@ -53,8 +55,9 @@ if ($thread_count) {
             '180' => $locale['forum_p180'],
             '365' => $locale['forum_3015']
         );
-        $this->forum_info['threads_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest").
-            form_select('filter', $locale['forum_0009'], isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array(
+
+        $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest").
+            form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), array(
                 'options' => $opts,
                 'width'   => '300px',
                 'class'   => 'pull-left m-r-10',
@@ -62,7 +65,7 @@ if ($thread_count) {
             )).closeform();
 
         if ($thread_count > $this->forum_info['thread_rows']) {
-            $this->forum_info['pagenav'] = makepagenav(0, $forum_settings['threads_per_page'], $thread_count, 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
+            $this->forum_info['pagenav'] = makepagenav($_GET['v_rowstart'], $forum_settings['threads_per_page'], $thread_count, 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
         }
 
         while ($threads = dbarray($result)) {
@@ -123,4 +126,3 @@ if ($thread_count) {
         }
     }
 }
-//showBenchmark(true);
