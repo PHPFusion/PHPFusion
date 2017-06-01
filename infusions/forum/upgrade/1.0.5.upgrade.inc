@@ -211,6 +211,7 @@ if (dbrows($result) > 0) {
         if ($data['forum_attach_download']) {
             $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."'";
         }
+
     }
 
     /*
@@ -218,7 +219,10 @@ if (dbrows($result) > 0) {
      * Change old forums already inside a group to be a forum containing threads
      * This makes all existing threads accessible both in forums and in panels after upgrade
      */
-    $inf_updatedbrow[] = $db_prefix."forums SET forum_type = 2 WHERE forum_cat != 0";
+    if ($data['forum_type']) {
+        $inf_updatedbrow[] = $db_prefix."forums SET forum_type='1' WHERE forum_cat='0'";
+        $inf_updatedbrow[] = $db_prefix."forums SET forum_type='2' WHERE forum_cat>'0'";
+    }
 }
 /*
  * Modify Forum Ranks Table
@@ -361,6 +365,7 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".LANGUAGE."')";
 }
+
 // Admin links
 $inf_adminpanel[] = array(
     "image"  => $inf_image,

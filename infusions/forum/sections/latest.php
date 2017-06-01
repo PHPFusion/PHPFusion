@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once INCLUDES."mimetypes_include.php";
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
 
