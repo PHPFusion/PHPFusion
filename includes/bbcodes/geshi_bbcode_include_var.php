@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
+$locale = fusion_get_locale();
 if (!function_exists("generate_geshi_langs")) {
     function generate_geshi_langs($textarea_name, $inputform_name) {
         $generated = "";

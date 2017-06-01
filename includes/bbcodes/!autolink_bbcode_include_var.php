@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_autolink_description'], "value" => "!autolink", "bbcode_start" => "",
     "bbcode_end" => "", "usage" => $locale['bb_autolink_usage']

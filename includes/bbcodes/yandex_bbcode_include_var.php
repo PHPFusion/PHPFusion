@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_yandex_description'], "value" => "yandex",
     "bbcode_start" => "[yandex]", "bbcode_end" => "[/yandex]",

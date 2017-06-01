@@ -40,8 +40,7 @@ if ($code_count) {
                         $data = dbarray($result);
                     }
                 }
-
-                $code_locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/code.php");
+                $locale = fusion_get_locale();
                 if (preg_match("/\/forum\//i",
                                FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
                 ) { // this one rely on global.
@@ -51,7 +50,7 @@ if ($code_count) {
                 }
                 $i++;
 
-                return "<div class='code_bbcode'><div class='tbl-border tbl2 tbl-code'><strong>".$code_locale['bb_code_code']."</strong>".$code_save."</div><div class='tbl-border tbl1' style='width:100%; white-space:nowrap;overflow:auto;'><pre style='white-space:nowrap'><code class='language-php'>".formatcode($m['1'])."</code></pre></div></div>";
+                return "<div class='code_bbcode'><div class='tbl-border tbl2 tbl-code'><strong>".$locale['bb_code_code']."</strong>".$code_save."</div><div class='tbl-border tbl1' style='width:100%; white-space:nowrap;overflow:auto;'><pre style='white-space:nowrap'><code class='language-php'>".formatcode($m['1'])."</code></pre></div></div>";
             }, $text);
     }
 }

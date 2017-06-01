@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_justify_description'], "value" => "justify",
     "bbcode_start" => "[justify]", "bbcode_end" => "[/justify]",

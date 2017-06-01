@@ -19,6 +19,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_flash_description'], "value" => "flash",
     "bbcode_start" => "[flash width=200 height=50]", "bbcode_end" => "[/flash]",

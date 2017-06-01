@@ -27,12 +27,13 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
     $__BBCODE__ = array();
     $bbcodes = "";
     foreach ($bbcode_cache as $bbcode) {
+
         if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
         }
-        include_once $locale_file;
+        \PHPFusion\Locale::setLocale($locale_file);
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         } elseif (!$selected) {

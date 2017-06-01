@@ -18,11 +18,10 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
+$locale = fusion_get_locale();
 if (!function_exists("generate_search_opts")) {
     function generate_search_opts($textarea_name, $inputform_name) {
-        global $settings;
-        include LOCALE.LOCALESET."search.php";
+        $locale = fusion_get_locale();
         $generated = "<input type='button' value='".$locale['407']."' class='button' style='width:100px' onclick=\"addText('".$textarea_name."', '[search=all]', '[/search]', '".$inputform_name."');return false;\" /><br />";
         if ($handle = opendir(BASEDIR."includes/search")) {
             while (FALSE !== ($file = readdir($handle))) {
