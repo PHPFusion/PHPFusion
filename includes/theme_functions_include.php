@@ -59,7 +59,7 @@ function showBenchmark($show_sql_performance = FALSE) {
                 $current_time = $sql[0];
                 $modal_body .= "<div class='spacer-xs m-10'>\n";
                 $modal_body .= "<h5><strong>SQL run#$i : ".($sql[0] > .1 ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
-                $modal_body .= "[code]".trim($sql[1]).trim($sql[2])."[/code]\n\r";
+                $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
                 $modal_body .= "<div>\n";
                 $modal_body .= "<kbd>".$sql[3][2]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][2]['line'].", ".$sql[3][2]['function']."</span>\n\r";
                 $modal_body .= "</div>\n";

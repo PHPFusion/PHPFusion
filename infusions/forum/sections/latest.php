@@ -18,6 +18,7 @@
 require_once INCLUDES."mimetypes_include.php";
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
+
 $count_sql = '';
 $last_bind = [
     ':hidden' => 0,
@@ -31,14 +32,17 @@ if (!empty($_POST['filter'])) {
     $latest_sql .= $count_sql;
     $last_bind[':time'] = (TIME - ($_POST['filter'] * 24 * 3600));
 }
+
 $thread_count = dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : '').groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden $count_sql", $last_bind);
-$last_bind[':rowstart'] = isset($_GET['rowstart']) && $_GET['rowstart'] <= $thread_count ? $_GET['rowstart'] : 0;
+$last_bind[':rowstart'] = isset($_GET['v_rowstart']) && $_GET['v_rowstart'] <= $thread_count ? $_GET['v_rowstart'] : 0;
+
 $last_bind[':threads_pp'] = $forum_settings['threads_per_page'];
-$latest_sql .= " GROUP BY thread_id ORDER BY t.thread_lastpost DESC LIMIT :rowstart, :threads_pp";
+$latest_sql .= " GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT :rowstart, :threads_pp";
+
 if ($thread_count) {
     $result = dbquery($latest_sql, $last_bind);
-    $this->forum_info['thread_max_rows'] = dbrows($result);
-    if (dbrows($result) > 0) {
+    $this->forum_info['thread_rows'] = dbrows($result);
+    if (dbrows($result)) {
         $opts = array(
             '0'   => $locale['forum_p999'],
             '1'   => $locale['forum_p001'],
@@ -56,6 +60,11 @@ if ($thread_count) {
                 'class'   => 'pull-left m-r-10',
                 'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
             )).closeform();
+
+        if ($thread_count > $this->forum_info['thread_rows']) {
+            $this->forum_info['pagenav'] = makepagenav(0, $forum_settings['threads_per_page'], $thread_count, 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
+        }
+
         while ($threads = dbarray($result)) {
 
             //$this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']); // this is latest thread, do not require moderator intervention?
@@ -80,11 +89,10 @@ if ($thread_count) {
                 'user_status' => fusion_get_user($threads['thread_lastuser'], 'user_status'),
                 'user_avatar' => fusion_get_user($threads['thread_lastuser'], 'user_avatar'),
             );
-
             // Adds formatted result
             $threads += array(
                 "thread_link"         => array(
-                    "link"  => INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'],
+                    "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'],
                     "title" => $threads['thread_subject']
                 ),
                 "forum_type"          => $threads['forum_type'],
@@ -115,3 +123,4 @@ if ($thread_count) {
         }
     }
 }
+//showBenchmark(true);
