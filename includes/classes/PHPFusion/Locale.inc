@@ -17,71 +17,79 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion;
-
+/**
+ * Class Locale
+ *
+ * Locale Handling
+ * We set a new global.php when the class initialize automatically so this will only be loaded once
+ * Implemented at core_functions_include.php
+ *
+ * @package PHPFusion
+ */
 class Locale {
 
-    /*
-     * Cache to omit inclusion if there is a repeated request
-     */
-    //private static $locale_cache = array();
-
-    /**
-     * Get Locale
-     *
-     * Fetch a given locale key
-     *
-     * @param null   $key          - The key of one setting
-     * @param string $include_file - The full path of the file which to be included
-     *
-     * @return array|null
-     */
     private static $locale_file = [];
     private static $locale = [];
     private static $instance = NULL;
 
     /**
-     * @return null|static
+     * Ensure that the class is only used once
+     *
+     * @param $key
+     *
+     * @return mixed
      */
-    public static function __getInstance() {
-        if (self::$instance == NULL) {
-            self::$instance = new Static();
+    public static function __getInstance($key) {
+        global $locale;
+        if (self::$instance[$key] === NULL) {
+            self::$instance[$key] = new Static();
+            require_once LOCALE.LOCALESET.'global.php';
+            self::$locale += $locale;
         }
 
-        return self::$instance;
+        return self::$instance[$key];
     }
 
     /**
-     * @param $file
+     * Includes a locale file and logs a trace
+     *
+     * @param $filename
      */
-    public static function load_locale_file($file) {
+    public static function load_locale_file($filename) {
         $locale = array();
-        include $file;
+        self::$locale_file[$filename] = debug_backtrace();
+        include_once $filename;
         self::$locale += $locale;
     }
 
-    public function getLocale($key = NULL, $include_file = "") {
-        global $locale;
-        self::$locale += $locale;
+    public static function get_loaded_files() {
+        return self::$locale_file;
+    }
 
+    /**
+     * Iinclude a new locale file
+     *
+     * @param $include_file     Can be an array or a string
+     */
+    public static function setLocale($include_file) {
         if (!empty($include_file)) {
             if (is_array($include_file)) {
                 foreach ($include_file as $file) {
-                    if (empty(self::$locale[$key]) and empty(self::$locale_file[$file])) {
-                        self::$locale_file[$file] = 1;
+                    if (!isset(self::$locale_file[$file])) {
                         self::load_locale_file($file);
                     }
                 }
-            } elseif (empty(self::$locale[$key]) and empty(self::$locale_file[$include_file])) {
-                self::$locale_file[$include_file] = 1;
+            } elseif (!isset(self::$locale_file[$include_file])) {
                 self::load_locale_file($include_file);
             }
         }
+    }
 
-        if (!empty(self::$locale)) {
-            return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : '');
-        }
-
-        return NULL;
+    public function getLocale($key = NULL) {
+        //self::$use_count++;
+        //print_p(microtime(TRUE)-START_TIME);
+        //print_p(self::$use_count);
+        return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : '');
     }
 
     /**
@@ -169,8 +177,7 @@ class Locale {
      *
      * @return mixed
      */
-    public
-    static function translate_country_names($country) {
+    public static function translate_country_names($country) {
         $translated_countries = array(
             "China"           => "中国",
             "Czech Republic"  => "Česko",
@@ -208,8 +215,7 @@ class Locale {
      *
      * @return array|mixed|null
      */
-    public
-    static function translate_lang_names($key = NULL) {
+    public static function translate_lang_names($key = NULL) {
         $translated_langs = array(
             "Chinese_Simplified"  => "中文-简体",
             "Chinese_Traditional" => "中文-繁体",
@@ -246,8 +252,7 @@ class Locale {
      *
      * @return array|mixed|null
      */
-    public
-    static function get_iso($key = NULL, $iso_to_lang = TRUE) {
+    public static function get_iso($key = NULL, $iso_to_lang = TRUE) {
         /**
          * ISO 639-1 Language Codes
          * References :

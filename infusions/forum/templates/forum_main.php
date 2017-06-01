@@ -324,7 +324,6 @@ if (!function_exists('render_forum_threads')) {
 if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
         $locale = fusion_get_locale();
-
         echo "<div class='thread-item' id='thread_".$info['thread_id']."'>\n";
         echo "<div class='row m-0'>\n";
         echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
@@ -334,8 +333,8 @@ if (!function_exists('render_thread_item')) {
             $thead_icons .= $icon;
         }
         echo "<div class='overflow-hide'>\n";
-        echo "<a class='forum-link' href='".$info['thread_link']['link']."'>".$info['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
-        echo "<div class='text-smaller'>".$info['thread_starter']."</div>\n";
+        echo "<a class='forum-link' href='".$info['thread_link']['link']."'>".$info['thread_link']['title']."</a><span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
+        echo "<br/><span class='text-smaller'>".$info['thread_starter_text']."</span>\n<br/>";
         echo $info['thread_pages'];
         echo isset($info['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
         echo "</div>\n";
@@ -357,8 +356,7 @@ if (!function_exists('render_thread_item')) {
         }
         echo "</div>\n"; // end grid
         echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
-			".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."<br/>
-			".trimlink(strip_tags($info['thread_last']['post_message']), 100)."
+			".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."			
 		</div>\n";
         echo "</div>\n";
         echo "</div>\n";
@@ -382,8 +380,7 @@ if (!function_exists("render_participated")) {
                 render_thread_item($data);
             }
             if ($info['post_rows'] > 20) {
-                echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3, FUSION_REQUEST,
-                                                                                  "rowstart")."\n</div>\n";
+                echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3, FUSION_REQUEST, "rowstart")."\n</div>\n";
             }
         } else {
             echo "<div class='well text-center'>".$locale['global_054']."</div>\n";
@@ -404,27 +401,8 @@ if (!function_exists("render_laft")) {
         } else {
             echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
         }
-
-        $opts = array(
-            '0'   => $locale['forum_p999'],
-            '1'   => $locale['forum_p001'],
-            '7'   => $locale['forum_p007'],
-            '14'  => $locale['forum_p014'],
-            '30'  => $locale['forum_p030'],
-            '90'  => $locale['forum_p090'],
-            '180' => $locale['forum_p180'],
-            '365' => $locale['forum_3015']
-        );
-
         echo "<hr/>\n";
-        echo openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest", array('downtime' => 1));
-        echo form_select('filter', $locale['forum_0009'], isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array(
-            'options' => $opts,
-            'width' => '300px',
-            'class' => 'pull-left m-r-10'
-        ));
-        echo form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
-        echo closeform();
+        echo $info['threads_filter'];
     }
 }
 

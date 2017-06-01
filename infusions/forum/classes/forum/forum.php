@@ -51,7 +51,7 @@ class Forum extends ForumServer {
 
         $userdata = fusion_get_userdata();
 
-        $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale = fusion_get_locale('', FORUM_LOCALE);
 
         $_GET['forum_id'] = (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? intval($_GET['forum_id']) : 0;
 
@@ -66,50 +66,42 @@ class Forum extends ForumServer {
             if ($_GET['section'] == 'tracked') redirect(INFUSIONS.'forum/index.php?section=tracked');
         }
 
-        // Xss sanitization
         $this->forum_info = [
-            'forum_id'         => isset($_GET['forum_id']) ? $_GET['forum_id'] : 0,
+            'forum_id'         => isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0,
+            'parent_id'        => 0,
             'new_thread_link'  => '',
-            'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : time(),
+            'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : TIME,
             'posts_per_page'   => $forum_settings['posts_per_page'],
             'threads_per_page' => $forum_settings['threads_per_page'],
             'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => array(),
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
         ];
-        $this->forum_info['parent_id'] = dbresult(dbquery("SELECT forum_cat FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"), 0);
-        $this->forum_info['forum_branch'] = dbresult(dbquery("SELECT forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_info['forum_id']."'"), 0);
+
+        if ($this->forum_info['forum_id']) {
+            $forum_result = dbquery("SELECT forum_cat, forum_branch, forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
+            $forum_data = dbarray($forum_result);
+            $this->forum_info['parent_id'] = $forum_data['forum_cat'];
+            $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
+            if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);
+            if (!empty($forum_data['forum_meta'])) set_meta('keywords', $forum_data['forum_meta']);
+        }
+
 
         // Set Max Rows -- XSS
-        $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')."
-		forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
-
-        // Sanitize Globals
+        $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
         $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
 
         $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
-
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
 
+        // Generate forum breadcrumbs
         $this->forum_breadcrumbs($this->forum_info['forum_index']);
-
-        // Set Meta data
-        if ($this->forum_info['forum_id'] > 0) {
-            $meta_sql = "SELECT forum_meta, forum_description FROM ".DB_FORUMS."
-            WHERE forum_id='".intval($this->forum_info['forum_id'])."'";
-            $meta_result = dbquery($meta_sql);
-            if (dbrows($meta_result) > 0) {
-                $meta_data = dbarray($meta_result);
-                if (!empty($meta_data['forum_description'])) set_meta('description', $meta_data['forum_description']);
-                if (!empty($meta_data['forum_meta'])) set_meta('keywords', $meta_data['forum_meta']);
-            }
-        }
 
         // Additional Sections in Index View
         if (isset($_GET['section'])) {
-
             switch ($_GET['section']) {
                 case 'participated':
                     include FORUM_SECTIONS."participated.php";
@@ -188,8 +180,7 @@ class Forum extends ForumServer {
 				# just last post user
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
-				AND (f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."'
-				OR f.forum_branch='".intval($this->forum_info['forum_branch'])."')
+				AND (f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."')
 				GROUP BY f.forum_id ORDER BY forum_cat ASC
                 ";
 

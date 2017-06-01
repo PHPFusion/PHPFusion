@@ -32,7 +32,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
         }
-        $locale = fusion_get_locale('', $locale_file);
+        include_once $locale_file;
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         } elseif (!$selected) {

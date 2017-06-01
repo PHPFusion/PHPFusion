@@ -95,9 +95,9 @@ class BreadCrumbs {
 
     public function __construct() {
         $this->addBreadCrumb(array(
-                                 'link' => BASEDIR.'index.php',
-                                 'title' => fusion_get_locale('home', LOCALE.LOCALESET."global.php"),
-                                 'class' => 'home-link crumb'
+            'link'  => BASEDIR.'index.php',
+            'title' => fusion_get_locale('home'),
+            'class' => 'home-link crumb'
                              ));
     }
 
@@ -114,7 +114,7 @@ class BreadCrumbs {
             'link' => '',
             'class' => 'crumb'
         );
-        $link['title'] = trim(parse_textarea($link['title'], TRUE, TRUE, FALSE));
+        $link['title'] = $link['title']; //trim(parse_textarea($link['title'], TRUE, TRUE, FALSE));
         if (!empty($link['title']) && !empty($link['link'])) {
             $this->breadcrumbs[] = $link;
         }

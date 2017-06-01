@@ -144,7 +144,7 @@ class Install_Core extends Infusion_Core {
 
             define("LOCALESET", LANGUAGE."/");
 
-            self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
+            self::$locale = Locale::__getInstance('Default')->getLocale('', LOCALE.LOCALESET."setup.php");
 
             // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {

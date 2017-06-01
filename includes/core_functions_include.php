@@ -116,7 +116,7 @@ function theme_exists($theme) {
  * @param string    $theme
  */
 function set_theme($theme) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     if (defined("THEME")) {
         return;
     }
@@ -1586,7 +1586,12 @@ function fusion_get_settings($key = NULL) {
  * @return array|null
  */
 function fusion_get_locale($key = NULL, $include_file = '') {
-    return PHPFusion\Locale::__getInstance()->getLocale($key, $include_file);
+    $locale = \PHPFusion\Locale::__getInstance('Default');
+    if ($include_file) {
+        $locale::setLocale($include_file);
+    }
+
+    return $locale->getLocale($key);
 }
 
 /**
@@ -1616,13 +1621,13 @@ function fusion_get_userdata($key = NULL) {
         $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
     }
     $userdata = $userdata + array(
-        "user_id"     => 0,
-        "user_name"   => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
-        "user_status" => 1,
-        "user_level"  => 0,
-        "user_rights" => "",
-        "user_groups" => "",
-        "user_theme"  => fusion_get_settings("theme"),
+            "user_id"     => 0,
+            "user_name"   => fusion_get_locale("user_guest"),
+            "user_status" => 1,
+            "user_level"  => 0,
+            "user_rights" => "",
+            "user_groups" => "",
+            "user_theme"  => fusion_get_settings("theme"),
     );
 
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);

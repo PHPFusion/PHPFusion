@@ -38,7 +38,7 @@
 
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
 
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
 
     $defender = \defender::getInstance();
 

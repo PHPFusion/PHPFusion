@@ -53,6 +53,8 @@ if (!isset($_GET['aid'])) {
 if (isset($permalink)) {
     unset($permalink);
 }
+// Check all loaded locale files
+//print_p(\PHPFusion\Locale::get_loaded_files());
 // Output the final complete page content
 echo $output;
 remove_notice();

@@ -47,9 +47,9 @@ class Dynamics {
             define("SELECT2", TRUE);
             \PHPFusion\OutputHandler::addToFooter("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
             \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-            $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-            $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-            if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            $select2_locale = fusion_get_locale("select2");
+            $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".$select2_locale.".js";
+            if (file_exists($select2_locale_path)) {
                 \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
             }
         }

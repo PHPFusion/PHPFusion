@@ -199,7 +199,7 @@ include INCLUDES."ip_handling_include.php";
 require_once INCLUDES."error_handling_include.php";
 
 // Load the Global language file
-include LOCALE.LOCALESET."global.php";
+//include LOCALE.LOCALESET."global.php";
 
 $defender = defender::getInstance();
 
