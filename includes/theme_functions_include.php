@@ -61,7 +61,8 @@ function showBenchmark($show_sql_performance = FALSE) {
                 $modal_body .= "<h5><strong>SQL run#$i : ".($sql[0] > .1 ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
                 $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
                 $modal_body .= "<div>\n";
-                $modal_body .= "<kbd>".$sql[3][2]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][2]['line'].", ".$sql[3][2]['function']."</span>\n\r";
+                $end_sql = end($sql[3]);
+                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span>\n\r";
                 $modal_body .= "</div>\n";
                 $modal_body .= "</div>\n";
                 $i++;
