@@ -46,20 +46,16 @@ class Forum extends ForumServer {
      * Executes forum
      */
     public function set_ForumInfo() {
-
         $forum_settings = $this->get_forum_settings();
-
         $userdata = fusion_get_userdata();
-
-        $locale = fusion_get_locale('', FORUM_LOCALE);
-
-        $_GET['forum_id'] = (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? intval($_GET['forum_id']) : 0;
+        $locale = fusion_get_locale();
 
         // security boot due to insufficient access level
         if (isset($_GET['viewforum']) && (empty($_GET['forum_id']) OR !isnum($_GET['forum_id']))) {
-            redirect(INFUSIONS.'forum/index.php');
+            if (!verify_forum($_GET['forum_id'])) {
+                redirect(INFUSIONS.'forum/index.php');
+            }
         }
-
         if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
             if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
             if ($_GET['section'] == 'mypost') redirect(INFUSIONS.'forum/index.php?section=mypost');
@@ -379,10 +375,8 @@ class Forum extends ForumServer {
     public static function get_forum($forum_id = FALSE, $branch_id = FALSE) { // only need to fetch child.
 
         $forum_settings = self::get_forum_settings();
-
         $userdata = fusion_get_userdata();
-
-        $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale = fusion_get_locale();
 
         $index = array();
 
@@ -403,24 +397,37 @@ class Forum extends ForumServer {
         );
 
         $query = dbquery("
-				SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-				tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
-				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, p.post_message,
-				u.user_id, u.user_name, u.user_status, u.user_avatar
-				FROM ".DB_FORUMS." tf
-				LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
-				LEFT JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id AND p.post_id = t.thread_lastpostid
-				LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
-				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
-				".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
-				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC
+				SELECT forum_id, forum_name, forum_cat, forum_branch, forum_access, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_description, forum_postcount, forum_threadcount, forum_image				
+				FROM ".DB_FORUMS."								
+				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access')."
+				".($forum_id && $branch_id ? "AND forum_id = '".intval($forum_id)."' or forum_cat = '".intval($forum_id)."' OR forum_branch = '".intval($branch_id)."'" : '')."
+				GROUP BY forum_id ORDER BY forum_cat ASC, forum_order ASC
 		");
+        showBenchmark(TRUE);
+
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
+
+            $data['thread_id'] = '';
+            $data['thread_subject'] = '';
+            $data['post_message'] = '';
+            if ($data['forum_type'] > 1) {
+                // There are 19,000 threads.
+                $thread_result = dbquery("SELECT thread_id, thread_subject FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id ORDER BY thread_lastpost DESC LIMIT 1", [':forum_id' => $data['forum_id']]);
+                if (dbrows($thread_result)) {
+                    $data += dbarray($thread_result);
+                }
+                $user = fusion_get_user($data['forum_lastuser']);
+                $data['user_id'] = $user['user_id'];
+                $data['user_name'] = $user['user_name'];
+                $data['user_status'] = $user['user_status'];
+                $data['user_avatar'] = $user['user_avatar'];
+                $data['user_level'] = $user['user_level'];
+            }
 
             // Calculate Forum New Status
             $newStatus = "";
             $forum_match = "\\|".$data['forum_lastpost']."\\|".$data['forum_id'];
-            $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
+            $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
             if ($data['forum_lastpost'] > $last_visited) {
                 if (iMEMBER && ($data['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)",
                             $userdata['user_threads']))
@@ -434,7 +441,7 @@ class Forum extends ForumServer {
                 $last_post = array(
                     'avatar'       => '',
                     'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
-                    'message'      => trim_text(parseubb(parsesmileys($data['post_message'])), 100),
+                    //'message'      => trim_text(parseubb(parsesmileys($data['post_message'])), 100),
                     'profile_link' => profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status']),
                     'time'         => timer($data['forum_lastpost']),
                     'date'         => showdate("forumdate", $data['forum_lastpost']),

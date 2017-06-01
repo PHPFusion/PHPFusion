@@ -44,7 +44,7 @@ if ($code_count) {
                 if (preg_match("/\/forum\//i",
                                FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
                 ) { // this one rely on global.
-                    $code_save = "<a class='pull-right m-t-0 btn btn-sm btn-default' href='".INCLUDES."bbcodes/code_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."'><i class='fa fa-download'></i> ".$code_locale['bb_code_save']."</a>&nbsp;&nbsp;";
+                    $code_save = "<a class='pull-right m-t-0 btn btn-sm btn-default' href='".INCLUDES."bbcodes/code_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."'><i class='fa fa-download'></i> ".$locale['bb_code_save']."</a>&nbsp;&nbsp;";
                 } else {
                     $code_save = "";
                 }

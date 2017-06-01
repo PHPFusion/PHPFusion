@@ -129,3 +129,4 @@ if ($thread_count) {
         }
     }
 }
+//showBenchmark(TRUE); 0.374
