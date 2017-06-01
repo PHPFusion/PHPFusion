@@ -67,7 +67,7 @@ if ($thread_count) {
             )).closeform();
 
         if ($this->forum_info['max_thread_rows'] > $this->forum_info['thread_rows']) {
-            $this->forum_info['pagenav'] = makepagenav($_GET['v_rowstart'], $forum_settings['threads_per_page'], $this->forum_info['max_thread_rows'], 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
+            $this->forum_info['pagenav'] = makepagenav($last_bind[':rowstart'], $forum_settings['threads_per_page'], $this->forum_info['max_thread_rows'], 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
         }
 
         while ($threads = dbarray($result)) {
