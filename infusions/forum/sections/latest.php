@@ -20,7 +20,7 @@ $userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
 
 $default_max_count = 200; // Hardcoded to fetch only latest 200 posts
-$count_sql = '';
+$time_sql = '';
 $last_bind = [
     ':hidden' => 0,
 ];
