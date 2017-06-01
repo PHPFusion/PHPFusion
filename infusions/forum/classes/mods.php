@@ -25,6 +25,7 @@ namespace PHPFusion\Forums;
  */
 class Moderator {
 
+    private static $instance = NULL;
     private $allowed_actions = array(
         'renew',
         'delete',
@@ -40,6 +41,15 @@ class Moderator {
     private $parent_id = 0;
     private $branch_id = 0;
     private $form_action = '';
+
+    public static function __getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new Static();
+        }
+
+        return self::$instance;
+    }
+
 
     /**
      * Verify a single thread ID is a genuine and valid thread

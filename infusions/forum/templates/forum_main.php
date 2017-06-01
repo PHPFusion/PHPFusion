@@ -189,7 +189,7 @@ if (!function_exists('render_forum_item')) {
                 echo "<div class='text-lighter count'>".$data['forum_postcount_word']."</div>\n";
                 echo "<div class='text-lighter count'>".$data['forum_threadcount_word']."</div>\n";
                 echo "</div><div class='forum-lastuser hidden-xs hidden-sm col-md-4'>\n";
-                if ($data['forum_lastpostid'] == 0) {
+                if ($data['thread_lastpostid'] == 0) {
                     echo $locale['forum_0005'];
                 } else {
                     echo "<div class='clearfix'>\n";
@@ -198,8 +198,7 @@ if (!function_exists('render_forum_item')) {
                     }
                     echo "<div class='overflow-hide'>\n";
                     echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
-                    echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a><br />\n";
-                    echo trimlink(strip_tags($data['last_post']['message']), 100);
+                    echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a>\n";
                     echo "</div>\n</div>\n";
                 }
                 echo "</div>\n";

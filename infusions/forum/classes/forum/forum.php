@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums;
 
 use PHPFusion\BreadCrumbs;
@@ -397,65 +398,69 @@ class Forum extends ForumServer {
         );
 
         $query = dbquery("
-				SELECT forum_id, forum_name, forum_cat, forum_branch, forum_access, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_description, forum_postcount, forum_threadcount, forum_image				
-				FROM ".DB_FORUMS."								
+				SELECT forum_id, forum_name, forum_cat, forum_branch, forum_access, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_description, forum_postcount, forum_threadcount, forum_image												
+				FROM ".DB_FORUMS."                
 				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access')."
 				".($forum_id && $branch_id ? "AND forum_id = '".intval($forum_id)."' or forum_cat = '".intval($forum_id)."' OR forum_branch = '".intval($branch_id)."'" : '')."
 				GROUP BY forum_id ORDER BY forum_cat ASC, forum_order ASC
 		");
-        showBenchmark(TRUE);
 
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
 
-            $data['thread_id'] = '';
+            $newStatus = '';
+            $lastPostInfo = [];
+            $data['thread_id'] = 0;
             $data['thread_subject'] = '';
-            $data['post_message'] = '';
+            $data['thread_lastpostid'] = 0;
+
             if ($data['forum_type'] > 1) {
-                // There are 19,000 threads.
-                $thread_result = dbquery("SELECT thread_id, thread_subject FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id ORDER BY thread_lastpost DESC LIMIT 1", [':forum_id' => $data['forum_id']]);
+
+                $thread_result = dbquery("SELECT thread_id, thread_subject, thread_lastpostid FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id ORDER BY thread_lastpost DESC LIMIT 1", [':forum_id' => $data['forum_id']]);
+
                 if (dbrows($thread_result)) {
-                    $data += dbarray($thread_result);
+
+                    $tdata = dbarray($thread_result);
+                    $data['thread_id'] = $tdata['thread_id'];
+                    $data['thread_subject'] = $tdata['thread_subject'];
+                    $data['thread_lastpostid'] = $tdata['thread_lastpostid'];
+
+                    $user = fusion_get_user($data['forum_lastuser']);
+                    $data['user_id'] = $user['user_id'];
+                    $data['user_name'] = $user['user_name'];
+                    $data['user_status'] = $user['user_status'];
+                    $data['user_avatar'] = $user['user_avatar'];
+                    $data['user_level'] = $user['user_level'];
+
                 }
-                $user = fusion_get_user($data['forum_lastuser']);
-                $data['user_id'] = $user['user_id'];
-                $data['user_name'] = $user['user_name'];
-                $data['user_status'] = $user['user_status'];
-                $data['user_avatar'] = $user['user_avatar'];
-                $data['user_level'] = $user['user_level'];
+
+                // Calculate Forum New Status
+                $forum_match = "\\|".$data['forum_lastpost']."\\|".$data['forum_id'];
+
+                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
+
+                if ($data['forum_lastpost'] > $last_visited) {
+                    if (iMEMBER && ($data['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
+                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+                    }
+                }
+
+                // Calculate lastpost information
+                if ($data['thread_lastpostid']) {
+                    $lastPostInfo = array(
+                        'avatar'       => '',
+                        'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
+                        'profile_link' => profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status']),
+                        'time'         => timer($data['forum_lastpost']),
+                        'date'         => showdate("forumdate", $data['forum_lastpost']),
+                        'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id'],
+                        'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
+                        'avatar'       => $forum_settings['forum_last_post_avatar'] ? display_avatar($data, '30px', '', '', 'img-rounded') : ''
+                    );
+                }
+
             }
 
-            // Calculate Forum New Status
-            $newStatus = "";
-            $forum_match = "\\|".$data['forum_lastpost']."\\|".$data['forum_id'];
-            $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
-            if ($data['forum_lastpost'] > $last_visited) {
-                if (iMEMBER && ($data['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)",
-                            $userdata['user_threads']))
-                ) {
-                    $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
-                }
-            }
-            // Calculate lastpost information
-            $lastPostInfo = array();
-            if ($data['forum_lastpostid']) {
-                $last_post = array(
-                    'avatar'       => '',
-                    'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
-                    //'message'      => trim_text(parseubb(parsesmileys($data['post_message'])), 100),
-                    'profile_link' => profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status']),
-                    'time'         => timer($data['forum_lastpost']),
-                    'date'         => showdate("forumdate", $data['forum_lastpost']),
-                    'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id'],
-                    'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
-                );
-                if ($forum_settings['forum_last_post_avatar']) {
-                    $last_post['avatar'] = display_avatar($data, '30px', '', '', 'img-rounded');
-                }
-                $lastPostInfo = $last_post;
-            }
-            /**
-             * Default system icons - why do i need this? Why not let themers decide?
-             */
+            // Icons
             switch ($data['forum_type']) {
                 case '1':
                     $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
@@ -477,7 +482,9 @@ class Forum extends ForumServer {
                     $forum_icon = "";
                     $forum_icon_lg = "";
             }
-            $mod = new Moderator();
+
+            $mod = Moderator::__getInstance();
+
             $row = array_merge($row, $data, array(
                 "forum_moderators"       => $mod::parse_forum_mods($data['forum_mods']),
                 // display forum moderators per forum.
@@ -501,9 +508,11 @@ class Forum extends ForumServer {
                 // big icon.
             ));
 
-            $row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "";
+            $row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '';
+
             $thisref = &$refs[$data['forum_id']];
             $thisref = $row;
+
             if ($data['forum_cat'] == 0) {
                 $index[0][$data['forum_id']] = &$thisref;
             } else {
