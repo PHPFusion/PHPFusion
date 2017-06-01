@@ -28,11 +28,13 @@ $latest_sql = "SELECT t.*, tf.*
 	FROM ".DB_FORUM_THREADS." t
 	INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id	
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden";
+
 if (!empty($_POST['filter_date'])) {
     $time_sql = " AND t.thread_lastpost < :time";
     $latest_sql .= $count_sql;
     $last_bind[':time'] = (TIME - ($_POST['filter_date'] * 24 * 3600));
 }
+
 $thread_count = dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : '').groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden $time_sql", $last_bind);
 $thread_count = $default_max_count > $thread_count ? $thread_count : $default_max_count;
 $last_bind[':rowstart'] = isset($_GET['v_rowstart']) && $_GET['v_rowstart'] <= $thread_count ? $_GET['v_rowstart'] : 0;
