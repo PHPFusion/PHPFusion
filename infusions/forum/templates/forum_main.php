@@ -402,7 +402,7 @@ if (!function_exists("render_laft")) {
             echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
         }
         echo "<hr/>\n";
-        echo $info['threads_filter'];
+        echo $info['threads_time_filter'];
     }
 }
 

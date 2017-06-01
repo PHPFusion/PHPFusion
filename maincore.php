@@ -192,6 +192,8 @@ if (!defined('LANGUAGE') && !defined('LOCALESET')) {
     define('LOCALESET', $current_user_language.'/');
 }
 
+\PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
+
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 

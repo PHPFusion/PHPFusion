@@ -35,12 +35,13 @@ if (!empty($_POST['filter_date'])) {
 }
 
 $thread_count = dbcount("(thread_id)", DB_FORUM_THREADS." t INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id", (multilang_table("FO") ? "tf.forum_language='".LANGUAGE."' AND " : '').groupaccess('tf.forum_access')." AND t.thread_hidden=:hidden $time_sql", $last_bind);
-$thread_count = $default_max_count > $thread_count ? $thread_count : $default_max_count;
+$this->forum_info['max_thread_rows'] = $default_max_count > $thread_count ? $thread_count : $default_max_count;
 $last_bind[':rowstart'] = isset($_GET['v_rowstart']) && $_GET['v_rowstart'] <= $thread_count ? $_GET['v_rowstart'] : 0;
 $last_bind[':threads_pp'] = $forum_settings['threads_per_page'];
 $latest_sql .= " GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT :rowstart, :threads_pp";
 
 if ($thread_count) {
+
     $result = dbquery($latest_sql, $last_bind);
     $this->forum_info['thread_rows'] = dbrows($result);
     $this->forum_info['pagenav'] = '';
@@ -65,14 +66,15 @@ if ($thread_count) {
                 'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
             )).closeform();
 
-        if ($thread_count > $this->forum_info['thread_rows']) {
-            $this->forum_info['pagenav'] = makepagenav($_GET['v_rowstart'], $forum_settings['threads_per_page'], $thread_count, 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
+        if ($this->forum_info['max_thread_rows'] > $this->forum_info['thread_rows']) {
+            $this->forum_info['pagenav'] = makepagenav($_GET['v_rowstart'], $forum_settings['threads_per_page'], $this->forum_info['max_thread_rows'], 3, FORUM."index.php?section=latest&amp;", 'v_rowstart');
         }
 
         while ($threads = dbarray($result)) {
 
-            //$this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']); // this is latest thread, do not require moderator intervention?
-            $icon = "";
+            $this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']);
+            $icon = '';
+
             $match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
             if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {
                 if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))) {

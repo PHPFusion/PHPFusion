@@ -40,11 +40,8 @@ class Locale {
      * @return mixed
      */
     public static function __getInstance($key) {
-        global $locale;
         if (self::$instance[$key] === NULL) {
             self::$instance[$key] = new Static();
-            require_once LOCALE.LOCALESET.'global.php';
-            self::$locale += $locale;
         }
 
         return self::$instance[$key];

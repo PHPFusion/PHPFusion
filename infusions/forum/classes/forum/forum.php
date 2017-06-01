@@ -76,11 +76,13 @@ class Forum extends ForumServer {
             'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => array(),
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
+            'new_topic_link'   => array('link' => FORUM.'newthread.php', 'title' => $locale['forum_0057'])
         ];
 
         if ($this->forum_info['forum_id']) {
-            $forum_result = dbquery("SELECT forum_cat, forum_branch, forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
+            $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
             $forum_data = dbarray($forum_result);
+            $this->setForumPermission($forum_data);
             $this->forum_info['parent_id'] = $forum_data['forum_cat'];
             $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
             if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);

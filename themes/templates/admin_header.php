@@ -20,14 +20,17 @@ if (!defined("IN_FUSION")) {
 }
 
 define("ADMIN_PANEL", TRUE);
-if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
+$settings = fusion_get_settings();
+$locale = fusion_get_locale();
+
+if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
     redirect(BASEDIR."maintenance.php");
 }
 
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
-$settings = fusion_get_settings();
+
 if (preg_match("/^([a-z0-9_-]){2,50}$/i",
                $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")
 ) {
@@ -67,13 +70,11 @@ ob_start();
 // After relogin the user can simply click back in browser and their input will
 // still be there so nothing is lost
 if (!check_admin_pass('')) {
-
     // If not admin, also must check if user_id is exist due to session time out.
     $user_id = fusion_get_userdata("user_id");
     if (empty($user_id)) {
         redirect(BASEDIR."index.php");
     }
-
     require_once "footer.php";
     exit;
 }

@@ -1465,7 +1465,8 @@ function showdate($format, $val, $options = array()) {
  * @return string
  */
 function parsebytesize($size, $digits = 2, $dir = FALSE) {
-    global $locale;
+    $locale = fusion_get_locale();
+
     $kb = 1024;
     $mb = 1024 * $kb;
     $gb = 1024 * $mb;
