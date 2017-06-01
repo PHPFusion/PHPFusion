@@ -70,7 +70,7 @@ class OutputHandler {
      * @param string $addition
      */
     public static function addToTitle($addition = "") {
-        self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", ' ', $addition, 1);
+        self::$pageTitle .= preg_replace("/".fusion_get_locale('global_200')."/", ' ', $addition, 1);
     }
 
     /**
@@ -190,7 +190,7 @@ class OutputHandler {
 
         if (self::$pageTitle != $settings['sitename']) {
             $output = preg_replace("#<title>.*</title>#i",
-                                   "<title>".self::$pageTitle.(self::$pageTitle ? $GLOBALS['locale']['global_200'] : '').$settings['sitename']."</title>",
+                "<title>".self::$pageTitle.(self::$pageTitle ? fusion_get_locale('global_200') : '').$settings['sitename']."</title>",
                                    $output, 1);
         }
 

@@ -144,7 +144,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     if ($options['password_strength'] == TRUE) {
-        $locale = fusion_get_locale("password_strength", LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale("password_strength");
         $path = DYNAMICS."assets/password/lang/$locale.js";
         if (file_exists($path)) {
             $path = DYNAMICS."assets/password/lang/$locale.js";

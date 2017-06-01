@@ -119,8 +119,8 @@ function showcounter() {
 function showprivacypolicy() {
     $html = '';
     if (!empty(fusion_get_settings('privacy_policy'))) {
-        $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176', LOCALE.LOCALESET."global.php")."</a>";
-        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176', LOCALE.LOCALESET."global.php"), ['button_id' => 'privacy_policy']);
+        $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
+        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
         $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
         $modal .= closemodal();
         add_to_footer($modal);

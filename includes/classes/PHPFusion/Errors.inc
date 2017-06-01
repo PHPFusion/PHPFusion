@@ -92,7 +92,6 @@ class Errors {
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
             self::$locale = fusion_get_locale('', array(
-                    LOCALE.LOCALESET.'global.php',
                     LOCALE.LOCALESET.'admin/errors.php',
                     LOCALE.LOCALESET.'errors.php'
                 )
