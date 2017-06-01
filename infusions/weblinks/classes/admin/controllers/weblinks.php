@@ -503,7 +503,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     });');
                 endwhile;
             ?><th colspan='7'><?php
-                echo form_checkbox('check_all', 'Select All', '', array('class' => 'm-b-0', 'reverse_label'=>TRUE));
+                echo form_checkbox('check_all', $this->locale['WLS_0206'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE));
 
                 add_to_jquery("
                     $('#check_all').bind('click', function() {

@@ -57,6 +57,7 @@ $locale['WLS_0202'] = "Submissioner";
 $locale['WLS_0203'] = "Date";
 $locale['WLS_0204'] = "Options";
 $locale['WLS_0205'] = "Review Submission";
+$locale['WLS_0206'] = "Select All";
 $locale['WLS_0252'] = "A Name of the Web Link.";
 $locale['WLS_0253'] = "Web Link URL";
 $locale['WLS_0254'] = "Description";
