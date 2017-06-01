@@ -15,8 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 $settings = fusion_get_settings();
 \PHPFusion\Admins::getInstance()->setAdmin();
 header("Content-Type: text/html; charset=".$locale['charset']."");

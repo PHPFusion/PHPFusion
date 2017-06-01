@@ -842,7 +842,7 @@ function censorwords($text) {
  * @return string
  */
 function getuserlevel($userlevel) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $userlevels = array(
         -101 => $locale['user1'],
         -102 => $locale['user2'],
@@ -862,7 +862,7 @@ function getuserlevel($userlevel) {
  * @return string|NULL NULL if the status does not exist
  */
 function getuserstatus($userstatus) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
 
     return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
 }
@@ -993,7 +993,7 @@ function cache_groups() {
  *               $levelGroupIcon)
  */
 function getusergroups() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $groups_array = array(
         array("0", $locale['user0'], $locale['user0'], 'fa fa-user'),
         array("-101", $locale['user1'], $locale['user1'], 'fa fa-user'),
@@ -1797,7 +1797,7 @@ function fusion_get_language_switch() {
  * @param bool|TRUE $icon
  */
 function lang_switcher($icon = TRUE) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $enabled_languages = fusion_get_enabled_languages();
     if (count($enabled_languages) <= 1) {
         return;

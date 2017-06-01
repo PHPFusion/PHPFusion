@@ -230,7 +230,7 @@ class Panels {
         }
 
         $settings = \fusion_get_settings();
-        $locale = \fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = \fusion_get_locale();
 
         $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {

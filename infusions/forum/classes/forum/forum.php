@@ -85,20 +85,16 @@ class Forum extends ForumServer {
             $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
             if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);
             if (!empty($forum_data['forum_meta'])) set_meta('keywords', $forum_data['forum_meta']);
+            // Set Max Rows -- XSS
+            $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
+            $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
+            $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
+            // Generate forum breadcrumbs
+            $this->forum_breadcrumbs($this->forum_info['forum_index']);
         }
-
-
-        // Set Max Rows -- XSS
-        $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
-        $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
-
-        $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
-
-        // Generate forum breadcrumbs
-        $this->forum_breadcrumbs($this->forum_info['forum_index']);
 
         // Additional Sections in Index View
         if (isset($_GET['section'])) {
@@ -113,13 +109,14 @@ class Forum extends ForumServer {
                     set_meta("description", $locale['global_024']);
                     break;
                 case 'latest':
-                    include FORUM_SECTIONS."latest.php";
                     add_to_title($locale['global_201'].$locale['global_021']);
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => FORUM."index.php?section=latest",
                         'title' => $locale['global_021']
                     ]);
                     set_meta("description", $locale['global_021']);
+                    // Clocks at 0.5s
+                    include FORUM_SECTIONS."latest.php";
                     break;
                 case 'tracked':
                     include FORUM_SECTIONS."tracked.php";
@@ -151,7 +148,6 @@ class Forum extends ForumServer {
                 default:
                     redirect(FORUM);
             }
-
         } else {
 
             // Viewforum view

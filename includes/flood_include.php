@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
 function flood_control($field, $table, $where, $debug = FALSE) {
     $userdata = fusion_get_userdata('user_id');
     $settings = fusion_get_settings();
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $flood = FALSE;
     if ((!iSUPERADMIN && !iADMIN && (!defined('iMOD') || !iMOD)) || $debug) {
         $result = dbquery("SELECT MAX(".$field.") 'last_post' FROM ".$table." WHERE ".$where);

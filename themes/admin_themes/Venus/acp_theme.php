@@ -88,7 +88,7 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $userdata = fusion_get_userdata();
     $languages = fusion_get_enabled_languages();
 
