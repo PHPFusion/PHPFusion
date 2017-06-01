@@ -27,5 +27,5 @@ include INFUSIONS."forum/templates/forum_main.php";
 // Base theme is 0.06s TOP
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
 $info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
-//render_forum($info);
+render_forum($info);
 require_once THEMES."templates/footer.php";
