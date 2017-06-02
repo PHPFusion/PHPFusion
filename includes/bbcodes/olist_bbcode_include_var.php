@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     'description' => $locale['bb_olist_description'], 'value' => "olist",
     'bbcode_start' => "[olist=TYPE]", 'bbcode_end' => '[/olist]',

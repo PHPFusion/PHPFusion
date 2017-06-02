@@ -18,10 +18,8 @@
 require_once "../maincore.php";
 pageAccess('BB');
 require_once THEMES."templates/admin_header.php";
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/bbcodes.php");
-
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/bbcodes.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'bbcodes.php'.fusion_get_aidlink(), "title"=> $locale['400']]);
-
 if (!isset($_GET['page']) || !isnum($_GET['page'])) {
     $_GET['page'] = 1;
 }
@@ -78,9 +76,7 @@ if ($_GET['page'] == 1) {
     if ($handle_bbcodes = opendir(INCLUDES."bbcodes/")) {
         while (FALSE !== ($file_bbcodes = readdir($handle_bbcodes))) {
             if (!in_array($file_bbcodes, array("..", ".", "index.php")) && !is_dir(INCLUDES."bbcodes/".$file_bbcodes)) {
-                if (preg_match("/_include.php/i", $file_bbcodes) && !preg_match("/_var.php/i", $file_bbcodes) && !preg_match("/_save.php/i",
-                                                                                                                             $file_bbcodes) && !preg_match("/.js/i",
-                                                                                                                                                           $file_bbcodes)
+                if (preg_match("/_include.php/i", $file_bbcodes) && !preg_match("/_var.php/i", $file_bbcodes) && !preg_match("/_save.php/i", $file_bbcodes) && !preg_match("/.js/i", $file_bbcodes)
                 ) {
                     $bbcode_name = explode("_", $file_bbcodes);
                     $available_bbcodes[] = $bbcode_name[0];
@@ -96,7 +92,7 @@ if ($_GET['page'] == 1) {
     echo $navigation;
     $result = dbquery("SELECT * FROM ".DB_BBCODES." ORDER BY bbcode_order");
     if (dbrows($result)) {
-        echo "<div style='width:100%;height:550px;overflow:auto'>\n";
+        echo "<div style='width:100%;'>\n";
         echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border'>\n<thead>\n<tr>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></th>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
@@ -143,10 +139,11 @@ if ($_GET['page'] == 1) {
             $cls = ($lp % 2 == 0 ? "tbl2" : "tbl1");
             echo "<tr>\n";
             if (file_exists(LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php")) {
-                include(LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php");
+                $locale_file = LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php";
             } elseif (file_exists(LOCALE."English/bbcodes/".$data['bbcode_name'].".php")) {
-                include(LOCALE."English/bbcodes/".$data['bbcode_name'].".php");
+                $locale_file = LOCALE."English/bbcodes/".$data['bbcode_name'].".php";
             }
+            $locale = fusion_get_locale('', $locale_file);
             include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
             echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($data['bbcode_name'])."</td>\n";
             echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$bbcode_image."</td>\n";
@@ -164,6 +161,7 @@ if ($_GET['page'] == 1) {
         echo "<div style='text-align:center'>".$locale['411']."</div>\n";
     }
     closetable();
+
     $enabled = dbcount("(bbcode_id)", DB_BBCODES);
     opentable($locale['413']);
     if (count($available_bbcodes) != $enabled) {
@@ -190,12 +188,15 @@ if ($_GET['page'] == 1) {
             } else {
                 $bbcode_image = "-";
             }
+
                 if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php")) {
                     include(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php");
                 } elseif (file_exists(LOCALE."English/bbcodes/".$available_bbcode.".php")) {
                     include(LOCALE."English/bbcodes/".$available_bbcode.".php");
                 }
+
                 include INCLUDES."bbcodes/".$available_bbcode."_bbcode_include_var.php";
+
                 $cls = ($xx % 2 == 0 ? "tbl2" : "tbl1");
                 echo "<tr>\n";
                 echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($available_bbcode)."</td>\n";
@@ -218,8 +219,7 @@ if ($_GET['page'] == 1) {
     if ($_GET['page'] == 2) {
         if (isset($_POST['post_test'])) {
             $test_message = form_sanitizer($_POST['test_message'], '', 'test_message');
-            $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
-                                                                           $test_message) ? " checked='checked'" : "";
+            $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $test_message) ? " checked='checked'" : "";
             if ($defender->safe()) {
                 opentable($locale['417']);
                 echo "<div class='well'>\n";
@@ -249,5 +249,4 @@ if ($_GET['page'] == 1) {
         closetable();
     }
 }
-
 require_once THEMES."templates/footer.php";

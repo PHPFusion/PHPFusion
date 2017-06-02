@@ -19,7 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 //Unordered list BBCode VARS
-$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_ulist_description'], "value" => "ulist",
     "bbcode_start" => "[ulist=TYPE]", "bbcode_end" => "[/ulist]",

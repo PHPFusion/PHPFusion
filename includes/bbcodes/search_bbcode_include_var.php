@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$locale = fusion_get_locale();
+
 if (!function_exists("generate_search_opts")) {
     function generate_search_opts($textarea_name, $inputform_name) {
         $locale = fusion_get_locale();

@@ -26,14 +26,18 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
     }
     $__BBCODE__ = array();
     $bbcodes = "";
-    foreach ($bbcode_cache as $bbcode) {
 
+    foreach ($bbcode_cache as $bbcode) {
         if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
+            \PHPFusion\Locale::setLocale($locale_file);
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
+            \PHPFusion\Locale::setLocale($locale_file);
         }
-        \PHPFusion\Locale::setLocale($locale_file);
+    }
+    $locale = fusion_get_locale();
+    foreach ($bbcode_cache as $bbcode) {
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         } elseif (!$selected) {
@@ -112,6 +116,8 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
 }
 
 function strip_bbcodes($text) {
+    return $text;
+
     global $p_data;
     if (iADMIN) {
         return $text;

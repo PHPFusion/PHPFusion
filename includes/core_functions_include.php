@@ -605,19 +605,21 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
  * @return string
  */
 function parseubb($text, $selected = "") {
-    $bbcode_cache = array();
     $bbcode_cache = cache_bbcode();
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
-    $locale = array();
     foreach ($bbcode_cache as $bbcode) {
         if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
         }
-        $locale += fusion_get_locale('', $locale_file);
+        \PHPFusion\Locale::setLocale($locale_file);
+    }
+    $locale = fusion_get_locale();
+
+    foreach ($bbcode_cache as $bbcode) {
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
@@ -628,6 +630,7 @@ function parseubb($text, $selected = "") {
             }
         }
     }
+
     $text = descript($text, FALSE);
 
     return $text;

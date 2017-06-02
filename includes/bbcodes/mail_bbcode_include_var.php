@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$locale = fusion_get_locale();
 $__BBCODE__[] = array(
     "description" => $locale['bb_mail_description'], "value" => "mail", "bbcode_start" => "[mail]",
     "bbcode_end" => "[/mail]",
