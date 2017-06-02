@@ -24,10 +24,10 @@ if (!fusion_get_settings("maintenance")) {
 if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
     \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing("");
 }
+$locale = fusion_get_locale();
 
-$info = array();
 if (!iMEMBER) {
-    switch (fusion_get_settings("login_method")) {
+    switch (fusion_get_settings('login_method')) {
         case "2" :
             $placeholder = $locale['global_101c'];
             break;
@@ -40,17 +40,16 @@ if (!iMEMBER) {
     $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
     $user_password = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
 
-    $info = array(
-        "open_form" => openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
-        "user_name" => form_text('user_name', "", $user_name, array('placeholder' => $placeholder, "inline" => TRUE)),
-        "user_pass" => form_text('user_pass', "", $user_password,
-                                 array('placeholder' => $locale['global_102'], 'type' => 'password', "inline" => TRUE)),
-        "remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
-        "login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
-        "registration_link" => (fusion_get_settings("enable_registration")) ? "<p>".$locale['global_105']."</p>\n" : "",
+    $info = [
+        "open_form"            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
+        "user_name"            => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
+        "user_pass"            => form_text('user_pass', "", $user_password, ['placeholder' => $locale['global_102'], 'type' => 'password', 'inline' => TRUE]),
+        "remember_me"          => form_checkbox('remember_me', $locale['global_103'], ""),
+        "login_button"         => form_button('login', $locale['global_104'], $locale['global_104'], ['class' => 'btn-primary btn-block m-b-20']),
+        "registration_link"    => (fusion_get_settings('enable_registration')) ? "<p>".$locale['global_105']."</p>\n" : "",
         "forgot_password_link" => $locale['global_106'],
-        "close_form" => closeform()
-    );
+        "close_form"           => closeform()
+    ];
 }
 
 require_once THEME."theme.php";
@@ -59,12 +58,12 @@ require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."templates/render_functions.php";
 include THEMES."templates/global/maintenance.php";
 
-header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
+header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".fusion_get_locale('xml_lang')."'>\n";
+echo "<html lang='".$locale['xml_lang']."'>\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings('sitename')."</title>\n";
-echo "<meta charset='".fusion_get_locale('charset')."' />\n";
+echo "<meta charset='".$locale['charset']."' />\n";
 echo "<meta name='description' content='".fusion_get_settings('description')."' />\n";
 echo "<meta name='url' content='".fusion_get_settings('siteurl')."' />\n";
 echo "<meta name='keywords' content='".fusion_get_settings('keywords')."' />\n";

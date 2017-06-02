@@ -410,7 +410,7 @@ class Panels {
                 $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
                 $script_url = explode("/", $file_path);
             } else {
-                $script_url = explode("/", FUSION_REQUEST);
+				$script_url = explode("/", $_SERVER['PHP_SELF']);
             }
             $url_count = count($script_url);
             $base_url_count = substr_count(BASEDIR, "/") + 1;
