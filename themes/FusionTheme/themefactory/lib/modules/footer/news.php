@@ -30,7 +30,7 @@ class News {
             require_once NEWS_CLASS."autoloader.php";
             $data = NewsView::News()->get_NewsItem(array("limit" => "0,3", "order" => "news_datestamp DESC"));
             if (!empty($data['news_items'])) : ?>
-                <ul>
+                <ul class="list-style-none">
                 <?php foreach ($data['news_items'] as $news_id => $news_data) : ?>
                     <li class="m-b-20">
                         <div class="pull-left m-r-15" style="width:20%">
