@@ -21,11 +21,8 @@ if (!db_exists(DB_BLOG)) {
 }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
-    include INFUSIONS."blog/locale/".LOCALESET."blog.php";
-} else {
-    include INFUSIONS."blog/locale/English/blog.php";
-}
+$locale = fusion_get_locale('', BLOG_LOCALE);
+
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";

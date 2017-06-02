@@ -18,6 +18,13 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+if (!defined("DOWNLOAD_ADMIN_LOCALE")) {
+    if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
+        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
+    } else {
+        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/English/downloads_admin.php");
+    }
+}
 define("DOWNLOADS", INFUSIONS."downloads/");
 define("IMAGES_D", INFUSIONS."downloads/images/");
 define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
