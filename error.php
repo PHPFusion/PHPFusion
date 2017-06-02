@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/error.php";
 /**
@@ -37,49 +37,49 @@ add_handler("replaceDir");
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
 
-$default = array(
-    'title' => $locale['errunk'],
+$default = [
+    'title'     => $locale['errunk'],
     'image_src' => IMAGES."error/unknown.png",
-    'status' => '505',
-    'back' => [
-        'url' => BASEDIR.'index.php',
-        'title' => $locale['errret']
+    'status'    => '505',
+    'back'      => [
+        'url'    => BASEDIR.'index.php',
+        'title'  => $locale['errret']
     ]
-);
+];
 
 if (isset($_GET['code'])) {
     switch ($_GET['code']) {
         case 401:
             header("HTTP/1.1 401 Unauthorized");
-            $info = array(
-                'title' => $locale['err401'],
+            $info = [
+                'title'     => $locale['err401'],
                 'image_src' => IMAGES.'error/401.png',
-                'status' => 401
-            );
+                'status'    => 401
+            ];
             break;
         case 403:
             header("HTTP/1.1 403 Forbidden");
-            $info = array(
-                'title' => $locale['err403'],
+            $info = [
+                'title'     => $locale['err403'],
                 'image_src' => IMAGES.'error/403.png',
-                'status' => 403,
-            );
+                'status'    => 403,
+            ];
             break;
         case 404:
             header("HTTP/1.1 404 Not Found");
-            $info = array(
-                'title' => $locale['err404'],
+            $info = [
+                'title'     => $locale['err404'],
                 'image_src' => IMAGES.'error/404.png',
-                'status' => 404,
-            );
+                'status'    => 404,
+            ];
             break;
         case 500:
             header("HTTP/1.1 500 Internal Server Error");
-            $info = array(
-                'title' => $locale['err500'],
+            $info = [
+                'title'     => $locale['err500'],
                 'image_src' => IMAGES.'error/500.png',
-                'status' => 500,
-            );
+                'status'    => 500,
+            ];
             break;
     }
 }
@@ -90,11 +90,11 @@ $info += $default;
 ob_start();
 display_error_page($info);
 echo strtr(ob_get_clean(), [
-    '{%title%}' => $info['title'],
-    '{%message%}' => $locale['errmsg'],
-    '{%image_src%}' => $info['image_src'],
+    '{%title%}'      => $info['title'],
+    '{%message%}'    => $locale['errmsg'],
+    '{%image_src%}'  => $info['image_src'],
     '{%error_code%}' => $info['status'],
-    '{%back_link%}' => $info['back']['url'],
+    '{%back_link%}'  => $info['back']['url'],
     '{%back_title%}' => $info['back']['title']
 ]);
 require_once THEMES."templates/footer.php";

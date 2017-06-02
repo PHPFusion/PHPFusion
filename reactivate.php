@@ -16,10 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 require_once INCLUDES."suspend_include.php";
-include LOCALE.LOCALESET."reactivate.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."reactivate.php");
 
 if (iMEMBER) {
    redirect(BASEDIR."index.php");
@@ -31,8 +31,8 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
         $data = dbarray($result);
         $code = md5($data['user_actiontime'].$data['user_password']);
         if ($_GET['code'] == $code) {
-            if ($data['user_actiontime'] > time()) {
-                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit=".time()." WHERE user_id='".$_GET['user_id']."'");
+            if ($data['user_actiontime'] > TIME) {
+                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit='".TIME."' WHERE user_id='".$_GET['user_id']."'");
                 unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
                 $message = str_replace(
                     ["[USER_NAME]", '[SITENAME]', '[SITEUSERNAME]'],

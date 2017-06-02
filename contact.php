@@ -15,18 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."contact.php");
 add_to_title($locale['global_200'].$locale['400']);
 $settings = fusion_get_settings();
-$input = array(
+$input = [
     'mailname'     => '',
     'email'        => '',
     'subject'      => '',
     'message'      => '',
     'captcha_code' => '',
-);
+];
 
 if (isset($_POST['sendmessage'])) {
     foreach ($input as $key => $value) {
@@ -96,10 +96,10 @@ echo "<!--contact_pre_idx-->";
 echo openform('contactform', 'post', FORM_REQUEST);
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64));
-echo form_text('email', $locale['403'], $input['email'], array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
-echo form_text('subject', $locale['404'], $input['subject'], array('required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64));
-echo form_textarea('message', $locale['405'], $input['message'], array('required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128));
+echo form_text('mailname', $locale['402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64]);
+echo form_text('email', $locale['403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64]);
+echo form_text('subject', $locale['404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64]);
+echo form_textarea('message', $locale['405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128]);
 if (iGUEST) {
     echo "<div class='panel panel-default tbl-border'>\n";
     echo "<div class='panel-body clearfix'>\n";
@@ -107,12 +107,12 @@ if (iGUEST) {
     include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
     echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n";
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        echo form_text('captcha_code', $locale['408'], '', array('required' => TRUE, 'autocomplete_off' => TRUE));
+        echo form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
     }
     echo "</div>\n</div>\n";
     echo "</div>\n</div>\n";
 }
-echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary'));
+echo form_button('sendmessage', $locale['406'], $locale['406'], ['class' => 'btn-primary']);
 echo "</div>\n</div>\n";
 echo closeform();
 echo "<!--contact_sub_idx-->";
