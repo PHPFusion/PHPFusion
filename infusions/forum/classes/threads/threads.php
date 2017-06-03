@@ -45,16 +45,17 @@ class ForumThreads extends ForumServer {
      */
     public static function get_forum_thread($forum_id, $filter = FALSE) {
 
+        /* Redo and remove all joins */
+
         $info = [];
-
-        $locale = fusion_get_locale("", FORUM_LOCALE);
-
+        $locale = fusion_get_locale();
         $forum_settings = ForumServer::get_forum_settings();
-
         $userdata = fusion_get_userdata();
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
 
-        $lastVisited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
+        //$locale = fusion_get_locale("", FORUM_LOCALE);
+        $lastVisited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
+
         /**
          * Get threads with filter conditions (XSS prevention)
          */
@@ -183,7 +184,7 @@ class ForumThreads extends ForumServer {
                         "forum_type"     => $threads['forum_type'],
                         "thread_pages"   => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3,
                             FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
-                        "thread_icons"   => array(
+                        "thread_icons"        => array(
                             'lock'   => $threads['thread_locked'] ? "<i class='".self::get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
                             'poll'   => $threads['thread_poll'] ? "<i class='".self::get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
@@ -193,11 +194,10 @@ class ForumThreads extends ForumServer {
                             'file'   => $threads['attach_files'] > 0 ? "<i class='".self::get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ),
-                        "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'],
-                                $author['user_name'],
-                                $author['user_status'])."</span>",
-                        "thread_author"  => $author,
-                        "thread_last"    => array(
+                        "thread_starter_text" => $locale['forum_0006'].' '.$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
+                        "thread_starter"      => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
+                        "thread_author"       => $author,
+                        "thread_last"         => array(
                             'user'         => $lastuser,
                             'avatar'       => display_avatar($lastuser, '35px', '', FALSE, 'img-rounded'),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),

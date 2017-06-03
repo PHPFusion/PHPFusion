@@ -222,11 +222,12 @@ if (!function_exists('forum_viewforum')) {
 
         $data = $info['item'][$_GET['forum_id']];
 
+
         echo render_breadcrumbs();
 
         echo "<div class='forum-title'>\n";
-        echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcount_word']."</span></h4>\n";
-        echo "<div class='forum-description'>\n".$data['forum_description']."</div>\n";
+        echo "<h4>".$info['forum_name']." <span class='sub-title'>".$info['forum_threadcount_word']."</span></h4>\n";
+        echo "<div class='forum-description'>\n".$info['forum_description']."</div>\n";
         echo "</div>\n";
 
         if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) {
@@ -237,7 +238,7 @@ if (!function_exists('forum_viewforum')) {
 			";
         }
 
-        echo $data['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
+        echo $info['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules']."</div>\n" : '';
         // subforums
         if (!empty($info['item'][$_GET['forum_id']]['child'])) {
             echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";

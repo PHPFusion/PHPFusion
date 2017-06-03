@@ -181,6 +181,7 @@ if (column_exists('forums', 'forum_attach_download')) {
 }
 
 // Update existing records and change level accesses to new user groups values
+$forum_index = dbquery_tree($db_prefix.'forums', 'forum_id', 'forum_cat');
 $result = dbquery("SELECT forum_id, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download, forum_mods FROM ".$db_prefix."forums");
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
@@ -215,6 +216,9 @@ if (dbrows($result) > 0) {
         // Update forum_branch as base branch if forum_cat is 0
         if (!$data['forum_cat']) {
             $inf_updatedbrow[] = $db_prefix."forums SET forum_branch='".$data['forum_id']."' WHERE forum_id='".$data['forum_id']."'";
+        } else {
+            $root = get_root($forum_index, $data['forum_id']);
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_branch='".$root."' WHERE forum_id='".$data['forum_id']."'";
         }
 
         // Update new access levels for forum moderators
