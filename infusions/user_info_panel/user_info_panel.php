@@ -20,21 +20,7 @@ require_once dirname(__FILE__).'/templates/default.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
-$modules = array(
-    'n' => array($locale['UM090'], infusion_exists('news')),
-    'b' => array($locale['UM095'], infusion_exists('blog')),
-    'l' => array($locale['UM091'], infusion_exists('weblinks')),
-    'a' => array($locale['UM092'], infusion_exists('articles')),
-    'p' => array($locale['UM093'], infusion_exists('photos')),
-    'd' => array($locale['UM094'], infusion_exists('downloads')),
-    'q' => array($locale['UM102'], infusion_exists('faq'))
-);
-$installedModules = array();
-foreach ($modules as $k => $v) {
-    if (!empty($v[1])) {
-        $installedModules[$k] = $v[0];
-    }
-}
+$modules = \PHPFusion\Admins::getInstance()->getSubmitData();
 
 if (iMEMBER) {
     $messages_count = dbquery("SELECT
@@ -87,11 +73,11 @@ if (iMEMBER) {
 
     $submissions_link_arr = [];
     $submissions_link = '';
-    if (!empty($installedModules)) {
-        foreach ($installedModules as $stype => $title) {
+    if (!empty($modules)) {
+        foreach ($modules as $stype => $title) {
             $submissions_link_arr[] = [
-                'link'  => BASEDIR.'submit.php?stype='.$stype,
-                'title' => $title,
+                'link'  => $title['submit_link'],
+                'title' => sprintf($title['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php"))),
             ];
         }
     }
