@@ -17,38 +17,15 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-$locale = fusion_get_locale("", LOCALE.LOCALESET."submissions.php");
-add_to_title(str_replace('...', '', $locale['UM089']));
+add_to_title(str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php")));
 
-$modules = array(
-    'n' => infusion_exists('news'),
-    'p' => infusion_exists('gallery'),
-    'a' => infusion_exists('articles'),
-    'd' => infusion_exists('downloads'),
-    'l' => infusion_exists('weblinks'),
-    'b' => infusion_exists('blog'),
-    'q' => infusion_exists('faq'),
-);
-$sum = array_sum($modules);
-if (!$sum) {
+$modules = \PHPFusion\Admins::getInstance()->getSubmitData();
+if (empty($modules)) {
     redirect("index.php");
 }
-
-$submission_types = array(
-    'news'      => array('link' => "submit.php?stype=n", 'title' => $locale['submit_0000']),
-    'blog'      => array('link' => "submit.php?stype=b", 'title' => $locale['submit_0005']),
-    'articles'  => array('link' => "submit.php?stype=a", 'title' => $locale['submit_0001']),
-    'downloads' => array('link' => "submit.php?stype=d", 'title' => $locale['submit_0002']),
-    'gallery'   => array('link' => "submit.php?stype=p", 'title' => $locale['submit_0003']),
-    'weblinks'  => array('link' => "submit.php?stype=l", 'title' => $locale['submit_0004']),
-    'faq'       => array('link' => "submit.php?stype=q", 'title' => $locale['submit_0006']),
-);
-
-foreach ($submission_types as $db => $submit) {
-    if (infusion_exists($db)) {
+foreach ($modules as $db => $submit) {
         opentable(sprintf($submit['title'], ''));
-        echo "<a href='".$submit['link']."'>".sprintf($submit['title'], str_replace('...', '', $locale['UM089']))."</a>";
+        echo "<a href='".$submit['submit_link']."'>".sprintf($submit['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php")))."</a>";
         closetable();
-    }
 }
 require_once THEMES."templates/footer.php";

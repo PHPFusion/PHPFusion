@@ -100,6 +100,9 @@ $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
 $submit_link = array();
 $submit_link += \PHPFusion\Admins::getInstance()->getSubmitLink();
 
+$submit_data = array();
+$submit_data += \PHPFusion\Admins::getInstance()->getSubmitData();
+
 $link_type = array(
     'C'  => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
     'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"

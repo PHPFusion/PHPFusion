@@ -58,7 +58,7 @@ function render_admin_dashboard() {
 
 function render_dashboard() {
     global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-        $global_ratings, $global_submissions, $link_type, $submit_type, $submit_link,
+        $global_ratings, $global_submissions, $link_type, $submit_data,
         $comments_type, $infusions_count, $global_infusions;
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
@@ -318,14 +318,14 @@ function render_dashboard() {
             echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
                 openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
                 if (count($global_submissions['data']) > 0) {
-                    foreach ($global_submissions['data'] as $i => $submit_data) {
-                        $review_link = sprintf($submit_link[$submit_data['submit_type']], $submit_data['submit_id']);
+                    foreach ($global_submissions['data'] as $i => $submit_date) {
+                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
                         echo "<!--Start Submissions Item-->\n";
                         echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
-                        echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])." </strong>\n";
-                        echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span><br/>\n";
-                        echo timer($submit_data['submit_datestamp'])."<br/>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_date, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+                        echo "<strong>".profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status'])." </strong>\n";
+                        echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_data[$submit_date['submit_type']]['submit_locale']."</strong></span><br/>\n";
+                        echo timer($submit_date['submit_datestamp'])."<br/>\n";
                         if (!empty($review_link)) {
                             echo "<a class='btn btn-xs btn-default m-t-5' title='".$locale['286']."' href='".$review_link."'>".$locale['286']."</a>\n";
                         }
