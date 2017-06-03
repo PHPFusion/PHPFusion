@@ -179,8 +179,9 @@ if (column_exists('forums', 'forum_attach')) {
 if (column_exists('forums', 'forum_attach_download')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
 }
+
 // Update existing records and change level accesses to new user groups values
-$result = dbquery("SELECT forum_id, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download FROM ".$db_prefix."forums");
+$result = dbquery("SELECT forum_id, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download, forum_mods FROM ".$db_prefix."forums");
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
         // Update new access levels for forum_post
@@ -210,6 +211,28 @@ if (dbrows($result) > 0) {
         // Update new access levels for forum attach
         if ($data['forum_attach_download']) {
             $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."'";
+        }
+        // Update new access levels for forum moderators
+        if (!empty($data['forum_mods'])) {
+            $current_mods = array();
+            $data['forum_mods'] = explode('.', $data['forum_mods']);
+            foreach ($data['forum_mods'] as $mods) {
+                switch ($mods) {
+                    case '103':
+                        $current_mods[] = USER_LEVEL_SUPER_ADMIN;
+                        break;
+                    case '102':
+                        $current_mods[] = USER_LEVEL_ADMIN;
+                        break;
+                    case '101':
+                        $current_mods[] = USER_LEVEL_PUBLIC;
+                        break;
+                    default:
+                        $current_mods[] = $mods;
+                }
+            }
+            $data['forum_mods'] = implode('.', $current_mods);
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."'";
         }
 
     }
