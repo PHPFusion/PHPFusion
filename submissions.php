@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."submissions.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."submissions.php");
 add_to_title(str_replace('...', '', $locale['UM089']));
 
 $modules = array(

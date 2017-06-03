@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."lostpassword.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."lostpassword.php");
 require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
     redirect("index.php");

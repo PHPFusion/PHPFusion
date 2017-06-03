@@ -49,7 +49,7 @@ class OpenGraph {
 
 	public static function ogUserProfile($userid = 0) {
 		$settings = fusion_get_settings();
-		$locale = fusion_get_locale();
+		$locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 
 		$info = array();
 		$result = dbquery("SELECT * FROM `".DB_USERS."` WHERE `user_id` = '".intval($userid)."' LIMIT 1");

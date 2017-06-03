@@ -23,11 +23,7 @@ if (!defined("IN_FUSION")) {
 $articleSettings = get_settings("article");
 
 // Locale
-if (file_exists(INFUSIONS."articles/locale/".LOCALESET."article_admin.php")) {
-    include INFUSIONS."articles/locale/".LOCALESET."article_admin.php";
-} else {
-    include INFUSIONS."articles/locale/English/article_admin.php";
-}
+$locale = fusion_get_locale('', ARTICLE_ADMIN_LOCALE);
 
 opentable("<i class='fa fa-file-text-o fa-lg m-r-10'></i> ".$locale['article_0900']);
 add_to_title($locale['global_200'].$locale['article_0900']);

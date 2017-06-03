@@ -18,6 +18,20 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+if (!defined("BLOG_LOCALE")) {
+    if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
+        define("BLOG_LOCALE", INFUSIONS."blog/locale/".LOCALESET."blog.php");
+    } else {
+        define("BLOG_LOCALE", INFUSIONS."blog/locale/English/blog.php");
+    }
+}
+if (!defined("BLOG_ADMIN_LOCALE")) {
+    if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
+        define("BLOG_ADMIN_LOCALE", INFUSIONS."blog/locale/".LOCALESET."blog_admin.php");
+    } else {
+        define("BLOG_ADMIN_LOCALE", INFUSIONS."blog/locale/English/blog_admin.php");
+    }
+}
 
 define("IMAGES_B", INFUSIONS."blog/images/");
 define("IMAGES_B_T", INFUSIONS."blog/images/thumbs/");

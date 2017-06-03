@@ -98,7 +98,7 @@ class Members {
 
         if (iMEMBER) {
 
-            $search_form = openform('searchform', 'get', FUSION_SELF);
+            $search_form = openform('searchform', 'get', BASEDIR."members.php?");
             $search_form .= "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
             $search_form .= form_text('search_text', '', $_GET['search_text'],
                                       array(

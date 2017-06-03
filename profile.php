@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."user_fields.php";
-
+$locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     require_once THEMES."templates/global/profile.php";
@@ -63,15 +62,12 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
 
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
-
     /*
      * Show group
      */
     \PHPFusion\UserGroups::getInstance()->setGroup($_GET['group_id'])->showGroup();
-
 } else {
 
     redirect(BASEDIR."index.php");
-
 }
 require_once THEMES."templates/footer.php";

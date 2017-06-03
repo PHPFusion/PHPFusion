@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET."print.php");
 
@@ -93,7 +93,7 @@ if (isset($_GET['type'])) {
                 redirect(BASEDIR."error.php?code=404");
             }
             $result = dbquery("
-			SELECT 
+			SELECT
 				ta.article_subject, ta.article_article, ta.article_breaks, ta.article_datestamp,
 				tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_ARTICLES." ta

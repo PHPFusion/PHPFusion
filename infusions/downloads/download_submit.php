@@ -21,11 +21,7 @@ if (!defined("IN_FUSION")) {
 
 $dl_settings = get_settings("downloads");
 
-if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
-    include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
-} else {
-    include INFUSIONS."downloads/locale/English/downloads_admin.php";
-}
+$locale = fusion_get_locale('', DOWNLOAD_ADMIN_LOCALE);
 
 add_to_title($locale['global_200'].$locale['download_0041']);
 

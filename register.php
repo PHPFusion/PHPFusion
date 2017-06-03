@@ -15,16 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."user_fields.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 require_once THEMES."templates/global/register.php";
 include THEMES."templates/global/profile.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
 
-if (iMEMBER or $settings['enable_registration'] == 0) {
+if (iMEMBER or fusion_get_settings('enable_registration') == 0) {
     redirect("index.php");
 }
 
@@ -68,9 +68,9 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 } elseif (isset($_POST['register'])) {
 
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->validation = $settings['display_validation']; //$settings['display_validation'];
-    $userInput->emailVerification = $settings['email_verification']; //$settings['email_verification'];
-    $userInput->adminActivation = $settings['admin_activation']; //$settings['admin_activation'];
+    $userInput->validation = $settings['display_validation'];
+    $userInput->emailVerification = $settings['email_verification'];
+    $userInput->adminActivation = $settings['admin_activation'];
     $userInput->skipCurrentPass = TRUE;
     $userInput->registration = TRUE;
     $insert = $userInput->saveInsert();
@@ -94,7 +94,6 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
     $userFields->skipCurrentPass = TRUE;
     $userFields->registration = TRUE;
     $userFields->display_profile_input();
-    //display_registerform($info);
 }
 
 require_once THEMES."templates/footer.php";
