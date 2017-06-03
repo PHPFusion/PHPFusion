@@ -42,6 +42,14 @@ define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('B', fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitType('b', fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitLink('b', INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
+//\PHPFusion\Admins::getInstance()->setSubmitType('b', fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"));
+//\PHPFusion\Admins::getInstance()->setSubmitLink('b', INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
+\PHPFusion\Admins::getInstance()->setSubmitData('b', [
+		'infusion_name' => 'blog',
+		'link'          => INFUSIONS."blog/blog_submit.php",
+		'submit_link'   => "submit.php?stype=b",
+		'submit_locale' => fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"),
+		'title'         => fusion_get_locale('submit_0005', LOCALE.LOCALESET."submissions.php"),
+		'admin_link'    => INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+	]);

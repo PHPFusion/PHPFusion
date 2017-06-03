@@ -20,29 +20,12 @@ if (!iMEMBER) {
     redirect("index.php");
 }
 require_once THEMES."templates/header.php";
-include_once INCLUDES."infusions_include.php";
-$modules = array(
-    'n' => infusion_exists('news'),
-    'p' => infusion_exists('gallery'),
-    'a' => infusion_exists('articles'),
-    'd' => infusion_exists('downloads'),
-    'l' => infusion_exists('weblinks'),
-    'b' => infusion_exists('blog'),
-    'q' => infusion_exists('faq')
-);
-$submit_types = array(
-    'n' => array('link' => INFUSIONS."news/news_submit.php"),
-    'p' => array('link' => INFUSIONS."gallery/photo_submit.php"),
-    'a' => array('link' => INFUSIONS."articles/article_submit.php"),
-    'd' => array('link' => INFUSIONS."downloads/download_submit.php"),
-    'l' => array('link' => INFUSIONS."weblinks/weblink_submit.php"),
-    'b' => array('link' => INFUSIONS."blog/blog_submit.php"),
-    'q' => array('link' => INFUSIONS."faq/faq_submit.php"),
-);
-$_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) && isset($submit_types[$_GET['stype']]) ? $_GET['stype'] : "";
-$sum = array_sum($modules);
-if ($sum && $_GET['stype']) {
-   require_once $submit_types[$_GET['stype']]['link'];
+$modules = \PHPFusion\Admins::getInstance()->getSubmitData();
+
+$_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) ? $_GET['stype'] : "";
+
+if (!empty($modules) && $_GET['stype']) {
+   require_once $modules[$_GET['stype']]['link'];
 } else {
     redirect('index.php');
 }

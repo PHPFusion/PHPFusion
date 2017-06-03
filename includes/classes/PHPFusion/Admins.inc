@@ -98,6 +98,7 @@ class Admins {
     private $submit_type = array();
     private $submit_link = array();
     private $link_type = array();
+    private $submit_data = [];
 
     private function __construct() {}
 
@@ -256,7 +257,6 @@ class Admins {
     public function getSubmitType($type = NULL) {
         return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
     }
-
     /**
      * @param $type  - submissions prefix
      * @param $title - title
@@ -265,6 +265,17 @@ class Admins {
         $this->submit_type[$type] = $title;
     }
 
+    /**
+     * @param $type  - submissions prefix
+     * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
+     */
+    public function setSubmitData($type, array $options = array()) {
+        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
+    }
+
+    public function getSubmitData($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+    }
     /**
      * @param $link     Admin submission url
      * @param $type     Submissions stype prefix
