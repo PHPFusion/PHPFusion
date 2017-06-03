@@ -79,6 +79,7 @@ class Forum extends ForumServer {
         if ($this->forum_info['forum_id']) {
             $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
             $forum_data = dbarray($forum_result);
+            Moderator::define_forum_mods($this->forum_info);
             $this->setForumPermission($forum_data);
             $this->forum_info['parent_id'] = $forum_data['forum_cat'];
             $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
@@ -296,9 +297,6 @@ class Forum extends ForumServer {
                             $this->forum_info['forum_type'] = $row['forum_type'];
 
                             $mods::define_forum_mods($row);
-
-                            // do the full string of checks for forums access
-                            $this->setForumPermission($row);
 
                             // Generate New thread link
                             if ($this->getForumPermission("can_post") && $row['forum_type'] > 1) {
