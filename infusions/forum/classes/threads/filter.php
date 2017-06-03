@@ -43,12 +43,12 @@ class ThreadFilter {
         );
 
         $type_array = array(
-            'all' => '',
-            'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
-            'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
-            'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
-            'solved' => "AND t.thread_answered = '1'",
-            'unsolved' => "AND t.thread_answered = '0'",
+            'all'         => '',
+            'discussions' => "AND (a.attach_id IS NULL or attach_count ='0') AND thread_poll='0'",
+            'attachments' => "AND (a.attach_id IS NULL OR attach_count > '0') AND thread_poll='0'",
+            'poll'        => "AND (a.attach_id IS NULL or attach_count ='0') AND thread_poll ='1'",
+            'solved'      => "AND t.thread_answered = '1'",
+            'unsolved'    => "AND t.thread_answered = '0'",
         );
 
         $sort_array = array(
@@ -73,26 +73,15 @@ class ThreadFilter {
         $typeCol = '';
 
         if ($time) {
-            $time_stop = $time_array['today'];
-            foreach ($time_array as $key => $value) {
-                if ($time == $key) {
-                    $time_stop = prev($time_array);
-                    break;
-                }
-            }
-
             if ($time !== 'today') {
                 $start_time = intval( $time_array[ $time ] );
-                $end_time = time();
-                $timeCol = "AND ((p1.post_datestamp BETWEEN '$start_time' AND '$end_time') OR (t.thread_lastpost BETWEEN '$start_time' AND '$end_time'))";
+                $timeCol = "AND (t.thread_lastpost BETWEEN '$start_time' AND '".TIME."')";
             } else {
-                $timeCol = "AND (p1.post_datestamp >= ".intval($time_array[$time])." OR t.thread_lastpost >= ".intval($time_stop)." )";
+                $timeCol = "AND (t.thread_lastpost >= ".intval($time_array[$time]).")";
             }
-
         }
 
         if ($type) {
-
             $typeCol = isset($type_array[$type]) ? $type_array[$type] : 'all';
         }
 

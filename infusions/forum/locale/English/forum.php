@@ -145,7 +145,7 @@ $locale['forum_0365'] = "Responses";
 $locale['forum_0366'] = "Add Poll";
 $locale['forum_0372'] = "Ratings";
 $locale['forum_0373'] = "Last replied by:";
-$locale['forum_0374'] = "Any Topics";
+$locale['forum_0374'] = "All Content";
 $locale['forum_0378'] = "Solved";
 $locale['forum_0379'] = "Unsolved";
 $locale['forum_0381'] = "Post Time";
@@ -157,7 +157,9 @@ $locale['forum_0396'] = "Confirm Forum Selection";
 $locale['forum_0397'] = "There are no forum defined.";
 $locale['forum_0398'] = "Unable to download file";
 $locale['forum_0399'] = "Add Bounty";
+
 $locale['forum_0400'] = "Thread bounty has been updated. Please be sure to select the answer to be awarded with the bounty";
+
 $locale['forum_0500'] = "Preview Thread";
 $locale['forum_0501'] = "Post Thread";
 $locale['forum_0505'] = "Preview Changes";
@@ -224,6 +226,9 @@ $locale['forum_0591'] = "Flush Post";
 $locale['forum_0592'] = "Flush Threads";
 $locale['forum_0593'] = "Flush Attachments";
 $locale['forum_0595'] = "Flush Poll";
+$locale['forum_0596'] = "Question";
+$locale['forum_0597'] = "Question|Questions";
+
 $locale['forum_0601'] = "Message";
 $locale['forum_0602'] = "Options";
 $locale['forum_0603'] = "Edit Poll";

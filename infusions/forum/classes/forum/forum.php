@@ -143,7 +143,9 @@ class Forum extends ForumServer {
                     require_once INCLUDES."mimetypes_include.php";
 
                     // @todo: turn this into ajax filtration to cut down SEO design pattern
+                    // This is the thread filtration pattern, and therefore should go to the thread class , not the forum class.
                     $this->forum_info['filter'] = $this->filter()->get_FilterInfo();
+
 
                     // this is the current forum data
                     $this->forum_info = array_merge($this->forum_info, dbarray($result));
@@ -182,203 +184,244 @@ class Forum extends ForumServer {
                         $this->forum_info['new_thread_link'] = FORUM."newthread.php?forum_id=".$this->forum_info['forum_id'];
                     }
 
-                    // Get Threads Data
-                    if ($this->forum_info['forum_type'] !== '1') {
-                        /**
-                         * Get existing threads in the current forum
-                         * @todo: Make a new template, use Jquery to cut out time.
-                         */
-                        $filter_sql = $this->filter()->get_filterSQL();
-                        $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'],
-                            array(
-                                'condition' => $filter_sql['condition'],
-                                'order'     => $filter_sql['order']
-                            ));
-                        $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
-                    }
+                    $this->forum_info['subforum_count'] = dbcount("(forum_id)", DB_FORUMS, 'forum_cat=:forum_id', [':forum_id' => $this->forum_info['forum_id']]);
 
-                    // Get Sub Forums
-                    if (dbcount("(forum_id)", DB_FORUMS, 'forum_cat=:forum_id', [':forum_id' => $this->forum_info['forum_id']])) {
-                        $select_column = "SELECT forum_id, forum_name, forum_cat, forum_lastpost, forum_lastpostid FROM ".DB_FORUMS;
-                        $select_cond = (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND (forum_id=:forum_id01 OR f.forum_cat=:forum_id02 OR f.forum_branch=:forum_id03')";
-                        $child_sql = $select_column.$select_cond;
-                        $child_param = [
-                            ':forum_id01' => $this->forum_info['forum_id'],
-                            ':forum_id02' => $this->forum_info['forum_id'],
-                            ':forum_id03' => $this->forum_info['forum_id'],
-                        ];
-                        $subforum_result = dbquery($child_sql, $child_param);
-                        $refs = array();
-                        // define what a row is
-                        $row_array = array(
-                            'forum_new_status'       => '',
-                            'last_post'              => '',
-                            'forum_icon'             => '',
-                            'forum_icon_lg'          => '',
-                            'forum_moderators'       => '',
-                            'forum_link'             => array(
-                                'link'  => '',
-                                'title' => ''
-                            ),
-                            'forum_description'      => '',
-                            'forum_postcount_word'   => '',
-                            'forum_threadcount_word' => '',
-                        );
-                        if (dbrows($subforum_result)) {
+                    if (isset($_GET['view']) && $_GET['view'] == 'subforums') {
 
-                            while ($row = dbarray($subforum_result) and checkgroup($row['forum_access'])) {
-                                //print_p($row);
+                        die('This part is currently under re-development');
 
-                                // Calculate Forum New Status
-                                $newStatus = "";
-                                $forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
-                                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
-                                if ($row['forum_lastpost'] > $last_visited) {
-                                    if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
-                                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
-                                    }
-                                }
+                        // Get Sub Forums Data
+                        if ($this->forum_info['subforum_count']) {
+                            $this->forum_info['subforum_link'] = [
+                                'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=subforums',
+                                'title' => $locale['forum_0351'],
+                            ];
+                            $select_column = "SELECT forum_id, forum_name, forum_cat, forum_lastpost, forum_lastpostid FROM ".DB_FORUMS;
+                            $select_cond = (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND (forum_id=:forum_id01 OR f.forum_cat=:forum_id02 OR f.forum_branch=:forum_id03')";
+                            $child_sql = $select_column.$select_cond;
+                            $child_param = [
+                                ':forum_id01' => $this->forum_info['forum_id'],
+                                ':forum_id02' => $this->forum_info['forum_id'],
+                                ':forum_id03' => $this->forum_info['forum_id'],
+                            ];
+                            $subforum_result = dbquery($child_sql, $child_param);
+                            $refs = array();
+                            // define what a row is
+                            $row_array = array(
+                                'forum_new_status'       => '',
+                                'last_post'              => '',
+                                'forum_icon'             => '',
+                                'forum_icon_lg'          => '',
+                                'forum_moderators'       => '',
+                                'forum_link'             => array(
+                                    'link'  => '',
+                                    'title' => ''
+                                ),
+                                'forum_description'      => '',
+                                'forum_postcount_word'   => '',
+                                'forum_threadcount_word' => '',
+                            );
+                            if (dbrows($subforum_result)) {
 
-                                /**
-                                 * Default system icons - why do i need this? Why not let themers decide?
-                                 */
-                                switch ($row['forum_type']) {
-                                    case '1':
-                                        $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
-                                        $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
-                                        break;
-                                    case '2':
-                                        $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
-                                        $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
-                                        break;
-                                    case '3':
-                                        $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
-                                        $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
-                                        break;
-                                    case '4':
-                                        $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
-                                        $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
-                                        break;
-                                    default:
-                                        $forum_icon = "";
-                                        $forum_icon_lg = "";
-                                }
+                                while ($row = dbarray($subforum_result) and checkgroup($row['forum_access'])) {
+                                    //print_p($row);
 
-                                // Calculate lastpost information
-                                $lastPostInfo = array(
-                                    'avatar'       => '',
-                                    'avatar_src'   => '',
-                                    'message'      => '',
-                                    'profile_link' => '',
-                                    'time'         => '',
-                                    'date'         => '',
-                                    'thread_link'  => '',
-                                    'post_link'    => '',
-                                );
-                                if ($forum_settings['forum_show_lastpost']) {
-                                    if (!empty($row['forum_lastpostid'])) {
-
-                                        // as first_post_datestamp
-                                        $last_post_sql = "SELECT post_message FROM ".DB_FORUMS." WHERE forum_id=:forum_id ORDER BY post_datestamp DESC";
-                                        $last_post_param = [':forum_id' => $row['forum_lastpostid']];
-                                        $post_result = dbquery($last_post_sql, $last_post_param);
-                                        if (dbrows($post_result)) {
-
-                                            // Get the current forum last user
-                                            $last_user = fusion_get_user($forum_data['forum_lastuser']);
-                                            $post_data = dbarray($post_result);
-
-                                            $last_post = array(
-                                                'avatar'       => '',
-                                                'avatar_src'   => $last_user['user_avatar'] && file_exists(IMAGES.'avatars/'.$last_user['user_avatar']) && !is_dir(IMAGES.'avatars/'.$last_user['user_avatar']) ? IMAGES.'avatars/'.$last_user['user_avatar'] : '',
-                                                'message'      => trim_text(parseubb(parsesmileys($post_data['post_message'])), 100),
-                                                'profile_link' => profile_link($last_user['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
-                                                'time'         => timer($row['forum_lastpost']),
-                                                'date'         => showdate("forumdate", $row['forum_lastpost']),
-                                                'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
-                                                'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
-                                            );
-                                            if ($forum_settings['forum_last_post_avatar']) {
-                                                $last_post['avatar'] = display_avatar($last_user, '30px', '', '', 'img-rounded');
-                                            }
-                                            $lastPostInfo = $last_post;
+                                    // Calculate Forum New Status
+                                    $newStatus = "";
+                                    $forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
+                                    $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
+                                    if ($row['forum_lastpost'] > $last_visited) {
+                                        if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
+                                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
                                         }
                                     }
+
+                                    /**
+                                     * Default system icons - why do i need this? Why not let themers decide?
+                                     */
+                                    switch ($row['forum_type']) {
+                                        case '1':
+                                            $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
+                                            $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
+                                            break;
+                                        case '2':
+                                            $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
+                                            $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
+                                            break;
+                                        case '3':
+                                            $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
+                                            $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
+                                            break;
+                                        case '4':
+                                            $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
+                                            $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
+                                            break;
+                                        default:
+                                            $forum_icon = "";
+                                            $forum_icon_lg = "";
+                                    }
+
+                                    // Calculate lastpost information
+                                    $lastPostInfo = array(
+                                        'avatar'       => '',
+                                        'avatar_src'   => '',
+                                        'message'      => '',
+                                        'profile_link' => '',
+                                        'time'         => '',
+                                        'date'         => '',
+                                        'thread_link'  => '',
+                                        'post_link'    => '',
+                                    );
+                                    if ($forum_settings['forum_show_lastpost']) {
+                                        if (!empty($row['forum_lastpostid'])) {
+
+                                            // as first_post_datestamp
+                                            $last_post_sql = "SELECT post_message FROM ".DB_FORUMS." WHERE forum_id=:forum_id ORDER BY post_datestamp DESC";
+                                            $last_post_param = [':forum_id' => $row['forum_lastpostid']];
+                                            $post_result = dbquery($last_post_sql, $last_post_param);
+                                            if (dbrows($post_result)) {
+
+                                                // Get the current forum last user
+                                                $last_user = fusion_get_user($forum_data['forum_lastuser']);
+                                                $post_data = dbarray($post_result);
+
+                                                $last_post = array(
+                                                    'avatar'       => '',
+                                                    'avatar_src'   => $last_user['user_avatar'] && file_exists(IMAGES.'avatars/'.$last_user['user_avatar']) && !is_dir(IMAGES.'avatars/'.$last_user['user_avatar']) ? IMAGES.'avatars/'.$last_user['user_avatar'] : '',
+                                                    'message'      => trim_text(parseubb(parsesmileys($post_data['post_message'])), 100),
+                                                    'profile_link' => profile_link($last_user['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
+                                                    'time'         => timer($row['forum_lastpost']),
+                                                    'date'         => showdate("forumdate", $row['forum_lastpost']),
+                                                    'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
+                                                    'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+                                                );
+                                                if ($forum_settings['forum_last_post_avatar']) {
+                                                    $last_post['avatar'] = display_avatar($last_user, '30px', '', '', 'img-rounded');
+                                                }
+                                                $lastPostInfo = $last_post;
+                                            }
+                                        }
+                                    }
+
+                                    $row['forum_postcount'] = dbcount("(post_id)", DB_FORUMS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
+                                    $row['forum_threadcount'] = dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
+
+                                    $_row = array_merge($row_array, $row, array(
+                                        "forum_type"             => $row['forum_type'],
+                                        "forum_moderators"       => Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
+                                        "forum_new_status"       => $newStatus,
+                                        "forum_link"             => array(
+                                            "link"  => FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id'],
+                                            "title" => $row['forum_name']
+                                        ),
+                                        "forum_description"      => nl2br(parseubb($row['forum_description'])), // current forum description
+                                        // @this need a count
+                                        "forum_postcount_word"   => format_word($row['forum_postcount'], $locale['fmt_post']), // current forum post count
+                                        // @this need a count
+                                        "forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']), // thread in the current forum
+                                        "last_post"              => $lastPostInfo, // last post information
+                                        "forum_icon"             => $forum_icon, // normal icon
+                                        "forum_icon_lg"          => $forum_icon_lg, // big icon.
+                                        "forum_image"            => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '',
+                                    ));
+
+                                    // child hierarchy data.
+                                    $thisref = &$refs[$_row['forum_id']];
+                                    $thisref = $_row;
+                                    if ($_row['forum_cat'] == $this->forum_info['parent_id']) {
+                                        $this->forum_info['item'][$_row['forum_id']] = &$thisref; // will push main item out.
+                                    } else {
+                                        $refs[$_row['forum_cat']]['child'][$_row['forum_id']] = &$thisref;
+                                    }
                                 }
+                            }
+                        }
+                    } else {
 
-                                $row['forum_postcount'] = dbcount("(post_id)", DB_FORUMS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
-                                $row['forum_threadcount'] = dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
+                        // Get Threads Data
+                        if ($this->forum_info['forum_type'] !== '1') {
 
-                                $_row = array_merge($row_array, $row, array(
-                                    "forum_type"             => $row['forum_type'],
-                                    "forum_moderators"       => Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
-                                    "forum_new_status"       => $newStatus,
-                                    "forum_link"             => array(
-                                        "link"  => FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id'],
-                                        "title" => $row['forum_name']
-                                    ),
-                                    "forum_description"      => nl2br(parseubb($row['forum_description'])), // current forum description
-                                    // @this need a count
-                                    "forum_postcount_word"   => format_word($row['forum_postcount'], $locale['fmt_post']), // current forum post count
-                                    // @this need a count
-                                    "forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']), // thread in the current forum
-                                    "last_post"              => $lastPostInfo, // last post information
-                                    "forum_icon"             => $forum_icon, // normal icon
-                                    "forum_icon_lg"          => $forum_icon_lg, // big icon.
-                                    "forum_image"            => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '',
+                            if ($this->forum_info['forum_type'] == 4) {
+                                // must be questions, so need 2 filters - 0596 is question.
+                                $filter = [
+                                    'solved'   => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=solved",
+                                        'title'  => $locale['forum_0378'],
+                                        'icon'   => "<i class='fa fa-question-circle-o text-success m-r-5'></i>",
+                                        'active' => FALSE,
+                                        'count'  => dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id and thread_answered=:answer AND thread_hidden=:status", [':forum_id' => $this->forum_info['forum_id'], ':answer' => 1, ':status' => 0]) ?: 0,
+                                    ],
+                                    'unsolved' => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=unsolved",
+                                        'title'  => $locale['forum_0379'],
+                                        'icon'   => "<i class='fa fa-question-circle text-warning m-r-5'></i>",
+                                        'active' => FALSE,
+                                        'count'  => dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id and thread_answered=:answer and thread_hidden=:status", [':forum_id' => $this->forum_info['forum_id'], ':answer' => 0, ':status' => 0]) ?: 0,
+                                    ]
+                                ];
+                            } else {
+                                // must be discussions
+                                $filter = [
+                                    'discussions' => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=discussions",
+                                        'title'  => $locale['forum_0222'],
+                                        'icon'   => "<i class='fa fa-comment text-primary m-r-5'></i>",
+                                        'active' => FALSE,
+                                        'count'  => $this->forum_info['thread_count'],
+                                    ]
+                                ];
+                            }
+                            $this->forum_info['filters']['type'] = [
+                                    'all'         => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=all",
+                                        'title'  => $locale['forum_0374'],
+                                        'icon'   => '',
+                                        'active' => FALSE,
+                                        'count'  => $this->forum_info['thread_count']
+                                    ],
+                                    'attachments' => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=attachments",
+                                        'title'  => $locale['forum_0223'],
+                                        'icon'   => "<i class='fa fa-file-text-o text-info m-r-5'></i>",
+                                        'active' => FALSE,
+                                        'count'  => dbcount("(t.forum_id)", DB_FORUM_ATTACHMENTS." a INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=a.thread_id", "t.forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]) ?: 0,
+                                    ],
+                                    'poll'        => [
+                                        'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=poll",
+                                        'title'  => $locale['forum_0314'],
+                                        'icon'   => "<i class='fa fa-bar-chart text-success m-r-5'></i>",
+                                        'active' => FALSE,
+                                        'count'  => dbcount("(thread_id)", DB_FORUM_THREADS, "thread_poll=:has_poll and thread_hidden=:status and forum_id=:forum_id", [':has_poll' => 1, ':status' => 0, ':forum_id' => $this->forum_info['forum_id']]) ?: 0,
+                                    ]
+                                ] + $filter;
+                            // calculate active
+                            $i = 0;
+                            foreach (array_keys($this->forum_info['filters']['type']) as $key) {
+                                if ((isset($_GET['type']) && $key == $_GET['type']) || ($i == 0 && !isset($_GET['type']))) {
+                                    $this->forum_info['filters']['type'][$key]['active'] = TRUE;
+                                }
+                                $i++;
+                            }
+
+                            /**
+                             * Get existing threads in the current forum
+                             *
+                             * @todo: Make a new template, use Jquery to cut out loading time.
+                             */
+                            $filter_sql = $this->filter()->get_filterSQL();
+                            $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'],
+                                array(
+                                    'condition' => $filter_sql['condition'],
+                                    'order'     => $filter_sql['order']
                                 ));
 
-                                // child hierarchy data.
-                                $thisref = &$refs[$_row['forum_id']];
-                                $thisref = $_row;
-                                if ($_row['forum_cat'] == $this->forum_info['parent_id']) {
-                                    $this->forum_info['item'][$_row['forum_id']] = &$thisref; // will push main item out.
-                                } else {
-                                    $refs[$_row['forum_cat']]['child'][$_row['forum_id']] = &$thisref;
-                                }
-                            }
-                            }
+                            $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
+                        }
                     }
-
+                    //showBenchmark(TRUE);
                 } else {
                     redirect(FORUM.'index.php');
                 }
-
-                /*
-                // Forum SQL
-                $forum_sql = "
-                SELECT f.*,                
-                #f2.forum_name 'forum_cat_name',				
-				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,				
-				p.post_message,				
-				u.user_id, u.user_name, u.user_status, u.user_avatar,				
-				min(p2.post_datestamp) 'first_post_datestamp'
-				
-				FROM ".DB_FORUMS." f
-				
-				# subforums
-				# LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-
-				# thread info
-				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id AND ".groupaccess('f.forum_access')."
-
-				# just last post
-				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
-
-				# post info
-				LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
-
-				# just last post user
-				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
-
-				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
-				AND (f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."')
-				GROUP BY f.forum_id ORDER BY forum_cat ASC
-                ";
-
-                $result = dbquery($forum_sql); */
-
-
             } else {
                 $this->forum_info['forums'] = self::get_forum(); //Index view
             }
