@@ -212,6 +212,11 @@ if (dbrows($result) > 0) {
         if ($data['forum_attach_download']) {
             $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."'";
         }
+        // Update forum_branch as base branch if forum_cat is 0
+        if (!$data['forum_cat']) {
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_branch='".$data['forum_id']."' WHERE forum_id='".$data['forum_id']."'";
+        }
+
         // Update new access levels for forum moderators
         if (!empty($data['forum_mods'])) {
             $current_mods = array();

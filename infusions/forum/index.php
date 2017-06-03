@@ -29,4 +29,5 @@ include INFUSIONS."forum/templates/forum_main.php";
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
 $info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
 render_forum($info);
+//showBenchmark(TRUE); //0.374
 require_once THEMES."templates/footer.php";

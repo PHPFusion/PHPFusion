@@ -136,8 +136,9 @@ class Forum extends ForumServer {
             // Viewforum view
             if (!empty($this->forum_info['forum_id']) && isset($_GET['viewforum'])) {
 
-                if ($this->forum_info['forum_id']) {
+                //if ($this->forum_info['forum_id']) {
                     $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
+                // this is the current forum data
                     $forum_data = dbarray($forum_result);
                     Moderator::define_forum_mods($forum_data);
                     $this->setForumPermission($forum_data);
@@ -151,21 +152,40 @@ class Forum extends ForumServer {
                     $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
                     // Generate forum breadcrumbs
                     $this->forum_breadcrumbs($this->forum_info['forum_index']);
-                }
+                //}
+
                 // @todo: turn this into ajax filtration to cut down SEO design pattern
                 $this->forum_info['filter'] = $this->filter()->get_FilterInfo();
+
+                // Check parent forum
+                $parent_sql = "SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id=:forum_cat";
+                $parent_bind = [':forum_cat' => $forum_data['forum_id']];
+                //$parent_result = dbquery($parent_sql, $parent_bind);
+
+                // Check current subforums
+                $child_sql = "SELECT * FROM ".DB_FORUMS." WHERE forum_cat=:forum_cat and forum_branch=:branch";
+
+                // Check current thread in the forum
+
 
                 // Forum SQL
                 $forum_sql = "
                 SELECT f.*,
-                f2.forum_name 'forum_cat_name',
+                
+                #f2.forum_name 'forum_cat_name',
+				
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+				
 				p.post_message,
+				
 				u.user_id, u.user_name, u.user_status, u.user_avatar,
+				
 				min(p2.post_datestamp) 'first_post_datestamp'
+				
 				FROM ".DB_FORUMS." f
+				
 				# subforums
-				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
+				# LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 
 				# thread info
 				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id AND ".groupaccess('f.forum_access')."
@@ -207,6 +227,7 @@ class Forum extends ForumServer {
                 if (dbrows($result) > 0) {
 
                     while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
+                        print_p($row);
 
                         // Calculate Forum New Status
                         $newStatus = "";
@@ -337,7 +358,6 @@ class Forum extends ForumServer {
             } else {
                 $this->forum_info['forums'] = self::get_forum(); //Index view
             }
-
         }
     }
 
