@@ -73,25 +73,8 @@ class Forum extends ForumServer {
             'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
             'threads'          => array(),
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
-            'new_topic_link'   => array('link' => FORUM.'newthread.php', 'title' => $locale['forum_0057'])
+            'new_topic_link'   => array('link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']),
         ];
-
-        if ($this->forum_info['forum_id']) {
-            $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
-            $forum_data = dbarray($forum_result);
-            Moderator::define_forum_mods($forum_data);
-            $this->setForumPermission($forum_data);
-            $this->forum_info['parent_id'] = $forum_data['forum_cat'];
-            $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
-            if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);
-            if (!empty($forum_data['forum_meta'])) set_meta('keywords', $forum_data['forum_meta']);
-            // Set Max Rows -- XSS
-            $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
-            $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
-            $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
-            // Generate forum breadcrumbs
-            $this->forum_breadcrumbs($this->forum_info['forum_index']);
-        }
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
@@ -153,6 +136,22 @@ class Forum extends ForumServer {
             // Viewforum view
             if (!empty($this->forum_info['forum_id']) && isset($_GET['viewforum'])) {
 
+                if ($this->forum_info['forum_id']) {
+                    $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
+                    $forum_data = dbarray($forum_result);
+                    Moderator::define_forum_mods($forum_data);
+                    $this->setForumPermission($forum_data);
+                    $this->forum_info['parent_id'] = $forum_data['forum_cat'];
+                    $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
+                    if (!empty($forum_data['forum_description'])) set_meta('description', $forum_data['forum_description']);
+                    if (!empty($forum_data['forum_meta'])) set_meta('keywords', $forum_data['forum_meta']);
+                    // Set Max Rows -- XSS
+                    $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
+                    $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
+                    $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
+                    // Generate forum breadcrumbs
+                    $this->forum_breadcrumbs($this->forum_info['forum_index']);
+                }
                 // @todo: turn this into ajax filtration to cut down SEO design pattern
                 $this->forum_info['filter'] = $this->filter()->get_FilterInfo();
 
@@ -167,14 +166,19 @@ class Forum extends ForumServer {
 				FROM ".DB_FORUMS." f
 				# subforums
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
+
 				# thread info
 				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id AND ".groupaccess('f.forum_access')."
+
 				# just last post
 				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+
 				# post info
 				LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
+
 				# just last post user
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
+
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND (f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."')
 				GROUP BY f.forum_id ORDER BY forum_cat ASC

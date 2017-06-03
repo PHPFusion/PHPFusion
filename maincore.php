@@ -58,10 +58,8 @@ date_default_timezone_set('UTC');
 //date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
-
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
 ini_set('session.gc_maxlifetime', 172800); // 48 hours
-
 // Session cookie life time
 ini_set('session.cookie_lifetime', 172800); // 48 hours
 
@@ -157,6 +155,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
+
 // User level, Admin Rights & User Group definitions
 define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
 define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);
@@ -205,6 +204,7 @@ $defender = defender::getInstance();
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();
 }
+
 \Defender\ImageValidation::ValidateExtensions();
 
 // Define aidlink
@@ -213,7 +213,7 @@ if (iADMIN) {
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
-    $token_time = time();
+    $token_time = TIME;
     $algo = fusion_get_settings('password_algorithm');
     $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
     $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
@@ -228,12 +228,10 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 
 $lastvisited = Authenticate::setLastVisitCookie();
 
-
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-new Dynamics();
-
+$fusion_dynamics = Dynamics::getInstance();
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
@@ -250,4 +248,8 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
+/**
+ * Reduction of 0.04 seconds in performance.
+ * We can use manually include the configuration if needed.
+ */
 \PHPFusion\Installer\Infusion_core::load_Configuration();

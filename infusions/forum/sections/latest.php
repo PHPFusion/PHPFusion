@@ -95,7 +95,12 @@ if ($thread_count) {
                 'user_status' => fusion_get_user($threads['thread_lastuser'], 'user_status'),
                 'user_avatar' => fusion_get_user($threads['thread_lastuser'], 'user_avatar'),
             );
-            // Adds formatted result
+
+            // Require a vote count if forum type is 4
+            if ($threads['forum_type'] == 4) {
+                $threads['vote_count'] = dbcount("(vote_id)", DB_FORUM_VOTES, "thread_id=:thread_id AND forum_id=:forum_id", [':thread_id' => $threads['thread_id'], ':forum_id' => $threads['forum_id']]);
+            }
+
             $threads += array(
                 "thread_link"         => array(
                     "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'],

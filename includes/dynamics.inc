@@ -24,8 +24,18 @@
  */
 class Dynamics {
 
-    public function __construct() {
+    private static $instance = NULL;
 
+    public static function getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new Static();
+            self::$instance->__load_dynamic_components();
+        }
+
+        return self::$instance;
+    }
+
+    private function __load_dynamic_components() {
         require_once DYNAMICS."includes/form_main.php";
         require_once DYNAMICS."includes/form_text.php";
         require_once DYNAMICS."includes/form_name.php";
