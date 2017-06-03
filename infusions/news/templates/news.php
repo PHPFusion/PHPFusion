@@ -255,8 +255,8 @@ if (!function_exists('render_news')) {
             echo "</div>\n";
             echo "<div class='news-footer panel-footer'>\n";
             echo "<span class='m-r-10'><i class='fa fa-eye'></i> ".number_format($info['news_reads'])."</span>";
-            echo $info['news_display_comments'];
-            echo $info['news_display_ratings'];
+            echo !empty($info['news_display_comments']) ? $info['news_display_comments'] : '';
+            echo !empty($info['news_display_ratings']) ? $info['news_display_ratings'] : '';
             echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."' target='_blank'><i class='fa fa-print'></i></a>";
             if (!empty($info['admin_actions'])) {
                 $admin_actions = $info['admin_actions'];
