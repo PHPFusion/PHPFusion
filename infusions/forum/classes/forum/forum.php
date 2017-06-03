@@ -79,7 +79,7 @@ class Forum extends ForumServer {
         if ($this->forum_info['forum_id']) {
             $forum_result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id=:this_forum_id", [':this_forum_id' => $this->forum_info['forum_id']]);
             $forum_data = dbarray($forum_result);
-            Moderator::define_forum_mods($this->forum_info);
+            Moderator::define_forum_mods($forum_data);
             $this->setForumPermission($forum_data);
             $this->forum_info['parent_id'] = $forum_data['forum_cat'];
             $this->forum_info['forum_branch'] = $forum_data['forum_branch'];
@@ -215,7 +215,16 @@ class Forum extends ForumServer {
                         }
 
                         // Calculate lastpost information
-                        $lastPostInfo = array();
+                        $lastPostInfo = array(
+                            'avatar'       => '',
+                            'avatar_src'   => '',
+                            'message'      => '',
+                            'profile_link' => '',
+                            'time'         => '',
+                            'date'         => '',
+                            'thread_link'  => '',
+                            'post_link'    => '',
+                        );
                         if (!empty($row['forum_lastpostid'])) {
                             $last_post = array(
                                 'avatar'       => '',
