@@ -25,8 +25,34 @@ if (iMEMBER) {
    redirect(BASEDIR."index.php");
 }
 
+if (isset($_GET['error']) && isnum($_GET['error'])) {
+	$text = "";
+    switch ($_GET['error']) {
+        case 1:
+        	$text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
+            break;
+        case 2:
+        	$text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
+            break;
+        case 3:
+        	$text = str_replace(['[LINK]', '[/LINK]', '[SITEEMAIL]'],
+            	["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
+            	$locale['503']
+            );
+            break;
+        default:
+        	redirect(BASEDIR."index.php");
+    }
+    opentable($locale['500']);
+    echo "<div class='alert alert-danger text-center'>".$text."</div>\n";
+    closetable();
+}
+
 if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) && preg_check("/^[0-9a-z]{32}$/", $_GET['code'])) {
-    $result = dbquery("SELECT user_name, user_email, user_actiontime, user_password FROM ".DB_USERS." WHERE user_id='".$_GET['user_id']."' AND user_actiontime>'0' AND user_status='7'");
+    $result = dbquery("SELECT user_name, user_email, user_actiontime, user_password
+                      FROM ".DB_USERS."
+                      WHERE user_id='".$_GET['user_id']."' AND user_actiontime>'0' AND user_status='7'"
+                      );
     if (dbrows($result)) {
         $data = dbarray($result);
         $code = md5($data['user_actiontime'].$data['user_password']);
@@ -51,22 +77,6 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
     } else {
         redirect(FUSION_SELF."?error=3");
     }
-} elseif (isset($_GET['error']) && isnum($_GET['error'])) {
-    opentable($locale['500']);
-    if ($_GET['error'] == 1) {
-        echo str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
-    } elseif ($_GET['error'] == 2) {
-        echo str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
-    } elseif ($_GET['error'] == 3) {
-        echo str_replace(
-            ['[LINK]', '[/LINK]', '[SITEEMAIL]'],
-            ["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
-            $locale['503']
-        );
-    } else {
-        redirect(BASEDIR."index.php");
-    }
-    closetable();
 } else {
     redirect(BASEDIR."index.php");
 }
