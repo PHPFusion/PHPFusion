@@ -426,6 +426,7 @@ class Forum extends ForumServer {
                 $this->forum_info['forums'] = self::get_forum(); //Index view
             }
         }
+
     }
 
     /**
@@ -495,13 +496,21 @@ class Forum extends ForumServer {
             'forum_threadcount_word' => '',
         );
 
-        $query = dbquery("
-				SELECT forum_id, forum_name, forum_cat, forum_branch, forum_access, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_description, forum_postcount, forum_threadcount, forum_image												
-				FROM ".DB_FORUMS."                
-				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access')."
-				".($forum_id && $branch_id ? "AND forum_id = '".intval($forum_id)."' or forum_cat = '".intval($forum_id)."' OR forum_branch = '".intval($branch_id)."'" : '')."
-				GROUP BY forum_id ORDER BY forum_cat ASC, forum_order ASC
-		");
+        $forum_sql = "
+        SELECT forum_id, forum_cat, forum_name, forum_description, forum_branch, forum_access, forum_lock, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_postcount, forum_threadcount, forum_image
+        FROM ".DB_FORUMS.(multilang_table('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')."        
+        ";
+        $forum_bind = [];
+        if ($forum_id AND $branch_id) {
+            $forum_sql .= " AND forum_id=:forum_id01 OR forum_cat=:forum_id02 OR forum_branch=:forum_id03";
+            $forum_bind = [
+                ':forum_id01' => $forum_id,
+                ':forum_id02' => $forum_id,
+                ':forum_id03' => $forum_id
+            ];
+        }
+        $forum_sql .= " GROUP BY forum_id ORDER BY forum_cat ASC, forum_order ASC";
+        $query = dbquery($forum_sql, $forum_bind);
 
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
 
@@ -513,7 +522,7 @@ class Forum extends ForumServer {
 
             if ($data['forum_type'] > 1) {
 
-                $thread_result = dbquery("SELECT thread_id, thread_subject, thread_lastpostid FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id ORDER BY thread_lastpost DESC LIMIT 1", [':forum_id' => $data['forum_id']]);
+                $thread_result = dbquery("SELECT thread_id, thread_subject, thread_lastpostid, thread_views FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id ORDER BY thread_lastpost DESC LIMIT 1", [':forum_id' => $data['forum_id']]);
 
                 if (dbrows($thread_result)) {
 
@@ -533,7 +542,6 @@ class Forum extends ForumServer {
 
                 // Calculate Forum New Status
                 $forum_match = "\\|".$data['forum_lastpost']."\\|".$data['forum_id'];
-
                 $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
 
                 if ($data['forum_lastpost'] > $last_visited) {
@@ -555,6 +563,9 @@ class Forum extends ForumServer {
                         'avatar'       => $forum_settings['forum_last_post_avatar'] ? display_avatar($data, '30px', '', '', 'img-rounded') : ''
                     );
                 }
+
+            } else {
+                // show the forums only
 
             }
 
@@ -585,32 +596,23 @@ class Forum extends ForumServer {
 
             $row = array_merge($row, $data, array(
                 "forum_moderators"       => $mod::parse_forum_mods($data['forum_mods']),
-                // display forum moderators per forum.
                 "forum_new_status"       => $newStatus,
                 "forum_link"             => array(
                     "link"  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id'],
-                    // uri
                     "title" => $data['forum_name']
                 ),
                 "forum_description"      => nl2br(parseubb($data['forum_description'])),
-                // current forum description
                 "forum_postcount_word"   => format_word($data['forum_postcount'], $locale['fmt_post']),
-                // current forum post count
                 "forum_threadcount_word" => format_word($data['forum_threadcount'], $locale['fmt_thread']),
-                // current forum thread count
                 "last_post"              => $lastPostInfo,
-                // last post information
                 "forum_icon"             => $forum_icon,
-                // normal icon
                 "forum_icon_lg"          => $forum_icon_lg,
-                // big icon.
             ));
 
             $row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '';
 
             $thisref = &$refs[$data['forum_id']];
             $thisref = $row;
-
             if ($data['forum_cat'] == 0) {
                 $index[0][$data['forum_id']] = &$thisref;
             } else {

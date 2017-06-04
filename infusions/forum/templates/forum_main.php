@@ -57,63 +57,121 @@ if (!function_exists('render_forum_main')) {
     function render_forum_main(array $info, $id = 0) {
         require_once FORUM_CLASS."autoloader.php";
         $locale = fusion_get_locale();
-        echo render_breadcrumbs();
-        echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
-        $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
-        if (!empty($threadTags['tags'])) : ?>
-            <!--Forum Tags-->
-            <ul class="list-group-item clearfix m-b-10 m-t-10">
-                <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
-                    <li class='pull-left display-inline-block m-r-10 <?php echo($tag_data['tag_active'] == TRUE ? 'active' : '') ?>'>
-                        <a href="<?php echo $tag_data['tag_link'] ?>">
-                            <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:<?php echo $tag_data['tag_color'] ?>"></i></div>
-                            <div class="pull-left">
-                                <?php echo $tag_data['tag_title'] ?>
-                            </div>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-            <!--//Forum Tags-->
-        <?php endif;
-        if (!empty($info['forums'][$id])) {
-            $forums = $info['forums'][$id];
-            $x = 1;
-            foreach ($forums as $forum_id => $data) {
-                if ($data['forum_type'] == '1') {
-                    echo "<div class='panel panel-default'>\n";
-                    echo "<div class='panel-heading' ".(isset($data['child']) ? 'style="border-bottom:0;"' : '').">\n";
-                    echo "<a title='".$data['forum_link']['title']."' class='forum-subject' href='".$data['forum_link']['link']."'>
-                    ".$data['forum_link']['title']."</a><br/>";
-                    echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
-                    echo "</div>\n";
-                    if (isset($info['forums'][0][$forum_id]['child'])) {
-                        echo "<!---subforums-->";
-                        echo "<div class='m-10'>\n";
-                        $i = 1;
-                        $sub_forums = $info['forums'][0][$forum_id]['child'];
-                        foreach ($sub_forums as $sub_forum_id => $cdata) {
-                            render_forum_item($cdata, $i);
-                            $i++;
+        ?>
+        <div class='spacer-sm'>
+            <?php echo render_breadcrumbs() ?>
+        </div>
+        <div class='forum-header' style="background: url(<?php echo FORUM.'images/default_forum_bg.jpg' ?>) no-repeat; background-size:cover;">
+            <div class='banner' style='display:block; height:180px; overflow:hidden;'>
+                <h2 class='p-20 center-y text-white' style='z-index: 2'><?php echo $locale['forum_0013'] ?></h2>
+            </div>
+        </div>
+        <div class='spacer-sm'>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-9 col-lg-9'>
+
+                    <div class='row'>
+                        <div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'></div>
+                    </div>
+
+                    <table class='table table-responsive clear'>
+                        <?php
+                        if (!empty($info['forums'][$id])) {
+                            $forums = $info['forums'][$id];
+                            $x = 1;
+                            foreach ($forums as $forum_id => $data) {
+                                if ($data['forum_type'] == '1') {
+                                    ?>
+                                    <tr>
+                                        <td style='padding-top:20px;'>
+                                            <a title='<?php echo $data['forum_link']['title'] ?>' class='forum-subject' href='<?php echo $data['forum_link']['link'] ?>'>
+                                                <small class='text-uppercase'>
+                                                    <strong>
+                                                        <?php echo $data['forum_link']['title'] ?>
+                                                    </strong>
+                                                </small>
+                                            </a>
+                                        </td>
+                                        <td style='padding-top:20px;'>
+                                            <small class='text-uppercase strong text-lighter'>Threads</small>
+                                        </td>
+                                        <td style='padding-top:20px;'>
+                                            <small class='text-uppercase strong text-lighter'>Posts</small>
+                                        </td>
+                                        <td class='col-xs-4' style='padding-top:20px;'>
+                                            <small class='text-uppercase strong text-lighter'>Latest Threads</small>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    if (isset($info['forums'][0][$forum_id]['child'])) {
+                                        echo "<!---subforums-->";
+                                        $i = 1;
+                                        $sub_forums = $info['forums'][0][$forum_id]['child'];
+                                        foreach ($sub_forums as $sub_forum_id => $cdata) {
+                                            render_forum_item($cdata, $i);
+                                            $i++;
+                                        }
+                                    } else {
+                                        echo "<div class='well'>\n";
+                                        echo $locale['forum_0327'];
+                                        echo "</div>\n";
+                                    }
+                                    ?>
+                                    <?php
+                                } else {
+                                    echo "<div class='well'>";
+                                    render_forum_item($data, $x);
+                                    echo "</div>\n";
+                                    $x++;
+                                }
+                            }
+                        } else {
+                            echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
                         }
-                        echo "</div>\n";
-                        echo "<!---subforums-->";
-                    } else {
-                        echo "<div class='panel-body text-center'>\n";
-                        echo $locale['forum_0327'];
-                        echo "</div>\n";
-                    }
-                    echo "</div>\n"; // end panel-default
-                } else {
-                    echo "<div class='list-group-item m-b-20'>";
-                    render_forum_item($data, $x);
-                    echo "</div>\n";
-                    $x++;
-                }
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
-        }
+                        ?>
+                    </table>
+
+
+                </div>
+                <div class='col-xs-12 col-sm-3 col-lg-3'>
+                    <?php //print_p($info, 1) ?>
+                    <div class='spacer-sm'>
+                        <a class='btn btn-primary btn-block' href='<?php echo $info['new_topic_link']['link'] ?>'><i class='fa fa-comment m-r-10'></i><?php echo $info['new_topic_link']['title'] ?></a>
+                    </div>
+                    Invite People to JOin the Discussions
+                    RSS View Feeds
+
+                    <?php
+                    $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
+                    if (!empty($threadTags['tags'])) : ?>
+                        <!--Forum Tags-->
+                        <h5><strong>Filter by Tags</strong></h5>
+                        <ul class="list-group spacer-xs">
+                            <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
+                                <li class='list-group-item<?php echo($tag_data['tag_active'] == TRUE ? ' active' : '') ?>'>
+                                    <a href="<?php echo $tag_data['tag_link'] ?>">
+                                        <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:<?php echo $tag_data['tag_color'] ?>"></i></div>
+                                        <div class="pull-left">
+                                            <?php echo $tag_data['tag_title'] ?>
+                                        </div>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <!--//Forum Tags-->
+
+                        <?php
+                    endif;
+                    ?>
+
+
+                    Featured Content
+
+                    Sub Categories.
+                </div>
+            </div>
+        </div>
+        <?php
     }
 }
 
@@ -129,27 +187,60 @@ if (!function_exists('render_forum_item')) {
      */
     function render_forum_item($data, $i) {
         $locale = fusion_get_locale();
-        if ($i > 0) {
+        /*if ($i > 0) {
             echo "<div id='forum_".$data['forum_id']."' class='forum-container'>\n";
         } else {
             echo "<div id='forum_".$data['forum_id']."' class='panel panel-default'>\n";
             echo "<div class='panel-body'>\n";
-        }
-        echo "<div class='pull-left forum-thumbnail'>\n";
+        }*/
+
+        ?>
+        <tr>
+            <td style='border-radius: 4px 0 0 4px; background: #f7f7f7; border-top:4px solid #fff; border-bottom:4px solid #fff;'>
+                <a title='<?php echo $data['forum_link']['title'] ?>' class='forum-subject' href='<?php echo $data['forum_link']['link'] ?>'>
+                    <strong>
+                        <?php echo $data['forum_link']['title'] ?>
+                    </strong>
+                </a>
+                <?php if ($data['forum_description']) : echo "<div class='forum-description'>".$data['forum_description']."</div>\n"; endif; ?>
+                <?php if ($data['forum_moderators']) : echo "<span class='forum-moderators'><small><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</small></span>\n"; endif; ?>
+            </td>
+            <td style='background: #f7f7f7;  border-top:4px solid transparent; border-bottom:4px solid #fff;'>
+                <?php echo $data['forum_threadcount_word'] ?>
+            </td>
+            <td style='background: #f7f7f7; border-radius: 0px 4px 4px 0; border-top:4px solid #fff; border-bottom:4px solid #fff; border-right: 4px solid #fff;'>
+                <?php echo $data['forum_postcount_word'] ?>
+            </td>
+            <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
+                <?php
+                if ($data['thread_lastpostid'] == 0) {
+                    echo $locale['forum_0005'];
+                } else {
+                    echo "<div class='clearfix'>\n";
+                    if (!empty($data['last_post']['avatar'])) {
+                        echo "<div class='pull-left lastpost-avatar m-t-5'>".$data['last_post']['avatar']."</div>";
+                    }
+                    echo "<div class='overflow-hide'>\n";
+                    echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
+                    echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a>\n";
+                    echo "</div>\n</div>\n";
+                }
+                ?>
+            </td>
+        </tr>
+
+        <?php
+        /*
         if ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) {
             echo thumbnail(FORUM."images/".$data['forum_image'], '50px');
         } else {
             echo "<div class='forum-icon'>".$data['forum_icon_lg']."</div>\n";
-        }
-        echo "</div>\n";
-        echo "<div class='overflow-hide'>\n";
-        echo "<div class='row m-0'>\n";
+        }*/
+        /*
         switch ($data['forum_type']) {
             case '3':
                 echo "<div class='col-xs-12 col-sm-12'>\n";
                 echo "<a class='display-inline-block forum-link' href='".$data['forum_link']['link']."'>".$data['forum_link']['title']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
-                echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
-                echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
                 if (isset($data['child'])) {
                     echo "<div class='clearfix sub-forum'>\n";
                     foreach ($data['child'] as $cdata) {
@@ -169,8 +260,6 @@ if (!function_exists('render_forum_item')) {
                 echo "<div class='col-xs-12 col-sm-6'>\n";
                 echo "
 				<a class='display-inline-block forum-link' href='".$data['forum_link']['link']."'>".$data['forum_link']['title']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
-                echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
-                echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
                 if (isset($data['child'])) {
                     echo "<div class='clearfix sub-forum'>\n";
                     echo "<div class='pull-left'>\n";
@@ -187,31 +276,8 @@ if (!function_exists('render_forum_item')) {
                     echo "</div>\n";
                 }
                 echo "</div>\n";
-                echo "<div class='hidden-xs col-sm-3 col-md-2 p-l-0 text-right'>\n";
-                echo "<div class='text-lighter count'>".$data['forum_postcount_word']."</div>\n";
-                echo "<div class='text-lighter count'>".$data['forum_threadcount_word']."</div>\n";
-                echo "</div><div class='forum-lastuser hidden-xs hidden-sm col-md-4'>\n";
-                if ($data['thread_lastpostid'] == 0) {
-                    echo $locale['forum_0005'];
-                } else {
-                    echo "<div class='clearfix'>\n";
-                    if (!empty($data['last_post']['avatar'])) {
-                        echo "<div class='pull-left lastpost-avatar m-t-5'>".$data['last_post']['avatar']."</div>";
-                    }
-                    echo "<div class='overflow-hide'>\n";
-                    echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
-                    echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a>\n";
-                    echo "</div>\n</div>\n";
-                }
-                echo "</div>\n";
         }
-        echo "</div>\n"; // end row
-        echo "</div>\n"; // end overflow-hide
-        if ($i > 0) {
-            echo "</div>\n";
-        } else {
-            echo "</div>\n</div>\n";
-        }
+        */
     }
 }
 
