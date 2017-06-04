@@ -150,7 +150,7 @@ class Forum extends ForumServer {
                     // this is the current forum data
                     $this->forum_info = array_merge($this->forum_info, dbarray($result));
 
-                    $this->forum_info['forum_moderators'] = $this->forum_info['forum_mods'];
+                    $this->forum_info['forum_moderators'] = Moderator::parse_forum_mods($row['forum_mods']);
                     Moderator::define_forum_mods($this->forum_info);
                     $this->setForumPermission($this->forum_info);
 
@@ -498,7 +498,7 @@ class Forum extends ForumServer {
 
         $forum_sql = "
         SELECT forum_id, forum_cat, forum_name, forum_description, forum_branch, forum_access, forum_lock, forum_lastuser, forum_lastpost, forum_lastpostid, forum_type, forum_mods, forum_postcount, forum_threadcount, forum_image
-        FROM ".DB_FORUMS.(multilang_table('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')."        
+        FROM ".DB_FORUMS.(multilang_table('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')."
         ";
         $forum_bind = [];
         if ($forum_id AND $branch_id) {
