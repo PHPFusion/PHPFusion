@@ -157,42 +157,31 @@ if (!function_exists('render_forum_main')) {
 
                         <?php
                     endif;
-                    ?>
-                    <h4 class='spacer-sm'><strong>Popular Threads</strong></h4>
-                    <div class='spacer-md'>
-                        <div>
-                            <a href=''><strong>Sample Text</strong></a><br/>
-                            by <a href=''>Username</a><br/>
-                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                    // Run custom query
+                    $custom_result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_postcount FROM ".DB_FORUM_THREADS."
+                        INNER JOIN ".DB_FORUMS.(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (thread_lastpost >=:one_week and thread_lastpost < :current) and thread_locked=:not_locked and thread_hidden=:not_hidden
+                        GROUP BY thread_id ORDER BY thread_postcount DESC LIMIT 10",
+                        [
+                            ':one_week'   => TIME - (7 * 24 * 3600),
+                            ':current'    => TIME,
+                            ':not_locked' => 0,
+                            ':not_hidden' => 0,
+                        ]);
+                    if (dbrows($custom_result)) : ?>
+                        <h4 class='spacer-sm'><strong>Popular Threads This Week</strong></h4>
+                        <div class='spacer-md'>
+                            <?php while ($popular = dbarray($custom_result)) :
+                                $user = fusion_get_user($popular['thread_author']);
+                                ?>
+                                <div>
+                                    <a href='<?php echo FORUM."viewthread.php?thread_id=".$popular['thread_id'] ?>'><strong><?php echo $popular['thread_subject'] ?></strong></a><br/>
+                                    <?php echo $locale['by'] ?> <?php echo profile_link($user['user_id'], $user['user_name'], $user['user_status']) ?>
+                                    <span class='text-lighter'><i class='fa fa-comment'></i> <?php echo format_word($popular['thread_postcount'], $locale['fmt_post']) ?></span>
+                                </div>
+                                <hr/>
+                            <?php endwhile; ?>
                         </div>
-                        <hr/>
-                        <div>
-                            <a href=''><strong>Sample Text</strong></a><br/>
-                            by <a href=''>Username</a><br/>
-                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
-                        </div>
-                        <hr/>
-                        <div>
-                            <a href=''><strong>Sample Text</strong></a><br/>
-                            by <a href=''>Username</a><br/>
-                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
-                        </div>
-                        <hr/>
-                        <div>
-                            <a href=''><strong>Sample Text</strong></a><br/>
-                            by <a href=''>Username</a><br/>
-                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
-                        </div>
-                        <hr/>
-                        <div>
-                            <a href=''><strong>Sample Text</strong></a><br/>
-                            by <a href=''>Username</a><br/>
-                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
-                        </div>
-                        <hr/>
-                    </div>
-
-
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -502,16 +502,19 @@ class Forum extends ForumServer {
         ";
         $forum_bind = [];
         if ($forum_id AND $branch_id) {
-            $forum_sql .= " AND forum_id=:forum_id01 OR forum_cat=:forum_id02 OR forum_branch=:forum_id03";
-            $forum_bind = [
+            //$forum_sql .= " AND forum_id=:forum_id01 OR forum_cat=:forum_id02 OR forum_branch=:forum_id03";
+            /*$forum_bind = [
                 ':forum_id01' => $forum_id,
                 ':forum_id02' => $forum_id,
                 ':forum_id03' => $forum_id
+            ];*/
+            $forum_sql .= " AND forum_branch=:forum_id";
+            $forum_bind = [
+                ':forum_id' => $forum_id,
             ];
         }
         $forum_sql .= " GROUP BY forum_id ORDER BY forum_cat ASC, forum_order ASC";
         $query = dbquery($forum_sql, $forum_bind);
-
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
 
             $newStatus = '';
