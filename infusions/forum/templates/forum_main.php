@@ -130,23 +130,18 @@ if (!function_exists('render_forum_main')) {
                         }
                         ?>
                     </table>
-
-
                 </div>
                 <div class='col-xs-12 col-sm-3 col-lg-3'>
                     <?php //print_p($info, 1) ?>
-                    <div class='spacer-sm'>
+                    <div class='spacer-sm m-b-50'>
                         <a class='btn btn-primary btn-block' href='<?php echo $info['new_topic_link']['link'] ?>'><i class='fa fa-comment m-r-10'></i><?php echo $info['new_topic_link']['title'] ?></a>
                     </div>
-                    Invite People to JOin the Discussions
-                    RSS View Feeds
-
                     <?php
                     $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
                     if (!empty($threadTags['tags'])) : ?>
                         <!--Forum Tags-->
-                        <h5><strong>Filter by Tags</strong></h5>
-                        <ul class="list-group spacer-xs">
+                        <h4 class='spacer-sm'><strong>Filter by Tags</strong></h4>
+                        <ul class="list-group spacer-md">
                             <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
                                 <li class='list-group-item<?php echo($tag_data['tag_active'] == TRUE ? ' active' : '') ?>'>
                                     <a href="<?php echo $tag_data['tag_link'] ?>">
@@ -163,15 +158,46 @@ if (!function_exists('render_forum_main')) {
                         <?php
                     endif;
                     ?>
+                    <h4 class='spacer-sm'><strong>Popular Threads</strong></h4>
+                    <div class='spacer-md'>
+                        <div>
+                            <a href=''><strong>Sample Text</strong></a><br/>
+                            by <a href=''>Username</a><br/>
+                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                        </div>
+                        <hr/>
+                        <div>
+                            <a href=''><strong>Sample Text</strong></a><br/>
+                            by <a href=''>Username</a><br/>
+                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                        </div>
+                        <hr/>
+                        <div>
+                            <a href=''><strong>Sample Text</strong></a><br/>
+                            by <a href=''>Username</a><br/>
+                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                        </div>
+                        <hr/>
+                        <div>
+                            <a href=''><strong>Sample Text</strong></a><br/>
+                            by <a href=''>Username</a><br/>
+                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                        </div>
+                        <hr/>
+                        <div>
+                            <a href=''><strong>Sample Text</strong></a><br/>
+                            by <a href=''>Username</a><br/>
+                            <span class='text-lighter'><i class='fa fa-comments'></i> 300 replies</span>
+                        </div>
+                        <hr/>
+                    </div>
 
 
-                    Featured Content
-
-                    Sub Categories.
                 </div>
             </div>
         </div>
         <?php
+        //print_p($info, true);
     }
 }
 
@@ -218,11 +244,11 @@ if (!function_exists('render_forum_item')) {
                 } else {
                     echo "<div class='clearfix'>\n";
                     if (!empty($data['last_post']['avatar'])) {
-                        echo "<div class='pull-left lastpost-avatar m-t-5'>".$data['last_post']['avatar']."</div>";
+                        echo "<div class='pull-left lastpost-avatar m-r-10'>".$data['last_post']['avatar']."</div>";
                     }
                     echo "<div class='overflow-hide'>\n";
-                    echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
-                    echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a>\n";
+                    echo "<span class='forum_thread_link'><a style='font-weight: 400; color: #333; text-decoration:underline; font-size:85%;' href='".$data['last_post']['post_link']."'>".trim_text($data['thread_subject'], 35)."</a></span><br/>";
+                    echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." - ".$data['last_post']['time']."</span>\n";
                     echo "</div>\n</div>\n";
                 }
                 ?>
