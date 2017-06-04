@@ -24,6 +24,8 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
+$locale = fusion_get_locale();
+
 require_once THEMES."templates/header.php";
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY,
