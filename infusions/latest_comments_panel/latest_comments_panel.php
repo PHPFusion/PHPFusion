@@ -37,10 +37,10 @@ if (dbrows($result)) {
 		switch ($data['comment_type']) {
 			case "N":
 		$ndata = [
-			'n_id'       => $data['comment_item_id'],
-			'n_stime'    => time(),
-			'n_etime'    => time(),
-			'n_language' => LANGUAGE,
+			':n_id'       => $data['comment_item_id'],
+			':n_stime'    => time(),
+			':n_etime'    => time(),
+			':n_language' => LANGUAGE,
 			];
 			$news_query = "SELECT
 				ns.news_subject
@@ -66,8 +66,8 @@ if (dbrows($result)) {
 			continue;
 			case "A":
 			$ndata = [
-				'n_id'       => $data['comment_item_id'],
-				'n_language' => LANGUAGE,
+				':n_id'       => $data['comment_item_id'],
+				':n_language' => LANGUAGE,
 				];
 			$article_query = "SELECT
 				ar.article_subject
@@ -90,8 +90,8 @@ if (dbrows($result)) {
 			continue;
 			case "P":
 			$ndata = [
-				'n_id'       => $data['comment_item_id'],
-				'n_language' => LANGUAGE,
+				':n_id'       => $data['comment_item_id'],
+				':n_language' => LANGUAGE,
 				];
 			$article_query = "SELECT
 				p.photo_title
@@ -114,8 +114,8 @@ if (dbrows($result)) {
 			continue;
 			case "D":
 			$ndata = [
-				'n_id'       => $data['comment_item_id'],
-				'n_language' => LANGUAGE,
+				':n_id'       => $data['comment_item_id'],
+				':n_language' => LANGUAGE,
 				];
 			$download_query = "SELECT
 				d.download_title
@@ -138,8 +138,8 @@ if (dbrows($result)) {
 			continue;
 			case "B":
 			$ndata = [
-				'n_id'       => $data['comment_item_id'],
-				'n_language' => LANGUAGE,
+				':n_id'       => $data['comment_item_id'],
+				':n_language' => LANGUAGE,
 				];
 			$download_query = "SELECT
 				d.blog_subject
