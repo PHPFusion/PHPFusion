@@ -169,9 +169,9 @@ class Forum extends ForumServer {
                      * @todo: INSPECT TO SEE WHETHER THIS IS REQUIRED
                      *      It is taking some resource
                      */
-                    $this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
-                    $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
-                    $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
+                    //$this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
+                    //$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
+                    //$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
                     /*
                      * End Inspection
                      */
@@ -186,25 +186,25 @@ class Forum extends ForumServer {
 
                     $this->forum_info['subforum_count'] = dbcount("(forum_id)", DB_FORUMS, 'forum_cat=:forum_id', [':forum_id' => $this->forum_info['forum_id']]);
 
-                    if (isset($_GET['view']) && $_GET['view'] == 'subforums') {
-
-                        die('This part is currently under re-development');
+                    if ((isset($_GET['view']) && $_GET['view'] == 'subforums') or ($this->forum_info['forum_type'] == 1)) {
 
                         // Get Sub Forums Data
                         if ($this->forum_info['subforum_count']) {
+
                             $this->forum_info['subforum_link'] = [
                                 'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=subforums',
                                 'title' => $locale['forum_0351'],
                             ];
-                            $select_column = "SELECT forum_id, forum_name, forum_cat, forum_lastpost, forum_lastpostid FROM ".DB_FORUMS;
-                            $select_cond = (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND (forum_id=:forum_id01 OR f.forum_cat=:forum_id02 OR f.forum_branch=:forum_id03')";
+
+                            $select_column = "SELECT * FROM ".DB_FORUMS;
+                            $select_cond = (multilang_table("FO") ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('forum_access')." AND forum_cat=:forum_id";
                             $child_sql = $select_column.$select_cond;
                             $child_param = [
-                                ':forum_id01' => $this->forum_info['forum_id'],
-                                ':forum_id02' => $this->forum_info['forum_id'],
-                                ':forum_id03' => $this->forum_info['forum_id'],
+                                ':forum_id' => $this->forum_info['forum_id'],
                             ];
+
                             $subforum_result = dbquery($child_sql, $child_param);
+
                             $refs = array();
                             // define what a row is
                             $row_array = array(
@@ -224,8 +224,6 @@ class Forum extends ForumServer {
                             if (dbrows($subforum_result)) {
 
                                 while ($row = dbarray($subforum_result) and checkgroup($row['forum_access'])) {
-                                    //print_p($row);
-
                                     // Calculate Forum New Status
                                     $newStatus = "";
                                     $forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
@@ -303,7 +301,7 @@ class Forum extends ForumServer {
                                         }
                                     }
 
-                                    $row['forum_postcount'] = dbcount("(post_id)", DB_FORUMS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
+                                    $row['forum_postcount'] = dbcount("(post_id)", DB_FORUM_POSTS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
                                     $row['forum_threadcount'] = dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id", [':forum_id' => $row['forum_id']]);
 
                                     $_row = array_merge($row_array, $row, array(
@@ -328,13 +326,17 @@ class Forum extends ForumServer {
                                     // child hierarchy data.
                                     $thisref = &$refs[$_row['forum_id']];
                                     $thisref = $_row;
-                                    if ($_row['forum_cat'] == $this->forum_info['parent_id']) {
-                                        $this->forum_info['item'][$_row['forum_id']] = &$thisref; // will push main item out.
+                                    if ($_row['forum_cat'] == $this->forum_info['forum_id']) {
+                                        //$this->forum_info['item'][$_row['forum_id']] = &$thisref; // will push main item out.
+                                        $list[$_row['forum_id']] = &$thisref;
                                     } else {
                                         $refs[$_row['forum_cat']]['child'][$_row['forum_id']] = &$thisref;
                                     }
                                 }
+                                $this->forum_info['item'][$this->forum_info['forum_id']]['child'] = $list;
                             }
+                            showBenchmark(TRUE);
+
                         }
                     } else {
 
@@ -418,7 +420,7 @@ class Forum extends ForumServer {
                             $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
                         }
                     }
-                    //showBenchmark(TRUE);
+
                 } else {
                     redirect(FORUM.'index.php');
                 }

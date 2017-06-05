@@ -228,7 +228,7 @@ if (!function_exists('render_forum_item')) {
             </td>
             <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
                 <?php
-                if ($data['thread_lastpostid'] == 0) {
+                if ($data['forum_lastpostid'] == 0) {
                     echo $locale['forum_0005'];
                 } else {
                     echo "<div class='clearfix'>\n";
@@ -305,21 +305,20 @@ if (!function_exists('forum_viewforum')) {
 
         $data = $info['item'][$_GET['forum_id']];
 
-        /*
-         * // subforums - we need to hide the subforums into another view to cut down more time during rendering.
-         * // Lets call it Spaces
-         * This can be fetched from Jquery as well.
-         *
-         */
-        echo render_breadcrumbs();
         ?>
-        <div class='forum-title'>
-            <h4><?php echo $info['forum_name'] ?> <span class='sub-title'><?php echo $info['forum_threadcount_word'] ?></span></h4>
-            <div class='forum-description'><?php echo $info['forum_description'] ?></div>
+        <div class='spacer-sm'>
+            <?php echo render_breadcrumbs() ?>
         </div>
-
+        <div class='forum-header' style="background: url(<?php echo FORUM.'images/default_forum_bg.jpg' ?>) no-repeat; background-size:cover;">
+            <div class='banner' style='display:block; height:180px; overflow:hidden;'>
+                <div class='center-y p-20'>
+                    <!--- add forum image here --->
+                    <h2 class='text-white'><?php echo $info['forum_name'] ?></h2>
+                    <div class='forum-description text-white'><?php echo $info['forum_description'] ?></div>
+                </div>
+            </div>
+        </div>
         <?php if ($info['forum_rules']) : alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules']); endif; ?>
-
         <div class='spacer-md'>
             <div class='row'>
                 <div class='col-xs-12 col-sm-6 col-md-5 col-lg-2'>
@@ -379,6 +378,19 @@ if (!function_exists('forum_viewforum')) {
                                     "; ?>
                             </div>
                             <?php if ($info['forum_moderators']) : echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n"; endif;
+                        } else {
+
+                            //print_p($info);
+                            if (!empty($info['item'][$_GET['forum_id']]['child'])) {
+                                echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
+                                $i = 1;
+                                echo "<div class='list-group-item'>\n";
+                                foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
+                                    render_forum_item($subforum_data, $i);
+                                    $i++;
+                                }
+                                echo "</div>\n";
+                            }
                         }
                     }
                     ?>
