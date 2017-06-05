@@ -157,7 +157,7 @@ class Install_Core extends Infusion_Core {
             self::detect_upgrade();
 
             // Run dynamics API
-            new \dynamics();
+            \Dynamics::getInstance();
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
 
