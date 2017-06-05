@@ -23,7 +23,7 @@ if (!db_exists(DB_FORUMS)) {
 if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
-
+$locale = fusion_get_locale();
 require_once THEMES."templates/header.php";
 
 add_to_title($locale['global_200'].$locale['global_041']);
@@ -53,6 +53,7 @@ if ($rows) {
     opentable($locale['global_041']);
         echo '<table class="table table-striped">';
             echo '<thead><tr>';
+                echo '<td></td>';
                 echo '<td><strong>'.$locale['global_044'].'</strong></td>';
                 echo '<td><strong>'.$locale['global_045'].'</strong></td>';
                 echo '<td><strong>'.$locale['global_046'].'</strong></td>';

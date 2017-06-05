@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/fields.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/fields.php");
 $user_field = new PHPFusion\QuantumFields();
 $user_field->setSystemTitle($locale['202']);
 $user_field->setAdminRights('UF');

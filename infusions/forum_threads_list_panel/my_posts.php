@@ -24,6 +24,8 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
+$locale = fusion_get_locale();
+
 require_once THEMES."templates/header.php";
 
 add_to_title($locale['global_200'].$locale['global_042']);

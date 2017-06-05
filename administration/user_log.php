@@ -18,7 +18,8 @@
 require_once "../maincore.php";
 pageAccess('UL');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/user_log.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/user_log.php");
+
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
 
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
