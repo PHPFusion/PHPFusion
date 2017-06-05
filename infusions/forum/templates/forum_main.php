@@ -525,7 +525,7 @@ if (!function_exists('render_forum_threads')) {
         ?>
         <div class='list-group-item p-t-15 p-b-15'>
             <?php
-            if ($info['subforum_count']) {
+            if ($info['forum_type'] == 1 && $info['subforum_count']) {
                 ?>
                 <a href='<?php echo $info['subforum_link']['link'] ?>'><?php echo $info['subforum_link']['title'] ?></a>
                 <?php

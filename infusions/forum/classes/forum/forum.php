@@ -150,7 +150,7 @@ class Forum extends ForumServer {
                     // this is the current forum data
                     $this->forum_info = array_merge($this->forum_info, dbarray($result));
 
-                    $this->forum_info['forum_moderators'] = Moderator::parse_forum_mods($row['forum_mods']);
+                    $this->forum_info['forum_moderators'] = Moderator::parse_forum_mods($this->forum_info['forum_mods']);
                     Moderator::define_forum_mods($this->forum_info);
                     $this->setForumPermission($this->forum_info);
 
