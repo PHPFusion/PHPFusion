@@ -124,6 +124,9 @@ class Install_Core extends Infusion_Core {
 
             define('IN_SETUP', TRUE);
 
+            require_once BASEDIR.'includes/dynamics.inc';
+            require_once BASEDIR.'includes/autoloader.php';
+
             self::installer_step();
 
             self::verify_requirements();
