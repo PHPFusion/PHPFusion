@@ -32,6 +32,7 @@ class InstallerInfusions extends Install_Core {
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
 
         require_once(INCLUDES.'multisite_include.php');
+        require_once(INCLUDES.'infusions_include.php');
 
         $validation = Requirements::get_system_validation();
 
