@@ -24,9 +24,9 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
-$locale = fusion_get_locale();
-
 require_once THEMES."templates/header.php";
+$locale = fusion_get_locale();
+$userdata = fusion_get_userdata();
 
 add_to_title($locale['global_200'].$locale['global_042']);
 
@@ -36,10 +36,9 @@ $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'");
 $rows = dbrows($result);
 
+opentable($locale['global_042']);
 if ($rows) {
-    if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-        $_GET['rowstart'] = 0;
-    }
+    $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
     $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, tp.post_datestamp,
 		tf.forum_name, tf.forum_access, tt.thread_subject
 		FROM ".DB_FORUM_POSTS." tp
@@ -47,35 +46,30 @@ if ($rows) {
 		INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'
 		ORDER BY tp.post_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
-    $i = 0;
 
-    opentable($locale['global_042']);
-        echo '<table class="table table-striped">';
-            echo '<thead><tr>';
-                echo '<td><strong>'.$locale['global_048'].'</strong></td>';
-                echo '<td><strong>'.$locale['global_044'].'</strong></td>';
-                echo '<td><strong>'.$locale['global_049'].'</strong></td>';
-            echo '</tr></thead>';
-            echo '<tbody>';
+        echo "<table class='table table-striped'>";
+            echo "<thead><tr>";
+                echo "<td><strong>".$locale["global_048"]."</strong></td>";
+                echo "<td><strong>".$locale["global_044"]."</strong></td>";
+                echo "<td><strong>".$locale["global_049"]."</strong></td>";
+            echo "</tr></thead>";
+            echo "<tbody>";
                 while ($data = dbarray($result)) {
                     echo "<tr>\n";
                         echo "<td>".trimlink($data['forum_name'], 30)."</td>\n";
                         echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a></td>\n";
                         echo "<td>".showdate("forumdate", $data['post_datestamp'])."</td>\n";
                     echo "</tr>\n";
-                    $i++;
                 }
-            echo '</tbody>';
-        echo '</table>';
-    closetable();
+            echo "</tbody>";
+        echo "</table>";
 
     if ($rows > 20) {
-        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3)."</div>\n";
+        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?")."</div>\n";
     }
 } else {
-    opentable($locale['global_042']);
     echo "<div class='text-center'>".$locale['global_054']."</div>\n";
-    closetable();
 }
+closetable();
 
 require_once THEMES."templates/footer.php";

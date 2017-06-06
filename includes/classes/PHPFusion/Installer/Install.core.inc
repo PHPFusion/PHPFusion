@@ -124,6 +124,9 @@ class Install_Core extends Infusion_Core {
 
             define('IN_SETUP', TRUE);
 
+            require_once BASEDIR.'includes/dynamics.inc';
+            require_once BASEDIR.'includes/autoloader.php';
+
             self::installer_step();
 
             self::verify_requirements();
@@ -157,7 +160,7 @@ class Install_Core extends Infusion_Core {
             self::detect_upgrade();
 
             // Run dynamics API
-            new \dynamics();
+            \Dynamics::getInstance();
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
 

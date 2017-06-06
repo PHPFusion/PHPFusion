@@ -40,9 +40,7 @@ $rows = dbrows($result);
 $threads = 0;
 
 if ($rows) {
-    if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-        $_GET['rowstart'] = 0;
-    }
+    $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
 
     $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, IF(tp.post_datestamp>tp.post_edittime, tp.post_datestamp, tp.post_edittime) AS post_timestamp,
 		tf.forum_name, tf.forum_access, tt.thread_subject, tu.user_id, tu.user_name, tu.user_status
@@ -53,15 +51,14 @@ if ($rows) {
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > '".$lastvisited."' OR tp.post_edittime > '".$lastvisited."')
 		GROUP BY tp.thread_id
 		ORDER BY post_timestamp DESC LIMIT ".$_GET['rowstart'].",20");
-    $i = 0;
 
-    echo '<table class="table table-striped">';
-        echo '<thead><tr>';
-            echo '<td><strong>'.$locale['global_048'].'</strong></td>';
-            echo '<td><strong>'.$locale['global_044'].'</strong></td>';
-            echo '<td><strong>'.$locale['global_050'].'</strong></td>';
-        echo '</tr></thead>';
-        echo '<tbody>';
+    echo "<table class='table table-striped'>";
+        echo "<thead><tr>";
+            echo "<td><strong>".$locale["global_048"]."</strong></td>";
+            echo "<td><strong>".$locale["global_044"]."</strong></td>";
+            echo "<td><strong>".$locale["global_050"]."</strong></td>";
+        echo "</tr></thead>";
+        echo "<tbody>";
             $threads = dbrows($result);
             while ($data = dbarray($result)) {
                 echo "<tr>\n";
@@ -69,12 +66,11 @@ if ($rows) {
                 echo "<td><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
                 echo "<td>".profile_link($data['post_author'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['post_timestamp'])."</td>\n";
                 echo "</tr>\n";
-                $i++;
             }
-        echo '</tbody>';
-    echo '</table>';
+        echo "</tbody>";
+    echo "</table>";
 
-    echo '<div class="text-center">'.sprintf($locale['global_055'], $rows, $threads).'</div>';
+    echo "<div class='text-center'>".sprintf($locale["global_055"], $rows, $threads)."</div>";
 } else {
     echo "<div class='text-center'>".sprintf($locale['global_055'], 0, 0)."</div>\n";
 }
@@ -82,6 +78,6 @@ if ($rows) {
 closetable();
 
 if ($threads > 20) {
-    echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $threads, 3)."</div>\n";
+    echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $threads, 3, FUSION_SELF."?")."</div>\n";
 }
 require_once THEMES."templates/footer.php";
