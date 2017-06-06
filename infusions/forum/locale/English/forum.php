@@ -23,6 +23,12 @@ $locale['forum_0015'] = "Forum Overview";
 $locale['forum_0016'] = "Activity";
 $locale['forum_0017'] = "People";
 
+$locale['forum_0020'] = "Last Activity";
+$locale['forum_0021'] = "on %s by %s";
+$locale['forum_0022'] = "Responded in";
+$locale['forum_0023'] = "Re:";
+$locale['forum_0024'] = "See the full discussion posts";
+
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";
 $locale['forum_0052'] = "Author";
@@ -30,7 +36,9 @@ $locale['forum_0053'] = "Views";
 $locale['forum_0054'] = "Replies";
 $locale['forum_0055'] = "Page:";
 $locale['forum_0056'] = "No Threads have been started";
-$locale['forum_0057'] = "Start a New Thread";
+$locale['forum_0057'] = "Start New Thread";
+$locale['forum_0058'] = "Ask a Question";
+
 $locale['forum_0080'] = "Check All";
 $locale['forum_0081'] = "Uncheck All";
 $locale['forum_0082'] = "Delete threads";
@@ -111,7 +119,7 @@ $locale['forum_0260'] = "New Posts";
 $locale['forum_0261'] = "No New Posts";
 $locale['forum_0262'] = "Sticky Thread";
 $locale['forum_0263'] = "Locked Thread";
-$locale['forum_0264'] = "Start New Thread";
+
 $locale['forum_0265'] = "Edit";
 $locale['forum_0266'] = "Quote";
 $locale['forum_0267'] = "wrote";

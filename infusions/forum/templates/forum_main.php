@@ -382,7 +382,7 @@ if (!function_exists('forum_viewforum')) {
                                 print_p('Section under development');
                                 break;
                             case 'activity':
-                                print_p('Section under development');
+                                render_forum_activity($info);
                                 break;
                         }
                     } else {
@@ -407,6 +407,67 @@ if (!function_exists('forum_viewforum')) {
         </div>
         <?php
 
+    }
+}
+/**
+ * Shows Forum Activity
+ */
+if (!function_exists('render_forum_activity')) {
+    function render_forum_activity($info) {
+        $locale = fusion_get_locale();
+        if (!empty($info['item'])) {
+            $i = 0;
+            ?>
+            <div class='clearfix'>
+                <?php if ($info['pagenav']) : ?>
+                    <div class='pull-right m-t-5'><?php echo $info['pagenav'] ?></div><?php endif; ?>
+                <div class='pull-left'>
+                    <div class='list-group-item'>
+                        <strong><?php echo format_word($info['max_post_count'], $locale['fmt_post']) ?> |
+                            <a href='<?php echo $info['last_activity']['link'] ?>'><?php echo $locale['forum_0020'] ?></a>
+                            <?php
+                            echo sprintf($locale['forum_0021'],
+                                showdate('forumdate', $info['last_activity']['time']),
+                                profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
+                            )
+                            ?>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <?php
+            foreach ($info['item'] as $post_id => $postData) {
+                ?>
+                <div class='well spacer-md<?php echo !$i ? " m-t-0" : "" ?> '>
+                    <div class='pull-left m-r-15'>
+                        <?php echo display_avatar($postData['post_author'], '50px', FALSE, '', '') ?>
+                    </div>
+                    <div class='overflow-hide'>
+                        <div class='m-b-10'>
+                            <?php echo profile_link($postData['post_author']['user_id'], $postData['post_author']['user_name'], $postData['post_author']['user_status']) ?>
+                            <span class='text-smaller strong'>
+                                <?php echo showdate('forumdate', $postData['post_datestamp']) ?>, <?php echo timer($postData['post_datestamp']) ?> <?php echo $locale['forum_0022'] ?> <a
+                                        href='<?php echo $postData['thread_link']['link'] ?>'><?php echo $postData['thread_link']['title'] ?></a>
+                            </span>
+                        </div>
+                        <div class='list-group-item'>
+                            <div class='m-b-10 text-smaller text-lighter'><strong><?php echo $locale['forum_0023']." ".$postData['thread_link']['title'] ?></strong></div>
+                            <?php echo parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE) ?>
+                        </div>
+                        <div class='list-group-item'>
+                            <a class='text-smaller strong' href='<?php echo $postData['thread_link']['link'] ?>'><?php echo $locale['forum_0024'] ?><i class='fa fa-external-link-square m-l-5'></i></a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $i++;
+            }
+        } else {
+            ?>
+            <div class='well text-center'>There are no activity in this forum.</div>
+            <?php
+        }
     }
 }
 
