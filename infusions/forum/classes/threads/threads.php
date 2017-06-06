@@ -446,7 +446,6 @@ class ForumThreads extends ForumServer {
 				    var thread_posts = $('input[name^=delete_post]:checkbox').prop('checked', false); });
 				");
             }
-
             $this->thread_info += array(
                 'thread'               => $this->thread_data,
                 'thread_id'            => $this->thread_data['thread_id'],
@@ -500,7 +499,7 @@ class ForumThreads extends ForumServer {
                 'newthread' => $this->getThreadPermission('can_post') == TRUE ?
                     array(
                         'link'  => FORUM.'newthread.php?forum_id='.$this->thread_data['forum_id'],
-                        'title' => $locale['forum_0264']
+                        'title' => $this->thread_data['forum_type'] == 4 ? $locale['forum_0058'] : $locale['forum_0057']
                     ) : [],
                 'reply'     => $this->getThreadPermission('can_reply') == TRUE ?
                     array(
