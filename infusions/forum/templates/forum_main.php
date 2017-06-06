@@ -69,11 +69,6 @@ if (!function_exists('render_forum_main')) {
         <div class='spacer-sm'>
             <div class='row'>
                 <div class='col-xs-12 col-sm-9 col-lg-9'>
-
-                    <div class='row'>
-                        <div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'></div>
-                    </div>
-
                     <table class='table table-responsive clear'>
                         <?php
                         if (!empty($info['forums'][$id])) {
@@ -84,22 +79,20 @@ if (!function_exists('render_forum_main')) {
                                     ?>
                                     <tr>
                                         <td style='padding-top:20px;'>
-                                            <a title='<?php echo $data['forum_link']['title'] ?>' class='forum-subject' href='<?php echo $data['forum_link']['link'] ?>'>
-                                                <small class='text-uppercase'>
-                                                    <strong>
-                                                        <?php echo $data['forum_link']['title'] ?>
-                                                    </strong>
-                                                </small>
-                                            </a>
+                                            <small class='text-uppercase'>
+                                                <strong>
+                                                    <?php echo $data['forum_link']['title'] ?>
+                                                </strong>
+                                            </small>
                                         </td>
                                         <td style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'>Threads</small>
+                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0002'] ?></small>
                                         </td>
                                         <td style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'>Posts</small>
+                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0003'] ?></small>
                                         </td>
                                         <td class='col-xs-4' style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'>Latest Threads</small>
+                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0012'] ?></small>
                                         </td>
                                     </tr>
                                     <?php
@@ -119,11 +112,16 @@ if (!function_exists('render_forum_main')) {
                                     ?>
                                     <?php
                                 } else {
-                                    echo "<div class='well'>";
-                                    render_forum_item($data, $x);
-                                    echo "</div>\n";
-                                    $x++;
+                                    echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
                                 }
+                                /*
+                                 * We no longer do this. Optimization deprecate
+                                 */
+                                /*echo "<div class='well'>";
+                                render_forum_item($data, $x);
+                                echo "</div>\n";
+                                $x++;
+                            }*/
                             }
                         } else {
                             echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
@@ -228,7 +226,7 @@ if (!function_exists('render_forum_item')) {
             </td>
             <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
                 <?php
-                if ($data['forum_lastpostid'] == 0) {
+                if ($data['thread_lastpost'] == 0) {
                     echo $locale['forum_0005'];
                 } else {
                     echo "<div class='clearfix'>\n";
@@ -302,9 +300,7 @@ if (!function_exists('render_forum_item')) {
 if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
         $locale = fusion_get_locale();
-
-        $data = $info['item'][$_GET['forum_id']];
-
+        //print_P($info);
         ?>
         <div class='spacer-sm'>
             <?php echo render_breadcrumbs() ?>
@@ -318,12 +314,26 @@ if (!function_exists('forum_viewforum')) {
                 </div>
             </div>
         </div>
+        <div class='navbar navbar-inverse' style='margin-top:-15px;'>
+            <ul class='nav navbar-nav'>
+                <?php
+                // Group the link together under 'forum_page_link'
+                $i = 0;
+                foreach ($info['forum_page_link'] as $view_keys => $page_link) {
+                    $a = (!isset($_GET['view']) && (!$i)) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? TRUE : FALSE;
+                    $active = $a ? " class='active'" : "";
+                    echo "<li$active><a href='".$page_link['link']."'>".$page_link['title']."</a></li>\n";
+                    $i++;
+                }
+                ?>
+            </ul>
+        </div>
         <?php if ($info['forum_rules']) : alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules']); endif; ?>
         <div class='spacer-md'>
             <div class='row'>
                 <div class='col-xs-12 col-sm-6 col-md-5 col-lg-2'>
                     <?php if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) : ?>
-                        <a class='btn btn-primary' href='<?php echo $info['new_thread_link'] ?>'><i class='m-r-10 fa fa-comment'></i><?php echo $locale['forum_0264'] ?></a>
+                        <a class='btn btn-primary' href='<?php echo $info['new_thread_link']['link'] ?>'><i class='m-r-10 fa fa-comment'></i><?php echo $info['new_thread_link']['title'] ?></a>
                     <?php endif; ?>
                 </div>
                 <div class='col-xs-12 col-sm-6 col-md-7 col-lg-10'>
@@ -332,67 +342,65 @@ if (!function_exists('forum_viewforum')) {
                         switch ($_GET['view']) {
                             default:
                             case 'threads':
+                                die('Unauthorized mode');
                                 if ($info['forum_type'] > 1) {
                                     echo "<!--pre_forum-->\n";
                                     // Threads Render
                                     render_forum_threads($info);
-                                    ?>
-                                    <div class='list-group-item m-t-20'>
-                                        <?php echo "
-                                    <span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    "; ?>
-                                    </div>
-                                    <?php if ($info['forum_moderators']) : echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n"; endif;
                                 }
                                 break;
                             case 'subforums':
                                 if (!empty($info['item'][$_GET['forum_id']]['child'])) {
-                                    echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
                                     $i = 1;
-                                    echo "<div class='list-group-item'>\n";
-                                    foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-                                        render_forum_item($subforum_data, $i);
-                                        $i++;
-                                    }
-                                    echo "</div>\n";
+                                    ?>
+                                    <table class='table table-responsive clear'>
+                                        <tr>
+                                            <td style='padding-top:20px;'>
+                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0351'] ?></small>
+                                            </td>
+                                            <td style='padding-top:20px;'>
+                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0002'] ?></small>
+                                            </td>
+                                            <td style='padding-top:20px;'>
+                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0003'] ?></small>
+                                            </td>
+                                            <td class='col-xs-4' style='padding-top:20px;'>
+                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0012'] ?></small>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
+                                            render_forum_item($subforum_data, $i);
+                                            $i++;
+                                        }
+                                        ?>
+                                    </table>
+                                    <?php
                                 }
+                                break;
+                            case 'people':
+                                print_p('Section under development');
+                                break;
+                            case 'activity':
+                                print_p('Section under development');
                                 break;
                         }
                     } else {
-                        if ($info['forum_type'] > 1) {
-                            echo "<!--pre_forum-->\n";
-                            // Threads Render
-                            render_forum_threads($info);
-                            ?>
-                            <div class='list-group-item m-t-20'>
-                                <?php echo "
-                                    <span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    <span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                                    "; ?>
-                            </div>
-                            <?php if ($info['forum_moderators']) : echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n"; endif;
-                        } else {
-
-                            //print_p($info);
-                            if (!empty($info['item'][$_GET['forum_id']]['child'])) {
-                                echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
-                                $i = 1;
-                                echo "<div class='list-group-item'>\n";
-                                foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-                                    render_forum_item($subforum_data, $i);
-                                    $i++;
-                                }
-                                echo "</div>\n";
-                            }
-                        }
+                        render_forum_threads($info);
                     }
+                    ?>
+                    <div class='list-group-item m-t-20'>
+                        <?php echo "
+                        <span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+                        <span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+                        <span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+                        <span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+                        <span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+                        "; ?>
+                    </div>
+                    <?php
+                    // Add people section
+                    if ($info['forum_moderators']) : echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n"; endif;
                     ?>
                 </div>
             </div>
@@ -520,16 +528,10 @@ if (!function_exists('forum_filter')) {
 
 if (!function_exists('render_forum_threads')) {
     function render_forum_threads($info) {
-
         $locale = fusion_get_locale();
         ?>
         <div class='list-group-item p-t-15 p-b-15'>
             <?php
-            if ($info['subforum_count']) {
-                ?>
-                <a href='<?php echo $info['subforum_link']['link'] ?>'><?php echo $info['subforum_link']['title'] ?></a>
-                <?php
-            }
             if (!empty($info['filters']['type'])) {
                 foreach ($info['filters']['type'] as $key => $tabs) {
                     ?>

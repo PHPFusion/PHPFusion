@@ -3,6 +3,7 @@ $locale['error-DP001'] = "No posts to be removed.";
 $locale['error-MP000'] = "Move posts - error";
 $locale['error-MP001'] = "New thread doesn&#039;t exist.";
 $locale['error-MP002'] = "Posts which you&#039;re marked to move do not exists or someone else already moved them.";
+
 $locale['forum_0000'] = "Discussion Forum";
 $locale['forum_0001'] = "Forum";
 $locale['forum_0002'] = "Threads";
@@ -18,6 +19,10 @@ $locale['forum_0011'] = "My Posts";
 $locale['forum_0012'] = "Latest Threads";
 $locale['forum_0013'] = "Forum Categories";
 $locale['forum_0014'] = "Reputation";
+$locale['forum_0015'] = "Forum Overview";
+$locale['forum_0016'] = "Activity";
+$locale['forum_0017'] = "People";
+
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";
 $locale['forum_0052'] = "Author";

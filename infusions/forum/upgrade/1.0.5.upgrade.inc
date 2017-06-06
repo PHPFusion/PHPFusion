@@ -182,8 +182,8 @@ if (column_exists('forums', 'forum_attach_download')) {
 
 // Update existing records and change level accesses to new user groups values
 $forum_index = dbquery_tree($db_prefix.'forums', 'forum_id', 'forum_cat');
-$result = dbquery("SELECT forum_id, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download, forum_mods FROM ".$db_prefix."forums");
-if (dbrows($result) > 0) {
+$result = dbquery("SELECT forum_id, forum_cat, forum_type, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download, forum_mods FROM ".$db_prefix."forums");
+if (dbrows($result)) {
     while ($data = dbarray($result)) {
         // Update new access levels for forum_post
         if ($data['forum_post']) {
@@ -243,7 +243,6 @@ if (dbrows($result) > 0) {
             $data['forum_mods'] = implode('.', $current_mods);
             $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."'";
         }
-
     }
 
     /*
@@ -251,11 +250,23 @@ if (dbrows($result) > 0) {
      * Change old forums already inside a group to be a forum containing threads
      * This makes all existing threads accessible both in forums and in panels after upgrade
      */
-    if ($data['forum_type']) {
-        $inf_updatedbrow[] = $db_prefix."forums SET forum_type='1' WHERE forum_cat='0'";
-        $inf_updatedbrow[] = $db_prefix."forums SET forum_type='2' WHERE forum_cat>'0'";
+    $inf_updatedbrow[] = $db_prefix."forums SET forum_type='1' WHERE forum_cat='0'";
+    $inf_updatedbrow[] = $db_prefix."forums SET forum_type='2' WHERE forum_cat>'0'";
+}
+
+// Update the forums with lastpost information
+$select = dbquery("SELECT forum_id FROM ".$db_prefix."forums ORDER BY forum_id ASC");
+if (dbrows($select)) {
+    while ($data = dbarray($select)) {
+        $select2 = dbquery("SELECT * FROM ".$db_prefix."forum_threads WHERE forum_id='".$data['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 1");
+        if (dbrows($select2)) {
+            while ($subData = dbarray($select2)) {
+                $inf_updatedbrow[] = $db_prefix."forums SET forum_lastpost='".$subData['thread_lastpost']."', forum_lastpostid='".$subData['thread_lastpostid']."', forum_lastuser='".$subData['thread_lastuser']."' WHERE forum_id='".$subData['forum_id']."'";
+            }
+        }
     }
 }
+
 /*
  * Modify Forum Ranks Table
  */
