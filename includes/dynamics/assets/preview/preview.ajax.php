@@ -30,7 +30,7 @@ if (!fusion_get_settings("site_seo") && isset($_POST['url'])) {
 	$count =  substr($_POST['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/")-1;
 	$prefix_ = str_repeat("../", $count);
 	foreach (cache_smileys() as $smiley) {
-		$smiley_path = "./".$prefix_."images/smiley/".$smiley['smiley_image'];
+		$smiley_path = fusion_get_settings('siteurl')."images/smiley/".$smiley['smiley_image'];
 		\PHPFusion\ImageRepo::setImage("smiley_".$smiley['smiley_text'], $smiley_path);
 	}
 }

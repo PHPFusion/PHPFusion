@@ -116,7 +116,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             if (!empty($smileys)) {
                 $tinymce_smiley_vars = "var shortcuts = {\n";
                 foreach ($smileys as $params) {
-                    $tinymce_smiley_vars .= "'".strtolower($params['smiley_code'])."' : '<img alt=\"".$params['smiley_text']."\" src=\"".IMAGES."smiley/".$params['smiley_image']."\"/>',\n";
+                    $tinymce_smiley_vars .= "'".strtolower($params['smiley_code'])."' : '<img alt=\"".$params['smiley_text']."\" src=\"".fusion_get_settings('siteurl')."images/smiley/".$params['smiley_image']."\"/>',\n";
                 }
                 $tinymce_smiley_vars .= "};\n";
                 $tinymce_smiley_vars .= "
