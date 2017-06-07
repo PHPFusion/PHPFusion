@@ -57,14 +57,18 @@ class ForumThreads extends ForumServer {
         //print_p($filter);
         /**
          * Get threads with filter conditions (XSS prevention)
+         * Latest Post requires a simple query replacement.
+         *  #AND tf.forum_lastpost = t.thread_lastpost AND tf.forum_lastpostid = t.thread_lastpostid
+         * The rows is thread that has the last post.... \\\\\\
+         *
          */
-        $thread_query = "
+        $thread_query = $filter['count_query'] ?: "
         SELECT
         count(t.thread_id) 'thread_max_rows',
         count(a.attach_id) 'attach_count', 
         a.attach_id
         FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id AND tf.forum_lastpost = t.thread_lastpost AND tf.forum_lastpostid = t.thread_lastpostid
+        LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id 
         INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
@@ -95,13 +99,12 @@ class ForumThreads extends ForumServer {
         $info['thread_max_rows'] = $count['thread_max_rows'];
 
         if ($info['thread_max_rows']) {
-
             $info['threads']['pagenav'] = '';
             $info['threads']['pagenav2'] = '';
             // anti-XSS filtered rowstart
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $count['thread_max_rows'] ? $_GET['rowstart'] : 0;
 
-            $thread_query = "
+            $thread_query = $filter['query'] ?: "
             SELECT t.*, tf.forum_type, tf.forum_name, tf.forum_cat,
             IF (n.thread_id > 0, 1 , 0) 'user_tracked',
             count(v.vote_user) 'thread_rated',
@@ -109,24 +112,23 @@ class ForumThreads extends ForumServer {
             count(v.post_id) AS vote_count,          
             count(a.attach_id) AS attach_count, a.attach_id                                   
             FROM ".DB_FORUM_THREADS." t
-            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id  AND tf.forum_lastpost=t.thread_lastpost AND tf.forum_lastpostid=t.thread_lastpostid                    
-            LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'            
+            LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id 
+            LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1            
             LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id            
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'            
             WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."            
-            ".(isset($filter['condition']) ? $filter['condition'] : '')."            
-            ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
+            ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."             
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '')."
             LIMIT ".intval($_GET['rowstart']).", ".$forum_settings['threads_per_page'];
             if (!empty($filter['debug'])) print_p($thread_query);
 
             $cthread_result = dbquery($thread_query);
+
             if (dbrows($cthread_result)) {
 
                 while ($threads = dbarray($cthread_result)) {
-
                     $threads += [
                         'author_name'      => '',
                         'author_status'    => '',
