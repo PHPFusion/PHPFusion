@@ -530,7 +530,7 @@ function displaysmileys($textarea, $form = "inputform") {
  * @return mixed
  */
 function fusion_parse_user($user_name) {
-    $user_regex = ' @[-0-9A-Z_\.]{1,50}';
+    $user_regex = '@[-0-9A-Z_\.]{1,50}';
     $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
         $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
         return render_user_tags($user_name);
