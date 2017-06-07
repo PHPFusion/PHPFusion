@@ -206,7 +206,6 @@ if (!function_exists('render_forum_item')) {
             echo "<div id='forum_".$data['forum_id']."' class='panel panel-default'>\n";
             echo "<div class='panel-body'>\n";
         }*/
-
         ?>
         <tr>
             <td style='border-radius: 4px 0 0 4px; background: #f7f7f7; border-top:4px solid #fff; border-bottom:4px solid #fff;'>
@@ -379,7 +378,7 @@ if (!function_exists('forum_viewforum')) {
                                 }
                                 break;
                             case 'people':
-                                print_p('Section under development');
+                                render_forum_users($info);
                                 break;
                             case 'activity':
                                 render_forum_activity($info);
@@ -409,6 +408,63 @@ if (!function_exists('forum_viewforum')) {
 
     }
 }
+
+if (!function_exists('render_forum_users')) {
+    function render_forum_users($info) {
+        $locale = fusion_get_locale();
+        ?>
+        <div class='list-group-item'>
+            <?php
+            if (!empty($info['pagenav'])) {
+                ?>
+                <div class='text-right'><?php echo $info['pagenav'] ?></div>
+                <hr/>
+                <?php
+            }
+            ?>
+            <table class='table table-responsive table-striped clear'>
+                <thead>
+                <tr>
+                    <th class='col-xs-2'>
+                        <small><strong><?php echo $locale['forum_0018'] ?></strong></small>
+                    </th>
+                    <th>
+                        <small><strong><?php echo $locale['forum_0012'] ?></strong></small>
+                    </th>
+                    <th>
+                        <small><strong><?php echo $locale['forum_0016'] ?></strong></small>
+                    </th>
+                </tr>
+                </thead>
+                <?php
+                if (!empty($info['item'])) {
+                    foreach ($info['item'] as $user) {
+                        ?>
+                        <tr>
+                            <td class='no-break'>
+                                <div class='clearfix'>
+                                    <div class='pull-left m-r-10'><?php echo display_avatar($user, '30px', '', '', '') ?></div>
+                                    <?php echo profile_link($user['user_id'], $user['user_name'], $user['user_status']) ?>
+                                </div>
+                            </td>
+                            <td>
+                                <span class='text-smaller'><a href='<?php echo $user['thread_link']['link'] ?>'><?php echo $user['thread_link']['title'] ?></a></span>
+                            </td>
+                            <td class='no-break'>
+                                <span class='text-smaller'><?php echo showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp']) ?></span>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
+            </table>
+        </div>
+
+        <?php
+    }
+}
+
 /**
  * Shows Forum Activity
  */

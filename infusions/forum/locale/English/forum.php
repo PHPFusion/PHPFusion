@@ -22,6 +22,7 @@ $locale['forum_0014'] = "Reputation";
 $locale['forum_0015'] = "Forum Overview";
 $locale['forum_0016'] = "Activity";
 $locale['forum_0017'] = "People";
+$locale['forum_0018'] = "Person";
 
 $locale['forum_0020'] = "Last Activity";
 $locale['forum_0021'] = "on %s by %s";

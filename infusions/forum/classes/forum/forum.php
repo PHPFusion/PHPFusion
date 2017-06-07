@@ -365,7 +365,41 @@ class Forum extends ForumServer {
                                 // Under Development for Forum 3.0
                             case 'people':
                                 // Under Development
+                                $this->forum_info['item'] = array();
+                                $this->forum_info['pagenav'] = '';
+                                if ($this->forum_info['thread_count']) {
+                                    $sql_select = DB_USERS." u INNER JOIN ".DB_FORUM_POSTS." p ON p.post_author=u.user_id";
+                                    $sql_cond = "p.forum_id=:forum_id";
+                                    $sql_param = [
+                                        ':forum_id' => $this->forum_info['forum_id']
+                                    ];
+                                    $this->forum_info['max_user_count'] = dbcount("(user_id)", $sql_select, $sql_cond, $sql_param);
+                                    $sql_param[':limit'] = $this->forum_info['posts_per_page'];
+                                    $_GET['rowstart'] = (isset($_GET['rowstart'])) && $_GET['rowstart'] <= $this->forum_info['max_user_count'] ? $_GET['rowstart'] : 0;
+                                    $sql_param[':rowstart'] = $_GET['rowstart'];
 
+                                    $query = "SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, p.post_id, p.post_datestamp, t.thread_id, t.thread_subject, t.forum_id   
+                                    FROM $sql_select INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=p.thread_id AND t.forum_id=p.forum_id WHERE $sql_cond GROUP BY u.user_id ORDER BY u.user_name ASC, p.post_datestamp DESC LIMIT :rowstart, :limit";
+
+                                    $result = dbquery($query, $sql_param);
+                                    $rows = dbrows($result);
+                                    if ($rows) {
+                                        if ($this->forum_info['max_user_count'] > $rows) {
+                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $rows, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=people&amp;');
+                                        }
+                                        while ($data = dbarray($result)) {
+                                            $data['thread_link'] = [
+                                                'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'],
+                                                'title' => $data['thread_subject']
+                                            ];
+                                            $this->forum_info['item'][$data['user_id']] = $data;
+                                            //print_p($data);
+                                        }
+                                    }
+                                }
+                                /*
+                                 * Benchmark results - 0.32s
+                                 */
                                 break;
                             case 'activity':
                                 // Fetch latest activity in this forum sort by the latest posts.
