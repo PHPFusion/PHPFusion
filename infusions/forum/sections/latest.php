@@ -41,12 +41,25 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUS
         'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
     )).closeform();
 
+// Select the latest threads - LATEST THREADS, meaning you need a thread that is the latest.
 $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
     array(
-        'condition' => $time_sql,
-        'order'     => 'ORDER BY t.thread_lastpost DESC',
-        'limit'     => "LIMIT 0, ".$forum_settings['threads_per_page'],
+        'count_query' => "
+        SELECT
+        count(t.thread_id) 'thread_max_rows'                 
+        FROM ".DB_FORUM_THREADS." t
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                        
+        WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql",
+
+        'query' => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount,
+            t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, 
+            tf.forum_type, tf.forum_name, tf.forum_cat
+            FROM ".DB_FORUM_THREADS." t
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
+            WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
+            GROUP BY t.thread_id
+            ORDER BY t.thread_lastpost DESC",
     )
 );
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
-//showBenchmark(TRUE); 0.27 (Faster by 0.1s)
+//showBenchmark(TRUE);

@@ -74,8 +74,7 @@ class ForumThreads extends ForumServer {
         count(a.attach_id) 'attach_count', 
         a.attach_id
         FROM ".DB_FORUM_THREADS." t
-        LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id 
-        INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id        
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
@@ -85,6 +84,7 @@ class ForumThreads extends ForumServer {
 
         if (!empty($filter['debug'])) print_p($thread_query);
         $thread_result = dbquery($thread_query);
+
         $thread_rows = dbrows($thread_result);
 
         $count = array(
@@ -118,7 +118,7 @@ class ForumThreads extends ForumServer {
             count(v.post_id) AS vote_count,          
             count(a.attach_id) AS attach_count, a.attach_id                                   
             FROM ".DB_FORUM_THREADS." t
-            LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id 
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
             LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1            
             LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id            
@@ -126,8 +126,8 @@ class ForumThreads extends ForumServer {
             WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."            
             ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."             
             GROUP BY t.thread_id
-            ".(isset($filter['order']) ? $filter['order'] : '')."
-            LIMIT ".intval($_GET['rowstart']).", ".$forum_settings['threads_per_page'];
+            ".(isset($filter['order']) ? $filter['order'] : '');
+            $thread_query .= " LIMIT ".intval($_GET['rowstart']).", ".$forum_settings['threads_per_page'];
             if (!empty($filter['debug'])) print_p($thread_query);
 
             $cthread_result = dbquery($thread_query);
@@ -135,6 +135,14 @@ class ForumThreads extends ForumServer {
             if (dbrows($cthread_result)) {
 
                 while ($threads = dbarray($cthread_result)) {
+
+                    if (!isset($threads['attach_count'])) {
+                        $threads['attach_count'] = dbcount("(attach_id)", DB_FORUM_ATTACHMENTS, "thread_id=:current_thread", [':current_thread' => $threads['thread_id']]);
+                    }
+                    if (!isset($threads['vote_count'])) {
+                        $threads['vote_count'] = dbcount("(post_id)", DB_FORUM_VOTES, "thread_id=:current_thread", [':current_thread' => $threads['thread_id']]);
+                    }
+
                     $threads += [
                         'author_name'      => '',
                         'author_status'    => '',
