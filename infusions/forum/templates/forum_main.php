@@ -678,16 +678,16 @@ if (!function_exists('render_forum_threads')) {
                 <thead>
                 <tr>
                     <th>
-                        <small><strong>Topic Title</strong></small>
+                        <small><strong><?php echo $locale['forum_0228'] ?></strong></small>
                     </th>
                     <th>
-                        <small><strong>Author</strong></small>
+                        <small><strong><?php echo $locale['forum_0052'] ?></strong></small>
                     </th>
                     <th class='no-break'>
-                        <small><strong>Latest Activity</strong></small>
+                        <small><strong><?php echo $locale['forum_0020'] ?></strong></small>
                     </th>
                     <th>
-                        <small><strong>Views</strong></small>
+                        <small><strong><?php echo $locale['forum_0053'] ?></strong></small>
                     </th>
                     <th>
                         <small><i class='fa fa-comment'></i></small>
@@ -731,7 +731,6 @@ if (!function_exists('render_forum_threads')) {
 /* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
-
         $locale = fusion_get_locale();
         ?>
         <tr id='thread_<?php echo $info['thread_id'] ?>'>
@@ -792,17 +791,54 @@ if (!function_exists("render_laft")) {
     function render_laft($info) {
         $locale = fusion_get_locale();
         echo render_breadcrumbs();
-        if (!empty($info['item'])) {
-            $i = 0;
-            foreach ($info['item'] as $data) {
-                render_thread_item($data);
-                $i++;
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
-        }
-        echo "<hr/>\n";
-        echo $info['threads_time_filter'];
+        ?>
+        <div class='list-group-item'>
+
+            <div class='clearfix' style='height:60px;'>
+                <div class='pull-left'><?php echo $info['threads_time_filter']; ?></div>
+                <?php if ($info['threads']['pagenav']) : ?>
+                    <div class='pull-right center-y'><?php echo $info['threads']['pagenav'] ?></div> <?php endif; ?>
+            </div>
+
+            <hr/>
+            <table class='table table-responsive clear'>
+                <thead>
+                <tr>
+                    <th>
+                        <small><strong><?php echo $locale['forum_0228'] ?></strong></small>
+                    </th>
+                    <th>
+                        <small><strong><?php echo $locale['forum_0052'] ?></strong></small>
+                    </th>
+                    <th class='no-break'>
+                        <small><strong><?php echo $locale['forum_0020'] ?></strong></small>
+                    </th>
+                    <th>
+                        <small><strong><?php echo $locale['forum_0053'] ?></strong></small>
+                    </th>
+                    <th>
+                        <small><i class='fa fa-comment'></i></small>
+                    </th>
+                    <th>
+                        <small><i class='fa fa-thumbs-o-up'></i></small>
+                    </th>
+                    <th></th>
+                </tr>
+                <tbody class='text-smaller'>
+                <?php
+                if (!empty($info['threads']['item'])) {
+                    $i = 0;
+                    foreach ($info['threads']['item'] as $data) {
+                        render_thread_item($data);
+                        $i++;
+                    }
+                } else {
+                    echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
+                }
+                ?>
+            </table>
+        </div>
+        <?php
     }
 }
 

@@ -397,9 +397,8 @@ abstract class ForumServer {
         $info['rows'] = dbrows($result);
         if ($info['rows'] > 0) {
             // need to throw moderator as an object
-
             while ($data = dbarray($result)) {
-                $data['moderators'] = self::moderator()->parse_forum_mods($data['forum_mods']);
+                $data['moderators'] = Moderator::parse_forum_mods($data['forum_mods']);
                 $info['item'][$data['thread_id']] = $data;
             }
         }

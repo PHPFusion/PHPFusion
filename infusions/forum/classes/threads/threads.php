@@ -43,7 +43,7 @@ class ForumThreads extends ForumServer {
      *
      * @return array
      */
-    public static function get_forum_thread($forum_id, $filter = FALSE) {
+    public static function get_forum_thread($forum_id = 0, $filter = FALSE) {
 
         /* Redo and remove all joins */
 
@@ -64,19 +64,17 @@ class ForumThreads extends ForumServer {
         count(a.attach_id) 'attach_count', 
         a.attach_id
         FROM ".DB_FORUM_THREADS." t
-        LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
+        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id AND tf.forum_lastpost = t.thread_lastpost AND tf.forum_lastpostid = t.thread_lastpostid
         INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
-        WHERE t.forum_id='".intval($forum_id)."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-        ".(isset($filter['condition']) ? $filter['condition'] : '')."
-        GROUP BY tf.forum_id
-        ";
+        WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+        ".(isset($filter['condition']) ? $filter['condition'] : '');
 
+        if (!empty($filter['debug'])) print_p($thread_query);
         $thread_result = dbquery($thread_query);
-
         $thread_rows = dbrows($thread_result);
 
         $count = array(
@@ -96,12 +94,12 @@ class ForumThreads extends ForumServer {
 
         $info['thread_max_rows'] = $count['thread_max_rows'];
 
-        if ($info['thread_max_rows'] > 0) {
+        if ($info['thread_max_rows']) {
 
             $info['threads']['pagenav'] = '';
             $info['threads']['pagenav2'] = '';
             // anti-XSS filtered rowstart
-            $_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $count['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $count['thread_max_rows'] ? $_GET['rowstart'] : 0;
 
             $thread_query = "
             SELECT t.*, tf.forum_type, tf.forum_name, tf.forum_cat,
@@ -111,24 +109,21 @@ class ForumThreads extends ForumServer {
             count(v.post_id) AS vote_count,          
             count(a.attach_id) AS attach_count, a.attach_id                                   
             FROM ".DB_FORUM_THREADS." t
-            LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                      
+            INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id  AND tf.forum_lastpost=t.thread_lastpost AND tf.forum_lastpostid=t.thread_lastpostid                    
             LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'            
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1            
             LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id            
-            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'
-            
-            WHERE t.forum_id='".$forum_id."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-            
-            ".(isset($filter['condition']) ? $filter['condition'] : '')."
-            
+            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'            
+            WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."            
+            ".(isset($filter['condition']) ? $filter['condition'] : '')."            
             ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '')."
-            LIMIT ".intval($_GET['thread_rowstart']).", ".$forum_settings['threads_per_page'];
+            LIMIT ".intval($_GET['rowstart']).", ".$forum_settings['threads_per_page'];
+            if (!empty($filter['debug'])) print_p($thread_query);
 
             $cthread_result = dbquery($thread_query);
-
-            if (dbrows($cthread_result) > 0) {
+            if (dbrows($cthread_result)) {
 
                 while ($threads = dbarray($cthread_result)) {
 
@@ -140,12 +135,14 @@ class ForumThreads extends ForumServer {
                         'last_user_status' => '',
                         'last_user_avatar' => '',
                     ];
+
                     $user1 = fusion_get_user($threads['thread_author']);
                     if (!empty($user1['user_id'])) {
                         $threads['author_name'] = $user1['user_name'];
                         $threads['author_status'] = $user1['user_status'];
                         $threads['author_avatar'] = $user1['user_avatar'];
                     }
+
                     $user2 = fusion_get_user($threads['thread_lastuser']);
                     if (!empty($user2['user_id'])) {
                         $threads['last_user_name'] = $user2['user_name'];
@@ -227,20 +224,19 @@ class ForumThreads extends ForumServer {
 
             if ($info['thread_max_rows'] > $forum_settings['threads_per_page']) {
 
-                $info['threads']['pagenav'] = makepagenav($_GET['thread_rowstart'],
+                $info['threads']['pagenav'] = makepagenav($_GET['rowstart'],
                     $forum_settings['threads_per_page'],
                     $info['thread_max_rows'],
                     3,
-                    clean_request("", array("thread_rowstart"), FALSE)."&amp;",
-                    "thread_rowstart"
+                    clean_request("", array("rowstart"), FALSE)."&amp;"
                 );
 
-                $info['threads']['pagenav2'] = makepagenav($_GET['thread_rowstart'],
+                $info['threads']['pagenav2'] = makepagenav($_GET['rowstart'],
                     $forum_settings['threads_per_page'],
                     $info['thread_max_rows'],
                     3,
-                    clean_request("", array("thread_rowstart"), FALSE)."&amp;",
-                    "thread_rowstart",
+                    clean_request("", array("rowstart"), FALSE)."&amp;",
+                    'rowstart',
                     TRUE
                 );
 

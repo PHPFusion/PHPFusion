@@ -30,6 +30,7 @@ $locale['forum_0022'] = "Responded in";
 $locale['forum_0023'] = "Re:";
 $locale['forum_0024'] = "See the full discussion posts";
 
+
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";
 $locale['forum_0052'] = "Author";
@@ -109,7 +110,7 @@ $locale['forum_0223'] = "Attachments";
 $locale['forum_0224'] = "Polls";
 $locale['forum_0225'] = "Sort by";
 $locale['forum_0226'] = "Date - last update";
-$locale['forum_0228'] = "Title";
+$locale['forum_0228'] = "Topic Title";
 $locale['forum_0229'] = "Order";
 $locale['forum_0230'] = "Descending";
 $locale['forum_0231'] = "Ascending";

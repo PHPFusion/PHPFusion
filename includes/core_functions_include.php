@@ -1655,7 +1655,7 @@ function fusion_get_user($user_id, $key = NULL) {
         $performance_test = $performance_test + 1;
     }
 
-    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : $user);
+    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : '');
 }
 
 /**
