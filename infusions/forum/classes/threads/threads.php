@@ -45,6 +45,12 @@ class ForumThreads extends ForumServer {
      */
     public static function get_forum_thread($forum_id = 0, $filter = FALSE) {
 
+        $default_filter = [
+            'count_query' => '',
+            'query'       => '',
+        ];
+        $filter += $default_filter;
+
         /* Redo and remove all joins */
 
         $info = [];
