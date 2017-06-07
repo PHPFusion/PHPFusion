@@ -75,7 +75,7 @@ if (!function_exists('render_forum_main')) {
                             $forums = $info['forums'][$id];
                             $x = 1;
                             foreach ($forums as $forum_id => $data) {
-                                if ($data['forum_type'] == '1') {
+                                if ($data['forum_type']) {
                                     ?>
                                     <tr>
                                         <td style='padding-top:20px;'>
