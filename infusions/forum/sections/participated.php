@@ -26,7 +26,7 @@ $time_sql = '';
 if (!empty($_POST['filter_date'])) {
     $time_filter = form_sanitizer($_POST['filter_date'], '', 'filter_date');
     $time_filter = (TIME - ($time_filter * 24 * 3600));
-    $time_sql = " AND t.thread_lastpost < '$time_filter'";
+    $time_sql = "t.thread_lastpost < '$time_filter' AND ";
 }
 $opts = array(
     '0'   => $locale['forum_p999'],
@@ -38,7 +38,7 @@ $opts = array(
     '180' => $locale['forum_p180'],
     '365' => $locale['forum_3015']
 );
-$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest").
+$this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=participated").
     form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), array(
         'options' => $opts,
         'width'   => '300px',
@@ -46,27 +46,26 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUS
         'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
     )).closeform();
 
-$count_query = "SELECT count(p.post_id) 'thread_max_rows'
-        FROM ".DB_FORUMS." tf
-        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id = tf.forum_id
-        INNER JOIN ".DB_FORUM_POSTS." p ON p.post_author='".$userdata['user_id']."' AND p.thread_id=t.thread_id AND p.forum_id=tf.forum_id
-        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND p.post_hidden='0' AND t.thread_hidden='0'		
-		ORDER BY p.post_datestamp DESC";
-$query = "
-        SELECT p.forum_id, p.thread_id, p.post_id, p.post_author 'thread_author', p.post_author 'thread_lastuser',  p.post_datestamp 'thread_lastpost', p.post_id 'thread_lastpostid',		
-		t.thread_id, t.thread_subject, t.forum_id, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,		
+$count_query = "SELECT count(t.thread_id) 'thread_max_rows'
+        FROM ".DB_FORUMS." tf        
+        INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
+        INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id                         
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access');
+
+$query = "SELECT p.forum_id, p.thread_id, p.post_id, p.post_author 'thread_author', p.post_author 'thread_lastuser',  p.post_datestamp 'thread_lastpost', p.post_id 'thread_lastpostid', p.thread_id 'thread_id', p.forum_id 'forum_id',	
+		t.thread_subject, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,		
 		tf.forum_name, tf.forum_access, tf.forum_type
 		FROM ".DB_FORUMS." tf
-		INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id = tf.forum_id
-		INNER JOIN ".DB_FORUM_POSTS." p ON p.post_author='".$userdata['user_id']."' AND p.thread_id=t.thread_id AND p.forum_id=tf.forum_id
-		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND p.post_hidden='0' AND t.thread_hidden='0'		
+		INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
+		INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id		
+		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access')."
 		ORDER BY p.post_datestamp DESC
 		";
+
 $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
     array(
         'count_query' => $count_query,
         'query'       => $query,
-        'debug'       => FALSE,
     )
 );
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);

@@ -758,7 +758,6 @@ if (!function_exists('render_thread_item')) {
             </td>
         </tr>
         <?php
-
     }
 }
 

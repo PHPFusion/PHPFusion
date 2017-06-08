@@ -50,7 +50,6 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                        
         WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql",
-
         'query' => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount,
             t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, 
             tf.forum_type, tf.forum_name, tf.forum_cat
