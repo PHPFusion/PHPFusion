@@ -27,17 +27,9 @@ if (!function_exists('render_forum')) {
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
-            if (isset($_GET['section']) && $_GET['section'] == 'participated') {
+            if (isset($_GET['section'])) {
                 render_section($info);
-            } elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-                render_section($info);
-            } elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-                render_tracked($info);
-            } elseif (isset($_GET['section']) && $_GET['section'] == 'unanswered') {
-                render_unanswered($info);
-            } elseif (isset($_GET['section']) && $_GET['section'] == 'unsolved') {
-                render_unsolved($info);
-            } elseif (!isset($_GET['section']) or isset($_GET['section']) && $_GET['section'] == 'thread') {
+            } else {
                 render_forum_main($info);
             }
         }
@@ -728,7 +720,6 @@ if (!function_exists('render_forum_threads')) {
     }
 }
 
-/* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
         $locale = fusion_get_locale();
@@ -752,9 +743,9 @@ if (!function_exists('render_thread_item')) {
             <td><strong><?php echo number_format($info['thread_postcount']) ?></strong></td>
             <td><strong><?php echo number_format($info['vote_count']) ?></strong></td>
             <td>
-                <?php
-                echo isset($info['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
-                ?>
+                <?php if (isset($info['track_button'])) : ?>
+                    <a class='btn btn-danger btn-sm' onclick="return confirm('<?php echo $locale['global_060'] ?>');" href='<?php echo $info['track_button']['link'] ?>'><?php echo $info['track_button']['title'] ?></a>
+                <?php endif; ?>
             </td>
         </tr>
         <?php
@@ -816,60 +807,6 @@ if (!function_exists("render_section")) {
             </table>
         </div>
         <?php
-    }
-}
-
-if (!function_exists("render_tracked")) {
-    /* Tracked Section */
-    function render_tracked($info) {
-        $locale = fusion_get_locale();
-        echo render_breadcrumbs();
-        if (!empty($info['item'])) {
-            $i = 0;
-            foreach ($info['item'] as $data) {
-                // do a thread.
-                render_thread_item($data);
-                $i++;
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['global_059']."</div>\n";
-        }
-    }
-}
-
-if (!function_exists("render_unanswered")) {
-    /* Unanswered Section */
-    function render_unanswered($info) {
-        $locale = fusion_get_locale();
-        echo render_breadcrumbs();
-        if (!empty($info['item'])) {
-            $i = 0;
-            foreach ($info['item'] as $data) {
-                // do a thread.
-                render_thread_item($data);
-                $i++;
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
-        }
-    }
-}
-
-if (!function_exists("render_unsolved")) {
-    /* Unsolved Section */
-    function render_unsolved($info) {
-        $locale = fusion_get_locale();
-        echo render_breadcrumbs();
-        if (!empty($info['item'])) {
-            $i = 0;
-            foreach ($info['item'] as $data) {
-                // do a thread.
-                render_thread_item($data);
-                $i++;
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
-        }
     }
 }
 

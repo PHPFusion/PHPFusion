@@ -124,6 +124,14 @@ class ForumThreads extends ForumServer {
             if ($rows) {
 
                 while ($threads = dbarray($cthread_result)) {
+
+                    if (isset($threads['track_button'])) {
+                        $threads['track_button'] = [
+                            'link'  => clean_request('delete_track='.$threads['track_button'], ['delete_track'], FALSE),
+                            'title' => 'Stop Tracking',
+                        ];
+                    }
+
                     if (!isset($threads['attach_count'])) {
                         $threads['attach_count'] = dbcount("(attach_id)", DB_FORUM_ATTACHMENTS, "thread_id=:current_thread", [':current_thread' => $threads['thread_id']]);
                     }
