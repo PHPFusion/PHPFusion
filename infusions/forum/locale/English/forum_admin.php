@@ -184,4 +184,4 @@ $locale['forum_opts_002'] = "Forum";
 $locale['forum_opts_003'] = "Link";
 $locale['forum_opts_004'] = "Support &amp; Answers";
 $locale['forum_points'] = "Forum Points";
-$locale['forum_root'] = "Forum Index";
+$locale['forum_root'] = "Forum Management";
