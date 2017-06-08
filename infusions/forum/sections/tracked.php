@@ -50,14 +50,15 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUS
         'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
     )).closeform();
 
-$count_query = "SELECT tn.thread_id 
-FROM ".DB_FORUM_THREAD_NOTIFY." tn
-INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
-INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
-WHERE ".$time_sql." tn.notify_user='".$userdata['user_id']."' AND ".groupaccess('forum_access')." AND t.thread_hidden='0'
-";
-
-$query = "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods, 
+$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
+    array(
+        'count_query' => "SELECT tn.thread_id 
+        FROM ".DB_FORUM_THREAD_NOTIFY." tn
+        INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
+        INNER JOIN ".DB_FORUMS." tf ON t.forum_id = tf.forum_id
+        WHERE ".$time_sql." tn.notify_user='".$userdata['user_id']."' AND ".groupaccess('forum_access')." AND t.thread_hidden='0'
+        ",
+        'query'       => "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods, 
         tn.thread_id, tn.notify_datestamp, tn.notify_user, tn.thread_id 'track_button',
         ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,                
         t.thread_subject, t.forum_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_postcount, t.thread_views, t.thread_locked,
@@ -68,12 +69,7 @@ $query = "SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.
         LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
         WHERE tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND $time_sql ".groupaccess('tf.forum_access')."
         GROUP BY tn.thread_id
-        ORDER BY tn.notify_datestamp DESC";
-
-$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
-    array(
-        'count_query' => $count_query,
-        'query'       => $query,
+        ORDER BY tn.notify_datestamp DESC"
     )
 );
 
