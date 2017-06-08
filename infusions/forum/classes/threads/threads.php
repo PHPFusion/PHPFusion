@@ -83,6 +83,7 @@ class ForumThreads extends ForumServer {
         ".(isset($filter['condition']) ? $filter['condition'] : '');
 
         if (!empty($filter['debug'])) print_p($thread_query);
+
         $thread_result = dbquery($thread_query);
 
         $thread_rows = dbrows($thread_result);

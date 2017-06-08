@@ -28,9 +28,9 @@ if (!function_exists('render_forum')) {
             forum_viewforum($info);
         } else {
             if (isset($_GET['section']) && $_GET['section'] == 'participated') {
-                render_participated($info);
+                render_section($info);
             } elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-                render_laft($info);
+                render_section($info);
             } elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
                 render_tracked($info);
             } elseif (isset($_GET['section']) && $_GET['section'] == 'unanswered') {
@@ -787,19 +787,17 @@ if (!function_exists("render_participated")) {
     }
 }
 
-if (!function_exists("render_laft")) {
-    function render_laft($info) {
+if (!function_exists("render_section")) {
+    function render_section($info) {
         $locale = fusion_get_locale();
         echo render_breadcrumbs();
         ?>
         <div class='list-group-item'>
-
             <div class='clearfix' style='height:60px;'>
                 <div class='pull-left'><?php echo $info['threads_time_filter']; ?></div>
-                <?php if ($info['threads']['pagenav']) : ?>
+                <?php if (!empty($info['threads']['pagenav'])) : ?>
                     <div class='pull-right center-y'><?php echo $info['threads']['pagenav'] ?></div> <?php endif; ?>
             </div>
-
             <hr/>
             <table class='table table-responsive clear'>
                 <thead>
