@@ -761,31 +761,6 @@ if (!function_exists('render_thread_item')) {
     }
 }
 
-if (!function_exists("render_participated")) {
-    function render_participated($info) {
-        $locale = fusion_get_locale('', FORUM_LOCALE);
-        echo render_breadcrumbs();
-        if (!empty($info['item'])) {
-            // sort by date.
-            $last_date = '';
-            foreach ($info['item'] as $data) {
-                $cur_date = date('M d, Y', $data['post_datestamp']);
-                if ($cur_date != $last_date) {
-                    $last_date = $cur_date;
-                    $title = "<div class='post_title m-b-10'>".$locale['forum_0525']." ".$last_date."</div>\n";
-                    echo $title;
-                }
-                render_thread_item($data);
-            }
-            if ($info['post_rows'] > 20) {
-                echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3, FUSION_REQUEST, "rowstart")."\n</div>\n";
-            }
-        } else {
-            echo "<div class='well text-center'>".$locale['global_054']."</div>\n";
-        }
-    }
-}
-
 if (!function_exists("render_section")) {
     function render_section($info) {
         $locale = fusion_get_locale();
@@ -823,14 +798,19 @@ if (!function_exists("render_section")) {
                 </tr>
                 <tbody class='text-smaller'>
                 <?php
-                if (!empty($info['threads']['item'])) {
-                    $i = 0;
-                    foreach ($info['threads']['item'] as $data) {
-                        render_thread_item($data);
-                        $i++;
+                if (!empty($info['threads'])) {
+                    if (!empty($info['threads']['sticky'])) {
+                        foreach ($info['threads']['sticky'] as $cdata) {
+                            render_thread_item($cdata);
+                        }
+                    }
+                    if (!empty($info['threads']['item'])) {
+                        foreach ($info['threads']['item'] as $cdata) {
+                            render_thread_item($cdata);
+                        }
                     }
                 } else {
-                    echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
+                    echo "<tr><td colspan='7' class='text-center'>".$locale['forum_0269']."</td></tr>\n";
                 }
                 ?>
             </table>

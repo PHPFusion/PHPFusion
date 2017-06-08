@@ -49,7 +49,8 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
         count(t.thread_id) 'thread_max_rows'                 
         FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id                        
-        WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql",
+        WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql GROUP BY t.thread_id",
+
         'query' => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.forum_id, t.thread_postcount,
             t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, 
             tf.forum_type, tf.forum_name, tf.forum_cat
@@ -57,7 +58,7 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
             INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=t.forum_id
             WHERE t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $time_sql ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
             GROUP BY t.thread_id
-            ORDER BY t.thread_lastpost DESC",
+            ORDER BY t.thread_sticky DESC, t.thread_lastpost DESC",
     )
 );
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);

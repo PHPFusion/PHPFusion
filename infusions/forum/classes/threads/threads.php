@@ -69,47 +69,32 @@ class ForumThreads extends ForumServer {
          *
          */
         $thread_query = $filter['count_query'] ?: "
-        SELECT
-        count(t.thread_id) 'thread_max_rows',
-        count(a.attach_id) 'attach_count', 
+        SELECT count(a.attach_id) 'attach_count', 
         a.attach_id
-        FROM ".DB_FORUM_THREADS." t
-        INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id        
-        LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
+        FROM ".DB_FORUMS." tf 
+        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id                
+        LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
-        WHERE ".($forum_id ? " t.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-        ".(isset($filter['condition']) ? $filter['condition'] : '');
+        WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+        ".(isset($filter['condition']) ? $filter['condition'] : '')." GROUP BY t.thread_id";
 
         if (!empty($filter['debug'])) print_p($thread_query);
 
         $thread_result = dbquery($thread_query);
-
-        $thread_rows = dbrows($thread_result);
-
-        $count = array(
-            "thread_max_rows" => 0,
-            "attach_image"    => 0,
-            "attach_files"    => 0,
-        );
+        $info['thread_max_rows'] = dbrows($thread_result);
 
         $info['item'][$forum_id]['forum_threadcount'] = 0;
-        $info['item'][$forum_id]['forum_threadcount_word'] = format_word($count['thread_max_rows'], $locale['fmt_thread']);
-
-        if ($thread_rows > 0) {
-            $count = dbarray($thread_result);
-            $info['item'][$forum_id]['forum_threadcount'] = 0;
-            $info['item'][$forum_id]['forum_threadcount_word'] = format_word($count['thread_max_rows'], $locale['fmt_thread']);
-        }
-
-        $info['thread_max_rows'] = $count['thread_max_rows'];
+        $info['item'][$forum_id]['forum_threadcount_word'] = format_word($info['thread_max_rows'], $locale['fmt_thread']);
 
         if ($info['thread_max_rows']) {
+
             $info['threads']['pagenav'] = '';
             $info['threads']['pagenav2'] = '';
+
             // anti-XSS filtered rowstart
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $count['thread_max_rows'] ? $_GET['rowstart'] : 0;
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['thread_max_rows'] ? $_GET['rowstart'] : 0;
 
             $thread_query = $filter['query'] ?: "
             SELECT t.*, tf.forum_type, tf.forum_name, tf.forum_cat,
@@ -128,15 +113,17 @@ class ForumThreads extends ForumServer {
             ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."             
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '');
+
             $thread_query .= " LIMIT ".intval($_GET['rowstart']).", ".$forum_settings['threads_per_page'];
+
             if (!empty($filter['debug'])) print_p($thread_query);
 
             $cthread_result = dbquery($thread_query);
+            $rows = dbrows($cthread_result);
 
-            if (dbrows($cthread_result)) {
+            if ($rows) {
 
                 while ($threads = dbarray($cthread_result)) {
-
                     if (!isset($threads['attach_count'])) {
                         $threads['attach_count'] = dbcount("(attach_id)", DB_FORUM_ATTACHMENTS, "thread_id=:current_thread", [':current_thread' => $threads['thread_id']]);
                     }
@@ -221,11 +208,8 @@ class ForumThreads extends ForumServer {
                             'avatar'       => display_avatar($lastuser, '35px', '', FALSE, ''),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time'         => $threads['thread_lastpost'],
-                            //'post_message' => parseubb(parsesmileys($threads['post_message'])), // Very slow
                             "formatted"    => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
-																				<div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'],
-                                    $lastuser['user_name'],
-                                    $lastuser['user_status'])."</span><br/>
+																				<div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
 																				".timer($threads['thread_lastpost'])."
 																				</div>"
                         ),
@@ -239,7 +223,7 @@ class ForumThreads extends ForumServer {
                 }
             }
 
-            if ($info['thread_max_rows'] > $forum_settings['threads_per_page']) {
+            if ($info['thread_max_rows'] > $rows) {
 
                 $info['threads']['pagenav'] = makepagenav($_GET['rowstart'],
                     $forum_settings['threads_per_page'],
