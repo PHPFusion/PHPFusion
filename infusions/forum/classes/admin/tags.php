@@ -240,7 +240,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         } else {
 
-            $html = "<div class='well text-center'>".self::$locale['437']."</div>\n";
+            $html = "<div class='well text-center'>".self::$locale['forum_tag_0209']."</div>\n";
 
         }
         return $html;

@@ -22,15 +22,15 @@ use PHPFusion\Forums\ForumServer;
 class ForumAdminRanks extends ForumAdminInterface {
 
     protected $data = array(
-        'rank_id' => 0,
-        'rank_title' => '',
-        'rank_image' => '',
-        'rank_posts' => 0,
-        'rank_type' => 2,
-        'rank_apply_normal' => '',
+        'rank_id'            => 0,
+        'rank_title'         => '',
+        'rank_image'         => '',
+        'rank_posts'         => 0,
+        'rank_type'          => 2,
+        'rank_apply_normal'  => '',
         'rank_apply_special' => '',
-        'rank_apply' => '',
-        'rank_language' => LANGUAGE,
+        'rank_apply'         => '',
+        'rank_language'      => LANGUAGE,
     );
 
     public function viewRanksAdmin() {
