@@ -209,6 +209,7 @@ if (!function_exists('render_post_item')) {
             </div>
             <div class='overflow-hide'>
                 {%vote_form%}
+                <div class='post_profiles'>{%user_profiles%}</div>
                 <div class='overflow-hide'>\n
                     <div class='post_message'>{%post_message%}</div>
                     {%user_signature%}

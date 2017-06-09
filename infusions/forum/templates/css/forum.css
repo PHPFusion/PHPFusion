@@ -181,6 +181,10 @@ PHP-Fusion 9 Core Template Forum CSS
 .post_items .post_stats {
 	font-size:12px;
 }
+
+.post_items .post_profiles {
+	float: right;
+}
 .forum_sig {
 	display: block;
 	opacity: 0.8;

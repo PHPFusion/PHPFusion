@@ -36,6 +36,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         pageAccess('F');
         $locale = fusion_get_locale();
 
+
         if (isset($_POST['recount_user_post'])) {
             $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
             if (dbrows($result)) {
@@ -71,6 +72,26 @@ class ForumAdminSettings extends ForumAdminInterface {
 
     private function display_uf_settings() {
         $locale = fusion_get_locale();
+        $_enabled = $this->get_forum_settings('forum_enabled_userfields');
+
+        if (isset($_POST['save_forum_uf'])) {
+            $current_uf = form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled');
+            if (\defender::safe()) {
+                if ($_enabled === NULL) {
+                    $result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_enabled_userfields', :current_uf, 'forum')", [':current_uf' => $current_uf]);
+                } else {
+                    $result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:current_uf WHERE settings_name='forum_enabled_userfields' AND settings_inf='forum'", [':current_uf' => $current_uf]);
+                }
+                if (dbrows($result)) {
+                    addNotice('success', self::$locale['900']);
+                    redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs&ref=ufields');
+                }
+            }
+        }
+        if (!empty($_enabled)) {
+            $enabled_uf = explode(",", $_enabled);
+            $enabled_uf = array_flip($enabled_uf);
+        }
         ?>
         <div class='well spacer-sm'>
             <strong>Enable user fields in detailed forum posts.</strong> User Fields are custom user information that can be managed in the <a href='<?php echo ADMIN.'user_fields.php'.fusion_get_aidlink() ?>'>user fields administration</a>.
@@ -84,7 +105,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         <hr/>
         <?php
         // Check how many user fields is on.
-        $ufc_select = "SELECT field_cat_id, field_cat_name FROM ".DB_USER_FIELD_CATS." ORDER BY field_cat_order ASC";
+        $ufc_select = "SELECT field_cat_id, field_cat_name FROM ".DB_USER_FIELD_CATS." WHERE field_cat_db='users' AND field_cat_index='user_id' ORDER BY field_cat_order ASC";
         $uf_select = "SELECT field_id, field_title, field_name, field_cat, field_type FROM ".DB_USER_FIELDS." WHERE field_cat=:field_cat ORDER BY field_order ASC";
         $ufc_query = dbquery($ufc_select);
         if (dbrows($ufc_query)) {
@@ -121,7 +142,8 @@ class ForumAdminSettings extends ForumAdminInterface {
                                             } else {
                                                 $current_field_title = QuantumFields::parse_label($cdata['field_title']);
                                             }
-                                            echo form_checkbox('uf_field_enabled[]', $current_field_title, '0', ['input_id' => 'uf_'.$cdata['field_id'], 'reverse_label' => TRUE, 'value' => $cdata['field_name'], 'class' => 'spacer-sm']);
+                                            $checked = (isset($enabled_uf[$cdata['field_name']]) ? $cdata['field_name'] : '');
+                                            echo form_checkbox('uf_field_enabled[]', $current_field_title, $checked, ['input_id' => 'uf_'.$cdata['field_id'], 'reverse_label' => TRUE, 'value' => $cdata['field_name'], 'class' => 'spacer-sm']);
                                         }
                                     } else {
                                         echo "There are no user fields defined in this category.";
