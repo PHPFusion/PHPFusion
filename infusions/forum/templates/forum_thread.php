@@ -39,6 +39,7 @@ if (!function_exists('render_thread')) {
             $filter_dropdown .= "</ul>\n";
         }
         $post_items = '';
+
         if (!empty($pdata)) {
             foreach ($pdata as $post_id => $post_data) {
                 $post_items .= "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
@@ -176,7 +177,6 @@ if (!function_exists('render_post_item')) {
         $aidlink = fusion_get_aidlink();
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
-        ob_start();
 
         $template = "
         {%post_html_comment%}
@@ -209,6 +209,7 @@ if (!function_exists('render_post_item')) {
             </div>
             <div class='overflow-hide'>
                 {%vote_form%}
+                {%user_profiles%}
                 <div class='overflow-hide'>\n
                     <div class='post_message'>{%post_message%}</div>
                     {%user_signature%}
@@ -236,13 +237,34 @@ if (!function_exists('render_post_item')) {
             }
         }
 
+        //$callback = implode('', array_map(function($array) { return "<li><div class='col-xs-12 col-sm-3 strong'>".$array['title']."</div><div class='col-xs-12 col-sm-9'>".$array['value']."</div></li>";}, $data['user_profiles']));        if (!empty($callback)) {
+        $user_profiles = '';
+        if (!empty($data['user_profiles'])) {
+            $temp_name = '';
+            foreach ($data['user_profiles'] as $attr) {
+                if ($temp_name !== $attr['field_cat_name']) {
+                    $user_profiles .= "<ul class='post_profiles'>\n";
+                    $user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
+                }
+                $user_profiles .= "<li class='row'>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-3 strong'>\n".$attr['title'].":\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-9'>\n".strip_tags($attr['value'])."\n</div>\n";
+                $user_profiles .= "</li>\n";
+                if ($temp_name !== $attr['field_cat_name']) {
+                    $user_profiles .= "</ul>\n";
+                }
+                $temp_name = $attr['field_cat_name'];
+            }
+        }
+
+
         return strtr($template,
             [
-                '{%post_html_comment%}'  => "<!--forum_thread_prepost_".$data['post_id']."-->",
-                '{%post_date%}'          => $data['post_shortdate'],
-                '{%item_marker_id%}'     => $data['marker']['id'],
-                '{%user_avatar%}'        => $data['user_avatar_image'],
-                '{%user_avatar_rank%}'   => ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>\n" : ''),
+                '{%post_html_comment%}' => "<!--forum_thread_prepost_".$data['post_id']."-->",
+                '{%post_date%}'         => $data['post_shortdate'],
+                '{%item_marker_id%}'    => $data['marker']['id'],
+                '{%user_avatar%}'       => $data['user_avatar_image'],
+                '{%user_avatar_rank%}'  => ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>\n" : ''),
                 '{%user_rank%}'          => ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : ''),
                 '{%user_profile_link%}'  => $data['user_profile_link'],
                 '{%user_online_status%}' => "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>",
@@ -263,12 +285,12 @@ if (!function_exists('render_post_item')) {
                 '{%li_message%}'         => ($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : ""),
                 '{%li_web%}'             => ($data['user_web']['link'] ? "<li><span>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</span></li>\n" : ""),
                 '{%li_print%}'           => "<li><a href='".$data['print']['link']."' target='_blank' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n",
-                '{%li_quote%}'           => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : ''),
-                '{%li_edit%}'            => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),
-                '{%li_admin%}'           => $li_admin,
-                '{%vote_form%}'          => ($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox'].$data['post_answer_check']."</div>" : ''),
+                '{%li_quote%}'          => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : ''),
+                '{%li_edit%}'           => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),
+                '{%li_admin%}'          => $li_admin,
+                '{%vote_form%}'         => ($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox'].$data['post_answer_check']."</div>" : ''),
+                '{%user_profiles%}'     => $user_profiles ?: '',
             ]
         );
-
     }
 }

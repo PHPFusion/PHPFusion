@@ -181,6 +181,27 @@ PHP-Fusion 9 Core Template Forum CSS
 .post_items .post_stats {
 	font-size:12px;
 }
+
+.post_items .post_profiles {
+	float: right;
+	display: inline-block;
+	width: 30%;
+	list-style: none;
+	padding: 15px;
+	background: #f7f7f7;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.post_items .post_profiles > .title {
+	text-transform: uppercase;
+	color: #aaa;
+	font-weight: 600;
+	font-size: 80%;
+	margin-bottom: 10px;
+}
+
 .forum_sig {
 	display: block;
 	opacity: 0.8;

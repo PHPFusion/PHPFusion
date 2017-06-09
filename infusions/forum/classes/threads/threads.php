@@ -189,13 +189,13 @@ class ForumThreads extends ForumServer {
                     );
 
                     $threads += array(
-                        "thread_link"    => array(
+                        "thread_link"         => array(
                             "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'],
                             "title" => $threads['thread_subject']
                         ),
-                        "forum_type"     => $threads['forum_type'],
-                        "thread_pages"   => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
-                        "thread_icons"   => array(
+                        "forum_type"          => $threads['forum_type'],
+                        "thread_pages"        => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
+                        "thread_icons"        => array(
                             'lock'   => $threads['thread_locked'] ? "<i class='".self::get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
                             'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
                             'poll'   => $threads['thread_poll'] ? "<i class='".self::get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
@@ -206,12 +206,12 @@ class ForumThreads extends ForumServer {
                         ),
                         "thread_starter_text" => $locale['forum_0006'].' '.$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
                         //"thread_starter"      => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>", // Very slow
-                        "thread_starter" => array(
+                        "thread_starter"      => array(
                             'author'       => $author,
                             'profile_link' => profile_link($author['user_id'], $author['user_name'], $author['user_status']),
                             'avatar'       => display_avatar($author, '20px', '', FALSE, 'img-rounded'),
                         ),
-                        "thread_last"    => array(
+                        "thread_last"         => array(
                             'user'         => $lastuser,
                             'avatar'       => display_avatar($lastuser, '35px', '', FALSE, ''),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
@@ -346,7 +346,6 @@ class ForumThreads extends ForumServer {
             /**
              * Generate User Tracked Buttons
              */
-
             $this->thread_info['buttons']['notify'] = [];
 
             if ($this->getThreadPermission("can_access")) {
@@ -760,11 +759,8 @@ class ForumThreads extends ForumServer {
 
         $locale = fusion_get_locale();
 
-        $user_sig_module = column_exists(DB_USERS, 'user_sig');
-
-        $user_web_module = column_exists(DB_USERS, 'user_web');
-
         $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
+
         switch ($this->thread_info['sort_post']) {
             case 'oldest':
                 $sortCol = 'post_datestamp ASC';
@@ -786,22 +782,18 @@ class ForumThreads extends ForumServer {
         require_once INCLUDES."mimetypes_include.php";
         // post query
         $result = dbquery("
-					SELECT p.*, t.thread_id,
-					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups,
-					u.user_joined, u.user_lastvisit, u.user_ip, ".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
-					u2.user_name AS edit_name, u2.user_status AS edit_status,
-					count(a1.attach_id) 'attach_image_count',
-					count(a2.attach_id) 'attach_files_count',
+					SELECT p.*, t.thread_id,					
+					u2.user_name AS edit_name, u2.user_status AS edit_status,					
 					SUM(v.vote_points) 'vote_points',
-					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points'
+					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points',
+					COUNT(a.attach_id) 'attach_count'
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id
 					LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".fusion_get_userdata('user_id')."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
-					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.post_id = p.post_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
-					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.post_id = p.post_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
+					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id AND a.post_id=p.post_id
 					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0'
 					".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".intval($this->thread_info['post_firstpost'])."'" : '')."
 					GROUP by p.post_id
@@ -842,7 +834,73 @@ class ForumThreads extends ForumServer {
 
             $i = 1;
 
+            // Cache the user fields in the system
+            $enabled_uf_fields = array();
+            $module = array();
+            if (!empty($forum_settings['forum_enabled_userfields'])) {
+                $enabled_uf_fields = explode(',', $forum_settings['forum_enabled_userfields']);
+                $uf_result = dbquery("
+                  SELECT ufc.field_cat_name, fd.field_title, fd.field_name, fd.field_type 
+                  FROM ".DB_USER_FIELD_CATS." ufc
+                  INNER JOIN ".DB_USER_FIELDS." fd ON fd.field_cat=ufc.field_cat_id
+                  WHERE field_cat_db = 'users' AND field_cat_index='user_id' ORDER BY ufc.field_cat_name ASC                 
+                ");
+                if (dbrows($uf_result)) {
+                    while ($ufData = dbarray($uf_result)) {
+                        $module[$ufData['field_name']] = $ufData;
+                    }
+                }
+            }
+
             while ($pdata = dbarray($result)) {
+
+                $user = fusion_get_user($pdata['post_author']);
+                if (!empty($user)) {
+                    $author = [
+                        'user_id'        => $user['user_id'],
+                        'user_name'      => $user['user_name'],
+                        'user_status'    => $user['user_status'],
+                        'user_avatar'    => $user['user_avatar'],
+                        'user_level'     => $user['user_level'],
+                        'user_posts'     => $user['user_posts'],
+                        'user_groups'    => $user['user_groups'],
+                        'user_joined'    => $user['user_joined'],
+                        'user_lastvisit' => $user['user_lastvisit'],
+                        'user_ip'        => $user['user_ip']
+                    ];
+                    /*
+                     * Build ['user_profiles'] info
+                     */
+                    if (!empty($enabled_uf_fields)) {
+                        foreach ($module as $field_name => $fieldAttr) {
+                            $field_value = $user[$field_name];
+                            if (!empty($field_value)) {
+                                if ($fieldAttr['field_type'] == 'file') {
+                                    $module_file_path = INCLUDES.'user_fields/'.$fieldAttr['field_name'].'_include.php';
+                                    $module_locale_file_path = LOCALE.LOCALESET.'user_fields/'.$fieldAttr['field_name'].'.php';
+                                    if (file_exists($module_file_path) && file_exists($module_locale_file_path)) {
+                                        $profile_method = 'display';
+                                        $user_fields = array();
+                                        include($module_locale_file_path);
+                                        include($module_file_path);
+                                        if (!empty($user_fields) && is_array($user_fields)) {
+                                            $user_fields['field_cat_name'] = $fieldAttr['field_cat_name'];
+                                            $pdata['user_profiles'][$field_name] = $user_fields;
+                                        }
+                                    }
+                                } else {
+                                    // this is just normal type
+                                    $pdata['user_profiles'][$field_name] = array(
+                                        'field_cat_name' => $fieldAttr['field_cat_name'],
+                                        'title'          => $field_name['field_name'],
+                                        'value'          => $field_value
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    $pdata += $author;
+                }
 
                 // Format Post Message
                 $post_message = empty($pdata['post_smileys']) ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
@@ -862,7 +920,7 @@ class ForumThreads extends ForumServer {
 
                 // Post Attachments
                 $post_attachments = '';
-                if ($pdata['attach_files_count'] || $pdata['attach_image_count']) {
+                if ($pdata['attach_count']) {
                     if ($this->getThreadPermission("can_download_attach")) {
                         $attachResult = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($pdata['post_id'])."'");
                         if (dbrows($attachResult) > 0) {
@@ -1154,7 +1212,8 @@ class ForumThreads extends ForumServer {
     /**
      * New Status
      */
-    public function set_thread_visitor() {
+    public
+    function set_thread_visitor() {
         if (iMEMBER) {
             $userdata = fusion_get_userdata();
             $thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];
