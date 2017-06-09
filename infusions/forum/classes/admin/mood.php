@@ -82,8 +82,6 @@ class ForumAdminMood extends ForumAdminInterface {
             redirect(clean_request('', array('mood_id', 'ref'), FALSE));
         }
 
-        $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
-
         $this->post_Mood();
 
         $groups = fusion_get_groups();
@@ -106,39 +104,38 @@ class ForumAdminMood extends ForumAdminInterface {
         echo openform("mood_form", "POST", $form_action).
             form_hidden('mood_id', '', $this->data['mood_id']).
 
-            \PHPFusion\QuantumFields::quantum_multilocale_fields('mood_name', $locale['forum_094'], $this->data['mood_name'],
-                      ['required' => TRUE, 'inline' => TRUE, 'placeholder' => $locale['forum_096']]).
+            \PHPFusion\QuantumFields::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
+                      ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_096']]).
 
-            \PHPFusion\QuantumFields::quantum_multilocale_fields('mood_description', $locale['forum_095'], $this->data['mood_description'],
-                      ['required' => TRUE, 'inline' => TRUE, 'placeholder' => $locale['forum_097'], 'ext_tip' => $locale['forum_098']]).
+            \PHPFusion\QuantumFields::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
+                      ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
 
-            form_text('mood_icon', $locale['forum_099'], $this->data['mood_icon'],
+            form_text('mood_icon', self::$locale['forum_099'], $this->data['mood_icon'],
                       ['inline' => TRUE, 'width' => '350px', 'placeholder' => 'fa fa-thumbs-up']).
 
-            form_checkbox('mood_status', $locale['forum_100'], $this->data['mood_status'],
+            form_checkbox('mood_status', self::$locale['forum_100'], $this->data['mood_status'],
                       ['options' => [
-                           $locale['forum_101'],
-                           $locale['forum_102']
+                           self::$locale['forum_101'],
+                           self::$locale['forum_102']
                            ],
                        'inline' => TRUE,
                        'type' => 'radio'
                       ]).
 
-            form_checkbox('mood_notify', $locale['forum_103'], $this->data['mood_notify'],
+            form_checkbox('mood_notify', self::$locale['forum_103'], $this->data['mood_notify'],
                       ['options' => $groups, 'inline' => TRUE, 'type' => 'radio']).
 
-            form_checkbox('mood_access', $locale['forum_104'], $this->data['mood_access'],
+            form_checkbox('mood_access', self::$locale['forum_104'], $this->data['mood_access'],
                       ['options' => $groups, 'inline' => TRUE, 'type' => 'radio']);
 
-            echo form_button('save_mood', !empty($this->data['mood_id']) ? $locale['forum_106'] : $locale['forum_105'], $locale['save_changes'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
-            echo form_button('cancel_mood', $locale['cancel'], $locale['cancel'], array('icon' => 'fa fa-times'));
+            echo form_button('save_mood', !empty($this->data['mood_id']) ? self::$locale['forum_106'] : self::$locale['forum_105'], self::$locale['save_changes'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
+            echo form_button('cancel_mood', self::$locale['cancel'], self::$locale['cancel'], array('icon' => 'fa fa-times'));
             echo closeform();
     }
     /**
      * Post execution of forum mood
      */
     protected function post_Mood() {
-        $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
 
         if (isset($_POST['save_mood'])) {
             $this->data = [
@@ -154,17 +151,17 @@ class ForumAdminMood extends ForumAdminInterface {
             if (\defender::safe()) {
                 if (!empty($this->data['mood_id'])) {
                     dbquery_insert(DB_FORUM_MOODS, $this->data, 'update');
-                    addNotice('success', $locale['forum_notice_16']);
+                    addNotice('success', self::$locale['forum_notice_16']);
                 } else {
                     dbquery_insert(DB_FORUM_MOODS, $this->data, 'save');
-                    addNotice('success', $locale['forum_notice_15']);
+                    addNotice('success', self::$locale['forum_notice_15']);
                 }
                 redirect(clean_request('', array('mood_id', 'ref'), FALSE));
             }
         }
 
         if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-             addNotice('success', $locale['forum_notice_14']);
+             addNotice('success', self::$locale['forum_notice_14']);
              dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['delete'])."'");
              redirect(clean_request("section=fmd", array("delete", "ref"), FALSE));
         }
@@ -173,8 +170,6 @@ class ForumAdminMood extends ForumAdminInterface {
      * Displays forum mood listing
      */
     private function displayMoodList() {
-
-        $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
 
         $mood_max_count = dbcount("(mood_id)", DB_FORUM_MOODS, "");
 
@@ -197,13 +192,13 @@ class ForumAdminMood extends ForumAdminInterface {
             <table class="table table-responsive table-striped table-hover m-t-20 m-b-20">
                 <thead>
                 <tr>
-                    <td class="col-xs-2"><?php echo $locale['forum_107'] ?></td>
-                    <td class="col-xs-2"><?php echo $locale['forum_108'] ?></td>
-                    <td><?php echo $locale['forum_109'] ?></td>
-                    <td><?php echo $locale['forum_115'] ?></td>
-                    <td><?php echo $locale['forum_110'] ?></td>
-                    <td><?php echo $locale['forum_111'] ?></td>
-                    <td><?php echo $locale['forum_112'] ?></td>
+                    <td class="col-xs-2"><?php echo self::$locale['forum_107'] ?></td>
+                    <td class="col-xs-2"><?php echo self::$locale['forum_108'] ?></td>
+                    <td><?php echo self::$locale['forum_109'] ?></td>
+                    <td><?php echo self::$locale['forum_115'] ?></td>
+                    <td><?php echo self::$locale['forum_110'] ?></td>
+                    <td><?php echo self::$locale['forum_111'] ?></td>
+                    <td><?php echo self::$locale['forum_112'] ?></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -218,7 +213,7 @@ class ForumAdminMood extends ForumAdminInterface {
                                 <?php echo QuantumFields::parse_label($data['mood_name']) ?>
                             </a>
                         </td>
-                        <td><?php echo sprintf($locale['forum_113'],
+                        <td><?php echo sprintf(self::$locale['forum_113'],
                                                ucfirst(fusion_get_userdata("user_name")),
                                                QuantumFields::parse_label($data['mood_description'])) ?>
                         </td>
@@ -227,12 +222,12 @@ class ForumAdminMood extends ForumAdminInterface {
                                 <i class="<?php echo $data['mood_icon'] ?>"></i>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo format_word($data['mood_count'], $locale['fmt_post']) ?></td>
+                        <td><?php echo format_word($data['mood_count'], self::$locale['fmt_post']) ?></td>
                         <td><?php echo getgroupname($data['mood_notify']) ?></td>
                         <td><?php echo getgroupname($data['mood_access']) ?></td>
                         <td>
-                            <a href="<?php echo $edit_link ?>"><?php echo $locale['edit'] ?></a> -
-                            <a href="<?php echo $delete_link ?>"><?php echo $locale['delete'] ?></a>
+                            <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> -
+                            <a href="<?php echo $delete_link ?>"><?php echo self::$locale['delete'] ?></a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
@@ -245,7 +240,7 @@ class ForumAdminMood extends ForumAdminInterface {
         } ?>
 
         <?php else : ?>
-            <div class="well text-center"><?php echo $locale['forum_114'] ?></div>
+            <div class="well text-center"><?php echo self::$locale['forum_114'] ?></div>
         <?php endif;
     }
 }

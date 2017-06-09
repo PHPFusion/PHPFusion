@@ -651,7 +651,6 @@ class ForumAdminView extends ForumAdminInterface {
             }
         }
     }
-
     /**
      * Recalculate users post count
      *
@@ -681,6 +680,38 @@ class ForumAdminView extends ForumAdminInterface {
 
     public function display_forum_admin() {
         $aidlink = fusion_get_aidlink();
+
+        if (isset($_GET['section'])) {
+
+            switch ($_GET['section']) {
+                case 'fr':
+        			BreadCrumbs::getInstance()->addBreadCrumb([
+                           'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr',
+                           'title' => self::$locale['forum_rank_404']
+                       ]);
+                    break;
+                case 'ft':
+        			BreadCrumbs::getInstance()->addBreadCrumb([
+                           'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=ft',
+                           'title' => self::$locale['forum_tag_0100']
+                       ]);
+                    break;
+                case 'fmd':
+        			BreadCrumbs::getInstance()->addBreadCrumb([
+                           'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fmd',
+                           'title' => self::$locale['forum_admin_004']
+                       ]);
+                    break;
+                case 'fs':
+        			BreadCrumbs::getInstance()->addBreadCrumb([
+        			       'link'  => ADMIN.'settings_forum.php'.$aidlink,
+        			       'title' => self::$locale['forum_settings']
+        			]);
+                    break;
+                default :
+            }
+
+        }
 
         opentable(self::$locale['forum_root']);
 
@@ -722,10 +753,6 @@ class ForumAdminView extends ForumAdminInterface {
 
         } else {
             pageAccess('F');
-            BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => FORUM.'admin/forums.php'.$aidlink,
-                'title' => self::$locale['forum_admin_000']
-            ]);
             $this->display_forum_index();
         }
         echo closetab();
