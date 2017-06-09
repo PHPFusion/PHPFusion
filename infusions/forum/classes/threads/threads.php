@@ -58,7 +58,7 @@ class ForumThreads extends ForumServer {
         $forum_settings = ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
-        $lastVisited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
+        $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
         //print_p($filter);
         /**
@@ -69,10 +69,10 @@ class ForumThreads extends ForumServer {
          *
          */
         $thread_query = $filter['count_query'] ?: "
-        SELECT count(a.attach_id) 'attach_count', 
+        SELECT count(a.attach_id) 'attach_count',
         a.attach_id
-        FROM ".DB_FORUMS." tf 
-        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id                
+        FROM ".DB_FORUMS." tf
+        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id=t.thread_id AND tf.forum_id=p1.forum_id
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
@@ -101,16 +101,16 @@ class ForumThreads extends ForumServer {
             IF (n.thread_id > 0, 1 , 0) 'user_tracked',
             count(v.vote_user) 'thread_rated',
             count(pv.forum_vote_user_id) 'poll_voted',
-            count(v.post_id) AS vote_count,          
-            count(a.attach_id) AS attach_count, a.attach_id                                   
+            count(v.post_id) AS vote_count,
+            count(a.attach_id) AS attach_count, a.attach_id
             FROM ".DB_FORUM_THREADS." t
             INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
             LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'
-            LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1            
-            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id            
-            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'            
-            WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."            
-            ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."             
+            LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
+            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
+            LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'
+            WHERE ".($forum_id ? "t.forum_id='".$forum_id."' AND " : "")."t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+            ".(isset($filter['condition']) ? $filter['condition'] : '')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : '')."
             GROUP BY t.thread_id
             ".(isset($filter['order']) ? $filter['order'] : '');
 
@@ -782,8 +782,8 @@ class ForumThreads extends ForumServer {
         require_once INCLUDES."mimetypes_include.php";
         // post query
         $result = dbquery("
-					SELECT p.*, t.thread_id,					
-					u2.user_name AS edit_name, u2.user_status AS edit_status,					
+					SELECT p.*, t.thread_id,
+					u2.user_name AS edit_name, u2.user_status AS edit_status,
 					SUM(v.vote_points) 'vote_points',
 					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points',
 					COUNT(a.attach_id) 'attach_count'
@@ -840,10 +840,10 @@ class ForumThreads extends ForumServer {
             if (!empty($forum_settings['forum_enabled_userfields'])) {
                 $enabled_uf_fields = explode(',', $forum_settings['forum_enabled_userfields']);
                 $uf_result = dbquery("
-                  SELECT ufc.field_cat_name, fd.field_title, fd.field_name, fd.field_type 
+                  SELECT ufc.field_cat_name, fd.field_title, fd.field_name, fd.field_type
                   FROM ".DB_USER_FIELD_CATS." ufc
                   INNER JOIN ".DB_USER_FIELDS." fd ON fd.field_cat=ufc.field_cat_id
-                  WHERE field_cat_db = 'users' AND field_cat_index='user_id' ORDER BY ufc.field_cat_name ASC                 
+                  WHERE field_cat_db = 'users' AND field_cat_index='user_id' ORDER BY ufc.field_cat_name ASC
                 ");
                 if (dbrows($uf_result)) {
                     while ($ufData = dbarray($uf_result)) {

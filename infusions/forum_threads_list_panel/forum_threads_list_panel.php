@@ -30,11 +30,8 @@ if (!$inf_settings) {
     return;
 }
 
-global $lastvisited;
+$lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
-if (!isset($lastvisited) || !isnum($lastvisited)) {
-    $lastvisited = TIME;
-}
 $result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_lastpost, f.forum_postcount,
     f.forum_threadcount, f.forum_lastuser, f.forum_access,
     t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll,

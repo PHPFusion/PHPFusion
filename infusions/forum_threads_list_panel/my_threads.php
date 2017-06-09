@@ -28,11 +28,8 @@ $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
 add_to_title($locale['global_200'].$locale['global_041']);
-global $lastvisited;
 
-if (!isset($lastvisited) || !isnum($lastvisited)) {
-    $lastvisited = time();
-}
+$lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
 $rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_FORUM_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
