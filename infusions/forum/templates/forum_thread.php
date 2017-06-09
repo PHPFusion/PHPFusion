@@ -247,8 +247,8 @@ if (!function_exists('render_post_item')) {
                     $user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
                 }
                 $user_profiles .= "<li class='row'>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-3 strong'>\n".$attr['title'].":\n</div>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-9'>\n".strip_tags($attr['value'])."\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
                 $user_profiles .= "</li>\n";
                 if ($temp_name !== $attr['field_cat_name']) {
                     $user_profiles .= "</ul>\n";
@@ -289,7 +289,7 @@ if (!function_exists('render_post_item')) {
                 '{%li_edit%}'           => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),
                 '{%li_admin%}'          => $li_admin,
                 '{%vote_form%}'         => ($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox'].$data['post_answer_check']."</div>" : ''),
-                '{%user_profiles%}'     => $user_profiles ?: '',
+                '{%user_profiles%}'     => $user_profiles ? "<div class='post_profile_container'>$user_profiles</div>" : '',
             ]
         );
     }
