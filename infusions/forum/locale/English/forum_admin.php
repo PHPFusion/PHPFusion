@@ -144,6 +144,17 @@ $locale['forum_133'] = "Min. Points to Cast Up Vote:";
 $locale['forum_134'] = "Min. Points to Cast Down Vote:";
 $locale['forum_135'] = "Point(s)";
 $locale['forum_136'] = "Forum User Point";
+$locale['forum_137'] = "General Forum Settings";
+$locale['forum_138'] = "Forum Post Settings";
+$locale['forum_139'] = "Forum User Fields Settings";
+$locale['forum_140'] = "General Display Settings";
+$locale['forum_141'] = "Notifications";
+$locale['forum_142'] = "Post File & Image Attachments";
+$locale['forum_143'] = "Post Behaviour Configurations";
+
+$locale['forum_150'] = "<strong>Enable user fields in detailed forum posts.</strong>  User Fields are custom user information that can be managed in the [LINK]user fields administration[/LINK]";
+$locale['forum_151'] = "There are no user fields defined in this category.";
+$locale['forum_152'] = "There are no user fields category.";
 $locale['forum_admin_000'] = "Forum Management";
 $locale['forum_admin_001'] = "Forum Ranks";
 $locale['forum_admin_002'] = "Forum Tags";
