@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../../../../maincore.php";
 require_once THEMES."templates/render_functions.php";
-
+$locale = fusion_get_locale();
 $text = stripinput($_POST['text']);
 
 // filter to relative path conversion
