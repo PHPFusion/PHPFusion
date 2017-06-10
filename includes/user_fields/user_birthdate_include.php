@@ -39,11 +39,11 @@ if ($profile_method == "input") {
 // Display in profile
 } elseif ($profile_method == "display") {
     if ($field_value != "1900-01-01") {
-        $months = explode("|", fusion_get_locale('months'));
+        //$months = explode("|", fusion_get_locale('months'));
         $user_birthDate = explode("-", $field_value);
         $lastday = mktime(0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0]);
-        $month_name = $months[number_format($user_birthDate[1])];
-        $fmt = array('0' => "%Y $month_name %d", '1' => "%d $month_name %Y");
+        //$month_name = $months[number_format($user_birthDate[1])];
+        $fmt = array('0' => '%Y %B %d', '1' => '%d %B %Y');
         $fmt_lg = array("hu", "eo", "eu", "ko", "it", "si", "zh-cn", "zh-tw");
         $user_fields = array(
             'title' => $locale['uf_birthdate'],
