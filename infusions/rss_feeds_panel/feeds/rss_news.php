@@ -17,13 +17,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../../../maincore.php";
+$settings = fusion_get_settings();
+if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
+    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
+} else {
+    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/English.php");
+}
 header('Content-Type: application/rss+xml; charset='.$locale['charset'].'');
 
-if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-    include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
-} else {
-    include INFUSIONS."rss_feeds_panel/locale/English.php";
-}
 
 if (db_exists(DB_NEWS)) {
     $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".groupaccess('news_visibility').(multilang_table("NS") ? " AND news_language='".LANGUAGE."'" : "")."	ORDER BY news_datestamp DESC LIMIT 0,10");

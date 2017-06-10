@@ -22,12 +22,12 @@ if (!defined("IN_FUSION")) {
 }
 
 include INCLUDES."infusions_include.php";
-
 if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-    include INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php";
+    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
 } else {
-    include INFUSIONS."rss_feeds_panel/locale/English.php";
+    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/English.php");
 }
+
 
 add_to_head('<style type="text/css">
 .rss-button {
@@ -36,7 +36,7 @@ add_to_head('<style type="text/css">
     color: #fff !important;
     border-radius: 4px;
     margin: 3px 0;
-    display: block;    
+    display: block;
 }
 .rss-button:hover,
 .rss-button:focus {
@@ -50,27 +50,27 @@ add_to_head('<style type="text/css">
 </style>');
 
 openside($locale['rss_title']);
-if (db_exists(DB_ARTICLES)) {
+if (infusion_exists('articles')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_articles'].'</a>';
 }
 
-if (db_exists(DB_BLOG)) {
+if (infusion_exists('blog')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_blog'].'</a>';
 }
 
-if (db_exists(DB_DOWNLOADS)) {
+if (infusion_exists('downloads')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_downloads.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_downloads'].'</a>';
 }
 
-if (db_exists(DB_FORUMS)) {
+if (infusion_exists('forum')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_forums'].'</a>';
 }
 
-if (db_exists(DB_NEWS)) {
+if (infusion_exists('news')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_news.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_news'].'</a>';
 }
 
-if (db_exists(DB_WEBLINKS)) {
+if (infusion_exists('weblinks')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_weblinks'].'</a>';
 }
 closeside();
