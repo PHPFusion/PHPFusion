@@ -130,7 +130,7 @@ if (!function_exists('render_forum_main')) {
                     $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
                     if (!empty($threadTags['tags'])) : ?>
                         <!--Forum Tags-->
-                        <h4 class='spacer-sm'><strong>Filter by Tags</strong></h4>
+                        <h4 class='spacer-sm'><strong><?php echo $locale['forum_0272'] ?></strong></h4>
                         <ul class="list-group spacer-md">
                             <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
                                 <li class='list-group-item<?php echo($tag_data['tag_active'] == TRUE ? ' active' : '') ?>'>
@@ -158,7 +158,7 @@ if (!function_exists('render_forum_main')) {
                             ':not_hidden' => 0,
                         ]);
                     if (dbrows($custom_result)) : ?>
-                        <h4 class='spacer-sm'><strong>Popular Threads This Week</strong></h4>
+                        <h4 class='spacer-sm'><strong><?php echo $locale['forum_0273'] ?></strong></h4>
                         <div class='spacer-md'>
                             <?php while ($popular = dbarray($custom_result)) :
                                 $user = fusion_get_user($popular['thread_author']);

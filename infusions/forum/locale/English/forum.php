@@ -129,6 +129,8 @@ $locale['forum_0268'] = "User IP";
 $locale['forum_0269'] = "No threads found.";
 $locale['forum_0270'] = "No post found.";
 $locale['forum_0271'] = "There are no post in this thread anymore. Please return to the &lt;a href=&#039;../../infusions/forum/index.php&#039;&gt;Forum Index&lt;/a&gt;";
+$locale['forum_0272'] = "Filter by Tags";
+$locale['forum_0273'] = "Popular Threads This Week";
 $locale['forum_0301'] = "Select new forum";
 $locale['forum_0302'] = "Next";
 $locale['forum_0303'] = "Select new thread";
