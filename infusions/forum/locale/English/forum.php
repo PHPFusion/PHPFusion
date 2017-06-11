@@ -4,6 +4,7 @@ $locale['error-MP000'] = "Move posts - error";
 $locale['error-MP001'] = "New thread doesn&#039;t exist.";
 $locale['error-MP002'] = "Posts which you&#039;re marked to move do not exists or someone else already moved them.";
 
+
 $locale['forum_0000'] = "Discussion Forum";
 $locale['forum_0001'] = "Forum";
 $locale['forum_0002'] = "Threads";
@@ -334,6 +335,8 @@ $locale['forum_4108'] = "The bounty has been awarded as requested.";
 $locale['forum_4109'] = "Thread bounty not awarded";
 $locale['forum_4110'] = "Thread bounty cannot be given to yourself.";
 $locale['forum_4120'] = "There are no forum ID or thread id defined. Please define either one.";
+$locale['forum_4121'] = "There are no activity in this forum.";
+
 $locale['forum_p001'] = "1 Day";
 $locale['forum_p002'] = "2 Days";
 $locale['forum_p007'] = "1 Week";
@@ -353,5 +356,6 @@ $locale['forum_perm_rate'] = "You %s up or downvote on the post in this discussi
 $locale['forum_perm_reply'] = "You %s reply in this discussion thread.";
 $locale['forum_perm_upload'] = "You %s upload attachments in this forum.";
 $locale['forum_perm_vote_poll'] = "You %s vote on the poll in this discussion thread.";
+
 $locale['success-DP001'] = "Post removed successfully";
 $locale['success-DP002'] = "All Post deleted. Forum threads have been removed because it no longer contains any post.";
