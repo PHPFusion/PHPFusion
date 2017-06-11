@@ -1,0 +1,28 @@
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<div class='forum-header' style="background: url({%forum_bg_src%}) no-repeat; background-size:cover;">
+    <div class='banner' style='display:block; height:180px; overflow:hidden;'>
+        <h2 class='p-20 center-y text-white' style='z-index: 2'>{%title%}</h2>
+    </div>
+</div>
+<div class='spacer-sm'>
+    <div class='row'>
+        <div class='col-xs-12 col-sm-9 col-lg-9'>
+            <table class='table table-responsive clear'>
+                {%forum_content%}
+            </table>
+        </div>
+        <div class='col-xs-12 col-sm-3 col-lg-3'>
+            <div class='spacer-sm m-b-50'>
+                {%new_thread_button%}
+            </div>
+            <div class='spacer-sm'>
+                {%thread_tags%}
+            </div>
+            <div class='spacer-sm'>
+                {%popular_threads%}
+            </div>
+
+
+        </div>
+    </div>
+</div>

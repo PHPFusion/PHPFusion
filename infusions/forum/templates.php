@@ -47,136 +47,102 @@ if (!function_exists('render_forum_main')) {
      * @param int   $id - counter nth
      */
     function render_forum_main(array $info, $id = 0) {
-        require_once FORUM_CLASS."autoloader.php";
         $locale = fusion_get_locale();
-        ?>
-        <div class='spacer-sm'>
-            <?php echo render_breadcrumbs() ?>
-        </div>
-        <div class='forum-header' style="background: url(<?php echo FORUM.'images/default_forum_bg.jpg' ?>) no-repeat; background-size:cover;">
-            <div class='banner' style='display:block; height:180px; overflow:hidden;'>
-                <h2 class='p-20 center-y text-white' style='z-index: 2'><?php echo $locale['forum_0013'] ?></h2>
-            </div>
-        </div>
-        <div class='spacer-sm'>
-            <div class='row'>
-                <div class='col-xs-12 col-sm-9 col-lg-9'>
-                    <table class='table table-responsive clear'>
-                        <?php
-                        if (!empty($info['forums'][$id])) {
-                            $forums = $info['forums'][$id];
-                            $x = 1;
-                            foreach ($forums as $forum_id => $data) {
-                                if ($data['forum_type']) {
-                                    ?>
-                                    <tr>
-                                        <td style='padding-top:20px;'>
-                                            <small class='text-uppercase'>
-                                                <strong>
-                                                    <?php echo $data['forum_link']['title'] ?>
-                                                </strong>
-                                            </small>
-                                        </td>
-                                        <td style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0002'] ?></small>
-                                        </td>
-                                        <td style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0003'] ?></small>
-                                        </td>
-                                        <td class='col-xs-4' style='padding-top:20px;'>
-                                            <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0012'] ?></small>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    if (isset($info['forums'][0][$forum_id]['child'])) {
-                                        echo "<!---subforums-->";
-                                        $i = 1;
-                                        $sub_forums = $info['forums'][0][$forum_id]['child'];
-                                        foreach ($sub_forums as $sub_forum_id => $cdata) {
-                                            render_forum_item($cdata, $i);
-                                            $i++;
-                                        }
-                                    } else {
-                                        echo "<div class='well'>\n";
-                                        echo $locale['forum_0327'];
-                                        echo "</div>\n";
-                                    }
-                                    ?>
-                                    <?php
-                                } else {
-                                    echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
-                                }
-                                /*
-                                 * We no longer do this. Optimization deprecate
-                                 */
-                                /*echo "<div class='well'>";
-                                render_forum_item($data, $x);
-                                echo "</div>\n";
-                                $x++;
-                            }*/
-                            }
-                        } else {
-                            echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
+        $html = fusion_get_template(FORUM.'templates/forum_index.html');
+        $html_item = fusion_get_template(FORUM.'templates/forum_index_item.html');
+        $html_no_item = fusion_get_template(FORUM.'templates/forum_index_no_item.html');
+        $content = '';
+        if (!empty($info['forums'][$id])) {
+            $forums = $info['forums'][$id];
+            foreach ($forums as $forum_id => $data) {
+                if ($data['forum_type']) {
+                    $content .= strtr($html_item, [
+                        '{%forum_title_link%}'  => $data['forum_link']['title'],
+                        '{%threads_title%}'     => $locale['forum_0002'],
+                        '{%post_title%}'        => $locale['forum_0003'],
+                        '{%last_thread_title%}' => $locale['forum_0012'],
+                    ]);
+                    if (isset($info['forums'][0][$forum_id]['child'])) {
+                        $sub_forums = $info['forums'][0][$forum_id]['child'];
+                        $i = 1;
+                        foreach ($sub_forums as $sub_forum_id => $cdata) {
+                            $content .= fusion_get_function('render_forum_item', $cdata, $i);
+                            $i++;
                         }
-                        ?>
-                    </table>
-                </div>
-                <div class='col-xs-12 col-sm-3 col-lg-3'>
-                    <?php //print_p($info, 1) ?>
-                    <div class='spacer-sm m-b-50'>
-                        <a class='btn btn-primary btn-block' href='<?php echo $info['new_topic_link']['link'] ?>'><i class='fa fa-comment m-r-10'></i><?php echo $info['new_topic_link']['title'] ?></a>
-                    </div>
-                    <?php
-                    $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
-                    if (!empty($threadTags['tags'])) : ?>
-                        <!--Forum Tags-->
-                        <h4 class='spacer-sm'><strong><?php echo $locale['forum_0272'] ?></strong></h4>
-                        <ul class="list-group spacer-md">
-                            <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
-                                <li class='list-group-item<?php echo($tag_data['tag_active'] == TRUE ? ' active' : '') ?>'>
-                                    <a href="<?php echo $tag_data['tag_link'] ?>">
-                                        <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:<?php echo $tag_data['tag_color'] ?>"></i></div>
-                                        <div class="pull-left">
-                                            <?php echo $tag_data['tag_title'] ?>
-                                        </div>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <!--//Forum Tags-->
+                    } else {
+                        echo "<div class='well'>\n";
+                        echo $locale['forum_0327'];
+                        echo "</div>\n";
+                    }
+                }
+            }
+        } else {
+            $content = strtr($html_no_item, ['{%message%}' => $locale['forum_0328']]);
+        }
 
-                        <?php
-                    endif;
-                    // Run custom query
-                    $custom_result = dbquery("SELECT thread_id, thread_subject, thread_author, thread_postcount FROM ".DB_FORUM_THREADS."
-                        INNER JOIN ".DB_FORUMS.(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (thread_lastpost >=:one_week and thread_lastpost < :current) and thread_locked=:not_locked and thread_hidden=:not_hidden
-                        GROUP BY thread_id ORDER BY thread_postcount DESC LIMIT 10",
-                        [
-                            ':one_week'   => TIME - (7 * 24 * 3600),
-                            ':current'    => TIME,
-                            ':not_locked' => 0,
-                            ':not_hidden' => 0,
-                        ]);
-                    if (dbrows($custom_result)) : ?>
-                        <h4 class='spacer-sm'><strong><?php echo $locale['forum_0273'] ?></strong></h4>
-                        <div class='spacer-md'>
-                            <?php while ($popular = dbarray($custom_result)) :
-                                $user = fusion_get_user($popular['thread_author']);
-                                ?>
-                                <div>
-                                    <a href='<?php echo FORUM."viewthread.php?thread_id=".$popular['thread_id'] ?>'><strong><?php echo $popular['thread_subject'] ?></strong></a><br/>
-                                    <?php echo $locale['by'] ?> <?php echo profile_link($user['user_id'], $user['user_name'], $user['user_status']) ?>
-                                    <span class='text-lighter'><i class='fa fa-comment'></i> <?php echo format_word($popular['thread_postcount'], $locale['fmt_post']) ?></span>
-                                </div>
-                                <hr/>
-                            <?php endwhile; ?>
-                        </div>
-                    <?php endif; ?>
+        // HTML mixed PHP -- non standard function
+        $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
+        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id 
+        ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
+        GROUP BY t.thread_id ORDER BY t.thread_postcount DESC LIMIT 10",
+            [
+                ':one_week'   => TIME - (7 * 24 * 3600),
+                ':current'    => TIME,
+                ':not_locked' => 0,
+                ':not_hidden' => 0,
+            ]);
+        if (dbrows($custom_result)) {
+            $popular_threads = "<h4 class='spacer-sm'><strong>".$locale['forum_0273']."</strong></h4>";
+            $popular_threads .= "<div class='spacer-md'>\n";
+            while ($popular = dbarray($custom_result)) {
+                $user = fusion_get_user($popular['thread_author']);
+                $popular_threads = "
+                <div>
+                <a href='".FORUM."viewthread.php?thread_id=".$popular['thread_id']."'><strong>".$popular['thread_subject']."</strong></a><br/>
+                ".$locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status'])."
+                <span class='text-lighter'><i class='fa fa-comment'></i> ".format_word($popular['thread_postcount'], $locale['fmt_post'])."</span>
                 </div>
-            </div>
-        </div>
-        <?php
-        //print_p($info, true);
+                <hr/>
+                ";
+            }
+            $popular_threads .= "</div>\n";
+        }
+
+        echo strtr($html, [
+            '{%breadcrumb%}'        => render_breadcrumbs(),
+            '{%forum_bg_src%}'      => FORUM.'images/default_forum_bg.jpg',
+            '{%title%}'             => $locale['forum_0013'],
+            '{%new_thread_button%}' => "<a class='btn btn-primary btn-block' href='".$info['new_topic_link']['link']."'><i class='fa fa-comment m-r-10'></i>".$info['new_topic_link']['title']."</a>",
+            '{%forum_content%}'     => $content,
+            '{%thread_tags%}'       => fusion_get_function('render_thread_tags'),
+            '{%popular_threads%}'   => $popular_threads
+        ]);
+    }
+}
+
+if (!function_exists('render_thread_tags')) {
+    function render_thread_tags() {
+        $locale = fusion_get_locale();
+        $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
+        $html_tags = fusion_get_template(FORUM.'templates/forum_index_thread_tags.html');
+        $html_tags_item = fusion_get_template(FORUM.'templates/forum_index_thread_tags_item.html');
+        $tags_item = '';
+        if (!empty($threadTags['tags'])) {
+            foreach ($threadTags['tags'] as $tag_id => $tag_data) {
+                $tags_item .= strtr($html_tags_item, [
+                    '{%active_class%}' => ($tag_data['tag_active'] == TRUE ? ' active' : ''),
+                    '{%tag_link%}'     => $tag_data['tag_link'],
+                    '{%tag_color%}'    => $tag_data['tag_color'],
+                    '{%tag_title%}'    => $tag_data['tag_title'],
+                ]);
+            }
+        } else {
+            $tags_item = $locale['forum_0274'];
+        }
+        echo strtr($html_tags, [
+            '{%tags_title%}'   => $locale['forum_0272'],
+            '{%tags_content%}' => $tags_item,
+        ]);
     }
 }
 
@@ -192,12 +158,6 @@ if (!function_exists('render_forum_item')) {
      */
     function render_forum_item($data, $i) {
         $locale = fusion_get_locale();
-        /*if ($i > 0) {
-            echo "<div id='forum_".$data['forum_id']."' class='forum-container'>\n";
-        } else {
-            echo "<div id='forum_".$data['forum_id']."' class='panel panel-default'>\n";
-            echo "<div class='panel-body'>\n";
-        }*/
         ?>
         <tr>
             <td style='border-radius: 4px 0 0 4px; background: #f7f7f7; border-top:4px solid #fff; border-bottom:4px solid #fff;'>
@@ -217,7 +177,7 @@ if (!function_exists('render_forum_item')) {
             </td>
             <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
                 <?php
-                if ($data['thread_lastpost'] == 0) {
+                if (empty($data['thread_lastpost'])) {
                     echo $locale['forum_0005'];
                 } else {
                     echo "<div class='clearfix'>\n";
@@ -400,6 +360,9 @@ if (!function_exists('forum_viewforum')) {
     }
 }
 
+/**
+ * Shows forum users
+ */
 if (!function_exists('render_forum_users')) {
     function render_forum_users($info) {
         $locale = fusion_get_locale();
@@ -469,9 +432,7 @@ if (!function_exists('render_forum_activity')) {
 if (!function_exists('forum_filter')) {
     function forum_filter($info) {
         // Put into core views
-
         $locale = fusion_get_locale();
-
         // This one need to push to core.
         $selector = array(
             'today'  => $locale['forum_0212'],
@@ -811,5 +772,110 @@ if (!function_exists('render_postify')) {
         }
         echo "</div>\n";
         closetable();
+    }
+}
+
+/**
+ * Display the post reply form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
+if (!function_exists("display_forum_postform")) {
+
+    function display_forum_postform($info) {
+        $locale = fusion_get_locale();
+        $template = fusion_get_template(FORUM.'templates/forms/post.html');
+
+        $tab_title['title'][0] = $locale['forum_0602'];
+        $tab_title['id'][0] = 'postopts';
+        $tab_title['icon'][0] = '';
+        $tab_active = tab_active($tab_title, 0);
+        $tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
+        $tab_content .= "<div class='well m-t-20'>\n";
+        $tab_content .= $info['delete_field'];
+        $tab_content .= $info['sticky_field'];
+        $tab_content .= $info['notify_field'];
+        $tab_content .= $info['lock_field'];
+        $tab_content .= $info['hide_edit_field'];
+        $tab_content .= $info['smileys_field'];
+        $tab_content .= $info['signature_field'];
+        $tab_content .= "</div>\n";
+        $tab_content .= closetabbody();
+        if (!empty($info['attachment_field'])) {
+            $tab_title['title'][1] = $locale['forum_0557'];
+            $tab_title['id'][1] = 'attach_tab';
+            $tab_title['icon'][1] = '';
+            $tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
+            $tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
+            $tab_content .= closetabbody();
+        }
+
+        echo $info['openform'];
+        echo(strtr($template, [
+            '{%breadcrumb%}'              => render_breadcrumbs(),
+            '{%opentable%}'               => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'              => fusion_get_function('closetable'),
+            '{%description%}'             => $info['description'],
+            '{%forum_fields%}'            => $info['forum_field'].$info['forum_id_field'].$info['thread_id_field'],
+            '{%forum_subject_field%}'     => $info['subject_field'],
+            '{%forum_tag_field%}'         => $info['tags_field'],
+            '{%forum_message_field%}'     => $info['message_field'],
+            '{%forum_edit_reason_field%}' => $info['edit_reason_field'],
+            '{%forum_poll_form%}'         => $info['poll_form'],
+            '{%forum_post_options%}'      => opentab($tab_title, $tab_active, 'newthreadopts').$tab_content.closetab(),
+            '{$forum_post_button%}'       => $info['post_buttons'],
+            '{%display_last_posts%}'      => !empty($info['last_posts_reply']) ? $info['last_posts_reply'] : '',
+        ]));
+        echo $info['closeform'];
+    }
+}
+
+/**
+ * Display the poll creation form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
+if (!function_exists("display_forum_pollform")) {
+    function display_forum_pollform($info) {
+        $html = fusion_get_template(FORUM.'templates/forms/poll.html');
+        echo strtr($html, [
+            '{%breadcrumb%}'  => render_breadcrumbs(),
+            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'  => fusion_get_function('closetable'),
+            '{%description%}' => $info['description'],
+            '{%pollform%}'    => $info['field']['openform'].$info['field']['poll_field'].$info['field']['poll_button'].$info['field']['closeform'],
+        ]);
+    }
+}
+
+/**
+ * Display the bounty creation form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
+if (!function_exists('display_form_bountyform')) {
+    function display_forum_bountyform($info) {
+        $html = fusion_get_template(FORUM.'templates/forms/bounty.html');
+        echo strtr($html, [
+            '{%breadcrumb%}'  => render_breadcrumbs(),
+            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'  => fusion_get_function('closetable'),
+            '{%description%}' => $info['description'],
+            '{%bountyform%}'  => $info['field']['openform'].$info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button'].$info['field']['closeform'],
+        ]);
+    }
+}
+
+/**
+ * Display the Quick Reply Form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
+if (!function_exists("display_quick_reply")) {
+    function display_quick_reply($info) {
+        $html = fusion_get_template(FORUM.'templates/forms/quick_reply.html');
+
+        return strtr($html, [
+            '{%description%}'   => $info['description'],
+            '{%message_field%}' => $info['field']['message'],
+            '{%options_field%}' => $info['field']['options'],
+            '{%button%}'        => $info['field']['button'],
+        ]);
     }
 }
