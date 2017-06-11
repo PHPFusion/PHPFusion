@@ -397,63 +397,32 @@ if (!function_exists('forum_viewforum')) {
             </div>
         </div>
         <?php
-
     }
 }
 
 if (!function_exists('render_forum_users')) {
     function render_forum_users($info) {
         $locale = fusion_get_locale();
-        ?>
-        <div class='list-group-item'>
-            <?php
-            if (!empty($info['pagenav'])) {
-                ?>
-                <div class='text-right'><?php echo $info['pagenav'] ?></div>
-                <hr/>
-                <?php
+        $html = fusion_get_template(FORUM.'templates/sections/forum_users.html');
+        $html_item = fusion_get_template(FORUM.'templates/sections/forum_users_item.html');
+        $users_list = '';
+        if (!empty($info['item'])) {
+            foreach ($info['item'] as $user) {
+                $users_list .= strtr($html_item, [
+                    '{%avatar%}'        => display_avatar($user, '30px', '', '', ''),
+                    '{%profile_link%}'  => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                    '{%thread_link%}'   => "<a href='".$user['thread_link']['link']."'>".$user['thread_link']['title']."</a>",
+                    '{%activity_date%}' => showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp'])
+                ]);
             }
-            ?>
-            <table class='table table-responsive table-striped clear'>
-                <thead>
-                <tr>
-                    <th class='col-xs-2'>
-                        <small><strong><?php echo $locale['forum_0018'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0012'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0016'] ?></strong></small>
-                    </th>
-                </tr>
-                </thead>
-                <?php
-                if (!empty($info['item'])) {
-                    foreach ($info['item'] as $user) {
-                        ?>
-                        <tr>
-                            <td class='no-break'>
-                                <div class='clearfix'>
-                                    <div class='pull-left m-r-10'><?php echo display_avatar($user, '30px', '', '', '') ?></div>
-                                    <?php echo profile_link($user['user_id'], $user['user_name'], $user['user_status']) ?>
-                                </div>
-                            </td>
-                            <td>
-                                <span class='text-smaller'><a href='<?php echo $user['thread_link']['link'] ?>'><?php echo $user['thread_link']['title'] ?></a></span>
-                            </td>
-                            <td class='no-break'>
-                                <span class='text-smaller'><?php echo showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp']) ?></span>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                }
-                ?>
-            </table>
-        </div>
-
-        <?php
+        }
+        echo strtr($html, [
+            '{%pagenav%}'             => $info['pagenav'],
+            '{%person_title%}'        => $locale['forum_0018'],
+            '{%latest_thread_title%}' => $locale['forum_0012'],
+            '{%activity_title%}'      => $locale['forum_0016'],
+            '{%users_list%}'          => $users_list
+        ]);
     }
 }
 
@@ -609,7 +578,6 @@ if (!function_exists('forum_filter')) {
             <?php
         }
     }
-
 }
 
 if (!function_exists('render_forum_threads')) {
