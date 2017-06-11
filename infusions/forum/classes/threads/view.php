@@ -327,7 +327,7 @@ class ViewThread extends ForumServer {
                                 dbquery("
                                 INSERT INTO ".DB_FORUM_THREAD_NOTIFY."
                                 (thread_id, notify_datestamp, notify_user, notify_status)
-                                VALUES ('".intval($thread_data['thread_id'])."', NOW(), '".intval($post_data['post_author'])."', 1)
+                                VALUES ('".intval($thread_data['thread_id'])."', '".TIME."', '".intval($post_data['post_author'])."', 1)
                                 ");
 
                             }
