@@ -107,8 +107,8 @@ if (iMEMBER) {
     ob_start();
     display_user_info_panel($info);
     echo strtr(ob_get_clean(), [
-        '{%openside%}'             => open_side($locale['UM096'].$userdata['user_name']),
-        '{%closeside%}'            => close_side(),
+        '{%openside%}'             => fusion_get_function('openside', $locale['UM096'].$userdata['user_name']),
+        '{%closeside%}'            => fusion_get_function('closeside'),
         '{%user_avatar%}'          => $info['user_avatar'],
         '{%user_name%}'            => $info['user_name'],
         '{%user_level%}'           => getuserlevel($info['user_level']),
@@ -151,16 +151,16 @@ if (iMEMBER) {
         }
 
         $info = [
-            'title'                => $locale['global_100'],
-            'open_side'            => open_side($locale['global_100']),
-            'close_side'           => close_side(),
-            'login_openform'       => openform('loginform', 'post', $action_url),
-            'login_closeform'      => closeform(),
-            'login_name_field'     => form_text('user_name', $locale['global_101'], '', array(
+            'title'            => $locale['global_100'],
+            'open_side'        => fusion_get_function('openside', $locale['global_100']),
+            'close_side'       => fusion_get_function('closeside'),
+            'login_openform'   => openform('loginform', 'post', $action_url),
+            'login_closeform'  => closeform(),
+            'login_name_field' => form_text('user_name', $locale['global_101'], '', array(
                 'placeholder' => $placeholder,
                 'required'    => 1
             )),
-            'login_pass_field'     => form_text('user_pass', $locale['global_102'], '', array(
+            'login_pass_field' => form_text('user_pass', $locale['global_102'], '', array(
                 'placeholder' => $locale['global_102'],
                 'type'        => 'password',
                 'required'    => 1

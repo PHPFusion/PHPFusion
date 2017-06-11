@@ -420,7 +420,7 @@ class UserGroups {
         $html .= "<div class='col-xs-12 col-sm-8'>\n";
 
         if ($rows > 0) {
-            $html .= open_side(self::$locale['GRP_460']);
+            $html .= fusion_get_function('openside', self::$locale['GRP_460']);
             $html .= "<div class='clearfix spacer-xs'>\n";
             $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;")."</div>\n" : "");
             $html .= "<div class='overflow-hide'>".sprintf(self::$locale['GRP_427'], $rows, $total_rows)."</div>\n";
@@ -451,7 +451,7 @@ class UserGroups {
             $html .= "</div>\n";
             $html .= "</div>\n";
             $html .= closeform();
-            $html .= close_side();
+            $html .= fusion_get_function('closeside');
         } else {
             $html .= "<div class='well text-center'>".self::$locale['GRP_463']."</div>\n";
         }

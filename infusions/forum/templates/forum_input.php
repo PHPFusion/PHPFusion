@@ -23,30 +23,14 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("display_forum_postform")) {
 
     function display_forum_postform($info) {
-
-        $locale = fusion_get_locale();
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-        echo render_breadcrumbs();
-
-        opentable($info['title']);
-        // New template
-        echo "<!--pre_form-->\n";
-        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-        echo $info['openform'];
-        echo $info['forum_field'];
-        echo $info['subject_field'];
-        echo !empty($info['tags_field']) ? $info['tags_field'] : "";
-        echo $info['message_field'];
-        echo $info['edit_reason_field'];
-        echo $info['forum_id_field'];
-        echo $info['thread_id_field'];
-        echo $info['poll_form'];
+        $locale = fusion_get_locale();
+        $template = fusion_get_template(FORUM.'templates/forms/postform.html');
 
         $tab_title['title'][0] = $locale['forum_0602'];
         $tab_title['id'][0] = 'postopts';
         $tab_title['icon'][0] = '';
         $tab_active = tab_active($tab_title, 0);
-
         $tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
         $tab_content .= "<div class='well m-t-20'>\n";
         $tab_content .= $info['delete_field'];
@@ -58,7 +42,6 @@ if (!function_exists("display_forum_postform")) {
         $tab_content .= $info['signature_field'];
         $tab_content .= "</div>\n";
         $tab_content .= closetabbody();
-
         if (!empty($info['attachment_field'])) {
             $tab_title['title'][1] = $locale['forum_0557'];
             $tab_title['id'][1] = 'attach_tab';
@@ -68,26 +51,27 @@ if (!function_exists("display_forum_postform")) {
             $tab_content .= closetabbody();
         }
 
-        echo opentab($tab_title, $tab_active, 'newthreadopts');
-        echo $tab_content;
-        echo closetab();
-
-        echo $info['post_buttons'];
+        echo $info['openform'];
+        echo(strtr($template, [
+            '{%breadcrumb%}'              => render_breadcrumbs(),
+            '{%opentable%}'               => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'              => fusion_get_function('closetable'),
+            '{%description%}'             => $info['description'],
+            '{%forum_fields%}'            => $info['forum_field'].$info['forum_id_field'].$info['thread_id_field'],
+            '{%forum_subject_field%}'     => $info['subject_field'],
+            '{%forum_tag_field%}'         => $info['tags_field'],
+            '{%forum_message_field%}'     => $info['message_field'],
+            '{%forum_edit_reason_field%}' => $info['edit_reason_field'],
+            '{%forum_poll_form%}'         => $info['poll_form'],
+            '{%forum_post_options%}'      => opentab($tab_title, $tab_active, 'newthreadopts').$tab_content.closetab(),
+            '{$forum_post_button%}'       => $info['post_buttons'],
+            '{%display_last_posts%}'      => !empty($info['last_posts_reply']) ? $info['last_posts_reply'] : '',
+        ]));
         echo $info['closeform'];
-
-        echo "<!--end_form-->\n";
-        closetable();
-        if (!empty($info['last_posts_reply'])) {
-            echo "<div class='well m-t-20'>\n";
-            echo $info['last_posts_reply'];
-            echo "</div>\n";
-        }
     }
-
 }
 
 if (!function_exists("display_forum_pollform")) {
-
     function display_forum_pollform($info) {
         echo render_breadcrumbs();
         opentable($info['title']);
@@ -99,7 +83,6 @@ if (!function_exists("display_forum_pollform")) {
         echo $info['field']['closeform'];
         closetable();
     }
-
 }
 
 if (!function_exists('display_form_bountyform')) {

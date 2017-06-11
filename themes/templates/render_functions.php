@@ -21,60 +21,42 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-function open_table($title = '') {
-    static $opentable = '';
-    if (empty($opentable)) {
-        ob_start();
-        opentable($title);
-        $opentable = ob_get_contents();
-        ob_end_clean();
-        if (empty($opentable)) {
-            $opentable = opentable($title);
-        }
-    }
-    return $opentable;
+/**
+ * Load a HTML template
+ *
+ * @param $source_file
+ *
+ * @return string
+ */
+function fusion_get_template($source_file) {
+    ob_start();
+    include $source_file;
+
+    return ob_get_clean();
 }
 
-function close_table($title = '') {
-    static $closetable = '';
-    if (empty($closetable)) {
-        ob_start();
-        closetable($title);
-        $closetable = ob_get_contents();
-        ob_end_clean();
-        if (empty($closetable)) {
-            $closetable = opentable($title);
-        }
+/**
+ * Load any function
+ *
+ * @param $function
+ *
+ * @return mixed|string
+ */
+function fusion_get_function($function) {
+    $function_args = func_get_args();
+    if (count($function_args) > 1) {
+        unset($function_args[0]);
     }
-    return $closetable;
-}
+    // Attempt to check if this function prints anything
+    ob_start();
+    $func = call_user_func_array($function, $function_args);
+    $content = ob_get_clean();
+    // If it does not print return the function results
+    if (empty($content)) {
+        return $func;
+    }
 
-function open_side($title = '') {
-    static $openside = '';
-    if (empty($closetable)) {
-        ob_start();
-        openside($title);
-        $openside = ob_get_contents();
-        ob_end_clean();
-        if (empty($openside)) {
-            $openside = openside($title);
-        }
-    }
-    return $openside;
-}
-
-function close_side($title = '') {
-    static $closeside = '';
-    if (empty($closeside)) {
-        ob_start();
-        closeside($title);
-        $closeside = ob_get_contents();
-        ob_end_clean();
-        if (empty($closeside)) {
-            $closeside = closeside($title);
-        }
-    }
-    return $closeside;
+    return $content;
 }
 
 // Render breadcrumbs template

@@ -51,7 +51,7 @@ class Search extends Search_Engine {
             return (string)render_search();
         }
         // Default
-        return open_table('{%title%}')."
+        return fusion_get_function('opentable', "{%title%}")."
         <div class='spacer-sm'>
         <div class='clearfix m-b-15'>{%search_text%}</div>
         {%search_method%}
@@ -73,7 +73,7 @@ class Search extends Search_Engine {
             {%char_areas%}
             </div>
         </div></div>
-        ".close_table();
+        ".fusion_get_function('closetable');
     }
     /**
      * Template for search no results when stext is less than 3
@@ -86,7 +86,8 @@ class Search extends Search_Engine {
         if (function_exists('render_search_no_result')) {
             return (string)render_search_no_result();
         }
-        return open_table('{%title%}')."<div class='alert alert-warning m-t-10'>{%content%}</div>\n".close_table();
+
+        return fusion_get_function('opentable', '{%title%}')."<div class='alert alert-warning m-t-10'>{%content%}</div>\n".fusion_get_function('closetable');
     }
 
     /**

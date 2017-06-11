@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\BreadCrumbs;
@@ -370,15 +371,16 @@ class ViewThread extends ForumServer {
                 'closeform'         => closeform(),
                 'forum_id_field'    => form_hidden('forum_id', "", $post_data['forum_id']),
                 'thread_id_field'   => form_hidden('thread_id', "", $post_data['thread_id']),
-                "forum_field"       => "",
+                "forum_field"       => '',
+                'tags_field'        => '',
                 'subject_field'     => form_hidden('thread_subject', "", $thread_data['thread_subject']),
                 'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
                     array(
-                        'required'   => TRUE,
-                        'preview'    => TRUE,
-                        'form_name'  => 'input_form',
-                        'bbcode'     => TRUE,
-                        'height'     => '500px',
+                        'required'  => TRUE,
+                        'preview'   => TRUE,
+                        'form_name' => 'input_form',
+                        'bbcode'    => TRUE,
+                        'height'    => '500px',
                     )),
                 // happens only in EDIT
                 'delete_field'      => '',
