@@ -128,7 +128,7 @@ class ForumThreads extends ForumServer {
                     if (isset($threads['track_button'])) {
                         $threads['track_button'] = [
                             'link'  => clean_request('delete_track='.$threads['track_button'], ['delete_track'], FALSE),
-                            'title' => 'Stop Tracking',
+                            'title' => $locale['global_058'],
                         ];
                     }
 
