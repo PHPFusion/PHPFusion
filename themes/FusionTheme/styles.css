@@ -60,3 +60,8 @@ Morphs Mobile Icons
     margin-right: 10px;
     margin-top: 5px;
 }
+
+.select2-result-selectable:hover > .select2-result-label {
+    background: #3875D7;
+    color: #fff !important;
+}

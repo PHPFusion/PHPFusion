@@ -238,23 +238,29 @@ if (!function_exists('render_post_item')) {
         }
 
         //$callback = implode('', array_map(function($array) { return "<li><div class='col-xs-12 col-sm-3 strong'>".$array['title']."</div><div class='col-xs-12 col-sm-9'>".$array['value']."</div></li>";}, $data['user_profiles']));        if (!empty($callback)) {
-        $user_profiles = '';
+        $user_profiles = "";
         if (!empty($data['user_profiles'])) {
             $temp_name = '';
+            $user_profiles .= "<ul class='post_profiles'>\n";
+            // must nest for easier implementation?
+            $i = 0;
             foreach ($data['user_profiles'] as $attr) {
+                $open_user_profiles = '';
+                $close_user_profiles = '';
                 if ($temp_name !== $attr['field_cat_name']) {
-                    $user_profiles .= "<ul class='post_profiles'>\n";
-                    $user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
+                    $open_user_profiles .= $i ? "</ul><ul class='post_profiles'>\n" : "";
+                    $open_user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
                 }
+
+                $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li class='row'>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
                 $user_profiles .= "</li>\n";
-                if ($temp_name !== $attr['field_cat_name']) {
-                    $user_profiles .= "</ul>\n";
-                }
+
                 $temp_name = $attr['field_cat_name'];
             }
+            $user_profiles .= "</ul>\n";
         }
 
 
