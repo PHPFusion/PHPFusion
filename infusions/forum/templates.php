@@ -158,90 +158,29 @@ if (!function_exists('render_forum_item')) {
      */
     function render_forum_item($data, $i) {
         $locale = fusion_get_locale();
-        ?>
-        <tr>
-            <td style='border-radius: 4px 0 0 4px; background: #f7f7f7; border-top:4px solid #fff; border-bottom:4px solid #fff;'>
-                <a title='<?php echo $data['forum_link']['title'] ?>' class='forum-subject' href='<?php echo $data['forum_link']['link'] ?>'>
-                    <strong>
-                        <?php echo $data['forum_link']['title'] ?>
-                    </strong>
-                </a>
-                <?php if ($data['forum_description']) : echo "<div class='forum-description'>".$data['forum_description']."</div>\n"; endif; ?>
-                <?php if ($data['forum_moderators']) : echo "<span class='forum-moderators'><small><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</small></span>\n"; endif; ?>
-            </td>
-            <td style='background: #f7f7f7;  border-top:4px solid transparent; border-bottom:4px solid #fff;'>
-                <?php echo $data['forum_threadcount_word'] ?>
-            </td>
-            <td style='background: #f7f7f7; border-radius: 0px 4px 4px 0; border-top:4px solid #fff; border-bottom:4px solid #fff; border-right: 4px solid #fff;'>
-                <?php echo $data['forum_postcount_word'] ?>
-            </td>
-            <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
-                <?php
-                if (empty($data['thread_lastpost'])) {
-                    echo $locale['forum_0005'];
-                } else {
-                    echo "<div class='clearfix'>\n";
-                    if (!empty($data['last_post']['avatar'])) {
-                        echo "<div class='pull-left lastpost-avatar m-r-10'>".$data['last_post']['avatar']."</div>";
-                    }
-                    echo "<div class='overflow-hide'>\n";
-                    echo "<span class='forum_thread_link'><a style='font-weight: 400; color: #333; text-decoration:underline; font-size:85%;' href='".$data['last_post']['post_link']."'>".trim_text($data['thread_subject'], 35)."</a></span><br/>";
-                    echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." - ".$data['last_post']['time']."</span>\n";
-                    echo "</div>\n</div>\n";
-                }
-                ?>
-            </td>
-        </tr>
-
-        <?php
-        /*
-        if ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) {
-            echo thumbnail(FORUM."images/".$data['forum_image'], '50px');
+        $html = fusion_get_template(FORUM.'templates/forum_index_forums.html');
+        if (empty($data['thread_lastpost'])) {
+            $last_post_html = $locale['forum_0005'];
         } else {
-            echo "<div class='forum-icon'>".$data['forum_icon_lg']."</div>\n";
-        }*/
-        /*
-        switch ($data['forum_type']) {
-            case '3':
-                echo "<div class='col-xs-12 col-sm-12'>\n";
-                echo "<a class='display-inline-block forum-link' href='".$data['forum_link']['link']."'>".$data['forum_link']['title']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
-                if (isset($data['child'])) {
-                    echo "<div class='clearfix sub-forum'>\n";
-                    foreach ($data['child'] as $cdata) {
-                        echo "<i class='entypo level-down'></i>\n";
-                        echo "<span class='nowrap'>\n";
-                        if (isset($cdata['forum_type'])) {
-                            echo $data['forum_icon'];
-                        }
-                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
-                        echo "<br/>\n";
-                    }
-                    echo "</div>\n";
-                }
-                echo "</div>\n";
-                break;
-            default:
-                echo "<div class='col-xs-12 col-sm-6'>\n";
-                echo "
-				<a class='display-inline-block forum-link' href='".$data['forum_link']['link']."'>".$data['forum_link']['title']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
-                if (isset($data['child'])) {
-                    echo "<div class='clearfix sub-forum'>\n";
-                    echo "<div class='pull-left'>\n";
-                    echo "<i class='entypo level-down'></i>\n";
-                    echo "</div>\n";
-                    echo "<div class='overflow-hide'>\n";
-                    foreach ($data['child'] as $cdata) {
-                        if (isset($cdata['forum_type'])) {
-                            echo $data['forum_icon'];
-                        }
-                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
-                    }
-                    echo "</div>\n";
-                    echo "</div>\n";
-                }
-                echo "</div>\n";
+            $last_post_html = "<div class='clearfix'>\n";
+            if (!empty($data['last_post']['avatar'])) {
+                $last_post_html .= "<div class='pull-left lastpost-avatar m-r-10'>".$data['last_post']['avatar']."</div>";
+            }
+            $last_post_html .= "<div class='overflow-hide'>\n";
+            $last_post_html .= "<span class='forum_thread_link'><a style='font-weight: 400; color: #333; text-decoration:underline; font-size:85%;' href='".$data['last_post']['post_link']."'>".trim_text($data['thread_subject'], 35)."</a></span><br/>";
+            $last_post_html .= "<span class='forum_profile_link'>".$data['last_post']['profile_link']." - ".$data['last_post']['time']."</span>\n";
+            $last_post_html .= "</div>\n</div>\n";
         }
-        */
+        echo strtr($html, [
+            '{%forum_link_url%}'         => $data['forum_link']['link'],
+            '{%forum_link_title%}'       => $data['forum_link']['title'],
+            '{%forum_description%}'      => $data['forum_description'],
+            '{%forum_moderators_title%}' => $locale['forum_0007'],
+            '{%forum_moderators%}'       => $data['forum_moderators'],
+            '{%forum_thread_count%}'     => $data['forum_threadcount_word'],
+            '{%forum_post_count%}'       => $data['forum_postcount_word'],
+            '{%last_post_html%}'         => $last_post_html,
+        ]);
     }
 }
 
