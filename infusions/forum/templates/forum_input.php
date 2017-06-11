@@ -20,12 +20,15 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+/**
+ * Display the post reply form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
 if (!function_exists("display_forum_postform")) {
 
     function display_forum_postform($info) {
-        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
-        $template = fusion_get_template(FORUM.'templates/forms/postform.html');
+        $template = fusion_get_template(FORUM.'templates/forms/post.html');
 
         $tab_title['title'][0] = $locale['forum_0602'];
         $tab_title['id'][0] = 'postopts';
@@ -71,69 +74,53 @@ if (!function_exists("display_forum_postform")) {
     }
 }
 
+/**
+ * Display the poll creation form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
 if (!function_exists("display_forum_pollform")) {
     function display_forum_pollform($info) {
-        echo render_breadcrumbs();
-        opentable($info['title']);
-        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-        echo "<!--pre_form-->\n";
-        echo $info['field']['openform'];
-        echo $info['field']['poll_field'];
-        echo $info['field']['poll_button'];
-        echo $info['field']['closeform'];
-        closetable();
+        $html = fusion_get_template(FORUM.'templates/forms/poll.html');
+        echo strtr($html, [
+            '{%breadcrumb%}'  => render_breadcrumbs(),
+            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'  => fusion_get_function('closetable'),
+            '{%description%}' => $info['description'],
+            '{%pollform%}'    => $info['field']['openform'].$info['field']['poll_field'].$info['field']['poll_button'].$info['field']['closeform'],
+        ]);
     }
 }
 
+/**
+ * Display the bounty creation form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
 if (!function_exists('display_form_bountyform')) {
-
     function display_forum_bountyform($info) {
-        echo render_breadcrumbs();
-        opentable($info['title']);
-        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-        echo "<!--pre_form-->\n";
-        echo $info['field']['openform'];
-        echo $info['field']['bounty_select'];
-        echo $info['field']['bounty_description'];
-        echo $info['field']['bounty_button'];
-        echo $info['field']['closeform'];
-        closetable();
+        $html = fusion_get_template(FORUM.'templates/forms/bounty.html');
+        echo strtr($html, [
+            '{%breadcrumb%}'  => render_breadcrumbs(),
+            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
+            '{%closetable%}'  => fusion_get_function('closetable'),
+            '{%description%}' => $info['description'],
+            '{%bountyform%}'  => $info['field']['openform'].$info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button'].$info['field']['closeform'],
+        ]);
     }
 }
 
+/**
+ * Display the Quick Reply Form
+ * To customize this form, declare the same function in your theme.php and use $info string
+ */
+if (!function_exists("display_quick_reply")) {
+    function display_quick_reply($info) {
+        $html = fusion_get_template(FORUM.'templates/forms/quick_reply.html');
 
-if (!function_exists("display_quickReply")) {
-
-    function display_quickReply($info) {
-
-        $locale = fusion_get_locale("", FORUM_LOCALE);
-        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
-        $userdata = fusion_get_userdata();
-        $html = "<!--sub_forum_thread-->\n";
-        $html .= openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], array('class' => 'spacer-sm'));
-        $html .= "<h4>".$locale['forum_0168']."</h4>\n";
-        $html .= form_textarea('post_message', '', '',
-                                  array(
-                                      'placeholder' => $locale['forum_0601']."...",
-                                      'bbcode'      => TRUE,
-                                      'required'    => TRUE,
-                                      'preview'     => TRUE,
-                                      'form_name'   => 'quick_reply_form',
-                                      'height'      => '250px'
-                                  ));
-        $html .= "<div class='m-t-10 pull-right'>\n";
-        $html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary m-r-10'));
-        $html .= "</div>\n";
-        $html .= "<div class='overflow-hide'>\n";
-        $html .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
-        if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-            $html .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
-        }
-        if ($forum_settings['thread_notify']) {
-            $html .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
-        }
-        $html .= "</div>\n";
-        $html .= closeform();
-        return (string)$html;
+        return strtr($html, [
+            '{%description%}'   => $info['description'],
+            '{%message_field%}' => $info['field']['message'],
+            '{%options_field%}' => $info['field']['options'],
+            '{%button%}'        => $info['field']['button'],
+        ]);
     }
 }
