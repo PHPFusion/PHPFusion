@@ -131,9 +131,11 @@ $locale['forum_0270'] = "No post found.";
 $locale['forum_0271'] = "There are no post in this thread anymore. Please return to the &lt;a href=&#039;../../infusions/forum/index.php&#039;&gt;Forum Index&lt;/a&gt;";
 $locale['forum_0272'] = "Filter by Tags";
 $locale['forum_0273'] = "Popular Threads This Week";
+
+$locale['forum_0300'] = "Move to a new thread";
 $locale['forum_0301'] = "Select new forum";
 $locale['forum_0302'] = "Next";
-$locale['forum_0303'] = "Select new thread";
+$locale['forum_0303'] = "Move to existing thread";
 $locale['forum_0305'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will not be moved[/STRONG] and has been removed from list because there are still posts left in the thread.";
 $locale['forum_0306'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will be moved[/STRONG] and thread will be deleted.";
 $locale['forum_0307'] = "No posts to move.";

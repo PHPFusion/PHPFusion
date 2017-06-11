@@ -213,6 +213,7 @@ class Moderator {
                 break;
         }
         $message = '';
+
         switch ($_GET['error']) {
             case '1':
                 $message = $locale['error-MP001'];
@@ -224,6 +225,7 @@ class Moderator {
                 $message = $locale['forum_0307'];
                 break;
         }
+
         if ($message != "") {
             opentable($locale['error-MP000']);
             echo "<div id='close-message'><div class='admin-message'>".$message."<br /><br />\n";
@@ -746,11 +748,11 @@ class Moderator {
             $f_post_blo = FALSE;
 
             $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post'); // The selected checkbox of post to move.
-
             $post_items = explode(',', $post_items);
             $post_items = array_filter($post_items);
 
             if (!empty($post_items)) {
+                //define('STOP_REDIRECT', true);
 
                 $first_post = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' ORDER BY post_datestamp ASC LIMIT 1"));
                 /**
@@ -772,7 +774,7 @@ class Moderator {
                 // found post items.
                 if (!empty($move_posts)) {
 
-                    // validate whether the selected post exists
+                    // Current Status Before Move.
                     $move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) 'num_posts'
 									FROM ".DB_FORUM_POSTS."
 									WHERE post_id IN (".$move_posts.")
@@ -787,7 +789,6 @@ class Moderator {
 
                         ob_start();
                         echo openmodal('forum0300', $locale['forum_0176'], array('class' => 'modal-md'));
-
                         if ($first_post_found) {
                             // there is a first post.
                             echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
@@ -804,7 +805,6 @@ class Moderator {
                             }
                             echo "</div></div>\n";
                         }
-
                         if (!isset($_POST['new_forum_id']) && !$f_post_blo) {
 
                             $fl_result = dbquery("
@@ -819,44 +819,33 @@ class Moderator {
 										");
 
                             if (dbrows($fl_result)) {
-
                                 $exclude_opts = array();
                                 while ($data = dbarray($fl_result)) {
                                     if (empty($data['threadcount']) || $data['forum_type'] == '1') {
                                         $exclude_opts[] = $data['forum_id'];
                                     }
                                 }
-
                                 echo openform('modopts', 'post', $this->form_action);
-
                                 echo form_select_tree('new_forum_id', $locale['forum_0301'], '', array(
                                     'disable_opts' => $exclude_opts,
                                     'no_root'      => 1,
-                                    'inline'       => 1
+                                    'inline'       => FALSE,
+                                    'inner_width'  => '100%'
                                 ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 
                                 foreach ($array_post as $value) {
                                     echo form_hidden("delete_item_post[]", "", $value, array("input_id" => "delete_post[$value]"));
                                 }
                                 echo form_hidden('move_posts', '', 1);
-
-                                echo "<div class='clearfix'>\n<div class='col-xs-12 col-md-offset-3 col-lg-offset-3'>\n";
-                                echo form_button($locale['forum_0302'], $locale['forum_0208'], $locale['forum_0208'], array(
-                                    'inline' => 1,
-                                    'class' => 'btn-primary'
-                                ));
-                                echo "</div>\n</div>\n";
+                                echo modalfooter(
+                                    form_button($locale['forum_0302'], $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-primary'))
+                                );
                                 echo closeform();
                             } else {
-
-                                echo "<div class='well'>\n";
                                 echo "<strong>".$locale['forum_0310']."</strong><br /><br />\n";
                                 echo "<a href='".$this->form_action."'>".$locale['forum_0309']."</a><br /><br />\n";
-                                echo "</div>\n";
-
                             }
-
-                        } elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !$f_post_blo) {
+                        } elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !isset($_POST['new_thread_subject']) && !$f_post_blo) {
                             // Select Threads in Selected Forum.
                             // build the list.
                             $tl_result = dbquery("
@@ -865,35 +854,73 @@ class Moderator {
 							WHERE forum_id='".intval($_POST['new_forum_id'])."' AND thread_id !='".intval($pdata['thread_id'])."' AND thread_hidden='0'
 							ORDER BY thread_subject ASC
 							");
-                            if (dbrows($tl_result) > 0) {
-                                $forum_list = array();
+
+                            if (dbrows($tl_result)) {
+                                $thread_list = array();
                                 while ($tl_data = dbarray($tl_result)) {
-                                    $forum_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
+                                    $thread_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
                                 }
                                 echo openform('modopts', 'post', $this->form_action."&amp;sv");
-                                echo form_hidden('new_forum_id', '', $_POST['new_forum_id']);
-                                echo form_select('new_thread_id', $locale['forum_0303'], '', array(
-                                    'options' => $forum_list,
-                                    'inline' => 1
-                                ));
+                                echo form_hidden('new_forum_id', '', $_POST['new_forum_id']); // has val
+                                if (!isset($_POST['new_thread_select'])) {
+                                    echo form_checkbox('new_thread_select', '', '', array(
+                                        'type'     => 'radio',
+                                        'options'  => [
+                                            0 => $locale['forum_0300'],
+                                            1 => $locale['forum_0303'],
+                                        ],
+                                        'inline'   => TRUE,
+                                        'required' => TRUE,
+                                    ));
+                                } else {
+                                    $thread_type = stripinput($_POST['new_thread_select']);
+                                    if (!empty($thread_type)) {
+                                        echo form_select('new_thread_id', $locale['forum_0303'], '', array(
+                                            'options'     => $thread_list,
+                                            'inline'      => FALSE,
+                                            'inner_width' => '100%',
+                                        ));
+                                        echo form_hidden('new_thread_select', '', 0);
+                                    } else {
+                                        echo form_text('new_thread_subject', $locale['forum_2000'], '', ['required' => TRUE, 'max_length' => 250, 'inline' => FALSE]);
+                                        echo form_hidden('new_thread_select', '', 1);
+                                    }
+                                }
                                 foreach ($array_post as $value) {
                                     echo form_hidden("delete_item_post[]", "", $value, array("input_id" => "delete_post[$value]"));
                                 }
                                 echo form_hidden('move_posts', '', 1);
-                                echo form_button($locale['forum_0176'], $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-primary btn-sm'));
+
+                                echo modalfooter(
+                                    form_button($locale['forum_0176'], $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-primary'))
+                                );
                             } else {
                                 echo $locale['forum_0308']."<br /><br />\n";
                                 echo "<a href='".$this->form_action."'>".$locale['forum_0309']."</a>\n";
                             }
 
-                        } elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
+                        } elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id']) || isset($_POST['new_thread_subject'])) {
 
-                            // Execute move and redirect after
-                            $move_posts_add = "";
-                            if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id='".intval($_POST['new_thread_id'])."' AND forum_id='".intval($_POST['new_forum_id'])."'")) {
-                                redirect($this->form_action."&amp;error=1");
+                            $_POST['new_thread_id'] = isset($_POST['new_thread_id']) ? $_POST['new_thread_id'] : 0;
+
+                            /**
+                             * Execute move posts
+                             */
+                            $move_posts_add = '';
+                            $param = [
+                                ':new_thread_id' => intval($_POST['new_thread_id']),
+                                ':new_forum_id'  => intval($_POST['new_forum_id'])
+                            ];
+
+                            // Redirect if there is no thread count
+                            if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=:new_thread_id AND forum_id=:new_forum_id", $param)) {
+                                if (!empty($_POST['new_thread_id'])) {
+                                    addNotice('danger', $locale['error-MP001']);
+                                    redirect($this->form_action);
+                                }
                             }
 
+                            // Selects all current selected posts
                             foreach ($array_post as $move_post_id) {
                                 if (isnum($move_post_id)) {
                                     if ($first_post_found && $remove_first_post) {
@@ -907,63 +934,107 @@ class Moderator {
                                 }
                             }
 
-                            if ($move_posts_add) {
+                            if (!empty($move_posts_add)) {
+                                // Validate if all the post belongs to the thread?
+                                if ($pdata['num_posts'] == count($array_post)) {
 
-                                $posts_ex = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."' AND post_id IN (".$move_posts_add.")");
+                                    // Create a new thread
+                                    if (!empty($_POST['new_thread_subject'])) {
+                                        $thread_subject = form_sanitizer($_POST['new_thread_subject']);
 
-                                if ($posts_ex) {
+                                        $author_result = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE post_id IN ($move_posts_add) ORDER BY post_datestamp ASC LIMIT 1"));
 
-                                    dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id='".intval($_POST['new_forum_id'])."', thread_id='".intval($_POST['new_thread_id'])."', post_datestamp='".TIME."' WHERE post_id IN (".$move_posts_add.")");
+                                        // Create a Thread
+                                        $new_thread_data = [
+                                            'thread_id'      => 0,
+                                            'forum_id'       => intval($_POST['new_forum_id']),
+                                            'thread_subject' => $thread_subject,
+                                            'thread_author'  => $author_result['post_author'],
+                                        ];
+                                        $param[':new_thread_id'] = dbquery_insert(DB_FORUM_THREADS, $new_thread_data, 'save', ['keep_session' => TRUE]);
+                                    }
 
-                                    dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET thread_id='".intval($_POST['new_thread_id'])."' WHERE post_id IN(".$move_posts_add.")");
+                                    // Update all selected posts with new thread and forum ID
+                                    dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=:new_forum_id, thread_id=:new_thread_id, post_datestamp='".TIME."' WHERE post_id IN (".$move_posts_add.")", $param);
+                                    // Update all thread attachments with new thread ID
+                                    dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET thread_id=:new_thread_id WHERE post_id IN(".$move_posts_add.")", [':new_thread_id' => $param[':new_thread_id']]);
 
+                                    // Get the latest post
                                     $new_thread = dbarray(dbquery("
-													SELECT forum_id, thread_id, post_id, post_author, post_datestamp
+													SELECT post_id, post_author, post_datestamp
 													FROM ".DB_FORUM_POSTS."
-													WHERE thread_id='".intval($_POST['new_thread_id'])."'
+													WHERE thread_id=:new_thread_id
 													ORDER BY post_datestamp DESC
 													LIMIT 1
-													"));
+													", [':new_thread_id' => $param[':new_thread_id']]
+                                    ));
+                                    $param[':thread_lastpost'] = $new_thread['post_datestamp'];
+                                    $param[':thread_lastpostid'] = $new_thread['post_id'];
+                                    $param[':thread_lastuser'] = $new_thread['post_author'];
 
-                                    dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".intval($new_thread['post_datestamp'])."', thread_lastpostid='".intval($new_thread['post_id'])."', thread_postcount=thread_postcount+".intval($pdata['num_posts']).", thread_lastuser='".intval($new_thread['post_author'])."' WHERE thread_id='".intval($_POST['new_thread_id'])."'");
+                                    // ReUpdate the target thread
+                                    dbquery("
+                                    UPDATE ".DB_FORUM_THREADS." SET 
+                                    thread_lastpost=:thread_lastpost, 
+                                    thread_lastpostid=:thread_lastpostid, 
+                                    thread_postcount=thread_postcount+".intval($pdata['num_posts']).", 
+                                    thread_lastuser=:thread_lastuser                                    
+                                    WHERE thread_id=:new_thread_id", [
+                                            ':thread_lastpost'   => $param[':thread_lastpost'],
+                                            ':thread_lastpostid' => $param[':thread_lastpostid'],
+                                            ':thread_lastuser'   => $param[':thread_lastuser'],
+                                            ':new_thread_id'     => $param[':new_thread_id']
+                                        ]
+                                    );
 
-                                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($new_thread['post_datestamp'])."', forum_postcount=forum_postcount+".intval($pdata['num_posts']).", forum_lastuser='".$new_thread['post_author']."' WHERE forum_id='".intval($_POST['new_forum_id'])."'");
+                                    // Re update the target forum
+                                    dbquery("UPDATE ".DB_FORUMS." SET 
+                                    forum_lastpost=:thread_lastpost, 
+                                    forum_postcount=forum_postcount+".intval($pdata['num_posts']).", 
+                                    forum_lastuser=:thread_lastuser WHERE forum_id=:new_forum_id", [
+                                        ':thread_lastpost' => $param[':thread_lastpost'],
+                                        ':thread_lastuser' => $param[':thread_lastuser'],
+                                        ':new_forum_id'    => $param[':new_forum_id']
+                                    ]);
 
-                                    $old_thread = dbarray(dbquery("
-									SELECT forum_id, thread_id, post_id, post_author, post_datestamp
-									FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($pdata['thread_id'])."' ORDER BY post_datestamp DESC
-									LIMIT 1
-									"));
+                                    // If Current Thread has no more post
                                     if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."'")) {
+                                        // Select
 
-                                        $new_last_post = dbarray(dbquery("SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC LIMIT 1 "));
+                                        $forum_lastpost_res = dbarray(dbquery("
+                                        SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".intval($pdata['forum_id'])."' ORDER BY post_datestamp DESC 
+                                        LIMIT 1
+                                        "));
 
-                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($new_last_post['post_datestamp'])."', 
+                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($forum_lastpost_res['post_datestamp'])."', 
                                         forum_postcount=forum_postcount-".intval($pdata['num_posts']).", 
-                                        forum_threadcount='".(dbcount("(forum_thread)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."', 
-                                        forum_lastuser='".intval($new_last_post['post_author'])."' 
+                                        forum_threadcount='".(dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id='".intval($pdata['forum_id'])."'") - 1)."', 
+                                        forum_lastuser='".intval($forum_lastpost_res['post_author'])."' 
                                         WHERE forum_id='".intval($pdata['forum_id'])."'");
 
                                         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($pdata['thread_id'])."'");
-
                                         dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".intval($pdata['thread_id'])."'");
-
                                         dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".intval($pdata['thread_id'])."'");
-
                                         dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".intval($pdata['thread_id'])."'");
-
                                         dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".intval($pdata['thread_id'])."'");
 
                                     } else {
 
-                                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".intval($old_thread['post_datestamp'])."',
-										thread_lastpostid='".intval($old_thread['post_id'])."', thread_postcount=thread_postcount-".intval($pdata['num_posts']).", thread_lastuser='".intval($old_thread['post_author'])."' WHERE thread_id='".intval($pdata['thread_id'])."'");
+                                        $thread_lastpost_res = dbarray(dbquery("
+                                        SELECT forum_id, thread_id, post_id, post_author, post_datestamp
+                                        FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($pdata['thread_id'])."' ORDER BY post_datestamp DESC
+                                        LIMIT 1
+                                        "));
 
-                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($old_thread['post_datestamp'])."', forum_postcount=forum_postcount-".intval($pdata['num_posts']).", forum_lastuser='".intval($old_thread['post_author'])."' WHERE forum_id='".intval($pdata['forum_id'])."'");
+                                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".intval($thread_lastpost_res['post_datestamp'])."',
+										thread_lastpostid='".intval($thread_lastpost_res['post_id'])."', thread_postcount=thread_postcount-".intval($pdata['num_posts']).", thread_lastuser='".intval($thread_lastpost_res['post_author'])."' WHERE thread_id='".intval($pdata['thread_id'])."'");
+
+                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($thread_lastpost_res['post_datestamp'])."', forum_postcount=forum_postcount-".intval($pdata['num_posts']).", forum_lastuser='".intval($thread_lastpost_res['post_author'])."' WHERE forum_id='".intval($pdata['forum_id'])."'");
                                     }
 
                                     $pid = count($array_post) - 1;
-                                    redirect(FORUM."viewthread.php?thread_id=".intval($_POST['new_thread_id'])."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
+                                    addNotice('success', 'Posts have been moved');
+                                    redirect(FORUM."viewthread.php?thread_id=".$param[':new_thread_id']."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
 
                                 } else {
 
@@ -972,13 +1043,10 @@ class Moderator {
 
                                 }
                             } else {
-
                                 addNotice('danger', $locale['forum_0307']);
                                 redirect($this->form_action);
-
                             }
                         }
-
                         echo closemodal();
                         add_to_footer(ob_get_contents());
                         ob_end_clean();
