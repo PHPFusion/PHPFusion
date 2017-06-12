@@ -48,9 +48,15 @@ if (!function_exists('render_forum_main')) {
      */
     function render_forum_main(array $info, $id = 0) {
         $locale = fusion_get_locale();
+        /**
+         * WORK IN PROGRESS TO IMPLEMENT TEMPLATE CLASS
+         */
         $html = fusion_get_template(FORUM.'templates/forum_index.html');
+
         $html_item = fusion_get_template(FORUM.'templates/forum_index_item.html');
         $html_no_item = fusion_get_template(FORUM.'templates/forum_index_no_item.html');
+        $popular_tpl = fusion_get_template(FORUM.'templates/components/popular_threads_body.html');
+        $popular_tpl_item = fusion_get_template(FORUM.'templates/components/popular_threads_item.html');
         $content = '';
         if (!empty($info['forums'][$id])) {
             $forums = $info['forums'][$id];
@@ -70,9 +76,7 @@ if (!function_exists('render_forum_main')) {
                             $i++;
                         }
                     } else {
-                        echo "<div class='well'>\n";
-                        echo $locale['forum_0327'];
-                        echo "</div>\n";
+                        $content .= strtr($html_no_item, ['{%message%}' => $locale['forum_0327']]);
                     }
                 }
             }
@@ -91,22 +95,25 @@ if (!function_exists('render_forum_main')) {
                 ':not_locked' => 0,
                 ':not_hidden' => 0,
             ]);
+        $items = '';
         if (dbrows($custom_result)) {
-            $popular_threads = "<h4 class='spacer-sm'><strong>".$locale['forum_0273']."</strong></h4>";
-            $popular_threads .= "<div class='spacer-md'>\n";
             while ($popular = dbarray($custom_result)) {
                 $user = fusion_get_user($popular['thread_author']);
-                $popular_threads = "
-                <div>
-                <a href='".FORUM."viewthread.php?thread_id=".$popular['thread_id']."'><strong>".$popular['thread_subject']."</strong></a><br/>
-                ".$locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status'])."
-                <span class='text-lighter'><i class='fa fa-comment'></i> ".format_word($popular['thread_postcount'], $locale['fmt_post'])."</span>
-                </div>
-                <hr/>
-                ";
+                $items .= strtr($popular_tpl_item, [
+                        '{%link%}'         => FORUM."viewthread.php?thread_id=".$popular['thread_id'],
+                        '{%title%}'        => $popular['thread_subject'],
+                        '{%profile_link%}' => $locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                        '{%count%}'        => format_word($popular['thread_postcount'], $locale['fmt_post'])
+                    ]
+                );
             }
-            $popular_threads .= "</div>\n";
         }
+
+        $popular_threads = strtr($popular_tpl, [
+                '{%title%}' => $locale['forum_0273'],
+                '{%items%}' => $items
+            ]
+        );
 
         echo strtr($html, [
             '{%breadcrumb%}'        => render_breadcrumbs(),
@@ -185,185 +192,212 @@ if (!function_exists('render_forum_item')) {
 }
 
 /**
- * For $_GET['viewforum'] view present.
+ * Viewforum (Index)
+ * Shows the forum threads and details
+ * Template File    templates/forum_viewforum.html
+ * Template File    templates/viewforum/forum_users.html
  */
 if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
         $locale = fusion_get_locale();
-        //print_P($info);
-        ?>
-        <div class='spacer-sm'>
-            <?php echo render_breadcrumbs() ?>
-        </div>
-        <div class='forum-header' style="background: url(<?php echo FORUM.'images/default_forum_bg.jpg' ?>) no-repeat; background-size:cover;">
-            <div class='banner' style='display:block; height:180px; overflow:hidden;'>
-                <div class='center-y p-20'>
-                    <!--- add forum image here --->
-                    <h2 class='text-white'><?php echo $info['forum_name'] ?></h2>
-                    <div class='forum-description text-white'><?php echo $info['forum_description'] ?></div>
-                </div>
-            </div>
-        </div>
-        <div class='navbar navbar-inverse' style='margin-top:-15px;'>
-            <ul class='nav navbar-nav'>
-                <?php
-                // Group the link together under 'forum_page_link'
-                $i = 0;
-                foreach ($info['forum_page_link'] as $view_keys => $page_link) {
-                    $a = (!isset($_GET['view']) && (!$i)) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? TRUE : FALSE;
-                    $active = $a ? " class='active'" : "";
-                    echo "<li$active><a href='".$page_link['link']."'>".$page_link['title']."</a></li>\n";
-                    $i++;
-                }
-                ?>
-            </ul>
-        </div>
-        <?php if ($info['forum_rules']) : alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules']); endif; ?>
-        <div class='spacer-md'>
-            <div class='row'>
-                <div class='col-xs-12 col-sm-6 col-md-5 col-lg-2'>
-                    <?php if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) : ?>
-                        <a class='btn btn-primary' href='<?php echo $info['new_thread_link']['link'] ?>'><i class='m-r-10 fa fa-comment'></i><?php echo $info['new_thread_link']['title'] ?></a>
-                    <?php endif; ?>
-                </div>
-                <div class='col-xs-12 col-sm-6 col-md-7 col-lg-10'>
-                    <?php
-                    if (isset($_GET['view'])) {
-                        switch ($_GET['view']) {
-                            default:
-                            case 'threads':
-                                die('Unauthorized mode');
-                                if ($info['forum_type'] > 1) {
-                                    echo "<!--pre_forum-->\n";
-                                    // Threads Render
-                                    render_forum_threads($info);
-                                }
-                                break;
-                            case 'subforums':
-                                if (!empty($info['item'][$_GET['forum_id']]['child'])) {
-                                    $i = 1;
-                                    ?>
-                                    <table class='table table-responsive clear'>
-                                        <tr>
-                                            <td style='padding-top:20px;'>
-                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0351'] ?></small>
-                                            </td>
-                                            <td style='padding-top:20px;'>
-                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0002'] ?></small>
-                                            </td>
-                                            <td style='padding-top:20px;'>
-                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0003'] ?></small>
-                                            </td>
-                                            <td class='col-xs-4' style='padding-top:20px;'>
-                                                <small class='text-uppercase strong text-lighter'><?php echo $locale['forum_0012'] ?></small>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-                                            render_forum_item($subforum_data, $i);
-                                            $i++;
-                                        }
-                                        ?>
-                                    </table>
-                                    <?php
-                                }
-                                break;
-                            case 'people':
-                                render_forum_users($info);
-                                break;
-                            case 'activity':
-                                render_forum_activity($info);
-                                break;
+        $tpl = \PHPFusion\Template::getInstance('viewforum');
+        $tpl->set_template(FORUM.'templates/forum_viewforum.html');
+        // Make it so it can get arrays and values
+        $tpl->set_tag('background_src', FORUM.'images/default_forum_bg.jpg');
+        $tpl->set_tag('breadcrumb', render_breadcrumbs());
+        $tpl->set_tag('title', $info['forum_name']);
+        $tpl->set_tag('description', $info['forum_description']);
+        if ($info['forum_rules']) {
+            $tpl->set_block('rules', ['forum_rules' => alert("<span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$info['forum_rules'])]);
+        }
+        $i = 0;
+        foreach ($info['forum_page_link'] as $view_keys => $page_link) {
+            $tpl->set_block('navbar_item', [
+                'active' => ((!isset($_GET['view']) && (!$i)) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? " class='active'" : ''),
+                'link'   => $page_link['link'],
+                'title'  => $page_link['title']
+            ]);
+            $i++;
+        }
+        if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) {
+            $tpl->set_block('post_button', [
+                'new_thread_link_url'   => $info['new_thread_link']['link'],
+                'new_thread_link_title' => $info['new_thread_link']['title']
+            ]);
+        }
+        if ($info['forum_moderators']) {
+            $tpl->set_block('moderators_list', ['moderators' => $info['forum_moderators'], 'title' => $locale['forum_0185']]);
+        }
+        // Draw the view
+        if (isset($_GET['view'])) {
+            switch ($_GET['view']) {
+                default:
+                case 'threads':
+                    if ($info['forum_type'] > 1) {
+                        $tpl->set_block('view', ['content' => render_forum_threads($info)]);
+                    }
+                    break;
+                case 'subforums':
+                    $ctpl = \PHPFusion\Template::getInstance('viewforum_subforums');
+                    $ctpl->set_template(FORUM.'templates/viewforum/forum_subforums.html');
+                    $ctpl->set_tag('title1', $locale['forum_0351']);
+                    $ctpl->set_tag('title2', $locale['forum_0002']);
+                    $ctpl->set_tag('title3', $locale['forum_0003']);
+                    $ctpl->set_tag('title4', $locale['forum_0012']);
+                    if (!empty($info['item'][$_GET['forum_id']]['child'])) {
+                        $i = 1;
+                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
+                            $ctpl->set_block('subforums', ['content' => fusion_get_function('render_forum_item', $subforum_data, $i)]);
+                            $i++;
                         }
                     } else {
-                        render_forum_threads($info);
+                        $ctpl->set_block('no_item', ['message' => 'There are no subforums available']);
                     }
-                    ?>
-                    <div class='list-group-item m-t-20'>
-                        <?php echo "
-                        <span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                        <span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                        <span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                        <span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                        <span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-                        "; ?>
-                    </div>
-                    <?php
-                    // Add people section
-                    if ($info['forum_moderators']) : echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n"; endif;
-                    ?>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-}
+                    break;
+                case 'people':
+                    $user_tpl = \PHPFusion\Template::getInstance('viewforum_users');
+                    $user_tpl->set_template(FORUM.'templates/viewforum/forum_users.html');
+                    $user_tpl->set_tag('pagenav', $info['pagenav']);
+                    $user_tpl->set_tag('person_title', $locale['forum_0018']);
+                    $user_tpl->set_tag('latest_thread_title', $locale['forum_0012']);
+                    $user_tpl->set_tag('activity_title', $locale['forum_0016']);
+                    if (!empty($info['item'])) {
+                        foreach ($info['item'] as $user) {
+                            $user_tpl->set_block('users_list', [
+                                'avatar'        => display_avatar($user, '30px', '', '', ''),
+                                'profile_link'  => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                                'thread_link'   => "<a href='".$user['thread_link']['link']."'>".$user['thread_link']['title']."</a>",
+                                'activity_date' => showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp'])
+                            ]);
+                        }
+                    }
+                    $tpl->set_block('view', ['content' => $user_tpl->get_output()]);
+                    break;
+                case 'activity':
+                    $ctpl = \PHPFusion\Template::getInstance('viewforum_activity');
+                    $ctpl->set_template(FORUM.'templates/viewforum/forum_activity.html');
+                    if (!empty($info['item'])) {
 
-/**
- * Shows forum users
- */
-if (!function_exists('render_forum_users')) {
-    function render_forum_users($info) {
-        $locale = fusion_get_locale();
-        $html = fusion_get_template(FORUM.'templates/sections/forum_users.html');
-        $html_item = fusion_get_template(FORUM.'templates/sections/forum_users_item.html');
-        $users_list = '';
-        if (!empty($info['item'])) {
-            foreach ($info['item'] as $user) {
-                $users_list .= strtr($html_item, [
-                    '{%avatar%}'        => display_avatar($user, '30px', '', '', ''),
-                    '{%profile_link%}'  => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                    '{%thread_link%}'   => "<a href='".$user['thread_link']['link']."'>".$user['thread_link']['title']."</a>",
-                    '{%activity_date%}' => showdate('forumdate', $user['post_datestamp']).", ".timer($user['post_datestamp'])
-                ]);
-            }
-        }
-        echo strtr($html, [
-            '{%pagenav%}'             => $info['pagenav'],
-            '{%person_title%}'        => $locale['forum_0018'],
-            '{%latest_thread_title%}' => $locale['forum_0012'],
-            '{%activity_title%}'      => $locale['forum_0016'],
-            '{%users_list%}'          => $users_list
-        ]);
-    }
-}
+                        $ctpl->set_block('pagenav', ['pagenav' => $info['pagenav']]);
 
-/**
- * Shows Forum Activity
- */
-if (!function_exists('render_forum_activity')) {
-    function render_forum_activity($info) {
-        $locale = fusion_get_locale();
-        $html = fusion_get_template(FORUM.'templates/sections/forum_activity.html');
-        $item_html = fusion_get_template(FORUM.'templates/sections/forum_activity_item.html');
-        $no_item_html = fusion_get_template(FORUM.'templates/sections/forum_activity_no_item.html');
-        if (!empty($info['item'])) {
-            $i = 0;
-            $items = '';
-            foreach ($info['item'] as $post_id => $postData) {
-                $items .= strtr($item_html, [
-                    '{%spacing%}'      => (!$i ? " m-t-0" : ''),
-                    '{%avatar%}'       => display_avatar($postData['post_author'], '50px', FALSE, '', ''),
-                    '{%profile_link%}' => profile_link($postData['post_author']['user_id'], $postData['post_author']['user_name'], $postData['post_author']['user_status']),
-                    '{%post_date%}'    => showdate('forumdate', $postData['post_datestamp']),
-                    '{%post_timer%}'   => timer($postData['post_datestamp']),
-                    '{%post_link%}'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
-                    '{%thread_link%}'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
-                    '{%post_message%}' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
-                    '{%post_link%}'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>\n"
-                ]);
-                $i++;
+                        $ctpl->set_tag('post_count', format_word($info['max_post_count'], $locale['fmt_post']));
+                        $ctpl->set_tag('last_activity_link', "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>");
+                        $ctpl->set_tag('last_activity_info', sprintf($locale['forum_0021'],
+                            showdate('forumdate', $info['last_activity']['time']),
+                            profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
+                        ));
+
+                        $i = 0;
+                        foreach ($info['item'] as $post_id => $postData) {
+                            $ctpl->set_block('activity_items', [
+                                'spacing'      => (!$i ? " m-t-0" : ''),
+                                'avatar'       => display_avatar($postData['post_author'], '50px', FALSE, '', ''),
+                                'profile_link' => profile_link($postData['post_author']['user_id'], $postData['post_author']['user_name'], $postData['post_author']['user_status']),
+                                'post_date'    => showdate('forumdate', $postData['post_datestamp']),
+                                'post_timer'   => timer($postData['post_datestamp']),
+                                'post_link'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
+                                'thread_link'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
+                                'post_message' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
+                                'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>\n"
+                            ]);
+                            $i++;
+                        }
+                    } else {
+                        $ctpl->set_block('no_item', ['message' => $locale['forum_4121']]);
+                    }
+                    $tpl->set_block('view', ['content' => $ctpl->get_output()]);
+                    break;
             }
-            echo strtr($html, [
-                '{%pagenav%}'            => $info['pagenav'],
-                '{%post_count%}'         => format_word($info['max_post_count'], $locale['fmt_post']),
-                '{%last_activity_link%}' => "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>",
-                '{%last_activity_info%}' => sprintf($locale['forum_0021'], showdate('forumdate', $info['last_activity']['time']), profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])),
-                '{%post_items%}'         => $items
-            ]);
         } else {
-            echo strtr($no_item_html, ['{%message%}' => $locale['forum_4121']]);
+            $tpl->set_block('view', ['content' => render_forum_threads($info)]);
         }
+        $tpl->set_tag('can_access', sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+        $tpl->set_tag('can_post', sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+        $tpl->set_tag('can_create_poll', sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+        $tpl->set_tag('can_upload_attach', sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+        $tpl->set_tag('can_download_attach', sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"));
+
+        echo $tpl->get_output();
+    }
+}
+
+/**
+ * Threads Item Display
+ * Template File     templates/viewforum/forum_thread_item.html
+ */
+if (!function_exists('render_forum_threads')) {
+    function render_forum_threads($info) {
+        $locale = fusion_get_locale();
+        // Ok, since this is a subpage and also require replacement, we need a new html file.
+        $tpl = \PHPFusion\Template::getInstance('thread_items');
+        $tpl->set_template(FORUM.'templates/viewforum/forum_thread_item.html');
+        if (!empty($info['filters']['type'])) {
+            foreach ($info['filters']['type'] as $key => $tabs) {
+                $tpl->set_block('tab_filter', [
+                    'filter_link' => $tabs['link'],
+                    'active_text' => $tabs['active'] ? " text-active" : "",
+                    'title'       => $tabs['icon'].$tabs['title'],
+                    'count'       => $tabs['count']
+                ]);
+            }
+        }
+
+        $tpl->set_tag('forum_filter', forum_filter($info));
+
+        if (!empty($info['threads']['pagenav'])) {
+            $tpl->set_block('pagenav_a', ['navigation' => $info['threads']['pagenav']]);
+        }
+
+        $tpl->set_tag('title1', $locale['forum_0228']);
+        $tpl->set_tag('title2', $locale['forum_0052']);
+        $tpl->set_tag('title3', $locale['forum_0020']);
+        $tpl->set_tag('title4', $locale['forum_0053']);
+
+        if (!empty($info['threads'])) {
+            if (!empty($info['threads']['sticky'])) {
+                foreach ($info['threads']['sticky'] as $cdata) {
+                    $tpl->set_block('sticky_threads', [
+                        'thread_id'           => $cdata['thread_id'],
+                        'avatar'              => $cdata['thread_last']['avatar'],
+                        'thread_link_url'     => $cdata['thread_link']['link'],
+                        'thread_link_title'   => $cdata['thread_link']['title'],
+                        'thread_icons'        => implode('', $cdata['thread_icons']),
+                        'thread_pages'        => $cdata['thread_pages'],
+                        'author_profile_link' => $cdata['thread_starter']['profile_link'],
+                        'last_activity_time'  => timer($cdata['thread_last']['time']),
+                        'thread_views'        => number_format($cdata['thread_views']),
+                        'thread_postcount'    => number_format($cdata['thread_postcount']),
+                        'thread_votecount'    => number_format($cdata['vote_count']),
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                    ]);
+                }
+            }
+            if (!empty($info['threads']['item'])) {
+                foreach ($info['threads']['item'] as $cdata) {
+                    $tpl->set_block('normal_threads', [
+                        'thread_id'           => $cdata['thread_id'],
+                        'avatar'              => $cdata['thread_last']['avatar'],
+                        'thread_link_url'     => $cdata['thread_link']['link'],
+                        'thread_link_title'   => $cdata['thread_link']['title'],
+                        'thread_icons'        => implode('', $cdata['thread_icons']),
+                        'thread_pages'        => $cdata['thread_pages'],
+                        'author_profile_link' => $cdata['thread_starter']['profile_link'],
+                        'last_activity_time'  => timer($cdata['thread_last']['time']),
+                        'thread_views'        => number_format($cdata['thread_views']),
+                        'thread_postcount'    => number_format($cdata['thread_postcount']),
+                        'thread_votecount'    => number_format($cdata['vote_count']),
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                    ]);
+                }
+            }
+        } else {
+            $tpl->set_block('no_item', ['message' => $locale['forum_0269']]);
+        }
+        if (!empty($info['threads']['pagenav2'])) {
+            $tpl->set_block('pagenav_b', ['navigation_2' => $info['threads']['pagenav2']]);
+        }
+
+        return $tpl->get_output();
     }
 }
 
@@ -409,7 +443,8 @@ if (!function_exists('forum_filter')) {
             'descending' => $locale['forum_0230'],
             'ascending'  => $locale['forum_0231']
         );
-
+        // temporarily fix before moving to TPL
+        ob_start();
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id']) || isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
             ?>
             <div class='clearfix'>
@@ -477,94 +512,12 @@ if (!function_exists('forum_filter')) {
 
             <?php
         }
+
+        return ob_get_clean();
     }
 }
 
-if (!function_exists('render_forum_threads')) {
-    function render_forum_threads($info) {
-        $locale = fusion_get_locale();
-        ?>
-        <div class='list-group-item p-t-15 p-b-15'>
-            <?php
-            if (!empty($info['filters']['type'])) {
-                foreach ($info['filters']['type'] as $key => $tabs) {
-                    ?>
-                    <a href='<?php echo $tabs['link'] ?>' class='m-r-10<?php echo $tabs['active'] ? " text-active" : "" ?> strong'><?php echo $tabs['icon'].$tabs['title'] ?> (<?php echo $tabs['count'] ?>)</a>
-                    <?php
-                }
-            }
-            ?>
-            <hr/>
-            <div class='clearfix'>
-                <div class='pull-left'>
-                    <?php forum_filter($info); ?>
-                </div>
-                <div class='pull-right'>
-                    <?php
-                    if (!empty($info['threads']['pagenav'])) {
-                        echo "<div class='text-right'>\n";
-                        echo $info['threads']['pagenav'];
-                        echo "</div>\n";
-                    }
-                    ?>
-                </div>
-            </div>
-            <hr/>
-            <!---forumthreads-->
-            <table class='table table-striped table-responsive clear'>
-                <thead>
-                <tr>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0228'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0052'] ?></strong></small>
-                    </th>
-                    <th class='no-break'>
-                        <small><strong><?php echo $locale['forum_0020'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0053'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><i class='fa fa-comment'></i></small>
-                    </th>
-                    <th>
-                        <small><i class='fa fa-thumbs-o-up'></i></small>
-                    </th>
-                    <th></th>
-                </tr>
-                <tbody class='text-smaller'>
-                <?php
-                if (!empty($info['threads'])) {
-                    if (!empty($info['threads']['sticky'])) {
-                        foreach ($info['threads']['sticky'] as $cdata) {
-                            render_thread_item($cdata);
-                        }
-                    }
-                    if (!empty($info['threads']['item'])) {
-                        foreach ($info['threads']['item'] as $cdata) {
-                            render_thread_item($cdata);
-                        }
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>".$locale['forum_0269']."</td></tr>\n";
-                }
-                ?>
-                </tbody>
-                </thead>
-            </table>
-        </div>
-        <?php
-        if (!empty($info['threads']['pagenav2'])) {
-            echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
-            echo $info['threads']['pagenav2'];
-            echo "</div>\n";
-        }
-
-    }
-}
-
+// Defunct this.
 if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
         $locale = fusion_get_locale();

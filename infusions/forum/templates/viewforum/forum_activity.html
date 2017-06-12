@@ -1,0 +1,37 @@
+<div class='clearfix'>
+    {pagenav.{
+    <div class='pull-right m-t-5'>{%pagenav%}</div>
+    }}
+    <div class='pull-left'>
+        <div class='list-group-item'>
+            <strong>
+                {%post_count%} | {%last_activity_link%} {%last_activity_info%}
+            </strong>
+        </div>
+    </div>
+</div>
+<div class='clearfix'>
+    {activity_items.{
+    <div class='well spacer-md {%spacing%}'>
+        <div class='pull-left m-r-15'>
+            {%avatar%}
+        </div>
+        <div class='overflow-hide'>
+            <div class='m-b-10'>
+                {%profile_link%}
+                <span class='text-smaller strong'>{%post_date%}, {%post_timer%} {%post_link%}</span>
+            </div>
+            <div class='list-group-item'>
+                <div class='m-b-10 text-smaller text-lighter'><strong>{%thread_link%}</strong></div>
+                {%post_message%}
+            </div>
+            <div class='list-group-item'>
+                <span class='text-smaller strong'>{%post_link%}<i class='fa fa-external-link-square m-l-5'></i></span>
+            </div>
+        </div>
+    </div>
+    }}
+    {no_item.{
+    <div class='well text-center'>{%message%}</div>
+    }}
+</div>

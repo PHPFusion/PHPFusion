@@ -1,6 +1,8 @@
 <div class='list-group-item'>
+    {pagenav.{
     <div class='text-right'>{%pagenav%}</div>
     <hr/>
+    }}
     <table class='table table-responsive table-striped clear'>
         <thead>
         <tr>
@@ -16,7 +18,22 @@
         </tr>
         </thead>
         <tbody>
-        {%users_list%}
+        {users_list.{
+        <tr>
+            <td class='no-break'>
+                <div class='clearfix'>
+                    <div class='pull-left m-r-10'>{%avatar%}</div>
+                    {%profile_link%}
+                </div>
+            </td>
+            <td>
+                <span class='text-smaller'>{%thread_link%}</span>
+            </td>
+            <td class='no-break'>
+                <span class='text-smaller'>{%activity_date%}</span>
+            </td>
+        </tr>
+        }}
         </tbody>
     </table>
 </div>
