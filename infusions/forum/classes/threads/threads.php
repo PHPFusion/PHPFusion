@@ -759,8 +759,6 @@ class ForumThreads extends ForumServer {
 
         $locale = fusion_get_locale();
 
-        $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
-
         switch ($this->thread_info['sort_post']) {
             case 'oldest':
                 $sortCol = 'post_datestamp ASC';
@@ -851,9 +849,7 @@ class ForumThreads extends ForumServer {
                     }
                 }
             }
-
             while ($pdata = dbarray($result)) {
-
                 $user = fusion_get_user($pdata['post_author']);
                 if (!empty($user)) {
                     $author = [
@@ -868,6 +864,9 @@ class ForumThreads extends ForumServer {
                         'user_lastvisit' => $user['user_lastvisit'],
                         'user_ip'        => $user['user_ip']
                     ];
+                    if (!$pdata['post_showsig']) {
+                        unset($module['user_sig']);
+                    }
                     /*
                      * Build ['user_profiles'] info
                      */
