@@ -26,7 +26,7 @@ class QuickReply extends ForumServer {
         $locale = fusion_get_locale();
         $user_sig = fusion_get_userdata('user_sig');
         $notify_options = ForumServer::get_forum_settings('thread_notify');
-        require_once FORUM."templates/forum_input.php";
+        require_once FORUM."templates.php";
 
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
         if (!$user_sig) {

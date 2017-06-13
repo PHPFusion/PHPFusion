@@ -1,3 +1,22 @@
+{category_header.{
+<tr>
+    <td style='padding-top:20px;'>
+        <small class='text-uppercase'>
+            <strong>{%forum_title_link%}</strong>
+        </small>
+    </td>
+    <td style='padding-top:20px;'>
+        <small class='text-uppercase strong text-lighter'>{%threads_title%}</small>
+    </td>
+    <td style='padding-top:20px;'>
+        <small class='text-uppercase strong text-lighter'>{%post_title%}</small>
+    </td>
+    <td class='col-xs-4' style='padding-top:20px;'>
+        <small class='text-uppercase strong text-lighter'>{%last_thread_title%}</small>
+    </td>
+</tr>}}
+
+{forums.{
 <tr>
     <td style='border-radius: 4px 0 0 4px; background: #f7f7f7; border-top:4px solid #fff; border-bottom:4px solid #fff;'>
         <a title='{%link_title%}' class='forum-subject' href='{%forum_link_url%}'>
@@ -16,6 +35,11 @@
         {%forum_post_count%}
     </td>
     <td style='background: #f7f7f7; border-radius: 4px; border-top:4px solid #fff; border-left:8px solid #fff; border-bottom:4px solid #fff;'>
-        {%last_post_html%}
+        {%forum_lastpost%}
     </td>
 </tr>
+}}
+
+{no_item.{
+<div class='well text-center'>{%message%}</div>
+}}

@@ -97,7 +97,6 @@ class Template {
         if (!empty($this->block)) {
             $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
             preg_match_all($block_pattern, $this->template, $matches, PREG_SET_ORDER);
-
             if (!empty($matches)) {
                 // set to ID and Template
                 foreach ($matches as $preg_results) {
@@ -133,8 +132,9 @@ class Template {
                 }
             }
         }
+        unset($this->tag);
+        unset($this->block);
 
-        //print_p($this->template);
-        return (string)$this->template;
+        return (string)trim($this->template);
     }
 }

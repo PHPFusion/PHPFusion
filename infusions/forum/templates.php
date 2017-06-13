@@ -51,40 +51,64 @@ if (!function_exists('render_forum_main')) {
         /**
          * WORK IN PROGRESS TO IMPLEMENT TEMPLATE CLASS
          */
-        $html = fusion_get_template(FORUM.'templates/forum_index.html');
 
-        $html_item = fusion_get_template(FORUM.'templates/forum_index_item.html');
-        $html_no_item = fusion_get_template(FORUM.'templates/forum_index_no_item.html');
-        $popular_tpl = fusion_get_template(FORUM.'templates/components/popular_threads_body.html');
-        $popular_tpl_item = fusion_get_template(FORUM.'templates/components/popular_threads_item.html');
-        $content = '';
+        $html = \PHPFusion\Template::getInstance('forum_index');
+        $html->set_template(FORUM.'templates/index/forum_index.html');
+        $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag('forum_bg_src', FORUM.'images/default_forum_bg.jpg');
+        $html->set_tag('title', $locale['forum_0013']);
+        $html->set_tag('new_thread_link_url', $info['new_topic_link']['link']);
+        $html->set_tag('new_thread_link_title', $info['new_topic_link']['title']);
         if (!empty($info['forums'][$id])) {
-            $forums = $info['forums'][$id];
-            foreach ($forums as $forum_id => $data) {
-                if ($data['forum_type']) {
-                    $content .= strtr($html_item, [
-                        '{%forum_title_link%}'  => $data['forum_link']['title'],
-                        '{%threads_title%}'     => $locale['forum_0002'],
-                        '{%post_title%}'        => $locale['forum_0003'],
-                        '{%last_thread_title%}' => $locale['forum_0012'],
+            $chtml = \PHPFusion\Template::getInstance('forum_su_index');
+            $chtml->set_template(FORUM.'templates/index/forum_item.html');
+            foreach ($info['forums'][$id] as $forum_id => $data) {
+                if ($data['forum_type'] == 1) {
+
+                    $chtml->set_block('category_header', [
+                        'forum_title_link'  => $data['forum_link']['title'],
+                        'threads_title'     => $locale['forum_0002'],
+                        'post_title'        => $locale['forum_0003'],
+                        'last_thread_title' => $locale['forum_0012'],
                     ]);
+
+                    $category_header = $chtml->get_output();
+                    // repeat this.
                     if (isset($info['forums'][0][$forum_id]['child'])) {
-                        $sub_forums = $info['forums'][0][$forum_id]['child'];
                         $i = 1;
-                        foreach ($sub_forums as $sub_forum_id => $cdata) {
-                            $content .= fusion_get_function('render_forum_item', $cdata, $i);
+                        $content = '';
+                        foreach ($info['forums'][0][$forum_id]['child'] as $sub_forum_id => $cdata) {
+                            $content .= render_forum_item($cdata, $i);
                             $i++;
                         }
+                        $html->set_block('forum_content', ['forum_content' => $category_header.$content]);
                     } else {
-                        $content .= strtr($html_no_item, ['{%message%}' => $locale['forum_0327']]);
+                        $chtml->set_block('no_item', ['message' => $locale['forum_0327']]);
                     }
                 }
             }
+            $html->set_tag('forum_content', ['content' => 'TBA']);
         } else {
-            $content = strtr($html_no_item, ['{%message%}' => $locale['forum_0328']]);
+            $html->set_block('no_item', ['{%message%}' => $locale['forum_0328']]);
         }
 
-        // HTML mixed PHP -- non standard function
+        $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
+        $html->set_tag('tags_title', $locale['forum_0272']);
+        if (!empty($threadTags['tags'])) {
+            foreach ($threadTags['tags'] as $tag_id => $tag_data) {
+                $html->set_block('tags', [
+                    'active_class' => ($tag_data['tag_active'] == TRUE ? ' active' : ''),
+                    'tag_link'     => $tag_data['tag_link'],
+                    'tag_color'    => $tag_data['tag_color'],
+                    'tag_title'    => $tag_data['tag_title'],
+                ]);
+            }
+        } else {
+            $html->set_block('tags_no_item', ['message' => $locale['forum_0274']]);
+        }
+
+        // Popular Threads this Week
+        // An example that you can run core codes still in the template controller function
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id 
         ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
@@ -95,61 +119,24 @@ if (!function_exists('render_forum_main')) {
                 ':not_locked' => 0,
                 ':not_hidden' => 0,
             ]);
-        $items = '';
         if (dbrows($custom_result)) {
+            $html->set_tag('popular_threads_title', $locale['forum_0273']);
             while ($popular = dbarray($custom_result)) {
                 $user = fusion_get_user($popular['thread_author']);
-                $items .= strtr($popular_tpl_item, [
-                        '{%link%}'         => FORUM."viewthread.php?thread_id=".$popular['thread_id'],
-                        '{%title%}'        => $popular['thread_subject'],
-                        '{%profile_link%}' => $locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                        '{%count%}'        => format_word($popular['thread_postcount'], $locale['fmt_post'])
-                    ]
-                );
-            }
-        }
-
-        $popular_threads = strtr($popular_tpl, [
-                '{%title%}' => $locale['forum_0273'],
-                '{%items%}' => $items
-            ]
-        );
-
-        echo strtr($html, [
-            '{%breadcrumb%}'        => render_breadcrumbs(),
-            '{%forum_bg_src%}'      => FORUM.'images/default_forum_bg.jpg',
-            '{%title%}'             => $locale['forum_0013'],
-            '{%new_thread_button%}' => "<a class='btn btn-primary btn-block' href='".$info['new_topic_link']['link']."'><i class='fa fa-comment m-r-10'></i>".$info['new_topic_link']['title']."</a>",
-            '{%forum_content%}'     => $content,
-            '{%thread_tags%}'       => fusion_get_function('render_thread_tags'),
-            '{%popular_threads%}'   => $popular_threads
-        ]);
-    }
-}
-
-if (!function_exists('render_thread_tags')) {
-    function render_thread_tags() {
-        $locale = fusion_get_locale();
-        $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
-        $html_tags = fusion_get_template(FORUM.'templates/forum_index_thread_tags.html');
-        $html_tags_item = fusion_get_template(FORUM.'templates/forum_index_thread_tags_item.html');
-        $tags_item = '';
-        if (!empty($threadTags['tags'])) {
-            foreach ($threadTags['tags'] as $tag_id => $tag_data) {
-                $tags_item .= strtr($html_tags_item, [
-                    '{%active_class%}' => ($tag_data['tag_active'] == TRUE ? ' active' : ''),
-                    '{%tag_link%}'     => $tag_data['tag_link'],
-                    '{%tag_color%}'    => $tag_data['tag_color'],
-                    '{%tag_title%}'    => $tag_data['tag_title'],
+                $html->set_block('popular_threads_item', [
+                    'link'         => FORUM."viewthread.php?thread_id=".$popular['thread_id'],
+                    'title'        => $popular['thread_subject'],
+                    'profile_link' => $locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                    'count'        => format_word($popular['thread_postcount'], $locale['fmt_post'])
                 ]);
             }
         } else {
-            $tags_item = $locale['forum_0274'];
+            $html->set_block('no_popular_threads', [
+                'message' => 'There are no threads defined'
+            ]);
         }
-        echo strtr($html_tags, [
-            '{%tags_title%}'   => $locale['forum_0272'],
-            '{%tags_content%}' => $tags_item,
-        ]);
+
+        echo $html->get_output();
     }
 }
 
@@ -161,33 +148,43 @@ if (!function_exists('render_forum_item')) {
      * Switch between different types of forum list containers
      *
      * @param $data
-     * @param $i
      */
-    function render_forum_item($data, $i) {
+    function render_forum_item($data) {
         $locale = fusion_get_locale();
-        $html = fusion_get_template(FORUM.'templates/forum_index_forums.html');
+        $html = \PHPFusion\Template::getInstance('forum_item');
+        $html->set_template(FORUM.'templates/index/forum_item.html');
+
+        $l_html = \PHPFusion\Template::getInstance('forum_item_lastpost');
+        $l_html->set_template(FORUM.'templates/index/forum_item_lastpost.html'); // we have already cached it earlier?
         if (empty($data['thread_lastpost'])) {
-            $last_post_html = $locale['forum_0005'];
+            $l_html->set_block('forum_no_lastpost', [
+                'message' => $locale['forum_0005']
+            ]);
         } else {
-            $last_post_html = "<div class='clearfix'>\n";
-            if (!empty($data['last_post']['avatar'])) {
-                $last_post_html .= "<div class='pull-left lastpost-avatar m-r-10'>".$data['last_post']['avatar']."</div>";
-            }
-            $last_post_html .= "<div class='overflow-hide'>\n";
-            $last_post_html .= "<span class='forum_thread_link'><a style='font-weight: 400; color: #333; text-decoration:underline; font-size:85%;' href='".$data['last_post']['post_link']."'>".trim_text($data['thread_subject'], 35)."</a></span><br/>";
-            $last_post_html .= "<span class='forum_profile_link'>".$data['last_post']['profile_link']." - ".$data['last_post']['time']."</span>\n";
-            $last_post_html .= "</div>\n</div>\n";
+            $l_html->set_block('forum_lastpost', [
+                'avatar'               => (!empty($data['last_post']['avatar']) ? $data['last_post']['avatar'] : ''),
+                'last_thread_link'     => $data['last_post']['post_link'],
+                'last_thread_subject'  => $data['thread_subject'],
+                'profile_link'         => $data['last_post']['profile_link'],
+                'last_thread_activity' => $data['last_post']['time']
+            ]);
         }
-        echo strtr($html, [
-            '{%forum_link_url%}'         => $data['forum_link']['link'],
-            '{%forum_link_title%}'       => $data['forum_link']['title'],
-            '{%forum_description%}'      => $data['forum_description'],
-            '{%forum_moderators_title%}' => $locale['forum_0007'],
-            '{%forum_moderators%}'       => $data['forum_moderators'],
-            '{%forum_thread_count%}'     => $data['forum_threadcount_word'],
-            '{%forum_post_count%}'       => $data['forum_postcount_word'],
-            '{%last_post_html%}'         => $last_post_html,
-        ]);
+
+        $template_arr = [
+            'forum_link_url'         => $data['forum_link']['link'],
+            'forum_link_title'       => $data['forum_link']['title'],
+            'forum_description'      => $data['forum_description'],
+            'forum_moderators_title' => $locale['forum_0007'],
+            'forum_moderators'       => $data['forum_moderators'],
+            'forum_thread_count'     => $data['forum_threadcount_word'],
+            'forum_post_count'       => $data['forum_postcount_word'],
+            'forum_lastpost'         => $l_html->get_output()
+        ];
+
+        $html->set_block('forums', $template_arr);
+        $output = $html->get_output();
+
+        return $output;
     }
 }
 
@@ -320,7 +317,6 @@ if (!function_exists('forum_viewforum')) {
         echo $tpl->get_output();
     }
 }
-
 /**
  * Threads Item Display
  * Template File     templates/viewforum/forum_thread_item.html
