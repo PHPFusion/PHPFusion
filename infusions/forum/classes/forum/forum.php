@@ -542,7 +542,7 @@ class Forum extends ForumServer {
                             array(
                                 'condition' => $filter_sql['condition'],
                                 'order'     => $filter_sql['order'],
-                                'debug'     => TRUE,
+                                //'debug'     => TRUE,
                             )
                         );
 
