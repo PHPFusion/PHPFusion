@@ -37,15 +37,13 @@ if (!function_exists('render_forum')) {
 }
 
 /**
- * Forum Page
+ * Main Forum Page - Recursive
+ *
+ * @param array $info
+ * @param int   $id - counter nth
+ *                  Template File    templates/index/forum_index.html
  */
 if (!function_exists('render_forum_main')) {
-    /**
-     * Main Forum Page - Recursive
-     *
-     * @param array $info
-     * @param int   $id - counter nth
-     */
     function render_forum_main(array $info, $id = 0) {
         $locale = fusion_get_locale();
         /**
@@ -141,14 +139,12 @@ if (!function_exists('render_forum_main')) {
 }
 
 /**
- * Forum Item
+ * Switch between different types of forum list containers
+ *
+ * @param $data
+ * Template File    templates/index/forum_item.html
  */
 if (!function_exists('render_forum_item')) {
-    /**
-     * Switch between different types of forum list containers
-     *
-     * @param $data
-     */
     function render_forum_item($data) {
         $locale = fusion_get_locale();
         $html = \PHPFusion\Template::getInstance('forum_item');

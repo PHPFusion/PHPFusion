@@ -20,85 +20,61 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists("display_forum_tags")) {
-
     function display_forum_tags($info) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
 
-        echo render_breadcrumbs();
-
         if (isset($_GET['tag_id'])) {
-
-            // thread design
-            echo "<!--pre_forum-->\n";
-            echo "<div class='forum-title m-t-20'>".$locale['forum_0002']."</div>\n";
-
-            forum_filter($info);
-
+            $html = \PHPFusion\Template::getInstance('tags');
+            $html->set_template(FORUM.'templates/tags/tag_threads.html');
+            $html->set_tag('title', $locale['forum_0002']);
+            $html->set_tag('filter', fusion_get_function('forum_filter', $info));
+            $html->set_tag('breadcrumb', render_breadcrumbs());
             if (!empty($info['threads']['pagenav'])) {
-                echo "<div class='text-right'>\n";
-                echo $info['threads']['pagenav'];
-                echo "</div>\n";
+                $html->set_block('pagenav', ['pagenav' => $info['threads']['pagenav']]);
+                $html->set_block('pagenav_a', ['pagenav_a' => $info['threads']['pagenav']]);
             }
-
             if (!empty($info['threads'])) {
-                echo "<div class='forum-container list-group-item'>\n";
+                $content = '';
                 if (!empty($info['threads']['sticky'])) {
                     foreach ($info['threads']['sticky'] as $cdata) {
-                        render_thread_item($cdata);
+                        $content .= fusion_get_function('render_thread_item', $cdata);
                     }
                 }
                 if (!empty($info['threads']['item'])) {
                     foreach ($info['threads']['item'] as $cdata) {
-                        render_thread_item($cdata);
+                        $content .= fusion_get_function('render_thread_item', $cdata);
                     }
                 }
-                echo "</div>\n";
+                $html->set_block('threads', ['content' => $content]);
             } else {
-                echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
+                $html->set_block('no_threads', ['message' => $locale['forum_0269']]);
             }
-
-            if (!empty($info['threads']['pagenav'])) {
-                echo "<div class='text-right hidden-xs m-t-15'>\n";
-                echo $info['threads']['pagenav'];
-                echo "</div>\n";
-            }
-
             if (!empty($info['threads']['pagenav2'])) {
-                echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
-                echo $info['threads']['pagenav2'];
-                echo "</div>\n";
+                $html->set_block('pagenav2', ['pagenav2' => $info['threads']['pagenav2']]);
             }
-
+            echo $html->get_output();
 
         } else {
-
-            ?>
-            <div class="row m-0">
-                <?php if (!empty($info['tags'])) : ?>
-                    <?php unset($info['tags'][0]) ?>
-                    <?php foreach ($info['tags'] as $tag_id => $tag_data): ?>
-                        <div class="col-xs-12 col-sm-4"
-                             style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
-                            <a href="<?php echo $tag_data['tag_link'] ?>">
-                                <div class="panel-body">
-                                    <h4 class="text-white"><?php echo $tag_data['tag_title'] ?></h4>
-
-                                    <p class="text-white"><?php echo $tag_data['tag_description'] ?></p>
-                                </div>
-                                <hr/>
-                                <?php if (!empty($tag_data['threads'])) : ?>
-                                    <span class="tag_result text-white">
-                                    <?php echo trim_text($tag_data['threads']['thread_subject'], 100)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
-                                </span>
-                                <?php endif; ?>
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-            <?php
+            $html = \PHPFusion\Template::getInstance('tags');
+            $html->set_template(FORUM.'templates/tags/tag.html');
+            $html->set_tag('breadcrumb', render_breadcrumbs());
+            if (!empty($info['tags'])) {
+                unset($info['tags'][0]);
+                foreach ($info['tags'] as $tag_id => $tag_data) {
+                    $html->set_block('tag_block', [
+                        'tag_color'       => $tag_data['tag_color'],
+                        'tag_link'        => $tag_data['tag_link'],
+                        'tag_title'       => $tag_data['tag_title'],
+                        'tag_description' => $tag_data['tag_description'],
+                        'thread_subject'  => (!empty($tag_data['threads']) ? trim_text($tag_data['threads']['thread_subject'], 100) : ''),
+                        'thread_activity' => (!empty($tag_data['threads']) ? ttimer($tag_data['threads']['thread_lastpost']) : ''),
+                    ]);
+                }
+            } else {
+                $html->set_block('no_tag', ['message' => 'There are no tags defined']);
+            }
+            echo $html->get_output();
         }
-
     }
 }

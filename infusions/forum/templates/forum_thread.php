@@ -171,7 +171,6 @@ if (!function_exists('render_thread')) {
 
 /* Post Item */
 if (!function_exists('render_post_item')) {
-
     function render_post_item($data) {
 
         $aidlink = fusion_get_aidlink();
