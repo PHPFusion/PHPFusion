@@ -129,6 +129,9 @@ if (!function_exists('infusion_exists')) {
 
         return (boolean)$inf_exists_check[$infusion_folder];
     }
+} else {
+    print_p('You are calling this file twice. Please report where by copying the following:');
+    print_p(debug_backtrace());
 }
 
 /**
