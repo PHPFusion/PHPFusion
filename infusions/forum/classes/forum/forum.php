@@ -492,6 +492,14 @@ class Forum extends ForumServer {
                                 ]
                             ];
                         }
+
+                        $attach_count = dbrows(dbquery("
+                        SELECT attach_id FROM ".DB_FORUM_THREADS." t
+                        INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON t.thread_id=a.thread_id
+                        WHERE t.forum_id=:forum_id AND t.thread_poll='0' AND t.thread_hidden='0' AND (a.attach_id IS NOT NULL OR attach_count > 0)
+                        GROUP BY a.thread_id                        
+                        ", [':forum_id' => $this->forum_info['forum_id']]));
+
                         $this->forum_info['filters']['type'] = [
                                 'all'         => [
                                     'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=all",
@@ -505,7 +513,7 @@ class Forum extends ForumServer {
                                     'title'  => $locale['forum_0223'],
                                     'icon'   => "<i class='fa fa-file-text-o text-info m-r-5'></i>",
                                     'active' => FALSE,
-                                    'count'  => dbcount("(t.forum_id)", DB_FORUM_ATTACHMENTS." a INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=a.thread_id", "t.forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]) ?: 0,
+                                    'count'  => $attach_count ?: 0,
                                 ],
                                 'poll'        => [
                                     'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=poll",
@@ -533,8 +541,10 @@ class Forum extends ForumServer {
                         $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'],
                             array(
                                 'condition' => $filter_sql['condition'],
-                                'order'     => $filter_sql['order']
-                            ));
+                                'order'     => $filter_sql['order'],
+                                'debug'     => TRUE,
+                            )
+                        );
 
                         $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
                     }
