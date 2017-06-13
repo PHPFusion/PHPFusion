@@ -50,12 +50,16 @@ function flipBox(b) {
 }
 /**
  * Tool to trim text
- * Usage: data-trim-text='30'
+ * Usage:
+ *     data-trim-text='30' - 30 is text length
+ *     $('[data-trim-text]').trim_text(); - function initialization
  */
-$.fn.trim_text = function () {
-    var length = this.data("trim-text"), newtext;
-    newtext = this.text().substr(0, length) + "...";
-    return this.text(newtext);
+$.fn.trim_text = function() {
+    return this.each(function() {
+        var length = $(this).data("trim-text"), newtext;
+        newtext = $(this).text().substr(0, length) + "...";
+        return $(this).text(newtext);
+    });
 }
 
 /**
