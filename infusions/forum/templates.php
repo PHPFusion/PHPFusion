@@ -19,6 +19,10 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 /**
+ *  To customize the forums template output, copy and declare the same function in your theme.php
+ */
+
+/**
  * Forum Page Control Layout
  */
 if (!function_exists('render_forum')) {
@@ -333,18 +337,14 @@ if (!function_exists('render_forum_threads')) {
                 ]);
             }
         }
-
         $tpl->set_tag('forum_filter', forum_filter($info));
-
         if (!empty($info['threads']['pagenav'])) {
             $tpl->set_block('pagenav_a', ['navigation' => $info['threads']['pagenav']]);
         }
-
         $tpl->set_tag('title1', $locale['forum_0228']);
         $tpl->set_tag('title2', $locale['forum_0052']);
         $tpl->set_tag('title3', $locale['forum_0020']);
         $tpl->set_tag('title4', $locale['forum_0053']);
-
         if (!empty($info['threads'])) {
             if (!empty($info['threads']['sticky'])) {
                 foreach ($info['threads']['sticky'] as $cdata) {
@@ -509,102 +509,75 @@ if (!function_exists('forum_filter')) {
     }
 }
 
-// Defunct this.
-if (!function_exists('render_thread_item')) {
-    function render_thread_item($info) {
-        $locale = fusion_get_locale();
-        ?>
-        <tr id='thread_<?php echo $info['thread_id'] ?>'>
-            <td>
-                <div class='clearfix'>
-                    <div class='pull-left m-r-10'><?php echo $info['thread_last']['avatar'] ?></div>
-                    <div class='overflow-hide'>
-                        <a class='forum-link' href='<?php echo $info['thread_link']['link'] ?>'><?php echo $info['thread_link']['title'] ?></a>
-                        <span class='m-l-10 m-r-10 text-lighter'><?php echo implode('', $info['thread_icons']) ?></span>
-                        <?php echo $info['thread_pages']; ?>
-                    </div>
-                </div>
-            </td>
-            <td><?php echo $info['thread_starter']['profile_link'] ?></td>
-            <td>
-                <small><?php echo timer($info['thread_last']['time']) ?></small>
-            </td>
-            <td><strong><?php echo number_format($info['thread_views']) ?></strong></td>
-            <td><strong><?php echo number_format($info['thread_postcount']) ?></strong></td>
-            <td><strong><?php echo number_format($info['vote_count']) ?></strong></td>
-            <td>
-                <?php if (isset($info['track_button'])) : ?>
-                    <a class='btn btn-danger btn-sm' onclick="return confirm('<?php echo $locale['global_060'] ?>');" href='<?php echo $info['track_button']['link'] ?>'><?php echo $info['track_button']['title'] ?></a>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <?php
-    }
-}
-
+/**
+ * Forum Sections Item Display (Latest, Participated, Tracked, Unanswered, Unsolved)
+ * Template File     templates/viewforum/forum_thread_item.html
+ */
 if (!function_exists("render_section")) {
     function render_section($info) {
         $locale = fusion_get_locale();
-        echo render_breadcrumbs();
-        ?>
-        <div class='list-group-item'>
-            <div class='clearfix' style='height:60px;'>
-                <div class='pull-left'><?php echo $info['threads_time_filter']; ?></div>
-                <?php if (!empty($info['threads']['pagenav'])) : ?>
-                    <div class='pull-right center-y'><?php echo $info['threads']['pagenav'] ?></div> <?php endif; ?>
-            </div>
-            <hr/>
-            <table class='table table-responsive clear'>
-                <thead>
-                <tr>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0228'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0052'] ?></strong></small>
-                    </th>
-                    <th class='no-break'>
-                        <small><strong><?php echo $locale['forum_0020'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><strong><?php echo $locale['forum_0053'] ?></strong></small>
-                    </th>
-                    <th>
-                        <small><i class='fa fa-comment'></i></small>
-                    </th>
-                    <th>
-                        <small><i class='fa fa-thumbs-o-up'></i></small>
-                    </th>
-                    <th></th>
-                </tr>
-                <tbody class='text-smaller'>
-                <?php
-                if (!empty($info['threads'])) {
-                    if (!empty($info['threads']['sticky'])) {
-                        foreach ($info['threads']['sticky'] as $cdata) {
-                            render_thread_item($cdata);
-                        }
-                    }
-                    if (!empty($info['threads']['item'])) {
-                        foreach ($info['threads']['item'] as $cdata) {
-                            render_thread_item($cdata);
-                        }
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>".$locale['forum_0269']."</td></tr>\n";
+        $html = \PHPFusion\Template::getInstance('forum_section');
+        $html->set_template(FORUM.'templates/forum_section.html');
+        $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag('filter_dropdown', $info['threads_time_filter']);
+        $html->set_tag('title1', $locale['forum_0228']);
+        $html->set_tag('title2', $locale['forum_0052']);
+        $html->set_tag('title3', $locale['forum_0020']);
+        $html->set_tag('title4', $locale['forum_0053']);
+        if (!empty($info['threads']['pagenav'])) {
+            $html->set_block('pagenav', ['pagenav' => $info['threads']['pagenav']]);
+        }
+        if (!empty($info['threads'])) {
+            if (!empty($info['threads']['sticky'])) {
+                foreach ($info['threads']['sticky'] as $cdata) {
+                    $html->set_block('sticky_threads', [
+                        'thread_id'           => $cdata['thread_id'],
+                        'avatar'              => $cdata['thread_last']['avatar'],
+                        'thread_link_url'     => $cdata['thread_link']['link'],
+                        'thread_link_title'   => $cdata['thread_link']['title'],
+                        'thread_icons'        => implode('', $cdata['thread_icons']),
+                        'thread_pages'        => $cdata['thread_pages'],
+                        'author_profile_link' => $cdata['thread_starter']['profile_link'],
+                        'last_activity_time'  => timer($cdata['thread_last']['time']),
+                        'thread_views'        => number_format($cdata['thread_views']),
+                        'thread_postcount'    => number_format($cdata['thread_postcount']),
+                        'thread_votecount'    => number_format($cdata['vote_count']),
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                    ]);
                 }
-                ?>
-            </table>
-        </div>
-        <?php
+            }
+            if (!empty($info['threads']['item'])) {
+                foreach ($info['threads']['item'] as $cdata) {
+                    $html->set_block('normal_threads', [
+                        'thread_id'           => $cdata['thread_id'],
+                        'avatar'              => $cdata['thread_last']['avatar'],
+                        'thread_link_url'     => $cdata['thread_link']['link'],
+                        'thread_link_title'   => $cdata['thread_link']['title'],
+                        'thread_icons'        => implode('', $cdata['thread_icons']),
+                        'thread_pages'        => $cdata['thread_pages'],
+                        'author_profile_link' => $cdata['thread_starter']['profile_link'],
+                        'last_activity_time'  => timer($cdata['thread_last']['time']),
+                        'thread_views'        => number_format($cdata['thread_views']),
+                        'thread_postcount'    => number_format($cdata['thread_postcount']),
+                        'thread_votecount'    => number_format($cdata['vote_count']),
+                        'track_button'        => (isset($cdata['track_button']) ? "<a class='btn btn-danger btn-sm' onclick=\"return confirm('".$locale['global_060']."');\" href='".$cdata['track_button']['link']."'>".$cdata['track_button']['title']."</a>" : '')
+                    ]);
+                }
+            }
+        } else {
+            $html->set_block('no_item', ['message' => $locale['forum_0269']]);
+        }
+        echo $html->get_output();
     }
 }
 
-/* Custom Modal New Topic */
+/**
+ * Custom Modal New Topic
+ * This is unused by the core but you can implement it.
+ */
 if (!function_exists('forum_newtopic')) {
     function forum_newtopic() {
         $locale = fusion_get_locale();
-
         if (isset($_POST['select_forum'])) {
             $_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
             redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
@@ -621,8 +594,7 @@ if (!function_exists('forum_newtopic')) {
             while ($data = dbarray($result)) {
                 $depth = get_depth($index, $data['forum_id']);
                 if (checkgroup($data['forum_post'])) {
-                    $options[$data['forum_id']] = str_repeat("&#8212;",
-                            $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
+                    $options[$data['forum_id']] = str_repeat("&#8212;", $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
                 }
             }
 
@@ -646,29 +618,36 @@ if (!function_exists('forum_newtopic')) {
     }
 }
 
+/**
+ * Forum Confirmation Message Box
+ * Template File    templates/forum_postify.html
+ */
 if (!function_exists('render_postify')) {
     function render_postify($info) {
-        opentable($info['title']);
-        echo "<div class='".($info['error'] ? "alert alert-danger" : "well")." text-center'>\n";
-        echo(!empty($info['description']) ? $info['description']."<br/>\n" : "");
-        foreach ($info['link'] as $link) {
-            echo "<p><a href='".$link['url']."'>".$link['title']."</a></p>\n";
+        $html = \PHPFusion\Template::getInstance('forum_postify');
+        $html->set_template(FORUM.'templates/forum_postify.html');
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        $html->set_tag('alert_class', ($info['error'] ? "alert alert-danger" : "well"));
+        if (!empty($info['description'])) {
+            $html->set_block('description', ['message' => $info['description']]);
         }
-        echo "</div>\n";
-        closetable();
+        foreach ($info['link'] as $link) {
+            $html->set_block('links', ['link_url' => $link['url'], 'link_title' => $link['title']]);
+        }
+        echo $html->get_output();
     }
 }
 
 /**
  * Display the post reply form
- * To customize this form, declare the same function in your theme.php and use $info string
+ * Template File    templates/forms/post.html
  */
 if (!function_exists("display_forum_postform")) {
-
     function display_forum_postform($info) {
         $locale = fusion_get_locale();
-        $template = fusion_get_template(FORUM.'templates/forms/post.html');
-
+        $html = \PHPFusion\Template::getInstance('forum_postform');
+        $html->set_template(FORUM.'templates/forms/post.html');
         $tab_title['title'][0] = $locale['forum_0602'];
         $tab_title['id'][0] = 'postopts';
         $tab_title['icon'][0] = '';
@@ -692,74 +671,79 @@ if (!function_exists("display_forum_postform")) {
             $tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
             $tab_content .= closetabbody();
         }
+        $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        $html->set_tag('description', $info['description']);
+        $html->set_tag('forum_fields', $info['forum_field'].$info['forum_id_field'].$info['thread_id_field']);
+        $html->set_tag('forum_subject_field', $info['subject_field']);
+        $html->set_tag('forum_tag_field', $info['tags_field']);
+        $html->set_tag('forum_message_field', $info['message_field']);
+        $html->set_tag('forum_edit_reason_field', $info['edit_reason_field']);
+        $html->set_tag('forum_poll_form', $info['poll_form']);
+        $html->set_tag('forum_post_options', opentab($tab_title, $tab_active, 'newthreadopts').$tab_content.closetab());
+        $html->set_tag('forum_post_button', $info['post_buttons']);
+
+        if (!empty($info['last_posts_reply'])) {
+            $html->set_block('lastpost', ['post_items' => $info['last_posts_reply']]);
+        }
 
         echo $info['openform'];
-        echo(strtr($template, [
-            '{%breadcrumb%}'              => render_breadcrumbs(),
-            '{%opentable%}'               => fusion_get_function('opentable', $info['title']),
-            '{%closetable%}'              => fusion_get_function('closetable'),
-            '{%description%}'             => $info['description'],
-            '{%forum_fields%}'            => $info['forum_field'].$info['forum_id_field'].$info['thread_id_field'],
-            '{%forum_subject_field%}'     => $info['subject_field'],
-            '{%forum_tag_field%}'         => $info['tags_field'],
-            '{%forum_message_field%}'     => $info['message_field'],
-            '{%forum_edit_reason_field%}' => $info['edit_reason_field'],
-            '{%forum_poll_form%}'         => $info['poll_form'],
-            '{%forum_post_options%}'      => opentab($tab_title, $tab_active, 'newthreadopts').$tab_content.closetab(),
-            '{$forum_post_button%}'       => $info['post_buttons'],
-            '{%display_last_posts%}'      => !empty($info['last_posts_reply']) ? $info['last_posts_reply'] : '',
-        ]));
+        echo $html->get_output();
         echo $info['closeform'];
     }
 }
 
 /**
  * Display the poll creation form
- * To customize this form, declare the same function in your theme.php and use $info string
+ * Template File    templates/forms/poll.html
  */
 if (!function_exists("display_forum_pollform")) {
     function display_forum_pollform($info) {
-        $html = fusion_get_template(FORUM.'templates/forms/poll.html');
-        echo strtr($html, [
-            '{%breadcrumb%}'  => render_breadcrumbs(),
-            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
-            '{%closetable%}'  => fusion_get_function('closetable'),
-            '{%description%}' => $info['description'],
-            '{%pollform%}'    => $info['field']['openform'].$info['field']['poll_field'].$info['field']['poll_button'].$info['field']['closeform'],
-        ]);
+        $html = \PHPFusion\Template::getInstance('forum_pollform');
+        $html->set_template(FORUM.'templates/forms/poll.html');
+        $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        $html->set_tag('description', $info['description']);
+        $html->set_tag('pollform', $info['field']['poll_field'].$info['field']['poll_button']);
+        echo $info['field']['openform'];
+        echo $html->get_output();
+        echo $info['field']['closeform'];
     }
 }
 
 /**
  * Display the bounty creation form
- * To customize this form, declare the same function in your theme.php and use $info string
+ * Template File        templates/forms/bounty.html
  */
 if (!function_exists('display_form_bountyform')) {
     function display_forum_bountyform($info) {
-        $html = fusion_get_template(FORUM.'templates/forms/bounty.html');
-        echo strtr($html, [
-            '{%breadcrumb%}'  => render_breadcrumbs(),
-            '{%opentable%}'   => fusion_get_function('opentable', $info['title']),
-            '{%closetable%}'  => fusion_get_function('closetable'),
-            '{%description%}' => $info['description'],
-            '{%bountyform%}'  => $info['field']['openform'].$info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button'].$info['field']['closeform'],
-        ]);
+        $html = \PHPFusion\Template::getInstance('forum_bntyform');
+        $html->set_template(FORUM.'templates/forms/bounty.html');
+        $html->set_tag('breadcrumb', render_breadcrumbs());
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        $html->set_tag('description', $info['description']);
+        $html->set_tag('pollform', $info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button']);
+        echo $info['field']['openform'];
+        echo $html->get_output();
+        echo $info['field']['closeform'];
     }
 }
 
 /**
  * Display the Quick Reply Form
- * To customize this form, declare the same function in your theme.php and use $info string
+ * Template File        templates/forms/quick_reply.html
  */
 if (!function_exists("display_quick_reply")) {
     function display_quick_reply($info) {
-        $html = fusion_get_template(FORUM.'templates/forms/quick_reply.html');
-
-        return strtr($html, [
-            '{%description%}'   => $info['description'],
-            '{%message_field%}' => $info['field']['message'],
-            '{%options_field%}' => $info['field']['options'],
-            '{%button%}'        => $info['field']['button'],
-        ]);
+        $html = \PHPFusion\Template::getInstance('forum_qrform');
+        $html->set_template(FORUM.'templates/forms/quick_reply.html');
+        $html->set_tag('description', $info['description']);
+        $html->set_tag('message_field', $info['field']['message']);
+        $html->set_tag('options_field', $info['field']['options']);
+        $html->set_tag('button', $info['field']['button']);
+        echo $html->get_output();
     }
 }

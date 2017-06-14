@@ -94,18 +94,21 @@ class Template {
      * @return string   The final HTML markup
      */
     public function get_output() {
-        if (!empty($this->block)) {
-            $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
-            preg_match_all($block_pattern, $this->template, $matches, PREG_SET_ORDER);
-            if (!empty($matches)) {
-                // set to ID and Template
-                foreach ($matches as $preg_results) {
-                    if (!empty($preg_results[1]) && !empty($preg_results[2])) {
-                        $this->block_render[$preg_results[1]] = $preg_results[2];
-                        $this->block_source[$preg_results[1]] = $preg_results[0];
-                    }
+
+        $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
+        preg_match_all($block_pattern, $this->template, $matches, PREG_SET_ORDER);
+
+        if (!empty($matches)) {
+            // set to ID and Template
+            foreach ($matches as $preg_results) {
+                if (!empty($preg_results[1]) && !empty($preg_results[2])) {
+                    $this->block_render[$preg_results[1]] = $preg_results[2];
+                    $this->block_source[$preg_results[1]] = $preg_results[0];
                 }
             }
+        }
+
+        if (!empty($this->block)) {
             foreach ($this->block as $block_id => $blocks) {
                 $block_results = '';
                 if (isset($this->block_render[$block_id]) && isset($this->block_source[$block_id])) {
@@ -118,12 +121,8 @@ class Template {
                     unset($this->block_source[$block_id]); // erase the block out of the array for cleaning up
                 }
             }
-            // Look for any remaining matches, and clean up the template if this block id is unused or is blanked value.
-            foreach ($this->block_source as $block_id => $block_results) {
-                $this->template = strtr($this->template, [$this->block_source[$block_id] => '']);
-                unset($this->block_source[$block_id]);
-            }
         }
+
         // Direct replacement that doesn't require any conditional checks. This is 1 to 1 string to tag replacements.
         if (!empty($this->tag)) {
             foreach ($this->tag as $tag => $value) {
@@ -132,6 +131,15 @@ class Template {
                 }
             }
         }
+
+        // Look for any remaining matches, and clean up the template if this block id is unused or is blanked value.
+        if (!empty($this->block_source)) {
+            foreach ($this->block_source as $block_id => $block_results) {
+                $this->template = strtr($this->template, [$this->block_source[$block_id] => '']);
+                unset($this->block_source[$block_id]);
+            }
+        }
+
         unset($this->tag);
         unset($this->block);
 
