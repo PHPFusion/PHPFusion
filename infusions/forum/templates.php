@@ -915,7 +915,9 @@ if (!function_exists('render_thread')) {
         }
         if (!empty($pdata)) {
             foreach ($pdata as $post_id => $post_data) {
+                // once i run this, the instance poofed because the cache...
                 $post_items = render_post_item($post_data);
+                //$post_items = '';
                 if ($post_id == $info['post_firstpost']) {
                     $html->set_block('post_firstpost_item', ['content' => $post_items]);
                     if ($info['permissions']['can_post']) {
@@ -937,6 +939,7 @@ if (!function_exists('render_thread')) {
                 }
             }
         }
+
         $html->set_tag('quick_reply_form', (!empty($info['quick_reply_form']) ? "<hr/>\n".$info['quick_reply_form'] : ''));
         $html->set_tag('info_access', (sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"));
         $html->set_tag('info_post', (sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"));
@@ -972,70 +975,128 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
     function render_post_item($data) {
-
-        $aidlink = fusion_get_aidlink();
+        $html = \PHPFusion\Template::getInstance('forum_post');
+        $html->set_template(FORUM.'templates/forum_post_item.html');
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
-
-        $template = "
-        {%post_html_comment%}
-        <div id='{%item_marker_id%}' class='clearfix post_items'>
-            <div class='clearfix'>
-                <div class='forum_avatar text-center'>{%user_avatar%}{%user_avatar_rank%}</div>
-                <!--forum_thread_user_name-->
-                <div class='m-b-10 post_info'>
-                    {%user_online_status%} <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
-                    <div class='pull-right m-l-10'>
-                        <div class='clearfix'>
-                            <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
-                            <div class='btn-group'>
-                                {%quote_button%}{%reply_button%}{%edit_button%}
-                                <a class='dropdown-toggle btn btn-sm btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
-                                <ul class='dropdown-menu forum-post-options'>
-                                    {%li_user_ip%}
-                                    {%li_user_post_count%}
-                                    <li class='divider'></li>
-                                    {%li_message%}
-                                    {%li_web%}
-                                    {%li_print%}
-                                    {%li_quote%}
-                                    {%li_edit%}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class='overflow-hide'>
-                {%vote_form%}
-                {%user_profiles%}
-                <div class='overflow-hide'>\n
-                    <div class='post_message'>{%post_message%}</div>
-                    {%user_signature%}
-                    {%post_attach%}
-                </div>
-                <!--sub_forum_post_message-->
-                <div class='post_info m-t-20'>\n
-                    {%post_edit_reason%}
-                    {%post_reply_message%}
-                    {%post_mood_message%}
-                </div>
-                <!--//sub_forum_post_message-->
-		    </div>
-		    {%post_mood%} {%bounty_button%}
-        </div>
-        ";
-
-        $li_admin = '';
-        if ($data['user_id'] != 1) {
+        $aidlink = fusion_get_aidlink();
+        $html->set_tag('post_html_comment', "<!--forum_thread_prepost_".$data['post_id']."-->");
+        $html->set_tag('post_date', $data['post_shortdate']);
+        $html->set_tag('item_marker_id', $data['marker']['id']);
+        $html->set_tag('user_avatar', $data['user_avatar_image']);
+        $html->set_tag('user_avatar_rank', ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>" : ''));
+        $html->set_tag('user_rank', ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>".$data['user_rank']."</span>" : ''));
+        $html->set_tag('user_profile_link', $data['user_profile_link']);
+        $html->set_tag('user_online_status', ($data['user_online'] ? "fa-circle" : "fa-circle-thin"));
+        $html->set_tag('user_signature', ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>" : ""));
+        $html->set_tag('checkbox_input', (iMOD ? $data['post_checkbox'] : ''));
+        $html->set_tag('post_message', $data['post_message']);
+        $html->set_tag('post_edit_reason', $data['post_edit_reason']);
+        $html->set_tag('post_reply_message', $data['post_reply_message']);
+        $html->set_tag('post_mood_message', $data['post_mood_message']);
+        if ($data['post_bounty']) {
+            $html->set_block('bounty_btn', [
+                'link_url'   => $data['post_bounty']['link'],
+                'link_title' => $data['post_bounty']['title'],
+                'title'      => $data['post_bounty']['title'],
+            ]);
+        }
+        if ($data['post_mood']) {
+            $html->set_block('mood_messages', ['btns' => $data['post_mood']]);
+        }
+        if ($data['post_attachments']) {
+            $html->set_block('post_attachments', ['attach' => $data['post_attachments']]);
+        }
+        if ((isset($data['post_quote']) && !empty($data['post_quote']))) {
+            $html->set_block('quote_btn', [
+                'link_url'   => $data['post_quote']['link'],
+                'link_title' => $data['post_quote']['title'],
+                'title'      => $data['post_quote']['title'],
+            ]);
+        }
+        if ((isset($data['post_reply']) && !empty($data['post_reply']))) {
+            $html->set_block('reply_btn', [
+                'link_url'   => $data['post_reply']['link'],
+                'link_title' => $data['post_reply']['title'],
+                'title'      => $data['post_reply']['title'],
+            ]);
+        }
+        if ((isset($data['post_edit']) && !empty($data['post_edit']))) {
+            $html->set_block('edit_btn', [
+                'link_url'   => $data['post_edit']['link'],
+                'link_title' => $data['post_edit']['title'],
+                'title'      => $data['post_edit']['title'],
+            ]);
+        }
+        // Dropdowns
+        $html->set_block('li_post_count', ['title' => $data['user_post_count']]);
+        $html->set_block('li_print_post', [
+            'link_url'   => $data['print']['link'],
+            'link_title' => $data['print']['title'],
+            'title'      => $data['print']['title']
+        ]);
+        if ($data['user_ip']) {
+            $html->set_block('li_ip', ['title' => $data['user_ip']]);
+        }
+        if ($data['user_message']['link']) {
+            $html->set_block('li_um', [
+                'link_url'   => $data['user_message']['link'],
+                'link_title' => $data['user_message']['title'],
+                'title'      => $data['user_message']['title']
+            ]);
+        }
+        if (isset($data['post_quote']) && !empty($data['post_quote'])) {
+            $html->set_block('li_quote', [
+                'link_url'   => $data['post_quote']['link'],
+                'link_title' => $data['post_quote']['title'],
+                'title'      => $data['post_quote']['title']
+            ]);
+        }
+        if (!empty($data['post_edit'])) {
+            $html->set_block('li_edit', [
+                'link_url'   => $data['post_edit']['link'],
+                'link_title' => $data['post_edit']['title'],
+                'title'      => $data['post_edit']['title'],
+            ]);
+        }
+        if ($data['user_web']['link']) {
+            $html->set_block('li_web', [
+                'link_url'    => $data['user_message']['link'],
+                'link_title'  => $data['user_message']['title'],
+                'title'       => $data['user_message']['title'],
+                'noindex_a'   => (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->"),
+                'noindex_b'   => (fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->"),
+                'noindex_rel' => (fusion_get_settings('index_url_userweb') ? "" : " rel='nofollow'")
+            ]);
+        }
+        if ($data['user_level'] >= iSUPERADMIN) {
             if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
-                $li_admin .= "<li class='divider'></li>\n";
-                $li_admin .= "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
-                $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
-                $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
+                $html->set_block('li_admin_title', [
+                    'title' => $locale['forum_0662']
+                ]);
+                $html->set_block('li_edit_user', [
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id'],
+                    'link_title' => $locale['forum_0663'],
+                    'title'      => $locale['forum_0663'],
+                ]);
+                $html->set_block('li_ban_user', [
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1",
+                    'link_title' => $locale['forum_0664'],
+                    'title'      => $locale['forum_0664'],
+                ]);
+                $html->set_block('li_delete_user', [
+                    'link_url'   => ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id'],
+                    'link_title' => $locale['forum_0665'],
+                    'title'      => $locale['forum_0665'],
+                ]);
             }
         }
-
+        if ($data['post_votebox']) {
+            $html->set_block('votebox', [
+                'input'  => $data['post_votebox'],
+                'status' => $data['post_answer_check']
+            ]);
+        }
         //$callback = implode('', array_map(function($array) { return "<li><div class='col-xs-12 col-sm-3 strong'>".$array['title']."</div><div class='col-xs-12 col-sm-9'>".$array['value']."</div></li>";}, $data['user_profiles']));        if (!empty($callback)) {
         $user_profiles = "";
         if (!empty($data['user_profiles'])) {
@@ -1045,56 +1106,21 @@ if (!function_exists('render_post_item')) {
             $i = 0;
             foreach ($data['user_profiles'] as $attr) {
                 $open_user_profiles = '';
-                $close_user_profiles = '';
                 if ($temp_name !== $attr['field_cat_name']) {
                     $open_user_profiles .= $i ? "</ul><ul class='post_profiles'>\n" : "";
                     $open_user_profiles .= "<li class='title'>".\PHPFusion\QuantumFields::parse_label($attr['field_cat_name'])."</li>\n";
                 }
-
                 $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li class='row'>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
                 $user_profiles .= "</li>\n";
-
                 $temp_name = $attr['field_cat_name'];
             }
             $user_profiles .= "</ul>\n";
+            $html->set_block('user_profiles', ['profiles' => $user_profiles]);
         }
 
-        return strtr($template,
-            [
-                '{%post_html_comment%}'  => "<!--forum_thread_prepost_".$data['post_id']."-->",
-                '{%post_date%}'          => $data['post_shortdate'],
-                '{%item_marker_id%}'     => $data['marker']['id'],
-                '{%user_avatar%}'        => $data['user_avatar_image'],
-                '{%user_avatar_rank%}'   => ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>\n" : ''),
-                '{%user_rank%}'          => ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : ''),
-                '{%user_profile_link%}'  => $data['user_profile_link'],
-                '{%user_online_status%}' => "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>",
-                '{%user_signature%}'     => ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : ""),
-                '{%checkbox_input%}'     => (iMOD ? $data['post_checkbox'] : ''),
-                '{%post_message%}'       => $data['post_message'],
-                '{%bounty_button%}'      => ($data['post_bounty'] ? "<!---bounty--><a class='btn btn-success pull-right' href='".$data['post_bounty']['link']."'>".$data['post_bounty']['title']."</a><!--//post_bounty-->" : ''),
-                '{%post_mood%}'          => (!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-t-10 m-b-10'>".$data['post_mood']."</div><!--//forum_mood-->" : ""),
-                '{%post_edit_reason%}'   => $data['post_edit_reason'],
-                '{%post_reply_message%}' => $data['post_reply_message'],
-                '{%post_mood_message%}'  => $data['post_mood_message'],
-                '{%post_attach%}'        => ($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : ""),
-                '{%quote_button%}'       => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-sm quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : ''),
-                '{%reply_button%}'       => (isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-sm reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : ''),
-                '{%edit_button%}'        => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-sm edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : ""),
-                '{%li_user_ip%}'         => ($data['user_ip'] ? "<li class='dropdown-header'>".$data['user_ip']."</li>" : ''),
-                '{%li_user_post_count%}' => "<li class='dropdown-header'>".$data['user_post_count']."</li>",
-                '{%li_message%}'         => ($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : ""),
-                '{%li_web%}'             => ($data['user_web']['link'] ? "<li><span>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</span></li>\n" : ""),
-                '{%li_print%}'           => "<li><a href='".$data['print']['link']."' target='_blank' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n",
-                '{%li_quote%}'           => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : ''),
-                '{%li_edit%}'            => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),
-                '{%li_admin%}'           => $li_admin,
-                '{%vote_form%}'          => ($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox'].$data['post_answer_check']."</div>" : ''),
-                '{%user_profiles%}'      => $user_profiles ? "<div class='post_profile_container'>$user_profiles</div>" : '',
-            ]
-        );
+        return $html->get_output();
     }
 }

@@ -284,6 +284,12 @@ $locale['forum_0661'] = "Hello {USERNAME},A reply has been posted in the forum t
 If you no longer wish to watch this thread you can click the \"Stop tracking this thread\" link located at the top of the thread.
 Regards,
 {SITEUSERNAME}";
+
+$locale['forum_0662'] = "User Options";
+$locale['forum_0663'] = "Edit User";
+$locale['forum_0664'] = "Ban User";
+$locale['forum_0665'] = "Delete User";
+
 $locale['forum_0701'] = "The Thread has been deleted.";
 $locale['forum_0704'] = "Are you sure you want to delete this Thread?";
 $locale['forum_0705'] = "Unable to remove thread because thread does not exist";
