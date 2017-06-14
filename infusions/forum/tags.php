@@ -25,7 +25,7 @@ require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates.php";
-require_once INFUSIONS."forum/templates/forum_tags.php";
+require_once INFUSIONS."forum/templates.php";
 
 $info = \PHPFusion\Forums\ForumServer::Tag(TRUE, TRUE)->get_TagInfo();
 display_forum_tags($info);
