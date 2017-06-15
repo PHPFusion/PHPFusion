@@ -11,8 +11,8 @@
 <div class='navbar navbar-inverse' style='margin-top:-15px;'>
     <ul class='nav navbar-nav'>
         {navbar_item.{
-        <li
-        {%active%}><a href='{%link%}'>{%title%}</a></li>}}
+        <li {%active%}><a href='{%link%}'>{%title%}</a></li>
+        }}
     </ul>
 </div>
 {rules.{
@@ -34,5 +34,6 @@
     <span>{%can_upload_attach%}</span><br/>
     <span>{%can_download_attach%}</span><br/>
 </div>
+
 {moderator_list.{
-<div class='list-group-item'><strong>{%title%}</strong> {%moderators%}</div>}}
+<div class='list-group-item'><strong>{%mod_title%}</strong> {%moderators%}</div>}}

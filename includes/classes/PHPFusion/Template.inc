@@ -94,34 +94,10 @@ class Template {
      *
      * @return string   The final HTML markup
      */
-    public static $output_matches = array();
-
-    /**
-     * Work in progress to lighten the load of the template engine
-     *
-     * @return mixed
-     */
-    private function cache_output() {
-        if (empty(self::$output_matches[self::$key])) {
-            $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
-            preg_match_all($block_pattern, $this->template, self::$output_matches[self::$key], PREG_SET_ORDER);
-            //print_p(self::$output_matches[self::$key]);
-            //print_p(self::$key);
-        } else {
-            //print_p(self::$output_matches[self::$key]);
-            //print_p(self::$key);
-        }
-
-        return self::$output_matches[self::$key];
-    }
-
     public function get_output() {
 
-        //$cache = $this->cache_output();
-        //print_p(self::$instance['viewthreads']);
         $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
         preg_match_all($block_pattern, $this->template, $cache, PREG_SET_ORDER);
-
         // set to ID and Template
         if (!empty($cache)) {
             foreach ($cache as $preg_results) {

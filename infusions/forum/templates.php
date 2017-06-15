@@ -275,9 +275,7 @@ if (!function_exists('forum_viewforum')) {
                     $ctpl = \PHPFusion\Template::getInstance('viewforum_activity');
                     $ctpl->set_template(FORUM.'templates/viewforum/forum_activity.html');
                     if (!empty($info['item'])) {
-
                         $ctpl->set_block('pagenav', ['pagenav' => $info['pagenav']]);
-
                         $ctpl->set_tag('post_count', format_word($info['max_post_count'], $locale['fmt_post']));
                         $ctpl->set_tag('last_activity_link', "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>");
                         $ctpl->set_tag('last_activity_info', sprintf($locale['forum_0021'],
