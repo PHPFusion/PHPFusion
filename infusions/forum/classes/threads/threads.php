@@ -926,26 +926,28 @@ class ForumThreads extends ForumServer {
                         if (dbrows($attachResult) > 0) {
                             $aImage = "";
                             $aFiles = "";
+                            $aFiles_Count = 0;
+                            $aImage_Count = 0;
                             while ($attachData = dbarray($attachResult)) {
                                 if (in_array($attachData['attach_mime'], img_mimeTypes())) {
                                     $aImage .= display_image_attach($attachData['attach_name'], "50", "50", $pdata['post_id'])."\n";
+                                    $aFiles_Count++;
                                 } else {
+                                    $current_file = FORUM.'attachments/'.$attachData['attach_name'];
                                     $aFiles .= "<div class='display-inline-block'><i class='fa fa-paperclip'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;getfiles=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
-                                    $aFiles .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attachData['attach_name']))." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
+                                    $aFiles .= "[<span class='small'>".(file_exists($current_file) ? parsebytesize(filesize($current_file)) : $locale['na'])." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
+                                    $aImage_Count++;
                                 }
                             }
                             if (!empty($aFiles)) {
                                 $post_attachments .= "<div class='emulated-fieldset'>\n";
-                                $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'],
-                                        $pdata['user_status']).' '.$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
+                                $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).' '.$locale['forum_0154'].($aFiles_Count > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
                                 $post_attachments .= "<div class='attachments-list m-t-10'>".$aFiles."</div>\n";
                                 $post_attachments .= "</div>\n";
                             }
-
                             if (!empty($aImage)) {
                                 $post_attachments .= "<div class='emulated-fieldset'>\n";
-                                $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'],
-                                        $pdata['user_status']).' '.$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
+                                $post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).' '.$locale['forum_0154'].($aImage_Count > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
                                 $post_attachments .= "<div class='attachments-list'>".$aImage."</div>\n";
                                 $post_attachments .= "</div>\n";
                                 if (!defined('COLORBOX')) {
@@ -955,6 +957,7 @@ class ForumThreads extends ForumServer {
                                     add_to_jquery("$('a[rel^=\"attach\"]').colorbox({ current: '".$locale['forum_0159']." {current} ".$locale['forum_0160']." {total}',width:'80%',height:'80%'});");
                                 }
                             }
+
                         } else {
                             $post_attachments = $locale['forum_0163a'];
                         }
