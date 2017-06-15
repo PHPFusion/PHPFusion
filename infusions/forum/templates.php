@@ -820,7 +820,7 @@ if (!function_exists('render_thread')) {
     function render_thread($info) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $html = \PHPFusion\Template::getInstance('viewthreads');
-        $html->set_template(FORUM.'templates/forum_threads.php');
+        $html->set_template(FORUM.'templates/forum_threads.html');
 
         $locale = fusion_get_locale();
         // Shorts in core
@@ -1067,7 +1067,7 @@ if (!function_exists('render_post_item')) {
                 'noindex_rel' => (fusion_get_settings('index_url_userweb') ? "" : " rel='nofollow'")
             ]);
         }
-        if ($data['user_level'] >= iSUPERADMIN) {
+        if ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
             if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
                 $html->set_block('li_admin_title', [
                     'title' => $locale['forum_0662']
