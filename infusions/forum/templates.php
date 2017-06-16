@@ -111,6 +111,7 @@ if (!function_exists('render_forum_main')) {
 
         // Popular Threads this Week
         // An example that you can run core codes still in the template controller function
+        $html->set_tag('popular_threads_title', $locale['forum_0273']);
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id 
         ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
@@ -122,22 +123,20 @@ if (!function_exists('render_forum_main')) {
                 ':not_hidden' => 0,
             ]);
         if (dbrows($custom_result)) {
-            $html->set_tag('popular_threads_title', $locale['forum_0273']);
             while ($popular = dbarray($custom_result)) {
                 $user = fusion_get_user($popular['thread_author']);
                 $html->set_block('popular_threads_item', [
-                    'link'         => FORUM."viewthread.php?thread_id=".$popular['thread_id'],
-                    'title'        => $popular['thread_subject'],
-                    'profile_link' => $locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status']),
-                    'count'        => format_word($popular['thread_postcount'], $locale['fmt_post'])
+                    'p_link'         => FORUM."viewthread.php?thread_id=".$popular['thread_id'],
+                    'p_title'        => $popular['thread_subject'],
+                    'p_profile_link' => $locale['by']." ".profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                    'p_count'        => format_word($popular['thread_postcount'], $locale['fmt_post'])
                 ]);
             }
         } else {
             $html->set_block('no_popular_threads', [
-                'message' => 'There are no threads defined'
+                'p_message' => $locale['forum_0275']
             ]);
         }
-
         echo $html->get_output();
     }
 }

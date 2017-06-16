@@ -133,6 +133,7 @@ $locale['forum_0271'] = "There are no post in this thread anymore. Please return
 $locale['forum_0272'] = "Filter by Tags";
 $locale['forum_0273'] = "Popular Threads This Week";
 $locale['forum_0274'] = "There are no thread tags";
+$locale['forum_0275'] = "There are no threads found";
 
 $locale['forum_0300'] = "Move to a new thread";
 $locale['forum_0301'] = "Select new forum";
