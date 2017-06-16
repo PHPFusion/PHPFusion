@@ -540,14 +540,9 @@ class ForumThreads extends ForumServer {
                     'locale' => $locale['forum_0182']
                 );
             }
-
             $this->handle_quick_reply();
-
             $this->get_thread_post();
-
-            //self::set_ThreadJs();
-            // execute in the end.
-
+            //showBenchmark(TRUE);
         } else {
             redirect(FORUM.'index.php');
         }
@@ -753,47 +748,37 @@ class ForumThreads extends ForumServer {
      * @todo: optimize post reply with a subnested query to reduce post^n queries.
      */
     private function get_thread_post() {
-
         $forum_settings = $this->get_forum_settings();
-
         $userdata = fusion_get_userdata();
-
         $locale = fusion_get_locale();
 
         switch ($this->thread_info['sort_post']) {
             case 'oldest':
-                $sortCol = 'post_datestamp ASC';
+                $sortCol = 'p.post_datestamp ASC';
                 break;
             case 'latest':
-                $sortCol = 'post_datestamp DESC';
+                $sortCol = 'p.post_datestamp DESC';
                 break;
             case 'high':
-                $sortCol = 'vote_points DESC';
+                $sortCol = 'v.vote_points DESC';
                 break;
             default:
-                $sortCol = 'post_datestamp ASC';
+                $sortCol = 'p.post_datestamp ASC';
         }
-
-        // Thread id and forum id mismatch bug
-
-        // @todo: where to calculate has voted without doing it in while loop?
 
         require_once INCLUDES."mimetypes_include.php";
         // post query
         $result = dbquery("
-					SELECT p.*, t.thread_id,
-					u2.user_name AS edit_name, u2.user_status AS edit_status,
+					SELECT p.*, 					
 					SUM(v.vote_points) 'vote_points',
-					IF(v2.vote_id, 1, 0) 'has_voted', v2.vote_points 'has_voted_points',
+					IF(v2.vote_id, 1, 0) 'has_voted', 
+					v2.vote_points 'has_voted_points',
 					COUNT(a.attach_id) 'attach_count'
-					FROM ".DB_FORUM_POSTS." p
-					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
+					FROM ".DB_FORUM_POSTS." p															
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id
 					LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".fusion_get_userdata('user_id')."'
-					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
-					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
-					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id=t.thread_id AND a.post_id=p.post_id
-					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0'
+					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON p.thread_id=a.thread_id AND a.post_id=p.post_id
+					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND p.post_hidden='0'
 					".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".intval($this->thread_info['post_firstpost'])."'" : '')."
 					GROUP by p.post_id
 					ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page'])
@@ -804,6 +789,7 @@ class ForumThreads extends ForumServer {
         if ($this->thread_info['post_rows'] > 0) {
 
             $response = $this->mood()->post_mood();
+
             if ($response) {
                 redirect(FUSION_REQUEST);
             }
@@ -830,9 +816,20 @@ class ForumThreads extends ForumServer {
                 }
             });
             ");
+            if (iMOD) {
+                // pass the checkbox value to an input field
+                add_to_jquery("
+                var checks = $('input[name^=delete_post]:checkbox');
+                checks.on('change', function() {
+                    var string = checks.filter(':checked').map(function(i,v){
+                    return this.value;
+                    }).get().join(',');
+                    $('#delete_item_post').val(string);
+                });
+                ");
+            }
 
             $i = 1;
-
             // Cache the user fields in the system
             $enabled_uf_fields = array();
             $module = array();
@@ -865,6 +862,7 @@ class ForumThreads extends ForumServer {
                         'user_lastvisit' => $user['user_lastvisit'],
                         'user_ip'        => $user['user_ip']
                     ];
+
                     if (!$pdata['post_showsig']) {
                         unset($module['user_sig']);
                     }
@@ -985,44 +983,55 @@ class ForumThreads extends ForumServer {
                     'post_reply_message' => '',
                     'post_bounty'        => [],
                 );
-
                 $pdata['post_message'] = $post_message;
 
-                // Who has replied to this post.
                 /**
-                 * This will drag the entire forum down with +1 query per forum post.
+                 * Who has replied to this post.
+                 * This will drag the entire forum down with +1 query per forum post. Each is 0.04s
+                 *
+                 * @todo:
+                 * Many to many search very slow (TURN OFF to implement it in next release)
+                 * Increment DB_FORUM_POSTS with 'post_replied' column and have postify set it.
                  */
-                $reply_result = dbquery("
-                SELECT p.post_id, p.post_datestamp, u.user_id, u.user_name, u.user_status
-                FROM ".DB_FORUM_POSTS." p
-                INNER JOIN ".DB_USERS." u ON u.user_id = p.post_author
-                WHERE p.post_cat= ".intval($pdata['post_id'])."
-                GROUP BY u.user_id ORDER BY p.post_datestamp DESC
-                ");
-                if (dbrows($reply_result)) {
-                    // who has replied
-                    $reply_sender = "";
-                    $last_datestamp = 0;
-                    while ($r_data = dbarray($reply_result)) {
-                        $reply_sender[$r_data['post_id']] = "
+
+                $replies_sql = "SELECT post_id FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id LIMIT 1";
+                $replies_param = [
+                    ':post_id'   => $pdata['post_id'],
+                    ':thread_id' => $pdata['thread_id'],
+                    ':forum_id'  => $pdata['forum_id']
+                ];
+                if (dbrows(dbquery($replies_sql, $replies_param))) {
+                    $replies_sql = "SELECT post_id, post_datestamp, post_author FROM ".DB_FORUM_POSTS." WHERE post_cat=:post_id AND thread_id=:thread_id AND forum_id=:forum_id GROUP BY post_author ORDER BY post_datestamp DESC";
+                    $reply_result = dbquery($replies_sql, $replies_param);
+                    if (dbrows($reply_result)) {
+                        // who has replied
+                        $reply_sender = "";
+                        $last_datestamp = 0;
+                        while ($r_data = dbarray($reply_result)) {
+                            $user_replied = fusion_get_user($r_data['post_author']);
+                            $r_data += array(
+                                'user_id'     => $user_replied['user_id'],
+                                'user_name'   => $user_replied['user_name'],
+                                'user_status' => $user_replied['user_status']
+                            );
+                            $reply_sender[$r_data['post_id']] = "
                         <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
                         ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
                         </a>
                         ";
-                        $last_datestamp = $r_data['post_datestamp'];
+                            $last_datestamp = $r_data['post_datestamp'];
+                        }
+                        $senders = implode(", ", $reply_sender);
+                        $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
                     }
-                    $senders = implode(", ", $reply_sender);
-                    $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
                 }
 
-                // Displays mood buttons
                 /**
+                 * Displays mood buttons
                  * This will drag the forum down with +1 query per post.
                  */
                 $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
-
                 $pdata['post_mood_message'] = ($pdata['post_mood']) ? $this->mood()->get_mood_message() : '';
-
                 /*
                  * Bounty payment
                  */
@@ -1032,7 +1041,6 @@ class ForumThreads extends ForumServer {
                         'title' => $locale['forum_4107']
                     );
                 }
-
                 /**
                  * User Stuffs, Sig, User Message, Web
                  */
@@ -1104,7 +1112,7 @@ class ForumThreads extends ForumServer {
 
                 // User Sig
                 if (!empty($pdata['user_sig']) && $pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['post_showsig'] == 1 && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
-                    $pdata['user_sig'] = nl2br(parse_textarea(stripslashes($pdata['user_sig'])));
+                    $pdata['user_sig'] = nl2br(parsesmileys(parseubb(stripslashes($pdata['user_sig']))));
                 } else {
                     $pdata['user_sig'] = "";
                 }
@@ -1170,7 +1178,16 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ".profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
+                    $e_user = fusion_get_user($pdata['post_edituser']);
+                    if ($e_user) {
+                        $edit_user = [
+                            'edit_userid'     => $e_user['user_id'],
+                            'edit_username'   => $e_user['user_name'],
+                            'edit_userstatus' => $e_user['user_status'],
+                        ];
+                        $pdata += $edit_user;
+                    }
+                    $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ".profile_link($edit_user['edit_userid'], $edit_user['edit_username'], $edit_user['edit_userstatus'])." ".$locale['forum_0167']." ".showdate("forumdate", $pdata['post_edittime']).", ".timer($pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= " - <a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
@@ -1197,26 +1214,13 @@ class ForumThreads extends ForumServer {
                 $this->thread_info['post_items'][$pdata['post_id']] = $pdata;
                 $i++;
             }
-            if (iMOD) {
-                // pass the checkbox value to an input field
-                add_to_jquery("
-                var checks = $('input[name^=delete_post]:checkbox');
-                checks.on('change', function() {
-                    var string = checks.filter(':checked').map(function(i,v){
-                    return this.value;
-                    }).get().join(',');
-                    $('#delete_item_post').val(string);
-                });
-                ");
-            }
         }
     }
 
     /**
      * New Status
      */
-    public
-    function set_thread_visitor() {
+    public function set_thread_visitor() {
         if (iMEMBER) {
             $userdata = fusion_get_userdata();
             $thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];

@@ -985,7 +985,7 @@ if (!function_exists('render_post_item')) {
         $html->set_tag('user_avatar_rank', ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>" : ''));
         $html->set_tag('user_rank', ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>".$data['user_rank']."</span>" : ''));
         $html->set_tag('user_profile_link', $data['user_profile_link']);
-        $html->set_tag('user_online_status', ($data['user_online'] ? "fa-circle" : "fa-circle-thin"));
+        $html->set_tag('user_online_status', ($data['user_online'] ? "fa fa-circle" : "fa fa-circle-thin"));
         $html->set_tag('user_signature', ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>" : ""));
         $html->set_tag('checkbox_input', (iMOD ? $data['post_checkbox'] : ''));
         $html->set_tag('post_message', $data['post_message']);
