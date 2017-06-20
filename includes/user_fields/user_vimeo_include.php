@@ -35,7 +35,7 @@ if ($profile_method == "input") {
     //https://vimeo.com/user1577007
     if ($field_value) {
         $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.vimeo.com/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_facebook_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_vimeo_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
     $user_fields = array('title' => $icon.$locale['uf_vimeo'], 'value' => $field_value ?: '');
 }
