@@ -43,7 +43,7 @@ if (db_exists(DB_NEWS)) {
             $rsid = intval($row['news_id']);
             $rtitle = $row['news_subject'];
             $description = stripslashes(nl2br($row['news_news']));
-            $description = strip_tags($description, "<a><p><br /><br /><hr />");
+            $description = strip_tags($description, "<a><p><br /><hr />");
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/news/news.php?readmore=".$rsid."</link>\n";

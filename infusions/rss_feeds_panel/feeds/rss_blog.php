@@ -50,7 +50,7 @@ if (db_exists(DB_BLOG)) {
             $rsid = intval($row['blog_id']);
             $rtitle = $row['blog_subject'];
             $description = stripslashes(nl2br($row['blog_blog']));
-            $description = strip_tags($description, "<a><p><br /><br /><hr />");
+            $description = strip_tags($description, "<a><p><br /><hr />");
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/blog/blog.php?readmore=".$rsid."</link>\n";

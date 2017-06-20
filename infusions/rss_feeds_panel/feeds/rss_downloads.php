@@ -44,7 +44,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
             $rsid = intval($row['download_id']);
             $rtitle = $row['download_title'];
             $description = stripslashes(nl2br($row['download_description']));
-            $description = strip_tags($description, "<a><p><br /><br /><hr />");
+            $description = strip_tags($description, "<a><p><br /><hr />");
             echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/downloads/downloads.php?download_id=".$rsid."</link>\n";
             echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
