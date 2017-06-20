@@ -113,7 +113,7 @@ if (!function_exists('render_forum_main')) {
         // An example that you can run core codes still in the template controller function
         $html->set_tag('popular_threads_title', $locale['forum_0273']);
         $custom_result = dbquery("SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_postcount FROM ".DB_FORUMS." tf
-        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id 
+        INNER JOIN ".DB_FORUM_THREADS." t ON tf.forum_id=t.forum_id
         ".(multilang_column('FO') ? " WHERE forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('forum_access')." and (t.thread_lastpost >=:one_week and t.thread_lastpost < :current) and t.thread_locked=:not_locked and t.thread_hidden=:not_hidden
         GROUP BY t.thread_id ORDER BY t.thread_postcount DESC LIMIT 10",
             [
@@ -851,9 +851,10 @@ if (!function_exists('render_thread')) {
             }
             $selector['oldest'] = $locale['forum_0180'];
             $selector['latest'] = $locale['forum_0181'];
+            $selector['high'] = $locale['forum_0182'];
             $html->set_block('thread_filter', [
                 'filter_label' => $locale['forum_0183'],
-                'filter_word'  => (isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180']),
+                'filter_word'  => (isset($_GET['sort_post']) && in_array($_GET['sort_post'], array_flip($selector)) ? $selector[$_GET['sort_post']] : $locale['forum_0180']),
                 'filter_opts'  => $filter_dropdown,
             ]);
         }
