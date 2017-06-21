@@ -44,7 +44,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
             $rsid = intval($row['article_id']);
             $rtitle = $row['article_subject'];
             $description = stripslashes(nl2br($row['article_snippet']));
-            $description = strip_tags($description, "<a><p><br /><hr />");
+            $description = strip_tags(htmlspecialchars_decode($description), "<a><p><br /><hr />");
             echo "<item>\n";
             echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR") ? " - ".$locale['rss_in'].$row['article_cat_language'] : "")."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/articles/articles.php?article_id=".$rsid."</link>\n";
