@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 namespace Material;
 
+/**
+ * Class Login
+ * @package Material
+ */
 class Login extends Components {
     public function __construct() {
         $locale   = fusion_get_locale();

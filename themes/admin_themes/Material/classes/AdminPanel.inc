@@ -19,6 +19,10 @@ namespace Material;
 
 use PHPFusion\Admins;
 
+/**
+ * Class AdminPanel
+ * @package Material
+ */
 class AdminPanel extends Components {
     public function __construct() {
         self::AddTo();
@@ -63,10 +67,7 @@ class AdminPanel extends Components {
                 }
             echo '</div>';
 
-            if (self::IsMobile()) {
-                // Mobile
-            } else {
-                // PC
+            if (!self::IsMobile()) {
                 self::MessagesBox();
                 self::ThemeSettings();
             }

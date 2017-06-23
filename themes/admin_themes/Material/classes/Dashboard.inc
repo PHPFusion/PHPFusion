@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 namespace Material;
 
+/**
+ * Class Dashboard
+ * @package Material
+ */
 class Dashboard {
     private static function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
@@ -27,10 +31,10 @@ class Dashboard {
         $aidlink = fusion_get_aidlink();
 
         opentable($locale['250']);
-            $mobile  = '12';
-            $tablet  = '6';
-            $laptop  = '6';
-            $desktop = '3';
+            $mobile  = 12;
+            $tablet  = 6;
+            $laptop  = 3;
+            $desktop = 3;
 
             $panels = [
                 'registered'   => ['link' => '', 'title' => 251],
@@ -58,7 +62,8 @@ class Dashboard {
                 echo '</div>';
             echo '</div>';
 
-            $desktop = '4';
+            $laptop  = 6;
+            $desktop = 4;
 
             echo '<div class="row">';
                 if (infusion_exists('forum')) {

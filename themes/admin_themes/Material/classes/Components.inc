@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 namespace Material;
 
+/**
+ * Class Components
+ * @package Material
+ */
 class Components {
     private static $messages = [];
 
