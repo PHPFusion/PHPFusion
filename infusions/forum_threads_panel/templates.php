@@ -29,23 +29,27 @@ if (!function_exists('render_threads_panel')) {
         $html->set_tag('label', $finfo['latest']['label']);
         $html->set_tag('label2', $finfo['hottest']['label']);
         if (!empty($finfo['latest'])) {
+        	if (!empty($finfo['latest']['item'])) {
                 foreach ($finfo['latest']['item'] as $cdatm) {
                     $html->set_block('latest', [
                         'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
+                        'link_title'  => "<div id='text_id' data-trim-text='18'>".$cdatm['link_title']."</div>",
                     ]);
                 }
+        	}
         } else {
             $html->set_block('latest_no_item', ['message' => $finfo['latest']['no_rows']]);
         }
         if (!empty($finfo['hottest'])) {
+        	if (!empty($finfo['hottest']['item'])) {
                 foreach ($finfo['hottest']['item'] as $cdatm) {
                     $html->set_block('hottest', [
                         'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
+                        'link_title'  => "<div id='text_id' data-trim-text='18'>".$cdatm['link_title']."</div>",
                         'badge'  => $cdatm['badge'],
                     ]);
                 }
+        	}
         } else {
             $html->set_block('hottest_no_item', ['message' => $finfo['hottest']['no_rows']]);
         }
