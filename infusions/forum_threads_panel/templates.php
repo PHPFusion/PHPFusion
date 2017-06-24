@@ -33,7 +33,7 @@ if (!function_exists('render_threads_panel')) {
                 foreach ($finfo['latest']['item'] as $cdatm) {
                     $html->set_block('latest', [
                         'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-trim-text='18'>".$cdatm['link_title']."</div>",
+                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
                     ]);
                 }
         	}
@@ -45,7 +45,7 @@ if (!function_exists('render_threads_panel')) {
                 foreach ($finfo['hottest']['item'] as $cdatm) {
                     $html->set_block('hottest', [
                         'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-trim-text='18'>".$cdatm['link_title']."</div>",
+                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
                         'badge'  => $cdatm['badge'],
                     ]);
                 }

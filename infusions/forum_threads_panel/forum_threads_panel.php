@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 include_once INCLUDES."infusions_include.php";
 include_once INFUSIONS."forum_threads_panel/templates.php";
 
-add_to_jquery("$('[data-trim-text]').trim_text();");
+add_to_jquery("$('[data-threads-text]').trim_text();");
 
 $inf_settings = get_settings('forum');
 $locale = fusion_get_locale("", FORUM_LOCALE);
