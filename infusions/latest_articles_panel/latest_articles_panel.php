@@ -18,25 +18,30 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+include_once INFUSIONS."latest_articles_panel/templates.php";
+add_to_jquery("$('[data-articles-text]').trim_text();");
 
-openside($locale['global_030']);
-$result = dbquery("
-	SELECT 
-		a.article_id, a.article_subject
-	FROM ".DB_ARTICLES." AS a
-	INNER JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
-	WHERE a.article_draft='0' AND ac.article_cat_status='1' AND ".groupaccess("a.article_visibility")." AND ".groupaccess("ac.article_cat_visibility")."
-	".(multilang_table("AR") ? "AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
-	ORDER BY a.article_datestamp DESC
-	LIMIT 0,5
-");
+$article_result = "SELECT a.article_id, a.article_subject, tu.user_id, tu.user_name, tu.user_status
+				FROM ".DB_ARTICLES." AS a
+				INNER JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
+				LEFT JOIN ".DB_USERS." tu ON tu.user_id = a.article_name
+				WHERE a.article_draft='0' AND ac.article_cat_status='1' AND ".groupaccess("a.article_visibility")." AND ".groupaccess("ac.article_cat_visibility")."
+				".(multilang_table("AR") ? "AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
+				ORDER BY a.article_datestamp DESC
+				LIMIT 0,5
+				";
+$result = dbquery($article_result);
+
+$ainfo['openside'] = $locale['global_030'];
 
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
-        echo THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' title='".$data['article_subject']."' class='side'>".trimlink($data['article_subject'], 21)."</a><br />\n";
+		$output['link_url'] = INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' title='".$data['article_subject']."' class='side'";
+		$output['link_title'] = $data['article_subject'];
+		$output['user'] = $locale['about'].": ".profile_link($data['user_id'], $data['user_name'], $data['user_status']);
+        $ainfo['item'][] = $output;
     }
 } else {
-    echo "<div style='text-align:center'>".$locale['global_031']."</div>\n";
+    $ainfo['no_item'] = $locale['global_031'];
 }
-
-closeside();
+render_articles($ainfo);
