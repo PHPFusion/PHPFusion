@@ -21,13 +21,12 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include INCLUDES."infusions_include.php";
+include_once INCLUDES."infusions_include.php";
 if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
     $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
 } else {
     $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/English.php");
 }
-
 
 add_to_head('<style type="text/css">
 .rss-button {
