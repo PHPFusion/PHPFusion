@@ -56,8 +56,12 @@ function flipBox(b) {
  */
 $.fn.trim_text = function() {
     return this.each(function() {
-        var length = $(this).data("trim-text"), newtext;
-        newtext = $(this).text().substr(0, length) + "...";
+        var length = $(this).data("trim-text"), newtext, dots;
+
+        dots = "";
+        if ($(this).text().length > length) dots = "...";
+        newtext = $(this).text().substr(0, length) + dots;
+
         return $(this).text(newtext);
     });
 }
