@@ -15,7 +15,7 @@ $locale['SMLY_413'] = "Inactive Smileys";
 $locale['SMLY_414'] = "The smiley Text is in use.";
 $locale['SMLY_415'] = "The smiley Code is in use.";
 $locale['SMLY_416'] = "Do you realy want to delete this smiley?";
-$locale['SMLY_417'] = "Do you realy want to Inactiv this smiley?";
+$locale['SMLY_417'] = "Do you realy want to deactivate this smiley?";
 $locale['SMLY_418'] = "Error Uploading smiley";
 // Smiley form
 $locale['SMLY_420'] = "Smiley Code:";
