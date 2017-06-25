@@ -254,7 +254,7 @@ if (!function_exists('forum_viewforum')) {
                 case 'people':
                     $user_tpl = \PHPFusion\Template::getInstance('viewforum_users');
                     $user_tpl->set_template(FORUM.'templates/viewforum/forum_users.html');
-                    $user_tpl->set_tag('pagenav', $info['pagenav']);
+                    $user_tpl->set_block('pagenav', ['pagenav' => $info['pagenav']]);
                     $user_tpl->set_tag('person_title', $locale['forum_0018']);
                     $user_tpl->set_tag('latest_thread_title', $locale['forum_0012']);
                     $user_tpl->set_tag('activity_title', $locale['forum_0016']);
