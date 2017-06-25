@@ -27,8 +27,9 @@ if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
 $locale = fusion_get_locale("", $locale_path);
 
 if (!infusion_exists('forum')) {
-    echo $locale['fmp_0103'];
+	$info['no_forum'] = $locale['fmp_0103'];
 } else {
+	include_once INFUSIONS."forum_mods_online_panel/templates.php";
     $moderator_groups = array();
     $mod_group = array();
     $group_sql = "";
@@ -49,9 +50,6 @@ if (!infusion_exists('forum')) {
         $mod_group = array_flip($moderator_groups);
     }
 
-    $admin_user = array();
-    $member_user = array();
-
     $user_column_select = "u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_level, u.user_groups";
 
     $site_admins_query = "SELECT $user_column_select FROM ".DB_USERS." u
@@ -61,48 +59,21 @@ if (!infusion_exists('forum')) {
     $site_admin_result = dbquery($site_admins_query);
 
     if (dbrows($site_admin_result) > 0) {
+    $info['admin']['openside'] = "<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0100'];
+    $info['member']['openside'] = "<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0102'];
         while ($user = dbarray($site_admin_result)) {
             $current_user_groups = array_flip(explode(".", $user['user_groups']));
-            if ($user['user_level'] <= USER_LEVEL_ADMIN) {
-                $user['user_title'] = $locale['fmp_0101'];
-                $admin_user[$user['user_id']] = $user;
+            if ($user['user_level'] <= USER_LEVEL_ADMIN) {            	$output['user_title'] = $locale['fmp_0101'];
+            	$output['user_avatar'] = display_avatar($user, "35px", "", TRUE, "img-rounded m-r-5");
+            	$output['user_profil'] = profile_link($user['user_id'], ucfirst($user['user_name']), $user['user_status']);
+                $info['admin']['item'][] = $output;
             } elseif ($key = array_intersect_key($moderator_groups, $current_user_groups)) {
-                $user['user_title'] = reset($key);
-                $member_user[$user['user_id']] = $user;
+            	$output['user_title'] = reset($key);
+            	$output['user_avatar'] = display_avatar($user, "35px", "", TRUE, "img-rounded m-r-5");
+            	$output['user_profil'] = profile_link($user['user_id'], ucfirst($user['user_name']), $user['user_status']);
+                $info['member']['item'][] = $output;
             }
         }
+	render_forum_mods($info);
     }
-
-    if (!empty($admin_user)) {
-        openside("<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0100']);
-            echo '<ul>';
-                foreach ($admin_user as $user_id => $user_data) {
-                    echo '<li>';
-                        echo '<div class="pull-left m-t-5">'.display_avatar($user_data, "35px", "", TRUE, "img-rounded m-r-5").'</div>';
-                        echo '<div class="overflow-hide">';
-                            echo '<div class="display-block strong">'.profile_link($user_data['user_id'], ucfirst($user_data['user_name']), $user_data['user_status']).'</div>';
-                            echo '<span class="text-lighter">'.$user_data['user_title'].'</span>';
-                        echo '</div>';
-                    echo '</li>';
-                }
-            echo '</ul>';
-        closeside();
-    }
-
-    if (!empty($member_user)) {
-        openside("<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0102']);
-            echo '<ul>';
-                foreach ($member_user as $user_id => $user_data) {
-                    echo '<li>';
-                        echo '<div class="pull-left m-t-5">'.display_avatar($user_data, "35px", "", TRUE, "img-rounded m-r-5").'</div>';
-                        echo '<div class="overflow-hide">';
-                            echo '<div class="display-block strong">'.profile_link($user_data['user_id'], ucfirst($user_data['user_name']), $user_data['user_status']).'</div>';
-                            echo '<span class="text-lighter">'.$user_data['user_title'].'</span>';
-                        echo '</div>';
-                    echo '</li>';
-                }
-            echo '</ul>';
-        closeside();
-    }
-
 }
