@@ -314,8 +314,8 @@ class Forum extends ForumServer {
                                                             'profile_link' => profile_link($last_user['forum_lastuser'], $last_user['user_name'], $last_user['user_status']),
                                                             'time'         => timer($row['forum_lastpost']),
                                                             'date'         => showdate("forumdate", $row['forum_lastpost']),
-                                                            'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
-                                                            'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+                                                            'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id'],
+                                                            'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
                                                         );
                                                         if ($forum_settings['forum_last_post_avatar']) {
                                                             $last_post['avatar'] = display_avatar($last_user, '30px', '', '', 'img-rounded');
@@ -378,7 +378,7 @@ class Forum extends ForumServer {
                                     $_GET['rowstart'] = (isset($_GET['rowstart'])) && $_GET['rowstart'] <= $this->forum_info['max_user_count'] ? $_GET['rowstart'] : 0;
                                     $sql_param[':rowstart'] = $_GET['rowstart'];
 
-                                    $query = "SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, p.post_id, p.post_datestamp, t.thread_id, t.thread_subject, t.forum_id   
+                                    $query = "SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, p.post_id, p.post_datestamp, t.thread_id, t.thread_subject, t.forum_id
                                     FROM $sql_select INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=p.thread_id AND t.forum_id=p.forum_id WHERE $sql_cond GROUP BY u.user_id ORDER BY u.user_name ASC, p.post_datestamp DESC LIMIT :rowstart, :limit";
 
                                     $result = dbquery($query, $sql_param);
@@ -497,7 +497,7 @@ class Forum extends ForumServer {
                         SELECT attach_id FROM ".DB_FORUM_THREADS." t
                         INNER JOIN ".DB_FORUM_ATTACHMENTS." a ON t.thread_id=a.thread_id
                         WHERE t.forum_id=:forum_id AND t.thread_poll='0' AND t.thread_hidden='0' AND (a.attach_id IS NOT NULL OR attach_count > 0)
-                        GROUP BY a.thread_id                        
+                        GROUP BY a.thread_id
                         ", [':forum_id' => $this->forum_info['forum_id']]));
 
                         $this->forum_info['filters']['type'] = [
@@ -626,8 +626,8 @@ class Forum extends ForumServer {
         );
 
         $forum_sql = "
-        SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid               
-        FROM ".DB_FORUMS." f 
+        SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid
+        FROM ".DB_FORUMS." f
         ".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('f.forum_access')."
         ";
         $forum_bind = [];
@@ -676,8 +676,9 @@ class Forum extends ForumServer {
                         'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
                         'time'         => timer($data['thread_lastpost']),
                         'date'         => showdate("forumdate", $data['thread_lastpost']),
-                        'thread_link'  => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id'],
-                        'post_link'    => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
+                        'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id'],
+                        'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
+                        'link_title'         => $data['forum_name'],
                     );
                     // Calculate Forum New Status
                     $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
