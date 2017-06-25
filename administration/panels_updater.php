@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-include LOCALE.LOCALESET."admin/panels.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/panels.php");
 pageAccess("P");
 
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
