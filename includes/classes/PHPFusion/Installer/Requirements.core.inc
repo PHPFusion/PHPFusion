@@ -241,7 +241,7 @@ class Requirements extends Install_Core {
             $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) ? TRUE : FALSE;
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
-                $requirements['files_check']['sub'][$key]['severability'] = -10;
+																$requirements['files_check']['severability'] = -10;
             } else {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
             }
