@@ -38,9 +38,9 @@ function total_side_span($value) {
 function center_grid_settings($side_grid_settings) {
     return array(
         'desktop_size' => (12 - total_side_span($side_grid_settings['desktop_size'])) > 0 ? 12 - total_side_span($side_grid_settings['desktop_size']) : 12,
-        'laptop_size' => (12 - total_side_span($side_grid_settings['laptop_size'])) > 0 ? 12 - total_side_span($side_grid_settings['laptop_size']) : 12,
-        'tablet_size' => (12 - total_side_span($side_grid_settings['tablet_size'])) > 0 ? 12 - total_side_span($side_grid_settings['tablet_size']) : 12,
-        'phone_size' => (12 - total_side_span($side_grid_settings['phone_size'])) > 0 ? 12 - total_side_span($side_grid_settings['phone_size']) : 12,
+        'laptop_size'  => (12 - total_side_span($side_grid_settings['laptop_size'])) > 0 ? 12 - total_side_span($side_grid_settings['laptop_size']) : 12,
+        'tablet_size'  => (12 - total_side_span($side_grid_settings['tablet_size'])) > 0 ? 12 - total_side_span($side_grid_settings['tablet_size']) : 12,
+        'phone_size'   => (12 - total_side_span($side_grid_settings['phone_size'])) > 0 ? 12 - total_side_span($side_grid_settings['phone_size']) : 12,
     );
 }
 

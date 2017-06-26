@@ -43,20 +43,22 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_forced_root' => TRUE,
         'placeholder'         => '',
         'deactivate'          => FALSE,
-        'width'               => '',
-        'inner_width'         => '100%',
-        'height'              => '80px',
-        'class'               => '',
-        'inner_class'         => '',
-        'inline'              => FALSE,
-        'length'              => 200,
-        'error_text'          => $locale['error_input_default'],
-        'safemode'            => FALSE,
-        'form_name'           => 'input_form',
-        'tinymce'             => 'simple',
-        'tinymce_css'         => '',
+        'width'              => '',
+        'inner_width'        => '100%',
+        'height'             => '80px',
+        'class'              => '',
+        'inner_class'        => '',
+        'inline'             => FALSE,
+        'length'             => 200,
+        'error_text'         => $locale['error_input_default'],
+        'safemode'           => FALSE,
+        'form_name'          => 'input_form',
+        'tinymce'            => 'simple',
+        'tinymce_css'        => '',
         'no_resize'          => FALSE,
         'autosize'           => FALSE,
+        'bbcode'             => FALSE,
+        'html'               => FALSE,
         'preview'            => FALSE,
         'path'               => IMAGES,
         'maxlength'          => '',
@@ -205,7 +207,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 plugins: [
                     'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
+                    'contextmenu directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
                 ],
                 width: '100%',
                 height: 100,
@@ -229,7 +231,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     ".$tinymce_smiley_vars."
                 }
                 });
-                ");
+        ");
                 add_to_jquery("
                 $('#inject').bind('click', function () {
                     tinyMCE.activeEditor.execCommand(\"mceInsertContent\", true, '[b]I am injecting in stuff..[/b]');
@@ -265,6 +267,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 break;
         }
     } else {
+
+        if ($options['bbcode']) {
+            $options['type'] = 'bbcode';
+        } elseif ($options['html']) {
+            $options['type'] = 'html';
+        }
 
         if (!defined('autogrow') && $options['autosize']) {
             define('autogrow', TRUE);

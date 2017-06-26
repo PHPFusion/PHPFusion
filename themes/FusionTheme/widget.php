@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -15,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 class FusionThemeAdmin {
 
     private $exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php";
@@ -35,7 +37,7 @@ class FusionThemeAdmin {
             if (defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $sqlArray = array(
-                        "settings_name" => $settings_name,
+                        "settings_name"  => $settings_name,
                         "settings_value" => $settings_value,
                         "settings_theme" => "FusionTheme",
                     );
@@ -57,6 +59,7 @@ class FusionThemeAdmin {
 
     /**
      * Returns all available Atom Theme Template
+     *
      * @return array
      */
     public function get_template_list() {

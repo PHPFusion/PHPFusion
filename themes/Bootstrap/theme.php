@@ -38,9 +38,9 @@ function render_page($license = FALSE) {
     // set size - max of 12 min of 0
     $side_grid_settings = array(
         'desktop_size' => 2,
-        'laptop_size' => 3,
-        'tablet_size' => 3,
-        'phone_size' => 12,
+        'laptop_size'  => 3,
+        'tablet_size'  => 3,
+        'phone_size'   => 12,
     );
 
     // Render Theme
@@ -140,21 +140,21 @@ function render_page($license = FALSE) {
     }
 
     echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER1') && USER1 ? USER1 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER1') && USER1 ? USER1 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER2') && USER2 ? USER2 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER2') && USER2 ? USER2 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER3') && USER3 ? USER3 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER3') && USER3 ? USER3 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER4') && USER4 ? USER4 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER4') && USER4 ? USER4 : '';
+    echo "</div>\n";
     echo "</div>\n";
 
     // footer

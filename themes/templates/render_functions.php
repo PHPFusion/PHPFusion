@@ -70,6 +70,7 @@ if (!function_exists("render_breadcrumbs")) {
             $html .= "</li>\n";
         }
         $html .= "</ol>\n";
+
         return $html;
     }
 }
@@ -78,7 +79,7 @@ if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES) {
         $html = "";
         /* Src: http://realfavicongenerator.net/favicon_result?file_id=p1avd9jap61od55nq1l2e1e2q7q76#.WAbP6I995D8 */
-		if (file_exists($folder)) {
+        if (file_exists($folder)) {
             $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon.png'>\n";
             $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'>\n";
             $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'>\n";
@@ -87,6 +88,7 @@ if (!function_exists('render_favicons')) {
             $html .= "<meta name='theme-color' content='#ffffff'>\n";
 
         }
+
         return $html;
     }
 }
@@ -94,8 +96,11 @@ if (!function_exists('render_favicons')) {
 if (!function_exists('render_user_tags')) {
     /**
      * The callback function for parseUser()
+     *
      * @global array $locale
+     *
      * @param string $m The message
+     *
      * @return string
      */
     function render_user_tags($m) {
@@ -111,8 +116,10 @@ if (!function_exists('render_user_tags')) {
             $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>\n";
+
             return $html;
         }
+
         return $m[0];
     }
 }

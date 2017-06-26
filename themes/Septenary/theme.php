@@ -39,6 +39,7 @@ if (!defined("THEME_BULLET")) {
 
 /**
  * Legacy Render Page Function
+ *
  * @param bool|FALSE $license
  */
 function render_page($license = FALSE) {
@@ -47,6 +48,7 @@ function render_page($license = FALSE) {
 
 /**
  * Legacy openside function
+ *
  * @param bool|FALSE $title
  * @param string     $state
  */
@@ -63,6 +65,7 @@ function closeside() {
 
 /**
  * Legacy opentable function
+ *
  * @param bool|FALSE $title
  */
 function opentable($title = FALSE) {
@@ -78,7 +81,9 @@ function closetable() {
 
 /**
  * Legacy output replacement function
+ *
  * @param $output
+ *
  * @return array
  */
 function theme_output($output) {

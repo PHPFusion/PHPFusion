@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 class Switcher {
+    public $selected = '';
     private $args;
     private $changed = FALSE;
     private $buttons = array();
@@ -33,7 +34,6 @@ class Switcher {
     private $name;
     private $post;
     private $props = array();
-    public $selected = '';
     private $separator;
 
     public function __construct($mode, $dir, $ext, $default, $class = '', $separator = " ", $auto = TRUE, $args = '') {
@@ -55,11 +55,6 @@ class Switcher {
                 $this->writeSelected();
             }
         }
-    }
-
-    public function disable() {
-        $this->enabled = FALSE;
-        $this->selected = $this->default;
     }
 
     private function getProps() {
@@ -131,14 +126,9 @@ class Switcher {
         }
     }
 
-    private function getButtons() {
-        foreach ($this->props as $prop) {
-            if ($prop != $this->selected) {
-                $this->buttons[] = '<input type="image" name="'.$prop.'" src="'.$this->dir.'/'.$prop.'.'.$this->ext.'" class="'.$this->class.'" alt="'.$prop.'"/>';
-            }
-        }
-
-        return $this->buttons;
+    public function disable() {
+        $this->enabled = FALSE;
+        $this->selected = $this->default;
     }
 
     public function makeForm($class = '') {
@@ -154,6 +144,16 @@ class Switcher {
 
             return $form;
         }
+    }
+
+    private function getButtons() {
+        foreach ($this->props as $prop) {
+            if ($prop != $this->selected) {
+                $this->buttons[] = '<input type="image" name="'.$prop.'" src="'.$this->dir.'/'.$prop.'.'.$this->ext.'" class="'.$this->class.'" alt="'.$prop.'"/>';
+            }
+        }
+
+        return $this->buttons;
     }
 
     public function makeHeadTag() {

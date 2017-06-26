@@ -25,7 +25,7 @@ require_once INCLUDES."theme_functions_include.php";
 spl_autoload_register(function ($className) {
 
     $autoload_register_paths = array(
-        "PHPFusion\\SeptenaryTheme" => THEME."includes/septenary.php",
+        "PHPFusion\\SeptenaryTheme"      => THEME."includes/septenary.php",
         "PHPFusion\\SeptenaryComponents" => THEME."includes/components.php",
     );
 

@@ -6,7 +6,9 @@ body {
     min-height: 30px;
 }
 
-img { vertical-align: top; }
+img {
+    vertical-align: top;
+}
 
 blockquote {
     font: 14px/150% "Georgia", "Times New Roman", "Times", serif !important;

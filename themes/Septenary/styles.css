@@ -1,4 +1,5 @@
 @import url(../templates/global/default_home/default_home.css);
+
 a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
     background: transparent;
     border: 0 none;
@@ -8,6 +9,7 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
     outline: 0;
     vertical-align: top;
 }
+
 h5 {
     margin: 20px 0;
     font-weight: 600;
@@ -30,7 +32,8 @@ h2.septenary_showcase_title {
 }
 
 .nav-pills > li > a {
-    color: #2196f3; !important;
+    color: #2196f3;
+!important;
 }
 
 .nav-pills > li > a:hover, .nav-pills > li > a:focus {
@@ -151,7 +154,8 @@ a:hover {
 }
 
 a.side {
-    color: #2196f3; !important;
+    color: #2196f3;
+!important;
     text-decoration: underline;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -366,9 +370,15 @@ nav {
     border-radius: 0 !important;
 }
 
-.navbar-default .navbar-brand { color: #fff !important; }
+.navbar-default .navbar-brand {
+    color: #fff !important;
+}
 
-.navbar-default .navbar-toggle { margin-top: 10px !important; padding: 10px !important; color: #fff !important; }
+.navbar-default .navbar-toggle {
+    margin-top: 10px !important;
+    padding: 10px !important;
+    color: #fff !important;
+}
 
 @media (max-width: 768px) {
     .navbar-default {
@@ -397,7 +407,9 @@ nav {
     }
 }
 
-.navbar-inverse { border-radius: 0; }
+.navbar-inverse {
+    border-radius: 0;
+}
 
 .navbar-nav > li {
     margin-right: 10px;
@@ -1195,7 +1207,9 @@ div.emulated-fieldset div.attachments-list {
     margin-top: 11px !important;
 }
 
-.forum.label > .detail { font-size: 11px; }
+.forum.label > .detail {
+    font-size: 11px;
+}
 
 .forum-icon-stickythread {
     max-height: 24px;
@@ -1492,7 +1506,9 @@ body .mceToolbar div {
     margin-top: 10px;
 }
 
-#news-carousel .item-lg, #news-carousel .item-sm { padding: 0; }
+#news-carousel .item-lg, #news-carousel .item-sm {
+    padding: 0;
+}
 
 #news-carousel .item-inner {
     display: table;
@@ -1502,11 +1518,17 @@ body .mceToolbar div {
     height: 100%;
 }
 
-#news-carousel .item-caption { transition: padding-bottom 0.5s cubic-bezier(.55, 0, .1, 1); }
+#news-carousel .item-caption {
+    transition: padding-bottom 0.5s cubic-bezier(.55, 0, .1, 1);
+}
 
-#news-carousel .item-lg .item-caption:hover { padding-bottom: 25px; }
+#news-carousel .item-lg .item-caption:hover {
+    padding-bottom: 25px;
+}
 
-#news-carousel .item-sm .item-caption:hover { padding-bottom: 15px; }
+#news-carousel .item-sm .item-caption:hover {
+    padding-bottom: 15px;
+}
 
 #news-carousel .item-lg > .item-inner > .item-caption, #news-carousel .item-sm > .item-inner > .item-caption {
     display: table-cell;
