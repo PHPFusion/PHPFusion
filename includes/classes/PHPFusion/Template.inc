@@ -95,7 +95,7 @@ class Template {
      * @return string   The final HTML markup
      */
     public function get_output() {
-
+        $this->template = trim($this->template);
         $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
         preg_match_all($block_pattern, $this->template, $cache, PREG_SET_ORDER);
         // set to ID and Template
@@ -123,15 +123,6 @@ class Template {
             }
         }
 
-        // Direct replacement that doesn't require any conditional checks. This is 1 to 1 string to tag replacements.
-        if (!empty($this->tag)) {
-            foreach ($this->tag as $tag => $value) {
-                if (is_string($tag) && is_string($value)) {
-                    $this->template = strtr($this->template, [$tag => $value]);
-                }
-            }
-        }
-
         // Look for any remaining matches, and clean up the template if this block id is unused or is blanked value.
         if (!empty($this->block_source)) {
             foreach ($this->block_source as $block_id => $block_results) {
@@ -139,6 +130,16 @@ class Template {
                 unset($this->block_source[$block_id]);
             }
         }
+
+        // Direct replacement that doesn't require any conditional checks. This is 1 to 1 string to tag replacements.
+        if (!empty($this->tag)) {
+            foreach ($this->tag as $tag => $value) {
+                if (is_string($tag) && (is_string($value) || isnum($value))) {
+                    $this->template = strtr($this->template, [$tag => $value]);
+                }
+            }
+        }
+
 
         unset($this->tag);
         unset($this->block);
