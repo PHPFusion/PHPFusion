@@ -109,6 +109,7 @@ $locale['setup_1221'] = "Your MYSQL username";
 $locale['setup_1222'] = "...and your MYSQL password";
 $locale['setup_1223'] = "Make this very unique to secure your database";
 $locale['setup_1224'] = "Browser Cookie Identifier Prefix";
+$locale['setup_1225'] = "e.g. localhost";
 $locale['setup_1307'] = "Please ensure config.php is writable.";
 $locale['setup_1310'] = "Unable to connect with MySQL database.";
 $locale['setup_1311'] = "The specified MySQL database does not exist.";
