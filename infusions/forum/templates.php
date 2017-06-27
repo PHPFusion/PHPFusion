@@ -248,7 +248,7 @@ if (!function_exists('forum_viewforum')) {
                             $i++;
                         }
                     } else {
-                        $ctpl->set_block('no_item', ['message' => 'There are no subforums available']);
+                        $ctpl->set_block('no_item', ['message' => $locale['forum_0019']]);
                     }
                     break;
                 case 'people':
@@ -804,7 +804,7 @@ if (!function_exists("display_forum_tags")) {
                     ]);
                 }
             } else {
-                $html->set_block('no_tag', ['message' => 'There are no tags defined']);
+                $html->set_block('no_tag', ['message' => $locale['forum_0276']]);
             }
             echo $html->get_output();
         }
