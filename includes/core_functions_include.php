@@ -615,7 +615,9 @@ function parseubb($text, $selected = "") {
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
         }
-        \PHPFusion\Locale::setLocale($locale_file);
+        if ($locale_file) {
+            \PHPFusion\Locale::setLocale($locale_file);
+        }
     }
     $locale = fusion_get_locale();
 

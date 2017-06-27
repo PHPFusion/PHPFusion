@@ -25,7 +25,6 @@ if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
     \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing("");
 }
 $locale = fusion_get_locale();
-
 if (!iMEMBER) {
     switch (fusion_get_settings('login_method')) {
         case "2" :
@@ -39,7 +38,6 @@ if (!iMEMBER) {
     }
     $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
     $user_password = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
-
     $info = [
         "open_form"            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
         "user_name"            => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
