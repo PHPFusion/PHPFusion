@@ -610,6 +610,7 @@ function parseubb($text, $selected = "") {
         $sel_bbcodes = explode("|", $selected);
     }
     foreach ($bbcode_cache as $bbcode) {
+        $locale_file = '';
         if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
         } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
