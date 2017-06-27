@@ -49,7 +49,7 @@ class InstallerDbSetup extends Install_Core {
                               array(
                                   'inline'           => TRUE,
                                   'required'         => TRUE,
-                                  'placeholder'      => 'e.g. localhost',
+                                  'placeholder'      => self::$locale['setup_1225'],
                                   'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
                               ));
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
