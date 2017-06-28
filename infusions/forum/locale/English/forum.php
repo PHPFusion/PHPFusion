@@ -24,6 +24,7 @@ $locale['forum_0015'] = "Forum Overview";
 $locale['forum_0016'] = "Activity";
 $locale['forum_0017'] = "People";
 $locale['forum_0018'] = "Person";
+$locale['forum_0019'] = "There are no subforums available";
 
 $locale['forum_0020'] = "Last Activity";
 $locale['forum_0021'] = "on %s by %s";
@@ -134,6 +135,7 @@ $locale['forum_0272'] = "Filter by Tags";
 $locale['forum_0273'] = "Popular Threads This Week";
 $locale['forum_0274'] = "There are no thread tags";
 $locale['forum_0275'] = "There are no threads found";
+$locale['forum_0276'] = "There are no tags defined";
 
 $locale['forum_0300'] = "Move to a new thread";
 $locale['forum_0301'] = "Select new forum";
