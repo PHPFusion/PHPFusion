@@ -40,7 +40,10 @@ if (!iMEMBER) {
     }
     $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
     $user_password = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
-    $path = BASEDIR.(!stristr(fusion_get_settings('opening_page'), '.php') ? fusion_get_settings('opening_page').'/index.php' : fusion_get_settings('opening_page'));
+    $path = fusion_get_settings('opening_page');
+    if (!defined('IN_PERMALINK')) {
+        $path = BASEDIR.(!stristr(fusion_get_settings('opening_page'), '.php') ? fusion_get_settings('opening_page').'/index.php' : fusion_get_settings('opening_page'));
+    }
     $info = [
         "open_form"    => openform('loginpageform', 'POST', $path),
         "user_name"    => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
