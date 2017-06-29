@@ -47,7 +47,9 @@ if (isset($_POST['save_robots'])) {
         addNotice("danger", $locale['ROBOT_417']);
     }
 
-	if (\defender::safe()) {		$message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];		write_file($file, $robots_content);
+	if (\defender::safe()) {
+		$message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];
+		write_file($file, $robots_content);
         addNotice("success", $message);
         redirect(FUSION_REQUEST);
     }
@@ -75,7 +77,9 @@ if (!file_exists($file)) {
 	echo "<div class='alert alert-danger text-center'><strong>".$locale['ROBOT_411']."</strong></div>\n";
 	$current = write_Default();
 	$button = $locale['ROBOT_422'];
-} else {	$current = file_get_contents($file);
+} else {
+
+	$current = file_get_contents($file);
 	$button = $locale['save'];
 }
 

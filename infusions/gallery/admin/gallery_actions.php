@@ -124,7 +124,8 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 purgeAlbumImage($albumData);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
                 redirect(FUSION_SELF.$aidlink);
-            } else {                // Confirmation form
+            } else {
+                // Confirmation form
                 echo openmodal('confirm_steps', $locale['album_0027']);
                 echo openform('inputform', 'post', FUSION_REQUEST);
                 echo form_select('target_album', $locale['choose'], '', array(

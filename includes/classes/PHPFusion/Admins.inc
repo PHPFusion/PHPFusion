@@ -273,7 +273,8 @@ class Admins {
         infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
     }
 
-    public function getSubmitData($type = NULL) {
+    public function getSubmitData($type = NULL) {
+
         return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
     }
     /**

@@ -180,7 +180,8 @@ if (dbrows($result)) {
         }
 
     }
-} else {	$infos['no_rows'] = $locale['global_026'];
+} else {
+	$infos['no_rows'] = $locale['global_026'];
 }
 
 render_latest_comments($infos);

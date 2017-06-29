@@ -198,7 +198,9 @@ abstract class News extends NewsServer {
              "));
 		return $count_db['count_comment'];
 	}
-//    protected function check_NewsFilter() {//    }
+//    protected function check_NewsFilter() {
+
+//    }
     /**
      * Sql filter between $_GET['type']
      * most commented

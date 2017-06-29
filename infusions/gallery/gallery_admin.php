@@ -216,7 +216,8 @@ function gallery_photo_listing() {
             echo "<a class='m-t-10 btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=purge&amp;cat_id=".$_GET['album_id']."'>".$locale['photo_0025']."</a>\n";
             echo "<div class='row m-t-20'>\n";
             $i = 1;
-            while ($data = dbarray($result)) {            	$rcount = rating_count($data['photo_id'], 'P');
+            while ($data = dbarray($result)) {
+            	$rcount = rating_count($data['photo_id'], 'P');
             	$vcount = rating_vote($data['photo_id'], 'P');
                 echo "<div class='col-xs-12' style='float:left; width:20%; padding:0 15px;'>\n";
                 // <!-------panel------>

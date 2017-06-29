@@ -24,7 +24,8 @@ if (!function_exists('render_forum_mods')) {
 
         $html = \PHPFusion\Template::getInstance('render_forum_mods');
         $html->set_template(INFUSIONS."forum_mods_online_panel/templates/forum_mods.html");
-		if (!empty($info['no_forum'])) {            $html->set_block('no_forum', ['message' => $info['no_forum']]);
+		if (!empty($info['no_forum'])) {
+            $html->set_block('no_forum', ['message' => $info['no_forum']]);
 		}
 
         if (!empty($info['admin']['item'])) {

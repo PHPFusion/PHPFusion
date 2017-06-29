@@ -39,11 +39,13 @@ $latest_result = "SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subje
 $result = dbquery($latest_result);
 
 if (dbrows($result)) {
-    while ($data = dbarray($result)) {		$output['link_url'] = FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."' class='side'";
+    while ($data = dbarray($result)) {
+		$output['link_url'] = FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."' class='side'";
 		$output['link_title'] = $data['thread_subject'];
         $finfo['latest']['item'][] = $output;
     }
-} else {	$finfo['latest']['no_rows'] = $locale['global_023'];
+} else {
+	$finfo['latest']['no_rows'] = $locale['global_023'];
 }
 
 $finfo['hottest']['label'] = $locale['global_022'];

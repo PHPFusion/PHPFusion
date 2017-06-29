@@ -24,8 +24,10 @@ class PrivateMessages {
     );
     private $locale = array();
 
-    public function __construct() {        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."messages.php");
-    }
+    public function __construct() {
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."messages.php");
+
+    }
     /**
      * @return array
      */

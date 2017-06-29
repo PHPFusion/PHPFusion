@@ -63,7 +63,8 @@ if (!infusion_exists('forum')) {
     $info['member']['openside'] = "<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0102'];
         while ($user = dbarray($site_admin_result)) {
             $current_user_groups = array_flip(explode(".", $user['user_groups']));
-            if ($user['user_level'] <= USER_LEVEL_ADMIN) {            	$output['user_title'] = $locale['fmp_0101'];
+            if ($user['user_level'] <= USER_LEVEL_ADMIN) {
+            	$output['user_title'] = $locale['fmp_0101'];
             	$output['user_avatar'] = display_avatar($user, "35px", "", TRUE, "img-rounded m-r-5");
             	$output['user_profil'] = profile_link($user['user_id'], ucfirst($user['user_name']), $user['user_status']);
                 $info['admin']['item'][] = $output;
