@@ -800,7 +800,7 @@ if (!function_exists("display_forum_tags")) {
                         'tag_title'       => $tag_data['tag_title'],
                         'tag_description' => $tag_data['tag_description'],
                         'thread_subject'  => (!empty($tag_data['threads']) ? trim_text($tag_data['threads']['thread_subject'], 100) : ''),
-                        'thread_activity' => (!empty($tag_data['threads']) ? ttimer($tag_data['threads']['thread_lastpost']) : ''),
+                        'thread_activity' => (!empty($tag_data['threads']) ? timer($tag_data['threads']['thread_lastpost']) : ''),
                     ]);
                 }
             } else {
@@ -808,6 +808,51 @@ if (!function_exists("display_forum_tags")) {
             }
             echo $html->get_output();
         }
+    }
+}
+
+/* display threads -- need to simplify */
+if (!function_exists('render_thread_item')) {
+    function render_thread_item($info) {
+        $locale = fusion_get_locale();
+
+        echo "<div class='thread-item' id='thread_".$info['thread_id']."'>\n";
+        echo "<div class='row m-0'>\n";
+        echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
+        echo "<div class='pull-left m-r-10 m-t-5'>\n".$info['thread_last']['avatar']."</div>\n";
+        $thead_icons = '';
+        foreach ($info['thread_icons'] as $icon) {
+            $thead_icons .= $icon;
+        }
+        echo "<div class='overflow-hide'>\n";
+        echo "<a class='forum-link' href='".$info['thread_link']['link']."'>".$info['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
+        echo "<div class='text-smaller'>".$info['thread_starter']."</div>\n";
+        echo $info['thread_pages'];
+        echo isset($info['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
+        echo "</div>\n";
+        echo "</div>\n"; // end grid
+        echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
+        echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
+        echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_views'])."</h4>\n";
+        echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], array('add_count'=>0))."</span>";
+        echo "</div>\n";
+        echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
+        echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_postcount'])."</h4>\n";
+        echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], array('add_count'=>0))."</span>";
+        echo "</div>\n";
+        if ($info['forum_type'] == '4') {
+            echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
+            echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['vote_count'])."</h4>\n";
+            echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], array('add_count'=>0))."</span>";
+            echo "</div>\n";
+        }
+        echo "</div>\n"; // end grid
+        echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
+			".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."<br/>
+			".trimlink(strip_tags($info['thread_last']['post_message']), 100)."
+		</div>\n";
+        echo "</div>\n";
+        echo "</div>\n";
     }
 }
 
