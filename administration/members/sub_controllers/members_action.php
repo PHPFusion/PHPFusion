@@ -141,8 +141,8 @@ class Members_Action extends Members_Admin {
             'user_status_log_func' => 'suspend_log',
             'action_time'          => TRUE,
             'email'                => TRUE,
-            'user_email_title'     => 'email_deactivate_subject',
-            'user_email_message'   => 'email_deactivate_message',
+            'email_title'     => 'email_deactivate_subject',
+            'email_message'   => 'email_deactivate_message',
         ]
     );
 
@@ -242,7 +242,7 @@ class Members_Action extends Members_Admin {
                         $u_name[] = $u_data['user_name'];
                     }
                     addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
-                    redirect(FUSION_SELF.fusion_get_aidlink());
+                    redirect(FUSION_REQUEST);
                 }
             } else {
 
@@ -269,7 +269,7 @@ class Members_Action extends Members_Admin {
                 $form .= form_button('post_action', self::$locale['update'], $this->action, array('class' => 'btn-primary'));
                 ob_start();
                 echo openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], array('static' => TRUE));
-                echo openform('uAdmin_frm', 'post', FUSION_SELF.fusion_get_aidlink());
+                echo openform('uAdmin_frm', 'post', FUSION_REQUEST);
                 echo strtr($this->action_form_template(), [
                     '{%message%}'    => sprintf(self::$locale['ME_431'], self::$locale[$this->action_map[$this->action]['a_message']]),
                     '{%users_list%}' => $users_list,
@@ -283,7 +283,7 @@ class Members_Action extends Members_Admin {
             }
         } else {
             addNotice('danger', self::$locale['ME_430']);
-            redirect(FUSION_SELF.fusion_get_aidlink());
+            redirect(FUSION_REQUEST);
         }
     }
 
