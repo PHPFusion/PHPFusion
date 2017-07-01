@@ -27,6 +27,8 @@ if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
 
 $locale = fusion_get_locale();
 
+$info = [];
+
 if (!iMEMBER) {
     switch (fusion_get_settings('login_method')) {
         case "2" :
