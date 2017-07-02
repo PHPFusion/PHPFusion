@@ -19,23 +19,29 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (!function_exists('render_articles')) {
-    function render_articles($info) {
+if (!function_exists('render_latest_articles')) {
+    function render_latest_articles($info) {
+        $locale = fusion_get_locale();
 
-        $html = \PHPFusion\Template::getInstance('render_articles');
-        $html->set_template(INFUSIONS."latest_articles_panel/templates/latest_articles.html");
-        $html->set_tag('openside', fusion_get_function('openside', $info['openside']));
+        $html = \PHPFusion\Template::getInstance('render_latest_articles');
+        $html->set_template(INFUSIONS.'latest_articles_panel/templates/latest_articles.html');
+
+        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));
+
+        add_to_jquery("$('[data-trim-text]').trim_text();");
+
         if (!empty($info['item'])) {
-                foreach ($info['item'] as $cdatm) {
-                    $html->set_block('articles', [
-                        'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-articles-text='21'>".$cdatm['link_title']."</div>",
-                        'user'        => $cdatm['user'],
+                foreach ($info['item'] as $data) {
+                    $html->set_block('article', [
+                        'article_url'   => $data['article_url'],
+                        'article_title' => '<div data-trim-text="35">'.$data['article_title'].'</div>',
+                        'author'        => $locale['global_070'].' '.$data['profile_link'],
+                        'bullet'        => $info['theme_bullet']
                     ]);
                 }
         } else {
-            $html->set_block('no_aitem', ['message' => $info['no_item']]);
+            $html->set_block('no_item', ['message' => $info['no_item']]);
         }
         echo $html->get_output();
     }

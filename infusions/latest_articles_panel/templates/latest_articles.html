@@ -1,11 +1,11 @@
 {%openside%}
-{articles.{
-	<div class='pull-left'><i class='fa fa-th-list fa-fw m-r-10'></i></div>
-	<div class='spacer-xs'><a href='{%link_url%}'>{%link_title%}</a></div>
-	<div class='text-left'>{%user%}</div>
-	<hr>
-}}
-{no_aitem.{
-	<div class='spacer-xs text-center'>{%message%}</div>
-}}
+    {article.{
+        <div class="pull-left m-r-5">{%bullet%}</div>
+        <a href="{%article_url%}">{%article_title%}</a>
+        <div class="text-left">{%author%}</div>
+    }}
+
+    {no_item.{
+        <div class="text-center">{%message%}</div>
+    }}
 {%closeside%}
