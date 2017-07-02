@@ -71,7 +71,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         $_enabled = $this->get_forum_settings('forum_enabled_userfields');
 
         if (isset($_POST['save_forum_uf'])) {
-            $current_uf = form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled');
+            $current_uf = !empty($_POST['uf_field_enabled']) ? form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled') : '';
             if (\defender::safe()) {
                 if ($_enabled === NULL) {
                     $result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_enabled_userfields', :current_uf, 'forum')", [':current_uf' => $current_uf]);
