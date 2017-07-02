@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
-    $defender = defender::getInstance();
+    $defender = \defender::getInstance();
     $locale = fusion_get_locale('', [
         LOCALE.LOCALESET."admin/html_buttons.php",
         LOCALE.LOCALESET."error.php"
@@ -298,7 +298,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
