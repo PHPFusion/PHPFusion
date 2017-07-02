@@ -773,6 +773,7 @@ class PrivateMessages {
                 'required'    => TRUE,
                 'inner_width' => '100%',
                 'width'       => '100%',
+                'error_text'  => $this->locale['error_input_username'],
                 'placeholder' => $this->locale['421']
             ));
             $input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
@@ -808,6 +809,7 @@ class PrivateMessages {
                 'inline'      => TRUE,
                 'width'       => '100%',
                 'inner_width' => '100%',
+                'error_text'  => $this->locale['error_input_username'],
                 'placeholder' => $this->locale['421']
             ));
         }
@@ -820,13 +822,14 @@ class PrivateMessages {
                 'max_length'       => 100,
                 'autocomplete_off' => TRUE,
                 'width'            => '100%',
+                'error_text'  => $this->locale['error_input_default'],
             ]).form_textarea('message', '', '', [
                 'placeholder' => $this->locale['422'],
                 'required'    => TRUE,
                 'error_text'  => '',
-                'autosize'    => 1,
+                'autosize'    => TRUE,
                 'no_resize'   => 0,
-                'preview'     => 1,
+                'preview'     => TRUE,
                 'form_name'   => 'inputform',
                 'height'      => '150px',
                 'error_text'  => $this->locale['error_input_default'],
