@@ -19,21 +19,36 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-openside($locale['global_032']);
+include_once INFUSIONS."latest_downloads_panel/templates.php";
 
-$result = dbquery("SELECT td.download_id, td.download_title, td.download_cat, td.download_datestamp, td.download_visibility
-			FROM ".DB_DOWNLOADS." td
-			INNER JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-			ORDER BY download_datestamp DESC LIMIT 0,5");
+$download_result = "SELECT td.download_id, td.download_title, tu.user_id, tu.user_name, tu.user_status
+    FROM ".DB_DOWNLOADS." td
+    INNER JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
+    LEFT JOIN ".DB_USERS." tu ON tu.user_id = td.download_user
+    ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')."
+    ORDER BY download_datestamp DESC LIMIT 0,5
+";
+
+$result = dbquery($download_result);
+
+$info = [];
+
+$info['title'] = $locale['global_032'];
+$info['theme_bullet'] = THEME_BULLET;
 
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
-        echo THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."' title='".$data['download_title']."' class='side'>".trimlink($data['download_title'],
-                                                                                                                                                                            23)."</a><br />\n";
+        $item = [
+            'download_url'   => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
+            'download_title' => $data['download_title'],
+            'profile_link'   => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+        ];
+
+        $info['item'][] = $item;
     }
 } else {
-    echo "<div style='text-align:center'>".$locale['global_033']."</div>\n";
+    $info['no_item'] = $locale['global_033'];
 }
 
-closeside();
+render_latest_downloads($info);
+
