@@ -168,83 +168,83 @@ class PrivateMessages {
                 <?php
                 echo closeform();
                 add_to_jquery("
-			function checkedCheckbox() {
-				var checkList = '';
-				$('input[type=checkbox]').each(function() {
-					if (this.checked) {
-						checkList += $(this).val()+',';
-					}
-				});
-				return checkList;
-			}
-			$('#check_all_pm').bind('click', function() {
-				var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-				var read_checkbox = $('#read_tbl tr').find(':checkbox');
-				var action = $(this).data('action');
-				if (action == 'check') {
-					unread_checkbox.prop('checked', true);
-					read_checkbox.prop('checked', true);
-					$('#unread_tbl tr').addClass('warning');
-					$('#read_tbl tr').addClass('warning');
-					$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-					$(this).data('action', 'uncheck');
-					$('#selectedPM').val(checkedCheckbox());
-				} else {
-					unread_checkbox.prop('checked', false);
-					read_checkbox.prop('checked', false);
-					$('#unread_tbl tr').removeClass('warning');
-					$('#read_tbl tr').removeClass('warning');
-					$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-					$(this).data('action', 'check');
-					$('#selectedPM').val(checkedCheckbox());
-				}
-			});
-			$('#check_read_pm').bind('click', function() {
-				var read_checkbox = $('#read_tbl tr').find(':checkbox');
-				var action = $(this).data('action');
-				if (action == 'check') {
-					read_checkbox.prop('checked', true);
-					$('#read_tbl tr').addClass('warning');
-					$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-					$(this).data('action', 'uncheck');
-					$('#selectedPM').val(checkedCheckbox());
-				} else {
-					read_checkbox.prop('checked', false);
-					$('#read_tbl tr').removeClass('warning');
-					$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-					$(this).data('action', 'check');
-					$('#selectedPM').val(checkedCheckbox());
-				}
-			});
-			$('#check_unread_pm').bind('click', function() {
-				var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-				var action = $(this).data('action');
-				if (action == 'check') {
-					unread_checkbox.prop('checked', true);
-					$('#unread_tbl tr').addClass('warning');
-					$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-					$(this).data('action', 'uncheck');
-					$('#selectedPM').val(checkedCheckbox());
-				} else {
-					unread_checkbox.prop('checked', false);
-					$('#unread_tbl tr').removeClass('warning');
-					$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-					$(this).data('action', 'check');
-					$('#selectedPM').val(checkedCheckbox());
-				}
-			});
-			$('input[type=checkbox]').bind('click', function() {
-				var checkList = $('#selectedPM').val();
-				if ($(this).is(':checked')) {
-				$(this).parents('tr').addClass('warning');
-					checkList += $(this).val()+',';
-				} else {
-					$(this).parents('tr').removeClass('warning');
-					checkList = checkList.replace($(this).val()+',', '');
-				}
-				$('#selectedPM').val(checkList);
-			});
-			");
+            function checkedCheckbox() {
+                var checkList = '';
+                $('input[type=checkbox]').each(function() {
+                    if (this.checked) {
+                        checkList += $(this).val()+',';
+                    }
+                });
+                return checkList;
+            }
+            $('#check_all_pm').bind('click', function() {
+                var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                var action = $(this).data('action');
+                if (action == 'check') {
+                    unread_checkbox.prop('checked', true);
+                    read_checkbox.prop('checked', true);
+                    $('#unread_tbl tr').addClass('warning');
+                    $('#read_tbl tr').addClass('warning');
+                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                    $(this).data('action', 'uncheck');
+                    $('#selectedPM').val(checkedCheckbox());
+                } else {
+                    unread_checkbox.prop('checked', false);
+                    read_checkbox.prop('checked', false);
+                    $('#unread_tbl tr').removeClass('warning');
+                    $('#read_tbl tr').removeClass('warning');
+                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                    $(this).data('action', 'check');
+                    $('#selectedPM').val(checkedCheckbox());
+                }
+            });
+            $('#check_read_pm').bind('click', function() {
+                var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                var action = $(this).data('action');
+                if (action == 'check') {
+                    read_checkbox.prop('checked', true);
+                    $('#read_tbl tr').addClass('warning');
+                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                    $(this).data('action', 'uncheck');
+                    $('#selectedPM').val(checkedCheckbox());
+                } else {
+                    read_checkbox.prop('checked', false);
+                    $('#read_tbl tr').removeClass('warning');
+                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                    $(this).data('action', 'check');
+                    $('#selectedPM').val(checkedCheckbox());
+                }
+            });
+            $('#check_unread_pm').bind('click', function() {
+                var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                var action = $(this).data('action');
+                if (action == 'check') {
+                    unread_checkbox.prop('checked', true);
+                    $('#unread_tbl tr').addClass('warning');
+                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                    $(this).data('action', 'uncheck');
+                    $('#selectedPM').val(checkedCheckbox());
+                } else {
+                    unread_checkbox.prop('checked', false);
+                    $('#unread_tbl tr').removeClass('warning');
+                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                    $(this).data('action', 'check');
+                    $('#selectedPM').val(checkedCheckbox());
+                }
+            });
+            $('input[type=checkbox]').bind('click', function() {
+                var checkList = $('#selectedPM').val();
+                if ($(this).is(':checked')) {
+                $(this).parents('tr').addClass('warning');
+                    checkList += $(this).val()+',';
+                } else {
+                    $(this).parents('tr').removeClass('warning');
+                    checkList = checkList.replace($(this).val()+',', '');
+                }
+                $('#selectedPM').val(checkList);
+            });
+            ");
             }
             $this->info['actions_form'] = ob_get_contents();
             ob_end_clean();
@@ -292,9 +292,9 @@ class PrivateMessages {
         if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
-	$in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
-	$out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
-	$arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
+    $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
+    $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
+    $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
         $this->info = [
             'folders' => [
                 'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402']],
@@ -331,9 +331,9 @@ class PrivateMessages {
             ];
             if ($user_id !== $userdata) {
                 $result = dbquery("
-					SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-					FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
-				");
+                    SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+                    FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
+                ");
                 if (dbrows($result)) {
                     $data = dbarray($result);
                     // What this does is that if any of the params is 0, we use default system values.
@@ -585,10 +585,10 @@ class PrivateMessages {
     }
 
     public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
-
-
         require_once INCLUDES."sendmail_include.php";
         require_once INCLUDES."flood_include.php";
+
+        $locale = fusion_get_locale();
 
         $strict = FALSE;
         $group_name = getgroupname($to);
@@ -644,7 +644,7 @@ class PrivateMessages {
                                 if ($myStatus['user_pm_save_sent'] == '2' && $save_sent == TRUE) {
                                     // user_outbox.
                                     $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
-									".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
+                                    ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
                                     // check my outbox limit and if surpass, remove oldest message
                                     if ($myStatus['user_outbox'] != "0" && ($cdata['outbox_count'] + 1) > $myStatus['user_outbox']) {
                                         dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
@@ -659,10 +659,11 @@ class PrivateMessages {
                                 $send_email = $pmStatus['user_pm_email_notify'];
 
                                 if ($send_email == "2") {
-									$message_content = str_replace(
-									['[SUBJECT]','[USER]','[LINK]','[/LINK]','[SITENAME]',],
-									[$subject,$userdata['user_name'],"<a href='".fusion_get_settings('siteurl')."messages.php'>","</a>",fusion_get_settings('sitename')],
-									$locale['626']);
+                                    $message_content = str_replace(
+                                        ['[SUBJECT]', '[USER]', '[LINK]','[/LINK]', '[SITENAME]'],
+                                        [$subject, $userdata['user_name'], "<a href='".fusion_get_settings('siteurl')."messages.php'>", "</a>", fusion_get_settings('sitename')],
+                                        $locale['626']
+                                    );
 
                                     $template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
                                     if (dbrows($template_result)) {
@@ -776,8 +777,8 @@ class PrivateMessages {
             ));
             $input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
             $input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$this->locale['434']."
-							<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
-						   style='margin-right:10px !important;'/></label>\n";
+                            <input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
+                           style='margin-right:10px !important;'/></label>\n";
             $input_header .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
             $user_groups = fusion_get_groups();
             unset($user_groups[0]);
@@ -789,17 +790,17 @@ class PrivateMessages {
             $input_header .= "</div>\n</div>\n";
             // Toggle "Send to All" link
             add_to_jquery("
-			$('#mass_send').bind('click', function() {
-			$('#msg_to_group-field').toggleClass('display-none');
-			$('#msg_send-field').toggleClass('display-none');
-			var invisible = $('#msg_to_group-field').hasClass('display-none');
-			if (invisible) {
-				$('#all_check').prop('checked', false);
-			} else {
-				$('#all_check').prop('checked', true);
-			}
-			});
-			");
+            $('#mass_send').bind('click', function() {
+            $('#msg_to_group-field').toggleClass('display-none');
+            $('#msg_send-field').toggleClass('display-none');
+            var invisible = $('#msg_to_group-field').hasClass('display-none');
+            if (invisible) {
+                $('#all_check').prop('checked', false);
+            } else {
+                $('#all_check').prop('checked', true);
+            }
+            });
+            ");
         } else {
             $input_header = form_user_select('msg_send', $this->locale['420a'], $_GET['msg_send'], array(
                 'required'    => TRUE,
