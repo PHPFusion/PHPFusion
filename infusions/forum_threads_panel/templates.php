@@ -20,38 +20,42 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists('render_threads_panel')) {
-    function render_threads_panel($finfo) {
+    function render_threads_panel($info) {
 
         $html = \PHPFusion\Template::getInstance('threads');
         $html->set_template(INFUSIONS."forum_threads_panel/templates/threads.html");
-        $html->set_tag('openside', fusion_get_function('openside', $finfo['openside']));
+
+        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));
-        $html->set_tag('label', $finfo['latest']['label']);
-        $html->set_tag('label2', $finfo['hottest']['label']);
-        if (!empty($finfo['latest'])) {
-        	if (!empty($finfo['latest']['item'])) {
-                foreach ($finfo['latest']['item'] as $cdatm) {
+        $html->set_tag('label', $info['latest']['label']);
+        $html->set_tag('label2', $info['hottest']['label']);
+
+        add_to_jquery("$('[data-trim-text]').trim_text();");
+
+        if (!empty($info['latest'])) {
+        	if (!empty($info['latest']['item'])) {
+                foreach ($info['latest']['item'] as $data) {
                     $html->set_block('latest', [
-                        'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
+                        'link_url'    => $data['link_url'],
+                        'link_title'  => '<div data-trim-text="18">'.$data['link_title'].'</div>',
                     ]);
                 }
         	}
         } else {
-            $html->set_block('latest_no_item', ['message' => $finfo['latest']['no_rows']]);
+            $html->set_block('latest_no_item', ['message' => $info['latest']['no_rows']]);
         }
-        if (!empty($finfo['hottest'])) {
-        	if (!empty($finfo['hottest']['item'])) {
-                foreach ($finfo['hottest']['item'] as $cdatm) {
+        if (!empty($info['hottest'])) {
+        	if (!empty($info['hottest']['item'])) {
+                foreach ($info['hottest']['item'] as $data) {
                     $html->set_block('hottest', [
-                        'link_url'    => $cdatm['link_url'],
-                        'link_title'  => "<div id='text_id' data-threads-text='18'>".$cdatm['link_title']."</div>",
-                        'badge'  => $cdatm['badge'],
+                        'link_url'    => $data['link_url'],
+                        'link_title'  => '<div data-trim-text="18">'.$data['link_title'].'</div>',
+                        'badge'       => $data['badge'],
                     ]);
                 }
         	}
         } else {
-            $html->set_block('hottest_no_item', ['message' => $finfo['hottest']['no_rows']]);
+            $html->set_block('hottest_no_item', ['message' => $info['hottest']['no_rows']]);
         }
         echo $html->get_output();
     }

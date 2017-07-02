@@ -23,19 +23,18 @@ include_once INFUSIONS."latest_comments_panel/templates.php";
 $displayComments = 10;
 $comments_per_page = fusion_get_settings('comments_per_page');
 
-$comment_query = "SELECT tc.comment_id, tc.comment_item_id, tc.comment_type, tc.comment_message, tu.user_id, tu.user_name
-                  FROM ".DB_COMMENTS." tc
-                  LEFT JOIN ".DB_USERS." tu ON tu.user_id = tc.comment_name
-                  WHERE tc.comment_hidden='0'
-                  ORDER BY tc.comment_datestamp DESC
-                  ";
+$comment_query = "SELECT tc.comment_id, tc.comment_item_id, tc.comment_type, tc.comment_message, tu.user_id, tu.user_name, tu.user_status
+    FROM ".DB_COMMENTS." tc
+    LEFT JOIN ".DB_USERS." tu ON tu.user_id = tc.comment_name
+    WHERE tc.comment_hidden='0'
+    ORDER BY tc.comment_datestamp DESC
+";
 $result = dbquery($comment_query);
 
-$infos['opentable'] = $locale['global_025'];
+$info['title'] = $locale['global_025'];
 
 if (dbrows($result)) {
     $i = 0;
-	add_to_jquery("$('[data-comments-text]').trim_text();");
 
 	while ($data = dbarray($result)) {
         if ($i == $displayComments) {
@@ -65,12 +64,15 @@ if (dbrows($result)) {
 
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='N' AND comment_id<=".$data['comment_id']);
 				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
-				$output['subject'] = $news_data['news_subject'];
-				$output['link_url'] = INFUSIONS."news/news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$data['comment_message']."' class='side'";
-				$output['link_title'] = $data['comment_message'];
-				$output['user'] = $locale['about'].": ".$data['user_name'];
+
+				$item = [
+				    'subject'      => $news_data['news_subject'],
+				    'link_url'     => INFUSIONS."news/news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id'],
+				    'link_title'   => $data['comment_message'],
+				    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+				];
 				$i++;
-                $infos['item'][] = $output;
+                $info['item'][] = $item;
 			}
 			continue;
 			case "A":
@@ -91,12 +93,15 @@ if (dbrows($result)) {
 
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='A' AND comment_id<=".$data['comment_id']);
 				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
-				$output['subject'] = $article_data['article_subject'];
-				$output['link_url'] = INFUSIONS."articles/articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$data['comment_message']."' class='side'";
-				$output['link_title'] = $data['comment_message'];
-				$output['user'] = $locale['about'].": ".$data['user_name'];
+
+				$item = [
+				    'subject'      => $article_data['article_subject'],
+				    'link_url'     => INFUSIONS."articles/articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id'],
+				    'link_title'   => $data['comment_message'],
+				    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+				];
 				$i++;
-                $infos['item'][] = $output;
+                $info['item'][] = $item;
 			}
 			continue;
 			case "P":
@@ -116,12 +121,15 @@ if (dbrows($result)) {
 				$photo_data = dbarray($results);
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='P' AND comment_id<=".$data['comment_id']);
 				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
-				$output['subject'] = $photo_data['photo_title'];
-				$output['link_url'] = INFUSIONS."gallery/gallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$data['comment_message']."' class='side'";
-				$output['link_title'] = $data['comment_message'];
-				$output['user'] = $locale['about'].": ".$data['user_name'];
+
+				$item = [
+				    'subject'      => $photo_data['photo_title'],
+				    'link_url'     => INFUSIONS."gallery/gallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id'],
+				    'link_title'   => $data['comment_message'],
+				    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+				];
 				$i++;
-                $infos['item'][] = $output;
+                $info['item'][] = $item;
 			}
 			continue;
 			case "D":
@@ -142,12 +150,15 @@ if (dbrows($result)) {
 
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);
 				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
-				$output['subject'] = $download_data['download_title'];
-				$output['link_url'] = INFUSIONS."downloads/downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$data['comment_message']."' class='side'";
-				$output['link_title'] = $data['comment_message'];
-				$output['user'] = $locale['about'].": ".$data['user_name'];
+
+				$item = [
+				    'subject'      => $download_data['download_title'],
+				    'link_url'     => INFUSIONS."downloads/downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id'],
+				    'link_title'   => $data['comment_message'],
+				    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+				];
 				$i++;
-                $infos['item'][] = $output;
+                $info['item'][] = $item;
 			}
 			continue;
 			case "B":
@@ -155,25 +166,28 @@ if (dbrows($result)) {
 				':n_id'       => $data['comment_item_id'],
 				':n_language' => LANGUAGE,
 				];
-			$download_query = "SELECT
+			$blog_query = "SELECT
 				d.blog_subject
 				FROM ".DB_BLOG." as d
 				INNER JOIN ".DB_BLOG_CATS." as c ON c.blog_cat_id=d.blog_cat
 				WHERE d.blog_id=:n_id AND ".groupaccess('d.blog_visibility').(multilang_table("BL") ? " AND d.blog_language=:n_language" : "")."
 				ORDER BY d.blog_datestamp DESC";
-			$results = dbquery($download_query, $ndata);
+			$results = dbquery($blog_query, $ndata);
 
 			if (dbrows($results)) {
-				$download_data = dbarray($results);
+				$blog_data = dbarray($results);
 
 				$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='B' AND comment_id<=".$data['comment_id']);
 				$commentStart = $commentStart > $comments_per_page ? "&amp;c_start_news_comments=".((floor($commentStart / $comments_per_page) * $comments_per_page) - $comments_per_page) : "";
-				$output['subject'] = $download_data['blog_subject'];
-				$output['link_url'] = INFUSIONS."blog/blog.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$data['comment_message']."' class='side'";
-				$output['link_title'] = $data['comment_message'];
-				$output['user'] = $locale['about'].": ".$data['user_name'];
+
+				$item = [
+				    'subject'      => $blog_data['blog_subject'],
+				    'link_url'     => INFUSIONS."blog/blog.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id'],
+				    'link_title'   => $data['comment_message'],
+				    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+				];
 				$i++;
-                $infos['item'][] = $output;
+                $info['item'][] = $item;
 			}
 			continue;
 
@@ -181,7 +195,7 @@ if (dbrows($result)) {
 
     }
 } else {
-	$infos['no_rows'] = $locale['global_026'];
+	$info['no_rows'] = $locale['global_026'];
 }
 
-render_latest_comments($infos);
+render_latest_comments($info);

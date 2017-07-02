@@ -1,21 +1,21 @@
 {%openside%}
-<div class='side-label'><strong>{%label%}</strong></div>
-	<ul class='side'>
+<div class="side-label"><strong>{%label%}</strong></div>
+	<ul class="side">
 {latest.{
-	<li class='pull-left'></li><a href='{%link_url%}'>{%link_title%}</a>
+	<li class="pull-left"></li><a href="{%link_url%}">{%link_title%}</a>
 }}
 	</ul>
 {latest_no_item.{
-	<div class='spacer-xs text-center'>{%message%}</div>
+	<div class="text-center">{%message%}</div>
 }}
-<div class='side-label'><strong>{%label2%}</strong></div>
-	<ul class='side'>
+<div class="side-label"><strong>{%label2%}</strong></div>
+	<ul class="side">
 {hottest.{
 	{%badge%}
-	<li class='pull-left'></li><a href='{%link_url%}'>{%link_title%}</a>
+	<li class="pull-left"></li><a href="{%link_url%}">{%link_title%}</a>
 }}
 	</ul>
 {hottest_no_item.{
-	<div class='spacer-xs text-center'>{%message%}</div>
+	<div class="text-center">{%message%}</div>
 }}
 {%closeside%}

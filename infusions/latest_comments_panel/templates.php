@@ -20,23 +20,28 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists('render_latest_comments')) {
-    function render_latest_comments($infom) {
+    function render_latest_comments($info) {
+        $locale = fusion_get_locale();
 
         $html = \PHPFusion\Template::getInstance('latest_comments');
         $html->set_template(INFUSIONS."latest_comments_panel/templates/latest_comments.html");
-        $html->set_tag('openside', fusion_get_function('openside', $infom['opentable']));
+
+        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));
-        if (!empty($infom['item'])) {
-                foreach ($infom['item'] as $cdatm) {
+
+        add_to_jquery("$('[data-trim-text]').trim_text();");
+
+        if (!empty($info['item'])) {
+                foreach ($info['item'] as $data) {
                     $html->set_block('normal_comments', [
-                        'comments_subject'     => "<div id='text_id' data-comments-text='23'>".$cdatm['subject']."</div>",
-                        'comments_link_url'    => $cdatm['link_url'],
-                        'comments_link_title'  => "<div id='text_id' data-comments-text='23'>".$cdatm['link_title']."</div>",
-                        'comments_user'        => $cdatm['user'],
+                        'comments_subject'     => '<div data-trim-text="23">'.$data['subject'].'</div>',
+                        'comments_link_url'    => $data['link_url'],
+                        'comments_link_title'  => '<div data-trim-text="23">'.$data['link_title'].'</div>',
+                        'comments_user'        => $locale['global_070'].$data['profile_link'],
                     ]);
                 }
         } else {
-            $html->set_block('no_item', ['message' => $infom['no_rows']]);
+            $html->set_block('no_item', ['message' => $info['no_rows']]);
         }
         echo $html->get_output();
     }
