@@ -19,7 +19,6 @@
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = array()) {
 
     $locale = fusion_get_locale();
-    $defender = \defender::getInstance();
 
     if (!defined("COLORPICKER")) {
         define("COLORPICKER", TRUE);
@@ -30,19 +29,19 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $input_name = stripinput($input_name);
     $input_value = stripinput($input_value);
     $default_options = array(
-        'input_id' => $input_name,
-        'required' => FALSE,
+        'input_id'    => $input_name,
+        'required'    => FALSE,
         'placeholder' => '',
-        'deactivate' => FALSE,
-        'width' => '',
+        'deactivate'  => FALSE,
+        'width'       => '',
         'inner_width' => '100%',
-        'class' => '',
-        'inline' => FALSE,
-        'error_text' => $locale['error_input_default'],
-        'safemode' => FALSE,
-        'icon' => "",
-        "tip" => "",
-        'format' => 'hex', //options = the color format - hex | rgb | rgba.
+        'class'       => '',
+        'inline'      => FALSE,
+        'error_text'  => $locale['error_input_default'],
+        'safemode'    => FALSE,
+        'icon'        => "",
+        "tip"         => "",
+        'format'      => 'hex', //options = the color format - hex | rgb | rgba.
     );
     $options += $default_options;
     if (!$options['width']) {
@@ -51,10 +50,10 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $input_id = $options['input_id'] ?: $default_options['input_id'];
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -75,13 +74,13 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    $defender->add_field_session(array(
+    \defender::getInstance()->add_field_session(array(
                                      'input_name' => $input_name,
-                                     'type' => 'color',
-                                     'title' => $title,
-                                     'id' => $input_id,
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
+                                     'type'       => 'color',
+                                     'title'      => $title,
+                                     'id'         => $input_id,
+                                     'required'   => $options['required'],
+                                     'safemode'   => $options['safemode'],
                                      'error_text' => $options['error_text']
                                  ));
     add_to_jquery("$('#$input_id').colorpicker({ format : '".$options['format']."'  });");

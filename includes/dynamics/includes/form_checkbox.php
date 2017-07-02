@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
-    $defender = \defender::getInstance();
+
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 
     $default_options = array(
@@ -58,10 +58,10 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $options['input_id'] = trim($options['input_id'], "[]");
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -143,16 +143,15 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
-    $html .= $defender->inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
 
-    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
     $html .= $options['inline'] ? "</div>\n" : "";
 
     $html .= "</div>\n";
 
-    $defender->add_field_session(
-        array(
+    \defender::getInstance()->add_field_session(array(
             'input_name' => str_replace("[]", "", $input_name),
             'title'      => trim($title, '[]'),
             'id'         => $options['input_id'],

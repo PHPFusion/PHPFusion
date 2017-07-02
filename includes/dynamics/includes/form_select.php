@@ -40,8 +40,6 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 
     $locale = fusion_get_locale();
 
-    $defender = \defender::getInstance();
-
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
@@ -93,10 +91,10 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -171,8 +169,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     }
     $html .= $options['stacked'];
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
-    $html .= $defender->inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
-    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
     $html .= "</div>\n";
     if ($options['required']) {
@@ -180,7 +178,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     }
     // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-    $defender->add_field_session(array(
+    \defender::getInstance()->add_field_session(array(
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
@@ -243,18 +241,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
             $vals .= ($arr == count($input_value) - 1) ? "'$val'" : "'$val',";
         }
         \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
-        // For Tags */
-        /* foreach ($input_value as $id => $text) {
-            $select_array[] = $keyflip ? array('id' => "$text", 'text' => "$text") : array('id' => "$id", 'text' => "$text");
-        }
-        if (!isset($select_array)) {
-            $select_array = array();
-        }
-        $encoded = json_encode($select_array);
-        add_to_jquery("$('#".$options['input_id']."').select2('data', $encoded);"); */
     }
 
-    // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
     return $html;
 }
 

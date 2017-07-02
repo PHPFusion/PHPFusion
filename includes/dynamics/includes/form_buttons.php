@@ -23,15 +23,15 @@ function form_button($input_name, $title, $input_value, array $options = array()
     $input_value = stripinput($input_value);
 
     $default_options = array(
-        'input_id' => $input_name,
+        'input_id'    => $input_name,
         'input_value' => $input_name,
-        'class' => "btn-default",
-        'icon' => "",
-        'deactivate' => FALSE,
-        'type' => "submit",
-        'block' => FALSE,
-        'alt' => $title,
-        'data' => [],
+        'class'       => "btn-default",
+        'icon'        => "",
+        'deactivate'  => FALSE,
+        'type'        => "submit",
+        'block'       => FALSE,
+        'alt'         => $title,
+        'data'        => [],
     );
 
     $options = $options + $default_options;
@@ -65,34 +65,33 @@ function form_button($input_name, $title, $input_value, array $options = array()
  */
 function form_btngroup($input_name, $label = "", $input_value, array $options = array()) {
     $locale = fusion_get_locale();
-    $defender = \defender::getInstance();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
 
     $default_options = array(
-        'options' => array($locale['disable'], $locale['enable']),
-        'input_id' => $input_name,
-        'class' => "btn-default",
-        'icon' => "",
-        "multiple" => FALSE,
-        "delimiter" => ",",
-        'deactivate' => FALSE,
-        'error_text' => "",
-        'inline' => FALSE,
-        'safemode' => FALSE,
-        'required' => FALSE,
+        'options'        => array($locale['disable'], $locale['enable']),
+        'input_id'       => $input_name,
+        'class'          => "btn-default",
+        'icon'           => "",
+        "multiple"       => FALSE,
+        "delimiter"      => ",",
+        'deactivate'     => FALSE,
+        'error_text'     => "",
+        'inline'         => FALSE,
+        'safemode'       => FALSE,
+        'required'       => FALSE,
         'callback_check' => '',
     );
 
     $options += $default_options;
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -118,22 +117,22 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $html .= "</div>\n";
     $html .= "<input name='$input_name' type='hidden' id='".$options['input_id']."-text' value='$input_value' />\n";
 
-    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
 
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
-    $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'title' => trim($title, '[]'),
-                                     'id' => $options['input_id'],
-                                     'type' => 'dropdown',
-                                     'required' => $options['required'],
+    \defender::getInstance()->add_field_session(array(
+                                     'input_name'     => $input_name,
+                                     'title'          => trim($title, '[]'),
+                                     'id'             => $options['input_id'],
+                                     'type'           => 'dropdown',
+                                     'required'       => $options['required'],
                                      'callback_check' => $options['callback_check'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text'],
-                                     'delimiter' => $options['delimiter'],
+                                     'safemode'       => $options['safemode'],
+                                     'error_text'     => $options['error_text'],
+                                     'delimiter'      => $options['delimiter'],
                                  ));
     add_to_jquery("
 	$('#".$options['input_id']." button').bind('click', function(e){

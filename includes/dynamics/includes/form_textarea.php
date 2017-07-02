@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
-    $defender = \defender::getInstance();
+
     $locale = fusion_get_locale('', [
         LOCALE.LOCALESET."admin/html_buttons.php",
         LOCALE.LOCALESET."error.php"
@@ -43,33 +43,33 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_forced_root' => TRUE,
         'placeholder'         => '',
         'deactivate'          => FALSE,
-        'width'              => '',
-        'inner_width'        => '100%',
-        'height'             => '80px',
-        'class'              => '',
-        'inner_class'        => '',
-        'inline'             => FALSE,
-        'length'             => 200,
-        'error_text'         => $locale['error_input_default'],
-        'safemode'           => FALSE,
-        'form_name'          => 'input_form',
-        'tinymce'            => 'simple',
-        'tinymce_css'        => '',
-        'no_resize'          => FALSE,
-        'autosize'           => FALSE,
-        'bbcode'             => FALSE,
-        'html'               => FALSE,
-        'preview'            => FALSE,
-        'path'               => IMAGES,
-        'maxlength'          => '',
-        'tip'                => '',
-        'ext_tip'            => '',
-        'input_bbcode'       => '',
-        'wordcount'          => FALSE,
-        'file_filter'        => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
-        'tinymce_theme'      => 'modern',
-        'tinymce_skin'       => 'lightgray',
-        'tinymce_spellcheck' => TRUE,
+        'width'               => '',
+        'inner_width'         => '100%',
+        'height'              => '80px',
+        'class'               => '',
+        'inner_class'         => '',
+        'inline'              => FALSE,
+        'length'              => 200,
+        'error_text'          => $locale['error_input_default'],
+        'safemode'            => FALSE,
+        'form_name'           => 'input_form',
+        'tinymce'             => 'simple',
+        'tinymce_css'         => '',
+        'no_resize'           => FALSE,
+        'autosize'            => FALSE,
+        'bbcode'              => FALSE,
+        'html'                => FALSE,
+        'preview'             => FALSE,
+        'path'                => IMAGES,
+        'maxlength'           => '',
+        'tip'                 => '',
+        'ext_tip'             => '',
+        'input_bbcode'        => '',
+        'wordcount'           => FALSE,
+        'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
+        'tinymce_theme'       => 'modern',
+        'tinymce_skin'        => 'lightgray',
+        'tinymce_spellcheck'  => TRUE,
     );
 
     $options += $default_options;
@@ -295,7 +295,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
             $new_error_text = \defender::getErrorText($input_name);
@@ -424,10 +424,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     }
 
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
-    $defender->add_field_session(array(
+    \defender::getInstance()->add_field_session(array(
         'input_name' => $input_name,
         'type'       => 'textarea',
         'title'      => $label,

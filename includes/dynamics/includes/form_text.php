@@ -47,36 +47,35 @@
 
 function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
 
-    $defender = \defender::getInstance();
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
-        'type'             => 'text',
-        'required'         => FALSE,
-        'label_icon'       => '',
-        'feedback_icon'    => '',
-        'safemode'         => FALSE,
-        'regex'            => '',
-        'regex_error_text' => '',
-        'callback_check'   => FALSE,
-        'input_id'         => $input_name,
-        'placeholder'      => '',
-        'deactivate'       => FALSE,
-        'width'            => '',
-        'inner_width'      => '',
-        'class'            => '',
-        'inner_class'      => '',
-        'inline'           => FALSE,
-        'min_length'       => 1,
-        'max_length'       => 200,
-        'number_min'       => 0,
-        'number_max'       => 0,
-        'number_step'      => 1,
-        'icon'             => '',
-        'autocomplete_off' => FALSE,
-        'tip'              => '',
+        'type'               => 'text',
+        'required'           => FALSE,
+        'label_icon'         => '',
+        'feedback_icon'      => '',
+        'safemode'           => FALSE,
+        'regex'              => '',
+        'regex_error_text'   => '',
+        'callback_check'     => FALSE,
+        'input_id'           => $input_name,
+        'placeholder'        => '',
+        'deactivate'         => FALSE,
+        'width'              => '',
+        'inner_width'        => '',
+        'class'              => '',
+        'inner_class'        => '',
+        'inline'             => FALSE,
+        'min_length'         => 1,
+        'max_length'         => 200,
+        'number_min'         => 0,
+        'number_max'         => 0,
+        'number_step'        => 1,
+        'icon'               => '',
+        'autocomplete_off'   => FALSE,
+        'tip'                => '',
         'ext_tip'            => '',
         'append_button'      => '',
         'append_value'       => '',
@@ -132,14 +131,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (\defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
             $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            //addNotice("danger", $options['error_text']);
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
@@ -182,7 +181,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
     }
 
-    // min, max, step
     $min = '';
     $max = '';
     $step = '';
@@ -234,18 +232,18 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= "</div>\n";
 
     // Add input settings in the SESSION
-    defender::getInstance()->add_field_session(array(
-                                                   'input_name' => $input_name,
-                                                   'title' => trim($title, '[]'),
-                                                   'id' => $options['input_id'],
-                                                   'type' => $options['type'],
-                                                   'required' => $options['required'],
-                                                   'safemode' => $options['safemode'],
-                                                   'regex' => $options['regex'],
+    \defender::getInstance()->add_field_session(array(
+                                                   'input_name'     => $input_name,
+                                                   'title'          => trim($title, '[]'),
+                                                   'id'             => $options['input_id'],
+                                                   'type'           => $options['type'],
+                                                   'required'       => $options['required'],
+                                                   'safemode'       => $options['safemode'],
+                                                   'regex'          => $options['regex'],
                                                    'callback_check' => $options['callback_check'],
-                                                   'delimiter' => $options['delimiter'],
-                                                   'min_length' => $options['min_length'],
-                                                   'max_length' => $options['max_length']
+                                                   'delimiter'      => $options['delimiter'],
+                                                   'min_length'     => $options['min_length'],
+                                                   'max_length'     => $options['max_length']
                                                ));
 
     // This should affect all number inputs by type, not by ID

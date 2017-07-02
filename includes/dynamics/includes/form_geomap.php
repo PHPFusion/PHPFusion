@@ -20,7 +20,6 @@
 
 function form_geo($input_name, $label = '', $input_value = FALSE, array $options = array()) {
     $locale = fusion_get_locale();
-    $defender = \defender::getInstance();
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $countries = array();
     require(INCLUDES.'geomap/geomap.inc.php');
@@ -40,22 +39,22 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     }
 
     $options += array(
-        'input_id' => $input_name,
-        'required' => FALSE,
-        'placeholder' => '',
-        'deactivate' => FALSE,
-        'width' => '100%',
-        'class' => '',
-        'inline' => '',
-        'tip' => '',
-        'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['street_error'],
+        'input_id'     => $input_name,
+        'required'     => FALSE,
+        'placeholder'  => '',
+        'deactivate'   => FALSE,
+        'width'        => '100%',
+        'class'        => '',
+        'inline'       => '',
+        'tip'          => '',
+        'error_text'   => !empty($options['error_text']) ? $options['error_text'] : $locale['street_error'],
         'error_text_2' => !empty($options['error_text_2']) ? $options['error_text_2'] : $locale['street_error'],
         'error_text_3' => !empty($options['error_text_3']) ? $options['error_text_3'] : $locale['country_error'],
         'error_text_4' => !empty($options['error_text_4']) ? $options['error_text_4'] : $locale['state_error'],
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['city_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : $locale['postcode_error'],
-        'safemode' => FALSE,
-        'flag' => '',
+        'safemode'     => FALSE,
+        'flag'         => '',
     );
 
     $input_id = $options['input_id'];
@@ -80,7 +79,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 
     $error_class = "";
     for ($i = 0; $i <= 5; $i++) {
-        if ($defender->inputHasError($input_name.'-'.$validation_key[$i])) {
+        if (\defender::inputHasError($input_name.'-'.$validation_key[$i])) {
             $error_class = "has-error ";
             addNotice("danger", "<strong>$title</strong> - ".$error_key[$i]);
         }
@@ -94,7 +93,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $html .= "<div class='row'>\n";
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[0])) || $defender->inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[0])) || \defender::inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
@@ -111,32 +110,32 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
     }
     $html .= "</select>\n";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[2])) || $defender->inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[2])) || \defender::inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
     $html .= "</div>\n";
     $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
     $html .= "<div id='state-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
     $html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[3])) || $defender->inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[3])) || \defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
     $html .= "</div>\n";
     $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name[4])) || $defender->inputHasError($input_name[4])) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name[4])) || \defender::inputHasError($input_name[4])) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
     $html .= "</div>\n";
     $html .= "<div class='col-xs-12 col-sm-7 col-md-4 col-lg-7 m-b-10'>\n";
     $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[5])) || $defender->inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[5])) || \defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
     $html .= "</div>\n";
     $html .= "</div>\n"; // close inner row
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
-    $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type' => 'address',
-                                     'title' => $title,
-                                     'id' => $input_id,
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text'],
+    \defender::getInstance()->add_field_session(array(
+                                     'input_name'   => $input_name,
+                                     'type'         => 'address',
+                                     'title'        => $title,
+                                     'id'           => $input_id,
+                                     'required'     => $options['required'],
+                                     'safemode'     => $options['safemode'],
+                                     'error_text'   => $options['error_text'],
                                      'error_text_2' => $options['error_text_2'],
                                      'error_text_3' => $options['error_text_3'],
                                      'error_text_4' => $options['error_text_4'],
@@ -214,32 +213,32 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     $default_options = array(
-        'options' => array(),
-        'required' => FALSE,
-        'regex' => '',
-        'input_id' => $input_name,
-        'placeholder' => $locale['choose-location'],
-        'deactivate' => FALSE,
-        'safemode' => FALSE,
-        'allowclear' => FALSE,
-        'flag' => FALSE,
-        'multiple' => FALSE,
-        'width' => '250px',
-        'keyflip' => FALSE,
-        'tags' => FALSE,
-        'jsonmode' => FALSE,
-        'chainable' => FALSE,
-        'max_select' => 1,
-        'error_text' => $locale['error_input_default'],
-        'class' => '',
-        'inline' => FALSE,
-        'tip' => '',
-        'ext_tip' => '',
-        'delimiter' => ',',
+        'options'        => array(),
+        'required'       => FALSE,
+        'regex'          => '',
+        'input_id'       => $input_name,
+        'placeholder'    => $locale['choose-location'],
+        'deactivate'     => FALSE,
+        'safemode'       => FALSE,
+        'allowclear'     => FALSE,
+        'flag'           => FALSE,
+        'multiple'       => FALSE,
+        'width'          => '250px',
+        'keyflip'        => FALSE,
+        'tags'           => FALSE,
+        'jsonmode'       => FALSE,
+        'chainable'      => FALSE,
+        'max_select'     => 1,
+        'error_text'     => $locale['error_input_default'],
+        'class'          => '',
+        'inline'         => FALSE,
+        'tip'            => '',
+        'ext_tip'        => '',
+        'delimiter'      => ',',
         'callback_check' => '',
-        "stacked" => "",
-        'icon' => '',
-        'file' => '',
+        "stacked"        => "",
+        'icon'           => '',
+        'file'           => '',
     );
 
     $options += $default_options;
@@ -357,15 +356,15 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $html .= "</div>\n";
 
     \defender::add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type' => 'textbox',
-                                     'title' => trim($title, '[]'),
-                                     'id' => $options['input_id'],
-                                     'regex' => $options['regex'],
+                                     'input_name'     => $input_name,
+                                     'type'           => 'textbox',
+                                     'title'          => trim($title, '[]'),
+                                     'id'             => $options['input_id'],
+                                     'regex'          => $options['regex'],
                                      'callback_check' => $options['callback_check'],
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'error_text' => $options['error_text']
+                                     'required'       => $options['required'],
+                                     'safemode'       => $options['safemode'],
+                                     'error_text'     => $options['error_text']
                                  ));
 
     return $html;
