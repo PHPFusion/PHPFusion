@@ -38,6 +38,7 @@ if (!function_exists('render_latest_comments')) {
                         'comments_link_url'    => $data['link_url'],
                         'comments_link_title'  => '<div data-trim-text="23">'.$data['link_title'].'</div>',
                         'comments_user'        => $locale['global_070'].$data['profile_link'],
+                        'comments_bullet'      => $info['theme_bullet']
                     ]);
                 }
         } else {

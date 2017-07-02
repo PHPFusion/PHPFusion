@@ -32,6 +32,7 @@ $comment_query = "SELECT tc.comment_id, tc.comment_item_id, tc.comment_type, tc.
 $result = dbquery($comment_query);
 
 $info['title'] = $locale['global_025'];
+$info['theme_bullet'] = THEME_BULLET;
 
 if (dbrows($result)) {
     $i = 0;
