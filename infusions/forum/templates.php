@@ -91,7 +91,7 @@ if (!function_exists('render_forum_main')) {
             }
             $html->set_tag('forum_content', ['content' => 'TBA']);
         } else {
-            $html->set_block('no_item', ['{%message%}' => $locale['forum_0328']]);
+            $html->set_block('no_item', ['message' => $locale['forum_0328']]);
         }
 
         $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
