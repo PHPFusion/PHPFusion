@@ -72,6 +72,8 @@ class Template {
      * @param array $value      The replacements sets
      */
     public function set_block($block_id, array $value = array()) {
+        $filtered_value = [];
+
         foreach ($value as $tag => $val) {
             $filtered_value['{%'.$tag.'%}'] = $val;
         }
