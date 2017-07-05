@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: themes/templates/global/home.php
-| Author: Chubatyj Vitalij (Rizado)
-| Co-Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -29,9 +28,16 @@ if (!function_exists('display_home')) {
                 echo "<div class='row'>";
                 foreach ($content['data'] as $data) {
                     echo "<div class='".$classes." clearfix'>";
-                    echo "<h4><a href='".$data['url']."'>".$data['title']."</a></h4>";
-                    echo "<div class='small m-b-10'>".$data['meta']."</div>";
-                    echo "<div class='overflow-hide'>".nl2br(trim_text(strip_tags($data['content']), 250))."</div>";
+                        echo '<a href="'.$data['url'].'">';
+                            if (!empty($data['image'])) {
+                                echo '<img style="max-height: 180px;" class="center-x img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
+                            } else {
+                                echo get_image('imagenotfound', $data['title'], 'max-height: 180px;');
+                            }
+                        echo '</a>';
+                        echo "<h4><a href='".$data['url']."'>".$data['title']."</a></h4>";
+                        echo "<div class='small m-b-10'>".$data['meta']."</div>";
+                        echo "<div class='overflow-hide'>".nl2br(trim_text(strip_tags($data['content']), 250))."</div>";
                     echo "</div>";
                 }
                 echo "</div>";
@@ -42,12 +48,13 @@ if (!function_exists('display_home')) {
         }
     }
 }
+
 /**
  * Show that no module have been installed
  */
 if (!function_exists('display_no_item')) {
     function display_no_item() {
-        global $locale;
+        $locale = fusion_get_locale();
         opentable($locale['home_0100']);
         echo $locale['home_0101'];
         closetable();

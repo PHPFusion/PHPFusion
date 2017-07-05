@@ -340,7 +340,7 @@ class Shoutbox {
         closeside();
     }
 
-    public function sb_captha() {
+    public function sb_captcha() {
         if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
             $_CAPTCHA_HIDE_INPUT = FALSE;
             echo form_text('shout_name', self::$locale['SB_name'], '',
@@ -369,7 +369,7 @@ class Shoutbox {
             echo form_hidden('shout_hidden', '', $this->data['shout_hidden']);
             echo form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], array('required' => TRUE, "autosize" => TRUE, 'form_name' => self::$default_params['sbform_name'], 'wordcount' => TRUE, 'maxlength' => '200', 'type' => 'bbcode', 'input_bbcode' => 'smiley|b|u|url|color'));
             if (iGUEST) {
-                echo self::sb_captha();
+                echo self::sb_captcha();
             }
             if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
                 echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
@@ -521,11 +521,10 @@ class Shoutbox {
                 echo "</div>\n";
             }
             echo($info['sbform_name'] == 'sarchiv' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (
-            ($total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center'><a class='btn btn-default btn-xs' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php' class='side'>".self::$locale['SB_archive']."</a>\n</div>\n" : "")));
+            ($total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center m-t-15'><a class='btn btn-default btn-xs' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php' class='side'>".self::$locale['SB_archive']."</a>\n</div>\n" : "")));
         } else {
             echo "<div class='text-center'>".self::$locale['SB_no_msgs']."</div>\n";
         }
         closeside();
     }
-
 }

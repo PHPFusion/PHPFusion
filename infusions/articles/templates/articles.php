@@ -26,7 +26,6 @@ if (!function_exists("display_main_articles")) {
      * @param $info
      */
     function display_main_articles($info) {
-
         $articles_settings = \PHPFusion\Articles\ArticlesServer::get_article_settings();
         $locale = fusion_get_locale();
 
@@ -92,7 +91,7 @@ if (!function_exists("display_main_articles")) {
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     <!-- Display View Options -->
-                    <?php echo openform("viewform", "post", FUSION_REQUEST, array("max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10")); ?>
+                    <?php echo openform("viewform", "post", FUSION_REQUEST, array("remote_url" => FUSION_REQUEST, "max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10")); ?>
                     <div class="btn-group">
                         <?php $active = isset($_COOKIE['fusion_articles_view']) && isnum($_COOKIE['fusion_articles_view']) && $_COOKIE['fusion_articles_view'] == 2 ? 2 : 1; ?>
                         <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i> ".$locale['article_0040'], "1", array("class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
@@ -216,8 +215,8 @@ if (!function_exists("render_article")) {
                     </div>
                 </div>
 
-                <div class="article-footer panel-footer">
-                    <i class="fa fa-fw fa-eye m-l-10"></i> <?php echo $info['article_reads']; ?>
+                <div class="article-footer panel-footer text-center">
+                    <i class="fa fa-fw fa-eye"></i> <?php echo $info['article_reads']; ?>
 
                     <?php if ($info['article_allow_comments']) { ?>
                         <i class="fa fa-fw fa-comments m-l-10"></i>

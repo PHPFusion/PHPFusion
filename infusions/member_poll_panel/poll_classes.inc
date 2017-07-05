@@ -434,12 +434,6 @@ class MemberPoll {
         $result = $this->_selectDB($rowstart);
         $rows = dbrows($result);
 
-        echo "<div class='clearfix'>\n";
-        echo "<span>".sprintf(self::$locale['POLL_011'], $rows, $total_rows)."</span>\n";
-        echo "</div>\n";
-
-        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, FUSION_SELF."?") : "";
-
         if ($rows > 0) {
             echo "<div class='row m-t-20'>\n";
             while ($data = dbarray($result)) {
@@ -470,7 +464,7 @@ class MemberPoll {
                 echo "</div>\n";
 
                 echo "<div class='panel-footer'>\n";
-                echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].$db_info."</strong></p>\n";
+                echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].' '.$db_info."</strong></p>\n";
                 echo "<p class='m-b-0'>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
                 echo "<p class='display-inline-block badge class='m-b-0''>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
 
@@ -481,6 +475,8 @@ class MemberPoll {
                 echo "</div>\n";
                 echo "</div>\n"; // .col-xs-12
             }
+
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, FUSION_SELF."?").'</div>' : "";
             echo "</div>\n";
         } else {
             echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";

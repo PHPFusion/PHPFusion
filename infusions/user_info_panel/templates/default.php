@@ -39,8 +39,8 @@ if (!function_exists('display_user_info_panel')) {
             </div>
             <div class='user_pm_notice'>{%user_pm_notice%}</div>
             <div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>
-            <div class='submissions m-t-10'>{%submit%}</div>
-            <div id='navigation-user'>
+            <!-- <div class='submissions m-t-10'>{%submit%}</div> -->
+            <div id='navigation-user' class="m-t-10">
                 <strong>{%user_nav_title%}</strong><br/>
                 <ul class='block'>
                     <li><a href='{%edit_profile_link%}'>{%edit_profile_title%} <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a></li>
@@ -57,7 +57,7 @@ if (!function_exists('display_user_info_panel')) {
                 <ul class='block'>
                     <li>
                         <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
-                            <ul id='collapse' class='panel-collapse collapse block'>
+                            <ul id='collapse' class='panel-collapse collapse block m-l-10'>
                                 <?php
                                 foreach ($info['submissions'] as $modules) {
                                     ?>

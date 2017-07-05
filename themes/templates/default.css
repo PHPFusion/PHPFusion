@@ -1222,7 +1222,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .comments-form-header, .comments-header {
     position: relative;
-    padding: 10px 15px;
+    padding: 10px 0;
 }
 
 .comments-form-header:after, .comments-form-header:before, .comments-header:after, .comments-header:before {

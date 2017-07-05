@@ -34,6 +34,7 @@ if (!function_exists('render_downloads')) {
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
+            echo opentable('');
             echo "<div class='clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-15'>";
             if ($data['admin_link']) {
@@ -113,6 +114,7 @@ if (!function_exists('render_downloads')) {
 
             echo $data['download_show_comments'];
             echo $data['download_allow_ratings'] ? "<a id='rate'>\n</a>\n".$data['download_show_ratings'] : '';
+            echo closetable();
         } else {
             echo "<h3>".$info['download_title']."</h3>\n";
             if (!empty($info['download_cat_description'])) {
@@ -130,9 +132,9 @@ if (!function_exists('render_downloads')) {
                     echo "<div class='pull-right'>\n";
 
                     if ($dl_settings['download_stats']) {
-                        echo "<div class='m-t-10 m-r-10'><i class='fa fa-download fa-fw'></i>".$data['download_count']."</div>\n";
-                        echo "<div class='m-r-10'><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
-                        echo "<div class='m-r-10'><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
+                        echo "<div class='m-t-10'><i class='fa fa-download fa-fw'></i>".$data['download_count']."</div>\n";
+                        echo "<div><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
+                        echo "<div><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
                     }
 
                     echo "<a class='btn btn-sm btn-primary m-t-10 ".(empty($data['download_file_link']) ? 'disabled' : '')."' target='_blank' href='".$data['download_file_link']."'><i class='fa fa-download fa-fw'></i> ".$locale['download_1007']."</a>\n";
@@ -151,14 +153,11 @@ if (!function_exists('render_downloads')) {
                 }
 
                 if (!empty($info['download_nav'])) {
-                    echo "<br/>\n";
-                    echo $info['download_nav'];
+                    echo '<div class="text-center m-t-10 m-b-10">'.$info['download_nav'].'</div>';
                 }
 
             } else {
-                echo "<div class='text-center well m-t-20'>\n";
-                echo $locale['download_3000'];
-                echo "</div>\n";
+                echo "<div class='text-center well m-t-20'>\n".$locale['download_3000']."</div>\n";
             }
             echo "</div>\n";
             echo "<!--sub_download_cat-->";

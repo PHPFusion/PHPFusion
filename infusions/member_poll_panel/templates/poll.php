@@ -33,7 +33,7 @@ if (!function_exists('render_poll')) {
 
                         echo "<div class='panel-body'>\n";
                             foreach ($inf['poll_option'] as $key => $inf_opt) {
-                                echo "<p class='m-l-20'>".$inf_opt."</p>\n";
+                                echo $inf_opt;
                             }
                         echo "</div>\n";
 

@@ -22,7 +22,8 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_main_blog')) {
     function render_main_blog($info) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
-        echo "<div class='blog spacer-sm'>\n";
+
+        echo opentable(fusion_get_locale('blog_1000'));
         echo render_breadcrumbs();
         if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
             echo "<!--blog_pre_readmore-->";
@@ -31,7 +32,7 @@ if (!function_exists('render_main_blog')) {
         } else {
             echo display_blog_index($info);
         }
-        echo "</div>\n";
+        echo closetable();
 
         // push the blog menu to the right panel
         if (!empty($info['blog_filter'])) {

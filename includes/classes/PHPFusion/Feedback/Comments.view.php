@@ -61,7 +61,7 @@ if (!function_exists("display_comments_section")) {
 if (!function_exists('display_comments_listing')) {
     function display_comments_listing() {
         ?>
-        <ul class='comments clearfix'>
+        <ul class='comments clearfix list-style-none'>
             {%comments_list%}
         </ul>
         <div class='clearfix'>
@@ -110,7 +110,7 @@ if (!function_exists('display_comments_list')) {
                      - <span class='comment_date'>{%comment_date%}</span></small>
                 </div>
                 {%comment_reply_form%}
-                <ul class='sub_comments'>
+                <ul class='sub_comments list-style-none'>
                     {%comment_sub_comments%}
                 </ul>
             </div>
@@ -153,7 +153,7 @@ if (!function_exists("display_comments_form")) {
             <div class='comments-form-header'><h4>{%comment_form_title%}</h4></div>
             <div class='comments-form'>
                 <?php if (fusion_get_settings('comments_avatar')) : ?>
-                    <div class='pull-left m-r-15'>
+                    <div class='pull-left m-r-15 m-t-5'>
                         {%user_avatar%}
                     </div>
                 <?php endif; ?>
