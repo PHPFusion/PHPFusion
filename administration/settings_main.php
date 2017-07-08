@@ -204,7 +204,7 @@ echo form_textarea('footer', $locale['412'], stripslashes($settings_main['footer
                    'tinymce'  =>'simple'
                    ]);
 
-echo fusion_get_function('closeside');
+echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
 echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], [
@@ -256,7 +256,7 @@ echo form_select('logoposition_lg', $locale['404LG'], $settings_main['logopositi
                  'options' => $options_lg
                  ]);
 
-echo fusion_get_function('closeside');
+echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
 echo form_textarea('description', $locale['409'], $settings_main['description'], ['autosize' => TRUE]);
@@ -266,7 +266,7 @@ echo form_select('default_search', $locale['419'], $settings_main['default_searc
                  'callback_check' => 'validate_default_search'
                  ]);
 
-echo fusion_get_function('closeside');
+echo fusion_get_function('closeside', '');
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 
 echo fusion_get_function('openside', '');
@@ -314,7 +314,7 @@ echo form_text('site_port', $locale['430'], $settings_main['site_port'], [
                'ext_tip'        => $locale['430_desc']
                ]);
 
-echo fusion_get_function('closeside');
+echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
 echo "<div class='alert alert-info'>".$locale['424']."</div>";
@@ -328,7 +328,7 @@ echo form_textarea('exclude_user1', $locale['443a'], $settings_main['exclude_use
 echo form_textarea('exclude_user2', $locale['443b'], $settings_main['exclude_user2'], ['autosize' => TRUE]);
 echo form_textarea('exclude_user3', $locale['443c'], $settings_main['exclude_user3'], ['autosize' => TRUE]);
 echo form_textarea('exclude_user4', $locale['443d'], $settings_main['exclude_user4'], ['autosize' => TRUE]);
-echo fusion_get_function('closeside');
+echo fusion_get_function('closeside', '');
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
 echo closeform();

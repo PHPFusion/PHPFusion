@@ -4294,3 +4294,28 @@ label {
 #error_logform #delete_status-field {
 	margin-top: 1.5px;
 }
+.panel-txtarea {
+	-webkit-box-shadow: initial;
+	box-shadow: initial;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+.panel-txtarea .select2-container {
+	width: 100% !important;
+}
+.panel-txtarea .panel-heading .bbcode {
+	margin: 5px;
+}
+.panel-txtarea .bbcode_input {
+	height: 35px;
+}
+.panel-txtarea .editor-wrapper > .nav > li a:active,
+.panel-txtarea .editor-wrapper > .nav > li.active > a {
+	background-color: #e6e6e6;
+	border-color: rgba(0, 0, 0, 0);
+}
+.panel-txtarea .editor-wrapper > .nav > li > a {
+	padding: 4px 7px;
+	margin-top: 3px;
+}
