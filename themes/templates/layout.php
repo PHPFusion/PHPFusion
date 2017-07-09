@@ -91,7 +91,7 @@ if (iADMIN) {
         addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
-        addNotice("warning", fusion_get_locale('global_190'), 'all');
+        addNotice("warning maintenance-alert", fusion_get_locale('global_190'), 'all');
     }
     if (!fusion_get_userdata('user_admin_password')) {
         addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."edit_profile.php'>", "</a>"), fusion_get_locale('global_199')), 'all');
