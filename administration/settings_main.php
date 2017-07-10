@@ -154,7 +154,11 @@ if (isset($_POST['savesettings'])) {
 
     if (\defender::safe()) {
         foreach ($settings_main as $settings_key => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+            $data = [
+                'settings_name'  => $settings_key,
+                'settings_value' => $settings_value
+            ];
+            dbquery_insert(DB_SETTINGS, $data, 'update', array('primary_key' => 'settings_name'));
         }
         addNotice("success", $locale['900']);
         redirect(FUSION_REQUEST);

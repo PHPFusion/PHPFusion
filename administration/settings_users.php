@@ -53,33 +53,35 @@ if (isset($_POST['savesettings'])) {
 
     );
 
-    if (defender::safe()) {
+    if (\defender::safe()) {
         foreach ($settings2 as $settings_key => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+            $data = [
+                'settings_name'  => $settings_key,
+                'settings_value' => $settings_value
+            ];
+            dbquery_insert(DB_SETTINGS, $data, 'update', array('primary_key' => 'settings_name'));
         }
         if ($_POST['enable_deactivation'] == '0') {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
         }
         addNotice("success", $locale['900']);
-        redirect(FUSION_SELF.fusion_get_aidlink());
+        redirect(FUSION_REQUEST);
     }
 }
 
 opentable($locale['user_settings']);
 echo "<div class='well'>".$locale['user_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
+echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 $choice_opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], ['options' => $choice_opts]);
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], [
-    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number']);
+    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number', 'ext_tip' => $locale['1004']]);
 
-echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
 echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], [
-    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number']);
+    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number', 'ext_tip' => $locale['1006']]);
 
-echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
 $action_opts = ['0' => $locale['1012'], '1' => $locale['1013']];
 echo form_select('deactivation_action', $locale['1011'], $settings2['deactivation_action'], ['options' => $action_opts]);
 closeside();
@@ -141,8 +143,7 @@ closeside();
 openside('');
 echo form_select('userNameChange', $locale['691'], $settings2['userNameChange'], ['options' => $choice_opts]);
 echo form_select('userthemes', $locale['668'], $settings2['userthemes'], ['options' => $choice_opts]);
-echo form_select('multiple_logins', $locale['1014'], $settings2['multiple_logins'], ['options' => $choice_opts]);
-echo "<span class='text-smaller mid-opacity display-block m-b-10'>".$locale['1014a']."</span>\n";
+echo form_select('multiple_logins', $locale['1014'], $settings2['multiple_logins'], ['options' => $choice_opts, 'ext_tip' => $locale['1014a']]);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);

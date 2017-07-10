@@ -20,22 +20,31 @@ pageAccess("S7");
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
-$pm_settings = array(
+$pm_settings = [
     'pm_inbox_limit'   => fusion_get_settings('pm_inbox_limit'),
     'pm_outbox_limit'  => fusion_get_settings('pm_outbox_limit'),
     'pm_archive_limit' => fusion_get_settings('pm_archive_limit'),
     'pm_email_notify'  => fusion_get_settings('pm_email_notify'),
     'pm_save_sent'     => fusion_get_settings('pm_save_sent'),
-);
+];
 
 if (isset($_POST['save_settings'])) {
+
+	$pm_settings = [
+    	'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
+    	'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
+    	'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
+    	'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
+    	'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+	];
+
     if (\defender::safe()) {
     	foreach ($pm_settings as $key => $value) {
-        	if (isset($_POST[$key])) {
-        	    $pm_settings[$key] = form_sanitizer($_POST[$key], $pm_settings[$key], $key);
-        	} else {
-        	    $pm_settings[$key] = form_sanitizer($pm_settings[$key], $pm_settings[$key], $key);
-        	}
+            $data = [
+                'settings_name'  => $key,
+                'settings_value' => $value
+            ];
+
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$pm_settings[$key]."' WHERE settings_name='".$key."'");
     	}
         addNotice('success', $locale['900']);
