@@ -22,12 +22,9 @@ class PrivateMessages {
     private $info = array(
         'items' => array()
     );
-    private $locale = array();
 
-    public function __construct() {
-        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."messages.php");
+    public $locale = array();
 
-    }
     /**
      * @return array
      */

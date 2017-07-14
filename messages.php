@@ -23,6 +23,7 @@ require_once THEMES."templates/header.php";
 //include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
 $message = new \PHPFusion\PrivateMessages();
+$message->locale = fusion_get_locale('', LOCALE.LOCALESET.'messages.php');
 $message->display_inbox();
 display_inbox($message->getInfo());
 require_once THEMES."templates/footer.php";
