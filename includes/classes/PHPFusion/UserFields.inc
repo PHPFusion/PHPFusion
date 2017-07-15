@@ -714,22 +714,15 @@ class UserFields extends QuantumFields {
         }
 
         $this->info = $this->info + $this->get_user_fields();
-
         if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
-            $this->info['buttons'][] = array(
-                'link' => BASEDIR."messages.php?folder=inbox&amp;msg_send=".$this->userData['user_id'],
-                'name' => $locale['u043']
-            );
+            $this->info['buttons'][] = "<a class='btn btn-default' href='".BASEDIR."messages.php?msg_send=".$this->userData['user_id']."'>".$locale['u043']."</a>\n";
 
             if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->userData['user_id'] != '1') {
 
                 $this->info['admin'] = self::renderAdminOptions();
 
-                $this->info['buttons'][] = array(
-                    'link' => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id'],
-                    'name' => $locale['u054']
-                );
+                $this->info['buttons'][] = "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id']."'>".$locale['u054']."</a>\n";
 
             }
         }
@@ -737,6 +730,7 @@ class UserFields extends QuantumFields {
          * The template
          */
         ob_start();
+        //print_p($this->info);
         display_user_field($this->info);
         $field_template = ob_get_clean();
         ob_start();
@@ -814,6 +808,7 @@ class UserFields extends QuantumFields {
                 '{%user_name%}'     => $user_name,
                 '{%user_level%}'    => $user_level,
                 '{%admin_buttons%}' => !empty($this->info['admin']) ? $this->info['admin'] : '',
+                '{%buttons%}'       => !empty($this->info['buttons']) ? implode(" ", array_values($this->info['buttons'])) : '',
                 '{%basic_info%}'    => $basic_info,
                 '{%extended_info%}' => $extended_info,
                 '{%tab_footer%}'    => isset($tab_title) ? closetab() : ''
