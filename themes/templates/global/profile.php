@@ -124,10 +124,10 @@ if (!function_exists('display_user_profile')) {
                 <div class='clearfix'>{%basic_info%}</div>
                 <hr/>
                 <div class='clearfix'>{%extended_info%}</div>
+            	<div class='text-center'>{%buttons%}</div>
             </div>
             {%tab_footer%}
         </section>
-            <div class='clearfix text-center'>{%buttons%}</div>
         <!--userprofile_sub_idx-->
         <?php
     }
