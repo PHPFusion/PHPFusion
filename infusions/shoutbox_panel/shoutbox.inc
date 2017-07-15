@@ -507,8 +507,8 @@ class Shoutbox {
                 echo "</div>\n";
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".clean_request('s_action=edit&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".clean_request('s_action=delete&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id=".$data['shout_id']."' class='side'><i class='fa fa-edit'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
                 echo "<div class='shoutboxname'>\n";
