@@ -769,12 +769,12 @@ class ForumThreads extends ForumServer {
         require_once INCLUDES."mimetypes_include.php";
         // post query
         $result = dbquery("
-					SELECT p.*, 					
+					SELECT p.*,
 					SUM(v.vote_points) 'vote_points',
-					IF(v2.vote_id, 1, 0) 'has_voted', 
+					IF(v2.vote_id, 1, 0) 'has_voted',
 					v2.vote_points 'has_voted_points',
 					COUNT(a.attach_id) 'attach_count'
-					FROM ".DB_FORUM_POSTS." p															
+					FROM ".DB_FORUM_POSTS." p
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id=p.post_id
 					LEFT JOIN ".DB_FORUM_VOTES." v2 ON v2.post_id=p.post_id AND v2.vote_user='".fusion_get_userdata('user_id')."'
 					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON p.thread_id=a.thread_id AND a.post_id=p.post_id
@@ -833,13 +833,18 @@ class ForumThreads extends ForumServer {
             // Cache the user fields in the system
             $enabled_uf_fields = array();
             $module = array();
+            $sql_condition = "";
             if (!empty($forum_settings['forum_enabled_userfields'])) {
                 $enabled_uf_fields = explode(',', $forum_settings['forum_enabled_userfields']);
+	            foreach ($enabled_uf_fields as $key => $values) {
+	                if ($sql_condition) $sql_condition .= " OR ";
+	                $sql_condition .= "field_name='".$values."'";
+	            }
                 $uf_result = dbquery("
-                  SELECT ufc.field_cat_name, fd.field_title, fd.field_name, fd.field_type
-                  FROM ".DB_USER_FIELD_CATS." ufc
-                  INNER JOIN ".DB_USER_FIELDS." fd ON fd.field_cat=ufc.field_cat_id
-                  WHERE field_cat_db = 'users' AND field_cat_index='user_id' ORDER BY ufc.field_cat_name ASC
+                  SELECT *
+                  FROM ".DB_USER_FIELDS."
+                  WHERE $sql_condition
+                  ORDER BY field_name ASC
                 ");
                 if (dbrows($uf_result)) {
                     while ($ufData = dbarray($uf_result)) {
@@ -847,6 +852,7 @@ class ForumThreads extends ForumServer {
                     }
                 }
             }
+
             while ($pdata = dbarray($result)) {
                 $user = fusion_get_user($pdata['post_author']);
                 if (!empty($user)) {
@@ -883,12 +889,12 @@ class ForumThreads extends ForumServer {
                                         include($module_file_path);
                                         if (!empty($user_fields) && is_array($user_fields)) {
                                             $user_fields['field_cat_name'] = $fieldAttr['field_cat_name'];
-                                            $pdata['user_profiles'][$field_name] = $user_fields;
+                                            $author['user_profiles'][$field_name] = $user_fields;
                                         }
                                     }
                                 } else {
                                     // this is just normal type
-                                    $pdata['user_profiles'][$field_name] = array(
+                                    $author['user_profiles'][$field_name] = array(
                                         'field_cat_name' => $fieldAttr['field_cat_name'],
                                         'title'          => $field_name['field_name'],
                                         'value'          => $field_value
@@ -899,7 +905,6 @@ class ForumThreads extends ForumServer {
                     }
                     $pdata += $author;
                 }
-
                 // Format Post Message
                 $post_message = empty($pdata['post_smileys']) ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
                 $post_message = nl2br(parseubb($post_message));
@@ -913,6 +918,7 @@ class ForumThreads extends ForumServer {
                     "title" => "#".($i + $_GET['rowstart']),
                     'id'    => "post_".$pdata['post_id']
                 );
+
                 $post_marker = "<a class='marker' href='".$marker['link']."' id='".$marker['id']."'>".$marker['title']."</a>";
                 $post_marker .= "<a title='".$locale['forum_0241']."' href='#top'><i class='fa fa-angle-up'></i></a>\n";
 
