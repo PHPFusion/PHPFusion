@@ -29,7 +29,7 @@ if (!function_exists('display_home')) {
                 foreach ($content['data'] as $data) {
                     echo "<div class='".$classes." clearfix'>";
                         echo '<a href="'.$data['url'].'">';
-                            if (!empty($data['image'])) {
+                            if (!empty($data['image']) && file_exists($data['image'])) {
                                 echo '<img style="max-height: 180px;" class="center-x img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
                             } else {
                                 echo get_image('imagenotfound', $data['title'], 'max-height: 180px;');
