@@ -62,7 +62,19 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 echo "</head>";
-echo "<body>";
+
+/**
+ * new constant - THEME_BODY;
+ * replace <body> tags with your own theme definition body tags. Some body tags require additional params
+ * for the theme purposes.
+ */
+
+if (!defined("THEME_BODY")) {
+    echo "<body>\n";
+} else {
+    echo THEME_BODY;
+}
+
 if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
     //addNotice("danger", fusion_get_locale('global_198'));
 }
