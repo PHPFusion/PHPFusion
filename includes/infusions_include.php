@@ -177,8 +177,6 @@ if (!function_exists('send_pm')) {
 if (!function_exists('upload_file')) {
 
     function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
-        global $defender;
-
         if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
 
             if (stristr($valid_ext, ',')) {
@@ -186,7 +184,7 @@ if (!function_exists('upload_file')) {
             } elseif (stristr($valid_ext, '|')) {
                 $valid_ext = explode("|", $valid_ext);
             } else {
-                $defender->stop();
+                \defender::stop();
                 addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
             }
 

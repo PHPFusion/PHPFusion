@@ -296,7 +296,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".($value ? "initialPreview: ".$value.", " : '')."
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
                 defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
-                browseClass: 'btn btn-sm btn-block btn-default',
+                browseClass: 'btn btn-block btn-default',
                 uploadClass: 'btn btn-modal',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',

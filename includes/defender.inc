@@ -343,8 +343,7 @@ class defender {
                         }
                         // Add a notice
                         if (self::$debug) {
-                            addNotice('warning',
-                                '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                            addNotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
                         // Return user's input for correction
                         return $this->field_value;
@@ -352,7 +351,6 @@ class defender {
                         if (self::$debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
-
                         return $secured;
                     }
                 } else {

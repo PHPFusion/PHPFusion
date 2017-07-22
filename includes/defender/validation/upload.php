@@ -32,7 +32,7 @@ class Upload extends \Defender\Validation {
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
     protected function verify_file_upload() {
-        global $locale;
+        $locale = fusion_get_locale();
         require_once INCLUDES."infusions_include.php";
         if (self::$inputConfig['multiple']) {
             if (!empty($_FILES[self::$inputConfig['input_name']]['name'])) {
@@ -158,16 +158,13 @@ class Upload extends \Defender\Validation {
                 return array();
             }
         } else {
-
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
-
                 $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
                 if ($upload['error'] != 0) {
                     \defender::stop(); // return FALSE
                     switch ($upload['error']) {
                         case 1: // Maximum file size exceeded
-                            addNotice('danger',
-                                sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
+                            addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
                             \defender::setInputError(self::$inputName);
                             break;
                         case 2: // Invalid File extensions
