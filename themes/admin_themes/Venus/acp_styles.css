@@ -987,3 +987,7 @@ footer {
     bottom: 0;
     left: 0;
 }
+
+#acp-left-menu li {
+    list-style: none;
+}

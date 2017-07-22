@@ -44,11 +44,7 @@ class Shoutbox {
     public function __construct() {
         require_once INCLUDES."infusions_include.php";
 
-        if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
-            self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
-        } else {
-            self::$locale = fusion_get_locale("", INFUSIONS."shoutbox_panel/locale/English.php");
-        }
+        self::$locale = fusion_get_locale("", SHOUTBOX_LOCALE);
 
         $sb_settings = self::get_sb_settings();
         self::$limit = $sb_settings['visible_shouts'];
@@ -507,8 +503,8 @@ class Shoutbox {
                 echo "</div>\n";
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".clean_request('s_action=edit&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
-                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".clean_request('s_action=delete&shout_id='.$data['shout_id'], ['s_action', 'shout_id'], FALSE)."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['edit']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id=".$data['shout_id']."' class='side'><i class='fa fa-edit'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
                 echo "<div class='shoutboxname'>\n";

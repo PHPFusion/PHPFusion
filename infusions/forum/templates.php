@@ -724,7 +724,7 @@ if (!function_exists('display_form_bountyform')) {
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('description', $info['description']);
-        $html->set_tag('pollform', $info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button']);
+        $html->set_tag('bountyform', $info['field']['bounty_select'].$info['field']['bounty_description'].$info['field']['bounty_button']);
         echo $info['field']['openform'];
         echo $html->get_output();
         echo $info['field']['closeform'];
@@ -972,7 +972,7 @@ if (!function_exists('render_thread')) {
                             'title'       => $info['buttons']['reply']['title'],
                         ]);
                         if ($info['thread_bounty']) {
-                            $this->set_block('thread_bounty_info', [
+                            $html->set_block('thread_bounty_info', [
                                 'message' => $info['thread_bounty']
                             ]);
                         }

@@ -35,23 +35,26 @@ $blog_result = "SELECT
 				";
 $result = dbquery($blog_result);
 if (dbrows($result)) {
-    echo "<ul class='blog_archive_inner'>\n";
-	$data = [];
+    echo "<ul class='blog_archive_inner list-style-none' id='blog_archive'>\n";
+    $data = [];
     while ($row = dbarray($result)) {
         $year = date('Y', $row['blog_datestamp']);
         $month = showdate('%b', $row['blog_datestamp']);
         $data[$year][$month][] = $row;
     }
     foreach ($data as $blog_year => $blog_months) {
-        echo "<div class='text-left'><b>".$blog_year."</b></div>";
-        foreach ($blog_months as $blog_month => $blog_entries) {
-            echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
-            foreach ($blog_entries as $blog_entry) {
-                echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'],
-                                                                                                                             25)."</a></li>";
+        echo '<li>';
+            echo '<a data-toggle="collapse" data-parent="#blog_archive" href="#link-'.$blog_year.'"><b>'.$blog_year.'</b></a>';
+            echo '<ul id="link-'.$blog_year.'" class="collapse">';
+            foreach ($blog_months as $blog_month => $blog_entries) {
+                echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
+                foreach ($blog_entries as $blog_entry) {
+                    echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'],
+                                                                                                                                 25)."</a></li>";
+                }
             }
-        }
-
+            echo '</ul>';
+        echo '</li>';
     }
     echo "</ul>\n";
 } else {
