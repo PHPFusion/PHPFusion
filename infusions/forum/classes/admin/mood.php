@@ -37,7 +37,7 @@ class ForumAdminMood extends ForumAdminInterface {
     public function viewMoodAdmin() {
         pageAccess('F');
 
-        echo "<div class='well'>".self::$locale['forum_090']."</div>\n";
+        echo "<div class='well m-t-15'>".self::$locale['forum_090']."</div>\n";
         $mood_pages = array("mood_list", "mood_form");
 
         if (isset($_GET['ref']) && $_GET['ref'] == "back") {
@@ -176,11 +176,11 @@ class ForumAdminMood extends ForumAdminInterface {
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $mood_max_count ? intval($_GET['rowstart']) : 0;
 
         $mood_query = "SELECT fm.*, count(pn.post_id) AS 'mood_count'
-        	FROM ".DB_FORUM_MOODS." fm
-        	LEFT JOIN ".DB_POST_NOTIFY." pn ON pn.notify_mood_id=fm.mood_id
-        	GROUP BY mood_id
-        	ORDER BY mood_id ASC
-        	LIMIT ".$_GET['rowstart'].", 16";
+            FROM ".DB_FORUM_MOODS." fm
+            LEFT JOIN ".DB_POST_NOTIFY." pn ON pn.notify_mood_id=fm.mood_id
+            GROUP BY mood_id
+            ORDER BY mood_id ASC
+            LIMIT ".$_GET['rowstart'].", 16";
 
         $mood_result = dbquery($mood_query);
 
@@ -240,7 +240,7 @@ class ForumAdminMood extends ForumAdminInterface {
         } ?>
 
         <?php else : ?>
-            <div class="well text-center"><?php echo self::$locale['forum_114'] ?></div>
+            <div class="well text-center m-t-10"><?php echo self::$locale['forum_114'] ?></div>
         <?php endif;
     }
 }

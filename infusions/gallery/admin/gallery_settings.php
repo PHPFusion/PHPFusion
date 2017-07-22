@@ -85,7 +85,7 @@ if (isset($_POST['delete_watermarks'])) {
     }
 }
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='well'>".$locale['gallery_0022']."</div>";
+echo "<div class='well m-t-15'>".$locale['gallery_0022']."</div>";
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);

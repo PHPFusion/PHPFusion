@@ -38,7 +38,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         pageAccess('F');
 
-        echo "<div class='well'>".self::$locale['forum_tag_0101']."</div>\n";
+        echo "<div class='well m-t-15'>".self::$locale['forum_tag_0101']."</div>\n";
         $tag_pages = ["tag_list", "tag_form"];
 
         if (isset($_GET['ref']) && $_GET['ref'] == "back") {
@@ -63,8 +63,10 @@ class ForumAdminTags extends ForumAdminInterface {
         echo opentab($tab, $_GET['ref'], "rank_admin", TRUE, 'nav-pills m-t-20', "ref");
 
         switch ($_GET['ref']) {
-            case "tag_form" :
+            case "tag_form":
+                echo '<div class="m-t-10">';
                 echo $this->displayTagForm();
+                echo '</div>';
                 break;
             default:
                 echo $this->displayTagList();
@@ -240,7 +242,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         } else {
 
-            $html = "<div class='well text-center'>".self::$locale['forum_tag_0209']."</div>\n";
+            $html = "<div class='well text-center m-t-10'>".self::$locale['forum_tag_0209']."</div>\n";
 
         }
         return $html;

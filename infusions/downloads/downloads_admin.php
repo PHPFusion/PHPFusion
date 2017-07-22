@@ -32,22 +32,22 @@ $dl_settings = get_settings("downloads");
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
 if (!empty($_GET['section'])){
-	switch ($_GET['section']) {
-    	case "download_form":
-        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' =>$locale['download_0002']]);
-	        break;
-    	case "download_category":
-        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
-	        break;
-    	case "download_settings":
-        	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
-	        break;
-    	case "submissions":
-        	BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
-	        break;
-    	default:
-        	break;
-	}
+    switch ($_GET['section']) {
+        case "download_form":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' =>$locale['download_0002']]);
+            break;
+        case "download_category":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
+            break;
+        case "download_settings":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
+            break;
+        case "submissions":
+            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
+            break;
+        default:
+            break;
+    }
 }
 $allowed_section = array("downloads", "download_form", "download_settings", "download_category", "submissions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
@@ -140,15 +140,15 @@ function download_listing() {
     }
 
     $list_query = "SELECT d.*, dc.download_cat_id, dc.download_cat_name
-	FROM ".DB_DOWNLOADS." d
-	INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
-	".($filter ? "WHERE $filter " : "")."
-	ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit";
+    FROM ".DB_DOWNLOADS." d
+    INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
+    ".($filter ? "WHERE $filter " : "")."
+    ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit";
 
     $result = dbquery($list_query);
 
     $rows = dbrows($result);
-    echo "<div class='clearfix'>\n";
+    echo "<div class='clearfix m-t-10'>\n";
     echo "<span class='pull-right m-t-10'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
@@ -188,9 +188,9 @@ function download_listing() {
             }
             echo "<li class='list-group-item'>\n";
             echo "<div class='pull-right'>\n".$locale['download_0207']."
-			<a style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;section=download_category&amp;action=edit&amp;cat_id=".$data2['download_cat_id']."' class='badge'>
-			".$data2['download_cat_name']."</a>
-			</div>\n";
+            <a style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;section=download_category&amp;action=edit&amp;cat_id=".$data2['download_cat_id']."' class='badge'>
+            ".$data2['download_cat_name']."</a>
+            </div>\n";
             echo "<div class='pull-left m-r-10'>\n";
             echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
             echo "</div>\n";

@@ -25,9 +25,6 @@ use PHPFusion\QuantumFields;
 /**
  * Class ForumAdminSettings
  *
- * @todo    : Check and Localize the entire file.
- *
- *
  * @package PHPFusion\Forums\Admin
  */
 class ForumAdminSettings extends ForumAdminInterface {
@@ -60,7 +57,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         $_GET['ref'] = (isset($_GET['ref']) && method_exists($this, $tab['callback'][$_GET['ref']]) ? $_GET['ref'] : 'general');
 
-        echo opentab($tab, $_GET['ref'], 'forum_settings_tab', TRUE, FALSE, 'ref', ['ref'], TRUE);
+        echo opentab($tab, $_GET['ref'], 'forum_settings_tab', TRUE, 'nav-tabs m-t-15', 'ref', ['ref'], TRUE);
         $function = $tab['callback'][$_GET['ref']];
         $this->$function();
         echo closetab();
@@ -91,7 +88,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         ?>
         <div class='well spacer-sm'>
             <?php echo str_replace(['[LINK]', '[/LINK]'],
-            	["<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."'>", "</a>"], self::$locale['forum_150']);
+                ["<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."'>", "</a>"], self::$locale['forum_150']);
         ?>
         </div>
         <?php

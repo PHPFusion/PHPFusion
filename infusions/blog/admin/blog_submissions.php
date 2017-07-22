@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-opentable($locale['blog_0131']);
+echo '<div class="m-t-10">';
+echo '<h2>'.$locale['blog_0131'].'</h2>';
+
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_id='".$_GET['submit_id']."'");
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
             $data = array(
@@ -95,11 +97,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         }
     } elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("
-			SELECT
-			ts.submit_datestamp, ts.submit_criteria
-			FROM ".DB_SUBMISSIONS." ts
-			WHERE submit_type='b' and submit_id='".intval($_GET['submit_id'])."'
-		");
+            SELECT
+            ts.submit_datestamp, ts.submit_criteria
+            FROM ".DB_SUBMISSIONS." ts
+            WHERE submit_type='b' and submit_id='".intval($_GET['submit_id'])."'
+        ");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $submit_criteria = unserialize($data['submit_criteria']);
@@ -118,10 +120,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         redirect(clean_request("", array("submit_id"), FALSE));
     } else {
         $result = dbquery("SELECT
-			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='b' order by submit_datestamp desc");
+            ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='b' order by submit_datestamp desc");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $submit_criteria = unserialize($data['submit_criteria']);
@@ -340,11 +342,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     }
 } else {
     $result = dbquery("SELECT
-			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='b' order by submit_datestamp desc
-			");
+            ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='b' order by submit_datestamp desc
+            ");
     $rows = dbrows($result);
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['blog_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
@@ -374,4 +376,5 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "<div class='well text-center m-t-20'>".$locale['blog_0130']."</div>\n";
     }
 }
-closetable();
+
+echo '</div>';

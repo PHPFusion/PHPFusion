@@ -47,9 +47,9 @@ if (isset($_POST['save_robots'])) {
         addNotice("danger", $locale['ROBOT_417']);
     }
 
-	if (\defender::safe()) {
-		$message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];
-		write_file($file, $robots_content);
+    if (\defender::safe()) {
+        $message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];
+        write_file($file, $robots_content);
         addNotice("success", $message);
         redirect(FUSION_REQUEST);
     }
@@ -63,7 +63,7 @@ if (isset($_POST['set_default'])) {
         addNotice("danger", $locale['ROBOT_414']);
     }
     if (\defender::safe() && !defined('FUSION_NULL')) {
-		write_file($file, write_Default());
+        write_file($file, write_Default());
         addNotice("success", $locale['ROBOT_412']);
         redirect(FUSION_REQUEST);
     }
@@ -71,28 +71,26 @@ if (isset($_POST['set_default'])) {
 }
 
 opentable($locale['ROBOT_400']);
-openside('');
 
 if (!file_exists($file)) {
-	echo "<div class='alert alert-danger text-center'><strong>".$locale['ROBOT_411']."</strong></div>\n";
-	$current = write_Default();
-	$button = $locale['ROBOT_422'];
+    echo "<div class='alert alert-danger text-center'><strong>".$locale['ROBOT_411']."</strong></div>\n";
+    $current = write_Default();
+    $button = $locale['ROBOT_422'];
 } else {
 
-	$current = file_get_contents($file);
-	$button = $locale['save'];
+    $current = file_get_contents($file);
+    $button = $locale['save'];
 }
 
 echo openform('robotsform', 'post', FUSION_REQUEST);
 echo "<div class='text-center well'><strong>".$locale['ROBOT_420']."</strong></div>\n";
-echo "<div class='panel-footer text-center'>";
+echo "<div class='panel panel-default text-center'><div class='panel-footer'>";
 echo str_replace(['[LINK]', '[/LINK]'], ["<a href='http://www.robotstxt.org/' target='_blank'>", "</a>",], $locale['ROBOT_421']);
-echo "</div>\n";
+echo "</div></div>\n";
 echo form_textarea('robots_content', '', $current, array('height' => '300px'));
 echo form_button('save_robots', $button, $button, array('class' => 'btn-primary m-r-10'));
 echo file_exists($file) ? form_button('set_default', $locale['ROBOT_423'], $locale['ROBOT_423'], array('class' => 'btn-default')) : "";
 echo closeform();
-closeside();
 
 closetable();
 add_to_jquery("$('#set_default').bind('click', function() { return confirm('".$locale['ROBOT_410']."'); });");

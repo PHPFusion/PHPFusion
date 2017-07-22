@@ -272,11 +272,11 @@ class Shoutbox {
         switch ($_GET['section']) {
             case "shoutbox_form":
                 add_to_title(self::$locale['edit']);
-				\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $edit ? self::$locale['edit'] : self::$locale['SB_add']]);
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $edit ? self::$locale['edit'] : self::$locale['SB_add']]);
                 break;
             case "shoutbox_settings":
                 add_to_title(self::$locale['SB_settings']);
-				\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => self::$locale['SB_settings']]);
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => self::$locale['SB_settings']]);
                 break;
             default:
         }
@@ -294,7 +294,7 @@ class Shoutbox {
         $master_tab_title['id'][] = "shoutbox_settings";
         $master_tab_title['icon'][] = "";
 
-        echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE);
+        echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE, 'nav-tabs m-b-10');
         switch ($_GET['section']) {
             case "shoutbox_form":
                 add_to_title(self::$locale['edit']);
@@ -406,10 +406,10 @@ class Shoutbox {
         $result = $this->_selectDB($rowstart, self::$limit);
         $rows = dbrows($result);
 
-        echo "<div class='clearfix'>\n";
-        echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span>\n";
-        echo "</div>\n";
-        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
+        echo '<div class="m-t-10 m-b-10">';
+        echo "<div class='display-inline'><span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span></div>\n";
+        echo ($total_rows > $rows) ? '<div>'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;").'</div>' : "";
+        echo '</div>';
 
         if ($rows > 0) {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
@@ -447,9 +447,10 @@ class Shoutbox {
             echo "</div>\n";
             echo form_button('sb_admins', self::$locale['SB_selected_shout'], self::$locale['SB_selected_shout'], array('class' => 'btn-danger', 'icon' => 'fa fa-trash'));
             echo closeform();
-            echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
+
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;").'</div>' : "";
         } else {
-            echo "<div class='text-center'>".self::$locale['SB_no_msgs']."</div>\n";
+            echo "<div class='text-center m-t-10'>".self::$locale['SB_no_msgs']."</div>\n";
         }
     }
 

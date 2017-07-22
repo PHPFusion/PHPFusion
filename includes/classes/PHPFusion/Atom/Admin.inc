@@ -76,7 +76,7 @@ class Admin {
         $atom = new Atom();
         $atom->target_folder = $theme_name;
         $atom->theme_name = $theme_name;
-        echo opentab($tab, $tab_active, "theme_admin", TRUE);
+        echo opentab($tab, $tab_active, "theme_admin", TRUE, 'nav-tabs m-b-10');
         // now include the thing as necessary
         switch ($_GET['section']) {
             case "dashboard":
@@ -89,7 +89,7 @@ class Admin {
                     }
                     $theme_name = stripinput($_GET['theme']);
                     $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."'
-					and theme_id='".intval($_GET['delete_preset'])."'"));
+                    and theme_id='".intval($_GET['delete_preset'])."'"));
                     if (file_exists(THEMES.$theme_name."/".$file['theme_file'])) {
                         unlink(THEMES.$theme_name."/".$file['theme_file']);
                     }

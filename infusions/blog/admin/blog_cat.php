@@ -89,7 +89,10 @@ if (isset($_POST['save_cat'])) {
     }
 }
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
-opentable($formTitle);
+
+echo '<div class="m-t-10">';
+echo '<h2>'.$formTitle.'</h2>';
+
 echo openform("addcat", "post", $formAction);
 openside("");
 echo form_hidden("blog_cat_id", "", $data['blog_cat_id']);
@@ -144,7 +147,9 @@ if ($rows != 0) {
 } else {
     echo "<div class='well text-center'>".$locale['blog_0461']."</div>\n";
 }
-closetable();
+
+echo '</div>';
+
 function getblogCatPath($item_id) {
     $full_path = "";
     while ($item_id > 0) {

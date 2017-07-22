@@ -28,7 +28,7 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
 $aidlink = fusion_get_aidlink();
- 
+
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.fusion_get_aidlink(), 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
 if (!empty($_GET['section'])){
@@ -166,7 +166,7 @@ function blog_listing() {
 	");
 
     $rows = dbrows($result);
-    echo "<div class='clearfix'>\n";
+    echo "<div class='clearfix m-t-10'>\n";
     echo "<span class='pull-right m-t-10'>".sprintf($locale['blog_0408'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
@@ -196,7 +196,7 @@ function blog_listing() {
     }
     echo "</div>\n";
 
-    echo "<ul class='list-group m-10'>\n";
+    echo "<ul class='list-group m-t-10'>\n";
     if ($rows > 0) {
         while ($data2 = dbarray($result)) {
             echo "<li class='list-group-item'>\n";

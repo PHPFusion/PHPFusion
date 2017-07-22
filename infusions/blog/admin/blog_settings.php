@@ -53,7 +53,10 @@ $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
 $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
-opentable($locale['blog_settings']);
+
+echo '<div class="m-t-10">';
+echo '<h2>'.$locale['blog_settings'].'</h2>';
+
 echo "<div class='well'>".$locale['blog_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
@@ -136,22 +139,23 @@ require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
 $mime_opts = array();
 foreach ($mime as $m => $Mime) {
-	$ext = ".$m";
-	$mime_opts[$ext] = $ext;
+    $ext = ".$m";
+    $mime_opts[$ext] = $ext;
 }
 sort($mime_opts);
 echo form_select('blog_file_types', $locale['961'], $blog_settings['blog_file_types'],
-				 array(
-    			'options' => $mime_opts,
-    			'error_text' => $locale['error_type'],
-    			'placeholder' => $locale['choose'],
-    			'multiple' => TRUE,
-    			'tags' => TRUE,
-    			'width' => '100%',
-    			'delimiter' => '|'
-			));
+                 array(
+                'options' => $mime_opts,
+                'error_text' => $locale['error_type'],
+                'placeholder' => $locale['choose'],
+                'multiple' => TRUE,
+                'tags' => TRUE,
+                'width' => '100%',
+                'delimiter' => '|'
+            ));
 closeside();
 echo "</div></div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
 echo closeform();
-closetable();
+
+echo '</div>';

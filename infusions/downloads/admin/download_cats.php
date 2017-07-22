@@ -116,7 +116,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $tab_title['icon'][] = "";
     $tab_active = tab_active($tab_title, isset($_GET['cat_view']) ? 1 : 0);
 
-    echo opentab($tab_title, $tab_active, 'dcategory', FALSE, "nav-tabs");
+    echo opentab($tab_title, $tab_active, 'dcategory', FALSE, "nav-tabs m-t-10");
     echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
     echo openform('addcat', 'post', FUSION_REQUEST, array('class' => 'm-t-20'));
     echo "<div class='row'>\n";
@@ -207,7 +207,7 @@ function showcatlist($parent = 0, $level = 0) {
 	ORDER BY d.download_cat_name
 	");
     if (dbrows($result) != 0) {
-        echo "<div class='row'>";
+        echo "<div class='row m-t-15'>";
         while ($data = dbarray($result)) {
             echo "<div class='col-xs-12 col-sm-6'>";
             echo "<div class='well clearfix'>\n";

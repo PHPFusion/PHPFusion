@@ -39,26 +39,27 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $forum_settings = $this->get_forum_settings();
 
-        echo "<div class='well'>".self::$locale['forum_rank_0100']."</div>\n";
+        echo "<div class='well m-t-15'>".self::$locale['forum_rank_0100']."</div>\n";
 
         if ($forum_settings['forum_ranks']) {
-        $tab_pages = array("rank_list", "rank_form");
+            $tab_pages = array("rank_list", "rank_form");
 
-        if (isset($_GET['ref']) && $_GET['ref'] == "back") {
-            redirect(clean_request("section=fr", array("ref", "section", 'rank_id'), FALSE));
-        }
+            if (isset($_GET['ref']) && $_GET['ref'] == "back") {
+                redirect(clean_request("section=fr", array("ref", "section", 'rank_id'), FALSE));
+            }
 
-        $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab_pages) ? $_GET['ref'] : $tab_pages[0];
+            $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab_pages) ? $_GET['ref'] : $tab_pages[0];
 
-        if ($_GET['ref'] != $tab_pages[0]) {
-            $tab['title'][] = self::$locale['back'];
-            $tab['id'][] = "back";
-            $tab['icon'][] = "fa fa-fw fa-arrow-left";
-        } else {
-            $tab['title'][] = self::$locale['forum_rank_402'];
-            $tab['id'][] = "rank_list";
-            $tab['icon'][] = "";
-        }
+            if ($_GET['ref'] != $tab_pages[0]) {
+                $tab['title'][] = self::$locale['back'];
+                $tab['id'][] = "back";
+                $tab['icon'][] = "fa fa-fw fa-arrow-left";
+            } else {
+                $tab['title'][] = self::$locale['forum_rank_402'];
+                $tab['id'][] = "rank_list";
+                $tab['icon'][] = "";
+            }
+
             $tab['title'][] = isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? self::$locale['forum_rank_401'] : self::$locale['forum_rank_400'];
             $tab['id'][] = "rank_form";
             $tab['icon'][] = isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? "fa fa-fw fa fa-pencil" : "fa fa-fw fa fa-plus";
@@ -77,11 +78,10 @@ class ForumAdminRanks extends ForumAdminInterface {
             echo closetab();
 
         } else {
-            opentable(self::$locale['forum_rank_403']);
+            echo '<h3>'.self::$locale['forum_rank_403'].'</h3>';
             echo "<div class='well text-center'>";
                 echo sprintf(self::$locale['forum_rank_450'], "<a href='".clean_request("section=fs", array("section"), FALSE)."'>".self::$locale['forum_rank_451']."</a>");
             echo "</div>";
-            closetable();
         }
     }
 

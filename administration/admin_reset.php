@@ -44,7 +44,7 @@ class admin_reset_admin {
                 break;
         }
 
-	   \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
+       \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
         self::set_adminsdb();
     }
 
@@ -248,11 +248,11 @@ class admin_reset_admin {
 
             $tab_title['title'][] = self::$locale['apw_415'];
             $tab_title['id'][] = 'adminreset_list';
-			$tab_title['icon'][] = "";
+            $tab_title['icon'][] = "";
 
             $tab_title['title'][] = self::$locale['apw_title'];
             $tab_title['id'][] = 'adminreset_form';
-			$tab_title['icon'][] = "";
+            $tab_title['icon'][] = "";
 
             echo opentab($tab_title, $_GET['section'], 'adminreset_list', TRUE);
             switch ($_GET['section']) {
@@ -270,7 +270,8 @@ class admin_reset_admin {
     public function admin_reset_listing() {
         $all_admin_reset = self::load_all_admin_reset();
 
-        opentable(self::$locale['apw_415']);
+        echo '<div class="m-t-15">';
+            echo '<h2>'.self::$locale['apw_415'].'</h2>';
             if (!empty($all_admin_reset)) {
                 echo "<table class='table table-hover table-striped'>\n";
                 echo "<tr>\n";
@@ -300,18 +301,19 @@ class admin_reset_admin {
             } else {
                 echo "<div class='well text-center'>".self::$locale['apw_426']."</div>\n";
             }
-        closetable();
+        echo '</div>';
     }
 
     public function admin_reset_form() {
         fusion_confirm_exit();
-        openside('');
+        openside('', 'm-t-15');
             echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_form");
             echo form_select('reset_admin', self::$locale['apw_400'], '', array(
                 'required' => TRUE,
                 'options' => self::load_admins(),
                 'placeholder' => self::$locale['choose'],
-                'allowclear' => TRUE
+                'allowclear' => TRUE,
+                'inline' => TRUE
             ));
 
             echo form_textarea('reset_message', self::$locale['apw_404'], '', array('required' => TRUE, 'autosize' => TRUE));

@@ -64,7 +64,7 @@ foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;
 }
-echo "<div class='well'>".$locale['download_description']."</div>";
+echo "<div class='well m-t-20'>".$locale['download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");

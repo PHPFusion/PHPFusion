@@ -123,7 +123,7 @@ class Banners {
                 $master_tab_title['id'][] = 'banners_form';
             }
 
-            echo opentab($master_tab_title, $_GET['section'], 'banners_list', TRUE);
+            echo opentab($master_tab_title, $_GET['section'], 'banners_list', TRUE, 'nav-tabs m-b-20');
               switch ($_GET['section']) {
                 case "banners_form":
                     if ($edit) {

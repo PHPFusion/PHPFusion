@@ -35,15 +35,15 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         $this->locale = self::get_WeblinkAdminLocale();
         $weblink_settings = self::get_weblink_settings();
 
-		// Save
+        // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = array(
-				"links_per_page"        => form_sanitizer($_POST['links_per_page'], 15, "links_per_page"),
+                "links_per_page"        => form_sanitizer($_POST['links_per_page'], 15, "links_per_page"),
                 "links_allow_submission"  => form_sanitizer($_POST['links_allow_submission'], 0, "links_allow_submission"),
                 "links_extended_required" => form_sanitizer($_POST['links_extended_required'], 0, "links_extended_required")
             );
 
-			// Update
+            // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = array(
@@ -55,33 +55,31 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                 redirect(FUSION_REQUEST);
             } else {
                 addNotice("danger", $this->locale['901']);
-				$weblink_settings = $inputArray;
+                $weblink_settings = $inputArray;
             }
         }
 
-		opentable("");
-		echo openform("settingsform", "post", FUSION_REQUEST);
-		echo "<div class='well m-b-0 spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
+        echo openform("settingsform", "post", FUSION_REQUEST);
+        echo "<div class='well spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
 
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12'>\n";
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-12'>\n";
 
         echo form_text("links_per_page", $this->locale['WLS_0132'], $weblink_settings['links_per_page'], array(
-            "max_length" => 4, "inner_width" => "250px", "type" => "number"
-			));
+            "max_length" => 4, "inner_width" => "250px", "type" => "number", 'inline' => TRUE
+            ));
 
         echo form_select("links_allow_submission", $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], array(
-				"options" => array($this->locale['disable'], $this->locale['enable'])
-			));
+                "options" => array($this->locale['disable'], $this->locale['enable']), 'inline' => TRUE
+            ));
 
-		echo form_select("links_extended_required", $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], array(
-				"options" => array($this->locale['disable'], $this->locale['enable'])
-			));
+        echo form_select("links_extended_required", $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], array(
+                "options" => array($this->locale['disable'], $this->locale['enable']), 'inline' => TRUE
+            ));
         echo "</div>\n";
         echo "</div>\n";
 
-		echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
+        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
         echo closeform();
-		closetable();
     }
 }

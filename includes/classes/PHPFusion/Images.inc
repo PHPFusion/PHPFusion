@@ -227,7 +227,7 @@ class Images {
     public function edit_image() {
         $aidlink = fusion_get_aidlink();
         if (isset($_GET['view']) && in_array($_GET['view'], $this->data['image_list'])) {
-            echo "<div class='text-center'>\n";
+            echo "<div class='text-center m-t-20'>\n";
             $image_ext = strrchr($this->data['afolder'].stripinput($_GET['view']), ".");
             if (in_array($image_ext, array(".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", ".SVG"))) {
                 echo "<img class='img-responsive img-thumbnail' src='".$this->data['afolder'].stripinput($_GET['view'])."' title='".stripinput($_GET['view'])."' /><br /><br />\n";
@@ -245,7 +245,7 @@ class Images {
     public function image_list() {
         $aidlink = fusion_get_aidlink();
 
-        echo "<div class='text-center well'>";
+        echo "<div class='well text-center m-t-15'>";
         echo "<div class='btn-group'>\n";
         foreach ($this->data['folders'] as $key => $value) {
             if ($value['count'] != 0) {
@@ -299,7 +299,7 @@ class Images {
             }
         }
 
-        echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE));
+        echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE, 'class' => 'm-t-15'));
         echo form_fileinput("myfile", self::$locale['421'], "", array(
             'upload_path' => $this->data['afolder'],
             'type'        => 'image',

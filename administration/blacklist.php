@@ -219,7 +219,7 @@ class Blaclist {
 
     public function blacklistForm() {
         fusion_confirm_exit();
-        openside('');
+        openside('', 'm-t-15');
         echo "<div class='well'>\n";
         echo self::$locale['BLS_MS'];
         echo "</div>\n";
