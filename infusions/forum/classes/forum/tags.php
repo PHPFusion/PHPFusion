@@ -125,8 +125,9 @@ class ThreadTags extends ForumServer {
         $thread_query = "
         SELECT
         count(t.thread_id) 'thread_max_rows',
-        count(a1.attach_id) 'attach_image',
-        count(a2.attach_id) 'attach_files'
+        count(a.attach_id) 'attach_image',
+        count(a2.attach_id) 'attach_files',
+        count(a.attach_id) 'attach_count'
         FROM ".DB_FORUM_THREADS." t
         LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
         INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
@@ -134,9 +135,9 @@ class ThreadTags extends ForumServer {
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         #LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
+        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id AND a.attach_mime IN ('".implode(",", img_mimeTypes())."')
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
-        WHERE ".in_group('t.thread_tags', intval($tag_id), '.')." AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+        WHERE ".in_group('t.thread_tags', intval($tag_id), '.')."AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')."
         GROUP BY tf.forum_id
         ";

@@ -44,11 +44,11 @@ class ThreadFilter {
 
         $type_array = array(
             'all'         => '',
-            'discussions' => "AND (a.attach_id IS NULL or attach_count ='0') AND thread_poll='0'",
-            'attachments' => "AND (a.attach_id IS NOT NULL OR attach_count > 0) AND thread_poll='0'",
-            'poll'        => "AND (a.attach_id IS NULL or attach_count ='0') AND thread_poll ='1'",
-            'solved'      => "AND t.thread_answered = '1'",
-            'unsolved'    => "AND t.thread_answered = '0'",
+            'discussions' => " AND (a.attach_id IS NULL OR a.attach_count ='0') AND thread_poll='0'",
+            'attachments' => " AND (a.attach_id IS NOT NULL OR a.attach_count > 0) AND thread_poll='0'",
+            'poll'        => " AND (a.attach_id IS NULL OR a.attach_count ='0') AND thread_poll ='1'",
+            'solved'      => " AND t.thread_answered = '1'",
+            'unsolved'    => " AND t.thread_answered = '0'",
         );
 
         $sort_array = array(
