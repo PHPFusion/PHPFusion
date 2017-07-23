@@ -263,10 +263,10 @@ class MemberPoll {
                         foreach ($dat['poll_option'] as $im1 => $data1) {
                             $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
                             $opt_votes = ($num_votes ? number_format(($num_votes / $info_f['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
-                            $info_f['poll_table'][$key]['poll_option'][] = "<label><input type='radio' name='check' value='".$im1."' /> ".$data1."</label>\n";
+                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1]);
                         }
 
-                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], array('class' => 'btn-primary m-r-10'));
+                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], array('class' => 'btn-primary'));
                         $info_f['poll_table'][$key]['poll_foot'][] = closeform();
                         $i++;
                     }
@@ -503,7 +503,7 @@ class MemberPoll {
                     'vote_user'         => iMEMBER ? fusion_get_userdata('user_id') : 0,
                     'vote_user_ip'      => USER_IP,
                     'vote_user_ip_type' => USER_IP_TYPE,
-                    'vote_opt'          => stripinput($_POST['check']),
+                    'vote_opt'          => form_sanitizer($_POST['check'], 0, 'check'),
                     'poll_id'           => intval($_POST['poll_id'])
                 );
 
