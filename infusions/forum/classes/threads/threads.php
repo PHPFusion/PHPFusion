@@ -838,11 +838,12 @@ class ForumThreads extends ForumServer {
                 $enabled_uf_fields = explode(',', $forum_settings['forum_enabled_userfields']);
 	            foreach ($enabled_uf_fields as $key => $values) {
 	                if ($sql_condition) $sql_condition .= " OR ";
-	                $sql_condition .= "field_name='".$values."'";
+	                $sql_condition .= "fd.field_name='".$values."'";
 	            }
                 $uf_result = dbquery("
-                  SELECT *
-                  FROM ".DB_USER_FIELDS."
+                  SELECT fd.*, ufc.*
+                  FROM ".DB_USER_FIELDS." fd
+                  INNER JOIN ".DB_USER_FIELD_CATS." ufc ON fd.field_cat=ufc.field_cat_id
                   WHERE $sql_condition
                   ORDER BY field_name ASC
                 ");
