@@ -123,7 +123,6 @@ class Requirements extends Install_Core {
 
         // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple statements.
         // $requirements['php_extensions'] output
-        $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
         $missing_extensions = array();
         $required_extensions = array(
             'date',
@@ -147,6 +146,7 @@ class Requirements extends Install_Core {
         }
         if (!empty($missing_extensions)) {
             $requirements['php_extensions'] = array(
+                'title'        => self::$locale['setup_0052'],
                 'description'  => self::$locale['setup_0114'],
                 'value'        => implode(', ', $missing_extensions),
                 'severability' => -10,
