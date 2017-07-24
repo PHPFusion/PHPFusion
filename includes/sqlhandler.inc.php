@@ -855,23 +855,23 @@ function getcategory($cat) {
  * However you can pass the table name with or without prefix,
  * this function only check the prefixed tables of the PHPFusion
  *
- * @todo We should find a better name. fusion_table_exists or fusion_dbtable_exists...
- *
  * @staticvar boolean[] $tables
  * @param string $table The name of the table with or without prefix
- * @param boolean $updateCache The state of a table is cached.
  *    Pass TRUE if you want to update the cached state of the table.
  * @return boolean
  */
-function db_exists($table, $updateCache = FALSE) {
+function db_exists($table) {
     if (strpos($table, DB_PREFIX) === FALSE) {
         $table = DB_PREFIX.$table;
     }
-    $sql = "SHOW TABLES LIKE '%".$table."%'";
-    $result = dbquery($sql);
-    if (dbrows($result)) {
-        return TRUE;
+
+    $query = dbquery("SHOW TABLES");
+    while ($row = dbarraynum($query)) {
+        if ($row[0] == $table) {
+            return TRUE;
+        }
     }
+
     return FALSE;
 }
 
