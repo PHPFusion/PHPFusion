@@ -865,11 +865,9 @@ function db_exists($table) {
         $table = DB_PREFIX.$table;
     }
 
-    $query = dbquery("SHOW TABLES");
-    while ($row = dbarraynum($query)) {
-        if ($row[0] == $table) {
-            return TRUE;
-        }
+    $result = dbquery("SHOW TABLES LIKE '%".$table."%'");
+    if (dbrows($result)) {
+        return TRUE;
     }
 
     return FALSE;
