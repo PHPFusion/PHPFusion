@@ -146,7 +146,6 @@ class Requirements extends Install_Core {
         }
         if (!empty($missing_extensions)) {
             $requirements['php_extensions'] = array(
-                'title'        => self::$locale['setup_0052'],
                 'description'  => self::$locale['setup_0114'],
                 'value'        => implode(', ', $missing_extensions),
                 'severability' => -10,
@@ -154,6 +153,8 @@ class Requirements extends Install_Core {
         } else {
             $requirements['php_extensions']['description'] = self::$locale['setup_0115'];
         }
+
+        $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
 
         // Check to see if OPcache is installed.
         // $requirements['php_opcache']
@@ -241,7 +242,7 @@ class Requirements extends Install_Core {
             $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) ? TRUE : FALSE;
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
-																$requirements['files_check']['severability'] = -10;
+                                                                $requirements['files_check']['severability'] = -10;
             } else {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
             }
