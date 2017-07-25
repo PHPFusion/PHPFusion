@@ -864,10 +864,11 @@ function db_exists($table) {
     if (strpos($table, DB_PREFIX) === FALSE) {
         $table = DB_PREFIX.$table;
     }
-
-    $result = dbquery("SHOW TABLES LIKE '%".$table."%'");
-    if (dbrows($result)) {
-        return TRUE;
+    $query = dbquery("SHOW TABLES");
+    while ($row = dbarraynum($query)) {
+        if ($row[0] == $table or $row[0] == strtolower($table)) {
+            return TRUE;
+        }
     }
 
     return FALSE;
