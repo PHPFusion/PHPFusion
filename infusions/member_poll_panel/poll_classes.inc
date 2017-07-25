@@ -136,7 +136,7 @@ class MemberPoll {
     }
 
     public function _selectVote($user, $pollid) {
-        $whr = iMEMBER ? "vote_user='".$user."' AND vote_user_ip='".USER_IP."'" : "vote_user_ip='".USER_IP."'";
+        $whr = iMEMBER ? "vote_user='".$user."'" : "vote_user_ip='".USER_IP."'";
         $result = dbquery("SELECT vote_id, vote_user, vote_opt, vote_user_ip, poll_id
             FROM ".DB_POLL_VOTES."
             WHERE poll_id='".$pollid."' AND ".$whr
