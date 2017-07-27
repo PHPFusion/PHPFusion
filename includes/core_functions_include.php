@@ -525,14 +525,16 @@ function displaysmileys($textarea, $form = "inputform") {
 /**
  * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  *
- * @param $user_name
+ * @param $user_name (@Chan)
+ * @param $tooltip ("<div class='clearfix'>".($userdata['user_lastvisit']-120 < TIME ? 'Onlin' : 'Offline')."</div>";)
  *
  * @return mixed
  */
-function fusion_parse_user($user_name) {
+function fusion_parse_user($user_name, $tooltip = "") {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
+    $text = preg_replace_callback("#$user_regex#i", function ($user_name) use ($tooltip) {
         $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
+        $user_name[1] = $tooltip;
         return render_user_tags($user_name);
     }, $user_name);
 

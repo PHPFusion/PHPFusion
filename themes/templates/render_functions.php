@@ -115,7 +115,7 @@ if (!function_exists('render_user_tags')) {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $title = "<div class='user-tooltip'><div class='pull-left m-r-10'>".display_avatar($data, '50px', '', FALSE, '')."</div><div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/><span class='user_level'>".getuserlevel($data['user_level'])."</span></div>";
-            $content = "<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
+            $content = $m[1]."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
             $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>\n";
