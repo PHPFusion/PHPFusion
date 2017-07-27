@@ -104,35 +104,26 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
         echo "</tr>\n";
         $i = 1;
         while ($data = dbarray($result)) {
-            $class = "tbl$i";
+
             $suspension = ($data['suspend_type'] != 2 ? getsuspension($data['suspend_type']) : $locale['susp111']);
             $reason = ($data['suspend_reason'] ? ": ".$data['suspend_reason'] : "");
             $admin = ($data['admin_name'] ? $data['admin_name']." (".$locale['susp108'].": ".$data['suspend_ip'].")" : $locale['susp109']);
-            echo "<tr><td class='$class' valign='top'>#".$data['suspend_id']."</td>\n";
-            echo "<td class='$class' valign='top'>".showdate('forumdate', $data['suspend_date'])."</td>\n";
-            echo "<td class='$class' valign='top'><strong>$suspension</strong>$reason</td>\n";
-            echo "<td class='$class' valign='top'>$admin</td>\n";
+            echo "<tr><td>#".$data['suspend_id']."</td>\n";
+            echo "<td>".showdate('forumdate', $data['suspend_date'])."</td>\n";
+            echo "<td><strong>".$suspension."</strong>".$reason."</td>\n";
+            echo "<td>".$admin."</td>\n";
             echo "</tr>\n<tr>\n";
             if ($data['reinstate_date']) {
                 $r_reason = ($data['reinstate_reason'] ? ": ".$data['reinstate_reason'] : "");
                 $admin = ($data['admin_name_b'] ? $data['admin_name_b']." (".$locale['susp112'].$data['reinstate_ip'].")" : $locale['susp109']);
-                echo "<td class='$class' valign='top' align='right'>&nbsp;</td>\n";
-                echo "<td class='$class' valign='top'>".showdate('forumdate', $data['reinstate_date'])."</td>\n";
-                echo "<td class='$class' valign='top'>".$locale['susp113'].$r_reason."</td>\n";
-                echo "<td class='$class' valign='top'>$admin</td>\n";
-                echo "</tr>\n<tr>\n";
-            } elseif ($data['suspend_type'] != 2) {
-                echo "<td class='$class' valign='top' align='right'>&nbsp;</td>\n";
-                echo "<td class='$class' valign='top'>&nbsp;</td>\n";
-                echo "<td class='$class' valign='top'>&nbsp;</td>\n";
-                echo "<td class='$class' valign='top'>&nbsp;</td>\n";
+                echo "<td>&nbsp;</td>\n";
+                echo "<td>".showdate('forumdate', $data['reinstate_date'])."</td>\n";
+                echo "<td>".$locale['susp113'].$r_reason."</td>\n";
+                echo "<td>".$admin."</td>\n";
                 echo "</tr>\n<tr>\n";
             }
-            echo "<td class='tbl1' colspan='4'><hr /></td>\n";
+            echo "<td colspan='4'><hr /></td>\n";
             echo "</tr>\n";
-            if ($i == 2 ? $i = 1 : $i++) {
-                ;
-            }
         }
         echo "</table>\n";
     } else {
@@ -153,13 +144,12 @@ function member_nav($second = "", $third = "") {
         echo "<li class='crumb'><a href='".$second[0]."'>".$second[1]."</a>\n</li>\n";
     }
     if ($third && $third = explode("|", $third)) {
-        echo "<li class='crumb'><a href='".$third[0]."'>".$third[1]."</a>\n</li>\n";
+        echo "<li class='crumb'>".$third[1]."</li>\n";
     }
 	echo "</div>\n";
 }
 
 function member_url($step, $user_id) {
-    global $aidlink;
 
-    return FUSION_SELF.fusion_get_aidlink()."&amp;ref=".$step.($user_id ? "&amp;user_id=$user_id" : "");
+    return FUSION_SELF.fusion_get_aidlink()."&amp;ref=".$step.($user_id ? "&amp;lookup=$user_id" : "");
 }
