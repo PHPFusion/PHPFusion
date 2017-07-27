@@ -72,7 +72,7 @@ function opentable($title) {
 }
 
 function closetable() {
-
+    echo " ";
 }
 
 
