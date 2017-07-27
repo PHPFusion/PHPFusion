@@ -95,7 +95,7 @@ if (!function_exists('render_favicons')) {
 
 if (!function_exists('render_user_tags')) {
     /**
-     * The callback function for parseUser()
+     * The callback function for fusion_parse_user()
      *
      * @global array $locale
      *
@@ -107,16 +107,18 @@ if (!function_exists('render_user_tags')) {
         $locale = fusion_get_locale();
         add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
         $user = str_replace('@', '', $m[0]);
-        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar FROM ".DB_USERS." WHERE user_name='".$user."' or user_name='".ucwords($user)."' or user_name='".strtolower($user)."' AND user_status='0' LIMIT 1");
+        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar
+        		FROM ".DB_USERS."
+        		WHERE user_name='".$user."' OR user_name='".ucwords($user)."' OR user_name='".strtolower($user)."' AND user_status='0'
+        		LIMIT 1
+        	");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/no-avatar.jpg";
-            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link strong m-b-10" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><span class="user_level">'.getuserlevel($data['user_level']).'</span></div>';
-            $content = '<a class="btn btn-block btn-primary" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'">'.$locale['send_message'].'</a>';
-            $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
+            $title = "<div class='user-tooltip'><div class='pull-left m-r-10'>".display_avatar($data, '50px', '', FALSE, '')."</div><div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/><span class='user_level'>".getuserlevel($data['user_level'])."</span></div>";
+            $content = "<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
+            $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>\n";
-
             return $html;
         }
 
