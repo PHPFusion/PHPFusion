@@ -235,4 +235,19 @@ class Members_Profile extends Members_Admin {
         echo closeform();
         echo "</div>\n";
     }
+
+    public static function delete_unactivated_user() {        if (isset($_POST['delete_newuser'])) {        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
+        redirect(clean_request('', array('ref', 'lookup', 'newuser'), FALSE));
+        }
+        echo "<div class='well'>\n";
+        echo "<h4>".self::$locale['ME_454']."</h4>";
+        echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
+        echo openform('mod_form', 'post', FUSION_REQUEST);
+        echo "<div class='spacer-sm'>\n";
+        echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], array('class' => 'btn-danger m-r-10'));
+        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
+        echo "</div>\n";
+        echo closeform();
+        echo "</div>\n";
+    }
 }

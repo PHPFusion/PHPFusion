@@ -252,7 +252,11 @@ class Members_Admin {
                     }
                     break;
                 case 'delete':
-                    if (!empty(self::$user_id)) {
+                	if (!empty($_GET['newuser'])) {                        opentable(sprintf(self::$locale['ME_453'], $_GET['lookup']));
+                        Members_Profile::delete_unactivated_user();
+                        closetable();
+                	}
+                    elseif (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
                         if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());

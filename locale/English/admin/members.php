@@ -45,6 +45,8 @@ $locale['ME_455'] = "You are about to delete user %s!\n\r\n\rThe contents posted
 Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n\r
 Are you sure you want to delete this user?\n\r";
 $locale['ME_456'] = 'Delete User';
+$locale['ME_457'] = "You are about to delete New Unactivated user %s!\n
+Are you sure you want to delete this user?\n";
 
 $locale['ME_460'] = 'There are no users to be deactivated';
 $locale['ME_461'] = '%s has been deactivated';
@@ -77,6 +79,7 @@ $locale['ME_557'] = 'permanently deleted';
 
 $locale['ME_560'] = "Display Results";
 $locale['ME_561'] = "Display User With Status";
+$locale['ME_562'] = "New Unactivated User";
 
 /*--------------------------------------------------------------------------
 These are old locale. They are MOST LIKELY not being used by the new member center.
@@ -121,7 +124,7 @@ $locale['424'] = "Member Activated";
 $locale['426'] = "Yes";
 $locale['427'] = "No";
 
-// Suspension Log 
+// Suspension Log
 $locale['510s'] = "Suspension Log for ";
 $locale['511s'] = "There are no recorded suspensions for this member in the suspension log.";
 $locale['512s'] = "Previous suspensions of ";
