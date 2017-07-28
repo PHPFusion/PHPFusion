@@ -1014,12 +1014,13 @@ class Comments {
      * Parse Comment Results
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
-		if (iGUEST){			$garray = [
+		if (!isnum($row['comment_name'])){			$garray = [
             	'user_id'      => 0,
                 'user_name'    => $row['comment_name'],
                 'user_avatar'  => '',
                 'user_status'  => 0,
        		];		}
+
        $row = array_merge_recursive($row, isnum($row['comment_name']) ? fusion_get_user($row['comment_name']) : $garray);
 
         $actions = array(
@@ -1125,7 +1126,7 @@ class Comments {
                 "comment_id"        => $row['comment_id'],
                 "comment_cat"       => $row['comment_cat'],
                 "i"                 => $i,
-                "user_avatar"       => isnum($row['user_name']) ? display_avatar($row, '50px', '', FALSE, '') : display_avatar([], '50px', '', FALSE, ''),
+                "user_avatar"       => isnum($row['comment_name']) ? display_avatar($row, '50px', '', FALSE, '') : display_avatar([], '50px', '', FALSE, ''),
                 "user"              => array(
                     "user_id"     => $row['user_id'],
                     "user_name"   => $row['user_name'],
@@ -1139,7 +1140,7 @@ class Comments {
                 "comment_time"      => timer($row['comment_datestamp']),
                 "comment_subject"   => $row['comment_subject'],
                 "comment_message"   => nl2br(parseubb(parsesmileys($row['comment_message']))),
-                "comment_name"      => isnum($row['user_name']) ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
+                "comment_name"      => isnum($row['comment_name']) ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
             ) + $actions;
 
         // can limit and use a show more comments.
