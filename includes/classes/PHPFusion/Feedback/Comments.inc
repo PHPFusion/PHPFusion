@@ -974,7 +974,7 @@ class Comments {
                 SELECT tcm.* ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? ", tcr.rating_vote 'ratings'" : '')."
                 FROM ".DB_COMMENTS." tcm
                 ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? "LEFT JOIN ".DB_RATINGS." tcr ON tcr.rating_item_id=tcm.comment_item_id AND tcr.rating_type=tcm.comment_type" : '')."
-                WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat = 0 
+                WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat = 0
                 ORDER BY comment_id ASC, comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC LIMIT :start, :end
                 ";
                 $comment_bind = [
@@ -1000,8 +1000,7 @@ class Comments {
                         $this->c_arr['c_info']['admin_link'] = "<!--comment_admin-->\n";
                         $this->c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".fusion_get_aidlink()."&amp;ctype=".$this->getParams('comment_item_type')."&amp;comment_item_id=".$this->getParams('comment_item_id')."'>".$this->locale['c106']."</a>";
                     }
-                    while ($row = dbarray($query)) {
-                        $this->parse_comments_data($row, $i);
+                    while ($row = dbarray($query)) {                        $this->parse_comments_data($row, $i);
                         $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
                     }
                     $this->c_arr['c_info']['comments_per_page'] = $this->cpp;
@@ -1015,8 +1014,13 @@ class Comments {
      * Parse Comment Results
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
-
-        $row = array_merge_recursive($row, fusion_get_user($row['comment_name']));
+		if (iGUEST){			$garray = [
+            	'user_id'      => 0,
+                'user_name'    => $row['comment_name'],
+                'user_avatar'  => '',
+                'user_status'  => 0,
+       		];		}
+       $row = array_merge_recursive($row, isnum($row['comment_name']) ? fusion_get_user($row['comment_name']) : $garray);
 
         $actions = array(
             'edit_link'   => '',
@@ -1121,7 +1125,7 @@ class Comments {
                 "comment_id"        => $row['comment_id'],
                 "comment_cat"       => $row['comment_cat'],
                 "i"                 => $i,
-                "user_avatar"       => display_avatar($row, '50px', '', FALSE, ''),
+                "user_avatar"       => isnum($row['user_name']) ? display_avatar($row, '50px', '', FALSE, '') : display_avatar([], '50px', '', FALSE, ''),
                 "user"              => array(
                     "user_id"     => $row['user_id'],
                     "user_name"   => $row['user_name'],
@@ -1135,7 +1139,7 @@ class Comments {
                 "comment_time"      => timer($row['comment_datestamp']),
                 "comment_subject"   => $row['comment_subject'],
                 "comment_message"   => nl2br(parseubb(parsesmileys($row['comment_message']))),
-                "comment_name"      => $row['user_name'] ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
+                "comment_name"      => isnum($row['user_name']) ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
             ) + $actions;
 
         // can limit and use a show more comments.
