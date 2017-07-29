@@ -81,7 +81,7 @@ if (isset($_POST['savepermalinks'])) {
             }
         }
         addNotice("success", $locale['PL_421']);
-    	redirect(clean_request('section', ['edit'], FALSE));
+    	redirect(clean_request('', ['edit'], FALSE));
     }
     addNotice("danger", $locale['PL_420']);
     redirect(FUSION_REQUEST); // Required to refresh token
@@ -134,7 +134,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     } else {
         addNotice("warning", sprintf($locale['PL_425'], $rewrite_name));
     }
-    redirect(clean_request('section', ['enable'], FALSE));
+    redirect(clean_request('', ['enable'], FALSE));
 
 } elseif (isset($_GET['disable'])) {
 
@@ -151,7 +151,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     $result = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
 
     addNotice("success", sprintf($locale['PL_426'], $rewrite_name));
-    redirect(clean_request('section', ['disable'], FALSE));
+    redirect(clean_request('', ['disable'], FALSE));
 
 } elseif (isset($_GET['reinstall'])) {
     /**
@@ -213,7 +213,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     } elseif ($error == 1) {
         addNotice("danger", $locale['PL_420']);
     }
-    redirect(clean_request('section', ['reinstall'], FALSE));
+    redirect(clean_request('', ['reinstall'], FALSE));
 }
 
 $available_rewrites = array();
