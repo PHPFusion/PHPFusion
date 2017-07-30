@@ -76,7 +76,7 @@ if (iMEMBER) {
     if (!empty($modules)) {
         foreach ($modules as $stype => $title) {
             $submissions_link_arr[] = [
-                'link'  => $title['submit_link'],
+                'link'  => BASEDIR.$title['submit_link'],
                 'title' => sprintf($title['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php"))),
             ];
         }
