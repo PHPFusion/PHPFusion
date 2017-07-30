@@ -803,7 +803,7 @@ class UserFields extends QuantumFields {
         ob_start();
         display_user_profile($this->info);
         echo strtr(ob_get_clean(), [
-                '{%tab_header%}'    => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE) : '',
+                '{%tab_header%}'    => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, FALSE, 'section', ['lookup', 'section']) : '',
                 '{%user_avatar%}'   => $user_avatar,
                 '{%user_name%}'     => $user_name,
                 '{%user_level%}'    => $user_level,

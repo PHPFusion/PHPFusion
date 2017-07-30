@@ -43,30 +43,31 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_forced_root' => TRUE,
         'placeholder'         => '',
         'deactivate'          => FALSE,
-        'width'               => '',
-        'inner_width'         => '100%',
-        'height'              => '80px',
-        'class'               => '',
-        'inner_class'         => '',
-        'inline'              => FALSE,
-        'length'              => 200,
-        'error_text'          => $locale['error_input_default'],
-        'safemode'            => FALSE,
-        'form_name'           => 'input_form',
-        'tinymce'             => 'simple',
-        'tinymce_css'         => '',
-        'no_resize'           => FALSE,
-        'autosize'            => FALSE,
-        'bbcode'              => FALSE,
-        'html'                => FALSE,
-        'preview'             => FALSE,
-        'path'                => IMAGES,
-        'maxlength'           => '',
-        'tip'                 => '',
-        'ext_tip'             => '',
-        'input_bbcode'        => '',
-        'wordcount'           => FALSE,
-        'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
+        'width'         => '',
+        'inner_width'   => '100%',
+        'height'        => '80px',
+        'class'         => '',
+        'inner_class'   => '',
+        'inline'        => FALSE,
+        'length'        => 200,
+        'error_text'    => $locale['error_input_default'],
+        'safemode'      => FALSE,
+        'form_name'     => 'input_form',
+        'tinymce'       => 'simple',
+        'tinymce_css'   => '',
+        'tinymce_image' => FALSE,         //Turns on or off the image selection feature in TinyMCE
+        'no_resize'     => FALSE,
+        'autosize'      => FALSE,
+        'bbcode'        => FALSE,
+        'html'          => FALSE,
+        'preview'       => FALSE,
+        'path'          => IMAGES,
+        'maxlength'     => '',
+        'tip'           => '',
+        'ext_tip'       => '',
+        'input_bbcode'  => '',
+        'wordcount'     => FALSE,
+        'file_filter'   => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
         'tinymce_theme'       => 'modern',
         'tinymce_skin'        => 'lightgray',
         'tinymce_spellcheck'  => TRUE,
@@ -85,16 +86,18 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $options['tinymce_spellcheck'] = $options['tinymce_spellcheck'] == TRUE ? 'true' : 'false';
 
         $tinymce_list = array();
-        if (!empty($options['path'])) {
+        if (!empty($options['path']) && $options['tinymce_image'] == TRUE) {
             $image_list = [];
             if (is_array($options['path'])) {
                 foreach ($options['path'] as $dir) {
-                    if (file_exists($dir)) {
+                    if (file_exists($dir) && is_dir($dir)) {
                         $image_list[$dir] = makefilelist($dir, ".|..|");
                     }
                 }
             } else {
-                $image_list[$options['path']] = makefilelist($options['path'], '.|..|');
+                if (file_exists($options['path']) && is_dir($options['path'])) {
+                    $image_list[$options['path']] = makefilelist($options['path'], '.|..|');
+                }
             }
             foreach ($image_list as $key => $images) {
                 foreach ($images as $keys => $image_name) {
@@ -212,7 +215,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 width: '100%',
                 height: 100,
                 image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
+                toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
                 language: '".$locale['tinymce']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 object_resizing: ".($options['autosize'] ? "false" : "true").",
@@ -334,7 +337,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div class='m-t-10 m-b-10'>\n";
-        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
+        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']); // @todo: image_path to be turned off by default
         $html .= $options['preview'] ? "</div>\n" : "";
     }
 

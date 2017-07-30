@@ -711,7 +711,7 @@ if (!function_exists('display_avatar')) {
 }
 
 if (!function_exists('colorbox')) {
-    function colorbox($img_path, $img_title, $responsive = TRUE, $class = '') {
+    function colorbox($img_path, $img_title, $responsive = TRUE, $class = '', $as_text = FALSE) {
         if (!defined('COLORBOX')) {
             define('COLORBOX', TRUE);
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
@@ -720,12 +720,12 @@ if (!function_exists('colorbox')) {
         }
         $class = ($class ? " $class" : '');
         if ($responsive) {
-            $class = " class='img-responsive $class";
+            $class = " class='img-responsive $class' ";
         } else {
-            $class = (!empty($class) ? " class='$class'" : '');
+            $class = (!empty($class) ? " class='$class' " : '');
         }
 
-        return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'><img src='$img_path'".$class."alt='$img_title'/></a>";
+        return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>".($as_text ? $img_title : "<img src='$img_path'".$class."alt='$img_title'/>")."</a>";
     }
 }
 
@@ -999,7 +999,7 @@ if (!function_exists("tab_active")
                 if ($link) {
                     $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                     if ($link === TRUE) {
-                        $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
+                        $link_url = clean_request($getname.'='.$tab_id, $getArray, TRUE);
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 } else {
