@@ -237,7 +237,8 @@ class Shoutbox {
     }
 
     public function _selectDB($rows, $min) {
-        $result = dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden, u.user_id, u.user_name, u.user_avatar, u.user_status
+        $result = dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
+        	u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." s
             LEFT JOIN ".DB_USERS." u ON s.shout_name=u.user_id
             WHERE ".(multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "")."
@@ -415,7 +416,7 @@ class Shoutbox {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
             echo "<div class='list-group'>\n";
             while ($data = dbarray($result)) {
-                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle-thin" : "fa fa-circle")."'></i></span>";
+                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>";
                 echo "<div class='list-group-item clearfix'>\n";
                 echo '<div class="row">';
                 echo '<div class="col-sm-3">';
@@ -510,7 +511,7 @@ class Shoutbox {
                     echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
-                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle-thin" : "fa fa-circle")."'></i></span>";
+                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>";
 
                 echo "<div class='shoutboxname'>\n";
                 echo ($data['user_name']) ? "<span class='side'>".profile_link($data['shout_name'], $data['user_name'],
