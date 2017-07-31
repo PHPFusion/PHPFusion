@@ -44,7 +44,7 @@ class Members {
         }
         $_GET['orderby'] = isset($_GET['orderby']) ? $_GET['orderby'] : 'active';
         $_GET['sort_order'] = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
-        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : ($_GET['sortby'] != "all" ? $_GET['sortby'] : '');
+        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby'];
     }
 
     public static function getInstance($set_info = TRUE) {
@@ -88,7 +88,7 @@ class Members {
     private static function getFilters() {
         // alpha select condition
         $default_condition = ($_GET['sortby'] == "all" ? "" : " AND user_name LIKE '".stripinput($_GET['sortby'])."%'");
-        return ((isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i",
+        return ((isset($_GET['search_text']) && $_GET['search_text'] != 'all' && preg_check("/^[-0-9A-Z_@\s]+$/i",
                                                            $_GET['search_text'])) ? ' AND user_name LIKE "'.stripinput($_GET['search_text']).'%"' : $default_condition);
     }
 

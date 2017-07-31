@@ -24,7 +24,10 @@ $regex = array(
     "%time%"    => "([0-9]+)",
     "%section%" => "([0-9]+)",
     "%logout%"  => "(yes)",
-    "%sortby%"  => "([a-zA-Z]+)"
+    "%sortby%"  => "([0-9a-zA-Z]+)",
+    "%orderby%"  => "([a-zA-Z]+)",
+    "%sort_order%"  => "([a-zA-Z]+)",
+    "%search_text%"  => "([0-9a-zA-Z._]+)",
 );
 
 $pattern = array(
@@ -35,7 +38,8 @@ $pattern = array(
     "maintenance"            => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",
     "edit-profile"           => "edit_profile.php",
-    "members/%sortby%"       => "members.php?sortby=%sortby%",
+    "website-members/search-%search_text%/%orderby%/%sort_order%/"       => "members.php?search_text=%search_text%&amp;orderby=%orderby%&amp;sort_order=%sort_order%",
+    "website-members/%sortby%"       => "members.php?sortby=%sortby%",
     "website-members"        => "members.php",
     "create/ref=%time%"      => "register.php?ref=%time%",
     "contact"                => "contact.php",
