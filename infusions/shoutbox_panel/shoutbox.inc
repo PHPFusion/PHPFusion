@@ -237,7 +237,8 @@ class Shoutbox {
     }
 
     public function _selectDB($rows, $min) {
-        $result = dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden, u.user_id, u.user_name, u.user_avatar, u.user_status
+        $result = dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
+        	u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." s
             LEFT JOIN ".DB_USERS." u ON s.shout_name=u.user_id
             WHERE ".(multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "")."
@@ -415,12 +416,14 @@ class Shoutbox {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
             echo "<div class='list-group'>\n";
             while ($data = dbarray($result)) {
+                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>";
                 echo "<div class='list-group-item clearfix'>\n";
                 echo '<div class="row">';
                 echo '<div class="col-sm-3">';
                 echo display_avatar($data, '30px', '', TRUE, 'img-rounded pull-left m-r-10');
                 echo "<div class='overflow-hide pull-left m-r-20'>";
                 echo $data['user_name'] ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $data['shout_name'];
+                echo $online;
                 echo ' '.self::$locale['SB_userip'].' '.$data['shout_ip'].'<br/>';;
                 echo "<small>".showdate("longdate", $data['shout_datestamp'])."</small><br/>";
                 echo self::$sb_settings['hidden_shouts'] ? self::$locale['SB_visbility'].': '.getgroupname($data['shout_hidden']).'<br/>' : '';
@@ -508,9 +511,11 @@ class Shoutbox {
                     echo "<a class='btn btn-default btn-xs' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
                     echo "</div>\n";
                 }
+                $online = "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>";
+
                 echo "<div class='shoutboxname'>\n";
                 echo ($data['user_name']) ? "<span class='side'>".profile_link($data['shout_name'], $data['user_name'],
-                        $data['user_status'])."</span>\n" : $data['shout_name']."\n";
+                        $data['user_status'])."</span>\n".$online : $data['shout_name']."\n";
                 echo "</div>\n";
                 echo "<div class='shoutboxdate'>".timer($data['shout_datestamp'])."</div>\n";
                 $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
