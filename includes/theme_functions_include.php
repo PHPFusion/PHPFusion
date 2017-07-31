@@ -999,7 +999,7 @@ if (!function_exists("tab_active")
                 if ($link) {
                     $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                     if ($link === TRUE) {
-                        $link_url = clean_request($getname.'='.$tab_id, $getArray, TRUE);
+                        $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 } else {
