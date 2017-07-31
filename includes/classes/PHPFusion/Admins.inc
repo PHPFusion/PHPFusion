@@ -106,7 +106,7 @@ class Admins {
      * @return object
      */
     public static function getInstance() {
-        if (self::$instance === NULL) {
+        if (empty(self::$instance)) {
             self::$instance = new static();
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
@@ -117,14 +117,15 @@ class Admins {
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
             self::$admin_pages = $this->getAdminPages();
-            $this->admin_sections = array(
+            $this->admin_sections = array_filter(array_merge(array(
                 0 => self::$locale['ac00'],
                 1 => self::$locale['ac01'],
                 2 => self::$locale['ac02'],
                 3 => self::$locale['ac03'],
                 4 => self::$locale['ac04'],
                 5 => self::$locale['ac05'],
-            );
+            ), $this->admin_sections));
+            $this->admin_sections = array_values($this->admin_sections);
             $this->current_page = $this->_currentPage();
         }
     }

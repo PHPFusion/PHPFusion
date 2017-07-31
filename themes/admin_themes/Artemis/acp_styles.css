@@ -45,7 +45,7 @@ h3 {
     font-weight: 600 !important;
     color: #444;
     padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-top: 0;
 }
 
@@ -72,7 +72,7 @@ a:hover, a:focus {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 200px;
+    width: 185px;
     background: #2b333e;
     z-index: 101;
 }
@@ -164,7 +164,7 @@ a:hover, a:focus {
 }
 
 #devlpr .left_menu li a {
-    padding-left: 27px;
+    padding-left: 10px;
     display: block;
     line-height: 40px;
     color: #c5cfdd;
@@ -173,6 +173,10 @@ a:hover, a:focus {
     text-decoration: none;
     font-weight: 600;
     position: relative;
+}
+
+#devlpr .left_menu.collapsed li a {
+    padding-left: 25px;
 }
 
 #devlpr .left_menu li a:hover, #devlpr .left_menu li a:focus {
@@ -189,7 +193,7 @@ a:hover, a:focus {
     background: #2b333e;
     position: fixed;
     top: 70px;
-    left: 200px;
+    left: 185px;
     bottom: 0;
     width: 550px;
     max-width: 100%;
@@ -315,12 +319,11 @@ a:hover, a:focus {
 /* main section */
 #devlpr #main_content.content {
     position: relative;
-    margin-left: 200px;
+    margin-left: 185px;
     background-color: #f1f4f8;
     min-height: 100vh;
     padding-top: 70px;
     padding-bottom: 50px;
-    /*z-index: 90;*/
     transition: -webkit-transform .5s;
     transition: transform .5s;
 }
@@ -362,14 +365,13 @@ a:hover, a:focus {
 #devlpr #main_content > header {
     height: 70px;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: 0 27px;
     position: absolute;
     top: 0;
     z-index: 101;
     transition: left .0001s .48s;
     width: calc(100vw - 200px);
-    /* if fixed must use left: 200px; */
+    border-bottom: 1px solid #ddd;
 }
 
 #devlpr #main_content > header.affix {
@@ -383,9 +385,10 @@ a:hover, a:focus {
 #devlpr #main_content > aside.header {
     display: block;
     position: relative;
-    height: 55px;
+    height: 46px;
     background-color: #fff;
     padding-left: 30px;
+    border-bottom: 1px solid #ddd;
 }
 
 /* Header Navs */
@@ -516,7 +519,7 @@ a:hover, a:focus {
 /* opentable */
 #devlpr #main_content .content header {
     margin-top: 30px;
-    padding: 30px 30px 0;
+    padding: 15px 40px 0;
 }
 
 #devlpr #main_content .content header > h2 {
@@ -1845,7 +1848,7 @@ nav > ul > li.active > a {
 }
 
 nav > ul > li > a {
-    padding: 17px !important;
+    padding: 10px 15px !important;
     color: #444;
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
