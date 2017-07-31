@@ -134,6 +134,7 @@ class Admins {
      * @return array
      */
     public function getAdminPages() {
+        self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
             $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
             $rows = dbrows($result);
