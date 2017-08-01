@@ -88,6 +88,11 @@ a:hover, a:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
 }
 
+#devlpr .app_icon > img {
+    max-width: 32px;
+    margin-top: 10px;
+}
+
 #devlpr .left_menu h4.fa {
     font-size: 24px;
     color: #fff;
@@ -216,7 +221,7 @@ a:hover, a:focus {
 
 #devlpr .app_menu .app_list li {
     height: 70px;
-    padding: 10px 30px 10px 93px;
+    padding: 10px 30px 10px 73px;
     position: relative;
     transition: background .2s;
 }
