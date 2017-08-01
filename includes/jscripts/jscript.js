@@ -354,7 +354,6 @@ function resize_forum_imgs() {
 function setChecked(frmName,chkName,val) {
     dml=document.forms[frmName];
     len=dml.elements.length;
-    console.log(len);
     for(i=0;i<len;i++){
         if(dml.elements[i].name==chkName){
             dml.elements[i].checked=val;
