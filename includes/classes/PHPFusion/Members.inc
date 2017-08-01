@@ -106,9 +106,9 @@ class Members {
                                           'placeholder' => self::$locale['MEMB_005'],
                                           'append_button' => TRUE,
                                           'append_type' => "submit",
-                                          "append_form_value" => self::$locale['MEMB_006'],
+                                          "append_form_value" => 'search',
                                           "append_value" => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
-                                          "append_button_name" => self::$locale['MEMB_006'],
+                                          "append_button_name" => 'search',
                                           "width" => "260px",
                                           'class' => 'no-border m-b-0'
                                       )
