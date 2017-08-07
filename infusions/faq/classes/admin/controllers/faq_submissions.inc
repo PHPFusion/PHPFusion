@@ -215,84 +215,84 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         <?php
     }
 
-	private static function submitData(array $filters = array()) {
+    private static function submitData(array $filters = array()) {
 
-		$query = "SELECT s.*".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
-				FROM ".DB_SUBMISSIONS." s
-				".(!empty($filters['join']) ? $filters['join'] : "")."
-				WHERE ".(!empty($filters['where']) ? $filters['where'] : "")."
-				ORDER BY s.submit_datestamp DESC
-				";
+        $query = "SELECT s.*".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
+                FROM ".DB_SUBMISSIONS." s
+                ".(!empty($filters['join']) ? $filters['join'] : "")."
+                WHERE ".(!empty($filters['where']) ? $filters['where'] : "")."
+                ORDER BY s.submit_datestamp DESC
+                ";
 
-		$result = dbquery($query, $filters['wheredata']);
+        $result = dbquery($query, $filters['wheredata']);
 
-	    if (dbrows($result) > 0) {
-	    	while ($data = dbarray($result)) {
-	    		$info[] = $data;
-	    	}
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $info[] = $data;
+            }
         return $info;
-	    }
-	    return FALSE;
-	}
+        }
+        return FALSE;
+    }
     /**
      * Display List with Submissions
      */
     private function displaySubmissionList() {
 
-    	$criteria = array(
-    		'criteria' => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
-    		'join' => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
-    		'where' => 's.submit_type=:submit_type',
+        $criteria = array(
+            'criteria' => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
+            'join' => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
+            'where' => 's.submit_type=:submit_type',
             'wheredata' => array (
-            	':submit_type' => 'q'
-            	)
+                ':submit_type' => 'q'
+                )
 
-    	);
-		$data = self::submitData($criteria);
+        );
+        $data = self::submitData($criteria);
 
-		echo "<table class='table table-responsive table-striped'>\n";
-		echo "<thead>\n";
-			echo "<tr>\n";
-            	echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
+        echo "<div class='table-responsive'><table class='table table-striped'>\n";
+        echo "<thead>\n";
+            echo "<tr>\n";
+                echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
         echo "<td class='strong col-xs-5'>".$this->locale['faq_0100']."</td>\n";
-            	echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
-            	echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
-            	echo "<td class='strong'>".$this->locale['faq_0204']."</td>\n";
+                echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
+                echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
+                echo "<td class='strong'>".$this->locale['faq_0204']."</td>\n";
             echo "</tr>\n";
-		echo "</thead>\n";
-		echo "<tbody>\n";
+        echo "</thead>\n";
+        echo "<tbody>\n";
 
         if (!empty($data)) {
 
-        	foreach($data as $key => $info){
-        		$submitData = unserialize($info['submit_criteria']);
-				$submitUser = $this->locale['user_na'];
-				if ($info['user_name']) {
-					$submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
-					$submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
-				}
+            foreach($data as $key => $info){
+                $submitData = unserialize($info['submit_criteria']);
+                $submitUser = $this->locale['user_na'];
+                if ($info['user_name']) {
+                    $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
+                    $submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
+                }
 
-				$reviewLink = clean_request("section=submissions&submit_id=".$info['submit_id'], array("section", "ref", "action", "submit_id"), false);
+                $reviewLink = clean_request("section=submissions&submit_id=".$info['submit_id'], array("section", "ref", "action", "submit_id"), false);
 
-				echo "<tr>\n";
-					echo "<td>".$info['submit_id']."</td>\n";
-					echo "<td><span class='text-dark'>".$submitData['faq_question']."</span></td>\n";
-					echo "<td>".$submitUser."</td>\n";
-					echo "<td>".timer($info['submit_datestamp'])."</td>\n";
-					echo "<td>\n";
-					echo "<a href=".$reviewLink." title=".$this->locale['faq_0205']." class='btn btn-default btn-sm'><i class='fa fa-fw fa-eye'></i> ".$this->locale['faq_0205']."</a\n";
-					echo "</td>\n";
-				echo "</tr>\n";
+                echo "<tr>\n";
+                    echo "<td>".$info['submit_id']."</td>\n";
+                    echo "<td><span class='text-dark'>".$submitData['faq_question']."</span></td>\n";
+                    echo "<td>".$submitUser."</td>\n";
+                    echo "<td>".timer($info['submit_datestamp'])."</td>\n";
+                    echo "<td>\n";
+                    echo "<a href=".$reviewLink." title=".$this->locale['faq_0205']." class='btn btn-default btn-sm'><i class='fa fa-fw fa-eye'></i> ".$this->locale['faq_0205']."</a\n";
+                    echo "</td>\n";
+                echo "</tr>\n";
 
-        	}
+            }
         } else {
-        	echo "<tr>\n";
-        	echo "<td colspan='5' class='text-center'>".$this->locale['faq_0063']."</td>\n";
-        	echo "</tr>\n";
+            echo "<tr>\n";
+            echo "<td colspan='5' class='text-center'>".$this->locale['faq_0063']."</td>\n";
+            echo "</tr>\n";
         }
 
         echo "</tbody>\n";
-        echo "</table>\n";
+        echo "</table>\n</div>";
     }
     /**
      * Display Admin Area
@@ -306,19 +306,19 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         // Handle a Submission
         if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id='".$_GET['submit_id']."' AND submit_type='q'")) {
             //$this->inputArray = self::unserializeData();
-    	$criteria = array(
-    		'criteria' => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
-    		'join' => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
-    		'where' => 's.submit_type=:submit_type AND s.submit_id=:submit_id',
+        $criteria = array(
+            'criteria' => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
+            'join' => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
+            'where' => 's.submit_type=:submit_type AND s.submit_id=:submit_id',
             'wheredata' => array (
-            	':submit_id' => $_GET['submit_id'],
-            	':submit_type' => 'q'
-            	)
-    	);
+                ':submit_id' => $_GET['submit_id'],
+                ':submit_type' => 'q'
+                )
+        );
         $data = self::submitData($criteria);
         $data[0] += self::$defArray;
         $data[0] += unserialize($data[0]['submit_criteria']);
-		$this->inputArray = $data[0];
+        $this->inputArray = $data[0];
             // Delete, Publish, Preview
 
             self::handleDeleteSubmission();

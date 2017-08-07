@@ -190,7 +190,7 @@ class Search_Engine extends Search_Model {
             'subject' => $locale['442'],
             'author' => $locale['443']
         );
-        $sort = "<table style='width:100%'><td>".$locale['440']."&nbsp;</td>\n";
+        $sort = "<table class='table'><td>".$locale['440']."&nbsp;</td>\n";
         $sort .= "<td>\n";
         $sort .= form_select('sort', '', self::get_param('sort'), array(
             'inner_width' => '150px',
@@ -227,7 +227,7 @@ class Search_Engine extends Search_Model {
             '150' => '150',
             '200' => '200'
         );
-        $char_areas = "<table style='width:100%'><tr><td>".$locale['460']."</td>\n";
+        $char_areas = "<table class='table'><tr><td>".$locale['460']."</td>\n";
         $char_areas .= "<td>\n";
         $char_areas .= form_select('chars', '', self::get_param('chars'), array(
                                     'inner_width' => '150px',

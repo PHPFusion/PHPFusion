@@ -31,23 +31,23 @@ $userdata = fusion_get_userdata();
 add_to_title($locale['global_200'].$locale['global_042']);
 
 $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
-	INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
-	INNER JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
-	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'");
+    INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
+    INNER JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
+    ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'");
 $rows = dbrows($result);
 
 opentable($locale['global_042']);
 if ($rows) {
     $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
     $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, tp.post_datestamp,
-		tf.forum_name, tf.forum_access, tt.thread_subject
-		FROM ".DB_FORUM_POSTS." tp
-		INNER JOIN ".DB_FORUMS." tf ON tp.forum_id=tf.forum_id
-		INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
-		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'
-		ORDER BY tp.post_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
+        tf.forum_name, tf.forum_access, tt.thread_subject
+        FROM ".DB_FORUM_POSTS." tp
+        INNER JOIN ".DB_FORUMS." tf ON tp.forum_id=tf.forum_id
+        INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'
+        ORDER BY tp.post_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
 
-        echo "<table class='table table-striped'>";
+        echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
                 echo "<td><strong>".$locale["global_048"]."</strong></td>";
                 echo "<td><strong>".$locale["global_044"]."</strong></td>";
@@ -62,7 +62,7 @@ if ($rows) {
                     echo "</tr>\n";
                 }
             echo "</tbody>";
-        echo "</table>";
+        echo "</table></div>";
 
     if ($rows > 20) {
         echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?")."</div>\n";

@@ -214,7 +214,7 @@ class Smileys {
         echo '<h2>'.self::$locale['SMLY_404'].'</h2>';
 
         if(!empty($all_smileys)) {
-            echo "<table class='table table-hover table-striped'>\n";
+            echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             echo "<tr>\n";
             echo "<td class='col-xs-2'><strong>".self::$locale['SMLY_430']."</strong></td>\n";
             echo "<td class='col-xs-2'><strong>".self::$locale['SMLY_431']."</strong></td>\n";
@@ -231,7 +231,7 @@ class Smileys {
                 echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_417']."');\">".self::$locale['SMLY_435']."<i class='fa fa-trash m-l-10'></i></a> \n";
                 echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;inact=1&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_416']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n</tr>\n";
                 }
-            echo "</table>\n";
+            echo "</table>\n</div>";
         } else {
             echo "<div class='well text-center'>".self::$locale['SMLY_440']."</div>\n";
         }
@@ -240,7 +240,7 @@ class Smileys {
         echo '<div class="m-t-10">';
         echo '<h2>'.self::$locale['SMLY_405'].'</h2>';
         if(!empty($smileys_list)) {
-            echo "<table class='table table-hover table-striped'>\n";
+            echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
                 foreach ($smileys_list as $list) {
                 echo "<tr>\n";
                 echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$list."' alt='' title='' style='border:0px;' /></td>\n";
@@ -248,7 +248,7 @@ class Smileys {
                 echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;smiley_text=".$list."'>".self::$locale['add']."<i class='fa fa-plus-square m-l-10'></i></a></td>\n";
                 echo "</tr>\n";
                 }
-            echo "</table>\n";
+            echo "</table>\n</div>";
         } else {
             echo "<div class='well text-center'>".self::$locale['SMLY_441']."</div>\n";
         }

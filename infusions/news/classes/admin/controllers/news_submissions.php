@@ -481,15 +481,15 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
         } else {
             $result = dbquery("SELECT
-			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='n' order by submit_datestamp desc
-			");
+            ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='n' order by submit_datestamp desc
+            ");
             $rows = dbrows($result);
             if ($rows > 0) {
                 echo "<div class='well'>".sprintf(self::$locale['news_0137'], format_word($rows, self::$locale['fmt_submission']))."</div>\n";
-                echo "<table class='table table-striped'>\n";
+                echo "<div class='table-responsive'><table class='table table-striped'>\n";
                 echo "<thead>\n";
                 echo "<tr>\n";
                 echo "<th>".self::$locale['news_0144']."</th>\n";
@@ -510,7 +510,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     echo "</tr>\n";
                 }
                 echo "</tbody>\n";
-                echo "</table>\n";
+                echo "</table>\n</div>";
             } else {
                 echo "<div class='well text-center m-t-20'>".self::$locale['news_0130']."</div>\n";
             }

@@ -132,7 +132,7 @@ function user_posts_migrate_console() {
     }
 
     echo openform('inputform', 'post', FUSION_SELF.$aidlink);
-    echo "<table style='width:100%' class='table table-striped'>\n";
+    echo "<div class='table-responsive'><table class='table table-striped'>\n";
     echo "<thead>\n";
     echo "<tr style='height:30px;'><th style='width:33%; text-align:left'>".$locale['125']."</th><th style='width:33%; text-align:left;'>".$locale['126']."</th><th class='text-left'>&nbsp;</th>\n</tr>\n";
     echo "</thead>\n";
@@ -189,7 +189,7 @@ function user_posts_migrate_console() {
     echo "</td>\n";
     echo "</tr>\n";
     echo "</tbody>\n";
-    echo "</table>\n";
+    echo "</table>\n</div>";
     echo closeform();
 }
 

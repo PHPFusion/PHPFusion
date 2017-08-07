@@ -99,8 +99,8 @@ echo form_text('smtp_host', $locale['664']."<br/>", $settings_misc['smtp_host'],
     'inline'     => TRUE
 ]);
 echo form_text('smtp_port', $locale['674'], $settings_misc['smtp_port'], [
-	'max_length' => 10,
-	'inline' => TRUE
+    'max_length' => 10,
+    'inline' => TRUE
 ]);
 echo form_select('smtp_auth', $locale['698'], $settings_misc['smtp_auth'], [
     'options' => $choice_arr,
@@ -132,10 +132,10 @@ echo form_checkbox('comments_enabled', $locale['671'], $settings_misc['comments_
     'type'    => 'radio'
 ]);
 echo form_text('comments_per_page', $locale['913'], $settings_misc['comments_per_page'], [
-	'inline'      => TRUE,
-	'error_text'  => $locale['error_value'],
-	'type'        => 'number',
-	'inner_width' => '150px'
+    'inline'      => TRUE,
+    'error_text'  => $locale['error_value'],
+    'type'        => 'number',
+    'inner_width' => '150px'
 ]);
 
 $sort_opts = ['ASC' => $locale['685'], 'DESC' => $locale['686']];

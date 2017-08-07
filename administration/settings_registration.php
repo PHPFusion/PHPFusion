@@ -67,10 +67,10 @@ echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_select('enable_terms', $locale['558'], $settings2['enable_terms'], ['options' => $opts]);
 echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], [
-	'form_name' => 'settingsform',
-	'input_id'  => 'enable_license_agreement',
-	'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
-	'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html')
+    'form_name' => 'settingsform',
+    'input_id'  => 'enable_license_agreement',
+    'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+    'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html')
 ]);
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";

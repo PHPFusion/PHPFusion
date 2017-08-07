@@ -34,17 +34,17 @@ $settings_main = [
 ];
 
 if (isset($_POST['savesettings'])) {
-	$settings_main = [
-	    'shortdate'        => form_sanitizer($_POST['shortdate'], '', 'shortdate'),
-	    'longdate'         => form_sanitizer($_POST['longdate'], '', 'longdate'),
-	    'forumdate'        => form_sanitizer($_POST['forumdate'], '', 'forumdate'),
-	    'newsdate'         => form_sanitizer($_POST['newsdate'], '', 'newsdate'),
-	    'subheaderdate'    => form_sanitizer($_POST['subheaderdate'], '', 'subheaderdate'),
-	    'timeoffset'       => form_sanitizer($_POST['timeoffset'], '', 'timeoffset'),
-	    'serveroffset'     => form_sanitizer($_POST['serveroffset'], '', 'serveroffset'),
-	    'default_timezone' => form_sanitizer($_POST['default_timezone'], '', 'default_timezone'),
-	    'week_start'       => form_sanitizer($_POST['week_start'], 0, 'week_start')
-	];
+    $settings_main = [
+        'shortdate'        => form_sanitizer($_POST['shortdate'], '', 'shortdate'),
+        'longdate'         => form_sanitizer($_POST['longdate'], '', 'longdate'),
+        'forumdate'        => form_sanitizer($_POST['forumdate'], '', 'forumdate'),
+        'newsdate'         => form_sanitizer($_POST['newsdate'], '', 'newsdate'),
+        'subheaderdate'    => form_sanitizer($_POST['subheaderdate'], '', 'subheaderdate'),
+        'timeoffset'       => form_sanitizer($_POST['timeoffset'], '', 'timeoffset'),
+        'serveroffset'     => form_sanitizer($_POST['serveroffset'], '', 'serveroffset'),
+        'default_timezone' => form_sanitizer($_POST['default_timezone'], '', 'default_timezone'),
+        'week_start'       => form_sanitizer($_POST['week_start'], 0, 'week_start')
+    ];
 
     if (\defender::safe()) {
         foreach ($settings_main as $settings_key => $settings_value) {
@@ -62,10 +62,10 @@ if (isset($_POST['savesettings'])) {
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::AMERICA | DateTimeZone::AFRICA | DateTimeZone::ARCTIC | DateTimeZone::ASIA | DateTimeZone::ATLANTIC | DateTimeZone::EUROPE | DateTimeZone::INDIAN | DateTimeZone::PACIFIC); //gives both african and american time zones
 
 foreach ($timezones as $zone) {
-	$zone = explode('/', $zone); // 0 => Continent, 1 => City
-	if (!empty($zone[1])) {
-		$timezoneArray[$zone[0].'/'.$zone[1]] = str_replace('_', ' ', $zone[1]); // Creates array(DateTimeZone => 'Friendly name')
-	}
+    $zone = explode('/', $zone); // 0 => Continent, 1 => City
+    if (!empty($zone[1])) {
+        $timezoneArray[$zone[0].'/'.$zone[1]] = str_replace('_', ' ', $zone[1]); // Creates array(DateTimeZone => 'Friendly name')
+    }
 }
 
 $weekdayslist = explode("|", $locale['weekdays']);

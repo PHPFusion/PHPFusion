@@ -104,8 +104,8 @@ class PageList extends PageAdmin {
         LEFT JOIN ".DB_USERS." u ON u.user_id=cp.page_user
         LEFT JOIN ".DB_CUSTOM_PAGES." cp2 ON cp.page_cat=cp2.page_id
         ".($sql_condition ? "WHERE " : "")." $sql_condition
-	    GROUP BY cp.page_id
-	    ORDER BY cp.page_status DESC, cp.page_datestamp DESC LIMIT $rowstart, $page_per_query
+        GROUP BY cp.page_id
+        ORDER BY cp.page_status DESC, cp.page_datestamp DESC LIMIT $rowstart, $page_per_query
         ";
 
         $page_result = dbquery($page_query);
@@ -245,12 +245,11 @@ class PageList extends PageAdmin {
         <?php
 
         add_to_jquery("
-		$('.qform').hide();
-		$('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
-		");
+        $('.qform').hide();
+        $('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
+        ");
 
-        echo "<div class='m-t-20'>\n";
-        echo "<table id='cp_table_list' class='table table-responsive".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
+        echo "<div class='m-t-20 table-responsive'><table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
         echo "<thead>\n";
         echo "<tr>\n";
         echo "<th></th>\n";
@@ -302,16 +301,15 @@ class PageList extends PageAdmin {
             echo "</tr>\n";
         }
         echo "</tbody>\n";
-        echo "</table>\n";
-        echo "</div>\n";
+        echo "</table>\n</div>";
         if (fusion_get_settings('tinymce_enabled')) {
             add_to_jquery("
-			function SetTinyMCE(val) {
-			now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
-			expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
-			location.href='".FUSION_SELF.fusion_get_aidlink()."&section=cp2';
-			}
-		    ");
+            function SetTinyMCE(val) {
+            now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
+            expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
+            location.href='".FUSION_SELF.fusion_get_aidlink()."&section=cp2';
+            }
+            ");
         }
     }
 }

@@ -25,7 +25,7 @@ if (!isset ($_GET['page']) || !isnum($_GET['page'])) {
     $_GET['page'] = 1;
 }
 //Generating navigation
-$navigation = "<table class='table table-responsive' style='text-align:center; margin-bottom:1em;'>\n<tr>\n";
+$navigation = "<table class='table' style='text-align:center; margin-bottom:1em;'>\n<tr>\n";
 $navigation .= "<td class='".($_GET['page'] == 1 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 1 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=1'>".$locale['401']."</a>".($_GET['page'] == 1 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 2 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 2 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=2'>".$locale['420']."</a>".($_GET['page'] == 2 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 3 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 3 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=3'>".$locale['440']."</a>".($_GET['page'] == 3 ? "</strong>" : "")."</td>\n";
@@ -33,7 +33,7 @@ $navigation .= "<td class='".($_GET['page'] == 4 ? "tbl1" : "tbl2")."' style='wi
 $navigation .= "</tr></table>\n";
 //General info
 if ($_GET['page'] == 1) {
-    $phpinfo = "<table class='table table-responsive table-hover table-striped' style='width:100%;' id='folders'>\n";
+    $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' style='width:100%;' id='folders'>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['402']."</td><td class='tbl2' style='text-align:right'>".php_uname()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['403']."</td><td class='tbl1' style='text-align:right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['404']."</td><td class='tbl2' style='text-align:right'>".phpversion()."</td></tr>\n";
@@ -43,7 +43,7 @@ if ($_GET['page'] == 1) {
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['408']."</td><td class='tbl2' style='text-align:right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['409']."</td><td class='tbl1' style='text-align:right'>".COOKIE_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['410']."</td><td class='tbl1' style='text-align:right'>".stripinput($_SERVER['HTTP_USER_AGENT'])."</td></tr>\n";
-    $phpinfo .= "</table>\n";
+    $phpinfo .= "</table>\n</div>";
 } else //PHP settings
 {
     if ($_GET['page'] == 2) {
@@ -64,27 +64,32 @@ if ($_GET['page'] == 1) {
         $phpinfo .= "<tr>\n<td class='tbl2' style='width:50%'>".$locale['428']."</td><td class='tbl2' style='text-align:right'>".(ini_get('display_errors') ? $locale['421'] : $locale['422'])."</td></tr>\n";
         $phpinfo .= "<tr>\n<td class='tbl1' style='width:50%'>".$locale['429']."</td><td class='tbl1' style='text-align:right'>".(ini_get('disable_functions') ? ini_get('disable_functions') : $locale['430'])."</td></tr>\n";
         $phpinfo .= "</table>\n";
-    } else //folder permissions
-    {
+    } else {//folder permissions
         if ($_GET['page'] == 3) {
             $status = '';
             $folders = array( //path => have to be writeable or not
-                              'administration/db_backups/'       => TRUE,
-                              'images/'                          => TRUE,
-                              'images/imagelist.js'              => TRUE,
-                              'images/avatars/'                  => TRUE,
-                              'infusions/articles/images/'       => infusion_exists('articles'),
-                              'infusions/news/images/'           => infusion_exists('news'),
-                              'infusions/news/images/thumbs/'    => infusion_exists('news'),
-                              'infusions/news/news_cats/'        => infusion_exists('news'),
-                              'infusions/gallery/photos/'        => infusion_exists('gallery'),
-                              'infusions/gallery/submissions/'   => infusion_exists('gallery'),
-                              'infusions/forum/attachments/'     => infusion_exists('forum'),
-                              'infusions/downloads/files/'       => infusion_exists('downloads'),
-                              'infusions/downloads/images/'      => infusion_exists('downloads'),
-                              'infusions/downloads/submissions/' => infusion_exists('downloads'),
-                              'robots.txt'                       => TRUE,
-                              'config.php'                       => FALSE
+                'administration/db_backups/'       => TRUE,
+                'images/'                          => TRUE,
+                'images/imagelist.js'              => TRUE,
+                'images/avatars/'                  => TRUE,
+                'images/smiley/'                   => TRUE,
+                'infusions/articles/images/'       => infusion_exists('articles'),
+                'infusions/blog/images/'           => infusion_exists('blog'),
+                'infusions/blog/images/thumbs/'    => infusion_exists('blog'),
+                'infusions/downloads/files/'       => infusion_exists('downloads'),
+                'infusions/downloads/images/'      => infusion_exists('downloads'),
+                'infusions/downloads/submissions/' => infusion_exists('downloads'),
+                'infusions/downloads/submissions/images/' => infusion_exists('downloads'),
+                'infusions/forum/attachments/'     => infusion_exists('forum'),
+                'infusions/forum/images/'          => infusion_exists('forum'),
+                'infusions/gallery/photos/'        => infusion_exists('gallery'),
+                'infusions/gallery/photos/thumbs/' => infusion_exists('gallery'),
+                'infusions/gallery/submissions/'   => infusion_exists('gallery'),
+                'infusions/gallery/submissions/thumbs/' => infusion_exists('gallery'),
+                'infusions/news/images/'           => infusion_exists('news'),
+                'infusions/news/images/thumbs/'    => infusion_exists('news'),
+                'robots.txt'                       => TRUE,
+                'config.php'                       => FALSE
             );
             add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
             //Check file/folder writeable

@@ -158,8 +158,8 @@ class Members_Admin {
                             require_once INCLUDES."sendmail_include.php";
                             $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
                                         WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'
-		                                LIMIT 0,50
-		                                ");
+                                        LIMIT 0,50
+                                        ");
                             $rows = dbrows($result);
                             if ($rows != '0') {
                                 while ($data = dbarray($result)) {
@@ -252,10 +252,12 @@ class Members_Admin {
                     }
                     break;
                 case 'delete':
-                	if (!empty($_GET['newuser'])) {                        opentable(sprintf(self::$locale['ME_453'], $_GET['lookup']));
+                    if (!empty($_GET['newuser'])) {
+                        opentable(sprintf(self::$locale['ME_453'], $_GET['lookup']));
                         Members_Profile::delete_unactivated_user();
                         closetable();
-                	}
+
+                    }
                     elseif (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
                         if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {

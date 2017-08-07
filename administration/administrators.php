@@ -184,7 +184,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     opentable($locale['410']);
     if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
         echo openform('searchform', 'post', FUSION_SELF.$aidlink);
-        echo "<table cellpadding='0' cellspacing='0' width='450' class='center table table-responsive'>\n";
+        echo "<div class='table-responsive'><table cellpadding='0' cellspacing='0' width='450' class='center table'>\n";
         echo "<tr>\n<td align='center' class='tbl'><strong>".$locale['411']."</strong><br /><br />\n";
         echo form_text('search_criteria', '', '', array('width' => '300px'));
         echo "</td>\n</tr>\n<tr>\n<td align='center' class='tbl'>\n";
@@ -192,7 +192,8 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "<label><input type='radio' name='search_type' value='user_id' class='m-r-10' />&nbsp;".$locale['412']."</label></td>\n";
         echo "</tr>\n<tr>\n<td align='center' class='tbl'>\n";
         echo form_button('search_users', $locale['414'], $locale['414']);
-        echo "</td>\n</tr>\n</table>\n</form>\n";
+        echo "</td>\n</tr>\n</table>\n</div>\n";
+        echo closeform();
     } elseif (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
         $mysql_search = "";
         if ($_POST['search_type'] == "user_id" && isnum($_POST['search_criteria'])) {
@@ -205,7 +206,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         }
         if (isset($result) && dbrows($result)) {
             echo openform('add_users_form', 'post', FUSION_SELF.$aidlink);
-            echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
+            echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='tbl-border center table'>\n";
             $i = 0;
             $users = "";
             while ($data = dbarray($result)) {
@@ -238,7 +239,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                 echo "<tr>\n<td align='center' class='tbl'>".$locale['418']."<br /><br />\n";
                 echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['419']."</a>\n</td>\n</tr>\n";
             }
-            echo "</table>\n";
+            echo "</table>\n</div>";
             echo closeform();
         } else {
             echo "<table cellpadding='0' cellspacing='1' width='450' class='tbl-border center'>\n";
@@ -250,7 +251,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     opentable($locale['420']);
     $i = 0;
     $result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<='-102' ORDER BY user_level DESC, user_name");
-    echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<thead>\n<tr>\n";
+    echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='table tbl-border center'>\n<thead>\n<tr>\n";
     echo "<th class='tbl2'>".$locale['421']."</th>\n";
     echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['422']."</th>\n";
     echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['423']."</th>\n";
@@ -275,7 +276,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</td>\n</tr>\n";
         $i++;
     }
-    echo "</tbody>\n</table>\n";
+    echo "</tbody>\n</table>\n</div>";
     closetable();
 }
 

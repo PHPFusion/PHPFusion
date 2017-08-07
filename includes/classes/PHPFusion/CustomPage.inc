@@ -66,15 +66,15 @@ class CustomPage {
         }
         $choice = array('0' => $locale['no'], '1' => $locale['yes']);
         add_to_jquery("
-		$('.actionbar').hide();
-		$('tr').hover(
-			function(e) { $('#coupon-'+ $(this).data('id') +'-actions').show(); },
-			function(e) { $('#coupon-'+ $(this).data('id') +'-actions').hide(); }
-		);
-		$('.qform').hide();
-		");
-        echo "<div class='m-t-20'>\n";
-        echo "<table class='table table-responsive".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
+        $('.actionbar').hide();
+        $('tr').hover(
+            function(e) { $('#coupon-'+ $(this).data('id') +'-actions').show(); },
+            function(e) { $('#coupon-'+ $(this).data('id') +'-actions').hide(); }
+        );
+        $('.qform').hide();
+        ");
+        echo "<div class='m-t-20 table-responsive'>\n";
+        echo "<table class='table ".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
         echo "<tr>\n";
         echo "<th>".$locale['cp_100']."</th>\n";
         echo "<th>".$locale['cp_101']."</th>\n";
@@ -98,10 +98,10 @@ class CustomPage {
                 echo "<td>".$pageData['page_id']."</td>\n";
                 echo "<td class='col-sm-4'>".$pageData['page_title']."\n";
                 echo "<div class='actionbar text-smaller' id='coupon-".$pageData['page_id']."-actions'>
-				<a target='_blank' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['view']."</a> |
-				<a href='".FUSION_SELF.$aidlink."&amp;section=cp2&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
-				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['delete']."</a>
-				</div>\n";
+                <a target='_blank' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['view']."</a> |
+                <a href='".FUSION_SELF.$aidlink."&amp;section=cp2&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
+                <a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['delete']."</a>
+                </div>\n";
                 echo "</td>\n";
                 echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
                 echo "<td>".$displayLanguage."</td>\n";
@@ -209,10 +209,10 @@ class CustomPage {
             $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461']." TINYMCE" : $locale['462']." TINYMCE";
             echo form_button('tinymce_switch', $val, $val, array('class' => 'btn-default btn-block', 'type' => 'button'));
             add_to_jquery("
-			$('#tinymce_switch').bind('click', function() {
-				SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
-			});
-			");
+            $('#tinymce_switch').bind('click', function() {
+                SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
+            });
+            ");
             closeside();
         }
 
@@ -313,20 +313,20 @@ class CustomPage {
         }
         echo closeform();
         add_to_jquery("
-			$('#delete').bind('click', function() { confirm('".$locale['450']."'); });
-			$('#save').bind('click', function() {
-			var page_title = $('#page_title').val();
-			if (page_title =='') { alert('".$locale['451']."'); return false; }
-			});
-		");
+            $('#delete').bind('click', function() { confirm('".$locale['450']."'); });
+            $('#save').bind('click', function() {
+            var page_title = $('#page_title').val();
+            if (page_title =='') { alert('".$locale['451']."'); return false; }
+            });
+        ");
         if (fusion_get_settings('tinymce_enabled')) {
             add_to_jquery("
-			function SetTinyMCE(val) {
-			now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
-			expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
-			location.href='".FUSION_SELF.$aidlink."&section=cp2';
-			}
-		    ");
+            function SetTinyMCE(val) {
+            now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
+            expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
+            location.href='".FUSION_SELF.$aidlink."&section=cp2';
+            }
+            ");
         }
     }
 

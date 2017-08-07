@@ -13,7 +13,7 @@
     </div>
     <hr/>
     <!---forumthreads-->
-    <table class='table table-responsive clear'>
+    <div class="table-responsive"><table class='table clear'>
         <thead>
         <tr>
             <th>
@@ -36,6 +36,7 @@
             </th>
             <th></th>
         </tr>
+        </thead>
         <tbody class='text-smaller'>
         {sticky_threads.{
         <tr id='thread_{%thread_id%}' class='warning'>
@@ -91,8 +92,7 @@
         </tr>
         }}
         </tbody>
-        </thead>
-    </table>
+    </table></div>
     {pagenav_b.{
     <div class='hidden-sm hidden-md hidden-lg m-t-15'>{%navigation_2%}</div>
     }}

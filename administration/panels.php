@@ -452,7 +452,7 @@ class fusion_panel_admin {
                 $html .= "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
                 $html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
                 $html .= "</a>\n";
-                $html .= "<ul class='dropdown-menu' role='panel-options'>\n";
+                $html .= "<ul class='dropdown-menu'>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i><span class='badge'>".$type."</span></li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";

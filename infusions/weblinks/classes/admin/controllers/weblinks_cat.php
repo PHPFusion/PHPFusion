@@ -293,12 +293,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         // Query
         $result = dbquery_tree_full(DB_WEBLINK_CATS, "weblink_cat_id", "weblink_cat_parent", "",
             "SELECT ac.*, COUNT(a.weblink_id) AS weblink_count
-			FROM ".DB_WEBLINK_CATS." ac
-			LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
-			WHERE ".(multilang_table("WL") ? "ac.weblink_cat_language='".LANGUAGE."'" : "")."
-			$sql_condition
-			GROUP BY ac.weblink_cat_id
-			ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
+            FROM ".DB_WEBLINK_CATS." ac
+            LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
+            WHERE ".(multilang_table("WL") ? "ac.weblink_cat_language='".LANGUAGE."'" : "")."
+            $sql_condition
+            GROUP BY ac.weblink_cat_id
+            ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
         );
 
         // Filters
@@ -382,35 +382,35 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         // Footer
         add_to_footer("
-			<script>
+            <script>
                 function run_admin(action) {
                     $('#table_action').val(action);
                     $('#weblink_table').submit();
                 }
             </script>
-		");
+        ");
 
         // Toogle Options
         add_to_jquery("
-			// Toogle Options
-			$('#toggle_options').bind('click', function(e) {
+            // Toogle Options
+            $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
-				$('#weblink_filter_options').slideToggle();
-				var caret_status = $('#filter_caret').hasClass('fa-caret-down');
-				if (caret_status == 1) {
-					$('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
-					$(this).removeClass('btn-default').addClass('btn-info');
-				} else {
-					$('#filter_caret').removeClass('fa-caret-up').addClass('fa-caret-down');
-					$(this).removeClass('btn-info').addClass('btn-default');
-				}
-			});
+                $('#weblink_filter_options').slideToggle();
+                var caret_status = $('#filter_caret').hasClass('fa-caret-down');
+                if (caret_status == 1) {
+                    $('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
+                    $(this).removeClass('btn-default').addClass('btn-info');
+                } else {
+                    $('#filter_caret').removeClass('fa-caret-up').addClass('fa-caret-down');
+                    $(this).removeClass('btn-info').addClass('btn-default');
+                }
+            });
 
-			// Select change
-			$('#weblink_cat_status, #weblink_cat_visibility, #weblink_cat_language').bind('change', function(e){
-				$(this).closest('form').submit();
-			});
-		");
+            // Select change
+            $('#weblink_cat_status, #weblink_cat_visibility, #weblink_cat_language').bind('change', function(e){
+                $(this).closest('form').submit();
+            });
+        ");
 
     }
 
@@ -424,7 +424,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         if (!$id) :
             ?>
-            <table class="table table-responsive table-hover">
+            <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -480,7 +480,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
         <?php if (!$id) : ?>
             </tbody>
-            </table>
+            </table></div>
         <?php endif;
     }
 }

@@ -65,13 +65,9 @@ class Members {
     }
 
     private function getMemberRows() {
-
         $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
-
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
-
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
-
         $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
 
         $result = dbquery("
@@ -152,13 +148,13 @@ class Members {
                 'search_form' => $search_form,
             );
 
-            $info['search_table'] = "<table class='table table-responsive table-striped center alphabet-table'>\n<tr>\n";
+            $info['search_table'] = "<div class='table-responsive'><table class='table table-striped center alphabet-table'>\n<tr>\n";
             $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
             for ($i = 0; $i < count($info['search_filter']) != ""; $i++) {
                 $info['search_table'] .= "<td align='center' class='tbl1'><div class='small'><a href='".BASEDIR."members.php?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";
                 $info['search_table'] .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
             }
-            $info['search_table'] .= "</tr>\n</table>\n";
+            $info['search_table'] .= "</tr>\n</table>\n</div>";
 
             if (self::$rows > 0) {
 
@@ -222,19 +218,12 @@ class Members {
     }
 
     protected static function get_MembersQuery() {
-
         $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
-
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
-
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
-
         $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
-
         $limit = isset(self::$filters['limit']) ? self::$filters['limit'] : 24;
-
         $default_sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
-
         $default_sorting = "u.user_level DESC, u.user_language DESC, u.user_name $default_sort_order";
 
         if (isset($_GET['orderby'])) {

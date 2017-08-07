@@ -32,22 +32,22 @@ add_to_title($locale['global_200'].$locale['global_041']);
 $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
 $rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_FORUM_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
+    ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
 
 opentable($locale['global_041']);
 if ($rows) {
     $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 : $_GET['rowstart'];
 
     $result = dbquery("SELECT tt.forum_id, tt.thread_id, tt.thread_subject, tt.thread_views, tt.thread_lastuser,
-		tt.thread_lastpost, tt.thread_postcount, tf.forum_name, tf.forum_access, tu.user_id, tu.user_name,
-		tu.user_status
-		FROM ".DB_FORUM_THREADS." tt
-		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-		INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser = tu.user_id
-		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'
-		ORDER BY tt.thread_lastpost DESC LIMIT ".$_GET['rowstart'].",20");
+        tt.thread_lastpost, tt.thread_postcount, tf.forum_name, tf.forum_access, tu.user_id, tu.user_name,
+        tu.user_status
+        FROM ".DB_FORUM_THREADS." tt
+        INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
+        INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser = tu.user_id
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'
+        ORDER BY tt.thread_lastpost DESC LIMIT ".$_GET['rowstart'].",20");
 
-        echo "<table class='table table-striped'>";
+        echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
                 echo "<td></td>";
                 echo "<td><strong>".$locale["global_044"]."</strong></td>";
@@ -61,14 +61,14 @@ if ($rows) {
                         echo "<td>";
                         if ($data['thread_lastpost'] > $lastvisited) {
                             $thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
-			                 if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
+                             if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
                                   echo "<i class='fa fa-folder'></i>";
                              } else {
                                   echo "<i class='fa fa-folder'></i>";
                              }
-		                } else {
-			                 echo "<i class='fa fa-folder-o'></i>";
-		                }
+                        } else {
+                             echo "<i class='fa fa-folder-o'></i>";
+                        }
                         echo "</td>\n";
                         echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a><br />\n".$data['forum_name']."</td>\n";
                         echo "<td>".$data['thread_views']."</td>\n";
@@ -77,7 +77,7 @@ if ($rows) {
                     echo "</tr>\n";
                 }
             echo "</tbody>";
-        echo "</table>";
+        echo "</table></div>";
 
     if ($rows > 20) {
         echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 2, $rows, 3, FUSION_SELF."?")."</div>\n";

@@ -44,7 +44,7 @@ $result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_lastpos
 
 if (dbrows($result)) {
     opentable($locale['global_040']);
-        echo "<table class='table table-responsive table-striped'>";
+        echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
                 echo "<td class='min'>&nbsp;</td>\n";
                 echo "<td><strong>".$locale['global_044']."</strong></td>\n";
@@ -59,10 +59,12 @@ if (dbrows($result)) {
                         if ($data['thread_lastpost'] > $lastvisited) {
                             $thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
                             if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
-                                echo "<i class='fa fa-folder fa-3'></i>";
+                                echo "<i class='fa fa-folder fa-2x'></i>";
+                            } else {
+                                echo "<i class='fa fa-folder fa-2x text-danger'></i>";
                             }
                         } else {
-                            echo "<i class='fa fa-folder fa-3'></i>";
+                            echo "<i class='fa fa-folder fa-2x'></i>";
                         }
                         if ($data['thread_poll']) {
                             $thread_poll = "<span class='small' style='font-weight:bold'>[".$locale['global_051']."]</span> ";
@@ -79,7 +81,7 @@ if (dbrows($result)) {
                     echo "</tr>\n";
                 }
             echo "</tbody>";
-        echo "</table>\n";
+        echo "</table>\n</div>";
 
         if (iMEMBER) {
             echo "<div class='text-center'>\n";

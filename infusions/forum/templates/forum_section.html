@@ -7,7 +7,7 @@
         }}
     </div>
     <hr/>
-    <table class='table table-responsive clear'>
+    <div class="table-responsive"><table class='table clear'>
         <thead>
         <tr>
             <th>
@@ -30,6 +30,7 @@
             </th>
             <th></th>
         </tr>
+        </thead>
         {sticky_threads.{
         <tr id='thread_{%thread_id%}'>
             <td>
@@ -83,5 +84,5 @@
             <td colspan='7' class='text-center'>{%message%}</td>
         </tr>
         }}
-    </table>
+    </table></div>
 </div>

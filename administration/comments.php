@@ -63,15 +63,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['comme
 }
 
 $ndata = [
-		':type'       => $_GET['ctype'],
-		':item_id'    => $_GET['comment_item_id'],
-		];
+        ':type'       => $_GET['ctype'],
+        ':item_id'    => $_GET['comment_item_id'],
+        ];
 $comments_query = "SELECT
-			c.comment_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type, u.user_id, u.user_name, u.user_status
-			FROM ".DB_COMMENTS." AS c
-			LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
-			WHERE c.comment_type=:type AND c.comment_item_id=:item_id
-			ORDER BY c.comment_datestamp ASC";
+            c.comment_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type, u.user_id, u.user_name, u.user_status
+            FROM ".DB_COMMENTS." AS c
+            LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
+            WHERE c.comment_type=:type AND c.comment_item_id=:item_id
+            ORDER BY c.comment_datestamp ASC";
 $result = dbquery($comments_query, $ndata);
 
 if (dbrows($result)) {

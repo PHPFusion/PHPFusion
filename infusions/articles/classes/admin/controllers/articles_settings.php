@@ -62,7 +62,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
 
         //opentable("");
         ?>
-        <div class="well spacer-md">
+        <div class="well m-t-10">
             <?php echo $this->locale['article_0400']; ?>
         </div>
         <?php

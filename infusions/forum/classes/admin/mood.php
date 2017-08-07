@@ -189,7 +189,7 @@ class ForumAdminMood extends ForumAdminInterface {
         if ($rows > 0) :
 
             ?>
-            <table class="table table-responsive table-striped table-hover m-t-20 m-b-20">
+            <div class="table-responsive"><table class="table table-striped table-hover m-t-20 m-b-20">
                 <thead>
                 <tr>
                     <td class="col-xs-2"><?php echo self::$locale['forum_107'] ?></td>
@@ -233,7 +233,7 @@ class ForumAdminMood extends ForumAdminInterface {
                 <?php endwhile; ?>
 
                 </tbody>
-            </table>
+            </table></div>
 
             <?php if ($mood_max_count > 16) {
             echo makepagenav($_GET['rowstart'], $rows, $mood_max_count, 3, FUSION_SELF.fusion_get_aidlink()."&section=fmd&");

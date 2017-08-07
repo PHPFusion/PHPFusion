@@ -21,8 +21,8 @@ $locale = fusion_get_locale();
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_id='".$_GET['submit_id']."'");
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $callback_data = dbarray($result);
             $callback_data = array(
@@ -87,10 +87,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     } else {
         if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
             $result = dbquery("
-			SELECT ts.submit_id, ts.submit_datestamp, ts.submit_criteria
-			FROM ".DB_SUBMISSIONS." ts
-			WHERE submit_type='d' and submit_id='".intval($_GET['submit_id'])."'
-		");
+            SELECT ts.submit_id, ts.submit_datestamp, ts.submit_criteria
+            FROM ".DB_SUBMISSIONS." ts
+            WHERE submit_type='d' and submit_id='".intval($_GET['submit_id'])."'
+        ");
             if (dbrows($result) > 0) {
                 $callback_data = dbarray($result);
                 // delete all the relevant files
@@ -110,11 +110,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             redirect(clean_request("", array("submit_id"), FALSE));
         } else {
             $result = dbquery("SELECT ts.submit_id,
-			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='d' AND submit_id='".$_GET['submit_id']."'
-			");
+            ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='d' AND submit_id='".$_GET['submit_id']."'
+            ");
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $submit_criteria = unserialize($data['submit_criteria']);
@@ -203,7 +203,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 if (!empty($callback_data['download_file'])) {
                     echo "<p><strong>".$locale['download_0214']."</strong></p>\n";
                     echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
-				".$locale['download_0226']."</a>\n";
+                ".$locale['download_0226']."</a>\n";
                     echo form_hidden('download_file', '', $callback_data['download_file']);
                     echo form_hidden("download_url", "", "");
                 } else {
@@ -265,16 +265,16 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     }
 } else {
     $result = dbquery("SELECT
-			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='d'
-			ORDER BY submit_datestamp DESC
-			");
+            ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='d'
+            ORDER BY submit_datestamp DESC
+            ");
     $rows = dbrows($result);
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
-        echo "<table class='table table-striped'>\n";
+        echo "<div class='table-responsive'><table class='table table-striped'>\n";
             echo "<tr>\n";
                 echo "<th>".$locale['download_0055']."</th>\n";
                 echo "<th>".$locale['download_0053']."</th>\n";
@@ -295,7 +295,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "</tr>\n";
             }
             echo "</tbody>\n";
-        echo "</table>\n";
+        echo "</table>\n</div>";
     } else {
         echo "<div class='well text-center m-t-20'>".$locale['download_0050']."</div>\n";
     }

@@ -1003,7 +1003,7 @@ class NewsAdmin extends NewsAdminModel {
             <?php endif; ?>
         </div>
 
-        <table class="table table-responsive table-striped">
+        <div class="table-responsive"><table class="table table-striped">
             <thead>
             <tr>
                 <td></td>
@@ -1071,7 +1071,7 @@ class NewsAdmin extends NewsAdminModel {
                 </tr>
             <?php endif; ?>
             </tbody>
-        </table>
+        </table></div>
         <?php
         closeform();
     }

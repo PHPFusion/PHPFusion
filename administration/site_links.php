@@ -76,18 +76,18 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         }
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
         add_to_jquery("
-		$('#site-links').sortable({
-			handle : '.handle',
-			placeholder: 'state-highlight',
-			connectWith: '.connected',
-			scroll: true,
-			axis: 'y',
-			update: function () {
-				var ul = $(this),
+        $('#site-links').sortable({
+            handle : '.handle',
+            placeholder: 'state-highlight',
+            connectWith: '.connected',
+            scroll: true,
+            axis: 'y',
+            update: function () {
+                var ul = $(this),
                 order = ul.sortable('serialize'),
                 i = 0;
                 $.ajax({
-			        url: '".ADMIN."includes/site_links_updater.php".$this->aidlink."',
+                    url: '".ADMIN."includes/site_links_updater.php".$this->aidlink."',
                     type: 'GET',
                     dataType: 'json',
                     data : order,
@@ -104,7 +104,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                         });
 
                         ul.find('.num').each(function(i) {
-					    $(this).text(i+1);
+                        $(this).text(i+1);
                         });
                         ul.find('li').removeClass('tbl2').removeClass('tbl1');
                         ul.find('li:odd').addClass('tbl2');
@@ -122,18 +122,18 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                             delay: '3000'
                         });
                     }
-    			});
-			}
-		});
+                });
+            }
+        });
 
-		function checkLinkPosition(val) {
+        function checkLinkPosition(val) {
             if (val == 4) {
                 $('#link_position_id').prop('disabled', false).show();
             } else {
                 $('#link_position_id').prop('disabled', true).hide();
             }
         }
-		");
+        ");
     }
 
     public static function Administration() {
@@ -731,7 +731,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         echo openform("link_table", "post", FUSION_REQUEST);
         echo form_hidden("table_action", "", "");
-        echo "<table class='table table-striped table-responsive'>\n";
+        echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<tr>\n";
         echo "<th>".form_checkbox('check_all', '', '')."</th>\n";
         add_to_jquery("
@@ -867,9 +867,9 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 echo "<td>\n";
                 echo "<a class='text-dark' href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
                 echo "<div class='actionbar text-smaller' id='sl-".$data['link_id']."-actions'>
-				<a href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$this->locale['edit']."</a> |
-				<a class='qedit pointer' data-id='".$data['link_id']."'>".$this->locale['qedit']."</a> |
-				";
+                <a href='".FUSION_SELF.$this->aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$this->locale['edit']."</a> |
+                <a class='qedit pointer' data-id='".$data['link_id']."'>".$this->locale['qedit']."</a> |
+                ";
                 echo (isset($this->link_index[$data['link_id']]) ? $this->locale['SL_0034'] : "<a class='delete' href='".FUSION_SELF.$this->aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$this->locale['SL_0080']."');\">".$this->locale['delete']."</a>")." | ";
                 if (strstr($data['link_url'], "http://") || strstr($data['link_url'], "https://")) {
                     echo "<a href='".$data['link_url']."'>".$this->locale['view']."</a>\n";
@@ -894,56 +894,56 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             echo "</tr>\n";
         }
         echo "</tbody>\n";
-        echo "</table>\n";
+        echo "</table>\n</div>";
         echo closeform();
 
         echo "</div>\n";
 
         add_to_jquery("
-			$('.actionbar').hide();
-			$('tr').hover(
-				function(e) { $('#sl-'+ $(this).data('id') +'-actions').show(); },
-				function(e) { $('#sl-'+ $(this).data('id') +'-actions').hide(); }
-			);
-			$('.qform').hide();
-			$('.qedit').bind('click', function(e) {
-				$.ajax({
-					url: '".ADMIN."includes/sldata.php',
-					dataType: 'json',
-					type: 'get',
-					data: { q: $(this).data('id'), token: '".$this->aidlink."' },
-					success: function(e) {
-					    checkLinkPosition(e.link_position);
-						$('#sl_id').val(e.link_id);
-						$('#sl_name').val(e.link_name);
-						$('#sl_icon').val(e.link_icon);
-						$('#sl_status').select2('val', e.link_status);
-						// switch to custom
-						$('#sl-link_position').select2('val', e.link_position);
-						if (e.link_position > 3) {
-						    checkLinkPosition(e.link_position);
-						    $('#link_position_id').val(e.link_position_id);
-						}
+            $('.actionbar').hide();
+            $('tr').hover(
+                function(e) { $('#sl-'+ $(this).data('id') +'-actions').show(); },
+                function(e) { $('#sl-'+ $(this).data('id') +'-actions').hide(); }
+            );
+            $('.qform').hide();
+            $('.qedit').bind('click', function(e) {
+                $.ajax({
+                    url: '".ADMIN."includes/sldata.php',
+                    dataType: 'json',
+                    type: 'get',
+                    data: { q: $(this).data('id'), token: '".$this->aidlink."' },
+                    success: function(e) {
+                        checkLinkPosition(e.link_position);
+                        $('#sl_id').val(e.link_id);
+                        $('#sl_name').val(e.link_name);
+                        $('#sl_icon').val(e.link_icon);
+                        $('#sl_status').select2('val', e.link_status);
+                        // switch to custom
+                        $('#sl-link_position').select2('val', e.link_position);
+                        if (e.link_position > 3) {
+                            checkLinkPosition(e.link_position);
+                            $('#link_position_id').val(e.link_position_id);
+                        }
                         $('#sl-link_position').bind('change', function(e) {
                             checkLinkPosition( $(this).val() );
                         });
-						$('#sl_language').select2('val', e.link_language);
-						$('#sl_visibility').select2('val', e.link_visibility);
-						var length = e.link_window;
-						if (e.link_window > 0) { $('#sl_window').attr('checked', true);	} else { $('#sl_window').attr('checked', false); }
-					},
-					error : function(e) {
-						console.log(e);
-					}
-				});
-				$('.qform').show();
-				$('.list-result').hide();
-			});
-			$('#cancel').bind('click', function(e) {
-				$('.qform').hide();
-				$('.list-result').show();
-			});
-		");
+                        $('#sl_language').select2('val', e.link_language);
+                        $('#sl_visibility').select2('val', e.link_visibility);
+                        var length = e.link_window;
+                        if (e.link_window > 0) { $('#sl_window').attr('checked', true);	} else { $('#sl_window').attr('checked', false); }
+                    },
+                    error : function(e) {
+                        console.log(e);
+                    }
+                });
+                $('.qform').show();
+                $('.list-result').hide();
+            });
+            $('#cancel').bind('click', function(e) {
+                $('.qform').hide();
+                $('.list-result').show();
+            });
+        ");
 
     }
 }

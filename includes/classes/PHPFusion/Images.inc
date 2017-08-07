@@ -254,7 +254,7 @@ class Images {
         }
         echo "</div>\n</div>\n";
         if ($this->data['image_list']) {
-            echo "<table class='table table-responsive table-hover'>\n<tr>\n";
+            echo "<div class='table-responsive'><table class='table table-hover'>\n<tr>\n";
             for ($i = 0; $i < $this->data['image_count']; $i++) {
                 $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
                 $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
@@ -264,7 +264,7 @@ class Images {
                 echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['462']."</a></td>\n";
                 echo "</tr>\n";
             }
-            echo "</table>\n";
+            echo "</table>\n</div>";
             if (self::$settings['tinymce_enabled'] == 1) {
                 $upd_link = clean_request("action=update", array("action"), FALSE);
                 echo "<div class='text-center well'><a href='".$upd_link."'>".self::$locale['464']."</a></div>\n";

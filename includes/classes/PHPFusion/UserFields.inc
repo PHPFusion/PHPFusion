@@ -562,7 +562,7 @@ class UserFields extends QuantumFields {
                     $item[$data['field_cat']][] = $data;
                 }
 
-                if ($data['field_cat_db'] && $data['field_cat_index']) { // 2nd tab might want to be users as well
+                //if ($data['field_cat_db'] && $data['field_cat_index']) { // 2nd tab might want to be users as well
                     // extend userData
                     //if (!empty($this->callback_data) || ($this->registration && $this->method = 'input')) {
                         // Fix a bug where new db has no insertions rows yet.
@@ -573,7 +573,7 @@ class UserFields extends QuantumFields {
                     // this causes anomaly in callback data with multiple nested query
                     //}
                     //}
-                }
+                //}
 
             }
 
