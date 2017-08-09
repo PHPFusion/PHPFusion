@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
+    $locale = fusion_get_locale();
     $codes = (isset($htmlcode) && ($htmlcode !== "")) ? $htmlcode : "";
     if (!is_array($array)) {
         $array = array();
