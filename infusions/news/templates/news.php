@@ -58,18 +58,18 @@ if (!function_exists('display_main_news')) {
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
                     $carousel_item .= "<img class='img-responsive' style='position:absolute; width:100%;' src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>\n";
                     $carousel_item .= "
-					<div class='carousel-caption'>
-						<div class='overflow-hide'>
-						<a class='text-white' href='".INFUSIONS."news/news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
-						<span class='news-carousel-action m-r-10'><i class='fa fa-eye fa-fw'></i>".$news_item['news_reads']."</span>
-						".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'],
+                    <div class='carousel-caption'>
+                        <div class='overflow-hide'>
+                        <a class='text-white' href='".INFUSIONS."news/news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
+                        <span class='news-carousel-action m-r-10'><i class='fa fa-eye fa-fw'></i>".$news_item['news_reads']."</span>
+                        ".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'],
                                                                                                         INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments")."</span>" : '')."
-						".($news_item['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($news_item['news_sum_rating'],
+                        ".($news_item['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($news_item['news_sum_rating'],
                                                                                                       $news_item['news_count_votes'],
                                                                                                       INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating")." </span>" : '')."
-						</div>\n
-					</div>\n</div>\n
-					";
+                        </div>\n
+                    </div>\n</div>\n
+                    ";
                     $i++;
                 }
             }
@@ -86,15 +86,15 @@ if (!function_exists('display_main_news')) {
             echo $carousel_item;
             echo "</div>\n";
             echo "
-				<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
-					<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['previous']."</span>
-			  	</a>
-			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
-					<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['next']."</span>
-			  	</a>\n
-				";
+                <a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
+                    <span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['previous']."</span>
+                </a>
+                <a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
+                    <span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['next']."</span>
+                </a>\n
+                ";
             echo "</div>\n";
         }
 
@@ -111,7 +111,7 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['news_0008'].":</span> <span class='text-dark'>\n
-			".($info['news_last_updated'] ? $info['news_last_updated'] : $locale['na'])."</span>";
+            ".($info['news_last_updated'] ? $info['news_last_updated'] : $locale['na'])."</span>";
         echo "</div>\n";
         echo "</div>\n";
 
@@ -284,20 +284,20 @@ if (!function_exists('render_news_item')) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
         add_to_footer('<script type="text/javascript">'.jsminify('
-			$(document).ready(function() {
-				$(".news-image-overlay").colorbox({
-					transition: "elasic",
-					height:"100%",
-					width:"100%",
-					maxWidth:"98%",
-					maxHeight:"98%",
-					scrolling:false,
-					overlayClose:true,
-					close:false,
-					photo:true
-			   });
-			});
-			').'</script>');
+            $(document).ready(function() {
+                $(".news-image-overlay").colorbox({
+                    transition: "elasic",
+                    height:"100%",
+                    width:"100%",
+                    maxWidth:"98%",
+                    maxHeight:"98%",
+                    scrolling:false,
+                    overlayClose:true,
+                    close:false,
+                    photo:true
+               });
+            });
+            ').'</script>');
 
         opentable($locale['news_0004']);
         echo render_breadcrumbs();
@@ -306,16 +306,17 @@ if (!function_exists('render_news_item')) {
         if (!empty($data['news_admin_actions'])) {
             $admin_actions = $data['news_admin_actions'];
             echo "<div class='btn-group m-l-10 pull-right'>";
-            echo "<a class='btn btn-default btn-sm' title='".$locale['news_0003']."' href='".$admin_actions['edit']['link']."' title='".$admin_actions['edit']['title']."' /><i class='fa fa-pencil'></i> ".$admin_actions['edit']['title']."</a> \n";
-            echo "<a class='btn btn-danger btn-sm' title='".$locale['news_0003']."' href='".$admin_actions['delete']['link']."' title='".$admin_actions['delete']['title']."' /><i class='fa fa-trash'></i> ".$admin_actions['delete']['title']."</a>\n";
+            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']['link']."' title='".$admin_actions['edit']['title']."' /><i class='fa fa-pencil'></i> ".$admin_actions['edit']['title']."</a> \n";
+            echo "<a class='btn btn-danger btn-sm' href='".$admin_actions['delete']['link']."' title='".$admin_actions['delete']['title']."' /><i class='fa fa-trash'></i> ".$admin_actions['delete']['title']."</a>\n";
             echo "</div>\n";
         }
         echo "<h2 class='text-left m-t-0 m-b-0'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20 overflow-hide'>\n";
         if ($data['news_image_src']) {
-            echo "<a class='".$data['news_image_align']." news-image-overlay' href='".$data['news_image_src']."'>
-            <img class='img-responsive pull-left m-r-10' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; width: 30%; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
+            echo "<a class='news-image-overlay' href='".$data['news_image_src']."'>
+            <img class='img-responsive ".$data['news_image_align']." m-r-10' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; width: 30%; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
         }
+
         echo $data['news_news'];
         echo $data['news_extended'];
         echo "</div>\n";
@@ -326,12 +327,10 @@ if (!function_exists('render_news_item')) {
             $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
             echo '<hr/>';
             openside(fusion_get_locale('news_0019')) ?>
-            <div class='post-gallery'>
+            <div class='post-gallery overflow-hide m-b-20'>
                 <?php foreach ($data['news_gallery'] as $news_image_id => $news_image) : ?>
-                    <div class='post-gallery-item overflow-hide ' style='margin: -1px; width: 33%; max-height: <?php echo $thumb_height ?>px'>
-                        <div class='center-xy'>
-                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
-                        </div>
+                    <div class='post-gallery-item overflow-hide pull-left' style='width: 250px; height: 120px;'>
+                        <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
                     </div>
                 <?php endforeach; ?>
             </div>
