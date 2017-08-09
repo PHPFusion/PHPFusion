@@ -2141,7 +2141,8 @@ input[type=checkbox] {
     transition: .05s border-color ease-in-out;
 }
 
-input[type=radio]:checked:before, input[type=checkbox]:checked:before {
+input[type=radio]:checked:before,
+input[type=checkbox]:checked:before {
     float: left;
     display: inline-block;
     vertical-align: middle;
@@ -2158,6 +2159,20 @@ input[type=checkbox]:checked:before {
     margin: -1px 0 0 0;
     color: #1e8cbe;
     outline: none;
+}
+
+input[type=radio] {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+input[type=radio]:checked:before {
+    content: "\f111";
+    margin: 1px 0 0 -1px;
+    color: #1e8cbe;
+    outline: none;
+    font-size: 12px;
 }
 
 /* Forms */
