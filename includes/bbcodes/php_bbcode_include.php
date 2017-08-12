@@ -20,6 +20,9 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
+    global $pid;
+}
 require_once INCLUDES.'bbcodes/phphighlight/PHP_Highlight.php';
 unset ($matches);
 preg_match_all("#\[php\](.*?)\[/php\]#si", $text, $matches, PREG_PATTERN_ORDER);
@@ -33,8 +36,8 @@ for ($i = 0; $i < count($matches[0]); $i++) {
     $h = new PHP_Highlight;
     $h->loadString($start_php.$input.$end_php);
     $parsed = $h->toList(TRUE, TRUE, FALSE);
-    if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
-        $php_save = "<a href='".INCLUDES."bbcodes/php_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."' title='".$locale['bb_php_save']."'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
+    if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($pid)) {
+        $php_save = "<a href='".INCLUDES."bbcodes/php_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$pid."&amp;code_id=".$i."' title='".$locale['bb_php_save']."'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
     } else {
         $php_save = "";
     }

@@ -44,7 +44,7 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
             $ext = strtolower(str_replace("4strict", "", $matches[1][$_GET['code_id']]));
             $text = unstripinput($matches[2][$_GET['code_id']]);
             $filename = "geshi_".$_GET['thread_id']."_".$_GET['post_id']."_".$_GET['code_id'].".".$ext;
-            $object = new httpdownload;
+            $object = new PHPFusion\httpdownload;
             $object->set_bydata($text);
             $object->use_resume = TRUE;
             $object->set_filename($filename);

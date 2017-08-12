@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
-    $data;
+    global $pid;
 }
 
 unset($lines);
@@ -46,8 +46,8 @@ for ($i = 0; $i < count($matches[1]); $i++) {
         $geshi->set_footer_content($locale['bb_geshi_info']);
         $geshi->set_footer_content_style('font-family:Verdana,Arial,sans-serif;color:#808080;font-size:9px;font-weight:bold;background-color:#f0f0ff;border-top: 1px solid #d0d0d0;padding:2px;width:400px');
 
-        if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
-            $geshi_save = "<a href='".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."' title='".$locale['bb_geshi_save']."'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
+        if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($pid)) {
+            $geshi_save = "<a href='".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$pid."&amp;code_id=".$i."' title='".$locale['bb_geshi_save']."'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
         } else {
             $geshi_save = "";
         }
@@ -57,8 +57,8 @@ for ($i = 0; $i < count($matches[1]); $i++) {
     } else {
         $ccount = substr_count($text, "[geshi=");
         for ($i = 0; $i < $ccount; $i++) {
-            if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
-                $geshi_save = "<a href=\'".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."\' title=\'".$locale['bb_geshi_save']."\'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
+            if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($pid)) {
+                $geshi_save = "<a href=\'".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$pid."&amp;code_id=".$i."\' title=\'".$locale['bb_geshi_save']."\'><i class='fa fa-hdd-o'></i></a>&nbsp;&nbsp;";
             } else {
                 $geshi_save = "";
             }

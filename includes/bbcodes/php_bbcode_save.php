@@ -43,7 +43,7 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
         if (isset($matches[1][$_GET['code_id']])) {
             $text = unstripinput($matches[1][$_GET['code_id']]);
             $filename = "php_".$_GET['thread_id']."_".$_GET['post_id']."_".$_GET['code_id'].".php";
-            $object = new httpdownload;
+            $object = new PHPFusion\httpdownload;
             $object->set_bydata($text);
             $object->use_resume = TRUE;
             $object->set_filename($filename);
