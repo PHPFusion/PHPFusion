@@ -1013,7 +1013,7 @@ class ForumThreads extends ForumServer {
                     $reply_result = dbquery($replies_sql, $replies_param);
                     if (dbrows($reply_result)) {
                         // who has replied
-                        $reply_sender = "";
+                        $reply_sender = [];
                         $last_datestamp = 0;
                         while ($r_data = dbarray($reply_result)) {
                             $user_replied = fusion_get_user($r_data['post_author']);
