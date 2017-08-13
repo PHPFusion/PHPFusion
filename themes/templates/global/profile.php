@@ -114,7 +114,7 @@ if (!function_exists('display_user_profile')) {
         <!--userprofile_pre_idx-->
         <section id='user-profile' class='spacer-sm overflow-hide'>
             {%tab_header%}
-            <div class='container spacer-sm'>
+            <div class='spacer-sm'>
                 <div class='clearfix p-15 p-t-0'>
                     <div class='pull-left m-r-10'>{%user_avatar%}</div>
                     <div class='overflow-hide'><h4 class='m-0'>{%user_name%}<br/><small>{%user_level%}</small></h4></div>
@@ -124,7 +124,7 @@ if (!function_exists('display_user_profile')) {
                 <div class='clearfix'>{%basic_info%}</div>
                 <hr/>
                 <div class='clearfix'>{%extended_info%}</div>
-            	<div class='text-center'>{%buttons%}</div>
+                <div class='text-center'>{%buttons%}</div>
             </div>
             {%tab_footer%}
         </section>
