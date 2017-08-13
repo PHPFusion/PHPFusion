@@ -1403,7 +1403,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 #devlpr .panel-default .panel-heading {
-    padding: 10px 1.4rem;
+    padding: 10px;
     background: #fff;
 }
 
@@ -1422,7 +1422,7 @@ input[type="submit"].btn.btn-mini {
 }
 #devlpr .panel-default .panel-collapse {
     border-top: 1px solid #ddd;
-    padding: 1.4rem;
+    padding: 1.4rem 10px;
 }
 
 /* Table controls */
@@ -1527,6 +1527,7 @@ footer ul li a {
 }
 
 .btn-photo-upload > .btn-file {
+    margin-top: 0 !important;
     border: 2px dashed #ddd;
     outline: none;
     text-align: center;
@@ -2141,7 +2142,8 @@ input[type=checkbox] {
     transition: .05s border-color ease-in-out;
 }
 
-input[type=radio]:checked:before, input[type=checkbox]:checked:before {
+input[type=radio]:checked:before,
+input[type=checkbox]:checked:before {
     float: left;
     display: inline-block;
     vertical-align: middle;
@@ -2158,6 +2160,20 @@ input[type=checkbox]:checked:before {
     margin: -1px 0 0 0;
     color: #1e8cbe;
     outline: none;
+}
+
+input[type=radio] {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+input[type=radio]:checked:before {
+    content: "\f111";
+    margin: 1px 0 0 -1px;
+    color: #1e8cbe;
+    outline: none;
+    font-size: 12px;
 }
 
 /* Forms */
@@ -2322,4 +2338,51 @@ input[type=text] {
 
 .label.label-info {
     background-color: #f1f8ff;
+}
+
+/**
+table class ordering
+ */
+.order-caret-up-current:after, .order-caret-down-current:hover:after, .order-caret-up:hover:after {
+    /*down*/
+    font-family: 'FontAwesome';
+    content: '\f0d8';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.order-caret-down-current:after, .order-caret-up-current:hover:after, .order-caret-down:hover:after {
+    font-family: 'FontAwesome';
+    content: '\f0d7';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.tbl_actions {
+    display: none;
+}
+
+tr:hover > td .tbl_actions {
+    display: block;
+}
+
+.tbl_actions > span:after {
+    content: "|";
+    display: inline-block;
+    padding: 0 5px;
+    color: #ccc;
+}
+
+.tbl_actions > span:last-child:after {
+    content: "";
+}
+
+.text-normal label {
+    font-weight: 400;
+}
+
+.remove_tag {
+
 }
