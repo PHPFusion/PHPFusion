@@ -78,15 +78,16 @@ class Upload extends \Defender\Validation {
                             $file_ext = strtolower(strrchr($file['name'][$i], "."));
                             $file_dest = rtrim($target_folder, '/').'/';
                             $upload_file = array(
-                                "source_file" => $source_file,
-                                "source_size" => $file['size'][$i],
-                                "source_ext" => $file_ext,
-                                "target_file" => $target_file.$file_ext,
-                                "target_folder" => $target_folder,
-                                "valid_ext" => $valid_ext,
-                                "max_size" => $max_size,
-                                "query" => $query,
-                                "error" => 0
+                                "source_file"    => $source_file,
+                                "source_size"    => $file['size'][$i],
+                                "source_ext"     => $file_ext,
+                                "target_file"    => $target_file.$file_ext,
+                                "target_folder"  => $target_folder,
+                                "valid_ext"      => $valid_ext,
+                                "max_size"       => $max_size,
+                                "query"          => $query,
+                                "error"          => 0,
+                                "replace_upload" => self::$inputConfig['replace_upload']
                             );
 
                             if ($file['size'][$i] > $max_size) {
@@ -98,7 +99,7 @@ class Upload extends \Defender\Validation {
                             } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'][$i], $file_ext, $valid_ext) === FALSE) {
                                 $upload['error'] = 4;
                             } else {
-                                $target_file = filename_exists($file_dest, $target_file.$file_ext);
+                                $target_file = (self::$inputConfig['replace_upload'] ? $target_file.$file_ext : filename_exists($file_dest, $target_file.$file_ext));
                                 $upload_file['target_file'] = $target_file;
                                 move_uploaded_file($file['tmp_name'][$i], $file_dest.$target_file);
                                 if (function_exists("chmod")) {
@@ -159,7 +160,7 @@ class Upload extends \Defender\Validation {
             }
         } else {
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
-                $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
+                $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte'], "", self::$inputConfig['replace_upload']);
                 if ($upload['error'] != 0) {
                     \defender::stop(); // return FALSE
                     switch ($upload['error']) {
@@ -194,8 +195,6 @@ class Upload extends \Defender\Validation {
      * @return array
      */
     protected function verify_image_upload() {
-
-        $locale = fusion_get_locale();
 
         if (self::$inputConfig['multiple']) {
 
@@ -272,7 +271,8 @@ class Upload extends \Defender\Validation {
                             if (!file_exists($target_folder)) {
                                 mkdir($target_folder, 0755);
                             }
-                            $image_name_full = filename_exists($target_folder, $image_name.$image_ext);
+                            print_p(self::$inputConfig);
+                            $image_name_full = (self::$inputConfig['replace_upload'] ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
                             $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
                             $image_info['image_name'] = $image_name_full;
                             $image_info['image'] = TRUE;
@@ -298,7 +298,7 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb1_folder)) {
                                             mkdir($thumb1_folder, 0755, TRUE);
                                         }
-                                        $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
+                                        $image_name_t1 = (self::$inputConfig['replace_upload'] ? $image_name.$thumb1_suffix.$image_ext : filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext));
                                         $image_info['thumb1_name'] = $image_name_t1;
                                         $image_info['thumb1'] = TRUE;
                                         if ($thumb1_ratio == 0) {
@@ -317,7 +317,7 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb2_folder)) {
                                             mkdir($thumb2_folder, 0755, TRUE);
                                         }
-                                        $image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
+                                        $image_name_t2 = (self::$inputConfig['replace_upload'] ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
                                         $image_info['thumb2_name'] = $image_name_t2;
                                         $image_info['thumb2'] = TRUE;
                                         if ($thumb2_ratio == 0) {
@@ -372,7 +372,9 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['thumbnail2_w'], // thumb2 width
                     self::$inputConfig['thumbnail2_h'], // thumb2 height
                     FALSE,
-                    explode(',', self::$inputConfig['valid_ext'])
+                    explode(',', self::$inputConfig['valid_ext']),
+                    "", // query
+                    self::$inputConfig['replace_upload']
                 );
 
                 if ($upload['error'] != 0) {

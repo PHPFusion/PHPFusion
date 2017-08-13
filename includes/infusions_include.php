@@ -176,7 +176,7 @@ if (!function_exists('send_pm')) {
 // Upload file function
 if (!function_exists('upload_file')) {
 
-    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
+    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "", $replace_upload = FALSE) {
         if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
 
             if (stristr($valid_ext, ',')) {
@@ -214,7 +214,7 @@ if (!function_exists('upload_file')) {
             } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
-                $target_file = filename_exists($target_folder, $target_file.$file_ext);
+                $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
                 $upload_file['target_file'] = $target_file;
                 move_uploaded_file($file['tmp_name'], $target_folder.$target_file);
                 if (function_exists("chmod")) {
@@ -240,7 +240,7 @@ if (!function_exists('upload_file')) {
 // Upload image function
 if (!function_exists('upload_image')) {
 
-    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp')) {
+    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'), $replace_upload = FALSE) {
 
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
@@ -296,7 +296,7 @@ if (!function_exists('upload_image')) {
                     if (!file_exists($target_folder)) {
                         mkdir($target_folder, 0755);
                     }
-                    $image_name_full = filename_exists($target_folder, $image_name.$image_ext);
+                    $image_name_full = ($replace_upload ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
                     $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
                     $image_info['image_name'] = $image_name_full;
                     $image_info['image'] = TRUE;
@@ -340,7 +340,7 @@ if (!function_exists('upload_image')) {
                                 if (!file_exists($thumb2_folder)) {
                                     mkdir($thumb2_folder, 0755, TRUE);
                                 }
-                                $image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
+                                $image_name_t2 = ($replace_upload ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
                                 $image_info['thumb2_name'] = $image_name_t2;
                                 $image_info['thumb2'] = TRUE;
                                 if ($thumb2_ratio == 0) {

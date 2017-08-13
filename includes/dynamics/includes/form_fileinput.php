@@ -73,6 +73,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'template'          => 'classic',
         'media'             => FALSE,
         'placeholder'       => '',
+        'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     );
 
     $options += $default_options;
@@ -222,6 +223,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             'max_byte'          => $options['max_byte'],
             'multiple'          => $options['multiple'],
             'valid_ext'         => $options['valid_ext'],
+            'replace_upload'    => $options['replace_upload'],
         )
     );
 
