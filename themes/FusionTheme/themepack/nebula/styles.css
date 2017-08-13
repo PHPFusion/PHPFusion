@@ -44,7 +44,7 @@ a, h4 a:hover, a:hover h5, h5 > a:hover, a:hover h6, h6 > a:hover {
 
 .headerBg {
     background: #22498E;
-    min-height: 400px;
+    min-height: 300px;
 }
 
 .nebulaBg.full {
@@ -266,7 +266,7 @@ header h1 {
 }
 
 .nebulaBody > .container {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .nebulaBody > .container > .row {
@@ -761,8 +761,8 @@ News
 }
 
 .news_item > article {
-    margin-bottom: 55px;
-    padding-bottom: 55px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #dfe5e8;
 }
 
@@ -980,7 +980,7 @@ Well
 *******************/
 .well {
     background-color: #f4f6f7;
-    padding: 33px 40px 45px;
+    padding: 33px 40px;
     border: 0;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
