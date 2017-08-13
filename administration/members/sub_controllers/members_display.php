@@ -132,12 +132,9 @@ class Members_Display extends Members_Admin {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $name = $data['field_name'];
-            $title = $data['field_title'];
-            if (QuantumFields::is_serialized($title)) {
-                $title = QuantumFields::parse_label($title);
-            }
-            $tLocale[$data['field_name']] = $title;
-            $extra_checkboxes[$name] = form_checkbox("display[".$data['field_name']."]", $title, (isset($selected_fields[$data['field_name']]) ? 1 : 0), array('input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE));
+            $title = (QuantumFields::is_serialized($data['field_title']) ? QuantumFields::parse_label($data['field_title']) : $data['field_title']);
+            $tLocale[$name] = $title;
+            $extra_checkboxes[$name] = form_checkbox("display[".$name."]", $title, (isset($selected_fields[$name]) ? 1 : 0), array('input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE));
         }
 
         $field_status = array();
@@ -182,14 +179,17 @@ class Members_Display extends Members_Admin {
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
-        if (in_array(2, $selected_status)){            $nquery = "SELECT * FROM ".DB_NEW_USERS."";
+        if (in_array(2, $selected_status)){
+            $nquery = "SELECT * FROM ".DB_NEW_USERS."";
         	$nresult = dbquery($nquery);
         	$nrows = dbrows($nresult);
         	$i=999999;
-            while ($data = dbarray($nresult)) {            	 $list[$data['user_name']] = [
+            while ($data = dbarray($nresult)) {
+            	 $list[$data['user_name']] = [
             	 'user_id' => $i,
                  'checkbox' => '',
-            	 'user_name' => $data['user_name']."<br />".getsuspension(2),            	 'user_level' => self::$locale['ME_562'],
+            	 'user_name' => $data['user_name']."<br />".getsuspension(2),
+            	 'user_level' => self::$locale['ME_562'],
             	 'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
             	 'user_email' => $data['user_email'],
             	 'user_joined' => showdate('longdate', $data['user_datestamp'])
