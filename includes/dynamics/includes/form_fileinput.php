@@ -125,14 +125,12 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $value = '';
     if (!empty($input_value)) {
         if (is_array($input_value)) {
-            foreach ($input_value as $value) {
-                // attempt to find file and append file with base path to avoid breaking image
-                $image_src = (file_exists($options['upload_path'].$value)) ? $options['upload_path'].$value : $value;
-                $value[] = "<img class='img-responsive' src='".$image_src."/>";
+            $value = array();
+            foreach ($input_value as $c_value) {
+                $value[] = (file_exists($options['upload_path'].$c_value)) ? $options['upload_path'].$c_value : $c_value;
             }
         } else {
-            $image_src = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
-            $value = "<img class='img-responsive' src='".$image_src."'/>";
+            $value = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
         }
         $value = json_encode($value);
     }
@@ -249,6 +247,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 allowedPreviewTypes : ".$type_for_js.",
                 ".($value ? "initialPreview: ".$value.", " : '')."
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
+                initialPreviewAsData: true,
                 browseClass: 'btn ".$options['btn_class']." button',
                 uploadClass: 'btn btn-default button',
                 captionClass : '',
@@ -268,7 +267,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $('#".$options['input_id']."').fileinput({
                 allowedFileTypes: ".$type_for_js.",
                 allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($value ? "initialPreview: ".$value.", " : '')."                                
+                initialPreviewAsData: true,                
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
                 browseClass: 'btn btn-modal btn-lg',
                 uploadClass: 'btn btn-modal btn-lg',
@@ -286,7 +286,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                  main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
                  },
             });
-            ");
+    ");
             break;
         case "thumbnail":
             add_to_jquery("
@@ -295,8 +295,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 allowedPreviewTypes : ".$type_for_js.",
                 ".($value ? "initialPreview: ".$value.", " : '')."
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
+                initialPreviewAsData: true,
                 defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
-                browseClass: 'btn btn-block btn-default',
+                browseClass: 'btn btn-block btn-default',                
                 uploadClass: 'btn btn-modal',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',
@@ -309,7 +310,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 showRemove: false,
                 showUpload: false,
                 layoutTemplates: {
-                    main2: '<div class=\"panel panel-default\">'+'{preview}'+'<div class=\"panel-body\">'+' {browse}'+'</div></div>',
+        main2:
+        '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
                 },
             });
             ");
