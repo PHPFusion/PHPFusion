@@ -271,7 +271,6 @@ class Upload extends \Defender\Validation {
                             if (!file_exists($target_folder)) {
                                 mkdir($target_folder, 0755);
                             }
-                            print_p(self::$inputConfig);
                             $image_name_full = (self::$inputConfig['replace_upload'] ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
                             $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
                             $image_info['image_name'] = $image_name_full;
