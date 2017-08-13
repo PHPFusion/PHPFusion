@@ -174,7 +174,7 @@ if (!function_exists('render_forum_item')) {
             'forum_link_title'       => $data['forum_link']['title'],
             'forum_description'      => $data['forum_description'],
             'forum_moderators_title' => $locale['forum_0007'],
-            'forum_moderators'       => $data['forum_moderators'],
+            'forum_moderators'       => !empty($data['forum_moderators']) ? $data['forum_moderators'] : ' ---',
             'forum_thread_count'     => $data['forum_threadcount_word'],
             'forum_post_count'       => $data['forum_postcount_word'],
             'forum_lastpost'         => $l_html->get_output()
@@ -275,12 +275,14 @@ if (!function_exists('forum_viewforum')) {
                     $ctpl->set_template(FORUM.'templates/viewforum/forum_activity.html');
                     if (!empty($info['item'])) {
                         $ctpl->set_block('pagenav', ['pagenav' => $info['pagenav']]);
-                        $ctpl->set_tag('post_count', format_word($info['max_post_count'], $locale['fmt_post']));
-                        $ctpl->set_tag('last_activity_link', "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>");
-                        $ctpl->set_tag('last_activity_info', sprintf($locale['forum_0021'],
-                            showdate('forumdate', $info['last_activity']['time']),
-                            profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
-                        ));
+                        $ctpl->set_block('activity', [
+                            'post_count' => format_word($info['max_post_count'], $locale['fmt_post']),
+                            'last_activity_link' => "<a href='".$info['last_activity']['link']."'>".$locale['forum_0020']."</a>",
+                            'last_activity_info' => sprintf($locale['forum_0021'],
+                                showdate('forumdate', $info['last_activity']['time']),
+                                profile_link($info['last_activity']['user']['user_id'], $info['last_activity']['user']['user_name'], $info['last_activity']['user']['user_status'])
+                            )
+                        ]);
 
                         $i = 0;
                         foreach ($info['item'] as $post_id => $postData) {

@@ -65,23 +65,23 @@ if ($rows) {
     ");
     echo "<div class='table-responsive'><table class='table table-striped'>\n";
          echo "<thead><tr>\n";
-              echo "<td><strong>".$locale['global_044']."</strong></td>\n";
-              echo "<td><strong>".$locale['global_050']."</strong></td>\n";
-              echo "<td><strong>".$locale['global_047']."</strong></td>\n";
-              echo "<td><strong>".$locale['global_046']."</strong></td>\n";
-              echo "<td><strong>".$locale['global_057']."</strong></td>\n";
-              echo "</tr>\n</thead>";
-              echo "<tbody>";
-                   while ($data = dbarray($result)) {
-                        echo "<tr>\n";
-                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
-                        echo "<td>".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])."</td>\n";
-                        echo "<td>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
-                        echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
-                        echo "<td><a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
-                        echo "</tr>\n";
-                   }
-              echo "</tbody>";
+              echo "<th><strong>".$locale['global_044']."</strong></th>\n";
+              echo "<th><strong>".$locale['global_050']."</strong></th>\n";
+              echo "<th><strong>".$locale['global_047']."</strong></th>\n";
+              echo "<th><strong>".$locale['global_046']."</strong></th>\n";
+              echo "<th><strong>".$locale['global_057']."</strong></th>\n";
+          echo "</tr>\n</thead>";
+          echo "<tbody>";
+               while ($data = dbarray($result)) {
+                    echo "<tr>\n";
+                    echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
+                    echo "<td>".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])."</td>\n";
+                    echo "<td>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
+                    echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
+                    echo "<td><a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
+                    echo "</tr>\n";
+               }
+          echo "</tbody>";
     echo "</table>\n</div>";
 
     echo "<div class='text-center'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";

@@ -46,11 +46,11 @@ if (dbrows($result)) {
     opentable($locale['global_040']);
         echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
-                echo "<td class='min'>&nbsp;</td>\n";
-                echo "<td><strong>".$locale['global_044']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_045']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_046']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_047']."</strong></td>\n";
+                echo "<th class='min'>&nbsp;</th>\n";
+                echo "<th><strong>".$locale['global_044']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_045']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_046']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_047']."</strong></th>\n";
             echo "</thead></tr>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {

@@ -2,13 +2,14 @@
     {pagenav.{
     <div class='pull-right m-t-5'>{%pagenav%}</div>
     }}
-    <div class='pull-left'>
+
+    {activity.{
         <div class='list-group-item'>
             <strong>
                 {%post_count%} | {%last_activity_link%} {%last_activity_info%}
             </strong>
         </div>
-    </div>
+    }}
 </div>
 <div class='clearfix'>
     {activity_items.{
