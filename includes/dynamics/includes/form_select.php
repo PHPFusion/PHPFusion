@@ -23,6 +23,7 @@
  * Note on Tags Support
  * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array(TRUE,'2','3');
  * For tagging - set both tags and multiple to TRUE
+ * http://select2.github.io/select2/
  *
  * @param       $label
  * @param       $input_name
@@ -200,7 +201,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         }
         $tag_js = '';
         if ($options['tags']) {
-            $tag_value = json_encode($options['options']);
+            $tag_value = json_encode(array_values($options['options']));
+            // The format yield must be : `tags:["red", "green", "blue", "orange", "white", "black", "purple", "cyan", "teal"]`
             $tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
         }
         if ($options['required']) {
