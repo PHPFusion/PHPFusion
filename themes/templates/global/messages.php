@@ -73,7 +73,7 @@ if (!function_exists('display_inbox')) {
                         echo '<h4><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse">'.$locale['446'].'</a></h4>
                     <div id="unread_inbox" class="collapse in">';
                         if (!empty($unread)) {
-                            echo '<table id="unread_tbl" class="table table-responsive table-hover">';
+                            echo '<div class="table-responsive"><table id="unread_tbl" class="table table-hover">';
                             foreach ($unread as $id => $messageData) {
                                 echo "<tr>\n";
                                 echo "<td>".form_checkbox("pmID", "", "", array(
@@ -86,16 +86,16 @@ if (!function_exists('display_inbox')) {
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
-                            echo '</table>';
+                            echo '</table></div>';
                         } else {
                             echo '<div class="text-center well">'.$locale['471'].'</div>';
                         }
                         echo '</div>';
 
                         echo '<h4><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse">'.$locale['447'].'</a></h4>
-				        <div id="read_inbox" class="collapse in">';
+                        <div id="read_inbox" class="collapse in">';
                         if (!empty($read)) {
-                            echo '<table id="read_tbl"  class="table table-responsive table-hover">';
+                            echo '<div class="table-responsive"><table id="read_tbl"  class="table table-hover">';
                             foreach ($read as $id => $messageData) {
                                 echo "<tr>\n";
                                 echo "<td>".form_checkbox("pmID", "", "", array(
@@ -108,13 +108,13 @@ if (!function_exists('display_inbox')) {
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
-                            echo '</table>';
+                            echo '</table></div>';
                         }
                         echo '</div>';
 
                     } else {
                         if (!empty($read)) {
-                            echo '<table id="read_tbl"  class="table table-responsive table-hover">';
+                            echo '<div class="table-responsive"><table id="read_tbl"  class="table table-hover">';
                             foreach ($read as $id => $messageData) {
                                 echo "<tr>\n";
                                 echo "<td>".form_checkbox("pmID", "", "", array(
@@ -127,7 +127,7 @@ if (!function_exists('display_inbox')) {
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
                                 echo "</tr>\n";
                             }
-                            echo '</table>';
+                            echo '</table></div>';
                         }
                     }
 
@@ -139,7 +139,7 @@ if (!function_exists('display_inbox')) {
 
         opentable($locale['400']);
         ?>
-        <!---start_inbox_idx--->
+        <!---start_inbox_idx-->
         <div class="row spacer-sm">
             <?php if (!isset($_GET['msg_send'])) : ?>
                 <div class="col-xs-12 col-sm-3">

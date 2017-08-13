@@ -124,13 +124,13 @@ class Errors {
         ));
         if ($db->countRows($result) == 0) {
             $db->query("INSERT INTO ".DB_ERRORS." (
-				error_level, error_message, error_file, error_line, error_page,
-				error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
-			) VALUES (
-				:level, :message, :file, :line, :page,
-				'".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
-				'0', '".time()."'
-			)", array(
+                error_level, error_message, error_file, error_line, error_page,
+                error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
+            ) VALUES (
+                :level, :message, :file, :line, :page,
+                '".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
+                '0', '".time()."'
+            )", array(
                 ':level'   => $error_level,
                 ':message' => $error_message,
                 ':file'    => $error_file,
@@ -267,7 +267,7 @@ class Errors {
 
             <div class='m-t-10'>
                 <?php openside('') ?>
-                <table class='table table-responsive'>
+                <div class="table-responsive"><table class='table'>
                     <tr>
                         <td colspan='4' class='tbl2'><strong><?php echo $locale['ERROR_421'] ?></strong>
                             (<?php echo $locale['ERROR_415']." ".$line_start." - ".$line_end ?>)
@@ -279,7 +279,7 @@ class Errors {
                                 'text' => $data['error_message']
                             )) ?></td>
                     </tr>
-                </table>
+                </table></div>
                 <?php closeside() ?>
             </div>
             <?php
@@ -288,7 +288,7 @@ class Errors {
             ?>
             <div class='m-t-10'>
                 <?php openside('') ?>
-                <table class='table table-responsive'>
+                <div class="table-responsive"><table class='table'>
                     <tr>
                         <td class='tbl2'><a name='page'></a>
                             <strong><?php echo $locale['ERROR_411'] ?>
@@ -298,7 +298,7 @@ class Errors {
                     <tr>
                         <td><?php echo self::printCode($pageContent, "1") ?></td>
                     </tr>
-                </table>
+                </table></div>
                 <?php closeside() ?>
             </div>
             <?php
@@ -329,7 +329,7 @@ class Errors {
         $html .= closeform();
 
         if (!empty($this->errors) or !empty($this->new_errors)) {
-            $html .= "<table id='error_logs_table' class='table table-responsive center'>";
+            $html .= "<div class='table-responsive'><table id='error_logs_table' class='table center'>";
             $html .= "<tr>";
             $html .= "<th>".$locale['ERROR_410']."</th>";
             $html .= "<th class='col-xs-2'>".$locale['ERROR_462']."</th>";
@@ -391,7 +391,9 @@ class Errors {
                     $html .= "</td></tr>\n";
                 }
             }
-            $html .= "</table>\n";
+
+            $html .= "</table>\n</div>";
+
             if ($this->rows > 20) {
                 $html .= "<div class='m-t-10 text-center'>\n";
                 $html .= makepagenav($this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&amp;");
@@ -513,7 +515,7 @@ class Errors {
                     }
                 });
             });
-		");
+        ");
         }
     }
 
@@ -547,7 +549,7 @@ class Errors {
                     ), '',
                         highlight_string('<?php '.$code_line,
                             TRUE)))."
-				</td>\n</tr>\n";
+                </td>\n</tr>\n";
                 if ($line_count == $error_line) {
                     $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
                 }

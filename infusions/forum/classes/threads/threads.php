@@ -747,7 +747,7 @@ class ForumThreads extends ForumServer {
      *
      * @todo: optimize post reply with a subnested query to reduce post^n queries.
      */
-    private function get_thread_post() {
+    private function get_thread_post() {    	global $pid;
         $forum_settings = $this->get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -906,6 +906,7 @@ class ForumThreads extends ForumServer {
                     }
                     $pdata += $author;
                 }
+                $pid = $pdata['post_id'];
                 // Format Post Message
                 $post_message = empty($pdata['post_smileys']) ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
                 $post_message = nl2br(parseubb($post_message));
@@ -1012,7 +1013,7 @@ class ForumThreads extends ForumServer {
                     $reply_result = dbquery($replies_sql, $replies_param);
                     if (dbrows($reply_result)) {
                         // who has replied
-                        $reply_sender = "";
+                        $reply_sender = [];
                         $last_datestamp = 0;
                         while ($r_data = dbarray($reply_result)) {
                             $user_replied = fusion_get_user($r_data['post_author']);

@@ -180,9 +180,9 @@ echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 $flood_opts = ['1' => $locale['on'], '0' => $locale['off']];
 echo form_text('flood_interval', $locale['660'], $Security_settings['flood_interval'], [
-	'type'        => 'number',
-	'inner_width' => '150px',
-	'max_length'  => 2
+    'type'        => 'number',
+    'inner_width' => '150px',
+    'max_length'  => 2
 ]);
 echo form_select('flood_autoban', $locale['680'], $Security_settings['flood_autoban'], [
     'options' => $flood_opts,

@@ -123,9 +123,9 @@ if ($infusions_count > 0) {
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
 $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-							FROM ".DB_COMMENTS." c LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
-							ORDER BY comment_datestamp DESC LIMIT 5
-							");
+                            FROM ".DB_COMMENTS." c LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
+                            ORDER BY comment_datestamp DESC LIMIT 5
+                            ");
 if ($global_comments['rows'] > $settings['comments_per_page']) {
     $global_comments['nav'] = makepagenav($_GET['c_rowstart'], $settings['comments_per_page'], $global_comments['rows'], 2);
 }
@@ -141,8 +141,8 @@ if (dbrows($comments_result)) {
 $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
 $_GET['r_rowstart'] = isset($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? $_GET['r_rowstart'] : 0;
 $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-					FROM ".DB_RATINGS." r LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
-					ORDER BY rating_datestamp DESC LIMIT 5");
+                    FROM ".DB_RATINGS." r LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
+                    ORDER BY rating_datestamp DESC LIMIT 5");
 $global_ratings['data'] = array();
 if (dbrows($result) > 0) {
     while ($_ratdata = dbarray($result)) {
@@ -158,9 +158,9 @@ if ($global_ratings['rows'] > $settings['comments_per_page']) {
 $global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
 $_GET['s_rowstart'] = isset($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? $_GET['s_rowstart'] : 0;
 $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-				FROM ".DB_SUBMISSIONS." s LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
-				ORDER BY submit_datestamp DESC LIMIT ".$_GET['s_rowstart'].", ".$settings['comments_per_page']."
-				");
+                FROM ".DB_SUBMISSIONS." s LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
+                ORDER BY submit_datestamp DESC LIMIT ".$_GET['s_rowstart'].", ".$settings['comments_per_page']."
+                ");
 $global_submissions['data'] = array();
 if (dbrows($result) > 0 && checkrights('SU')) {
     while ($_subdata = dbarray($result)) {

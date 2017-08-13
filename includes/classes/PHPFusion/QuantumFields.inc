@@ -292,12 +292,12 @@ class QuantumFields extends \SqlHandler {
         $result = dbquery("
         SELECT field.*,
         cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class,
-		root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index FROM
-		".$this->field_db." field
-		LEFT JOIN ".$this->category_db." cat on (cat.field_cat_id = field.field_cat)
-		LEFT JOIN ".$this->category_db." root on (root.field_cat_id = cat.field_parent)
-		ORDER BY cat.field_cat_order ASC, field.field_order ASC
-		");
+        root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index FROM
+        ".$this->field_db." field
+        LEFT JOIN ".$this->category_db." cat on (cat.field_cat_id = field.field_cat)
+        LEFT JOIN ".$this->category_db." root on (root.field_cat_id = cat.field_parent)
+        ORDER BY cat.field_cat_order ASC, field.field_order ASC
+        ");
 
         $this->max_rows = dbrows($result);
 
@@ -540,9 +540,9 @@ class QuantumFields extends \SqlHandler {
                         // is is not a root.
                         $result = dbquery("
                         SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf
-						LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
-						WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
-						");
+                        LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
+                        WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
+                        ");
 
                     }
 
@@ -792,11 +792,11 @@ class QuantumFields extends \SqlHandler {
 
         if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
             $result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
-			FROM ".$this->field_db." field
-			LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
-			LEFT JOIN ".$this->category_db." root on (u.field_parent = root.field_cat_id)
-			WHERE field_id='".intval($_GET['field_id'])."'
-			");
+            FROM ".$this->field_db." field
+            LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
+            LEFT JOIN ".$this->category_db." root on (u.field_parent = root.field_cat_id)
+            WHERE field_id='".intval($_GET['field_id'])."'
+            ");
             if (dbrows($result) > 0) {
 
                 $data = dbarray($result);
@@ -845,10 +845,10 @@ class QuantumFields extends \SqlHandler {
         $this->locale = fusion_get_locale();
 
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
-					FROM ".$this->field_db." tuf
-					INNER JOIN ".$this->category_db." tufc ON (tuf.field_cat = tufc.field_cat_id)
-					WHERE field_type = 'file'
-					ORDER BY field_cat_order, field_order");
+                    FROM ".$this->field_db." tuf
+                    INNER JOIN ".$this->category_db." tufc ON (tuf.field_cat = tufc.field_cat_id)
+                    WHERE field_type = 'file'
+                    ORDER BY field_cat_order, field_order");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $this->enabled_fields[] = $data['field_name'];
@@ -1178,9 +1178,9 @@ class QuantumFields extends \SqlHandler {
                 $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
                 include $options['plugin_folder'].$data['field_name']."_include.php";
                 if ($method == 'input') {
-                	if (isset($user_fields)) {
-	                    return $user_fields;
-	                }
+                    if (isset($user_fields)) {
+                        return $user_fields;
+                    }
                 } elseif ($method == 'display' && !empty($user_fields['value'])) {
                     return $user_fields;
                 }
@@ -1501,11 +1501,11 @@ class QuantumFields extends \SqlHandler {
         $this->debug = FALSE;
 
         add_to_jquery("
-		$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
-		$('#field_parent').bind('change', function() {
-		$(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
-		});
-		");
+        $('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
+        $('#field_parent').bind('change', function() {
+        $(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
+        });
+        ");
 
         if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
             $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
@@ -1840,7 +1840,7 @@ class QuantumFields extends \SqlHandler {
             }
         }
 
-        $this->field_data['field_config'] = [
+        /*$this->field_data['field_config'] = [
             'field_max_b'              => 1000000,
             'field_upload_type'        => 'file',
             'field_upload_path'        => IMAGES,
@@ -1857,7 +1857,7 @@ class QuantumFields extends \SqlHandler {
             'field_thumb2_h'           => 1024,
             'field_thumb2_w'           => 768,
             'field_delete_original'    => 0
-        ];
+        ];*/
 
         $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'];
 
@@ -2087,33 +2087,33 @@ class QuantumFields extends \SqlHandler {
             echo form_checkbox('field_delete_original', $this->locale['fields_0478'], $this->field_data['field_config']['field_delete_original'], array('reverse_label' => TRUE));
             echo "</div>\n";
             add_to_jquery("
-			if ($('#field_upload_type').select2().val() == 'image') {
-				$('#image_type').show();
-				$('#file_type').hide();
-			} else {
-				$('#image_type').hide();
-				$('#file_type').show();
-			}
-			$('#field_upload_type').bind('change', function() {
-				if ($(this).select2().val() == 'image') {
-				$('#image_type').show();
-				$('#file_type').hide();
-				} else {
-				$('#image_type').hide();
-				$('#file_type').show();
-				}
-			});
-			// thumbnail
-			$('#field_thumbnail').is(':checked') ? $('#field_t1').show() : $('#field_t1').hide();
-			$('#field_thumbnail').bind('click', function() {
-				$(this).is(':checked') ? $('#field_t1').show() : $('#field_t1').hide();
-			});
-			// thumbnail 2
-			$('#field_thumbnail_2').is(':checked') ? $('#field_t2').show() : $('#field_t2').hide();
-			$('#field_thumbnail_2').bind('click', function() {
-				$(this).is(':checked') ? $('#field_t2').show() : $('#field_t2').hide();
-			});
-			");
+            if ($('#field_upload_type').select2().val() == 'image') {
+                $('#image_type').show();
+                $('#file_type').hide();
+            } else {
+                $('#image_type').hide();
+                $('#file_type').show();
+            }
+            $('#field_upload_type').bind('change', function() {
+                if ($(this).select2().val() == 'image') {
+                $('#image_type').show();
+                $('#file_type').hide();
+                } else {
+                $('#image_type').hide();
+                $('#file_type').show();
+                }
+            });
+            // thumbnail
+            $('#field_thumbnail').is(':checked') ? $('#field_t1').show() : $('#field_t1').hide();
+            $('#field_thumbnail').bind('click', function() {
+                $(this).is(':checked') ? $('#field_t1').show() : $('#field_t1').hide();
+            });
+            // thumbnail 2
+            $('#field_thumbnail_2').is(':checked') ? $('#field_t2').show() : $('#field_t2').hide();
+            $('#field_thumbnail_2').bind('click', function() {
+                $(this).is(':checked') ? $('#field_t2').show() : $('#field_t2').hide();
+            });
+            ");
         } else {
             // @todo add config for textarea
             if ($this->field_data['field_type'] !== 'textarea') {
@@ -2182,10 +2182,10 @@ class QuantumFields extends \SqlHandler {
             // update
             // Alter $this->field_db table - change and modify column.
             $field_query = "SELECT uf.*, cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
-									FROM ".$this->field_db." uf
-									LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
-									LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
-									WHERE uf.field_id=:field_id";
+                                    FROM ".$this->field_db." uf
+                                    LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
+                                    LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
+                                    WHERE uf.field_id=:field_id";
             $field_param = [':field_id' => $data['field_id']];
 
             $old_record = dbquery($field_query, $field_param); // search old database.
@@ -2201,12 +2201,12 @@ class QuantumFields extends \SqlHandler {
                 // Get current updated field_cat - to compare new cat_db and old cat_db
 
                 $new_result = dbquery("
-				SELECT cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_order,
-				root.field_cat_db, root.field_cat_index
+                SELECT cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_order,
+                root.field_cat_db, root.field_cat_index
                 FROM ".$this->category_db." cat
-				LEFT JOIN ".$this->category_db." root on cat.field_parent = root.field_cat_id
-				WHERE cat.field_cat_id='".intval($data['field_cat'])."'
-				");
+                LEFT JOIN ".$this->category_db." root on cat.field_parent = root.field_cat_id
+                WHERE cat.field_cat_id='".intval($data['field_cat'])."'
+                ");
 
                 $newRows = array();
                 if (dbrows($new_result) > 0) {
@@ -2338,9 +2338,9 @@ class QuantumFields extends \SqlHandler {
             }
             // Alter $this->field_db table - add column.
             $cresult = dbquery("SELECT cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
-								FROM ".$this->category_db." cat
-								LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
-								WHERE cat.field_cat_id='".$data['field_cat']."'");
+                                FROM ".$this->category_db." cat
+                                LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
+                                WHERE cat.field_cat_id='".$data['field_cat']."'");
             if (dbrows($cresult) > 0) {
                 $cat_data = dbarray($cresult);
                 $new_table = $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
@@ -2636,34 +2636,34 @@ class QuantumFields extends \SqlHandler {
     public function install_quantum() {
         if (!db_exists($this->category_db)) {
             dbquery("CREATE TABLE ".$this->category_db." (
-				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-				field_cat_name VARCHAR(200) NOT NULL ,
-				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-				field_cat_db VARCHAR(100) NOT NULL,
-				field_cat_index VARCHAR(200) NOT NULL,
-				field_cat_class VARCHAR(50) NOT NULL,
-				field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
-				PRIMARY KEY (field_cat_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+                field_cat_name VARCHAR(200) NOT NULL ,
+                field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+                field_cat_db VARCHAR(100) NOT NULL,
+                field_cat_index VARCHAR(200) NOT NULL,
+                field_cat_class VARCHAR(50) NOT NULL,
+                field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
+                PRIMARY KEY (field_cat_id)
+            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
         }
         if (!db_exists($this->field_db)) {
             dbquery("CREATE TABLE ".$this->field_db." (
-				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-				field_title VARCHAR(50) NOT NULL,
-				field_name VARCHAR(50) NOT NULL,
-				field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-				field_type VARCHAR(25) NOT NULL,
-				field_default TEXT NOT NULL,
-				field_options TEXT NOT NULL,
-				field_error VARCHAR(50) NOT NULL,
-				field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-				field_config TEXT NOT NULL,
-				PRIMARY KEY (field_id),
-				KEY field_order (field_order)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+                field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+                field_title VARCHAR(50) NOT NULL,
+                field_name VARCHAR(50) NOT NULL,
+                field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+                field_type VARCHAR(25) NOT NULL,
+                field_default TEXT NOT NULL,
+                field_options TEXT NOT NULL,
+                field_error VARCHAR(50) NOT NULL,
+                field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+                field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+                field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+                field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+                field_config TEXT NOT NULL,
+                PRIMARY KEY (field_id),
+                KEY field_order (field_order)
+            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
         }
     }
 

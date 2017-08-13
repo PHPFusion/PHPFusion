@@ -589,7 +589,7 @@ class FaqAdmin extends FaqAdminModel {
             echo "</div>\n";
         }
 
-        echo "<table class='table table-responsive table-hover table-striped'>
+        echo "<div class='table-responsive'><table class='table table-hover table-striped'>
             <thead>
             <tr><th></th>
             <th>".$this->locale['faq_0100']."</td>
@@ -631,7 +631,7 @@ class FaqAdmin extends FaqAdminModel {
                 </tr>
                 ";
         }
-        echo "</tbody>\n</table>\n";
+        echo "</tbody>\n</table>\n</div>";
         echo "<div class='display-inline-block'>\n
         ".form_select('faq_display', $this->locale['faq_0132'], $info['limit'], array(
                 'width'       => '70px',

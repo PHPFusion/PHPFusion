@@ -286,7 +286,7 @@ class db_backup {
             echo "//-->\n</script>\n";
 
             echo openform('confirm_restore_frm', 'post', FUSION_REQUEST, ['max_tokens' => 30]);
-            echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
+            echo "<div class='table-responsive'><table class='table'>\n<tbody>\n<tr>\n";
             echo "<td colspan='2' class='tbl2'><strong>".$this->locale['430']."</strong></td>\n";
             echo "</tr>\n<tr>\n";
             echo "<td colspan='2' class='tbl'><strong>".$this->locale['431']."</strong> ".$backup_name."</td>\n";
@@ -310,7 +310,7 @@ class db_backup {
             echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$this->locale['437']."</a></div></td>\n";
             echo "</tr>\n<tr>\n";
             echo "<td align='center' colspan='2' class='tbl'>\n";
-            echo "</tr>\n</tbody>\n</table>\n";
+            echo "</tr>\n</tbody>\n</table>\n</div>";
             echo form_button('btn_do_restore', $this->locale['438'], $this->locale['438'], array('class' => 'btn-primary m-r-10'));
             echo form_button('btn_cancel', $this->locale['439'], $this->locale['439'], array('class' => 'btn-default'));
             echo closeform();
@@ -355,9 +355,10 @@ class db_backup {
         echo "//-->\n</script>\n";
 
         echo openform('backupform', 'post', FUSION_REQUEST);
-        echo "<table cellspacing='0' cellpadding='0' style='width:100%'>\n<tbody>\n<tr>\n";
-        echo "<td valign='top'>\n";
-        echo "<table cellspacing='0' cellpadding='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
+        echo "<div class='row'>";
+
+        echo '<div class="col-xs-12 col-sm-6">';
+        echo "<div class='table-responsive'><table cellspacing='0' cellpadding='0' class='table'>\n<tbody>\n<tr>\n";
         echo "<td colspan='2' class='tbl2' align='left'><strong>".$this->locale['451']."</strong></td>\n";
         echo "</tr>\n<tr>\n";
         echo "<td align='right' class='tbl'><strong>".$this->locale['414']."</strong></td>\n";
@@ -391,9 +392,11 @@ class db_backup {
         echo form_select('backup_type', '', '', array('options' => $opts, 'placeholder' => $this->locale['choose']));
         echo "</td>\n</tr>\n<tr>\n";
         echo "<td align='center' colspan='2' class='tbl'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
-        echo "</tr>\n</tbody>\n</table>\n</td>\n";
-        echo "<td valign='top'>\n";
-        echo "<table border='0' cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
+        echo "</tr>\n</tbody>\n</table>\n</div>";
+        echo '</div>';
+
+        echo '<div class="col-xs-12 col-sm-6">';
+        echo "<div class='table-responsive'><table border='0' cellpadding='0' cellspacing='0' class='table'>\n<tbody>\n<tr>\n";
         echo "<td class='tbl2'><strong>".$this->locale['457']."</strong></td>\n";
         echo "</tr>\n<tr>\n";
         echo "<td class='tbl'>\n";
@@ -405,9 +408,10 @@ class db_backup {
         echo "<a class='btn btn-default' a href=\"javascript:void(0)\" onclick=\"javascript:backupSelectNone()\">".$this->locale['437']."</a>\n";
         echo "</div>\n";
         echo "</div>\n";
-        echo "</td>\n</tr>\n</tbody>\n</table>\n";
-        echo "</td>\n";
-        echo "</tr>\n<tr>\n</tbody>\n</table>\n";
+        echo "</td>\n</tr>\n</tbody>\n</table>\n</div>";
+        echo '</div>';
+
+        echo "</div>"; // .row
         echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], array('class' => 'btn-primary m-t-10'));
         echo closeform();
     }

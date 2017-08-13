@@ -303,10 +303,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], array('class' => 'btn-success btn-sm', 'icon' => 'fa fa-hdd-o'));
             closeside();
             openside("");
-            echo "<label><input type='checkbox' name='blog_draft' value='1'".($callback_data['blog_draft'] ? "checked='checked'" : "")." /> ".$locale['blog_0431']."</label><br />\n";
-            echo "<label><input type='checkbox' name='blog_sticky' value='1'".($callback_data['blog_sticky'] ? "checked='checked'" : "")."  /> ".$locale['blog_0432']."</label><br />\n";
+            echo "<label><input type='checkbox' name='blog_draft' value='1' ".($callback_data['blog_draft'] ? "checked='checked'" : "")."/> ".$locale['blog_0431']."</label><br />\n";
+            echo "<label><input type='checkbox' name='blog_sticky' value='1' ".($callback_data['blog_sticky'] ? "checked='checked'" : "")."/> ".$locale['blog_0432']."</label><br />\n";
             if (fusion_get_settings("tinymce_enabled") != 1) {
-                echo "<label><input type='checkbox' name='blog_breaks' value='1'".($callback_data['blog_breaks'] ? "checked='checked'" : "")." /> ".$locale['blog_0433']."</label><br />\n";
+                echo "<label><input type='checkbox' name='blog_breaks' value='1' ".($callback_data['blog_breaks'] ? "checked='checked'" : "")."/> ".$locale['blog_0433']."</label><br />\n";
             }
             closeside();
             echo "</div></div>\n";
@@ -350,7 +350,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     $rows = dbrows($result);
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['blog_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
-        echo "<table class='table table-striped'>\n";
+        echo "<div class='table-responsive'><table class='table table-striped'>\n";
             echo "<tr>\n";
                 echo "<th>".$locale['blog_0144']."</th>\n";
                 echo "<th>".$locale['blog_0142']."</th>\n";
@@ -371,7 +371,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "</tr>\n";
             }
             echo "</tbody>\n";
-        echo "</table>\n";
+        echo "</table>\n</div>";
     } else {
         echo "<div class='well text-center m-t-20'>".$locale['blog_0130']."</div>\n";
     }

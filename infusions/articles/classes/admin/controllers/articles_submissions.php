@@ -213,7 +213,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 openside($this->locale['article_0261']);
 
                 echo form_select_tree("article_cat", $this->locale['article_0101'], $this->inputArray['article_cat'], array(
-                        "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'], 
+                        "required" => TRUE, "error_text" => $this->locale['article_0273'], "inner_width" => "100%", "inline" => TRUE, "parent_value" => $this->locale['choose'],
                         "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
                     ),
                     DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
@@ -297,7 +297,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         ?>
 
         <!-- Display Table -->
-        <table class="table table-responsive table-striped">
+        <div class="table-responsive"><table class="table table-striped">
             <thead>
             <tr>
                 <td class="strong"><?php echo $this->locale['article_0200']; ?></td>
@@ -337,7 +337,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 </tr>
             <?php endif; ?>
             </tbody>
-        </table>
+        </table></div>
         <?php
     }
 

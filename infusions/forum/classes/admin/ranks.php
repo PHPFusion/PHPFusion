@@ -175,7 +175,7 @@ class ForumAdminRanks extends ForumAdminInterface {
             form_select('rank_apply_normal', self::$locale['forum_rank_423'], $this->data['rank_apply'],
                         ['inline' => TRUE, 'options' => $array_apply_normal_opts, 'placeholder' => self::$locale['choose']]).
 
-            "</span>\n<span id='select_special'".($this->data['rank_type'] != 2 ? " class='display-none'" : "").">".
+            "</span>\n<span id='select_special' ".($this->data['rank_type'] != 2 ? " class='display-none'" : "").">".
 
             form_select('rank_apply_special', self::$locale['forum_rank_423'], $this->data['rank_apply'],
                         ['inline' => TRUE, 'options' => $group_opts, 'placeholder' => self::$locale['choose']]).
@@ -272,7 +272,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if (dbrows($result) > 0 ) {
 
-            $html = "<table class='table table-responsive table-striped table-hover center m-t-20'>\n<thead>\n<tr>\n".
+            $html = "<div class='table-responsive'><table class='table table-striped table-hover center m-t-20'>\n<thead>\n<tr>\n".
             "<th class='col-xs-4'>".self::$locale['forum_rank_430']."</th>\n".
             "<th>".self::$locale['forum_rank_431']."</th>\n".
             "<th>".self::$locale['forum_rank_432']."</th>\n".
@@ -304,7 +304,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
                 $i++;
             }
-            $html .= "</tbody>\n</table>";
+            $html .= "</tbody>\n</table></div>";
         } else {
 
             $html = "<div class='well text-center'>".self::$locale['forum_rank_437']."</div>\n";

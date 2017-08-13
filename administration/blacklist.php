@@ -187,7 +187,7 @@ class Blaclist {
 
         if ($rows > 0) {
             echo "<div class='m-t-20'>\n";
-            echo "<table class='table table-hover table-striped'>\n";
+            echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             echo "<tr>\n";
             echo "<td class='col-xs-2'>".self::$locale['BLS_030']."</th>\n";
             echo "<td class='col-xs-2'>".self::$locale['BLS_031']."</th>\n";
@@ -210,7 +210,7 @@ class Blaclist {
                 echo "</tr>\n";
             }
 
-            echo "</table>\n";
+            echo "</table>\n</div>";
             echo "</div>\n";
         } else {
             echo "<div style='text-align:center'><br />\n".self::$locale['BLS_015']."<br /><br />\n</div>\n";

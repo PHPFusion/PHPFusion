@@ -451,7 +451,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         if (!$id) :
             ?>
-            <table class="table table-responsive table-hover">
+            <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -507,7 +507,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
         <?php if (!$id) : ?>
             </tbody>
-            </table>
+            </table></div>
         <?php endif;
     }
 }

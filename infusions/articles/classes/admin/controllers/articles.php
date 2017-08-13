@@ -514,7 +514,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         </div>
 
         <!-- Display Table -->
-        <table class="table table-responsive table-striped">
+        <div class="table-responsive"><table class="table table-striped">
             <thead>
             <tr>
                 <td></td>
@@ -572,7 +572,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 </tr>
             <?php endif; ?>
             </tbody>
-        </table>
+        </table></div>
         <?php
         closeform();
 

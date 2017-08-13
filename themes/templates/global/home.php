@@ -24,17 +24,21 @@ if (!function_exists('display_home')) {
             $colwidth = $content['colwidth'];
             opentable($content['blockTitle']);
             if ($colwidth) {
-                $classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
+                $classes = "col-xs-12 col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
                 echo "<div class='row'>";
                 foreach ($content['data'] as $data) {
                     echo "<div class='".$classes." clearfix'>";
-                        echo '<a href="'.$data['url'].'">';
-                            if (!empty($data['image']) && file_exists($data['image'])) {
-                                echo '<img style="max-height: 180px;" class="center-x img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
-                            } else {
-                                echo get_image('imagenotfound', $data['title'], 'max-height: 180px;');
-                            }
-                        echo '</a>';
+
+                         if ($db_id !== DB_PREFIX.'articles') {
+                             echo '<a href="' . $data['url'] . '">';
+                             if (!empty($data['image']) && file_exists($data['image'])) {
+                                 echo '<img style="max-height: 180px;" class="center-x img-responsive" src="' . $data['image'] . '" alt="' . $data['title'] . '"/>';
+                             } else {
+                                 echo get_image('imagenotfound', $data['title'], 'max-height: 180px;');
+                             }
+                             echo '</a>';
+                         }
+
                         echo "<h4><a href='".$data['url']."'>".$data['title']."</a></h4>";
                         echo "<div class='small m-b-10'>".$data['meta']."</div>";
                         echo "<div class='overflow-hide'>".nl2br(trim_text(strip_tags($data['content']), 250))."</div>";

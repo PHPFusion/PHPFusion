@@ -28,13 +28,14 @@ if ($code_count) {
         $text = preg_replace_callback(
             "#\[code\](.*?)\[/code\]#si",
             function ($m) use (&$i) {
+				global $pid;
 
                 if (isset($_GET['thread_id'])) {
                     if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
-                        $result = dbquery("SELECT p.*, t.thread_id
+                        $result = dbquery("SELECT p.post_id, t.thread_id
                         FROM ".DB_FORUM_POSTS." p
                         INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-                        WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0'
+                        WHERE p.thread_id='".intval($_GET['thread_id'])."' AND p.post_id ='".intval($pid)."' AND post_hidden='0'
                     ");
 
                         $data = dbarray($result);

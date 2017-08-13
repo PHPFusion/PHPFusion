@@ -41,29 +41,29 @@ $_GET['rowstart'] = !isset($_GET['rowstart']) || !isnum($_GET['rowstart']) ? 0 :
 opentable($locale['global_056']);
 
 $result = dbquery("SELECT tn.thread_id FROM ".DB_FORUM_THREAD_NOTIFY." tn
-	INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
-	INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
+    INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
+    INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
+    ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
 $rows = dbrows($result);
 
 if ($rows) {
     $result = dbquery("
-		SELECT tf.forum_access, tn.thread_id, tn.notify_datestamp, tn.notify_user,
-		tt.thread_subject, tt.forum_id, tt.thread_lastpost, tt.thread_lastuser, tt.thread_postcount,
-		tu.user_id AS user_id1, tu.user_name AS user_name1, tu.user_status AS user_status1,
-		tu2.user_id AS user_id2, tu2.user_name AS user_name2, tu2.user_status AS user_status2
-		FROM ".DB_FORUM_THREAD_NOTIFY." tn
-		INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
-		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-		LEFT JOIN ".DB_USERS." tu ON tt.thread_author = tu.user_id
-		LEFT JOIN ".DB_USERS." tu2 ON tt.thread_lastuser = tu2.user_id
-		INNER JOIN ".DB_FORUM_POSTS." tp ON tt.thread_id = tp.thread_id
-		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
-		GROUP BY tn.thread_id
-		ORDER BY tn.notify_datestamp DESC
-		LIMIT ".$_GET['rowstart'].",10
-	");
-    echo "<table class='table table-striped'>\n";
+        SELECT tf.forum_access, tn.thread_id, tn.notify_datestamp, tn.notify_user,
+        tt.thread_subject, tt.forum_id, tt.thread_lastpost, tt.thread_lastuser, tt.thread_postcount,
+        tu.user_id AS user_id1, tu.user_name AS user_name1, tu.user_status AS user_status1,
+        tu2.user_id AS user_id2, tu2.user_name AS user_name2, tu2.user_status AS user_status2
+        FROM ".DB_FORUM_THREAD_NOTIFY." tn
+        INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
+        INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
+        LEFT JOIN ".DB_USERS." tu ON tt.thread_author = tu.user_id
+        LEFT JOIN ".DB_USERS." tu2 ON tt.thread_lastuser = tu2.user_id
+        INNER JOIN ".DB_FORUM_POSTS." tp ON tt.thread_id = tp.thread_id
+        ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
+        GROUP BY tn.thread_id
+        ORDER BY tn.notify_datestamp DESC
+        LIMIT ".$_GET['rowstart'].",10
+    ");
+    echo "<div class='table-responsive'><table class='table table-striped'>\n";
          echo "<thead><tr>\n";
               echo "<td><strong>".$locale['global_044']."</strong></td>\n";
               echo "<td><strong>".$locale['global_050']."</strong></td>\n";
@@ -82,7 +82,7 @@ if ($rows) {
                         echo "</tr>\n";
                    }
               echo "</tbody>";
-    echo "</table>\n";
+    echo "</table>\n</div>";
 
     echo "<div class='text-center'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
 } else {

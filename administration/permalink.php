@@ -46,14 +46,14 @@ $settings_seo = [
 ];
 
 if (isset($_POST['savesettings'])) {
-	$settings_seo = [
-	    'site_seo'      => form_sanitizer($_POST['site_seo'], 0, 'site_seo'),
-	    'normalize_seo' => form_sanitizer($_POST['normalize_seo'], 0, 'normalize_seo'),
-	    'debug_seo'     => form_sanitizer($_POST['debug_seo'], 0, 'debug_seo'),
-	];
+    $settings_seo = [
+        'site_seo'      => form_sanitizer($_POST['site_seo'], 0, 'site_seo'),
+        'normalize_seo' => form_sanitizer($_POST['normalize_seo'], 0, 'normalize_seo'),
+        'debug_seo'     => form_sanitizer($_POST['debug_seo'], 0, 'debug_seo'),
+    ];
 
-	if (\defender::safe()) {
-    	foreach ($settings_seo as $settings_key => $settings_value) {
+    if (\defender::safe()) {
+        foreach ($settings_seo as $settings_key => $settings_value) {
             $data = [
                 'settings_name'  => $settings_key,
                 'settings_value' => $settings_value
@@ -75,13 +75,13 @@ if (isset($_POST['savepermalinks'])) {
             foreach ($permalinks as $key => $value) {
                 $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source='".$value."' WHERE pattern_id='".$key."'");
                 if (!$result) {
-        			addNotice("danger", $locale['PL_420']);
-        			redirect(FUSION_REQUEST); // Required to refresh token
+                    addNotice("danger", $locale['PL_420']);
+                    redirect(FUSION_REQUEST); // Required to refresh token
                 }
             }
         }
         addNotice("success", $locale['PL_421']);
-    	redirect(clean_request('', ['edit'], FALSE));
+        redirect(clean_request('', ['edit'], FALSE));
     }
     addNotice("danger", $locale['PL_420']);
     redirect(FUSION_REQUEST); // Required to refresh token
@@ -94,7 +94,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
 
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
-		$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
 
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
@@ -140,7 +140,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
 
     $rewrite_name = stripinput($_GET['disable']);
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
-		$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
@@ -163,7 +163,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
 
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
-		$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
@@ -259,14 +259,14 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
     $driver = array();
     include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
-		$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$rewrite_name.".php");
     }
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include_once INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
     }
 
     $result = dbquery("SELECT p.*
-       					FROM ".DB_PERMALINK_REWRITE." r
+                        FROM ".DB_PERMALINK_REWRITE." r
                         INNER JOIN ".DB_PERMALINK_METHOD." p ON r.rewrite_id=p.pattern_type
                         WHERE r.rewrite_name='".$rewrite_name."'");
     $rows = dbrows($result);
@@ -315,15 +315,15 @@ switch ($_GET['section']) {
             ob_start();
             echo openmodal('permalinkHelper', $locale['PL_408'], ['button_id' => 'pButton']);
             if (!empty($regex)) {
-                echo "<table class='table table-responsive table-striped'>\n";
+                echo "<div class='table-responsive'><table class='table table-striped'>\n";
                 foreach ($regex as $key => $values) {
                     echo "<tr>
-                    		<td>".$key."</td>
-                    		<td>".$values."</td>
-                    		<td>".(isset($permalink_tags_desc[$key]) ? $permalink_tags_desc[$key] : $locale['na'])."</td>
-                    	</tr>\n";
+                            <td>".$key."</td>
+                            <td>".$values."</td>
+                            <td>".(isset($permalink_tags_desc[$key]) ? $permalink_tags_desc[$key] : $locale['na'])."</td>
+                        </tr>\n";
                 }
-                echo "</table>\n";
+                echo "</table>\n</div>";
             }
             echo closemodal();
             add_to_footer(ob_get_contents());
@@ -361,69 +361,69 @@ switch ($_GET['section']) {
             closeside();
         } else {
 
-            echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n";
+            echo "<div class='table-responsive'><table class='table table-hover table-striped m-t-20'>\n";
 
             if (!empty($permalink)) {
                 echo "<thead>
-                		<tr>
-                			<th>".$locale['PL_402']."</th>
-                			<th>".$locale['PL_403']."</th>
-                			<th>".$locale['PL_404']."</th>
-                		</tr>
-                	</thead>
-                	<tbody>";
+                        <tr>
+                            <th>".$locale['PL_402']."</th>
+                            <th>".$locale['PL_403']."</th>
+                            <th>".$locale['PL_404']."</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
 
                 foreach ($permalink as $data) {
                     echo "<tr id='link-".$data['rewrite_id']."' data-id=".$data['rewrite_id']."'>";
                     if (!file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_include.php") || !file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_info.php") || !file_exists(LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php")) {
                         echo "<td colspan='3'><strong>".$locale['411'].":</strong> ".sprintf($locale['412'], $data['rewrite_name'])."</td>\n";
                     } else {
-						$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php");
+                        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php");
                         include_once INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_include.php";
                         include_once INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_info.php";
                         echo "<td><strong>".$permalink_name."</strong></td>
-                        	<td>".$permalink_desc."</td>\n";
+                            <td>".$permalink_desc."</td>\n";
                     }
                     echo "<td>
-	                    	<a class='btn btn-default' href='".FUSION_REQUEST."&amp;reinstall=".$data['rewrite_name']."'>".$locale['PL_404d']."</a>
-	                    	<a class='btn btn-default' href='".FUSION_REQUEST."&amp;edit=".$data['rewrite_name']."'>".$locale['PL_404c']."</a>
-	                    	<a class='btn btn-default' href='".FUSION_REQUEST."&amp;disable=".$data['rewrite_name']."'>".$locale['PL_404b']."</a>
-	                    	</td>
-                    	</tr>\n";
+                            <a class='btn btn-default' href='".FUSION_REQUEST."&amp;reinstall=".$data['rewrite_name']."'>".$locale['PL_404d']."</a>
+                            <a class='btn btn-default' href='".FUSION_REQUEST."&amp;edit=".$data['rewrite_name']."'>".$locale['PL_404c']."</a>
+                            <a class='btn btn-default' href='".FUSION_REQUEST."&amp;disable=".$data['rewrite_name']."'>".$locale['PL_404b']."</a>
+                            </td>
+                        </tr>\n";
                 }
             } else {
                 echo "<tr><td colspan='3' class='text-center'>".$locale['PL_427']."</td>\n</tr>\n";
             }
-            echo "</tbody></table>\n";
+            echo "</tbody></table>\n</div>";
 
         }
         break;
     case "pl2":
         if (count($available_rewrites) != count($enabled_rewrites)) {
-        echo "<table class='table table-responsive table-hover table-striped m-t-20'>
-        		<thead>
-        			<tr>
-        				<th>".$locale['PL_402']."</th>
-        				<th>".$locale['PL_403']."</th>
-        				<th>".$locale['PL_404']."</th>
-        			</tr>
-        		</thead>
-        	<tbody>\n";
+        echo "<div class='table-responsive'><table class='table table-hover table-striped m-t-20'>
+                <thead>
+                    <tr>
+                        <th>".$locale['PL_402']."</th>
+                        <th>".$locale['PL_403']."</th>
+                        <th>".$locale['PL_404']."</th>
+                    </tr>
+                </thead>
+            <tbody>\n";
             $k = 0;
             foreach ($available_rewrites as $available_rewrite) {
                 if (!in_array($available_rewrite, $enabled_rewrites)) {
                     if (file_exists(INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php") && file_exists(LOCALE.LOCALESET."permalinks/".$available_rewrite.".php")) {
-						$locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$available_rewrite.".php");
+                        $locale = fusion_get_locale('', LOCALE.LOCALESET."permalinks/".$available_rewrite.".php");
                         include_once INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php";
                         echo "<tr>
-                        		<td><strong>".$permalink_name."</strong></td>
-                        		<td>".$permalink_desc."</td>
-                        		<td><a class='btn btn-default' href='".FUSION_REQUEST."&amp;enable=".$available_rewrite."'>".$locale['PL_404a']."</td>
-                        	</tr>\n";
+                                <td><strong>".$permalink_name."</strong></td>
+                                <td>".$permalink_desc."</td>
+                                <td><a class='btn btn-default' href='".FUSION_REQUEST."&amp;enable=".$available_rewrite."'>".$locale['PL_404a']."</td>
+                            </tr>\n";
                     }
                 }
             }
-        echo "</tbody>\n</table>\n";
+        echo "</tbody>\n</table>\n</div>";
         }
         break;
     case "pls":

@@ -93,7 +93,7 @@ if ($_GET['page'] == 1) {
     $result = dbquery("SELECT * FROM ".DB_BBCODES." ORDER BY bbcode_order");
     if (dbrows($result)) {
         echo "<div style='width:100%;'>\n";
-        echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border'>\n<thead>\n<tr>\n";
+        echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='table tbl-border'>\n<thead>\n<tr>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></th>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
         echo "<th class='tbl2'><strong>".$locale['405']."</strong></th>\n";
@@ -155,7 +155,7 @@ if ($_GET['page'] == 1) {
             echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['bbcode_id']."'>".$locale['410']."</a></td>\n";
             echo "</tr>\n";
         }
-        echo "</tbody>\n</table>\n";
+        echo "</tbody>\n</table>\n</div>";
         echo "</div>\n";
     } else {
         echo "<div style='text-align:center'>".$locale['411']."</div>\n";
@@ -166,7 +166,7 @@ if ($_GET['page'] == 1) {
     opentable($locale['413']);
     if (count($available_bbcodes) != $enabled) {
         echo "<div style='width:100%;height:550px;overflow:auto'>\n";
-        echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border'>\n<thead>\n<tr>\n";
+        echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='table tbl-border'>\n<thead>\n<tr>\n";
         echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></td>\n";
         echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></td>\n";
         echo "<td class='tbl2'><strong>".$locale['405']."</strong></td>\n";
@@ -209,7 +209,7 @@ if ($_GET['page'] == 1) {
                 $xx++;
             }
         }
-        echo "</tbody>\n</table>\n";
+        echo "</tbody>\n</table>\n</div>";
         echo "</div>\n";
     } else {
         echo "<div style='text-align:center'>".$locale['416']."</div>\n";
@@ -239,7 +239,7 @@ if ($_GET['page'] == 1) {
         opentable($locale['401']);
         echo $navigation;
         echo openform('input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2");
-        echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
+        echo "<table cellspacing='0' cellpadding='0' class='table center'>\n<tr>\n";
         echo "<td class='tbl'>\n";
         echo form_textarea('test_message', $locale['418a'], $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));
         echo "</td>\n</tr>\n<tr>\n";

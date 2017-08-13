@@ -28,7 +28,7 @@ if (!function_exists('render_user_group')) {
         echo "<h4>".(!empty($info['group_icon']) ? "<i class='".$info['group_icon']."'></i> " : "").(!empty($info['group_name']) ? $info['group_name'] : '')." ".format_word($info['total_rows'], $locale['fmt_member'])."</h4>\n";
         echo "</div>\n";
         $sort_plugin = fusion_sort_table('groupTbl');
-        echo "<table id='groupTbl' class='table table-responsive table-hover $sort_plugin'>\n";
+        echo "<div class='table-responsive'><table id='groupTbl' class='table table-hover $sort_plugin'>\n";
         echo "<tr>\n";
         echo "<th class='col-xs-1'>".$locale['u062']."</th>\n";
         echo "<th class='col-xs-1'>".$locale['u113']."</th>\n";
@@ -51,7 +51,7 @@ if (!function_exists('render_user_group')) {
             echo "<td colspan='5'>".$locale['u116']."</td>\n";
             echo "</tr>\n";
         }
-        echo "</table>\n";
+        echo "</table>\n</div>";
         echo $info['total_rows'] > $info['rows'] ? "<div class='pull-right m-r-10'>".makepagenav($_GET['rowstart'], $info['rows'], $info['total_rows'], 3, FUSION_SELF."?group_id=".$info['group_id']."&amp;")."</div>\n" : "";
         closetable();
     }

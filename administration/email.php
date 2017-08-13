@@ -194,7 +194,7 @@ echo "<div class='m-t-20 m-b-20'>\n";
 echo "<a class='pointer' data-target='#email_tutorial' data-toggle='collapse'>".$locale['MAIL_031']."</a>";
 echo "</div>\n";
 echo "<div id='email_tutorial' class='collapse'>\n";
-echo "<table class='table table-responsive'>\n";
+echo "<div class='table-responsive'><table class='table'>\n";
 echo "<tr>\n";
 echo "<th>".$locale['MAIL_032']."</th>\n";
 echo "<th>".$locale['MAIL_033']."</th>\n";
@@ -225,7 +225,7 @@ echo "</tr>\n<tr>\n";
 echo "<td>[THREAD_URL]</td>\n";
 echo "<td>".$locale['MAIL_039']."</td>\n";
 echo "</tr>\n";
-echo "</tbody>\n</table>\n";
+echo "</tbody>\n</table>\n</div>";
 echo "</div>\n";
 closeside();
 

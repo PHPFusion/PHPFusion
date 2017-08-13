@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/admin/controllers/news_settings.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

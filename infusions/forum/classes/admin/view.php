@@ -463,7 +463,7 @@ class ForumAdminView extends ForumAdminInterface {
                                     'forum_id',
                                     'forum_cat',
                                     $action_data['subforums_to_forum'])."'
-				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
+                ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } elseif (!$action_data['delete_forums']) {
                             \defender::stop();
                             addNotice('danger', self::$locale['forum_notice_na']);
@@ -569,7 +569,7 @@ class ForumAdminView extends ForumAdminInterface {
                 echo "<option value='90'>3 ".self::$locale['607']."</option>\n";
                 echo "<option value='120'>4 ".self::$locale['607']."</option>\n";
                 echo "<option value='150'>5 ".self::$locale['607']."</option>\n";
-                echo "<option value='180' selected='selected'>6 ".self::$locale['607']."</option>\n";
+                echo "<option value='180' selected>6 ".self::$locale['607']."</option>\n";
                 echo "</select><br /><br />\n";
                 echo "<input type='submit' name='prune_forum' value='".self::$locale['600']."' class='button' / onclick=\"return confirm('".self::$locale['612']."');\">\n";
                 echo "</div>\n</form>\n";
@@ -632,7 +632,7 @@ class ForumAdminView extends ForumAdminInterface {
                 }
                 // calculate and update total combined postcount on all threads to forum
                 $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+            WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -640,7 +640,7 @@ class ForumAdminView extends ForumAdminInterface {
                 }
                 // calculate and update total threads to forum
                 $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+            WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -685,28 +685,28 @@ class ForumAdminView extends ForumAdminInterface {
 
             switch ($_GET['section']) {
                 case 'fr':
-        			BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                            'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr',
                            'title' => self::$locale['forum_rank_404']
                        ]);
                     break;
                 case 'ft':
-        			BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                            'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=ft',
                            'title' => self::$locale['forum_tag_0100']
                        ]);
                     break;
                 case 'fmd':
-        			BreadCrumbs::getInstance()->addBreadCrumb([
+                    BreadCrumbs::getInstance()->addBreadCrumb([
                            'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fmd',
                            'title' => self::$locale['forum_admin_004']
                        ]);
                     break;
                 case 'fs':
-        			BreadCrumbs::getInstance()->addBreadCrumb([
-        			       'link'  => ADMIN.'settings_forum.php'.$aidlink,
-        			       'title' => self::$locale['forum_settings']
-        			]);
+                    BreadCrumbs::getInstance()->addBreadCrumb([
+                           'link'  => ADMIN.'settings_forum.php'.$aidlink,
+                           'title' => self::$locale['forum_settings']
+                    ]);
                     break;
                 default :
             }
@@ -1073,8 +1073,8 @@ class ForumAdminView extends ForumAdminInterface {
         ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
         echo "</div>\n";
         add_to_jquery("
-	    $('#forum_jump').change(function() {
-		location = '".FUSION_SELF.fusion_get_aidlink()."&parent_id='+$(this).val();
+        $('#forum_jump').change(function() {
+        location = '".FUSION_SELF.fusion_get_aidlink()."&parent_id='+$(this).val();
         });
         ");
     }
@@ -1098,9 +1098,9 @@ class ForumAdminView extends ForumAdminInterface {
         opentable($title);
 
         $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
-			".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
-			 ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
-			 ");
+            ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
+             ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
+             ");
 
         $rows = dbrows($result);
         if ($rows > 0) {

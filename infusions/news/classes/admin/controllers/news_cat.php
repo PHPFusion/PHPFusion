@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/admin/controllers/news_cat.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -443,7 +442,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
 
         if (!$id) :
             ?>
-            <table class="table table-responsive table-hover">
+            <div class="table-responsive"><table class="table table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -527,7 +526,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
 
         <?php if (!$id) : ?>
             </tbody>
-            </table>
+            </table></div>
         <?php endif;
     }
 

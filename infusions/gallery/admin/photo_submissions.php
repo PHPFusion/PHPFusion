@@ -28,8 +28,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_id='".intval($_GET['submit_id'])."'");
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_id='".intval($_GET['submit_id'])."'");
 
         if (dbrows($result)) {
             $data = dbarray($result);
@@ -97,11 +97,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     } else {
         if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
             $result = dbquery("
-			SELECT
-			ts.submit_id, ts.submit_datestamp, ts.submit_criteria
-			FROM ".DB_SUBMISSIONS." ts
-			WHERE submit_type='p' and submit_id='".intval($_GET['submit_id'])."'
-		");
+            SELECT
+            ts.submit_id, ts.submit_datestamp, ts.submit_criteria
+            FROM ".DB_SUBMISSIONS." ts
+            WHERE submit_type='p' and submit_id='".intval($_GET['submit_id'])."'
+        ");
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $criteriaArray = unserialize($data['submit_criteria']);
@@ -113,11 +113,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         } else {
 
             $result = dbquery("SELECT
-			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='p' AND submit_id='".intval($_GET['submit_id'])."'
-			");
+            ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='p' AND submit_id='".intval($_GET['submit_id'])."'
+            ");
 
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
@@ -220,15 +220,15 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     }
 } else {
     $result = dbquery("SELECT
-			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='p' order by submit_datestamp desc
-			");
+            ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+            FROM ".DB_SUBMISSIONS." ts
+            LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+            WHERE submit_type='p' order by submit_datestamp desc
+            ");
     $rows = dbrows($result);
     if ($rows > 0) {
         echo "<div class='well'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
-        echo "<table class='table table-striped'>\n";
+        echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<tr>\n";
         echo "<th>".$locale['gallery_0152']."</th>\n<th>".$locale['gallery_0153']."</th><th>".$locale['gallery_0154']."</th><th>".$locale['gallery_0155']."</th>";
         echo "</tr>\n";
@@ -245,7 +245,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo "<td>".$data['submit_id']."</td>\n";
             echo "</tr>\n";
         }
-        echo "</tbody>\n</table>\n";
+        echo "</tbody>\n</table>\n</div>";
     } else {
         echo "<div class='well text-center m-t-20'>".$locale['gallery_0150']."</div>\n";
     }

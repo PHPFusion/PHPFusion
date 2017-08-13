@@ -141,7 +141,7 @@ class admin_reset_admin {
 
                 $sucess_ids = "";
                 $failed_ids = "";
-                $text = "<table class='table table-hover table-striped'>\n";
+                $text = "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
                     if (!empty($reset_success)) {
                         foreach ($reset_success as $key => $info) {
                             $sucess_ids .= $sucess_ids != "" ? ".".$info['user_id'] : $info['user_id'];
@@ -162,7 +162,7 @@ class admin_reset_admin {
                         }
                     }
 
-                $text .= "</table>\n";
+                $text .= "</table>\n</div>";
                 $preview_html = openmodal('apw_preview', self::$locale['apw_410']);
                 $preview_html .= "<p>".$text."</p>\n";
                 $preview_html .= closemodal();
@@ -273,7 +273,7 @@ class admin_reset_admin {
         echo '<div class="m-t-15">';
             echo '<h2>'.self::$locale['apw_415'].'</h2>';
             if (!empty($all_admin_reset)) {
-                echo "<table class='table table-hover table-striped'>\n";
+                echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
                 echo "<tr>\n";
                 echo "<td class='col-xs-2'><strong>".self::$locale['apw_417']."</strong></td>\n";
                 echo "<td class='col-xs-2'><strong>".self::$locale['apw_418']."</strong></td>\n";
@@ -297,7 +297,7 @@ class admin_reset_admin {
                     echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_list&amp;action=delete&amp;reset_id=".$info['reset_id']."' onclick=\"return confirm('".self::$locale['apw_428']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n";
                     echo "</tr>\n";
                 }
-                echo "</table>\n";
+                echo "</table>\n</div>";
             } else {
                 echo "<div class='well text-center'>".self::$locale['apw_426']."</div>\n";
             }
