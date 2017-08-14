@@ -90,10 +90,10 @@ class Components {
     public static function SetLocale($lc = NULL) {
         $locale = [];
 
-        if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
-            include MATERIAL."locale/".LANGUAGE.".php";
+        if (file_exists(MATERIAL.'locale/'.LANGUAGE.'.php')) {
+            include MATERIAL.'locale/'.LANGUAGE.'.php';
         } else {
-            include MATERIAL."locale/English.php";
+            include MATERIAL.'locale/English.php';
         }
 
         return $locale['material_'.$lc];

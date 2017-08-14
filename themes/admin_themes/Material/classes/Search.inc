@@ -110,7 +110,7 @@ class Search {
                     $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
                 }
 
-                $icon = strtr(get_image("ac_".$data['admin_rights']), [
+                $icon = strtr(get_image('ac_'.$data['admin_rights']), [
                     INFUSIONS => fusion_get_settings('siteurl').'infusions/',
                     ADMIN => fusion_get_settings('siteurl').'administration/'
                 ]);
@@ -125,10 +125,10 @@ class Search {
     private function SetLocale($lc = NULL) {
         $locale = [];
 
-        if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
-            include MATERIAL."locale/".LANGUAGE.".php";
+        if (file_exists(MATERIAL.'locale/'.LANGUAGE.'.php')) {
+            include MATERIAL.'locale/'.LANGUAGE.'.php';
         } else {
-            include MATERIAL."locale/English.php";
+            include MATERIAL.'locale/English.php';
         }
 
         return $locale['material_'.$lc];
