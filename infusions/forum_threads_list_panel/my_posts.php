@@ -49,9 +49,9 @@ if ($rows) {
 
         echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
-                echo "<td><strong>".$locale["global_048"]."</strong></td>";
-                echo "<td><strong>".$locale["global_044"]."</strong></td>";
-                echo "<td><strong>".$locale["global_049"]."</strong></td>";
+                echo "<th><strong>".$locale["global_048"]."</strong></th>";
+                echo "<th><strong>".$locale["global_044"]."</strong></th>";
+                echo "<th><strong>".$locale["global_049"]."</strong></th>";
             echo "</tr></thead>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {

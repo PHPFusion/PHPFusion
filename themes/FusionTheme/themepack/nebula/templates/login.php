@@ -100,11 +100,11 @@ class Login {
             <div class="container">
                 <div class="col-xs-12 text-center">
                     <div class="text-center display-block"><?php echo $banner ?></div>
-               			<?php $notices = getNotices();
+                        <?php $notices = getNotices();
                         if ($notices) {
                              echo renderNotices($notices);
                         }?>
-                    <div class="panel panel-default" style="text-align:left;">
+                    <div class="panel panel-default" style="text-align:left;background-color: rgba(255, 255, 255, 0.93);">
                         <div class="panel-body p-20">
                             <h3 class="text-bigger text-uppercase text-dark"><?php echo $locale['u101'] ?></h3>
                             <h4><?php echo fusion_get_settings('sitename') ?></h4>

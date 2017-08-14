@@ -1819,8 +1819,27 @@ class QuantumFields extends \SqlHandler {
 
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
-
         $aidlink = fusion_get_aidlink();
+
+        $this->field_data['field_config'] = [
+            'field_max_b'              => 1000000,
+            'field_upload_type'        => 'file',
+            'field_upload_path'        => IMAGES,
+            'field_valid_file_ext'     => '.zip,.rar,.doc,.xls,.csv,.jpg,.gif,.png,.bmp',
+            'field_valid_image_ext'    => '.jpg,.gif,.png,.bmp',
+            'field_image_max_w'        => 1920,
+            'field_image_max_h'        => 1080,
+            'field_thumbnail'          => 0,
+            'field_thumbnail_2'        => 0,
+            'field_thumb_upload_path'  => 'thumbs/',
+            'field_thumb2_upload_path' => 'thumbs/',
+            'field_thumb_w'            => 0,
+            'field_thumb_h'            => 0,
+            'field_thumb2_h'           => 1024,
+            'field_thumb2_w'           => 768,
+            'field_delete_original'    => 0
+        ];
+
         $form_action = FUSION_SELF.$aidlink;
         if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
             $form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];
@@ -1839,25 +1858,6 @@ class QuantumFields extends \SqlHandler {
                 }
             }
         }
-
-        /*$this->field_data['field_config'] = [
-            'field_max_b'              => 1000000,
-            'field_upload_type'        => 'file',
-            'field_upload_path'        => IMAGES,
-            'field_valid_file_ext'     => '.zip,.rar,.doc,.xls,.csv,.jpg,.gif,.png,.bmp',
-            'field_valid_image_ext'    => '.jpg,.gif,.png,.bmp',
-            'field_image_max_w'        => 1920,
-            'field_image_max_h'        => 1080,
-            'field_thumbnail'          => 0,
-            'field_thumbnail_2'        => 0,
-            'field_thumb_upload_path'  => 'thumbs/',
-            'field_thumb2_upload_path' => 'thumbs/',
-            'field_thumb_w'            => 0,
-            'field_thumb_h'            => 0,
-            'field_thumb2_h'           => 1024,
-            'field_thumb2_w'           => 768,
-            'field_delete_original'    => 0
-        ];*/
 
         $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'];
 

@@ -140,7 +140,7 @@ if (!function_exists('display_inbox')) {
         opentable($locale['400']);
         ?>
         <!---start_inbox_idx-->
-        <div class="row spacer-sm">
+        <div class="row">
             <?php if (!isset($_GET['msg_send'])) : ?>
                 <div class="col-xs-12 col-sm-3">
                     <a class='btn btn-primary btn-block text-white' href='<?php echo $info['button']['new']['link'] ?>'>

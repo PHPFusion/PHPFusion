@@ -55,8 +55,8 @@ if (iMEMBER) {
 }
 
 
-function render_page($license = FALSE) {
-    new \ThemePack\Nebula\MainFrame($license);
+function render_page() {
+    new \ThemePack\Nebula\MainFrame();
 }
 
 function opentable($title = FALSE) {
@@ -82,7 +82,7 @@ function display_loginform($info) {
     ThemePack\Nebula\Templates\Login::login_form($info);
 }
 
-function display_registerform($info) {
+function display_register_form($info) {
     $theme = ThemeFactory\Core::getInstance();
     $theme->setParam('header', FALSE);
     $theme->setParam('footer', FALSE);

@@ -52,25 +52,26 @@ if (!function_exists('display_user_info_panel')) {
                     <?php if (iADMIN) : ?>
                         <li><a href='{%acp_link%}'>{%acp_title%} <i class='fa fa-dashboard fa-pull-right'></i></a></li>
                     <?php endif; ?>
-                </ul>
-                <?php if (!empty($info['submissions'])) : ?>
-                <ul class='block'>
-                    <li>
-                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
-                            <ul id='collapse' class='panel-collapse collapse block m-l-10'>
-                                <?php
-                                foreach ($info['submissions'] as $modules) {
-                                    ?>
-                                    <li>
-                                        <a class='side pl-l-15' href='<?php echo $modules['link'] ?>'><?php echo $modules['title'] ?></a>
-                                    </li>
+
+                    <?php if (!empty($info['submissions'])) : ?>
+
+                        <li>
+                            <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
+                                <ul id='collapse' class='panel-collapse collapse block m-l-10'>
                                     <?php
-                                }
-                                ?>
-                            </ul>
-                    </li>
+                                    foreach ($info['submissions'] as $modules) {
+                                        ?>
+                                        <li>
+                                            <a class='side pl-l-15' href='<?php echo $modules['link'] ?>'><?php echo $modules['title'] ?></a>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                </ul>
+                        </li>
+
+                    <?php endif; ?>
                 </ul>
-                <?php endif; ?>
             </div>
             <div class='spacer-xs'><a class='btn btn-block btn-primary' href='{%logout_link%}'>{%logout_title%}</a></div>
             {%closeside%}

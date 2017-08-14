@@ -858,9 +858,9 @@ class UserFields extends QuantumFields {
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-3'>\n";
         $html .= form_para($locale['u058'], "admin_options");
-        $html .= "</div>\n<div class='col-xs-12 col-sm-9 p-l-5'>\n";
-        $html .= "<div class='well'>\n";
-        $html .= "<div class='btn-group m-l-10 m-b-20'>\n<!--profile_admin_options-->\n";
+        $html .= "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+        $html .= "<div class='well text-center'>\n";
+        $html .= "<div class='btn-group'>\n<!--profile_admin_options-->\n";
         $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id']."'>".$locale['u069']."</a>\n";
         // $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;lookup=".$this->userData['user_id']."'>".$locale['u070']."</a>\n";
         // $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->userData['user_id']."'>".$locale['u071']."</a>\n";

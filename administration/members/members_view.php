@@ -24,7 +24,7 @@ class Members_View extends Members_Admin {
         <div class='pull-right'>{%action_button%}</div>
         <div class='pull-left'>{%filter_text%} {%filter_button%}</div>
         </div>
-        <!----filter---->
+        <!--filter-->
         <div id='filter_panel' class='m-t-10' style='display:none'>
             <div class='list-group-item'>
                 <div class='row'>
@@ -40,7 +40,7 @@ class Members_View extends Members_Admin {
             </div>
             <br/>{%filter_apply_button%}
         </div>
-        <!----//filter---->
+        <!--//filter-->
         <hr/>
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
         <div id='user_action_bar' class='list-group-item spacer-sm p-10 text-center'>{%user_actions%}</div>

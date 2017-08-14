@@ -29,7 +29,7 @@ use ThemeFactory\Lib\Installer\HomeInstall;
  */
 class MainFrame extends Core {
 
-    public function __construct($license = FALSE) {
+    public function __construct() {
         self::set_body_span();
         /**
          * First time installation on default install.
@@ -139,7 +139,7 @@ class MainFrame extends Core {
         add_to_jquery("
             $('#".SiteLinks::MenuDefaultID."').affix({
                 offset: {
-                    top: '".$this->getParam('nav_offset')."',
+                    top: $('#DefaultMenu').offset().top,
                     bottom: function () {
                         return (this.bottom = $('.footer').outerHeight(true))
                     }
