@@ -52,7 +52,7 @@ h3 {
 }
 
 a {
-    color: #008FBE;
+    color: #0073aa;
 }
 
 a:hover, a:focus {
@@ -780,11 +780,6 @@ a:hover, a:focus {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
-
-.btn-file {
-    background: #fff;
-}
-
 .btn-block {
     display: block;
     width: 100%;
@@ -1540,6 +1535,7 @@ footer ul li a {
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     margin-bottom: 10px;
+    background: #fff;
 }
 
 .btn-photo-upload > .btn-file:hover, .btn-photo-upload > .btn-file:focus {
