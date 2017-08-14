@@ -240,7 +240,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             )
         );
     }
-
     switch ($options['template']) {
         case "classic":
             add_to_jquery("
@@ -256,7 +255,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 maxFileCount: '".$options['max_count']."',
                 removeLabel: '".$locale['remove']."',
                 removeTitle: '".$locale['df_304']."',
-                removeClass : 'btn btn-default button',
+                removeClass : 'btn ".$options['btn_class']." button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
                 ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
