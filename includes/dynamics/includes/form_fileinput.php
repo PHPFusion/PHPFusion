@@ -136,12 +136,14 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $value = json_encode($value);
     }
 
+    $lang = '';
     if (!defined('form_fileinput')) {
         add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
         add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
 
         if (file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
             add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
+            $lang = 'language: "'.$locale['short_lang_name'].'",';
         }
         define('form_fileinput', TRUE);
     }
@@ -154,6 +156,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
     $html .= (\defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
+
     // Inserts Media Selector
     // Draw the framework first
     if ($options['media'] == TRUE) {
@@ -263,7 +266,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
                 ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
-                ".($options['jsonurl'] ? '' : 'showUpload: false')."
+                ".($options['jsonurl'] ? '' : 'showUpload: false,')."
+                ".$lang."
             });
             ");
             break;
@@ -272,8 +276,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $('#".$options['input_id']."').fileinput({
                 allowedFileTypes: ".$type_for_js.",
                 allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."                                
-                initialPreviewAsData: true,                
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                initialPreviewAsData: true,
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
                 browseClass: 'btn btn-modal btn-lg',
                 uploadClass: 'btn btn-modal btn-lg',
@@ -288,10 +292,11 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 showRemove: false,
                 showUpload: false,
                 layoutTemplates: {
-                 main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
-                 },
+                    main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                },
+                ".$lang."
             });
-    ");
+            ");
             break;
         case "thumbnail":
             add_to_jquery("
@@ -302,7 +307,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
                 initialPreviewAsData: true,
                 defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
-                browseClass: 'btn btn-block btn-default',                
+                browseClass: 'btn btn-block btn-default',
                 uploadClass: 'btn btn-modal',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',
@@ -315,9 +320,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 showRemove: false,
                 showUpload: false,
                 layoutTemplates: {
-        main2:
-        '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
+                    main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
                 },
+                ".$lang."
             });
             ");
             break;
