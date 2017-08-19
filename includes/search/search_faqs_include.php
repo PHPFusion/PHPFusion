@@ -74,7 +74,7 @@ if (db_exists(DB_FAQS)) {
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span>";
 
                 $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'             => INFUSIONS."/faq/faq.php?cat_id=".$data['faq_cat_id']."&sref=search",
+                        '{%item_url%}'             => INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id']."&sref=search",
                         '{%item_target%}'          => '',
                         '{%item_image%}'           => '',
                         '{%item_title%}'           => $data['faq_question'],

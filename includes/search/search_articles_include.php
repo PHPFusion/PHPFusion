@@ -94,7 +94,7 @@ if (db_exists(DB_ARTICLES)) {
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['522']." ".$locale['a405']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => INFUSIONS."/articles/articles.php?article_id=".$data['article_id']."&sref=search",
+                        '{%item_url%}'             => INFUSIONS."articles/articles.php?article_id=".$data['article_id']."&sref=search",
                         '{%item_target%}'          => 'self',
                         '{%item_image%}'           => '',
                         '{%item_title%}'           => $data['article_subject'],
