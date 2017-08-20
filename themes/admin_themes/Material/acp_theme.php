@@ -57,7 +57,8 @@ function closetable() {
 }
 
 function replace_meta($output = '') {
-    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#243447"/>', $output);
+    $color = !check_admin_pass('') ? '2c3e50' : '243447';
+    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);
 }
 
 add_handler('replace_meta');

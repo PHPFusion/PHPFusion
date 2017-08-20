@@ -51,7 +51,7 @@ class Dashboard {
                         openside('', $panel);
                             echo '<img class="pull-left m-r-10 dashboard-icon" src="'.get_image('ac_M').'" alt="'.$locale['M'].'"/>';
                             echo '<h4 class="text-right m-t-0 m-b-0">'.number_format($members[$panel]).'</h4>';
-                            echo '<span class="text-smaller pull-right"><strong>'.$locale[$block['title']].'</strong></span>';
+                            echo '<strong class="text-smaller pull-right" style="position: relative;z-index: 3;">'.$locale[$block['title']].'</strong>';
 
                             $content_  = '<div class="text-right text-uppercase">';
                             $content_ .= '<a href="'.ADMIN.'members.php'.$aidlink.$block['link'].'">'.$locale['255'].' <i class="fa fa-angle-right"></i></a>';
@@ -65,7 +65,7 @@ class Dashboard {
             $laptop  = 6;
             $desktop = 4;
 
-            echo '<div class="row">';
+            echo '<div class="row" id="overview">';
                 if (infusion_exists('forum')) {
                     echo '<div class="col-xs-'.$mobile.' col-sm-'.$tablet.' col-md-'.$laptop.' col-lg-'.$desktop.' block">';
                         openside('');
@@ -210,24 +210,6 @@ class Dashboard {
             echo '</div>';
 
             echo '<div class="row">';
-                echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-                    echo '<div id="infusions">';
-                        openside('<strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge">'.number_format((int)$infusions_count).'</span>');
-                            $content = '';
-                            if ($infusions_count > 0) {
-                                if (!empty($global_infusions)) {
-                                    foreach ($global_infusions as $inf_id => $inf_data) {
-                                        echo '<span class="badge m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
-                                    }
-                                }
-                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-angle-right"></i></a></div>' : '';
-                            } else {
-                                echo '<div class="text-center">'.$locale['284'].'</div>';
-                            }
-                        closeside($content);
-                    echo '</div>'; // #infusins
-                echo '</div>';
-
                 echo '<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">';
                     echo '<div id="comments">';
                         openside('<strong class="text-uppercase">'.$locale['277'].'</strong><span class="pull-right badge">'.number_format($global_comments['rows']).'</span>');
@@ -310,6 +292,24 @@ class Dashboard {
                             }
                         closeside();
                     echo '</div>'; // #submissions
+                echo '</div>';
+
+                echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
+                    echo '<div id="infusions">';
+                        openside('<strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge">'.number_format((int)$infusions_count).'</span>');
+                            $content = '';
+                            if ($infusions_count > 0) {
+                                if (!empty($global_infusions)) {
+                                    foreach ($global_infusions as $inf_id => $inf_data) {
+                                        echo '<span class="badge m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
+                                    }
+                                }
+                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-angle-right"></i></a></div>' : '';
+                            } else {
+                                echo '<div class="text-center">'.$locale['284'].'</div>';
+                            }
+                        closeside($content);
+                    echo '</div>'; // #infusins
                 echo '</div>';
             echo '</div>'; // .row
         closetable();

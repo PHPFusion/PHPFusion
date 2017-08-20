@@ -34,7 +34,7 @@ class Search {
         if ($this->AuthorizeAid()) {
             if (\defender::safe()) {
                 $this->SearchPages();
-                $message = !empty($this->result['status']) ? self::SetLocale($this->result['status']) : '';
+                $message = !empty($this->result['status']) ? $this->SetLocale($this->result['status']) : '';
 
                 if (!empty($message)) {
                     echo '<li><span>'.$message.'</span></li>';

@@ -49,8 +49,6 @@ main {
     position: absolute;
     width: 100%;
     border-radius: 0;
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.77);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.77);
     -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
@@ -102,20 +100,20 @@ main {
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {
-    background-color: rgba(0, 137, 255, 0.15)!important;
-    border-color: inherit!important;
+    background-color: rgba(0, 137, 255, 0.15) !important;
+    border-color: inherit !important;
 }
 .navbar .fa {
     margin-right: 0;
 }
 .top-menu .languages-switcher > a {
-    padding: 14.5px 10px!important;
+    padding: 14.5px 10px !important;
 }
 .top-menu .languages-switcher .fa {
     margin-right: 5px;
 }
 .top-menu .user-s > a {
-    padding: 19px 10px!important;
+    padding: 19px 10px !important;
 }
 .top-menu .messages {
     margin: -3px -10px;
@@ -165,7 +163,7 @@ main {
     width: 200px;
 }
 .top-menu .dropdown-menu li > a {
-    color: #444!important;
+    color: #444 !important;
     padding-top: 5px;
     padding-bottom: 5px;
 }
@@ -270,14 +268,12 @@ main {
 }
 .sidebar .header {
     position: absolute;
-    background: #243447;
+    background: #1f2d3e;
     z-index: 1111;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.77);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.77);
     white-space: nowrap;
 }
 .sidebar .header .pf-logo {
@@ -306,7 +302,12 @@ main {
     transition: all 0.5s ease-in-out;
 }
 .sidebar .search-box .focus.fa {
-    left: 230px;
+    left: 95%;
+}
+@media (min-width: 768px) {
+    .sidebar .search-box .focus.fa {
+        left: 230px;
+    }
 }
 .sidebar .search-box .form-control {
     border: 0;
@@ -343,7 +344,7 @@ main {
     color: #1378bb;
     font-size: 14px;
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
     .sidebar .search-box .form-control {
         width: 250px;
     }
@@ -372,7 +373,7 @@ main {
 .sidebar #search_result li > span {
     margin-left: 40%;
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
     .sidebar #search_result li > span {
         margin-left: 17%;
     }
@@ -454,7 +455,7 @@ main {
         width: 100%;
     }
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
     .sidebar-toggled .sidebar {
         width: 260px;
         -webkit-box-shadow: 0 0 20px rgb(0, 0, 0);
@@ -465,6 +466,14 @@ main {
 @media (min-width: 1200px) {
     .sidebar-toggled .sidebar {
         width: 0;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar .sidebar-menu {
+        display: none;
+    }
+    .sidebar-toggled .sidebar .sidebar-menu {
+        display: block;
     }
 }
 .content {
@@ -481,7 +490,7 @@ main {
         margin-left: 0;
     }
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
     .content {
         padding: 15px 30px;
     }
@@ -503,7 +512,7 @@ main {
 .sidebar-sm .sidebar .header .pf-logo {
     width: 70px;
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
     .sidebar-toggled.sidebar-sm .sidebar {
         width: 70px;
     }
@@ -538,7 +547,7 @@ main {
     top: 28px;
 }
 .sidebar-sm .sidebar .search-box .focus.fa {
-    left: 205px!important;
+    left: 205px !important;
 }
 .sidebar-sm .sidebar .search-box {
     left: 70px;
@@ -570,7 +579,7 @@ main {
 }
 .sidebar-sm .sidebar .admin-vertical-link > li > a > .adl-section-name,
 .sidebar-sm .sidebar .admin-vertical-link > li > a.collapsed > .adl-section-name {
-    background-color: #22354a;
+    background-color: #17293c;
     display: inline-block;
     left: 70px;
     opacity: 0;
@@ -610,7 +619,7 @@ main {
     top: 121px;
     bottom: 0;
     width: 100%;
-    background-color: #22354a;
+    background-color: #1a2e44;
 }
 .sidebar-sm .sidebar .admin-vertical-link .admin-submenu li:first-child {
     margin-top: 10px;
@@ -735,13 +744,13 @@ main {
     right: 210px;
 }
 .fixed {
-    position: fixed!important;
+    position: fixed !important;
 }
 .messages-box {
     position: fixed;
-    right: -260px;
+    right: -300px;
     top: 0;
-    width: 260px;
+    width: 300px;
     z-index: 400;
     background: #fff;
     color: #464646;
@@ -775,10 +784,10 @@ main {
     background: #444;
 }
 .messages-box .button-group > #messages-box-close {
-    width: 30%;
+    width: 40%;
 }
 .messages-box .button-group .new-message {
-    width: 70%;
+    width: 60%;
 }
 .messages-box ul > li {
     padding: 7px 10px;
@@ -840,7 +849,7 @@ main {
 .panel-default .panel-heading {
     border-bottom: none;
     border-bottom: 1px solid #bdc3c7;
-    background-color: #f9f9f9!important;
+    background-color: #f9f9f9 !important;
 }
 .panel-footer {
     border-top: none;
@@ -851,6 +860,8 @@ main {
 .members .dashboard-icon {
     width: 40px;
     height: 40px;
+    position: absolute;
+    z-index: 1;
 }
 .members .panel,
 .members .panel-footer,
@@ -875,11 +886,21 @@ main {
 }
 .members .panel-footer {
     padding: 0;
-    background-color: rgba(0, 0, 0, 0.14) !important;
+    background-color: rgba(0, 0, 0, 0.18) !important;
 }
 .members .panel-footer a {
     display: block;
     padding: 10px 15px;
+}
+#overview .dashboard-icon {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    right: 30px;
+}
+.dashboard-icon {
+    width: 48px;
+    height: 48px;
 }
 .openside {
     border: none;
@@ -1153,7 +1174,7 @@ select,
     border: none !important;
 }
 #comments_per_page {
-    width: 100%!important;
+    width: 100% !important;
 }
 table tr > .tbl1 > div > a {
     border-bottom: 1px solid #ddd;
@@ -1452,7 +1473,7 @@ input[type="checkbox"]:disabled:checked:after,
 .checkbox-inline input[type="checkbox"] {
     position: absolute;
     margin-left: -20px;
-    margin-top: 4px \9;
+    margin-top: 4px\9;
 }
 .radio + .radio,
 .checkbox + .checkbox {
@@ -2551,7 +2572,7 @@ tbody.collapse.in {
     vertical-align: middle;
     border-top: 4px dashed;
     border-top: 4px solid \9;
-    border-top-style: solid!important;
+    border-top-style: solid !important;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
 }
@@ -2645,7 +2666,7 @@ tbody.collapse.in {
     border-top: 0 dashed;
     border-bottom: 4px dashed;
     border-bottom: 4px solid \9;
-    border-bottom-style: solid!important;
+    border-bottom-style: solid !important;
     content: "";
 }
 .dropup .dropdown-menu,
@@ -3171,7 +3192,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li > a,
 .nav-tabs > li > a:focus {
     margin-right: 0;
-    background-color: transparent!important;
+    background-color: transparent !important;
     border: none;
     color: #666;
     -webkit-box-shadow: inset 0 -1px 0 #ddd;
@@ -3771,22 +3792,22 @@ button.close {
     border: none;
 }
 .bootstrap-datetimepicker-widget.dropdown-menu {
-    padding: 0!important;
-    margin: 0!important;
+    padding: 0 !important;
+    margin: 0 !important;
     border-radius: 2px !important;
 }
 .bootstrap-datetimepicker-widget.dropdown-menu.top:before,
 .bootstrap-datetimepicker-widget.dropdown-menu.top:after,
 .bootstrap-datetimepicker-widget.dropdown-menu.bottom:before,
 .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
-    border: none!important;
+    border: none !important;
 }
 .bootstrap-datetimepicker-widget table td,
 .bootstrap-datetimepicker-widget table th {
     border-radius: 2px !important;
 }
 .bootstrap-datetimepicker-widget table td span {
-    margin: 0 0 2px 0!important;
+    margin: 0 0 2px 0 !important;
     border-radius: 0 !important;
 }
 .bootstrap-datetimepicker-widget table td.active {
@@ -3810,7 +3831,7 @@ button.close {
 }
 .bootstrap-datetimepicker-widget table thead th {
     border-radius: 0 !important;
-    margin: 5px!important;
+    margin: 5px !important;
 }
 .bootstrap-datetimepicker-widget table tbody {
     background: #ffffff;
@@ -3984,9 +4005,6 @@ ul {
 .mce-content-body {
     background-color: #fff !important;
 }
-.dashboard-icon {
-    width: 48px;
-}
 label {
     margin-bottom: 0;
 }
@@ -4026,4 +4044,9 @@ label {
 .panel-txtarea .editor-wrapper > .nav > li > a {
     padding: 4px 7px;
     margin-top: 3px;
+}
+@media (max-width: 768px) {
+    #nav-sections.nav-tabs.nav-justified > li {
+        float: left;
+    }
 }

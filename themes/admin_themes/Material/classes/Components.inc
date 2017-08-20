@@ -22,46 +22,46 @@ namespace Material;
  * @package Material
  */
 class Components {
-    private static $messages = [];
+    private $messages = [];
 
-    public static function ThemeSettings() {
+    public function ThemeSettings() {
         echo '<aside id="theme-settings" class="hidden-xs">';
-            echo '<a href="#" title="'.self::SetLocale('002').'" data-action="theme-settings" class="btn-theme-settings cogs-animation">';
+            echo '<a href="#" title="'.$this->SetLocale('002').'" data-action="theme-settings" class="btn-theme-settings cogs-animation">';
                 echo '<i class="fa fa-cog fa-spin"></i>';
                 echo '<i class="fa fa-cog fa-spin fa-spin-reverse"></i>';
                 echo '<i class="fa fa-cog fa-spin"></i>';
             echo '</a>';
 
             echo '<div class="settings-box">';
-                echo '<h4>'.self::SetLocale('002').'</h4>';
+                echo '<h4>'.$this->SetLocale('002').'</h4>';
 
                 echo '<ul class="settings-menu">';
                     $theme_settings = [
-                        ['name' => 'hide-sidebar',      'title' => self::SetLocale('003')],
-                        ['name' => 'sidebar-sm',        'title' => self::SetLocale('004')],
-                        ['name' => 'fixedmenu',         'title' => self::SetLocale('005'), 'toggle' => 'on'],
-                        ['name' => 'fixedsidebar',      'title' => self::SetLocale('006'), 'toggle' => 'on'],
-                        ['name' => 'fixedfootererrors', 'title' => self::SetLocale('007'), 'toggle' => 'on'],
-                        ['name' => 'fullscreen',        'title' => self::SetLocale('008')]
+                        ['name' => 'hide-sidebar',      'title' => '003'],
+                        ['name' => 'sidebar-sm',        'title' => '004'],
+                        ['name' => 'fixedmenu',         'title' => '005', 'toggle' => 'on'],
+                        ['name' => 'fixedsidebar',      'title' => '006', 'toggle' => 'on'],
+                        ['name' => 'fixedfootererrors', 'title' => '007', 'toggle' => 'on'],
+                        ['name' => 'fullscreen',        'title' => '008']
                     ];
 
                     foreach ($theme_settings as $setting) {
-                        echo '<li><a href="#" data-action="'.$setting['name'].'" id="'.$setting['name'].'">'.$setting['title'].'<div class="btn-toggle pull-right '.(!empty($setting['toggle']) ? $setting['toggle'] : '').'"></div></a></li>';
+                        echo '<li><a href="#" data-action="'.$setting['name'].'" id="'.$setting['name'].'">'.$this->SetLocale($setting['title']).'<div class="btn-toggle pull-right '.(!empty($setting['toggle']) ? $setting['toggle'] : '').'"></div></a></li>';
                     }
                 echo '</ul>';
             echo '</div>';
         echo '</aside>';
     }
 
-    public static function MessagesBox() {
-        $messages = self::GetMessages();
+    public function MessagesBox() {
+        $messages = $this->GetMessages();
 
         echo '<aside class="messages-box hidden-xs">';
             echo '<div class="button-group">';
                 echo '<a href="#" id="messages-box-close">'.fusion_get_locale('close').'</a>';
-                echo '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.self::SetLocale('011').'</a>';
+                echo '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.$this->SetLocale('011').'</a>';
             echo '</div>';
-            echo '<h3 class="title">'.self::SetLocale('009').'</h3>';
+            echo '<h3 class="title">'.$this->SetLocale('009').'</h3>';
 
             if (!empty($messages)) {
                 echo '<ul>';
@@ -72,7 +72,7 @@ class Components {
                                 echo '<div class="block">';
                                     echo '<span class="title">'.$message['user']['user_name'].' <small>'.$message['datestamp'].'</small></span>';
                                     echo '<br /><small>'.trim_text($message['title'], 20).'</small>';
-                                    echo '<a href="'.BASEDIR.'messages.php?folder=inbox&amp;msg_read='.$message['link'].'" class="read-message">'.self::SetLocale('010').'</a>';
+                                    echo '<a href="'.BASEDIR.'messages.php?folder=inbox&amp;msg_read='.$message['link'].'" class="read-message">'.$this->SetLocale('010').'</a>';
                                 echo '</div>';
                             echo '</div>';
                         echo '</li>';
@@ -81,25 +81,13 @@ class Components {
             } else {
                 echo '<div class="no-messages">';
                     echo '<i class="fa fa-envelope icon"></i><br />';
-                    echo self::SetLocale('012');
+                    echo $this->SetLocale('012');
                 echo '</div>';
             }
         echo '</aside>';
     }
 
-    public static function SetLocale($lc = NULL) {
-        $locale = [];
-
-        if (file_exists(MATERIAL.'locale/'.LANGUAGE.'.php')) {
-            include MATERIAL.'locale/'.LANGUAGE.'.php';
-        } else {
-            include MATERIAL.'locale/English.php';
-        }
-
-        return $locale['material_'.$lc];
-    }
-
-    public static function Messages() {
+    public function Messages() {
         $userdata = fusion_get_userdata();
 
         $result = dbquery("
@@ -113,7 +101,7 @@ class Components {
         if (dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'")) {
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
-                    self::$messages[] = [
+                    $this->messages[] = [
                         'link'      => $data['message_id'],
                         'title'     => $data['message_subject'],
                         'user'      => [
@@ -128,17 +116,28 @@ class Components {
             }
         }
 
-        return self::$messages;
+        return $this->messages;
     }
 
-    public static function GetMessages() {
-        return self::$messages;
+    public function GetMessages() {
+        return $this->messages;
     }
 
-    public static function IsMobile() {
+    public function IsMobile() {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER['HTTP_USER_AGENT']);
     }
 
+    public static function SetLocale($lc = NULL) {
+        $locale = [];
+
+        if (file_exists(MATERIAL.'locale/'.LANGUAGE.'.php')) {
+            include MATERIAL.'locale/'.LANGUAGE.'.php';
+        } else {
+            include MATERIAL.'locale/English.php';
+        }
+
+        return $locale['material_'.$lc];
+    }
 
     public static function OpenSide($title = FALSE, $class = NULL) {
         echo '<div class="panel panel-default openside '.$class.'">';

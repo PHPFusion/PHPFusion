@@ -28,25 +28,22 @@ class AdminPanel extends Components {
     public function __construct() {
         OutputHandler::addToHead('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.min.js"></script>');
         OutputHandler::addToHead('<link rel="stylesheet" href="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.css"/>');
-        OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
         OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.js"></script>');
-        OutputHandler::addToFooter('<script type="text/javascript">$(".sidebar, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});</script>');
-        OutputHandler::addToJquery('$(".sidebar-sm .admin-submenu, .sidebar-sm .search-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
+        OutputHandler::addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
         $sections = Admins::getInstance()->getAdminSections();
 
         echo '<main class="clearfix">';
-            self::TopMenu();
-            self::Sidebar();
+            $this->TopMenu();
+            $this->Sidebar();
 
             echo '<div class="content">';
-
-                echo '<ul class="nav nav-tabs '.(self::IsMobile() ? '' : 'nav-justified ').'hidden-lg" style="margin-bottom: 20px;">';
+                echo '<ul id="nav-sections" class="nav nav-tabs nav-justified hidden-lg" style="margin-bottom: 20px;">';
                     if (!empty($sections)) {
                         $i = 0;
                         foreach ($sections as $section_name) {
                             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'">'.(self::IsMobile() ? Admins::getInstance()->get_admin_section_icons($i) : $section_name).'</a></li>';
+                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'"><span class="visible-xs">'.Admins::getInstance()->get_admin_section_icons($i).'</span><span class="hidden-xs">'.$section_name.'</span></a></li>';
                             $i++;
                         }
                     }
@@ -64,7 +61,7 @@ class AdminPanel extends Components {
                         echo showrendertime().showMemoryUsage().'<br />';
                     }
 
-                    echo 'Material Admin Theme &copy; '.date('Y').' '.self::SetLocale('013').' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.str_replace('<br />', ' | ', showcopyright());
+                    echo 'Material Admin Theme &copy; '.date('Y').' '.$this->SetLocale('013').' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.showcopyright('', TRUE);
                 echo '</footer>';
 
                 $errors = showFooterErrors();
@@ -73,9 +70,9 @@ class AdminPanel extends Components {
                 }
             echo '</div>';
 
-            if (!self::IsMobile()) {
-                self::MessagesBox();
-                self::ThemeSettings();
+            if (!$this->IsMobile()) {
+                $this->MessagesBox();
+                $this->ThemeSettings();
             }
         echo '</main>';
 
@@ -83,13 +80,13 @@ class AdminPanel extends Components {
         echo '<div class="overlay"></div>';
     }
 
-    private static function TopMenu() {
+    private function TopMenu() {
         $sections  = Admins::getInstance()->getAdminSections();
         $locale    = fusion_get_locale();
         $aidlink   = fusion_get_aidlink();
         $userdata  = fusion_get_userdata();
         $languages = fusion_get_enabled_languages();
-        $messages  = self::Messages();
+        $messages  = $this->Messages();
         $messages  = !empty($messages) ? '<span class="label label-danger messages">'.count($messages).'</span>' : '';
 
         echo '<div class="top-menu navbar fixed">';
@@ -135,7 +132,7 @@ class AdminPanel extends Components {
 
                 echo '<li><a title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
 
-                if (self::IsMobile()) {
+                if ($this->IsMobile()) {
                     echo '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
                 } else {
                     echo '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
@@ -146,7 +143,9 @@ class AdminPanel extends Components {
         echo '</div>';
     }
 
-    private static function Sidebar() {
+    private function Sidebar() {
+        $this->SearchAjax();
+
         echo '<aside class="sidebar fixed">';
             echo '<div class="header fixed hidden-xs hidden-sm hidden-md">';
                 echo '<div class="pf-logo"></div>';
@@ -158,40 +157,47 @@ class AdminPanel extends Components {
                 echo '<div class="search-box">';
                     echo '<i class="fa fa-search input-search-icon"></i>';
                     echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.self::SetLocale('001').'"/>';
+                    echo '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-b-5" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
                     echo '<ul id="search_result" style="display: none;"></ul>';
                 echo '</div>';
 
                 echo Admins::getInstance()->vertical_admin_nav(TRUE);
             echo '</div>';
         echo '</aside>';
+    }
 
-        add_to_jquery("$('#search_box').bind('keyup', function(e) {
+    private function SearchAjax() {
+        OutputHandler::addToJQuery('$("#search_box").bind("keyup", function () {
             var data = {
-                'pagestring': $(this).val(),
-                'url': '".$_SERVER['REQUEST_URI']."',
+                "pagestring": $(this).val(),
+                "url": "'.$_SERVER['REQUEST_URI'].'"
             };
-
             $.ajax({
-                url: '".MATERIAL."search.php".fusion_get_aidlink()."',
-                dataType: 'html',
-                method: 'get',
+                url: "'.MATERIAL.'search.php'.fusion_get_aidlink().'",
+                method: "get",
                 data: $.param(data),
-                success: function(e) {
-                    if ($('#search_box').val() == '') {
-                        $('#adl').show();
-                        $('#search_result').html(e).hide();
-                        $('#search_result li').html(e).hide();
+                beforeSend: function() {
+                    $("#ajax-loader").show();
+                },
+                success: function (e) {
+                    if ($("#search_box").val() == "") {
+                        $("#adl").show();
+                        $("#search_result").html(e).hide();
+                        $("#search_result li").html(e).hide();
                     } else {
-                        if ($('body').hasClass('sidebar-sm')) {
-                            $('#adl').show();
+                        if ($("body").hasClass("sidebar-sm")) {
+                            $("#adl").show();
                         } else {
-                            $('#adl').hide();
+                            $("#adl").hide();
                         }
 
-                        $('#search_result').html(e).show();
+                        $("#search_result").html(e).show();
                     }
+                },
+                complete: function () {
+                    $("#ajax-loader").hide();
                 }
             });
-        });");
+        });');
     }
 }
