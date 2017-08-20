@@ -157,8 +157,8 @@ class AdminPanel extends Components {
                 echo '<div class="search-box">';
                     echo '<i class="fa fa-search input-search-icon"></i>';
                     echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.self::SetLocale('001').'"/>';
-                    echo '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-b-5" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
                     echo '<ul id="search_result" style="display: none;"></ul>';
+                    echo '<img id="ajax-loader" style="width: 30px; display: none;" class="img-responsive center-x m-t-10" alt="Ajax Loader" src="'.IMAGES.'loader.svg"/>';
                 echo '</div>';
 
                 echo Admins::getInstance()->vertical_admin_nav(TRUE);
@@ -176,7 +176,7 @@ class AdminPanel extends Components {
                 url: "'.MATERIAL.'search.php'.fusion_get_aidlink().'",
                 method: "get",
                 data: $.param(data),
-                beforeSend: function() {
+                beforeSend: function () {
                     $("#ajax-loader").show();
                 },
                 success: function (e) {
