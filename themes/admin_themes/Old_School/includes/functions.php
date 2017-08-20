@@ -73,7 +73,7 @@ function render_dashboard() {
         );
 
         echo "<!--Start Members-->\n";
-        echo "<div class='row'>\n";
+        echo "<div class='row' id='members'>\n";
             foreach ($panels as $panel => $block) {
                 $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
@@ -247,7 +247,7 @@ function render_dashboard() {
                         }
                     }
                     echo "</div>\n";
-                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='fa fa-angle-right'></i></div>\n" : '';
+                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='fa fa-angle-right'></i></div>\n" : '';
                 } else {
                     echo "<div class='text-center'>".$locale['284']."</div>\n";
                 }

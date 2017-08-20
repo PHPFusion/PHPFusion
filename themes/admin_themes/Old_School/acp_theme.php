@@ -22,7 +22,9 @@ if (!defined("IN_FUSION")) {
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_themes/Old_School/includes/functions.php";
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
-$settings['bootstrap'] = 1;
+
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
 
 function render_admin_login() {
     $locale = fusion_get_locale();
@@ -87,8 +89,6 @@ function render_admin_panel() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
-
-
     $languages = fusion_get_enabled_languages();
 
     echo "<div id='wrapper'>\n";
@@ -113,18 +113,21 @@ function render_admin_panel() {
                 echo '</div>';
                 echo '<div class="collapse navbar-collapse" id="main-menu">';
                     echo '<ul class="nav navbar-nav">';
-                        echo "<li><a title='".$locale['ac00']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['ac00']."</a></li>\n";
-                        echo "<li><a title='".$locale['ac01']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=1'>".$locale['ac01']."</a></li>\n";
-                        echo "<li><a title='".$locale['ac02']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=2'>".$locale['ac02']."</a></li>\n";
-                        echo "<li><a title='".$locale['ac03']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=3'>".$locale['ac03']."</a></li>\n";
-                        echo "<li><a title='".$locale['ac04']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=4'>".$locale['ac04']."</a></li>\n";
-                        echo "<li><a title='".$locale['ac05']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=5'>".$locale['ac05']."</a></li>\n";
+                        $sections = \PHPFusion\Admins::getInstance()->getAdminSections();
+                        if (!empty($sections)) {
+                            $i = 0;
+
+                            foreach ($sections as $section_name) {
+                                $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && \PHPFusion\Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
+                                echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.$section_name.'</a></li>';
+                                $i++;
+                            }
+                        }
                     echo '</ul>';
 
                     echo '<ul class="nav navbar-nav navbar-right">';
                         echo "<li class='dropdown'>\n";
-                            echo "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '25px', '', '',
-                                                                                                             '')." ".$locale['logged']."<strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n</a>\n";
+                            echo "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '18px', '', '', 'img-rounded')." ".$locale['logged']."<strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n</a>\n";
                             echo "<ul class='dropdown-menu' role='menu'>\n";
                             echo "<li><a class='display-block' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
                             echo "<li><a class='display-block' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
