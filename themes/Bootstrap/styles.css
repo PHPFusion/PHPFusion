@@ -556,3 +556,11 @@
     max-height: 143px !important;
     margin: 5px auto 0;
 }
+
+.image-header {
+    height: 200px;
+}
+
+.editor-wrapper .btn {
+    padding: 5px 10px;
+}
