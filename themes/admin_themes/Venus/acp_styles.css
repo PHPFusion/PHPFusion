@@ -88,7 +88,7 @@ section.login-bg {
     z-index: 0;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
     border-radius: 0.278em;
-    color: rgb(255, 255, 255);
+    color: #fff;
     font-size: 20px;
     border-width: 0px;
     border-style: solid;
@@ -126,7 +126,7 @@ section.login-bg {
 }
 
 .breadcrumb > li {
-    text-shadow: 0px 1px 0px rgb(255, 255, 255);
+    text-shadow: 0px 1px 0px #fff;
     padding: 0px 20px;
     position: relative;
     white-space: nowrap;
@@ -624,7 +624,7 @@ legend {
 nav ul {
     list-style: none;
     margin: 0;
-    border: 0 !important;
+    border: 0;
 }
 
 nav ul > li {
@@ -632,25 +632,26 @@ nav ul > li {
     display: inline-block;
 }
 
-nav > ul > li.active > a {
+nav ul > li.active > a {
     font-weight: 600;
 }
 
-nav > ul > li > a {
-    padding: 17px !important;
+nav ul > li > a {
+    padding: 17px;
     color: #444;
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     display: inline-block;
 }
 
-nav > ul > li > a > .fa {
+nav ul > li > a > .fa {
     font-size: 24px;
 }
 
-nav > ul > li > a:hover,
-nav > ul > li > a:focus,
-nav > ul > li.open > a {
+nav ul > li > a:hover,
+nav ul > li > a:focus,
+nav ul > li.active > a,
+nav ul > li.open > a {
     color: rgba(0, 0, 0, 1);
     text-decoration: none;
     background-color: rgba(245, 245, 245, 1);
@@ -661,10 +662,11 @@ nav > ul > li.open > a {
 }
 
 #acp-header {
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
     width: 100%;
     margin-left: 0;
     z-index: 10;
+    border-bottom: 1px solid #ccc;
 }
 
 #acp-content {
@@ -681,7 +683,7 @@ nav > ul > li.open > a {
 #acp-left {
     color: rgb(101, 107, 147);
     background-color: rgb(34, 43, 45);
-    border-right: 1px solid rgb(170, 183, 205);
+    border-right: 1px solid #ccc;
     width: 250px;
     z-index: 10;
     margin-left: -250px;
@@ -704,7 +706,7 @@ nav > ul > li.open > a {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fc', endColorstr='#eaeff7', GradientType=0);
     margin-bottom: -1px;
     margin-top: 60px;
-    border-right: transparent;
+    border: transparent;
 }
 
 #acp-left strong {
@@ -764,7 +766,7 @@ nav > ul > li.open > a {
 
 /* Vertical Nav Styling */
 .admin-vertical-link {
-    border-top: 1px solid rgb(185, 196, 207);
+    border-top: 1px solid #ddd;
     width: 100% !important;
     display: inline-block;
     overflow-y: auto;
@@ -795,7 +797,7 @@ nav > ul > li.open > a {
 .admin-vertical-link > li.active > .adl-link:focus {
     padding: 15px 20px;
     font-weight: 600;
-    color: rgb(255, 255, 255);
+    color: #fff;
     text-shadow: 0px 1px rgb(17, 81, 123);
     background-color: #0163ac;
     background-image: -webkit-linear-gradient(bottom, #0163ac 11%, #43a6da 99%, #73bde4);
@@ -817,7 +819,7 @@ nav > ul > li.open > a {
     padding: 15px 20px;
     transition: color 0.2s ease-in-out 0s;
     outline: medium none;
-    text-shadow: 0px 1px rgb(255, 255, 255);
+    text-shadow: 0px 1px #fff;
     position: relative;
     border-bottom: 1px solid #B9C4CF;
 }
@@ -828,7 +830,7 @@ nav > ul > li.open > a {
     font-weight: 600;
     padding: 15px 20px;
     outline: none;
-    background: rgb(255, 255, 255);
+    background: #fff;
     background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(209, 225, 240, 1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(100%, rgba(209, 225, 240, 1)));
     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(209, 225, 240, 1) 100%);
@@ -848,7 +850,7 @@ nav > ul > li.open > a {
     text-shadow: 0px 1px rgb(17, 81, 123);
     background-color: rgb(1, 99, 172);
     background-image: linear-gradient(to top, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
-    color: rgb(255, 255, 255);
+    color: #fff;
     border-bottom: 1px solid rgb(3, 84, 145);
     outline: medium none;
 }
@@ -858,7 +860,7 @@ nav > ul > li.open > a {
 .admin-vertical-link > li > a:focus {
     color: rgb(48, 81, 132);
     text-decoration: none;
-    background: rgb(255, 255, 255);
+    background: #fff;
     background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(209, 225, 240, 1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(100%, rgba(209, 225, 240, 1)));
     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(209, 225, 240, 1) 100%);
@@ -879,7 +881,7 @@ nav > ul > li.open > a {
     width: 100%;
     font-weight: 400;
     padding: 11px 15px 9px 30px;
-    color: rgb(255, 255, 255);
+    color: #fff;
     outline: none;
     font-size: 95%;
 }
@@ -891,7 +893,7 @@ nav > ul > li.open > a {
 
 .admin-vertical-link .admin-submenu > li > a:hover,
 .admin-vertical-link .admin-submenu > li > a:focus {
-    color: rgb(255, 255, 255);
+    color: #fff;
     background-color: rgba(91, 131, 180, 0.3);
     text-decoration: none;
 }
@@ -901,7 +903,7 @@ nav > ul > li.open > a {
 .admin-vertical-link .admin-submenu > li.active > a:focus {
     font-weight: 600;
     background-color: rgba(91, 131, 180, 0.3);
-    color: rgb(255, 255, 255);
+    color: #fff;
 }
 
 .top-right-menu .dropdown-menu li {
@@ -913,7 +915,8 @@ nav > ul > li.open > a {
     width: 250px;
     height: 60px;
     float: left;
-    border-right: 1px solid rgb(170, 183, 205);
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .brand-text {
@@ -990,4 +993,13 @@ footer {
 
 #acp-left-menu li {
     list-style: none;
+}
+
+#members .dashboard-icon {
+    position: absolute;
+}
+
+#overview .dashboard-icon {
+    position: absolute;
+    right: 30px;
 }
