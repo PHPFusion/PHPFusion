@@ -59,7 +59,7 @@ if (dbrows($result)) {
                         if ($data['thread_lastpost'] > $lastvisited) {
                             $thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
                             if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
-                                echo "<i class='fa fa-folder fa-2x'></i>";
+                                echo "<i class='fa fa-folder-o fa-2x'></i>";
                             } else {
                                 echo "<i class='fa fa-folder fa-2x text-danger'></i>";
                             }
