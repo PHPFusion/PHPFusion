@@ -104,7 +104,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     // default max file size
     $format = '';
-    $browseLabel = $options['placeholder'] ?: $locale['df_300'];
+    $browseLabel = $locale['df_300'];
+
     // file type if single filter, if not will accept as object if left empty.
     $type_for_js = NULL;
     if ($options['type']) {
@@ -122,6 +123,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         }
         $type_for_js = json_encode((array)$options['type']);
     }
+    $browseLabel = $options['placeholder'] ?: $browseLabel;
 
     $value = '';
     if (!empty($input_value)) {
@@ -148,7 +150,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         define('form_fileinput', TRUE);
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block ' : '').$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
@@ -287,7 +289,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                browseIcon: '<i class=\"".$options['icon']."\"></i>',
                 showCaption: false,
                 showRemove: false,
                 showUpload: false,
@@ -315,7 +317,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                browseIcon: '<i class=\"".$options['icon']."\"></i>',
                 showCaption: false,
                 showRemove: false,
                 showUpload: false,
