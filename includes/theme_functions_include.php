@@ -224,13 +224,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     function openmodal($id, $title, $options = array()) {
         $locale = fusion_get_locale();
         $options += array(
-            'class' => !empty($options['class']) ?: 'modal-lg',
-            'button_id' => "",
-            "button_class" => "",
-            'static' => FALSE,
+            'class'        => !empty($options['class']) ?: 'modal-lg',
+            'button_id'    => '',
+            'button_class' => '',
+            'static'       => FALSE,
+            'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
         );
 
-        $modal_trigger = "";
+        $modal_trigger = '';
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
             $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
         }
@@ -242,11 +243,13 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         } elseif ($modal_trigger && empty($options['static'])) {
             PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            if (!$options['hidden']) {
+                PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            }
         }
         $html = '';
         $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-        $html .= "<div class='modal-dialog ".$options['class']."'>\n";
+        $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
         $html .= "<div class='modal-content'>\n";
         if ($title) {
             $html .= "<div class='modal-header'>";
@@ -714,7 +717,8 @@ if (!function_exists('colorbox')) {
     function colorbox($img_path, $img_title, $responsive = TRUE, $class = '', $as_text = FALSE) {
         if (!defined('COLORBOX')) {
             define('COLORBOX', TRUE);
-            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+            $colorbox_css = file_exists(THEME.'colorbox/colorbox.css') ? THEME.'colorbox/colorbox.css' : INCLUDES.'jquery/colorbox/colorbox.css';
+            add_to_head("<link rel='stylesheet' href='$colorbox_css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
             add_to_jquery("$('a[rel^=\"colorbox\"]').colorbox({ current: '',width:'80%',height:'80%'});");
         }
