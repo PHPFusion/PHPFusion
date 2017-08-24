@@ -52,6 +52,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'btn_class'         => 'btn-default',
         'icon'              => 'fa fa-upload',
         'jsonurl'           => FALSE,
+        'dropzone'          => FALSE,
         'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
         'thumbnail'         => FALSE,
         'thumbnail_w'       => 300,
@@ -73,12 +74,15 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'template'          => 'classic',
         'media'             => FALSE,
         'placeholder'       => '',
+        'form_id'           => '',
+        'hide_upload'       => FALSE,
+        'hide_remove'       => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     );
 
     $options += $default_options;
 
-    if (!is_dir($options['upload_path'])) {
+    if (!is_dir($options['upload_path']) && !$options['jsonurl']) {
         $options['upload_path'] = IMAGES;
     }
 
@@ -236,6 +240,21 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         )
     );
 
+    $extra_data_js = "";
+    if ($options['form_id'] && $options['jsonurl']) {
+        $extra_data_js = "
+        uploadExtraData: function() {
+            var inputs = $('#".$options['form_id']." :input');
+            var obj = $.map(inputs, function(x, y) {
+                return {
+                    Key: x.name,
+                    Value: $(x).val()
+                };
+            });                    
+            return obj;
+        },
+        ";
+    }
     if ($options['media']) {
         \defender::getInstance()->add_field_session(
             array(
@@ -267,8 +286,11 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 removeClass : 'btn ".$options['btn_class']." button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
-                ".($options['jsonurl'] ? '' : 'showUpload: false,')."
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                $extra_data_js
                 ".$lang."
             });
             ");
@@ -292,7 +314,11 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseIcon: '<i class=\"".$options['icon']."\"></i>',
                 showCaption: false,
                 showRemove: false,
-                showUpload: false,
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                $extra_data_js                                 
                 layoutTemplates: {
                     main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
                 },
@@ -320,7 +346,11 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 browseIcon: '<i class=\"".$options['icon']."\"></i>',
                 showCaption: false,
                 showRemove: false,
-                showUpload: false,
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                ".($options['jsonurl'] && $options['hide_upload'] ? 'showUpload: false,' : '')."
+                ".($options['jsonurl'] && $options['hide_remove'] ? 'showRemove: false,' : '')."
+                dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",     
+                $extra_data_js                           
                 layoutTemplates: {
                     main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
                 },
