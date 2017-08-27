@@ -43,7 +43,6 @@ if (fusion_get_settings('bootstrap') == TRUE) {
         echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n";
     }
 }
-
 if (fusion_get_settings('entypo')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
@@ -52,17 +51,14 @@ if (fusion_get_settings('entypo')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-
 if (fusion_get_settings('fontawesome')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
-
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
-
 echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-echo render_favicons(IMAGES);
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : '');
 
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
