@@ -107,7 +107,7 @@ if (!function_exists('render_downloads')) {
                 echo "<h4>".$locale['download_1019']."</h4>";
                 echo "<div class='well'>\n";
                 echo "<div class='overflow-hide'>\n";
-                echo $data['download_description'];
+                echo nl2br(parse_textarea($data['download_description'], TRUE, TRUE, FALSE));
                 echo "</div>\n";
                 echo "</div>\n";
             }
