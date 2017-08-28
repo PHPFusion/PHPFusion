@@ -58,7 +58,7 @@ if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-echo render_favicons(defined('THEME_ICON') ? THEME_ICON : '');
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
