@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer;
 
 /**
@@ -124,14 +125,18 @@ class Infusion_Core {
                                  */
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">")) {
+                                    unset($upgrades);
                                     $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
+
                                     foreach ($upgrades as $callback_method => $statement_type) {
+
                                         $method = $callback_method."_infuse";
-                                        if (method_exists(self::$instance, $method)) {
-                                            $error = self::$instance->$method($upgrades);
+                                        if (method_exists($this, $method)) {
+                                            $error = $this->$method($upgrades);
                                         }
                                         if ($error) {
-                                            \defender::stop();
+                                            // Reports visually which method has error.
+                                            \defender::stop($callback_method);
                                             addNotice('danger', self::$locale['403']);
 
                                             return $error;
@@ -152,8 +157,8 @@ class Infusion_Core {
             } else {
                 foreach (self::$inf as $callback_method => $statement_type) {
                     $method = $callback_method."_infuse";
-                    if (method_exists(self::$instance, $method)) {
-                        $error = self::getInstance()->$method(self::$inf);
+                    if (method_exists($this, $method)) {
+                        $error = $this->$method(self::$inf);
                     }
                     if ($error) {
                         addNotice('danger', self::$locale['403']);
@@ -170,8 +175,9 @@ class Infusion_Core {
                 }
             }
         }
-
-        redirect(FUSION_REQUEST);
+        if (\defender::safe()) {
+            redirect(FUSION_REQUEST);
+        }
     }
 
     /**
@@ -261,6 +267,8 @@ class Infusion_Core {
     }
 
     /**
+     * Load upgrade folder
+     *
      * @param $folder
      * @param $upgrade_file_path
      *
@@ -342,8 +350,9 @@ class Infusion_Core {
         return $infusion;
     }
 
-    // Method : Insert admin panel links
     /**
+     * Method : Get Instance
+     *
      * @return null|static
      */
     public static function getInstance() {
@@ -355,8 +364,9 @@ class Infusion_Core {
         return self::$instance;
     }
 
-    // Method: Install single site links
     /**
+     * Method: Defuse
+     *
      * @param $folder
      */
     public function defuse($folder) {
@@ -450,7 +460,13 @@ class Infusion_Core {
         redirect(FUSION_REQUEST);
     }
 
-    // Method: drop column
+    /**
+     * Method: Drop column
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function dropcol_infuse($inf) {
         $error = FALSE;
         if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
@@ -469,7 +485,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Multilanguage multiple insert rows
+    /**
+     * Method: Add Sitelinks
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function sitelink_infuse($inf) {
         $error = FALSE;
         if ($inf['sitelink'] && is_array($inf['sitelink'])) {
@@ -517,8 +539,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Register Multilang rights
-
+    /**
+     * Method: Register Multilang rights
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function mlt_insertdbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
@@ -543,8 +570,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Alter table
-
+    /**
+     * Method: Multilanguage Insert Rows
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function mlt_infuse($inf) {
         $error = FALSE;
         if ($inf['mlt'] && is_array($inf['mlt'])) {
@@ -562,13 +594,19 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Update table rows
-
+    /**
+     * Method: Change table structure
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function altertable_infuse($inf) {
         $error = FALSE;
         if ($inf['altertable'] && is_array($inf['altertable'])) {
             foreach ($inf['altertable'] as $altertable) {
-                $result = dbquery("ALTER TABLE ".$altertable);
+                $statement = "ALTER TABLE ".$altertable;
+                $result = dbquery($statement);
                 if (!$result) {
                     $error = TRUE;
                 }
@@ -578,8 +616,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Create new tables
-
+    /**
+     * Method: Update Row Record
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function updatedbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
@@ -594,8 +637,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Install new column
-
+    /**
+     * Method: Install New Table
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function newtable_infuse($inf) {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
@@ -613,8 +661,13 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Insert rows
-
+    /**
+     * Method: Insert New Column
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function newcol_infuse($inf) {
         $error = FALSE;
         static $table_schema = [];
@@ -638,6 +691,13 @@ class Infusion_Core {
         return $error;
     }
 
+    /**
+     * Method: Insert Rows
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function insertdbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
@@ -658,6 +718,13 @@ class Infusion_Core {
         return $error;
     }
 
+    /**
+     * Method: Delete rows
+     *
+     * @param $inf
+     *
+     * @return bool
+     */
     protected function deldbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {
