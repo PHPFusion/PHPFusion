@@ -2379,6 +2379,10 @@ tr:hover > td .tbl_actions {
     font-weight: 400;
 }
 
+.thumb > img {
+    display: block;
+    width: 100%;
+}
 .remove_tag {
 
 }
