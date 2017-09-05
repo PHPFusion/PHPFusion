@@ -336,6 +336,8 @@ class ThreadTags extends ForumServer {
             );
 
         }
+
+        return self::$tag_instance;
     }
 
     /**
