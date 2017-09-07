@@ -440,7 +440,7 @@ if (!function_exists('forum_filter')) {
             <div class='clearfix'>
                 <div class='pull-left'>
                     <?php echo $locale['forum_0388']; ?>
-                    <div class='forum-filter'>
+                    <div class='forum-filter dropdown'>
                         <button class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
                             <?php echo(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211']) ?>
                             <span class='caret'></span>
@@ -455,8 +455,8 @@ if (!function_exists('forum_filter')) {
                     </div>
                 </div>
                 <div class='pull-left'>
-                    <div class='forum-filter'>
-                        <?php echo $locale['forum_0225'] ?>
+                    <?php echo $locale['forum_0225'] ?>
+                    <div class='forum-filter dropdown'>
                         <button class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
                             <?php echo(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381']) ?>
                             <span class='caret'></span>
@@ -469,7 +469,7 @@ if (!function_exists('forum_filter')) {
                             ?>
                         </ul>
                     </div>
-                    <div class='forum-filter'>
+                    <div class='forum-filter dropdown'>
                         <button class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
                             <?php echo(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230']) ?>
                             <span class='caret'></span>

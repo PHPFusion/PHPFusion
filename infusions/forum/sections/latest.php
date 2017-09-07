@@ -54,7 +54,7 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
 		FROM ".DB_FORUMS." tf
 		INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id   		
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access')."
-		GROUP BY t.thread_id ORDER BY t.thread_sticky DESC, t.thread_lastpost DESC
+		GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC
 		"
     )
 );

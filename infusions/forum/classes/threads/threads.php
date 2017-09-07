@@ -168,9 +168,9 @@ class ForumThreads extends ForumServer {
                         if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] ||
                                 preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))
                         ) {
-                            $icon = "<i class='".get_forumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
+                            $icon = "<i class='".self::get_ForumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
                         } else {
-                            $icon = "<i class='".get_forumIcons('new')."' title='".$locale['forum_0260']."'></i>";
+                            $icon = "<i class='".self::get_ForumIcons('new')."' title='".$locale['forum_0260']."'></i>";
                         }
                     }
 
