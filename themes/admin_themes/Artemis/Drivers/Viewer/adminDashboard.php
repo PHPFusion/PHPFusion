@@ -245,7 +245,7 @@ class adminDashboard extends resource {
                                 </ul>
                                 ";
                             echo "</div>\n";
-                            echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
+                            echo "<strong>".(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name'])." </strong>\n";
                             echo "<span class='text-lighter'>".$locale['273']."</span> ".strtr($comment_item_url, ['{%item%}' => $comment_item_name]);
                             echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
                             $mess = trimlink(parse_textarea($comment_data['comment_message'], FALSE, FALSE), 70);
