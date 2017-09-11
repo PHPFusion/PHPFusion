@@ -1038,10 +1038,10 @@ class ForumThreads extends ForumServer {
                                 'user_status' => $user_replied['user_status']
                             );
                             $reply_sender[$r_data['post_id']] = "
-                        <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
-                        ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
-                        </a>
-                        ";
+                            <a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n
+                            ".profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE)."
+                            </a>
+                            ";
                             $last_datestamp = $r_data['post_datestamp'];
                         }
                         $senders = implode(", ", $reply_sender);

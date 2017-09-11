@@ -272,10 +272,13 @@ class Members_Admin {
                     break;
             }
         } else {
-            if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
+            if (isset($_REQUEST['action']) && isset($_REQUEST['user_id'])) {
                 $user_action = new Members_Action();
-                $user_action->set_userID((array)$_POST['user_id']);
-                $user_action->set_action((string)$_POST['action']);
+                if (!is_array($_REQUEST['user_id'])) {
+                    $_REQUEST['user_id'] = array($_REQUEST['user_id']);
+                }
+                $user_action->set_userID((array)$_REQUEST['user_id']);
+                $user_action->set_action((string)$_REQUEST['action']);
                 $user_action->execute();
             }
             opentable(self::$locale['ME_400']);
