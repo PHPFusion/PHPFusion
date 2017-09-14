@@ -124,6 +124,11 @@ if (!function_exists('display_main_news')) {
             foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
                 echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
             }
+
+            foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
+                echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
+            }
+
         } else {
             echo "<p>".$locale['news_0016']."</p>";
         }

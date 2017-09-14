@@ -10,6 +10,10 @@
     top: 0 !important;
 }
 
+.top-5 {
+    top: 5px !important;
+}
+
 .top-10 {
     top: 10px !important;
 }
@@ -32,6 +36,10 @@
 
 .bottom-0 {
     bottom: 0 !important;
+}
+
+.bottom-5 {
+    bottom: 5px !important;
 }
 
 .bottom-10 {
@@ -371,6 +379,10 @@ Grids
     padding-top: 0 !important;
 }
 
+.p-t-5 {
+    padding-top: 5px !important;
+}
+
 .p-t-10 {
     padding-top: 10px !important;
 }
@@ -385,6 +397,10 @@ Grids
 
 .p-l-0 {
     padding-left: 0 !important;
+}
+
+.p-l-5 {
+    padding-left: 5px !important;
 }
 
 .p-l-10 {

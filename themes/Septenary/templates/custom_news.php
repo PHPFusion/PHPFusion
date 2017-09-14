@@ -144,15 +144,15 @@ if (!function_exists('render_main_news')) {
 
             if ($carousel_count > 1) {
                 $carousel_html .= "
-				<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
-					<span class='fa fa-chevron-left' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['previous']."</span>
-			  	</a>
-			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
-					<span class='fa fa-chevron-right' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['next']."</span>
-			  	</a>\n
-				";
+                <a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
+                    <span class='fa fa-chevron-left' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['previous']."</span>
+                </a>
+                <a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
+                    <span class='fa fa-chevron-right' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['next']."</span>
+                </a>\n
+                ";
             }
 
             $carousel_html .= "</div>\n";
@@ -166,14 +166,17 @@ if (!function_exists('render_main_news')) {
         openside($locale['news_0009']);
         ?>
         <ul>
-            <?php if (!empty($info['news_categories'])) :
+            <?php if (!empty($info['news_categories'])) {
                 foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
                     echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
                 }
+
+                foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
+                    echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+                }
+            } else {
                 echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
-            else:
-                echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
-            endif;
+            }
             ?>
         </ul>
         <?php
@@ -233,15 +236,15 @@ if (!function_exists('render_news')) {
         $locale = fusion_get_locale();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         add_to_jquery("
-			$('.news-img-header').hover(
-				function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 1, 'height': ".$news_settings['news_thumb_h']." }); },
-				function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 0}); }
-			);
-			");
+            $('.news-img-header').hover(
+                function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 1, 'height': ".$news_settings['news_thumb_h']." }); },
+                function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 0}); }
+            );
+            ");
         ?>
         <!--news_prepost_<?php echo $info['news_id'] ?>-->
         <article class="news-article">
-            <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px">
+            <div class="news-img-info" style="min-height: 200px">
                 <?php echo $info['news_image']; ?>
                 <div class="news-box-overlay">
                     <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>" rel="bookmark">
@@ -260,7 +263,7 @@ if (!function_exists('render_news')) {
 
             <div class="news-poster-info">
                 <div class="pull-left">
-                    <?php echo display_avatar($info, '30px', '', FALSE, 'img-circle') ?>
+                    <?php echo display_avatar($info, '30px', '', FALSE, 'img-circle m-r-5') ?>
                 </div>
                 <div class="overflow-hide">
                     <span class="news-author">

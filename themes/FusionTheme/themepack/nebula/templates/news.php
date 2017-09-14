@@ -75,9 +75,19 @@ class News extends Core {
         ?>
         <ul>
             <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
-                <li class='list-group-item'>
+                <li class='list-group-item p-t-5 p-b-5'>
                     <a href='<?php echo $category['link'] ?>'>
-                        <h5 class='text-uppercase m-0 p-t-10 p-b-5'>
+                        <h5 class='text-uppercase'>
+                            <strong><?php echo $category['name'] ?></strong>
+                        </h5>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+
+            <?php foreach ($info['news_categories'][1] as $category_id => $category) : ?>
+                <li class='list-group-item p-t-5 p-b-5'>
+                    <a href='<?php echo $category['link'] ?>'>
+                        <h5 class='text-uppercase'>
                             <strong><?php echo $category['name'] ?></strong>
                         </h5>
                     </a>
