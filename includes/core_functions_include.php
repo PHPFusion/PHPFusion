@@ -347,8 +347,8 @@ function trimlink($text, $length) {
 function fusion_first_words($text, $limit, $suffix = '&hellip;') {
     $text = preg_replace('/[\r\n]+/', '', $text);
     return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])
-				[[:punct:]]\s*
-		))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
+                [[:punct:]]\s*
+        ))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
 }
 
 /**
@@ -1429,33 +1429,39 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  */
 function showdate($format, $val, $options = array()) {
     $userdata = fusion_get_userdata();
-/*    $tz_server = fusion_get_settings("serveroffset");
-	if (empty($tz_server)) $tz_server = 'Europe/London';*/
-	if (isset($options['tz_override'])) {
-		$tz_client = $options['tz_override'];
-	} else {
+
+    if (isset($options['tz_override'])) {
+        $tz_client = $options['tz_override'];
+    } else {
         if (!empty($userdata['user_timezone'])) {
             $tz_client = $userdata['user_timezone'];
         } else {
-            $tz_client = fusion_get_settings("timeoffset");
+            $tz_client = fusion_get_settings('timeoffset');
         }
-	}
-	if (empty($tz_client)) $tz_client = 'Europe/London';
-//    $server_dtz = new DateTimeZone($tz_server);
+    }
+
+    if (empty($tz_client)) {
+        $tz_client = 'Europe/London';
+    }
+
     $client_dtz = new DateTimeZone($tz_client);
-//    $server_dt = new DateTime("now", $server_dtz);
-    $client_dt = new DateTime("now", $client_dtz);
-    //$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
+    $client_dt = new DateTime('now', $client_dtz);
     $offset = $client_dtz->getOffset($client_dt);
 
-//    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-	if (in_array($format, array("shortdate", "longdate", "forumdate", "newsdate"))) {
-        $format = fusion_get_settings($format);
-        $offset = intval($val) + $offset;
+    if (!empty($val)) {
+        if (in_array($format, array('shortdate', 'longdate', 'forumdate', 'newsdate'))) {
+            $format = fusion_get_settings($format);
+            $offset = intval($val) + $offset;
 
-        return strftime($format, $offset);
+            return strftime($format, $offset);
+        } else {
+            $offset = intval($val) + $offset;
+
+            return strftime($format, $offset);
+        }
     } else {
-        $offset = intval($val) + $offset;
+        $format = fusion_get_settings($format);
+        $offset = intval(TIME) + $offset;
 
         return strftime($format, $offset);
     }
@@ -1833,18 +1839,18 @@ function lang_switcher($icon = TRUE) {
         echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
         echo closeform();
         add_to_jquery("
-			function showflag(item){
-				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
-			}
-			$('#lang_menu').select2({
-			placeholder: '".$locale['global_ML103']."',
-			formatSelection: showflag,
-			escapeMarkup: function(m) { return m; },
-			formatResult: showflag,
-			}).bind('change', function(item) {
-				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-			});
-		");
+            function showflag(item){
+                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+            }
+            $('#lang_menu').select2({
+            placeholder: '".$locale['global_ML103']."',
+            formatSelection: showflag,
+            escapeMarkup: function(m) { return m; },
+            formatResult: showflag,
+            }).bind('change', function(item) {
+                window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
+            });
+        ");
     }
     closeside();
 }
