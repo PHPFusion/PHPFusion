@@ -171,8 +171,10 @@ if (!function_exists('render_main_news')) {
                     echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
                 }
 
-                foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
-                    echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+                if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
+                    foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
+                        echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+                    }
                 }
             } else {
                 echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
