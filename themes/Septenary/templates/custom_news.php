@@ -246,7 +246,7 @@ if (!function_exists('render_news')) {
         ?>
         <!--news_prepost_<?php echo $info['news_id'] ?>-->
         <article class="news-article">
-            <div class="news-img-info" style="min-height: 200px">
+            <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px;">
                 <?php echo $info['news_image']; ?>
                 <div class="news-box-overlay">
                     <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>" rel="bookmark">
