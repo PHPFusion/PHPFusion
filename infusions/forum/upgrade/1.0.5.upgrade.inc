@@ -16,13 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = fusion_get_locale("",
-    array(
-        LOCALE.LOCALESET."setup.php",
-        INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
-    )
-);
-$locale = \defender::sanitize_array($locale);
+$locale = fusion_get_locale("", [
+    LOCALE.LOCALESET."setup.php",
+    INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+]);
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
@@ -183,7 +180,7 @@ if (column_exists('forums', 'forum_attach_download')) {
 
 // Update existing records and change level accesses to new user groups values
 $forum_index = dbquery_tree($db_prefix.'forums', 'forum_id', 'forum_cat');
-$result = dbquery("SELECT forum_id, forum_cat, forum_type, forum_post, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download, forum_mods FROM ".$db_prefix."forums");
+$result = dbquery("SELECT * FROM ".$db_prefix."forums");
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         // Update new access levels for forum_post
@@ -377,7 +374,7 @@ if (!empty($enabled_languages)) {
             $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
         );
         foreach ($sl_name_check as $link_name => $_sql) {
-            if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_names."'")) {
+            if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
                 $mlt_insertdbrow[$language][] = $_sql;
             }
         }
@@ -400,7 +397,7 @@ if (!empty($enabled_languages)) {
         }
 
         // Tags
-        if (!dbcount("(tag_id)", DB_FORUM_TAGS, "link_name='".$locale['forum_tag_0110']."'")) {
+        if (!dbcount("(tag_id)", DB_FORUM_TAGS, "tag_title='".$locale['forum_tag_0110']."'")) {
             $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".$language."')";
         }
 
@@ -427,7 +424,7 @@ if (!empty($enabled_languages)) {
         $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
     );
     foreach ($link_name_check as $link_name => $_sql) {
-        if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_names."'")) {
+        if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
             $mlt_insertdbrow[$language][] = $_sql;
         }
     }

@@ -8,7 +8,7 @@
         </div>
     </div>
 </div>
-<div class='navbar navbar-inverse' style='margin-top:-15px;'>
+<div class='navbar navbar-inverse' style='margin-top:-15px; border-radius: 0;'>
     <ul class='nav navbar-nav'>
         {navbar_item.{
         <li {%active%}><a href='{%link%}'>{%title%}</a></li>
@@ -36,4 +36,5 @@
 </div>
 
 {moderator_list.{
-<div class='list-group-item'><strong>{%mod_title%}</strong> {%moderators%}</div>}}
+    <div class='list-group-item'><strong>{%mod_title%}</strong> {%moderators%}</div>
+}}

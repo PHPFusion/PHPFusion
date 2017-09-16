@@ -25,6 +25,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_forum')) {
     function render_forum($info) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
@@ -42,28 +43,29 @@ if (!function_exists('render_forum')) {
  *
  * @param array $info
  * @param int   $id - counter nth
- *                  Template File    templates/index/forum_index.html
+ * Template File templates/index/forum_index.html
  */
 if (!function_exists('render_forum_main')) {
     function render_forum_main(array $info, $id = 0) {
         $locale = fusion_get_locale();
-        /**
-         * WORK IN PROGRESS TO IMPLEMENT TEMPLATE CLASS
-         */
 
         $html = \PHPFusion\Template::getInstance('forum_index');
         $html->set_template(FORUM.'templates/index/forum_index.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
-        $html->set_tag('forum_bg_src', FORUM.'images/default_forum_bg.jpg');
+        $html->set_tag('forum_bg_src', FORUM.'images/bg/default_forum_bg.jpg');
         $html->set_tag('title', $locale['forum_0013']);
-        $html->set_tag('new_thread_link_url', $info['new_topic_link']['link']);
-        $html->set_tag('new_thread_link_title', $info['new_topic_link']['title']);
+
         if (!empty($info['forums'][$id])) {
+            $html->set_block('new_thread_link', [
+                'new_thread_link_url'   => $info['new_topic_link']['link'],
+                'new_thread_link_title' => $info['new_topic_link']['title']
+            ]);
+
             $chtml = \PHPFusion\Template::getInstance('forum_su_index');
             $chtml->set_template(FORUM.'templates/index/forum_item.html');
+
             foreach ($info['forums'][$id] as $forum_id => $data) {
                 if ($data['forum_type'] == 1) {
-
                     $chtml->set_block('category_header', [
                         'forum_title_link'  => $data['forum_link']['title'],
                         'threads_title'     => $locale['forum_0002'],
@@ -86,7 +88,12 @@ if (!function_exists('render_forum_main')) {
                     }
                 }
             }
-            $html->set_tag('forum_content', ['content' => 'TBA']);
+
+            foreach ($info['forums'][$id] as $forum_id => $data) {
+                $content = render_forum_item($data);
+
+                $html->set_block('forum_content', ['forum_content' => $content]);
+            }
         } else {
             $html->set_block('no_item', ['message' => $locale['forum_0328']]);
         }
@@ -485,7 +492,6 @@ if (!function_exists('forum_filter')) {
                 </div>
             </div>
 
-
             <?php
             /*echo "<div class='forum-filter'>\n";
             echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['type']) && in_array($_GET['type'],
@@ -497,10 +503,6 @@ if (!function_exists('forum_filter')) {
             echo "</ul>\n";
             echo "</div>\n";
             */
-            ?>
-
-
-            <?php
         }
 
         return ob_get_clean();

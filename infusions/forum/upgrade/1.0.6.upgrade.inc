@@ -72,7 +72,7 @@ if (!column_exists(DB_FORUM_VOTES, 'vote_id', FALSE)) {
 if (!db_exists(DB_FORUM_USER_REP)) {
     $inf_newtable[] = $db_prefix."forum_user_reputation (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',	
+    rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -80,7 +80,7 @@ if (!db_exists(DB_FORUM_USER_REP)) {
 	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
 	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (rep_id),	
+	PRIMARY KEY (rep_id),
 	KEY post_id (post_id, user_id, voter_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }

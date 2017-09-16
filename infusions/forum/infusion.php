@@ -19,18 +19,15 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale('',
-                            array(
-                                LOCALE.LOCALESET."setup.php",
-                                INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
-                            )
-);
-
+$locale = fusion_get_locale('', [
+        LOCALE.LOCALESET."setup.php",
+        INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+]);
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '1.0.6';
+$inf_version = '2.0';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@php-fusion.co.uk';
 $inf_weburl = 'https://www.php-fusion.co.uk';
@@ -49,207 +46,207 @@ $inf_mlt[] = array(
 
 // Create tables
 $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
-	attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	attach_name VARCHAR(100) NOT NULL DEFAULT '',
-	attach_mime VARCHAR(20) NOT NULL DEFAULT '',
-	attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
-	attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (attach_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    attach_name VARCHAR(100) NOT NULL DEFAULT '',
+    attach_mime VARCHAR(20) NOT NULL DEFAULT '',
+    attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
+    attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (attach_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_VOTES." (
     vote_id MEDIUMINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
-	vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (vote_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+    vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (vote_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_RANKS." (
-	rank_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	rank_title VARCHAR(100) NOT NULL DEFAULT '',
-	rank_image VARCHAR(100) NOT NULL DEFAULT '',
-	rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
-	rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	rank_apply TINYINT(4) DEFAULT '-101',
-	rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (rank_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    rank_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    rank_title VARCHAR(100) NOT NULL DEFAULT '',
+    rank_image VARCHAR(100) NOT NULL DEFAULT '',
+    rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
+    rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    rank_apply TINYINT(4) DEFAULT '-101',
+    rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (rank_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
-	thread_id MEDIUMINT(8) unsigned NOT NULL,
-	forum_poll_option_id SMALLINT(5) UNSIGNED NOT NULL,
-	forum_poll_option_text VARCHAR(150) NOT NULL,
-	forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
-	KEY thread_id (thread_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    thread_id MEDIUMINT(8) unsigned NOT NULL,
+    forum_poll_option_id SMALLINT(5) UNSIGNED NOT NULL,
+    forum_poll_option_text VARCHAR(150) NOT NULL,
+    forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
+    KEY thread_id (thread_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
-	forum_vote_user_id MEDIUMINT(8) UNSIGNED NOT NULL,
-	forum_vote_user_ip VARCHAR(45) NOT NULL,
-	forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-	KEY thread_id (thread_id,forum_vote_user_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_vote_user_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_vote_user_ip VARCHAR(45) NOT NULL,
+    forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+    KEY thread_id (thread_id,forum_vote_user_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLLS." (
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
-	forum_poll_title VARCHAR(250) NOT NULL,
-	forum_poll_start INT(10) UNSIGNED DEFAULT NULL,
-	forum_poll_length iNT(10) UNSIGNED NOT NULL,
-	forum_poll_votes SMALLINT(5) unsigned NOT NULL,
-	KEY thread_id (thread_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
+    forum_poll_title VARCHAR(250) NOT NULL,
+    forum_poll_start INT(10) UNSIGNED DEFAULT NULL,
+    forum_poll_length iNT(10) UNSIGNED NOT NULL,
+    forum_poll_votes SMALLINT(5) unsigned NOT NULL,
+    KEY thread_id (thread_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUMS." (
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_name VARCHAR(50) NOT NULL DEFAULT '',
-	forum_type TINYINT(1) NOT NULL DEFAULT '1',
-	forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
-	forum_lock TINYINT(1) NOT NULL DEFAULT '0',
-	forum_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-	forum_description TEXT NOT NULL,
-	forum_rules TEXT NOT NULL,
-	forum_mods TEXT NOT NULL,
-	forum_access TINYINT(4) NOT NULL DEFAULT '0',
-	forum_post TINYINT(4) DEFAULT '-101',
-	forum_reply TINYINT(4) DEFAULT '-101',
-	forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
-	forum_poll TINYINT(4) NOT NULL DEFAULT '-101',
-	forum_vote TINYINT(4) NOT NULL DEFAULT '-101',
-	forum_image VARCHAR(100) NOT NULL DEFAULT '',
-	forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101',
-	forum_users TINYINT(1) NOT NULL DEFAULT '0',
-	forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
-	forum_attach TINYINT(4) NOT NULL DEFAULT '-101',
-	forum_attach_download TINYINT(4) NOT NULL DEFAULT '-101',
-	forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
-	forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_merge TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	forum_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	forum_meta TEXT NOT NULL,
-	forum_alias VARCHAR(50) NOT NULL DEFAULT '',
-	PRIMARY KEY (forum_id),
-	KEY forum_order (forum_order),
-	KEY forum_lastpostid (forum_lastpostid),
-	KEY forum_postcount (forum_postcount),
-	KEY forum_threadcount (forum_threadcount)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_name VARCHAR(50) NOT NULL DEFAULT '',
+    forum_type TINYINT(1) NOT NULL DEFAULT '1',
+    forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
+    forum_lock TINYINT(1) NOT NULL DEFAULT '0',
+    forum_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    forum_description TEXT NOT NULL,
+    forum_rules TEXT NOT NULL,
+    forum_mods TEXT NOT NULL,
+    forum_access TINYINT(4) NOT NULL DEFAULT '0',
+    forum_post TINYINT(4) DEFAULT '-101',
+    forum_reply TINYINT(4) DEFAULT '-101',
+    forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
+    forum_poll TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_vote TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_image VARCHAR(100) NOT NULL DEFAULT '',
+    forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_users TINYINT(1) NOT NULL DEFAULT '0',
+    forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
+    forum_attach TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_attach_download TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
+    forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_merge TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    forum_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    forum_meta TEXT NOT NULL,
+    forum_alias VARCHAR(50) NOT NULL DEFAULT '',
+    PRIMARY KEY (forum_id),
+    KEY forum_order (forum_order),
+    KEY forum_lastpostid (forum_lastpostid),
+    KEY forum_postcount (forum_postcount),
+    KEY forum_threadcount (forum_threadcount)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POSTS." (
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_message TEXT NOT NULL,
-	post_showsig TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	post_smileys TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	post_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	post_ip VARCHAR(45) NOT NULL DEFAULT '',
-	post_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-	post_edituser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	post_edittime INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	post_editreason TEXT NOT NULL,
-	post_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	post_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	post_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (post_id),
-	KEY thread_id (thread_id),
-	KEY post_datestamp (post_datestamp)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_message TEXT NOT NULL,
+    post_showsig TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    post_smileys TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    post_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    post_ip VARCHAR(45) NOT NULL DEFAULT '',
+    post_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+    post_edituser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    post_edittime INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    post_editreason TEXT NOT NULL,
+    post_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    post_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    post_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (post_id),
+    KEY thread_id (thread_id),
+    KEY post_datestamp (post_datestamp)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_THREADS." (
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	thread_tags TEXT NOT NULL,
-	thread_tags_old TEXT NOT NULL,
-	thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	thread_subject VARCHAR(100) NOT NULL DEFAULT '',
-	thread_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	thread_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_postcount SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-	thread_poll TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	thread_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	thread_bounty SMALLINT(8) NOT NULL,
-	thread_bounty_description TEXT NOT NULL,
-	thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
-	thread_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	thread_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (thread_id),
-	KEY thread_postcount (thread_postcount),
-	KEY thread_lastpost (thread_lastpost),
-	KEY thread_views (thread_views)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_tags TEXT NOT NULL,
+    thread_tags_old TEXT NOT NULL,
+    thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    thread_subject VARCHAR(100) NOT NULL DEFAULT '',
+    thread_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_postcount SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    thread_poll TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_bounty SMALLINT(8) NOT NULL,
+    thread_bounty_description TEXT NOT NULL,
+    thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    thread_locked TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    thread_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (thread_id),
+    KEY thread_postcount (thread_postcount),
+    KEY thread_lastpost (thread_lastpost),
+    KEY thread_views (thread_views)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-	KEY notify_datestamp (notify_datestamp)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+    KEY notify_datestamp (notify_datestamp)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_TAGS." (
-	tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	tag_title VARCHAR(100) NOT NULL DEFAULT '',
-	tag_description VARCHAR(250) NOT NULL DEFAULT '',
-	tag_color VARCHAR(20) NOT NULL DEFAULT '',
-	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
-	tag_language VARCHAR(100) NOT NULL DEFAULT '',
-	PRIMARY KEY (tag_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    tag_title VARCHAR(100) NOT NULL DEFAULT '',
+    tag_description VARCHAR(250) NOT NULL DEFAULT '',
+    tag_color VARCHAR(20) NOT NULL DEFAULT '',
+    tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+    tag_language VARCHAR(100) NOT NULL DEFAULT '',
+    PRIMARY KEY (tag_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_USER_REP." (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
-	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (rep_id),
-	KEY post_id (post_id, user_id, voter_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (rep_id),
+    KEY post_id (post_id, user_id, voter_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_MOODS." (
-	mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	mood_name TEXT NOT NULL,
-	mood_description TEXT NOT NULL,
-	mood_icon VARCHAR(50) NOT NULL DEFAULT '',
-	mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
-	mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
-	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY (mood_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    mood_name TEXT NOT NULL,
+    mood_description TEXT NOT NULL,
+    mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+    mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
+    mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+    mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (mood_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_POST_NOTIFY." (
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-	KEY notify_datestamp (notify_datestamp)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+    KEY notify_datestamp (notify_datestamp)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
