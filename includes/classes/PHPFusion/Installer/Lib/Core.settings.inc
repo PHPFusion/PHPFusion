@@ -496,7 +496,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => $_GET['localeset']
             ],
             [
-                'settings_name'  => 'UserName_ban',
+                'settings_name'  => 'user_name_ban',
                 'settings_value' => ''
             ]
         ]

@@ -208,7 +208,7 @@ class UserFieldsInput {
     private function _settUserName() {
         $locale = fusion_get_locale();
         $defender = \defender::getInstance();
-        $uban = explode(',', fusion_get_settings('UserName_ban'));
+        $uban = explode(',', fusion_get_settings('user_name_ban'));
 
         $this->_userName = "";
         if (isset($_POST['user_name'])) {

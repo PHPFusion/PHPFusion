@@ -203,7 +203,7 @@ if (!function_exists('forum_viewforum')) {
         $tpl = \PHPFusion\Template::getInstance('viewforum');
         $tpl->set_template(FORUM.'templates/forum_viewforum.html');
         // Make it so it can get arrays and values
-        $tpl->set_tag('background_src', FORUM.'images/default_forum_bg.jpg');
+        $tpl->set_tag('background_src', FORUM.'images/bg/default_forum_bg.jpg');
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
         $tpl->set_tag('title', $info['forum_name']);
         $tpl->set_tag('description', $info['forum_description']);

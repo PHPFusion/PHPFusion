@@ -433,7 +433,7 @@ if (db_exists(DB_SETTINGS)) {
         'logoposition_sm'   => 'logo-sm-left',
         'logoposition_md'   => 'logo-md-left',
         'logoposition_lg'   => 'logo-lg-left',
-        'UserName_ban'       => '',
+        'user_name_ban'     => '',
     ];
     foreach ($insert_settings_tbl as $key => $value) {
         if (!isset($settings[$key])) {
@@ -760,7 +760,7 @@ if (db_exists(DB_PHOTO_ALBUMS)) {
 
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
-            if (file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
+            if (!empty($data['album_thumb']) && file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
                 // Rename the album thumb here
                 rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
                 // Call the album directory rename function here

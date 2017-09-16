@@ -56,9 +56,7 @@ if (column_exists(DB_NEWS, 'news_visibility')) {
 $result = dbquery("SELECT news_id, news_visibility FROM ".DB_NEWS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
-        if ($data['news_visibility']) {
-            $inf_updatedbrow[] = DB_NEWS." SET news_visibility ='-".$data['news_visibility']."' WHERE news_id='".$data['news_id']."'";
-        }
+        $inf_updatedbrow[] = DB_NEWS." SET news_visibility ='-".$data['news_visibility']."' WHERE news_id='".$data['news_id']."' AND news_visibility != 0";
     }
 }
 

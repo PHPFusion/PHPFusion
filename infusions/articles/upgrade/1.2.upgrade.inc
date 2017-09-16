@@ -45,7 +45,7 @@ if (!column_exists(DB_ARTICLES, 'article_keywords', FALSE)) {
 }
 
 if (!column_exists(DB_ARTICLES, 'article_visibility', FALSE)) {
-    $inf_altertable[] = DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp";
+    $inf_altertable[] = DB_ARTICLES." ADD article_visibility TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER article_datestamp";
 }
 
 if (!column_exists(DB_ARTICLES, 'article_language', FALSE)) {
@@ -54,9 +54,9 @@ if (!column_exists(DB_ARTICLES, 'article_language', FALSE)) {
 
 if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
     $result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
-    if (dbrows($result)) {
+    if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
-            $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'";
+            $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."' AND article_visibility != 0";
         }
     }
 }
@@ -93,11 +93,10 @@ if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('article');
 $check_array = [
-    'article_pagination'        => 15,
+    'article_pagination' => 15,
     'article_extended_required' => 0,
-    'article_allow_submission'  => 1
+    'article_allow_submission' => 1
 ];
-
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'article')";

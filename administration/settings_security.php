@@ -45,7 +45,7 @@ $Security_settings = array(
     'bad_words_enabled'   => fusion_get_settings('bad_words_enabled'),
     'bad_words'           => fusion_get_settings('bad_words'),
     'bad_word_replace'    => fusion_get_settings('bad_word_replace'),
-    'UserName_ban'        => fusion_get_settings('UserName_ban')
+    'user_name_ban'       => fusion_get_settings('user_name_ban')
 );
 
 if (isset($_POST['savesettings'])) {
@@ -64,7 +64,7 @@ if (isset($_POST['savesettings'])) {
         'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'           => form_sanitizer($_POST['bad_words'], '', 'bad_words'),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'UserName_ban'        => form_sanitizer($_POST['UserName_ban'], '', 'UserName_ban')
+        'user_name_ban'        => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban')
     );
     // Validate extra fields
     if ($Security_settings['captcha'] == "grecaptcha") {
@@ -197,7 +197,7 @@ echo form_textarea('bad_words', $locale['651'], $Security_settings['bad_words'],
     'placeholder' => $locale['652'],
     'autosize'    => TRUE
 ]);
-echo form_textarea('UserName_ban', $locale['649'], $Security_settings['UserName_ban'], [
+echo form_textarea('user_name_ban', $locale['649'], $Security_settings['user_name_ban'], [
     'placeholder' => $locale['411'],
     'autosize'    => TRUE
 ]);

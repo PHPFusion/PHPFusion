@@ -22,7 +22,7 @@ $array_check = [
     // Option to use keywords in downloads
     'download_keywords'   => " ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description",
     // Add individual download item access
-    'download_visibility' => " ADD download_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER download_datestamp"
+    'download_visibility' => " ADD download_visibility TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER download_datestamp"
 ];
 foreach ($array_check as $key => $value) {
     if (!column_exists(DB_DOWNLOADS, $key, FALSE)) {
@@ -45,7 +45,7 @@ if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access', FALSE)) {
     $result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
     if (dbrows($result)) {
         while ($data = dbarray($result)) {
-            $inf_updatedbrow[] = DB_DOWNLOADS." SET download_visibility='-".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'";
+            $inf_updatedbrow[] = DB_DOWNLOADS." SET download_visibility='-".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."' AND download_visibility != 0";
         }
     }
 }

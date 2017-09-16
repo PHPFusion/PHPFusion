@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 0902.upgrade.inc
-| Forum upgrade from Version 7.02.xx to 9.02
+| Filename: 1.0.5.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,6 +19,8 @@ $locale = fusion_get_locale("", [
     LOCALE.LOCALESET."setup.php",
     INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
 ]);
+
+//$locale = \defender::sanitize_array($locale);
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
@@ -70,13 +71,13 @@ if (!db_exists($db_prefix.'forum_votes')) {
 if (!db_exists($db_prefix.'forum_thread_tags')) {
     $table_query = $db_prefix."forum_thread_tags (
     tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	tag_title VARCHAR(100) NOT NULL DEFAULT '',
-	tag_description VARCHAR(250) NOT NULL DEFAULT '',
-	tag_color VARCHAR(20) NOT NULL DEFAULT '',
-	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
-	tag_language VARCHAR(100) NOT NULL DEFAULT '',
-	PRIMARY KEY (tag_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    tag_title VARCHAR(100) NOT NULL DEFAULT '',
+    tag_description VARCHAR(250) NOT NULL DEFAULT '',
+    tag_color VARCHAR(20) NOT NULL DEFAULT '',
+    tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+    tag_language VARCHAR(100) NOT NULL DEFAULT '',
+    PRIMARY KEY (tag_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$table_query);
 }
 
@@ -85,27 +86,28 @@ if (!db_exists($db_prefix."forum_post_mood")) {
 
     $table_query = $db_prefix."forum_post_mood (
     mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	mood_name TEXT NOT NULL,
-	mood_description TEXT NOT NULL,
-	mood_icon VARCHAR(50) NOT NULL DEFAULT '',
-	mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
-	mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
-	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY (mood_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    mood_name TEXT NOT NULL,
+    mood_description TEXT NOT NULL,
+    mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+    mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
+    mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+    mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (mood_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$table_query);
 }
+
 // Install a new post notification table
 if (!db_exists($db_prefix."forum_post_notify")) {
     $table_query = $db_prefix."forum_post_notify (
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-	KEY notify_datestamp (notify_datestamp)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+    KEY notify_datestamp (notify_datestamp)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$table_query);
 }
 /*
@@ -157,7 +159,7 @@ if (!column_exists('forums', 'forum_lastpostid')) {
     $inf_altertable[] = $db_prefix."forums ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit";
 }
 if (column_exists('forums', 'forum_moderators')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_moderators forum_mods TEXT NOT NULL";
+    $inf_altertable[] = $db_prefix."forums CHANGE forum_moderators forum_mods TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
 }
 if (column_exists('forums', 'forum_access')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_access forum_access TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
@@ -185,31 +187,31 @@ if (dbrows($result)) {
     while ($data = dbarray($result)) {
         // Update new access levels for forum_post
         if ($data['forum_post']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_post ='-".$data['forum_post']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_post ='-".$data['forum_post']."' WHERE forum_id='".$data['forum_id']."' AND forum_post != 0";
         }
         // Update new access levels for forum_access
         if ($data['forum_access']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_access ='-".$data['forum_access']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_access ='-".$data['forum_access']."' WHERE forum_id='".$data['forum_id']."' AND forum_access != 0";
         }
         // Update new access levels for forum reply
         if ($data['forum_reply']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_reply ='-".$data['forum_reply']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_reply ='-".$data['forum_reply']."' WHERE forum_id='".$data['forum_id']."' AND forum_reply != 0";
         }
         // Update new access levels for forum vote
         if ($data['forum_vote']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_vote ='-".$data['forum_vote']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_vote ='-".$data['forum_vote']."' WHERE forum_id='".$data['forum_id']."' AND forum_vote != 0";
         }
         // Update new access levels for forum poll
         if ($data['forum_poll']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_poll ='-".$data['forum_poll']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_poll ='-".$data['forum_poll']."' WHERE forum_id='".$data['forum_id']."' AND forum_poll != 0";
         }
         // Update new access levels for forum attach
         if ($data['forum_attach']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach ='-".$data['forum_attach']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach ='-".$data['forum_attach']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach != 0";
         }
         // Update new access levels for forum attach
         if ($data['forum_attach_download']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach_download != 0";
         }
         // Update forum_branch as base branch if forum_cat is 0
         if (!$data['forum_cat']) {
@@ -221,25 +223,7 @@ if (dbrows($result)) {
 
         // Update new access levels for forum moderators
         if (!empty($data['forum_mods'])) {
-            $current_mods = array();
-            $data['forum_mods'] = explode('.', $data['forum_mods']);
-            foreach ($data['forum_mods'] as $mods) {
-                switch ($mods) {
-                    case '103':
-                        $current_mods[] = USER_LEVEL_SUPER_ADMIN;
-                        break;
-                    case '102':
-                        $current_mods[] = USER_LEVEL_ADMIN;
-                        break;
-                    case '101':
-                        $current_mods[] = USER_LEVEL_PUBLIC;
-                        break;
-                    default:
-                        $current_mods[] = $mods;
-                }
-            }
-            $data['forum_mods'] = implode('.', $current_mods);
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='-".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."' AND forum_mods != 0";
         }
     }
 
@@ -423,6 +407,7 @@ if (!empty($enabled_languages)) {
         $locale['setup_3322'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')",
         $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
     );
+
     foreach ($link_name_check as $link_name => $_sql) {
         if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
             $mlt_insertdbrow[$language][] = $_sql;
