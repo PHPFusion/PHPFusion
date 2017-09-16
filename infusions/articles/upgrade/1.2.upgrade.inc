@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /articles/upgrade/1.2.upgrade.inc
+| Filename: articles/upgrade/1.2.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,15 +20,15 @@ require_once INCLUDES."infusions_include.php";
 
 // Upgrade 1.2
 if (column_exists(DB_ARTICLE_CATS, "article_cat_sorting", FALSE)) {
-	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP article_cat_sorting");
+    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP article_cat_sorting");
 }
 
 if (!column_exists(DB_ARTICLE_CATS, "article_cat_visibility", FALSE)) {
-	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_cat_name");
+    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_cat_name");
 }
 
 if (!column_exists(DB_ARTICLE_CATS, "article_cat_status", FALSE)) {
-	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER article_cat_visibility");
+    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER article_cat_visibility");
 }
 
 // Upgrade 1.0.5
@@ -53,12 +53,12 @@ if (!column_exists(DB_ARTICLES, 'article_language', FALSE)) {
 }
 
 if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
-	$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
-	if (dbrows($result)) {
-	    while ($data = dbarray($result)) {
-	        $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'";
-	    }
-	}
+    $result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'";
+        }
+    }
 }
 
 // Update Navigational Links
@@ -93,10 +93,11 @@ if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('article');
 $check_array = [
-    'article_pagination' => 15,
+    'article_pagination'        => 15,
     'article_extended_required' => 0,
-    'article_allow_submission' => 1
+    'article_allow_submission'  => 1
 ];
+
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'article')";

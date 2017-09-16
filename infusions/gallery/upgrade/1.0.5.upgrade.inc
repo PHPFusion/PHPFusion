@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /gallery/upgrade/1.0.5.upgrade.inc
-| Upgrade Gallery to Version 9.0.2 (RC5)
+| Filename: gallery/upgrade/1.0.5.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the

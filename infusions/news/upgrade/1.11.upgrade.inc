@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /news/upgrade/1.11.php
+| Filename: news/upgrade/1.11.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,10 +20,10 @@ require_once INCLUDES."infusions_include.php";
 
 $check_array = [
     // Add support for keywords in news items
-    'news_keywords' => " ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended",
-    'news_language' => " ADD news_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_allow_ratings",
-    'news_image_align' => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
-    'news_image_full_default' => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
+    'news_keywords'            => " ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended",
+    'news_language'            => " ADD news_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_allow_ratings",
+    'news_image_align'         => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
+    'news_image_full_default'  => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
     'news_image_front_default' => " ADD news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_full_default",
 ];
 foreach ($check_array as $key => $value) {
@@ -35,11 +35,11 @@ foreach ($check_array as $key => $value) {
 
 $check_array = [
     // Add support of hierarchy to News
-    'news_cat_parent' => " ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id",
+    'news_cat_parent'     => " ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id",
     'news_cat_visibility' => " ADD news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER news_cat_image",
-    'news_cat_draft' => " ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility",
-    'news_cat_sticky' => " ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft",
-    'news_cat_language' => " ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_cat_sticky",
+    'news_cat_draft'      => " ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility",
+    'news_cat_sticky'     => " ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft",
+    'news_cat_language'   => " ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_cat_sticky",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS_CATS, $key)) {
@@ -64,22 +64,22 @@ if (dbrows($result) > 0) {
 
 // Insert new and old settings tables to Infusions table
 $check_array = [
-    'news_image_readmore' => 1,
-    'news_image_frontpage' => 0,
-    'news_thumb_ratio' => 0,
-    'news_image_link' => 1,
-    'news_photo_w' => 1920,
-    'news_photo_h' => 1080,
-    'news_thumb_w' => 600,
-    'news_thumb_h' => 400,
-    'news_photo_max_w' => 1920,
-    'news_photo_max_h' => 1080,
-    'news_photo_max_b' => 3 * 1024 * 1024,
-    'news_pagination' => 15,
-    'news_extended_required' => 0,
-    'news_allow_submission' => 1,
+    'news_image_readmore'         => 1,
+    'news_image_frontpage'        => 0,
+    'news_thumb_ratio'            => 0,
+    'news_image_link'             => 1,
+    'news_photo_w'                => 1920,
+    'news_photo_h'                => 1080,
+    'news_thumb_w'                => 600,
+    'news_thumb_h'                => 400,
+    'news_photo_max_w'            => 1920,
+    'news_photo_max_h'            => 1080,
+    'news_photo_max_b'            => 3 * 1024 * 1024,
+    'news_pagination'             => 15,
+    'news_extended_required'      => 0,
+    'news_allow_submission'       => 1,
     'news_allow_submission_files' => 1,
-    'news_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
+    'news_file_types'             => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('news');
 
@@ -126,13 +126,13 @@ if (!db_exists(DB_NEWS_IMAGES)) {
                 ]
             );
             // Now we move all the images over
-            if (file_exists(IMAGES."news/".$data['news_image'])) {
+            if (!empty($data['news_image']) && file_exists(IMAGES."news/".$data['news_image'])) {
                 rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
             }
-            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
+            if (!empty($data['news_image_t1']) && file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
                 rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
             }
-            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
+            if (!empty($data['news_image_t2']) && file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
                 rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
             }
         }
@@ -144,10 +144,10 @@ if (!db_exists(DB_NEWS_IMAGES)) {
 
 // Drop existing columns
 $check_array = [
-    'news_image' => 1,
+    'news_image'    => 1,
     'news_image_t1' => 1,
     'news_image_t2' => 1,
-    'news_ialign' => 1,
+    'news_ialign'   => 1,
 ];
 foreach ($check_array as $key => $value) {
     if (column_exists(DB_NEWS, $key)) {
