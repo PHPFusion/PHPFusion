@@ -52,7 +52,7 @@ if (!function_exists('render_forum_main')) {
         $html = \PHPFusion\Template::getInstance('forum_index');
         $html->set_template(FORUM.'templates/index/forum_index.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
-        $html->set_tag('forum_bg_src', FORUM.'images/bg/default_forum_bg.jpg');
+        $html->set_tag('forum_bg_src', fusion_get_settings('siteurl').'infusions/forum/images/bg/default_forum_bg.jpg');
         $html->set_tag('title', $locale['forum_0013']);
 
         if (!empty($info['forums'][$id])) {
@@ -203,7 +203,7 @@ if (!function_exists('forum_viewforum')) {
         $tpl = \PHPFusion\Template::getInstance('viewforum');
         $tpl->set_template(FORUM.'templates/forum_viewforum.html');
         // Make it so it can get arrays and values
-        $tpl->set_tag('background_src', FORUM.'images/bg/default_forum_bg.jpg');
+        $tpl->set_tag('background_src', fusion_get_settings('siteurl').'infusions/forum/images/bg/default_forum_bg.jpg');
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
         $tpl->set_tag('title', $info['forum_name']);
         $tpl->set_tag('description', $info['forum_description']);
