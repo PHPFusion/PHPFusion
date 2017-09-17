@@ -41,6 +41,7 @@ $pattern = array(
     "downloads/filter/{%download_cat_id%}/%filter_type%"       => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
     "downloads/%cat_id%/%download_id%/%download_title%"        => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
     "downloads/%download_id%/%download_title%"                 => "infusions/downloads/downloads.php?download_id=%download_id%",
+    "downloads/cat-%cat_id%/%download_id%/%download_title%"    => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
     "downloads/file/%download_id%/%download_title%"            => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
     "downloads/category/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
     "downloads"                                                => "infusions/downloads/downloads.php",

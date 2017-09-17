@@ -428,7 +428,7 @@ switch ($_GET['section']) {
         break;
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
-        echo "<div class='well'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
+        echo "<div class='well m-t-20'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
         $opts = array('0' => $locale['disable'], '1' => $locale['enable']);
         echo form_select('site_seo', $locale['438'], $settings_seo['site_seo'], ['options' => $opts, 'inline' => TRUE]);
         echo form_select('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], ['options' => $opts, 'inline' => TRUE]);
