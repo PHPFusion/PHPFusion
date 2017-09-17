@@ -227,7 +227,7 @@ if (!function_exists('forum_viewforum')) {
         }
 
         if ($info['forum_moderators']) {
-            $tpl->set_block('moderator_list', ['moderators' => $info['forum_moderators'], 'title' => $locale['forum_0185']]);
+            $tpl->set_block('moderator_list', ['moderators' => $info['forum_moderators'], 'mod_title' => $locale['forum_0185']]);
         }
         // Draw the view
         if (isset($_GET['view'])) {
