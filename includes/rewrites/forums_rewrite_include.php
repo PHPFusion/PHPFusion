@@ -117,6 +117,8 @@ $pattern += array(
 
 $pattern += array(
     "forum/browse/%forum_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
+    "forum/%forum_id%/activity"            => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;view=activity",
+    "forum/%forum_id%/people"              => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;view=people",
     "forum/create-new-thread"              => "infusions/forum/newthread.php",
     "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
     "forum/tags"                           => "infusions/forum/tags.php",
