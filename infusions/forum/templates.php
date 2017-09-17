@@ -997,7 +997,7 @@ if (!function_exists('render_thread')) {
         $html->set_tag('info_download', (sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"));
         $html->set_tag('info_rate', ($data['forum_type'] == 4 ? (sprintf($locale['forum_perm_rate'], $info['permissions']['can_rate'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n") : ''));
         $html->set_tag('info_bounty', ($data['forum_type'] == 4 ? (sprintf($locale['forum_perm_bounty'], $info['permissions']['can_start_bounty'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n") : ''));
-        $html->set_tag('info_moderators', ($info['forum_moderators'] ? "<div class='list-group-item m-b-20'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>" : ''));
+        $html->set_tag('info_moderators', ($info['forum_moderators'] ? "<div class='list-group-item m-b-20'><strong>".$locale['forum_0185']."</strong> ".$info['forum_moderators']."</div>" : ''));
 
         if (!empty($info['thread_users'])) {
             $i = 1;
@@ -1034,12 +1034,12 @@ if (!function_exists('render_post_item')) {
         $html->set_tag('user_rank', ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>".$data['user_rank']."</span>" : ''));
         $html->set_tag('user_profile_link', $data['user_profile_link']);
         $html->set_tag('user_online_status', ($data['user_online'] ? "fa fa-circle" : "fa fa-circle-thin"));
-        $html->set_tag('user_signature', ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>" : ""));
+        $html->set_tag('user_signature', ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>" : ''));
         $html->set_tag('checkbox_input', (iMOD ? $data['post_checkbox'] : ''));
         $html->set_tag('post_message', $data['post_message']);
         $html->set_tag('post_edit_reason', $data['post_edit_reason']);
         $html->set_tag('post_reply_message', $data['post_reply_message']);
-        $html->set_tag('post_mood_message', $data['post_mood_message']);
+        $html->set_tag('post_mood_message', ($data['post_mood_message'] ? $data['post_mood_message'] : ''));
         if ($data['post_bounty']) {
             $html->set_block('bounty_btn', [
                 'link_url'   => $data['post_bounty']['link'],
