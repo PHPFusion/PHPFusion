@@ -65,6 +65,15 @@ class Template {
     }
 
     /**
+     * Defines the instance to read a specific text
+     *
+     * @param $text     string
+     */
+    public function set_text($text) {
+        $this->template = $text;
+    }
+
+    /**
      * Sets to repeat on a subitem defined in the HTML markup  - {block_id.{<subitem_html>}}
      * This function adds a subitem for every set_block used
      *
