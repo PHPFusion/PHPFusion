@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: form_colorpicker.php
 | Author: Frederick MC CHan (Chan)
-| Credits: Mjolnic @ http://mjolnic.github.io/bootstrap-colorpicker/
+| Credits: https://farbelous.github.io/bootstrap-colorpicker/
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,8 +22,8 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 
     if (!defined("COLORPICKER")) {
         define("COLORPICKER", TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.css' rel='stylesheet' media='screen' />");
-        add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.min.css' rel='stylesheet' media='screen' />");
+        add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.min.js'></script>");
     }
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = stripinput($input_name);
@@ -63,8 +63,8 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 
     $html = "<div id='$input_id-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." '>\n";
     $html .= $label ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
-	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-	</label>\n" : '';
+    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+    </label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
     $html .= "<div id='$input_id' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '')." class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
     $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')." style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? "readonly" : "").">";
