@@ -53,6 +53,7 @@
         msgUploadBegin: 'Inicializálás...',
         msgUploadEnd: 'Kész',
         msgUploadEmpty: 'Nincs érvényes adat a feltöltéshez.',
+        msgUploadError: 'Error',
         msgValidationError: 'Érvényesítés hiba',
         msgLoading: '{index} / {files} töltése &hellip;',
         msgProgress: 'Feltöltés: {index} / {files} - {name} - {percent}% kész.',
@@ -77,6 +78,8 @@
         fileActionSettings: {
             removeTitle: 'A fájl eltávolítása',
             uploadTitle: 'fájl feltöltése',
+            uploadRetryTitle: 'Retry upload',
+            downloadTitle: 'Download file',
             zoomTitle: 'Részletek megtekintése',
             dragTitle: 'Mozgatás / Átrendezés',
             indicatorNewTitle: 'Nem feltöltött',

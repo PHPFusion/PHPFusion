@@ -55,6 +55,7 @@
         msgUploadBegin: 'Initializing...',
         msgUploadEnd: 'Done',
         msgUploadEmpty: 'No valid data available for upload.',
+        msgUploadError: 'Error',
         msgValidationError: 'Errore di convalida',
         msgLoading: 'Caricamento file {index} di {files}&hellip;',
         msgProgress: 'Caricamento file {index} di {files} - {name} - {percent}% completato.',
@@ -79,6 +80,8 @@
         fileActionSettings: {
             removeTitle: 'Rimuovere il file',
             uploadTitle: 'Caricare un file',
+            uploadRetryTitle: 'Retry upload',
+            downloadTitle: 'Download file',
             zoomTitle: 'Guarda i dettagli',
             dragTitle: 'Move / Rearrange',
             indicatorNewTitle: 'Non ancora caricato',
