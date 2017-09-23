@@ -43,31 +43,31 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_forced_root' => TRUE,
         'placeholder'         => '',
         'deactivate'          => FALSE,
-        'width'         => '',
-        'inner_width'   => '100%',
-        'height'        => '80px',
-        'class'         => '',
-        'inner_class'   => '',
-        'inline'        => FALSE,
-        'length'        => 200,
-        'error_text'    => $locale['error_input_default'],
-        'safemode'      => FALSE,
-        'form_name'     => 'input_form',
-        'tinymce'       => 'simple',
-        'tinymce_css'   => '',
-        'tinymce_image' => FALSE,         //Turns on or off the image selection feature in TinyMCE
-        'no_resize'     => FALSE,
-        'autosize'      => FALSE,
-        'bbcode'        => FALSE,
-        'html'          => FALSE,
-        'preview'       => FALSE,
-        'path'          => IMAGES,
-        'maxlength'     => '',
-        'tip'           => '',
-        'ext_tip'       => '',
-        'input_bbcode'  => '',
-        'wordcount'     => FALSE,
-        'file_filter'   => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
+        'width'               => '',
+        'inner_width'         => '100%',
+        'height'              => '80px',
+        'class'               => '',
+        'inner_class'         => '',
+        'inline'              => FALSE,
+        'length'              => 200,
+        'error_text'          => $locale['error_input_default'],
+        'safemode'            => FALSE,
+        'form_name'           => 'input_form',
+        'tinymce'             => 'simple',
+        'tinymce_css'         => '',
+        'tinymce_image'       => FALSE, // Turns on or off the image selection feature in TinyMCE
+        'no_resize'           => FALSE,
+        'autosize'            => FALSE,
+        'bbcode'              => FALSE,
+        'html'                => FALSE,
+        'preview'             => FALSE,
+        'path'                => IMAGES,
+        'maxlength'           => '',
+        'tip'                 => '',
+        'ext_tip'             => '',
+        'input_bbcode'        => '',
+        'wordcount'           => FALSE,
+        'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
         'tinymce_theme'       => 'modern',
         'tinymce_skin'        => 'lightgray',
         'tinymce_spellcheck'  => TRUE,
@@ -277,13 +277,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             $options['type'] = 'html';
         }
 
-        if (!defined('autogrow') && $options['autosize']) {
-            define('autogrow', TRUE);
-            add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
-        }
-
-        if ($options['autosize']) {
-            add_to_jquery("$('#".$options['input_id']."').autosize();");
+        if ($options['autosize'] || defined('AUTOSIZE')) {
+            add_to_footer("<script type='text/javascript' src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+            add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
 
@@ -361,39 +357,32 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= closetabbody();
         $html .= "</div>\n";
         add_to_jquery("
-        // preview syntax
-        var form = $('#".$options['form_name']."');
-        $('#tab-prw-".$options['input_id']."').bind('click',function(){
-        var text = $('#".$options['input_id']."').val();
-        var format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."';
-        var data = {
-            ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
-            'text' : text,
-            'editor' : format,
-            'url' : '".$_SERVER['REQUEST_URI']."',
-        };
-        var sendData = form.serialize() + '&' + $.param(data);
-        $.ajax({
-            url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
-            type: 'POST',
-            dataType: 'html',
-            data : sendData,
-            success: function(result){
-            //console.log(result);
-            $('#prw-".$options['input_id']."').html(result);
-            },
-            error: function(result) {
-                new PNotify({
-                    title: '".$locale['error_preview']."',
-                    text: '".$locale['error_preview_text']."',
-                    icon: 'notify_icon n-attention',
-                    animation: 'fade',
-                    width: 'auto',
-                    delay: '3000'
+            // preview syntax
+            var form = $('#".$options['form_name']."');
+            $('#tab-prw-".$options['input_id']."').bind('click',function(){
+            var text = $('#".$options['input_id']."').val();
+            var format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."';
+            var data = {
+                ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
+                'text' : text,
+                'editor' : format,
+                'url' : '".$_SERVER['REQUEST_URI']."',
+            };
+            var sendData = form.serialize() + '&' + $.param(data);
+            $.ajax({
+                url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
+                type: 'POST',
+                dataType: 'html',
+                data : sendData,
+                success: function(result) {
+                    //console.log(result);
+                    $('#prw-".$options['input_id']."').html(result);
+                },
+                error: function(result) {
+                    alert('".$locale['error_preview']."' + '\\n".$locale['error_preview_text']."');
+                }
                 });
-            }
             });
-        });
         ");
     }
 
