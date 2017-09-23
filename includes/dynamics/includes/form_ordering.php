@@ -37,12 +37,12 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
     global $_POST;
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
-        add_to_footer("<script src='".TEMPLATES_LIB."select2/select2.min.js'></script>");
-        add_to_head("<link href='".TEMPLATES_LIB."select2/select2.css' rel='stylesheet' />");
+        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
     }
     if (!defined("SELECTCHAIN")) {
         define("SELECTCHAIN", TRUE);
-        add_to_head("<script type='text/javascript' src='".TEMPLATES_LIB."chainselect/jquery.chained.js'></script>");
+        add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
     }
     if (isset($title) && ($title !== "")) {
         $title = stripinput($title);

@@ -1147,13 +1147,16 @@ select,
     border: 1px solid #e51c23;
 }
 .fileinput-remove-button,
+.fileinput-upload-button,
 .btn-file {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     border: 1px solid #949494 !important;
 }
 .fileinput-remove-button:hover,
+.fileinput-upload-button:hover,
 .fileinput-remove-button:focus,
+.fileinput-upload-button:focus,
 .btn-file:hover,
 .btn-file:focus {
     border: 1px solid #949494 !important;
@@ -3915,9 +3918,6 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dra
 }
 .colorpicker.dropdown-menu {
     right: inherit;
-}
-#tag_color {
-    width: 80%;
 }
 .overlay {
     background-color: rgba(0, 0, 0, 0.5);

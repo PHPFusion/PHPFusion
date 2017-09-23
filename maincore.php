@@ -66,7 +66,7 @@ ini_set('session.cookie_lifetime', 172800); // 48 hours
 // Prevent document expiry when user hits Back in browser
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
-session_start();
+@session_start();
 //ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
 ob_start();
 

@@ -53,7 +53,6 @@ if (iMEMBER) {
 $bootstrap_theme_css_src = '';
 // Load bootstrap
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    define('BOOTSTRAPPED', TRUE);
     $bootstrap_theme_css_src = INCLUDES."bootstrap/bootstrap.min.css";
     add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
     add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>");

@@ -91,17 +91,10 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                     type: 'GET',
                     dataType: 'json',
                     data : order,
-                    success: function(e){
+                    success: function(e) {
                         console.log(e);
                         if (e.status == 200) {
-                        new PNotify({
-                            title: '".fusion_get_locale('SL_0016', LOCALE.LOCALESET."admin/sitelinks.php")."',
-                            text: '',
-                            icon: 'notify_icon n-attention',
-                            animation: 'fade',
-                            width: 'auto',
-                            delay: '3000'
-                        });
+                        alert('".fusion_get_locale('SL_0016', LOCALE.LOCALESET."admin/sitelinks.php")."');
 
                         ul.find('.num').each(function(i) {
                         $(this).text(i+1);
@@ -113,14 +106,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                         }
                     },
                     error: function(result) {
-                        new PNotify({
-                            title: '".fusion_get_locale('error_preview', LOCALE.LOCALESET."admin/html_buttons.php")."',
-                            text: '".fusion_get_locale('error_preview_text', LOCALE.LOCALESET."admin/html_buttons.php")."',
-                            icon: 'notify_icon n-attention',
-                            animation: 'fade',
-                            width: 'auto',
-                            delay: '3000'
-                        });
+                        alert('".fusion_get_locale('error_preview', LOCALE.LOCALESET."admin/html_buttons.php")."'
+                        + '\\n".fusion_get_locale('error_preview_text', LOCALE.LOCALESET."admin/html_buttons.php")."');
                     }
                 });
             }

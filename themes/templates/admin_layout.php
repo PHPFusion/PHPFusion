@@ -27,7 +27,7 @@ echo "<meta charset='".$locale['charset']."' />";
 echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
 echo "<meta name='robots' content='none' />";
 echo "<meta name='googlebot' content='noarchive' />";
-if ($settings['bootstrap']) {
+if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 }
@@ -75,9 +75,6 @@ if (!defined("THEME_BODY")) {
     echo THEME_BODY;
 }
 
-if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
-    //addNotice("danger", fusion_get_locale('global_198'));
-}
 // Check if the user is logged in
 if (!check_admin_pass('')) {
     if (empty(fusion_get_userdata("user_admin_password"))) {
@@ -100,9 +97,7 @@ echo $fusion_page_footer_tags;
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
     $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => FALSE));
-    echo "<script type='text/javascript'>
-		$(function() { $fusion_jquery_tags; });
-		</script>\n";
+    echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
 }
 echo "</body>\n";
 echo "</html>";
