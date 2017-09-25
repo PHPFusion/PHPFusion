@@ -178,26 +178,30 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 $select = "";
                 $chain = (isset($options['chain_index'][$arr]) ? " class='".$options['chain_index'][$arr]."' " : "");
                 $text_value = isset($value['text']) ? $value['text'] : $value;
-                if ($options['keyflip']) { // flip mode = store array values
-                    if ($input_value !== '') {
-                        $select = ($input_value == $text_value) ? " selected" : "";
+                if (!empty($text_value) && !is_array($text_value)) {
+                    if ($options['keyflip']) { // flip mode = store array values
+                        if ($input_value !== '') {
+                            $select = ($input_value == $text_value) ? " selected" : "";
+                        }
+                        $item = "<option value='$text_value'".$chain.$select.">$text_value</option>\n";
+                    } else {
+                        if ($input_value !== '') {
+                            $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                            $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                        }
+                        $item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                     }
-                    $item = "<option value='$text_value'".$chain.$select.">".$text_value."</option>\n";
-                } else {
-                    if ($input_value !== '') {
-                        $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                        $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                    if (isset($value['children'])) {
+                        $html .= "<optgroup label='".$value['text']."'>\n";
+                        $html .= $item;
+                        $html .= form_select_build_optgroup($value['children'], $input_value, $options);
+                        $html .= "</optgroup>\n";
+                    } else {
+                        $html .= $item;
                     }
-                    $item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                 }
-                if (isset($value['children'])) {
-                    $html .= "<optgroup label='".$value['text']."'>\n";
-                    $html .= $item;
-                    $html .= form_select_build_optgroup($value['children'], $input_value, $options);
-                    $html .= "</optgroup>\n";
-                } else {
-                    $html .= $item;
-                }
+
+
             }
 
             return (string)$html;
