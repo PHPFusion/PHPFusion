@@ -87,7 +87,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     if ($options['db'] && $options['id_col'] && $options['cat_col'] && $options['title_col']) {
 
         // Cache result
-        if (empty($select_db[$options['db']])) {
+        $cache = ($options['custom_query'] ? TRUE : FALSE);
+        if (empty($select_db[$options['db']]) || !$cache) {
             $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
             /*
              * Build opt functions
