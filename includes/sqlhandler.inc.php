@@ -415,7 +415,7 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
     $refs = array();
     $list = array();
     $col_names = fieldgenerator($db);
-    $result = dbquery("SELECT * FROM ".$db." ".$filter." ");
+    $result = dbquery("SELECT * FROM ".$db." ".($filter ?: "ORDER BY $id_col ASC"));
     while ($data = dbarray($result)) {
         foreach ($col_names as $arr => $v) {
             if ($v == $id_col) {
@@ -423,12 +423,8 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
             }
             $thisref[$v] = $data[$v];
         }
-        if ($data[$id_col] == $cat_value) { // cat_val = 0 = impossible
-            $list[$data[$id_col]] = &$thisref; // pushing mechanism.
-        } elseif ($data[$cat_col] == $cat_value) { // 0;
-            // if current $data[article_cat_cat] == "3"
-            // $list[1] <-- inject in array. // list the current children.
-            $refs[$data[$cat_col]]['children'][$data[$id_col]] = &$thisref;
+        if ($data[$cat_col] == $cat_value) {
+            $list[$data[$id_col]] = &$thisref;
         } else {
             $refs[$data[$cat_col]]['children'][$data[$id_col]] = &$thisref;
         }
@@ -549,11 +545,14 @@ function tree_depth($data, $field, $match, $depth = '1') {
 }
 
 /**
+ * @todo: Change to count on index in favor of deprecated method
  * Get the occurences of a column name matching value
- * $unpublish_count = tree_count($dbtree_result, "wiki_cat_status", "0")-1;
+ * $unpublish_count = tree_count($dbtree_result, "column_name", "value")-1;
+ *
  * @param      $data - $data = dbquery_tree(...);
  * @param bool $field
  * @param bool $match
+ *
  * @return int
  */
 function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
@@ -613,11 +612,11 @@ function tree_join_method_sql_deprecated($db, $id_col, $cat_col, $filter = FALSE
     return $result;
 }
 
+/*
+* Display parent nodes
+*/
 // need dbquery_tree_data to function
 function display_parent_nodes($data, $id_col, $cat_col, $id) {
-    /*
-    * Display parent nodes
-    */
     $current = $data[$id];
     $parent_id = $current[$cat_col] === NULL ? "NULL" : $current[$cat_col];
     $parents = array();
@@ -897,7 +896,6 @@ function column_exists($table, $column, $add_prefix = TRUE) {
 
     return (isset($table_config[$table][$column]) ? TRUE : FALSE);
 }
-
 
 /**
  * ID is required only for update mode.

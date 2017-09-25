@@ -58,7 +58,16 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'keyflip'        => FALSE,
         'tags'           => FALSE,
         'jsonmode'       => FALSE,
-        'chainable'      => FALSE,
+        'chainable'      => FALSE,      // Set to True to Enable Chaining
+        'chain_to_id'    => '',         // Set which select it has to be chained to.
+        'db'             => '',         // Specify which DB to map
+        'id_col'         => '',         // Chain Primary Key Column Name
+        'cat_col'        => '',         // Chain Category Column Name
+        'title_col'      => '',        // Chain Title Column Name
+        'custom_query'   => '',     // If any replacement statement for the query
+        'value_filter'   => array('col' => '', 'value' => NULL), // Specify if building opts has to specifically match these conditions
+        'optgroup'       => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
+        'option_pattern' => "&#8212;",
         'max_select'     => FALSE,
         'error_text'     => $locale['error_input_default'],
         'class'          => '',
@@ -67,16 +76,134 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'ext_tip'        => '',
         'delimiter'      => ',',
         'callback_check' => '',
-        "stacked"        => "",
+        'stacked'        => '',
         'onchange'       => '',
     );
 
     $options += $default_options;
 
-    if (empty($options['options'])) {
+    static $select_db = array();
+    // New DB Caching Function.
+    if ($options['db'] && $options['id_col'] && $options['cat_col'] && $options['title_col']) {
+
+        // Cache result
+        if (empty($select_db[$options['db']])) {
+            $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
+            /*
+             * Build opt functions
+             */
+            if (!function_exists('get_form_select_opts')) {
+                // @todo: implement all options settings inherited from dbquery_select_hierarchy
+                function get_form_select_opts($data, $options, $id = 0, $level = 0) {
+                    $list = &$list;
+                    //array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
+                    if (!empty($data[$id])) {
+                        foreach ($data[$id] as $key => $value) {
+                            // Displays defined pattern
+                            $pattern = "";
+                            if ($options['option_pattern']) {
+                                $pattern = str_repeat($options['option_pattern'], $level)." ";
+                            }
+                            // Build List
+                            if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
+                                if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
+                                    $list[$key] = $pattern.$value[$options['title_col']];
+                                }
+                            } else {
+                                $list[$key] = $pattern.$value[$options['title_col']];
+                            }
+                            // Build Child
+                            if (isset($data[$key])) {
+                                $child = get_form_select_opts($data, $options, $key, $level + 1);
+                                if ($options['optgroup']) {
+                                    $list[$key] = array(
+                                        'text'     => $list[$key],
+                                        'children' => $child,
+                                    );
+                                } else {
+                                    $list = (!empty($list)) ? $list + $child : $child;
+                                }
+                            }
+                        }
+                    }
+
+                    return (array)$list;
+                }
+            }
+            /**
+             * Build chainable options
+             */
+            if (!function_exists('get_form_select_chain_index')) {
+                function get_form_select_chain_index($data, $options, $id = 0, $level = 0) {
+                    $list = array();
+                    if (!empty($data)) {
+                        $data = flatten_array($data);
+                        foreach ($data as $value) {
+                            $list[$value[$options['id_col']]] = $value[$options['cat_col']];
+                        }
+                    }
+
+                    return (array)$list;
+                }
+            }
+        }
+
+        if (!empty($select_db[$options['db']][0])) {
+            // Build options and override declared options
+            $options['options'] = get_form_select_opts($select_db[$options['db']], $options);
+
+            // Build a chain index and initialize the JS chain plugin
+            if ($options['chainable'] && $options['chain_to_id']) {
+                if (!defined('JS_SELECT_CHAINED')) {
+                    define('JS_SELECT_CHAINED', true);
+                    add_to_footer("<script src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
+                }
+                add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
+                $options['chain_index'] = get_form_select_chain_index($select_db[$options['db']], $options);
+            }
+        } else {
+            $options['options'] = array('0' => $locale['no_opts']);
+            $options['deactivate'] = 1;
+        }
+    } elseif (empty($options['options'])) {
         $options['options'] = array('0' => $locale['no_opts']);
         $options['deactivate'] = 1;
     }
+
+    // Optgroup with Hierarchy
+    if (!function_exists('form_select_build_optgroup')) {
+        function form_select_build_optgroup($array, $input_value, $options) {
+            $html = &$html;
+            foreach ($array as $arr => $value) {
+                $select = "";
+                $chain = (isset($options['chain_index'][$arr]) ? " class='".$options['chain_index'][$arr]."' " : "");
+                $text_value = isset($value['text']) ? $value['text'] : $value;
+                if ($options['keyflip']) { // flip mode = store array values
+                    if ($input_value !== '') {
+                        $select = ($input_value == $text_value) ? " selected" : "";
+                    }
+                    $item = "<option value='$text_value'".$chain.$select.">".$text_value."</option>\n";
+                } else {
+                    if ($input_value !== '') {
+                        $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                        $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
+                    }
+                    $item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
+                }
+                if (isset($value['children'])) {
+                    $html .= "<optgroup label='".$value['text']."'>\n";
+                    $html .= $item;
+                    $html .= form_select_build_optgroup($value['children'], $input_value, $options);
+                    $html .= "</optgroup>\n";
+                } else {
+                    $html .= $item;
+                }
+            }
+
+            return (string)$html;
+        }
+    }
+
     if (!$options['width']) {
         $options['width'] = $default_options['width'];
     }
@@ -116,53 +243,46 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         // normal mode
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
+
         /**
+         * Supported Formatting
+         * ---------------------
          * Have an array that looks like this in 'options' key
          * array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
+         * or
+         * array(1 => 'Option A', 2 => 'Option B');
          */
         if (is_array($options['options'])) {
-            foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
-                $select = '';
-                if (is_array($v) && isset($v['text'])) {
-                    $html .= "<optgroup label='".$v['text']."'>\n";
-                    if (isset($v['children'])) {
-                        foreach ($v['children'] as $key => $v2) {
-                            if ($options['keyflip']) { // flip mode = store array values
-                                $chain = $options['chainable'] ? "class='$v2'" : '';
-                                if ($input_value !== '') {
-                                    $select = ($input_value == $v2) ? " selected" : "";
-                                }
-                                $html .= "<option value='$v2'".$chain.$select.">".$key."</option>\n";
-                            } else { // normal mode = store array keys
-                                $chain = ($options['chainable']) ? "class='$key'" : '';
-                                $select = '';
-                                if ($input_value !== '') {
-                                    $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
-                                    $select = (isset($input_value) && $input_value == $key) ? ' selected' : '';
-                                }
-                                $html .= "<option value='$key'".$chain.$select.">$v2</option>\n";
-                            }
-                            unset($key);
-                        }
+            // Test if this is an optgroup
+            $test_array = $options['options'];
+            foreach ($test_array as $id => $v) {
+                if (isset($v['text'])) {
+                    $options['optgroup'] = TRUE;
+                    break;
+                }
+            }
+            if ($options['optgroup']) {
+                $html .= form_select_build_optgroup($options['options'], $input_value, $options);
+            } else {
+                foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
+                    $select = '';
+                    $chain = '';
+                    // Chain method always bind to options's array key
+                    if (isset($options['chain_index'][$arr])) {
+                        $chain = " class='".$options['chain_index'][$arr]."' ";
                     }
-                    $html .= "</optgroup>\n";
-                } else {
                     if ($options['keyflip']) { // flip mode = store array values
-                        $chain = $options['chainable'] ? "class='$v'" : '';
                         if ($input_value !== '') {
                             $select = ($input_value == $v) ? " selected" : "";
                         }
                         $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
-                    } else { // normal mode = store array keys
-                        $chain = ($options['chainable']) ? "class='$arr'" : '';
-                        $select = '';
+                    } else {
                         if ($input_value !== '') {
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
                         $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
                     }
-                    unset($arr);
                 }
             }
         }
@@ -193,18 +313,20 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     ));
     // Initialize Select2
     // Select 2 Multiple requires hidden DOM.
-    if ($options['jsonmode'] == FALSE) {
+    if ($options['jsonmode'] === FALSE) {
         // not json mode (normal)
         $max_js = '';
         if ($options['multiple'] && $options['max_select']) {
             $max_js = "maximumSelectionSize : ".$options['max_select'].",";
         }
+
         $tag_js = '';
         if ($options['tags']) {
             $tag_value = json_encode(array_values($options['options']));
             // The format yield must be : `tags:["red", "green", "blue", "orange", "white", "black", "purple", "cyan", "teal"]`
             $tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
         }
+
         if ($options['required']) {
             \PHPFusion\OutputHandler::addToJQuery("
 			var init_value = $('#".$options['input_id']."').select2('val');
@@ -226,6 +348,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 			});
 			");
         }
+
     } else {
         // json mode
         \PHPFusion\OutputHandler::addToJQuery("
@@ -236,7 +359,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 });
             ");
     }
-    // For Multiple Callback.
+
+    // For Multiple Callback JS
     if (is_array($input_value) && $options['multiple']) { // stores as value;
         $vals = '';
         foreach ($input_value as $arr => $val) {
@@ -245,7 +369,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
     }
 
-    return $html;
+    return (string)$html;
 }
 
 /**
@@ -506,7 +630,6 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             }
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
-
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= $options['allowclear'] ? "<option value=''></option>\n" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.

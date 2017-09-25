@@ -411,7 +411,6 @@ class SiteLinks {
             self::setLinks();
             $res = "<div id='".self::getMenuParam('id')."' class='navbar ".self::getMenuParam('navbar_class')."' role='navigation'>\n";
             $res .= self::getMenuParam('container') ? "<div class='container'>\n" : "";
-
             if (self::getMenuParam('show_header')) {
                 $res .= "<div class='navbar-header'>\n";
                 $res .= "<!--Menu Header Start-->\n";
@@ -433,15 +432,14 @@ class SiteLinks {
                 $res .= "<!--Menu Header End-->\n";
                 $res .= "</div>\n";
             }
-
             if (self::getMenuParam('responsive')) {
                 $res .= "<div class='navbar-collapse collapse' id='".self::getMenuParam('id')."_menu'>\n";
             }
-            $class = (fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'");
+            $class = (fusion_get_settings("bootstrap") ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
             if (self::getMenuParam('nav_class')) {
-                $class = "class= '".self::getMenuParam('nav_class')."'";
+                $class = " class='".self::getMenuParam('nav_class')."'";
             }
-            $res .= "<ul $class>\n";
+            $res .= "<ul$class>\n";
             $res .= "<!--Menu Item Start-->\n";
         }
         // Show primary links
@@ -721,13 +719,13 @@ class SiteLinks {
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
-                        $tab_index .= !empty($id) ? "tabindex='0'" : "";
+                        $tab_index .= !empty($id) ? " tabindex='0'" : "";
                     }
 
                     $li_class = array_filter($li_class);
                     $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
-                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class." $tab_index>" : "");
+                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.$tab_index.">" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
@@ -745,7 +743,7 @@ class SiteLinks {
                         $res .= "</ul>\n";
                     }
                     $res .= "</li>\n";
-                } elseif (!empty($link_data['link_cat'])) {
+                } else {
                     $res .= "<li class='divider'></li>\n";
                 }
                 $i++;
