@@ -1364,6 +1364,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 /** Shoutbox */
 .shoutboxwrapper {
     margin-top: 20px;
+    word-wrap: break-word;
 }
 
 /** Css navigational **/
