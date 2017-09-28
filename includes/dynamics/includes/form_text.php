@@ -93,7 +93,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'delimiter'          => ',',
         'stacked'            => '',
         'group_size'         => '', // http://getbootstrap.com/components/#input-groups-sizing - sm, md, lg
-        'password_strength'  => FALSE
+        'password_strength'  => FALSE,
+        'data'               => [],
+        'append_html'        => ''
     );
 
     $options += $default_options;
@@ -112,6 +114,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
     );
 
+    if (!empty($options['data'])) {
+        array_walk($options['data'], function ($a, $b) use (&$options_data) {
+            $options_data[] = "data-$b='$a'";
+        }, $options_data);
+    }
 
     // Error messages based on settings
     if ($options['type'] == 'password') {
@@ -201,7 +208,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $input_type = "text";
     }
 
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
 
@@ -226,6 +233,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
     $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+
+    $html .= $options['append_html'];
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
