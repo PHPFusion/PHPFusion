@@ -84,12 +84,24 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 
     static $select_db = array();
     // New DB Caching Function.
-    if ($options['db'] && $options['id_col'] && $options['cat_col'] && $options['title_col']) {
+    if ($options['db'] && $options['id_col'] && $options['title_col']) {
 
         // Cache result
         $cache = ($options['custom_query'] ? FALSE : TRUE);
+
         if (empty($select_db[$options['db']]) || !$cache) {
-            $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
+            if (!empty($options['cat_col'])) {
+                $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
+            } else {
+                $select_result = dbquery("SELECT * FROM ".$options['db']." ".($options['custom_query'] ? "WHERE ".$options['custom_query'] : '')." ORDER BY ".$options['id_col']." ASC, ".$options['title_col']." ASC");
+                // then make into hierarchy
+                if (dbrows($select_result)) {
+                    while ($data = dbarray($select_result)) {
+                        $list[0][$data[$options['id_col']]] = $data;
+                    }
+                    $select_db[$options['db']] = $list;
+                }
+            }
             /*
              * Build opt functions
              */
