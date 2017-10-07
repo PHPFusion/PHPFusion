@@ -35,7 +35,7 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
         FROM ".DB_FORUMS." f
         LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
         LEFT JOIN ".DB_FORUM_POSTS." p ON t.thread_id = p.post_id
-        ".(multilang_table('FO') ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
+        ".(multilang_table('FO') ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." f.forum_access=0 AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
         GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT 0,10
     ");
 
