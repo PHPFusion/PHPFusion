@@ -21,7 +21,6 @@ use PHPFusion\BreadCrumbs;
 use PHPFusion\SiteLinks;
 
 abstract class Articles extends ArticlesServer {
-
     private static $locale = array();
     public $info = array();
 
@@ -34,8 +33,11 @@ abstract class Articles extends ArticlesServer {
      * @return array
      */
     public function set_ArticlesInfo() {
-
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
+
+        if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php')) {
+            add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('article_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_articles.php"/>');
+        }
 
         set_title(self::$locale['article_0000']);
 

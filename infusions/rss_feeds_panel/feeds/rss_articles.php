@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: rss_articles.php
-| Author: Robert Gaudyn (Wooya)
-| Co-Author: Joakim Falk (Falk)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,45 +15,36 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__)."../../../../maincore.php";
-$settings = fusion_get_settings();
-if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
-} else {
-    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/English.php");
-}
-header('Content-Type: application/rss+xml; charset='.$locale['charset'].'');
+require_once dirname(__FILE__).'../../../../maincore.php';
 
+if (file_exists(INFUSIONS.'rss_feeds_panel/locale/'.LANGUAGE.'.php')) {
+    $locale = fusion_get_locale('', INFUSIONS.'rss_feeds_panel/locale/'.LANGUAGE.'.php');
+} else {
+    $locale = fusion_get_locale('', INFUSIONS.'rss_feeds_panel/locale/English.php');
+}
+
+$settings = fusion_get_settings();
+
+require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
 if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
     $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
-	INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-	WHERE ".groupaccess('article_visibility').(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
-	ORDER BY article_datestamp DESC LIMIT 0,10");
+        INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+        WHERE ".groupaccess('article_visibility').(multilang_table('AR') ? " AND article_cat_language='".LANGUAGE."'" : '')."
+        ORDER BY article_datestamp DESC LIMIT 0,10
+    ");
 
-    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
-    echo "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n";
+    header('Content-Type: application/rss+xml; charset='.$locale['charset']);
+
+    $rss = new RSS('articles', $settings['sitename'].' - '.$locale['rss_articles'].(multilang_table('AR') ? $locale['rss_in'].LANGUAGE : ''));
 
     if (dbrows($result) != 0) {
-
-        echo "<title>".$settings['sitename'].' - '.$locale['rss_articles'].(multilang_table("AR") ? $locale['rss_in'].LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
-        echo "<description>".$settings['description']."</description>\n";
-
-        while ($row = dbarray($result)) {
-            $rsid = intval($row['article_id']);
-            $rtitle = $row['article_subject'];
-            $description = stripslashes(nl2br($row['article_snippet']));
-            $description = strip_tags(htmlspecialchars_decode($description), "<a><p><br /><hr />");
-            echo "<item>\n";
-            echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR") ? " - ".$locale['rss_in'].$row['article_cat_language'] : "")."</title>\n";
-            echo "<link>".$settings['siteurl']."infusions/articles/articles.php?article_id=".$rsid."</link>\n";
-            echo "<description><![CDATA[".html_entity_decode($description)."]]></description>\n";
-            echo "</item>\n";
+        while ($data = dbarray($result)) {
+            $rss->AddItem($data['article_subject'], $settings['siteurl'].'infusions/articles/articles.php?article_id='.$data['article_id'], $data['article_snippet']);
         }
     } else {
-        echo "<title>".$settings['sitename'].' - '.$locale['rss_articles']."</title>\n
-		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss_nodata']."</description>\n";
+        $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_nodata']);
     }
-    echo "</channel>\n</rss>";
+
+    echo $rss->Write();
 }
