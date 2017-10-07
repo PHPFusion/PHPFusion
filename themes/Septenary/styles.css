@@ -1,6 +1,6 @@
 @import url(../templates/global/default_home/default_home.css);
 
-a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
+a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, header, hgroup, html, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
     background: transparent;
     border: 0 none;
     font-size: 100%;
@@ -32,8 +32,7 @@ h2.septenary_showcase_title {
 }
 
 .nav-pills > li > a {
-    color: #2196f3;
-!important;
+    color: #2196f3 !important;
 }
 
 .nav-pills > li > a:hover, .nav-pills > li > a:focus {
@@ -154,8 +153,7 @@ a:hover {
 }
 
 a.side {
-    color: #2196f3;
-!important;
+    color: #2196f3 !important;
     text-decoration: underline;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -799,7 +797,6 @@ ol, ul {
 ul.list li {
     padding: 0px 0 5px 12px;
     line-height: 25px;
-    background: url(../themes/Septenary/images/marker-1.gif) 0 11px no-repeat;
 }
 
 ul.list li a {
@@ -1685,4 +1682,11 @@ h4.news-title-info {
 
 .contentRight .text-dark {
     color: #fff !important;
+}
+
+blockquote {
+    padding: 10px;
+    margin: 0 0 20px;
+    font-size: 17.5px;
+    border-left: 5px solid #eee;
 }
