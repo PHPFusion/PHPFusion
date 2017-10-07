@@ -252,7 +252,6 @@ abstract class Weblinks extends WeblinksServer {
      * @return array
      */
     public function set_WeblinkCatInfo($weblink_cat_id) {
-
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
 
         $info = array(
@@ -280,8 +279,12 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
+            if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php')) {
+                add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('web_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_weblinks.php"/>');
+            }
+
             set_title(self::$locale['web_0000']);
-           BreadCrumbs::getInstance()->addBreadCrumb(array(
+            BreadCrumbs::getInstance()->addBreadCrumb(array(
                "link"  => INFUSIONS."weblinks/weblinks.php",
                "title" => self::$locale['web_0000']
             ));
