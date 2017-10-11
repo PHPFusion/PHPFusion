@@ -475,9 +475,8 @@ class MemberPoll {
                 echo "</div>\n";
                 echo "</div>\n"; // .col-xs-12
             }
-
-            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, FUSION_SELF."?").'</div>' : "";
             echo "</div>\n";
+			echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, INFUSIONS."member_poll_panel/polls_archive.php?").'</div>' : "";
         } else {
             echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";
         }
