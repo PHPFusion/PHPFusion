@@ -513,6 +513,8 @@ abstract class News extends NewsServer {
          */
         if ($max_news_rows) {
             $news_count = 0;
+            $news_info = [];
+
             while ($data = dbarray($result)) {
                 $news_count++;
                 if ($news_count == 1) {
