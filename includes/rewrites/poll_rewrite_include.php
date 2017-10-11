@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
-| Filename: photogallery_rewrite_include.php
+| Filename: poll_rewrite_include.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,4 +19,12 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$pattern = ['poll-archive' => 'infusions/member_poll_panel/polls_archive.php'];
+
+$regex = array(
+    "%rowstart%" => "([0-9]+)",
+);
+
+$pattern = array(
+    "poll-archive" => "infusions/member_poll_panel/polls_archive.php",
+    "poll-archive/rowstart=%rowstart%" => "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%",
+);
