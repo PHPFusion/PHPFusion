@@ -53,6 +53,7 @@
         msgUploadBegin: 'Initializing...',
         msgUploadEnd: 'Done',
         msgUploadEmpty: 'No valid data available for upload.',
+        msgUploadError: 'Error',
         msgValidationError: 'Error de validació',
         msgLoading: 'Pujant fitxer {index} de {files} &hellip;',
         msgProgress: 'Pujant fitxer {index} de {files} - {name} - {percent}% completat.',
@@ -77,6 +78,8 @@
         fileActionSettings: {
             removeTitle: 'Eliminar arxiu',
             uploadTitle: 'Pujar arxiu',
+            uploadRetryTitle: 'Retry upload',
+            downloadTitle: 'Download file',
             zoomTitle: 'Veure detalls',
             dragTitle: 'Move / Rearrange',
             indicatorNewTitle: 'No pujat encara',

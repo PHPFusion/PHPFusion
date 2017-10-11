@@ -29,8 +29,7 @@ if (fusion_get_enabled_languages() > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".fusion_get_settings('siteurl')."' />\n";
 }
 // Load bootstrap stylesheets
-if (fusion_get_settings('bootstrap') == TRUE) {
-    define('BOOTSTRAPPED', TRUE);
+if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
@@ -114,12 +113,10 @@ if (!empty($fusion_jquery_tags)) {
 }
 
 $jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, array('flaggedComments' => FALSE));
-echo "<script type='text/javascript'>\n";
-echo "$(function() { $jquery_tags });";
-echo "</script>\n";
+echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
 
 // Load bootstrap javascript
-if (fusion_get_settings('bootstrap')) {
+if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>\n";

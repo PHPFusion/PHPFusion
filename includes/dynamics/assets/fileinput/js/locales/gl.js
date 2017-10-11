@@ -53,6 +53,7 @@
         msgUploadBegin: 'Inicialicando...',
         msgUploadEnd: 'Feito',
         msgUploadEmpty: 'Non existen datos válidos para o envío.',
+        msgUploadError: 'Error',
         msgValidationError: 'Erro de validación',
         msgLoading: 'Subindo arquivo {index} de {files} &hellip;',
         msgProgress: 'Subiendo arquivo {index} de {files} - {name} - {percent}% completado.',
@@ -77,6 +78,8 @@
         fileActionSettings: {
             removeTitle: 'Eliminar arquivo',
             uploadTitle: 'Subir arquivo',
+            uploadRetryTitle: 'Retry upload',
+            downloadTitle: 'Download file',
             zoomTitle: 'Ver detalles',
             dragTitle: 'Mover / Reordenar',
             indicatorNewTitle: 'Non subido todavía',

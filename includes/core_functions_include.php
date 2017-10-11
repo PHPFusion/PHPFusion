@@ -1645,7 +1645,7 @@ function fusion_get_userdata($key = NULL) {
             "user_theme"  => fusion_get_settings("theme"),
     );
 
-    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
+    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
 }
 
 /**

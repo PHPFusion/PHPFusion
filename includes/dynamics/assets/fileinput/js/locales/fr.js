@@ -53,6 +53,7 @@
         msgUploadBegin: 'Initialisation...',
         msgUploadEnd: 'Terminé',
         msgUploadEmpty: 'Aucune donnée valide disponible pour transmission.',
+        msgUploadError: 'Error',
         msgValidationError: 'Erreur de validation',
         msgLoading: 'Transmission du fichier {index} sur {files}&hellip;',
         msgProgress: 'Transmission du fichier {index} sur {files} - {name} - {percent}% faits.',
@@ -77,6 +78,7 @@
         fileActionSettings: {
             removeTitle: 'Supprimer le fichier',
             uploadTitle: 'Transférer le fichier',
+            uploadRetryTitle: 'Retry upload',
             zoomTitle: 'Voir les détails',
             dragTitle: 'Déplacer / Réarranger',
             indicatorNewTitle: 'Pas encore transféré',

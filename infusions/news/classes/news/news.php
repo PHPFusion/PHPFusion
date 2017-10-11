@@ -37,8 +37,11 @@ abstract class News extends NewsServer {
      * @return array
      */
     public function set_NewsInfo() {
-
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
+
+        if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_news.php')) {
+            add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('news_0004').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_news.php"/>');
+        }
 
         set_title(self::$locale['news_0004']);
 
@@ -155,49 +158,49 @@ abstract class News extends NewsServer {
         $news_settings = self::get_news_settings();
         $cat_filter = self::check_NewsFilter();
         $query = "SELECT tn.*, tc.*,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-				".(!empty($cat_filter['count']) ? $cat_filter['count'] : '')."
-				ni.news_image, ni.news_image_t1, ni.news_image_t2
-				FROM ".DB_NEWS." tn
-				LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND ".(!empty($_GET['readmore']) ? "tn.news_image_full_default=ni.news_image_id" : "tn.news_image_front_default=ni.news_image_id")."
-				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
-				".(!empty($cat_filter['join']) ? $cat_filter['join'] : '')."
-				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
-				AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
-				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
-				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-				ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
-				LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
+                tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+                ".(!empty($cat_filter['count']) ? $cat_filter['count'] : '')."
+                ni.news_image, ni.news_image_t1, ni.news_image_t2
+                FROM ".DB_NEWS." tn
+                LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND ".(!empty($_GET['readmore']) ? "tn.news_image_full_default=ni.news_image_id" : "tn.news_image_front_default=ni.news_image_id")."
+                LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+                LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
+                ".(!empty($cat_filter['join']) ? $cat_filter['join'] : '')."
+                ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
+                AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
+                ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
+                GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
+                ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
+                LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
         return $query;
     }
 
     protected static function rating_comments($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-		return $count_db['sum_rating'];
-	}
+        return $count_db['sum_rating'];
+    }
 
     protected static function votes_comments($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(rating_item_id) AS count_votes
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                COUNT(rating_item_id) AS count_votes
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-		return $count_db['count_votes'];
-	}
+        return $count_db['count_votes'];
+    }
 
     protected static function count_comments($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(comment_item_id) AS count_comment
-				FROM ".DB_COMMENTS."
-				WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
+                COUNT(comment_item_id) AS count_comment
+                FROM ".DB_COMMENTS."
+                WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
-		return $count_db['count_comment'];
-	}
+        return $count_db['count_comment'];
+    }
 //    protected function check_NewsFilter() {
 
 //    }
@@ -221,17 +224,17 @@ abstract class News extends NewsServer {
             } elseif ($current_filter == 'comment') {
                 // order by comment_count
                 $cat_filter = [
-                	'order' => 'count_comment DESC',
-        			'count' => 'COUNT(td.comment_item_id) AS count_comment,',
-					'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
-					];
+                    'order' => 'count_comment DESC',
+                    'count' => 'COUNT(td.comment_item_id) AS count_comment,',
+                    'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
+                    ];
             } elseif ($current_filter == 'rating') {
                 // order by download_title
                 $cat_filter = [
-                	'order' => 'sum_rating DESC',
-        			'count' => 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,',
-					'join'  => "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'",
-				];
+                    'order' => 'sum_rating DESC',
+                    'count' => 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,',
+                    'join'  => "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'",
+                ];
             }
         } else {
             $cat_filter['order'] = 'news_datestamp DESC';
@@ -482,7 +485,7 @@ abstract class News extends NewsServer {
         } elseif ($_GET['cat_id'] == 0) {
 
             $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
-			AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
+            AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
 

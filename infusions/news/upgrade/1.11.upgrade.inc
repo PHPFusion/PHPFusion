@@ -86,8 +86,8 @@ foreach ($check_array as $key => $value) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'news')";
     }
 }
-if (!db_exists(DB_NEWS_IMAGES)) {
 
+if (!db_exists(DB_NEWS_IMAGES)) {
     $create_table = DB_NEWS_IMAGES." (
     news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -99,12 +99,14 @@ if (!db_exists(DB_NEWS_IMAGES)) {
 	PRIMARY KEY (news_image_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$create_table);
+}
 
-    // Port Photos into New Tables
-    $query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS;
-    $result = dbquery($query);
-    if (dbrows($result)) {
-        while ($data = dbarray($result)) {
+// Port Photos into New Tables
+$query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS." WHERE news_image<>'' ORDER BY news_id ASC";
+$result = dbquery($query);
+if (dbrows($result)) {
+    while ($data = dbarray($result)) {
+        if (!empty($data['news_image'])) {
             $insert_rows = DB_NEWS_IMAGES." (news_id, news_image, news_image_t1, news_image_t2, news_image_user, news_image_datestamp) VALUES (
             '".$data['news_id']."',
             '".$data['news_image']."',
@@ -133,12 +135,11 @@ if (!db_exists(DB_NEWS_IMAGES)) {
             if (!empty($data['news_image_t2']) && file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
                 rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
             }
+            // delay the process by 0.3 seconds to prevent redirection before process completes
+            sleep(0.3);
         }
     }
 }
-
-// Check all images
-
 
 // Drop existing columns
 $check_array = [

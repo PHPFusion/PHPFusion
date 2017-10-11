@@ -630,8 +630,11 @@ class UserFields extends QuantumFields {
         $aidlink = fusion_get_aidlink();
 
         $this->info['section'] = $this->getProfileSections();
-
-        $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
+        $current_section = array(['id' => 1]);
+        if (!empty($this->info['section'])) {
+            $current_section = current($this->info['section']);
+        }
+        $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : $current_section['id'];
 
         if (empty($this->userData['user_avatar']) && !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
             $this->userData['user_avatar'] = get_image('noavatar');

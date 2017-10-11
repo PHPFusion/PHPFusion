@@ -43,6 +43,7 @@
         msgUploadBegin: 'Initializing...',
         msgUploadEnd: 'Done',
         msgUploadEmpty: 'No valid data available for upload.',
+        msgUploadError: 'Error',
         msgValidationError: 'Błąd walidacji',
         msgLoading: 'Wczytywanie pliku {index} z {files} &hellip;',
         msgProgress: 'Wczytywanie pliku {index} z {files} - {name} - {percent}% zakończone.',
@@ -67,6 +68,8 @@
         fileActionSettings: {
             removeTitle: 'Usuń plik',
             uploadTitle: 'Przesyłanie pliku',
+            uploadRetryTitle: 'Retry upload',
+            downloadTitle: 'Download file',
             zoomTitle: 'Pokaż szczegóły',
             dragTitle: 'Przenies / Ponownie zaaranżuj',
             indicatorNewTitle: 'Jeszcze nie przesłanych',
