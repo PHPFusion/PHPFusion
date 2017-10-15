@@ -5,8 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
-| Filename: poll_rewrite_include.php
-| Author: Chan (Frederick MC Chan)
+| Filename: shoutbox_rewrite_info.php
+| Author: slb4life
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,12 +19,5 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
-$regex = array(
-    "%rowstart%" => "([0-9]+)",
-);
-
-$pattern = array(
-    "polls-archive"					=> "infusions/member_poll_panel/polls_archive.php",
-    "polls-archive-row-%rowstart%"	=> "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%",
-);
+$permalink_name = $locale['pl_shoutbox_title'];
+$permalink_desc = $locale['pl_shoutbox_desc'];

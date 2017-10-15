@@ -77,6 +77,10 @@ class Forum extends ForumServer {
             'new_topic_link'   => array('link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']),
         ];
 
+        if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php')) {
+            add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('forum_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_forums.php"/>');
+        }
+
         add_to_title($locale['global_200'].$locale['forum_0000']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
 

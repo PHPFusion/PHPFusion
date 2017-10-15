@@ -46,6 +46,10 @@ if ($settings['tinymce_enabled'] == 1) {
 
 $blog_settings = get_settings("blog");
 
+if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php')) {
+    add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('blog_1000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_blog.php"/>');
+}
+
 set_title($locale['blog_1000']);
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
@@ -116,12 +120,12 @@ switch ($_GET['type']) {
     case 'comment':
         $filter_condition = 'count_comment DESC';
         $filter_count = 'COUNT(td.comment_item_id) AS count_comment,';
-		$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'";
+        $filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'";
         break;
     case 'rating':
         $filter_condition = 'sum_rating DESC';
         $filter_count = 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,';
-		$filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.blog_id AND tr.rating_type='B'";
+        $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.blog_id AND tr.rating_type='B'";
         break;
     default:
         $filter_condition = 'blog_datestamp DESC';
@@ -131,15 +135,15 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
     if (validate_blog($_GET['readmore'])) {
         $result = dbquery("SELECT tn.*, tu.*,
-			".(!empty($filter_count) ? $filter_count : '')."
-					tn.blog_datestamp as last_updated
-					FROM ".DB_BLOG." tn
-					LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			".(!empty($filter_join) ? $filter_join : '')."
-					".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND
-					blog_id='".$_GET['readmore']."' AND blog_draft='0'
-					GROUP BY blog_id
-					");
+            ".(!empty($filter_count) ? $filter_count : '')."
+                    tn.blog_datestamp as last_updated
+                    FROM ".DB_BLOG." tn
+                    LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+            ".(!empty($filter_join) ? $filter_join : '')."
+                    ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND
+                    blog_id='".$_GET['readmore']."' AND blog_draft='0'
+                    GROUP BY blog_id
+                    ");
         $info['blog_rows'] = dbrows($result);
         if ($info['blog_rows'] > 0) {
             include INCLUDES."comments_include.php";
@@ -283,8 +287,8 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
     if (isset($_GET['author']) && isnum($_GET['author'])) {
         $info['blog_max_rows'] = dbcount("(blog_id)", DB_BLOG,
             (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
-										 AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."')
-										 AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'");
+                                         AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."')
+                                         AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'");
 
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
@@ -304,16 +308,16 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             }
 
             $result = dbquery("SELECT tn.*,
-			tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-			".(!empty($filter_count) ? $filter_count : '')."
-			max(tn.blog_datestamp) AS last_updated
-			FROM ".DB_BLOG." tn
-			inner join ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			".(!empty($filter_join) ? $filter_join : '')."
-			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
-			AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'
-			GROUP BY blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$blog_settings['blog_pagination']);
+            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+            ".(!empty($filter_count) ? $filter_count : '')."
+            max(tn.blog_datestamp) AS last_updated
+            FROM ".DB_BLOG." tn
+            inner join ".DB_USERS." tu ON tn.blog_name=tu.user_id
+            ".(!empty($filter_join) ? $filter_join : '')."
+            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
+            AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'
+            GROUP BY blog_id
+            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$blog_settings['blog_pagination']);
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
@@ -346,30 +350,30 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         }
 
         $info['blog_max_rows'] = dbrows(dbquery("select blog_id from ".DB_BLOG."
-			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE")." ".groupaccess("blog_visibility")."
-			AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
-			".$catFilter."
-			"));
+            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE")." ".groupaccess("blog_visibility")."
+            AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
+            ".$catFilter."
+            "));
 
         //xss
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
         if ($info['blog_max_rows']) {
             $result = dbquery("
-			SELECT tn.*, tc.*, IF(tn.blog_cat = 0, '".$locale['global_080']."', blog_cat_name) as blog_cat_name,
-			tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-			".(!empty($filter_count) ? $filter_count : '')."
-			max(tn.blog_datestamp) AS last_updated
-			FROM ".DB_BLOG." tn
-			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			LEFT JOIN ".DB_BLOG_CATS." tc ON tn.blog_cat=tc.blog_cat_id
-			".(!empty($filter_join) ? $filter_join : '')."
-			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
-			".$catFilter."
-			AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."')
-			AND blog_draft='0'
-			GROUP BY tn.blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
+            SELECT tn.*, tc.*, IF(tn.blog_cat = 0, '".$locale['global_080']."', blog_cat_name) as blog_cat_name,
+            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+            ".(!empty($filter_count) ? $filter_count : '')."
+            max(tn.blog_datestamp) AS last_updated
+            FROM ".DB_BLOG." tn
+            LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+            LEFT JOIN ".DB_BLOG_CATS." tc ON tn.blog_cat=tc.blog_cat_id
+            ".(!empty($filter_join) ? $filter_join : '')."
+            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
+            ".$catFilter."
+            AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."')
+            AND blog_draft='0'
+            GROUP BY tn.blog_id
+            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
             $info['blog_rows'] = dbrows($result);
         }
         \PHPFusion\OpenGraphBlogs::ogBlogCat($_GET['cat_id']);
@@ -393,12 +397,12 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
         $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG,
             (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")."
-										 ".groupaccess('blog_visibility')."
-										 AND (blog_start='0' || blog_start<='".time()."')
-										 AND (blog_end='0' || blog_end>='".time()."')
-										 AND blog_draft='0'
-										 ".$archiveSql."
-										 ");
+                                         ".groupaccess('blog_visibility')."
+                                         AND (blog_start='0' || blog_start<='".time()."')
+                                         AND (blog_end='0' || blog_end>='".time()."')
+                                         AND blog_draft='0'
+                                         ".$archiveSql."
+                                         ");
 
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
@@ -413,18 +417,18 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         if ($info['blog_max_rows'] > 0) {
             // remove blog category from join.
             $result = dbquery("
-			SELECT tn.*,
-			tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-			".(!empty($filter_count) ? $filter_count : '')."
-			max(tn.blog_datestamp) AS last_updated
-			FROM ".DB_BLOG." tn
-			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			".(!empty($filter_join) ? $filter_join : '')."
-			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
-			AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
-			".$archiveSql."
-			GROUP BY tn.blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
+            SELECT tn.*,
+            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+            ".(!empty($filter_count) ? $filter_count : '')."
+            max(tn.blog_datestamp) AS last_updated
+            FROM ".DB_BLOG." tn
+            LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+            ".(!empty($filter_join) ? $filter_join : '')."
+            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
+            AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
+            ".$archiveSql."
+            GROUP BY tn.blog_id
+            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
             $info['blog_rows'] = dbrows($result);
         }
     }
@@ -490,12 +494,12 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 // Archive Menu -- fix active selector
 $archive_result = dbquery("
-			SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
-			FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")."
-			".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
-			AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
-			GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC
-			");
+            SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
+            FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")."
+            ".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
+            AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
+            GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC
+            ");
 if (dbrows($archive_result)) {
     while ($a_data = dbarray($archive_result)) {
         $active = isset($_GET['archive']) && isnum($_GET['archive']) && ($_GET['archive'] == $a_data['blog_year']) &&
@@ -512,10 +516,10 @@ if (dbrows($archive_result)) {
 
 // Author Menu
 $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) AS blog_count, u.user_id, u.user_name, u.user_status
-			FROM ".DB_BLOG." b
-			INNER JOIN ".DB_USERS." u ON (b.blog_name = u.user_id)
-			GROUP BY blog_name ORDER BY blog_name ASC
-			");
+            FROM ".DB_BLOG." b
+            INNER JOIN ".DB_USERS." u ON (b.blog_name = u.user_id)
+            GROUP BY blog_name ORDER BY blog_name ASC
+            ");
 if (dbrows($author_result)) {
     while ($at_data = dbarray($author_result)) {
         $active = isset($_GET['author']) && $_GET['author'] == $at_data['blog_name'] ? 1 : 0;
@@ -530,27 +534,27 @@ if (dbrows($author_result)) {
 
 function rating_db($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
 return $count_db['sum_rating'];
 }
 
 function sum_db($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(rating_item_id) AS count_votes
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                COUNT(rating_item_id) AS count_votes
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
 return $count_db['count_votes'];
 }
 
 function count_comments($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(comment_item_id) AS count_comment
-				FROM ".DB_COMMENTS."
-				WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
+                COUNT(comment_item_id) AS count_comment
+                FROM ".DB_COMMENTS."
+                WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
 return $count_db['count_comment'];
 }

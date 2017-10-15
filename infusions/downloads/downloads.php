@@ -41,6 +41,10 @@ $dl_settings = get_settings("downloads");
     'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name")
 ]);
 
+if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_downloads.php')) {
+    add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('download_1000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_downloads.php"/>');
+}
+
 $result = NULL;
 
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
@@ -102,12 +106,12 @@ switch ($_GET['type']) {
     case 'comments':
         $filter_condition = 'count_comment DESC';
         $filter_count = 'COUNT(td.comment_item_id) AS count_comment,';
-		$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
+        $filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
         break;
     case 'ratings':
         $filter_condition = 'sum_rating DESC';
         $filter_count = 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,';
-		$filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
+        $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
         break;
     case 'download':
         $filter_condition = 'download_count DESC';
@@ -120,17 +124,17 @@ if (isset($_GET['download_id'])) {
     if (validate_download($_GET['download_id'])) {
 
         $download_query = "SELECT d.*, dc.*,
-					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-	 				SUM(tr.rating_vote) AS sum_rating,
-					COUNT(tr.rating_item_id) AS count_votes,
-					d.download_datestamp as last_updated
-					FROM ".DB_DOWNLOADS." d
-					INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
-					LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
-					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
-					".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
-					download_id='".intval($_GET['download_id'])."'
-					GROUP BY download_id";
+                    tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+                    SUM(tr.rating_vote) AS sum_rating,
+                    COUNT(tr.rating_item_id) AS count_votes,
+                    d.download_datestamp as last_updated
+                    FROM ".DB_DOWNLOADS." d
+                    INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+                    LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+                    LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
+                    ".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
+                    download_id='".intval($_GET['download_id'])."'
+                    GROUP BY download_id";
 
         $result = dbquery($download_query);
         $info['download_rows'] = dbrows($result);
@@ -225,12 +229,12 @@ if (isset($_GET['download_id'])) {
                 case 'comments':
                     $filter_condition = 'count_comment DESC';
                     $filter_count = 'COUNT(td.comment_item_id) AS count_comment,';
-				$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
+                $filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
                     break;
                 case 'ratings':
                     $filter_condition = 'sum_rating DESC';
                     $filter_count = 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,';
-				$filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
+                $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
                     break;
                 case 'download':
                     $filter_condition = 'download_count DESC';
@@ -240,18 +244,18 @@ if (isset($_GET['download_id'])) {
                         0);
             }
             $sql = "SELECT d.*, dc.*,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-				".(!empty($filter_count) ? $filter_count : '')."
-				MAX(d.download_datestamp) as last_updated
-				FROM ".DB_DOWNLOADS." d
-				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
-				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
-				".(!empty($filter_join) ? $filter_join : '')."
-				".(multilang_table("DL") ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('download_visibility')."
-				AND download_cat = '".intval($_GET['cat_id'])."'
-				GROUP BY d.download_id
-				ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
-				LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']);
+                tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+                ".(!empty($filter_count) ? $filter_count : '')."
+                MAX(d.download_datestamp) as last_updated
+                FROM ".DB_DOWNLOADS." d
+                INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+                LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+                ".(!empty($filter_join) ? $filter_join : '')."
+                ".(multilang_table("DL") ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('download_visibility')."
+                AND download_cat = '".intval($_GET['cat_id'])."'
+                GROUP BY d.download_id
+                ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
+                LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']);
 
             $result = dbquery($sql);
             $info['download_rows'] = dbrows($result);
@@ -273,18 +277,18 @@ if (isset($_GET['download_id'])) {
         if ($info['download_max_rows'] > 0) {
 
             $download_query = "SELECT d.*, dc.*,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-				".(!empty($filter_count) ? $filter_count : '')."
-				max(d.download_datestamp) as last_updated
-				FROM ".DB_DOWNLOADS." d
-				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
-				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
-				".(!empty($filter_join) ? $filter_join : '')."
-				".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-				".$condition."
-				GROUP BY d.download_id
-				ORDER BY ".($filter_condition ? $filter_condition : "dc.download_cat_sorting")."
-				LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']);
+                tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+                ".(!empty($filter_count) ? $filter_count : '')."
+                max(d.download_datestamp) as last_updated
+                FROM ".DB_DOWNLOADS." d
+                INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+                LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+                ".(!empty($filter_join) ? $filter_join : '')."
+                ".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
+                ".$condition."
+                GROUP BY d.download_id
+                ORDER BY ".($filter_condition ? $filter_condition : "dc.download_cat_sorting")."
+                LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']);
 
             $result = dbquery($download_query);
             $info['download_rows'] = dbrows($result);
@@ -307,18 +311,18 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
 
 if (!empty($info['download_rows'])) {
     while ($data = dbarray($result)) {
-    	$data['count_comment'] = !empty($data['count_comment']) ? $data['count_comment'] : count_db($data['download_id'], 'D');
-    	$data['count_votes'] = !empty($data['count_votes']) ? $data['count_votes'] : sum_db($data['download_id'], 'D');
-    	$data['sum_rating'] = !empty($data['sum_rating']) ? $data['sum_rating'] : rating_db($data['download_id'], 'D');
+        $data['count_comment'] = !empty($data['count_comment']) ? $data['count_comment'] : count_db($data['download_id'], 'D');
+        $data['count_votes'] = !empty($data['count_votes']) ? $data['count_votes'] : sum_db($data['download_id'], 'D');
+        $data['sum_rating'] = !empty($data['sum_rating']) ? $data['sum_rating'] : rating_db($data['download_id'], 'D');
         $data = array_merge($data, parseInfo($data));
         $info['download_item'][$data['download_id']] = $data;
     }
 }
 $author_result = dbquery("SELECT b.download_title, b.download_user, count(b.download_id) as download_count, u.user_id, u.user_name, u.user_status
-				FROM ".DB_DOWNLOADS." b
-				INNER JOIN ".DB_USERS." u on (b.download_user = u.user_id)
-				GROUP BY b.download_user ORDER BY b.download_user ASC
-				");
+                FROM ".DB_DOWNLOADS." b
+                INNER JOIN ".DB_USERS." u on (b.download_user = u.user_id)
+                GROUP BY b.download_user ORDER BY b.download_user ASC
+                ");
 if (dbrows($author_result)) {
     while ($at_data = dbarray($author_result)) {
         $active = isset($_GET['author']) && $_GET['author'] == $at_data['download_user'] ? 1 : 0;
@@ -335,25 +339,25 @@ render_downloads($info);
 require_once THEMES."templates/footer.php";
 function rating_db($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
 return $count_db['sum_rating'];
 }
 function sum_db($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(rating_item_id) AS count_votes
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                COUNT(rating_item_id) AS count_votes
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
 return $count_db['count_votes'];
 }
 function count_db($id, $type) {
             $count_db = dbarray(dbquery("SELECT
-				COUNT(comment_item_id) AS count_comment
-				FROM ".DB_COMMENTS."
-				WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
+                COUNT(comment_item_id) AS count_comment
+                FROM ".DB_COMMENTS."
+                WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
 return $count_db['count_comment'];
 }

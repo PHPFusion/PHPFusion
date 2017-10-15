@@ -28,9 +28,9 @@ $regex = array(
 );
 
 $pattern = array(
-    "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
-    "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",
-    "profile/%group_id%"            => "profile.php?group_id=%group_id%",
+    "profile-section-%section%/%user_id%/%user_name%"   => "profile.php?lookup=%user_id%&amp;section=%section%",
+    "profile-%user_id%/%user_name%" 					=> "profile.php?lookup=%user_id%",
+    "profile-group-%group_id%"           				=> "profile.php?group_id=%group_id%",
 
 );
 

@@ -5,9 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: rss_feeds_panel.php
-| Author: Robert Gaudyn (Wooya)
-| Co-Author: Joakim Falk (Falk)
-| Co-Author: Tomasz Jankowski (jantom)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,30 +21,12 @@ if (!defined("IN_FUSION")) {
 
 include_once INCLUDES."infusions_include.php";
 if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
-    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
+    $locale = fusion_get_locale('', INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php");
 } else {
-    $locale += fusion_get_locale("", INFUSIONS."rss_feeds_panel/locale/English.php");
+    $locale = fusion_get_locale('', INFUSIONS."rss_feeds_panel/locale/English.php");
 }
 
-add_to_head('<style type="text/css">
-.rss-button {
-    background: #FF9800;
-    padding: 1px 15px;
-    color: #fff !important;
-    border-radius: 4px;
-    margin: 3px 0;
-    display: block;
-}
-.rss-button:hover,
-.rss-button:focus {
-    background: #F57C00;
-    color: #fff;
-    text-decoration: none;
-}
-.rss-button .fa {
-    padding-right: 5px;
-}
-</style>');
+add_to_head('<style type="text/css">.rss-button{background:#FF9800;padding:1px 15px;color:#fff!important;-webkit-border-radius:4px;border-radius:4px;margin:3px 0;display:block;}.rss-button:hover,.rss-button:focus{background:#F57C00;color:#fff;text-decoration:none;}.rss-button .fa{padding-right:5px;}</style>');
 
 openside($locale['rss_title']);
 if (infusion_exists('articles')) {
@@ -72,4 +52,5 @@ if (infusion_exists('news')) {
 if (infusion_exists('weblinks')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_weblinks'].'</a>';
 }
+
 closeside();
