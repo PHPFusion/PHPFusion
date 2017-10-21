@@ -297,7 +297,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         ?>
 
         <!-- Display Table -->
-        <div class="table-responsive"><table class="table table-striped">
+        <div class="table-responsive m-t-10"><table class="table table-striped">
             <thead>
             <tr>
                 <td class="strong"><?php echo $this->locale['article_0200']; ?></td>

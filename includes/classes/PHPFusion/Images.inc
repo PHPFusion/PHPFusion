@@ -254,12 +254,12 @@ class Images {
         }
         echo "</div>\n</div>\n";
         if ($this->data['image_list']) {
-            echo "<div class='table-responsive'><table class='table table-hover'>\n<tr>\n";
+            echo "<div class='table-responsive'><table class='table table-hover'>\n";
             for ($i = 0; $i < $this->data['image_count']; $i++) {
                 $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
                 $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
-                echo "<tr>\n<td >".$this->data['image_list'][$i]."</td>\n";
-                echo "<td align='right' width='1%' style='white-space:nowrap'>\n";
+                echo "<tr>\n<td>".$this->data['image_list'][$i]."</td>\n";
+                echo "<td align='right'>\n";
                 echo "<a href='".$edit_link."'>".self::$locale['461']."</a> -\n";
                 echo "<a href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['462']."</a></td>\n";
                 echo "</tr>\n";

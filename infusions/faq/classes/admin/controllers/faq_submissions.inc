@@ -250,7 +250,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         );
         $data = self::submitData($criteria);
 
-        echo "<div class='table-responsive'><table class='table table-striped'>\n";
+        echo "<div class='table-responsive m-t-10'><table class='table table-striped'>\n";
         echo "<thead>\n";
             echo "<tr>\n";
                 echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";

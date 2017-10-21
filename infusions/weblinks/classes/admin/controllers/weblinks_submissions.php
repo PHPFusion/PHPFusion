@@ -238,7 +238,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         ?>
 
         <!-- Display Table -->
-        <div class="table-responsive"><table class="table table-striped">
+        <div class="table-responsive m-t-10"><table class="table table-striped">
             <thead>
             <tr>
                 <td class="strong"><?php echo $this->locale['WLS_0200']; ?></td>
