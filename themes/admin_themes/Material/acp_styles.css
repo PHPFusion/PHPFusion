@@ -1081,6 +1081,9 @@ main {
 .icon-wrapper .btn-app:focus {
     background-color: #f5f5f5;
 }
+.icon-wrapper .btn-app > span {
+    white-space: nowrap;
+}
 .copyright {
     font-size: 11px;
     margin-bottom: 30px;
