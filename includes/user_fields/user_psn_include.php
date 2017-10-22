@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/psn.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/psn.svg' alt='PSN'/>";
 // Display user field input
 if ($profile_method == "input") {
 

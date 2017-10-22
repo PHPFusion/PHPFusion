@@ -34,7 +34,7 @@ if (!function_exists("display_main_faq")) {
         if (!empty($info['faq_categories'])) {
             foreach ($info['faq_categories'] as $cat_id => $cat_data) {
                 echo "<div class='m-t-10' id='cat-".$cat_id."'>\n";
-                echo "<a class='text-bold' href='".INFUSIONS."faq/faq.php?cat_id=".$cat_id."' title=".$cat_data['faq_cat_name'].">".$cat_data['faq_cat_name']."</a><br/>";
+                echo "<a class='text-bold' href='".INFUSIONS."faq/faq.php?cat_id=".$cat_id."' title='".$cat_data['faq_cat_name']."'>".$cat_data['faq_cat_name']."</a><br/>";
                 echo $cat_data['faq_cat_description'];
                 echo "</div>\n";
             }

@@ -602,7 +602,7 @@ class UserFields extends QuantumFields {
                     } else {
                         // Display User Fields
                         if (isset($item[$cat_id])) {
-                            $fields['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+                            $fields['user_field'][$cat_id]['title'] = form_para($cat, 'cat-'.$cat_id, 'profile_category_name');
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 // Outputs array
                                 $field_output = $this->display_fields($field, $this->callback_data, $this->method);

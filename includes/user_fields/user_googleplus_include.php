@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/googleplus.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/googleplus.svg' alt='Google Plus'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

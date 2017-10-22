@@ -21,7 +21,6 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_threads_panel')) {
     function render_threads_panel($info) {
-
         $html = \PHPFusion\Template::getInstance('threads');
         $html->set_template(INFUSIONS."forum_threads_panel/templates/threads.html");
 
@@ -33,30 +32,32 @@ if (!function_exists('render_threads_panel')) {
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
         if (!empty($info['latest'])) {
-        	if (!empty($info['latest']['item'])) {
+            if (!empty($info['latest']['item'])) {
                 foreach ($info['latest']['item'] as $data) {
                     $html->set_block('latest', [
-                        'link_url'    => $data['link_url'],
-                        'link_title'  => '<div data-trim-text="18">'.$data['link_title'].'</div>',
+                        'link_url'   => $data['link_url'],
+                        'link_title' => '<span data-trim-text="18">'.$data['link_title'].'</span>',
                     ]);
                 }
-        	}
-        } else {
-            $html->set_block('latest_no_item', ['message' => $info['latest']['no_rows']]);
+            } else {
+                $html->set_block('latest_no_item', ['message' => $info['latest']['no_rows']]);
+            }
         }
+
         if (!empty($info['hottest'])) {
-        	if (!empty($info['hottest']['item'])) {
+            if (!empty($info['hottest']['item'])) {
                 foreach ($info['hottest']['item'] as $data) {
                     $html->set_block('hottest', [
-                        'link_url'    => $data['link_url'],
-                        'link_title'  => '<div data-trim-text="18">'.$data['link_title'].'</div>',
-                        'badge'       => $data['badge'],
+                        'link_url'   => $data['link_url'],
+                        'link_title' => '<span data-trim-text="18">'.$data['link_title'].'</span>',
+                        'badge'      => $data['badge'],
                     ]);
                 }
-        	}
-        } else {
-            $html->set_block('hottest_no_item', ['message' => $info['hottest']['no_rows']]);
+            } else {
+                $html->set_block('hottest_no_item', ['message' => $info['hottest']['no_rows']]);
+            }
         }
+
         echo $html->get_output();
     }
 }

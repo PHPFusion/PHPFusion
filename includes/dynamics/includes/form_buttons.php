@@ -26,6 +26,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'input_id'    => $input_name,
         'input_value' => $input_name,
         'class'       => "btn-default",
+        'icon_class'  => "m-r-10",
         'icon'        => "",
         'deactivate'  => FALSE,
         'type'        => "submit",
@@ -45,11 +46,11 @@ function form_button($input_name, $title, $input_value, array $options = array()
     }, $options_data);
 
     if ($options['type'] == 'link') {
-        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</a>";
+        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</a>";
     } elseif ($options['type'] == 'button') {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
     } else {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." m-r-10'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
     }
 
     return $html;
@@ -135,13 +136,13 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
                                      'delimiter'      => $options['delimiter'],
                                  ));
     add_to_jquery("
-	$('#".$options['input_id']." button').bind('click', function(e){
-		$('#".$options['input_id']." button').removeClass('active');
-		$(this).toggleClass('active');
-		value = $(this).data('value');
-		$('#".$options['input_id']."-text').val(value);
-	});
-	");
+    $('#".$options['input_id']." button').bind('click', function(e){
+        $('#".$options['input_id']." button').removeClass('active');
+        $(this).toggleClass('active');
+        value = $(this).data('value');
+        $('#".$options['input_id']."-text').val(value);
+    });
+    ");
 
     return $html;
 }

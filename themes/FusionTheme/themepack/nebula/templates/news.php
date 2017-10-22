@@ -113,7 +113,7 @@ class News extends Core {
                 <div class='post-image'>
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg') == FALSE) : ?>
                         <a href='<?php echo $info['news_link'] ?>'>
-                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
+                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>' alt='<?php echo $info['news_subject'];?>'>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -152,7 +152,7 @@ class News extends Core {
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg')) : ?>
                         <div class='pull-left m-r-15' style='width: 100px;'>
                             <a href='<?php echo $info['news_link'] ?>'>
-                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
+                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>' alt='<?php echo $info['news_subject'];?>'>
                             </a>
                 </div>
                     <?php endif; ?>

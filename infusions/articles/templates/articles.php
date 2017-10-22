@@ -29,8 +29,6 @@ if (!function_exists("display_main_articles")) {
         $articles_settings = \PHPFusion\Articles\ArticlesServer::get_article_settings();
         $locale = fusion_get_locale();
 
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-
         $cookie_expiry = time() + 7 * 24 * 3600;
         if (empty($_COOKIE['fusion_articles_view'])) {
             setcookie("fusion_articles_view", 1, $cookie_expiry);
@@ -43,9 +41,7 @@ if (!function_exists("display_main_articles")) {
         echo render_breadcrumbs();
 
         if (is_array($info['article_categories']) && !empty($info['article_categories'])) {
-            ?>
-
-            <div class="panel panel-default panel-articles-header">
+            ?><div class="panel panel-default panel-articles-header">
 
                 <!-- Display Informations -->
                 <div class="panel-body">
@@ -94,8 +90,8 @@ if (!function_exists("display_main_articles")) {
                     <?php echo openform("viewform", "post", FUSION_REQUEST, array("remote_url" => FUSION_REQUEST, "max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10")); ?>
                     <div class="btn-group">
                         <?php $active = isset($_COOKIE['fusion_articles_view']) && isnum($_COOKIE['fusion_articles_view']) && $_COOKIE['fusion_articles_view'] == 2 ? 2 : 1; ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i> ".$locale['article_0040'], "1", array("class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i> ".$locale['article_0041'], "2", array("class" => "btn-sm btn-default nsv".($active == "2" ? " active" : ""), "alt" => $locale['article_0041'])); ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i> ".$locale['article_0040'], "1", array("input_id" => "switchview_gallery", "class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i> ".$locale['article_0041'], "2", array("input_id" => "switchview_list", "class" => "btn-sm btn-default nsv".($active == "2" ? " active" : ""), "alt" => $locale['article_0041'])); ?>
                     </div>
                     <?php echo closeform(); ?>
 
@@ -136,9 +132,8 @@ if (!function_exists("display_main_articles")) {
                     </div>
                     <?php
                 }
-            } else { ?>
-                <div class="well text-center"><?php echo(isset($_GET['cat_id']) ? $locale['article_0062'] : $locale['article_0061']); ?></div>
-                <?php
+            } else {
+                echo '<div class="well text-center">'.(isset($_GET['cat_id']) ? $locale['article_0062'] : $locale['article_0061']).'</div>';
             }
         } else {
             echo "<div class='well text-center'>".$locale['article_0060']."</div>";

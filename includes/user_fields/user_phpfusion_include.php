@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."php-fusion-icon.png'/>";
+$icon = "<img src='".IMAGES."php-fusion-icon.png' alt='PHP Fusion'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(
