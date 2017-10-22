@@ -36,10 +36,10 @@ $regex = array(
 );
 
 $pattern = array(
-    "submit/%stype%/articles"                                                          => "submit.php?stype=%stype%",
-    "submit/%stype%/articles/submitted-and-thank-you"                                  => "submit.php?stype=%stype%&amp;submitted=A",
-    "articles/filter/%filter_type%"                                                    => "infusions/articles/articles.php?type=%filter_type%",
     "print/%type%/%article_id%/%article_title%"                                        => "print.php?type=%type%&amp;item_id=%article_id%",
+    "submit-%stype%/articles"                                                          => "submit.php?stype=%stype%",
+    "submit-%stype%/articles/submitted-and-thank-you"                                  => "submit.php?stype=%stype%&amp;submitted=A",
+    "articles/filter/%filter_type%"                                                    => "infusions/articles/articles.php?type=%filter_type%",
     "articles/comments-reply-%comment_cat%/%article_id%/%article_title%"               => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%",
     "articles/comments-reply-%comment_cat%/%article_id%/%article_title%#c%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;comment_reply=%comment_cat%#c%comment_id%",
     "articles/comments-%c_start%/%article_id%/%article_title%"                         => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",

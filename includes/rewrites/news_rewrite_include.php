@@ -38,8 +38,8 @@ $regex = array(
 
 $pattern = array(
     "print/%stype%/%news_id%/%news_title%"                                   => "print.php?type=%stype%&amp;item_id=%news_id%",
-    "submit/%stype%/news"                                                    => "submit.php?stype=%stype%",
-    "submit/%stype%/news/submitted-and-thank-you"                            => "submit.php?stype=%stype%&amp;submitted=n",
+    "submit-%stype%/news"                                                    => "submit.php?stype=%stype%",
+    "submit-%stype%/news/submitted-and-thank-you"                            => "submit.php?stype=%stype%&amp;submitted=n",
     "news/%news_id%/%news_title%"                                            => "infusions/news/news.php?readmore=%news_id%",
     "news/%news_id%/%news_title%#comments"                                   => "infusions/news/news.php?readmore=%news_id%#comments",
     "news/%news_id%/%news_title%#postrating"                                 => "infusions/news/news.php?readmore=%news_id%#postrating",
