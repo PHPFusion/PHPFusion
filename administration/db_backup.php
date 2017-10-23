@@ -309,7 +309,7 @@ class db_backup {
             echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectAll()\">".$this->locale['436']."</a>\n";
             echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$this->locale['437']."</a></div></td>\n";
             echo "</tr>\n<tr>\n";
-            echo "<td align='center' colspan='2' class='tbl'>\n";
+            echo "<td colspan='2' class='tbl text-center'>\n";
             echo "</tr>\n</tbody>\n</table>\n</div>";
             echo form_button('btn_do_restore', $this->locale['438'], $this->locale['438'], array('class' => 'btn-primary m-r-10'));
             echo form_button('btn_cancel', $this->locale['439'], $this->locale['439'], array('class' => 'btn-default'));
@@ -361,28 +361,28 @@ class db_backup {
         echo "<div class='table-responsive'><table cellspacing='0' cellpadding='0' class='table'>\n<tbody>\n<tr>\n";
         echo "<td colspan='2' class='tbl2' align='left'><strong>".$this->locale['451']."</strong></td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><strong>".$this->locale['414']."</strong></td>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['414']."</strong></td>\n";
         echo "<td class='tbl'>".$db_name."</td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><strong>".$this->locale['415']."</strong></td>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['415']."</strong></td>\n";
         echo "<td class='tbl'>".$db_prefix."</td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><strong>".$this->locale['452']."</strong></td>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['452']."</strong></td>\n";
         echo "<td class='tbl'>".parsebytesize($this->get_database_size(), 2, FALSE)." (".$this->get_table_count()." ".$this->locale['419'].")</td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><strong>".$this->locale['453']."</strong></td>\n";
+        echo "<td class='tbl text-right'><strong>".$this->locale['453']."</strong></td>\n";
         echo "<td class='tbl'>".parsebytesize($this->get_database_size($db_prefix), 2, FALSE)." (".$this->get_table_count($db_prefix)." ".$this->locale['419'].")</td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='left' colspan='2' class='tbl2'><strong>".$this->locale['454']."</strong></td>\n";
+        echo "<td colspan='2' class='tbl2 text-left'><strong>".$this->locale['454']."</strong></td>\n";
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><label for='backup_filename'>".$this->locale['431']." <span class='required'>*</span>\n</td>\n";
+        echo "<td class='tbl text-right'><label for='backup_filename'>".$this->locale['431']." <span class='required'>*</span>\n</td>\n";
         echo "<td class='tbl'>\n";
         echo form_text('backup_filename', '', "backup_".$this->stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", array(
             'required'   => 1,
             'error_text' => $this->locale['481b']
         ));
         echo "</tr>\n<tr>\n";
-        echo "<td align='right' class='tbl'><label for='backup_type'>".$this->locale['455']."</label></td>\n";
+        echo "<td class='tbl text-right'><label for='backup_type'>".$this->locale['455']."</label></td>\n";
         echo "<td class='tbl'>\n";
         $opts = array();
         if (function_exists("gzencode")) {
@@ -391,7 +391,7 @@ class db_backup {
         $opts['.sql'] = ".sql";
         echo form_select('backup_type', '', '', array('options' => $opts, 'placeholder' => $this->locale['choose']));
         echo "</td>\n</tr>\n<tr>\n";
-        echo "<td align='center' colspan='2' class='tbl'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
+        echo "<td colspan='2' class='tbl text-center'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
         echo "</tr>\n</tbody>\n</table>\n</div>";
         echo '</div>';
 

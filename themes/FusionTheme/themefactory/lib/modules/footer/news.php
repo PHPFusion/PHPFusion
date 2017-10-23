@@ -37,7 +37,8 @@ class News {
                             <div class="display-block overflow-hide" style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
                                 <img class="center-xy" style="position:absolute; min-height: 70px; min-width: 70px;"
                                      src="<?php echo $news_data['news_image_optimized'] ?>"
-                                     title="<?php echo $news_data['news_subject'] ?>"/>
+                                     title="<?php echo $news_data['news_subject'] ?>"
+                                     alt="<?php echo $news_data['news_subject'] ?>"/>
                             </div>
                         </div>
                         <div class="overflow-hide">

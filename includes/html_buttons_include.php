@@ -85,7 +85,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         if ($colors) {
             $res .= "<div class='btn-group'>\n";
             $res .= "<button title='".$locale['html_017']."' class='btn btn-sm btn-default m-b-10 button dropdown-toggle' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
-            $res .= "<ul class='dropdown-menu' role='text-color' style='width:190px;'>\n";
+            $res .= "<ul class='dropdown-menu' style='width:190px;'>\n";
             $res .= "<li>\n";
             $res .= "<div class='display-block p-l-10 p-r-5 p-t-5 p-b-0' style='width:100%'>\n";
             $res .= "<a class='display-inline-block' onclick=\"addText('".$textarea."', '&lt;span style=\'color:#000\'&gt;', '&lt;/span&gt;', '".$formname."');\" title='".$locale['color_8']."' style='background-color:#000; width:17px; margin:2px; text-decoration:none !important;'>&nbsp;</a>";
@@ -146,13 +146,13 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<div class='btn-group'>\n";
         $res .= "<button type='button' title='".$locale['html_018']."' class='btn btn-sm btn-default m-b-10 button strong' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">".$locale['html_018']."</button>\n";
         $res .= "<button title='".$locale['html_019']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button' data-toggle='dropdown'><i class='glyphicon glyphicon-header'></i> ".$locale['html_019']." <span class='caret'></span></button>\n";
-        $res .= "<ul class='dropdown-menu' role='text-heading' style='width:190px;'>\n";
-        $res .= "<li>\n<a value='H1' class='pointer' onclick=\"addText('".$textarea."', '&lt;h1&gt;', '&lt;/h1&gt;', '".$formname."');\"><span class='strong' style='font-size:24px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 1</span></a>\n</li>\n";
-        $res .= "<li>\n<a value='H2' class='pointer' onclick=\"addText('".$textarea."', '&lt;h2&gt;', '&lt;/h2&gt;', '".$formname."');\"><span class='strong' style='font-size:19.5px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 2</span></a>\n</li>\n";
-        $res .= "<li>\n<a value='H3' class='pointer' onclick=\"addText('".$textarea."', '&lt;h3&gt;', '&lt;/h3&gt;', '".$formname."');\"><span class='strong' style='font-size:15.5px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 3</span></a>\n</li>\n";
-        $res .= "<li>\n<a value='H4' class='pointer' onclick=\"addText('".$textarea."', '&lt;h4&gt;', '&lt;/h4&gt;', '".$formname."');\"><span class='strong' style='font-size:13px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 4</span></a>\n</li>\n";
-        $res .= "<li>\n<a value='H5' class='pointer' onclick=\"addText('".$textarea."', '&lt;h5&gt;', '&lt;/h5&gt;', '".$formname."');\"><span class='strong' style='font-size:11px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 5</span></a>\n</li>\n";
-        $res .= "<li>\n<a value='H6' class='pointer' onclick=\"addText('".$textarea."', '&lt;h6&gt;', '&lt;/h6&gt;', '".$formname."');\"><span class='strong' style='font-size:9px; font-family: Georgia, \'Times New Roman\', Times, serif !important;'>Heading 6</span></a>\n</li>\n";
+        $res .= "<ul class='dropdown-menu' style='width:190px;'>\n";
+        $res .= "<li>\n<a value='H1' class='pointer' onclick=\"addText('".$textarea."', '&lt;h1&gt;', '&lt;/h1&gt;', '".$formname."');\"><span class='strong' style='font-size:24px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 1</span></a>\n</li>\n";
+        $res .= "<li>\n<a value='H2' class='pointer' onclick=\"addText('".$textarea."', '&lt;h2&gt;', '&lt;/h2&gt;', '".$formname."');\"><span class='strong' style='font-size:19.5px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 2</span></a>\n</li>\n";
+        $res .= "<li>\n<a value='H3' class='pointer' onclick=\"addText('".$textarea."', '&lt;h3&gt;', '&lt;/h3&gt;', '".$formname."');\"><span class='strong' style='font-size:15.5px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 3</span></a>\n</li>\n";
+        $res .= "<li>\n<a value='H4' class='pointer' onclick=\"addText('".$textarea."', '&lt;h4&gt;', '&lt;/h4&gt;', '".$formname."');\"><span class='strong' style='font-size:13px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 4</span></a>\n</li>\n";
+        $res .= "<li>\n<a value='H5' class='pointer' onclick=\"addText('".$textarea."', '&lt;h5&gt;', '&lt;/h5&gt;', '".$formname."');\"><span class='strong' style='font-size:11px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 5</span></a>\n</li>\n";
+        $res .= "<li>\n<a value='H6' class='pointer' onclick=\"addText('".$textarea."', '&lt;h6&gt;', '&lt;/h6&gt;', '".$formname."');\"><span class='strong' style='font-size:9px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 6</span></a>\n</li>\n";
         $res .= "</ul>\n";
         $res .= "</div>\n";
 

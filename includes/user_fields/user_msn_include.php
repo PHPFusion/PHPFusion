@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
  * Microsoft started to phase out MSN Messenger (also known as Windows Live Messenger) globally in April 2013 and it will be completely shut down on October 31st.
  * MSN Messenger is only available in mainland China until then. In an e-mail about the changes, Microsoft suggested that users switch to Skype.
  */
-$icon = "<img src='".IMAGES."user_fields/social/msn.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/msn.svg' alt='MSN'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

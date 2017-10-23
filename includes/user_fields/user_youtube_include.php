@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/youtube.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/youtube.svg' alt='YouTube'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

@@ -58,13 +58,12 @@ class PrivateMessages {
             if ($query[$_GET['folder']][0] > 0) {
 
                 // Get messages
-                $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar,
-                max(m.message_id) as last_message
-                FROM ".DB_MESSAGES." m
-                INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-                WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
-                group by message_id
-                ORDER BY m.message_datestamp DESC
+                $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, max(m.message_id) as last_message
+                    FROM ".DB_MESSAGES." m
+                    INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+                    WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
+                    group by message_id
+                    ORDER BY m.message_datestamp DESC
                 ");
 
                 $this->info['max_rows'] = dbrows($result);
@@ -142,13 +141,13 @@ class PrivateMessages {
                 echo form_hidden("selectedPM", "", "");
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == 'archive') {
-                    echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
+                    echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock", "icon_class" => ""));
                 } else {
                     if ($_GET['folder'] !== 'outbox') {
-                        echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
+                        echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock", "icon_class" => ""));
                     }
                 }
-                echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
+                echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o", "icon_class" => ""));
                 echo "</div>\n";
                 ?>
                 <div class="dropdown display-inline-block m-r-10">
@@ -156,92 +155,92 @@ class PrivateMessages {
                        class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><?php echo form_button("mark", $this->locale['493'], "mark_all", array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['494'], "mark_read", array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['495'], "mark_unread", array("class" => "btn-link")) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['496'], "unmark_all", array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['493'], "mark_all", array("input_id" => "mark_all", "class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['494'], "mark_read", array("input_id" => "mark_read", "class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['495'], "mark_unread", array("input_id" => "mark_unread", "class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $this->locale['496'], "unmark_all", array("input_id" => "unmark_all", "class" => "btn-link")) ?></li>
                     </ul>
                 </div>
                 <?php
                 echo closeform();
                 add_to_jquery("
-            function checkedCheckbox() {
-                var checkList = '';
-                $('input[type=checkbox]').each(function() {
-                    if (this.checked) {
-                        checkList += $(this).val()+',';
+                    function checkedCheckbox() {
+                        var checkList = '';
+                        $('input[type=checkbox]').each(function() {
+                            if (this.checked) {
+                                checkList += $(this).val()+',';
+                            }
+                        });
+                        return checkList;
                     }
-                });
-                return checkList;
-            }
-            $('#check_all_pm').bind('click', function() {
-                var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-                var read_checkbox = $('#read_tbl tr').find(':checkbox');
-                var action = $(this).data('action');
-                if (action == 'check') {
-                    unread_checkbox.prop('checked', true);
-                    read_checkbox.prop('checked', true);
-                    $('#unread_tbl tr').addClass('warning');
-                    $('#read_tbl tr').addClass('warning');
-                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-                    $(this).data('action', 'uncheck');
-                    $('#selectedPM').val(checkedCheckbox());
-                } else {
-                    unread_checkbox.prop('checked', false);
-                    read_checkbox.prop('checked', false);
-                    $('#unread_tbl tr').removeClass('warning');
-                    $('#read_tbl tr').removeClass('warning');
-                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-                    $(this).data('action', 'check');
-                    $('#selectedPM').val(checkedCheckbox());
-                }
-            });
-            $('#check_read_pm').bind('click', function() {
-                var read_checkbox = $('#read_tbl tr').find(':checkbox');
-                var action = $(this).data('action');
-                if (action == 'check') {
-                    read_checkbox.prop('checked', true);
-                    $('#read_tbl tr').addClass('warning');
-                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-                    $(this).data('action', 'uncheck');
-                    $('#selectedPM').val(checkedCheckbox());
-                } else {
-                    read_checkbox.prop('checked', false);
-                    $('#read_tbl tr').removeClass('warning');
-                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-                    $(this).data('action', 'check');
-                    $('#selectedPM').val(checkedCheckbox());
-                }
-            });
-            $('#check_unread_pm').bind('click', function() {
-                var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-                var action = $(this).data('action');
-                if (action == 'check') {
-                    unread_checkbox.prop('checked', true);
-                    $('#unread_tbl tr').addClass('warning');
-                    $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-                    $(this).data('action', 'uncheck');
-                    $('#selectedPM').val(checkedCheckbox());
-                } else {
-                    unread_checkbox.prop('checked', false);
-                    $('#unread_tbl tr').removeClass('warning');
-                    $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-                    $(this).data('action', 'check');
-                    $('#selectedPM').val(checkedCheckbox());
-                }
-            });
-            $('input[type=checkbox]').bind('click', function() {
-                var checkList = $('#selectedPM').val();
-                if ($(this).is(':checked')) {
-                $(this).parents('tr').addClass('warning');
-                    checkList += $(this).val()+',';
-                } else {
-                    $(this).parents('tr').removeClass('warning');
-                    checkList = checkList.replace($(this).val()+',', '');
-                }
-                $('#selectedPM').val(checkList);
-            });
-            ");
+                    $('#check_all_pm').bind('click', function() {
+                        var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                        var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                        var action = $(this).data('action');
+                        if (action == 'check') {
+                            unread_checkbox.prop('checked', true);
+                            read_checkbox.prop('checked', true);
+                            $('#unread_tbl tr').addClass('warning');
+                            $('#read_tbl tr').addClass('warning');
+                            $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                            $(this).data('action', 'uncheck');
+                            $('#selectedPM').val(checkedCheckbox());
+                        } else {
+                            unread_checkbox.prop('checked', false);
+                            read_checkbox.prop('checked', false);
+                            $('#unread_tbl tr').removeClass('warning');
+                            $('#read_tbl tr').removeClass('warning');
+                            $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                            $(this).data('action', 'check');
+                            $('#selectedPM').val(checkedCheckbox());
+                        }
+                    });
+                    $('#check_read_pm').bind('click', function() {
+                        var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                        var action = $(this).data('action');
+                        if (action == 'check') {
+                            read_checkbox.prop('checked', true);
+                            $('#read_tbl tr').addClass('warning');
+                            $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                            $(this).data('action', 'uncheck');
+                            $('#selectedPM').val(checkedCheckbox());
+                        } else {
+                            read_checkbox.prop('checked', false);
+                            $('#read_tbl tr').removeClass('warning');
+                            $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                            $(this).data('action', 'check');
+                            $('#selectedPM').val(checkedCheckbox());
+                        }
+                    });
+                    $('#check_unread_pm').bind('click', function() {
+                        var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                        var action = $(this).data('action');
+                        if (action == 'check') {
+                            unread_checkbox.prop('checked', true);
+                            $('#unread_tbl tr').addClass('warning');
+                            $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                            $(this).data('action', 'uncheck');
+                            $('#selectedPM').val(checkedCheckbox());
+                        } else {
+                            unread_checkbox.prop('checked', false);
+                            $('#unread_tbl tr').removeClass('warning');
+                            $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                            $(this).data('action', 'check');
+                            $('#selectedPM').val(checkedCheckbox());
+                        }
+                    });
+                    $('input[type=checkbox]').bind('click', function() {
+                        var checkList = $('#selectedPM').val();
+                        if ($(this).is(':checked')) {
+                        $(this).parents('tr').addClass('warning');
+                            checkList += $(this).val()+',';
+                        } else {
+                            $(this).parents('tr').removeClass('warning');
+                            checkList = checkList.replace($(this).val()+',', '');
+                        }
+                        $('#selectedPM').val(checkList);
+                    });
+                ");
             }
             $this->info['actions_form'] = ob_get_contents();
             ob_end_clean();
@@ -260,7 +259,6 @@ class PrivateMessages {
     }
 
     private function setInbox() {
-
         $userdata = fusion_get_userdata();
         /**
          * Sanitize environment
@@ -289,9 +287,9 @@ class PrivateMessages {
         if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
-    $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
-    $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
-    $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
+        $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
+        $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
+        $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
         $this->info = [
             'folders' => [
                 'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402']],
@@ -367,7 +365,6 @@ class PrivateMessages {
      * PM settings page
      */
     public function display_settings() {
-
         $userdata = fusion_get_userdata();
 
         if (isset($_POST['save_options'])) {
@@ -406,7 +403,6 @@ class PrivateMessages {
      * SQL archive action
      */
     private function archive_pm() {
-
         $userdata = fusion_get_userdata();
 
         $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
@@ -605,11 +601,10 @@ class PrivateMessages {
             if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".intval($from)."'")) {
 
                 // find receipient
-                $result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level,
-                COUNT(m.message_id) 'message_count'
-                FROM ".DB_USERS." u
-                LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id and message_folder='0'
-                WHERE u.user_id='".intval($to)."' GROUP BY u.user_id
+                $result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level, COUNT(m.message_id) 'message_count'
+                    FROM ".DB_USERS." u
+                    LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id and message_folder='0'
+                    WHERE u.user_id='".intval($to)."' GROUP BY u.user_id
                 ");
 
                 if (dbrows($result) > 0) {

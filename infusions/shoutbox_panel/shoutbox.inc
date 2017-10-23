@@ -415,6 +415,8 @@ class Shoutbox {
         if ($rows > 0) {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
             echo "<div class='list-group'>\n";
+            add_to_jquery("$('.shoutbox-delete-btn').on('click', function() {return confirm('".self::$locale['SB_warning_shout']."');});");
+
             while ($data = dbarray($result)) {
                 $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
                 echo "<div class='list-group-item clearfix'>\n";
@@ -438,7 +440,7 @@ class Shoutbox {
                 echo "<a class='btn btn-default' href='".$this->postLink."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'>";
                 echo "<i class='fa fa-edit fa-fw'></i> ".self::$locale['edit'];
                 echo "</a>";
-                echo "<a class='btn btn-danger' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\">";
+                echo "<a class='btn btn-danger shoutbox-delete-btn' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."'>";
                 echo "<i class='fa fa-trash fa-fw'></i> ".self::$locale['delete'];
                 echo "</a>";
                 echo '</div>';
@@ -500,17 +502,22 @@ class Shoutbox {
                 echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span>\n";
                 echo "</div>\n";
             }
+
+            add_to_jquery("$('.shoutbox-delete-btn').on('click', function() {return confirm('".self::$locale['SB_warning_shout']."');});");
+
             while ($data = dbarray($result)) {
                 echo "<div class='display-block shoutboxwrapper clearfix'>\n";
                 echo "<div class='shoutboxavatar pull-left m-r-10 m-t-5'>\n";
                 echo display_avatar($data, '50px', '', TRUE, 'img-rounded');
                 echo "</div>\n";
+
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs side' title='".self::$locale['edit']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id=".$data['shout_id']."'><i class='fa fa-edit'></i></a>\n"; //
-                    echo "<a class='btn btn-default btn-xs side' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."' onclick=\"return confirm('".self::$locale['SB_warning_shout']."');\"><i class='fa fa-trash'></i></a>\n"; //
+                    echo "<a class='btn btn-default btn-xs side' title='".self::$locale['edit']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id=".$data['shout_id']."'><i class='fa fa-edit'></i></a>\n";
+                    echo "<a class='btn btn-default btn-xs side shoutbox-delete-btn' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=".$data['shout_id']."'><i class='fa fa-trash'></i></a>\n";
                     echo "</div>\n";
                 }
+
                 $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
 
                 echo "<div class='shoutboxname'>\n";

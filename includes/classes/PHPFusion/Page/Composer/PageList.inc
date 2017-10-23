@@ -160,7 +160,7 @@ class PageList extends PageAdmin {
             ));
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
-            echo "<a class='btn btn-sm m-r-10 ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['page_0107']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
+            echo "<a class='btn btn-sm m-r-10 ".($filter_empty == FALSE ? "btn-info" : "btn-default")."' id='toggle_options' href='#'>".self::$locale['page_0107']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
             echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108'], array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";
@@ -289,7 +289,7 @@ class PageList extends PageAdmin {
                 echo "<td>$pageStatus</td>\n";
                 echo "<td>";
                 echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;
-                <a href='$edit_link'>".$locale['edit']."</a> &middot; 
+                <a href='$edit_link'>".$locale['edit']."</a> &middot;
                 <a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>";
                 echo "</td>";
                 echo "<td>".$pageData['page_id']."</td>\n";

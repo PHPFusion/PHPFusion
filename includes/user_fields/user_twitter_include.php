@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/twitter.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/twitter.svg' alt='Twitter'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

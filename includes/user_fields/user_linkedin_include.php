@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/linkedin.svg'>";
+$icon = "<img src='".IMAGES."user_fields/social/linkedin.svg' alt='LinkedIn'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

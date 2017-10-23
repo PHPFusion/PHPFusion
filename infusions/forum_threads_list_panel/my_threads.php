@@ -62,12 +62,12 @@ if ($rows) {
                         if ($data['thread_lastpost'] > $lastvisited) {
                             $thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
                              if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
-                                  echo "<i class='fa fa-folder'></i>";
+                                  echo "<i class='fa fa-folder fa-2x'></i>";
                              } else {
-                                  echo "<i class='fa fa-folder'></i>";
+                                  echo "<i class='fa fa-folder fa-2x'></i>";
                              }
                         } else {
-                             echo "<i class='fa fa-folder-o'></i>";
+                             echo "<i class='fa fa-folder-o fa-2x'></i>";
                         }
                         echo "</td>\n";
                         echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a><br />\n".$data['forum_name']."</td>\n";

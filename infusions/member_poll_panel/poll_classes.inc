@@ -454,7 +454,7 @@ class MemberPoll {
                 foreach ($poll_opt as $keys => $data1) {
                     $text = "";
                     foreach ($data1 as $key => $inf) {
-                        $text .= "<p>".(!empty($inf) ? translate_lang_names($key).": ".$inf : $inf)."</p>\n";
+                        $text .= (!empty($inf) ? translate_lang_names($key).": ".$inf : $inf);
                     }
                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
                     $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
@@ -466,7 +466,7 @@ class MemberPoll {
                 echo "<div class='panel-footer'>\n";
                 echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].' '.$db_info."</strong></p>\n";
                 echo "<p class='m-b-0'>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
-                echo "<p class='display-inline-block badge class='m-b-0''>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
+                echo "<p class='display-inline-block badge m-b-0'>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
 
                 if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
                     echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";

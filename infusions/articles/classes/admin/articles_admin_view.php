@@ -42,40 +42,40 @@ class ArticlesAdminView extends ArticlesAdminModel {
         $articleTitle = self::$locale['article_0000'];
         $articleCatTitle = self::$locale['article_0004'];
 
-		if (!empty($_GET['section'])){
-			switch ($_GET['section']) {
-			    case "article":
- 		           if (isset($_GET['ref']) && $_GET['ref'] == "article_form") {
-		                if (!isset($_GET['article_id'])) {
-		                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0002']]);
-                    		$articleTitle = self::$locale['article_0002'];
-		                } else {
-		                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0003']]);
-                    		$articleTitle = self::$locale['article_0003'];
-		                }
-		            }
-			        break;
-			    case "article_category":
-		            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0004']));
-		            if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
-		                if (!isset($_GET['cat_id'])) {
-		                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0005']));
-		                    $articleCatTitle = self::$locale['article_0005'];
-		                } else {
-		                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0006']));
-		                    $articleCatTitle = self::$locale['article_0006'];
-		                }
-		            }
-			        break;
-			    case "settings":
-		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0008']]);
-			        break;
-			    case "submissions":
-		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0007']]);
-			        break;
-			    default:
-			}
-		}
+        if (!empty($_GET['section'])){
+            switch ($_GET['section']) {
+                case "article":
+                   if (isset($_GET['ref']) && $_GET['ref'] == "article_form") {
+                        if (!isset($_GET['article_id'])) {
+                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0002']]);
+                            $articleTitle = self::$locale['article_0002'];
+                        } else {
+                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0003']]);
+                            $articleTitle = self::$locale['article_0003'];
+                        }
+                    }
+                    break;
+                case "article_category":
+                    BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0004']));
+                    if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
+                        if (!isset($_GET['cat_id'])) {
+                            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0005']));
+                            $articleCatTitle = self::$locale['article_0005'];
+                        } else {
+                            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => FUSION_REQUEST, "title" => self::$locale['article_0006']));
+                            $articleCatTitle = self::$locale['article_0006'];
+                        }
+                    }
+                    break;
+                case "settings":
+                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0008']]);
+                    break;
+                case "submissions":
+                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => self::$locale['article_0007']]);
+                    break;
+                default:
+            }
+        }
 
         if ($_GET['section'] == "article_category") {
             BreadCrumbs::getInstance()->addBreadCrumb(array("link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=article_category", "title" => self::$locale['article_0004']));

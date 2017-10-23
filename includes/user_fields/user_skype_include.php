@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_skype_include.php
-| Author: Hans Kristian Flaatten {Starefossen}
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 // Display user field input
-$icon = "<img src='".IMAGES."user_fields/social/skype.svg'>";
+$icon = "<img src='".IMAGES."user_fields/social/skype.svg' alt='Skype'/>";
 if ($profile_method == 'input') {
     $options = array(
             'inline'           => TRUE,

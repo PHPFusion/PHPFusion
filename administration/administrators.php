@@ -185,12 +185,12 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
         echo openform('searchform', 'post', FUSION_SELF.$aidlink);
         echo "<div class='table-responsive'><table cellpadding='0' cellspacing='0' width='450' class='center table'>\n";
-        echo "<tr>\n<td align='center' class='tbl'><strong>".$locale['411']."</strong><br /><br />\n";
+        echo "<tr>\n<td class='tbl text-center'><strong>".$locale['411']."</strong><br /><br />\n";
         echo form_text('search_criteria', '', '', array('width' => '300px'));
-        echo "</td>\n</tr>\n<tr>\n<td align='center' class='tbl'>\n";
+        echo "</td>\n</tr>\n<tr>\n<td class='tbl text-center'>\n";
         echo "<label><input type='radio' name='search_type' value='user_name' class='m-r-10' checked='checked' />&nbsp;".$locale['413']."</label>\n";
         echo "<label><input type='radio' name='search_type' value='user_id' class='m-r-10' />&nbsp;".$locale['412']."</label></td>\n";
-        echo "</tr>\n<tr>\n<td align='center' class='tbl'>\n";
+        echo "</tr>\n<tr>\n<td class='tbl text-center'>\n";
         echo form_button('search_users', $locale['414'], $locale['414']);
         echo "</td>\n</tr>\n</table>\n</div>\n";
         echo closeform();
@@ -236,14 +236,14 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                 echo "</div>\n";
                 echo "<br />\n";
             } else {
-                echo "<tr>\n<td align='center' class='tbl'>".$locale['418']."<br /><br />\n";
+                echo "<tr>\n<td class='tbl text-center'>".$locale['418']."<br /><br />\n";
                 echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['419']."</a>\n</td>\n</tr>\n";
             }
             echo "</table>\n</div>";
             echo closeform();
         } else {
             echo "<table cellpadding='0' cellspacing='1' width='450' class='tbl-border center'>\n";
-            echo "<tr>\n<td align='center' class='tbl'>".$locale['418']."<br /><br />\n";
+            echo "<tr>\n<td class='tbl text-center'>".$locale['418']."<br /><br />\n";
             echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['419']."</a>\n</td>\n</tr>\n</table>\n";
         }
     }
@@ -253,15 +253,15 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     $result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<='-102' ORDER BY user_level DESC, user_name");
     echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='table tbl-border center'>\n<thead>\n<tr>\n";
     echo "<th class='tbl2'>".$locale['421']."</th>\n";
-    echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['422']."</th>\n";
-    echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['423']."</th>\n";
+    echo "<th width='1%' class='tbl2 text-center' style='white-space:nowrap'>".$locale['422']."</th>\n";
+    echo "<th width='1%' class='tbl2 text-center' style='white-space:nowrap'>".$locale['423']."</th>\n";
     echo "</tr>\n</thead>\n<tbody>\n";
     while ($data = dbarray($result)) {
         $row_color = $i % 2 == 0 ? "tbl1" : "tbl2";
         echo "<tr>\n<td class='$row_color'><span title='".($data['user_rights'] ? str_replace(".", " ",
                                                                                               $data['user_rights']) : "".$locale['425']."")."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
-        echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
-        echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>\n";
+        echo "<td width='1%' class='$row_color text-center' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
+        echo "<td width='1%' class='$row_color text-center' style='white-space:nowrap'>\n";
         if ($data['user_level'] == "-103" && $userdata['user_id'] == "1") {
             $can_edit = TRUE;
         } elseif ($data['user_level'] != "-103") {

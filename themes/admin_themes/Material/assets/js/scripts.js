@@ -110,6 +110,7 @@ $(function () {
                 break;
             case "theme-settings":
                 e.preventDefault();
+                e.stopPropagation();
                 $("#theme-settings").toggleClass("open");
                 break;
             case "fixedfootererrors":
@@ -132,6 +133,10 @@ $(function () {
             default:
                 break;
         }
+    });
+
+    $(document).click(function () {
+        $("#theme-settings").removeClass("open");
     });
 
     if (get("sidebar-toggled") !== undefined) {

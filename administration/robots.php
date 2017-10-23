@@ -83,10 +83,10 @@ if (!file_exists($file)) {
 }
 
 echo openform('robotsform', 'post', FUSION_REQUEST);
-echo "<div class='text-center well'><strong>".$locale['ROBOT_420']."</strong></div>\n";
-echo "<div class='panel panel-default text-center'><div class='panel-footer'>";
+echo "<div class='text-center well'><strong>".$locale['ROBOT_420']."</strong>";
+echo "<br/>";
 echo str_replace(['[LINK]', '[/LINK]'], ["<a href='http://www.robotstxt.org/' target='_blank'>", "</a>",], $locale['ROBOT_421']);
-echo "</div></div>\n";
+echo "</div>";
 echo form_textarea('robots_content', '', $current, array('height' => '300px'));
 echo form_button('save_robots', $button, $button, array('class' => 'btn-primary m-r-10'));
 echo file_exists($file) ? form_button('set_default', $locale['ROBOT_423'], $locale['ROBOT_423'], array('class' => 'btn-default')) : "";

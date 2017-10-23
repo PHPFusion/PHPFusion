@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg'>\n";
+$icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg' alt='Whatsapp'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

@@ -1095,6 +1095,7 @@ class ForumAdminView extends ForumAdminInterface {
             (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows) ? intval($_GET['rowstart']) : 0;
 
+        echo '<div class="m-t-10">';
         opentable($title);
 
         $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
@@ -1175,6 +1176,7 @@ class ForumAdminView extends ForumAdminInterface {
             echo "<div class='well text-center'>".self::$locale['560']."</div>\n";
         }
         closetable();
+        echo '</div>';
     }
 
     /**
@@ -1182,7 +1184,7 @@ class ForumAdminView extends ForumAdminInterface {
      */
     private function quick_create_forum() {
         echo "<hr/>\n";
-        echo openform('forum_create_form', 'post', FUSION_REQUEST, ['class' => 'spacer-md m-t-0 p-15']);
+        echo openform('forum_create_form', 'post', FUSION_REQUEST, ['class' => 'spacer-sm m-t-0 p-15']);
         echo "<h4>".self::$locale['forum_001']."</h4>";
         echo form_text('forum_name', self::$locale['forum_006'], '', array(
             'class'       => 'form-group-lg',

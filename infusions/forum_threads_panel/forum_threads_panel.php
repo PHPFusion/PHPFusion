@@ -50,7 +50,7 @@ if (dbrows($result)) {
         $info['latest']['item'][] = $item;
     }
 } else {
-	$info['latest']['no_rows'] = $locale['global_023'];
+    $info['latest']['no_rows'] = $locale['global_023'];
 }
 
 $info['hottest']['label'] = $locale['global_022'];
@@ -64,7 +64,7 @@ $hottest_result = "SELECT tf.forum_id, t.thread_id, t.thread_subject, t.thread_p
     INNER JOIN ".DB_FORUM_THREADS." t USING(forum_id)
     ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." AND tf.forum_type!='1' AND tf.forum_type!='3' AND t.thread_hidden='0' AND t.thread_postcount >= '".$min_posts."'".$timeframe."
     ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC
-	LIMIT 0,".$inf_settings['numofthreads']."
+    LIMIT 0,".$inf_settings['numofthreads']."
 ";
 $result = dbquery($hottest_result);
 
@@ -79,6 +79,6 @@ if (dbrows($result)) {
         $info['hottest']['item'][] = $item;
     }
 } else {
-	$info['hottest']['no_rows'] = $locale['global_023'];
+    $info['hottest']['no_rows'] = $locale['global_023'];
 }
 render_threads_panel($info);

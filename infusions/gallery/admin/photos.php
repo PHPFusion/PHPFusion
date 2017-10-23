@@ -225,7 +225,8 @@ function photo_form() {
 
         echo form_text('photo_order', $locale['photo_0013'], $data['photo_order'], array(
             "type"        => "number",
-            "inner_width" => "100px"
+            "inner_width" => "100px",
+            "inline"      => TRUE
         ));
 
         echo "</div>\n";
@@ -278,9 +279,9 @@ function mass_photo_form() {
                                         0) + 1,
                             );
                             dbquery("
-							insert into ".DB_PHOTOS."
-							(".implode(", ", array_keys($current_photos)).") values ('".implode("','", array_values($current_photos))."')
-							");
+                            insert into ".DB_PHOTOS."
+                            (".implode(", ", array_keys($current_photos)).") values ('".implode("','", array_values($current_photos))."')
+                            ");
                             $success_upload++;
                         } else {
                             $failed_upload++;
@@ -296,7 +297,7 @@ function mass_photo_form() {
         }
 
         echo openform("mass_form", "post", FUSION_REQUEST, array("enctype" => TRUE, "class" => "clearfix"));
-        echo "<div class='well text-center'>\n".$locale['photo_0019']."</div>\n";
+        echo "<div class='well text-center m-t-10'>\n".$locale['photo_0019']."</div>\n";
         echo form_select('album_id', $locale['photo_0003'], "", array(
             "input_id" => "album",
             "options"  => get_albumOpts(),

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/icq.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/icq.svg' alt='ICQ'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = array(

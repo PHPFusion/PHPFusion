@@ -31,8 +31,8 @@ $textarea_name = "";
 $inputform_name = "";
 
 $navigation = "<table width='100%' cellpadding='0' cellspacing='1' class='tbl-border'>\n<tr>\n";
-$navigation .= "<td width='50%' align='center' class='".($_GET['page'] == 1 ? "tbl2" : "tbl1")."'>".($_GET['page'] == 1 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=1'>".$locale['400']."</a>".($_GET['page'] == 1 ? "</strong>" : "")."</td>\n";
-$navigation .= "<td width='50%' align='center' class='".($_GET['page'] == 2 ? "tbl2" : "tbl1")."'>".($_GET['page'] == 2 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=2'>".$locale['401']."</a>".($_GET['page'] == 2 ? "</strong>" : "")."</td>\n";
+$navigation .= "<td width='50%' class='".($_GET['page'] == 1 ? "tbl2" : "tbl1")." text-center'>".($_GET['page'] == 1 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=1'>".$locale['400']."</a>".($_GET['page'] == 1 ? "</strong>" : "")."</td>\n";
+$navigation .= "<td width='50%' class='".($_GET['page'] == 2 ? "tbl2" : "tbl1")." text-center'>".($_GET['page'] == 2 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=2'>".$locale['401']."</a>".($_GET['page'] == 2 ? "</strong>" : "")."</td>\n";
 $navigation .= "</tr>\n</table>\n";
 $navigation .= "<div style='margin:15px'></div>\n";
 
@@ -98,7 +98,7 @@ if ($_GET['page'] == 1) {
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
         echo "<th class='tbl2'><strong>".$locale['405']."</strong></th>\n";
         echo "<th class='tbl2'><strong>".$locale['406']."</strong></th>\n";
-        echo "<th align='center' colspan='2' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['407']."</strong></th>\n";
+        echo "<th colspan='2' width='1%' class='tbl2 text-center' style='white-space:nowrap'><strong>".$locale['407']."</strong></th>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
         $lp = 0;
@@ -146,13 +146,13 @@ if ($_GET['page'] == 1) {
             $locale = fusion_get_locale('', $locale_file);
             include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
             echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($data['bbcode_name'])."</td>\n";
-            echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$bbcode_image."</td>\n";
+            echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'>".$bbcode_image."</td>\n";
             echo "<td class='$cls'>".$__BBCODE__[0]['description']."</td>\n";
             echo "<td class='$cls'>".$__BBCODE__[0]['usage']."</td>\n";
             unset ($__BBCODE__);
-            echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$data['bbcode_order']."</td>\n";
-            echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$up_down."</td>\n";
-            echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['bbcode_id']."'>".$locale['410']."</a></td>\n";
+            echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'>".$data['bbcode_order']."</td>\n";
+            echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'>".$up_down."</td>\n";
+            echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['bbcode_id']."'>".$locale['410']."</a></td>\n";
             echo "</tr>\n";
         }
         echo "</tbody>\n</table>\n</div>";
@@ -200,10 +200,10 @@ if ($_GET['page'] == 1) {
                 $cls = ($xx % 2 == 0 ? "tbl2" : "tbl1");
                 echo "<tr>\n";
                 echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($available_bbcode)."</td>\n";
-                echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$bbcode_image."</td>\n";
+                echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'>".$bbcode_image."</td>\n";
                 echo "<td class='$cls'>".$__BBCODE__[0]['description']."</td>\n";
                 echo "<td class='$cls'>".$__BBCODE__[0]['usage']."</td>\n";
-                echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_bbcode."'>".$locale['414']."</a></td>\n";
+                echo "<td width='1%' class='$cls text-center' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_bbcode."'>".$locale['414']."</a></td>\n";
                 echo "</tr>\n";
                 unset ($__BBCODE__);
                 $xx++;
@@ -243,7 +243,7 @@ if ($_GET['page'] == 1) {
         echo "<td class='tbl'>\n";
         echo form_textarea('test_message', $locale['418a'], $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));
         echo "</td>\n</tr>\n<tr>\n";
-        echo "<td align='center' class='tbl'><label><input type='checkbox' name='test_smileys' value='1' ".$smileys_checked." />&nbsp;".$locale['418']."</label><br /><br />\n";
+        echo "<td class='tbl text-center'><label><input type='checkbox' name='test_smileys' value='1' ".$smileys_checked." />&nbsp;".$locale['418']."</label><br /><br />\n";
         echo form_button('post_test', $locale['401'], $locale['401'], array('class' => 'btn-primary'));
         echo "</td>\n</tr>\n</table>\n</form>\n";
         closetable();

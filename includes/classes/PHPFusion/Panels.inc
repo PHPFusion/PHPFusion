@@ -70,7 +70,7 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-	
+
 		$panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
         $param = [
             ':panel_status' => 1,
@@ -241,7 +241,7 @@ class Panels {
         // Add admin message
         $admin_mess = '';
         $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
-        add_to_footer($admin_mess);
+        add_to_head($admin_mess);
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
 
