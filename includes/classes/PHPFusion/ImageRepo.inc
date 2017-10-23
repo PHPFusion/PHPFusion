@@ -222,4 +222,30 @@ class ImageRepo {
         return (array)$image_list;
     }
 
+    /**
+     * Cache installed smiley images from database
+     *
+     * @return array|null
+     */
+    private static $smiley_cache = NULL;
+
+    public static function cache_smileys() {
+        if (self::$smiley_cache === NULL) {
+            self::$smiley_cache = array();
+            $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
+            while ($data = dbarray($result)) {
+                self::$smiley_cache[] = array(
+                    "smiley_code"  => $data['smiley_code'],
+                    "smiley_image" => $data['smiley_image'],
+                    "smiley_text"  => $data['smiley_text']
+                );
+            }
+        }
+
+        return self::$smiley_cache;
+    }
+
+
+
+
 }

@@ -466,20 +466,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
  * @return array
  */
 function cache_smileys() {
-    static $smiley_cache = NULL;
-    if ($smiley_cache === NULL) {
-        $smiley_cache = array();
-        $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
-        while ($data = dbarray($result)) {
-            $smiley_cache[] = array(
-                "smiley_code"  => $data['smiley_code'],
-                "smiley_image" => $data['smiley_image'],
-                "smiley_text"  => $data['smiley_text']
-            );
-        }
-    }
-
-    return $smiley_cache;
+    return \PHPFusion\ImageRepo::cache_smileys();
 }
 
 /**
