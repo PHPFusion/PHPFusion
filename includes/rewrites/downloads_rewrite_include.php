@@ -34,8 +34,8 @@ $regex = array(
 );
 
 $pattern = array(
-    "submit/%stype%/files"                                     => "submit.php?stype=%stype%",
-    "submit/%stype%/files/submitted-and-thank-you"             => "submit.php?stype=%stype%&amp;submitted=d",
+    "submit-%stype%/files"                                     => "submit.php?stype=%stype%",
+    "submit-%stype%/files/submitted-and-thank-you"             => "submit.php?stype=%stype%&amp;submitted=d",
     "downloads/author/%author_id%/%author_name%"               => "infusions/downloads/downloads.php?author=%author_id%",
     "downloads/filter/%filter_type%"                           => "infusions/downloads/downloads.php?type=%filter_type%",
     "downloads/filter/{%download_cat_id%}/%filter_type%"       => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
