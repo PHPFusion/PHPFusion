@@ -82,7 +82,7 @@ if (!defined("THEME_BODY")) {
 }
 
 if (iADMIN) {
-    if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
+    if (iSUPERADMIN && file_exists(BASEDIR.'install.php') && !defined("DEVMODE")) {
         addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
