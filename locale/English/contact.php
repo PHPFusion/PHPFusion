@@ -1,7 +1,7 @@
 <?php
 // Contact Form
 $locale['400'] = "Contact";
-$locale['401'] = "There are several ways you can get in contact. You can email directly at 
+$locale['401'] = "There are several ways you can get in contact. You can email directly at
 [SITE_EMAIL]. If you are a Member you can send a [PM_LINK].
 Alternatively, you can fill in the form on this page which sends your message via Email.";
 $locale['402'] = "Name:";

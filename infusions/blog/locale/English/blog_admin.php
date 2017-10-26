@@ -92,7 +92,7 @@ $locale['blog_0561'] = "This category already exists.";
 // Popup Error/Warning Messages
 $locale['blog_0450'] = "Please specify a subject";
 $locale['blog_0451'] = "Delete this Blog?";
-$locale['blog_0452'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
+$locale['blog_0452'] = "%s are disabled for all items.<br/>This setting will only take effect when they are enabled again.";
 $locale['blog_0456'] = 'There are no Blog in this category.';
 $locale['blog_0457'] = "Please specify keywords";
 $locale['blog_0461'] = 'There are no Blog Categories defined.';

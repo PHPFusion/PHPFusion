@@ -52,8 +52,8 @@ $locale['gallery_0100'] = "Photo Submissions";
 $locale['gallery_0101'] = "Thank you for submitting your Photo";
 $locale['gallery_0102'] = "Submit another Photo";
 $locale['gallery_0107'] = "Use the following form to submit a Photo. Your submission will be reviewed by an
-&#092;nAdministrator. [SITENAME] reserves the right to amend or edit any submission. Photos
-&#092;nshould be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
+<br/>Administrator. [SITENAME] reserves the right to amend or edit any submission. Photos
+<br/>should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
 $locale['gallery_0111'] = "Submit Photo";
 $locale['gallery_0112'] = "Sorry, we currently do not accept any photo submissions on this site.";
 $locale['gallery_0113'] = "Return to [SITENAME]";

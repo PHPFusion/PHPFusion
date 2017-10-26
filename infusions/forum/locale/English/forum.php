@@ -1,8 +1,8 @@
 <?php
 $locale['error-DP001'] = "No posts to be removed.";
 $locale['error-MP000'] = "Move posts - error";
-$locale['error-MP001'] = "New thread doesn&#039;t exist.";
-$locale['error-MP002'] = "Posts which you&#039;re marked to move do not exists or someone else already moved them.";
+$locale['error-MP001'] = "New thread doesn't exist.";
+$locale['error-MP002'] = "Posts which you're marked to move do not exists or someone else already moved them.";
 
 
 $locale['forum_0000'] = "Discussion Forum";
@@ -130,7 +130,7 @@ $locale['forum_0267'] = "wrote";
 $locale['forum_0268'] = "User IP";
 $locale['forum_0269'] = "No threads found.";
 $locale['forum_0270'] = "No post found.";
-$locale['forum_0271'] = "There are no post in this thread anymore. Please return to the &lt;a href=&#039;../../infusions/forum/index.php&#039;&gt;Forum Index&lt;/a&gt;";
+$locale['forum_0271'] = "There are no post in this thread anymore. Please return to the <a href=\"../../infusions/forum/index.php\">Forum Index</a>";
 $locale['forum_0272'] = "Filter by Tags";
 $locale['forum_0273'] = "Popular Threads This Week";
 $locale['forum_0274'] = "There are no thread tags";
