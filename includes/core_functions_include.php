@@ -249,8 +249,8 @@ function stripget($check_url) {
 
         return (bool)preg_match("/<[^<>]+>/i", $check_url);
     }
-    foreach ($check_url as $value) {
-        if (stripget($value)) {
+    foreach ($check_url as $key => $value) {
+        if (stripget($key)) {
             return TRUE;
         }
     }
