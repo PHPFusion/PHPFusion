@@ -94,6 +94,20 @@ class MySQLi extends AbstractDatabaseDriver {
     }
 
     /**
+     * Count the number of selected columns by the given query
+     *
+     * @param mixed $result The result of a query
+     * @return int
+     */
+    public function countColumns($result) {
+        if (is_object($result)) {
+            return $result->field_count ?: 0;
+        }
+
+        return 0;
+    }
+
+    /**
      * Fetch one row as an associative array
      *
      * @param mixed $result The result of a query

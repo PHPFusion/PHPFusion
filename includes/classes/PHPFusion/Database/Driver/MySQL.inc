@@ -84,6 +84,16 @@ class MySQL extends AbstractDatabaseDriver {
     }
 
     /**
+     * Count the number of selected columns by the given query
+     *
+     * @param mixed $result The result of a query
+     * @return int
+     */
+    public function countColumns($result) {
+        return @mysql_num_fields($result);
+    }
+
+    /**
      * Fetch one row as an associative array
      *
      * @param mixed $result The result of a query

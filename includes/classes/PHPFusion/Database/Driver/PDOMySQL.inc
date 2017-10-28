@@ -121,6 +121,18 @@ class PDOMySQL extends AbstractDatabaseDriver {
     }
 
     /**
+     * Count the number of affected columns by the given query
+     *
+     * @param \PDOStatement $statement
+     * @return int
+     */
+    public function countColumns($statement) {
+        if ($statement !== FALSE) {
+            return $statement->columnCount();
+        }
+    }
+
+    /**
      * Fetch one row as an associative array
      *
      * @param \PDOStatement $statement

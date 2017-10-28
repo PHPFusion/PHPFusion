@@ -284,8 +284,8 @@ abstract class AbstractDatabaseDriver {
     public function getNextId($table) {
         $status = $this->fetchAssoc($this->query(
             'SELECT auto_increment FROM information_schema.tables WHERE
-				table_schema = database() AND
-				table_name = :table', array(':table' => $table)));
+                table_schema = database() AND
+                table_name = :table', array(':table' => $table)));
 
         return empty($status) ? FALSE : (int)$status['auto_increment'];
     }
@@ -346,6 +346,14 @@ abstract class AbstractDatabaseDriver {
      * @return int
      */
     abstract public function countRows($result);
+
+    /**
+     * Count the number of selected columns by the given query
+     *
+     * @param mixed $result The result of a query
+     * @return int
+     */
+    abstract public function countColumns($result);
 
     /**
      * Get the last inserted auto increment id
