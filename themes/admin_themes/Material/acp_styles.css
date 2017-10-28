@@ -1084,6 +1084,9 @@ main {
 .icon-wrapper .btn-app > span {
     white-space: nowrap;
 }
+.icon-wrapper .btn-app > img {
+    max-width: 45px;
+}
 .copyright {
     font-size: 11px;
     margin-bottom: 30px;
