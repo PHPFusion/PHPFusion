@@ -244,28 +244,28 @@ class PageList extends PageAdmin {
         </div>
         <?php
 
-        add_to_jquery("
-        $('.qform').hide();
-        $('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
-        ");
-
-        echo "<div class='m-t-20 table-responsive'><table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
-        echo "<thead>\n";
-        echo "<tr>\n";
-        echo "<th></th>\n";
-        echo "<th class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
-        echo "<th>".$locale['page_0102']."</th>\n";
-        echo "<th>".$locale['page_0103']."</th>\n";
-        //echo "<th>".$locale['page_0104']."</th>\n";
-        //echo "<th>".$locale['page_0105']."</th>\n";
-        echo "<th>".$locale['page_0305']."</th>\n";
-        echo "<th>".$locale['page_0118']."</th>\n";
-        echo "<th>".$locale['page_0106']."</th>\n";
-        echo "</tr>\n";
-        echo "</thead>\n";
-        echo "<tbody id='custompage-links' class='connected'>\n";
-
         if (dbrows($page_result) > 0) {
+            add_to_jquery("
+                $('.qform').hide();
+                $('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
+            ");
+
+            echo "<div class='m-t-20 table-responsive'><table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
+            echo "<thead>\n";
+            echo "<tr>\n";
+            echo "<th></th>\n";
+            echo "<th class='col-xs-4'>".self::$locale['page_0101']."</th>\n";
+            echo "<th>".$locale['page_0102']."</th>\n";
+            echo "<th>".$locale['page_0103']."</th>\n";
+            //echo "<th>".$locale['page_0104']."</th>\n";
+            //echo "<th>".$locale['page_0105']."</th>\n";
+            echo "<th>".$locale['page_0305']."</th>\n";
+            echo "<th>".$locale['page_0118']."</th>\n";
+            echo "<th>".$locale['page_0106']."</th>\n";
+            echo "</tr>\n";
+            echo "</thead>\n";
+            echo "<tbody id='custompage-links' class='connected'>\n";
+
             while ($pageData = dbarray($page_result)) {
                 $pageLanguage = '';
                 $pageLang = explode(".", $pageData['page_language']);
@@ -295,13 +295,13 @@ class PageList extends PageAdmin {
                 echo "<td>".$pageData['page_id']."</td>\n";
                 echo "</tr>\n";
             }
+
+            echo "</tbody>\n";
+            echo "</table>\n</div>";
         } else {
-            echo "<tr>\n";
-            echo "<td colspan='9' class='text-center'>\n<div class='well'>\n".$locale['page_0440']."</div>\n</td>\n";
-            echo "</tr>\n";
+            echo "<div class='well text-center m-t-20'>\n".$locale['page_0440']."</div>";
         }
-        echo "</tbody>\n";
-        echo "</table>\n</div>";
+
         if (fusion_get_settings('tinymce_enabled')) {
             add_to_jquery("
             function SetTinyMCE(val) {
