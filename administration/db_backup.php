@@ -19,6 +19,8 @@ require_once "../maincore.php";
 pageAccess('DB');
 require_once THEMES."templates/admin_header.php";
 
+use PHPFusion\Database\DatabaseFactory;
+
 /**
  * Class db_backup
  */
@@ -54,17 +56,21 @@ class db_backup {
                     echo "DROP TABLE IF EXISTS `$table`;$crlf";
                     $row = dbarraynum(dbquery("SHOW CREATE TABLE $table"));
                     echo $row[1].";".$crlf;
-                    $result = dbquery("SELECT * FROM $table");
+
+                    $db = DatabaseFactory::getConnection();
+                    $result = $db->query("SELECT * FROM $table");
+
                     if ($result && dbrows($result)) {
                         echo $crlf."#".$crlf."# Table Data for `".$table."`".$crlf."#".$crlf;
                         $column_list = "";
-                        $num_fields = $result->columnCount();
+                        $num_fields = $db->countColumns($result);
                         for ($i = 0; $i < $num_fields; $i++) {
                             $column_meta = $result->getColumnMeta($i);
                             $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
                             unset($column_meta);
                         }
                     }
+
                     while ($row = dbarraynum($result)) {
                         $dump = "INSERT INTO `$table` ($column_list) VALUES (";
                         for ($i = 0; $i < $num_fields; $i++) {
@@ -101,18 +107,18 @@ class db_backup {
 
                 $file = form_sanitizer($_POST['backup_filename'], '', 'backup_filename');
                 $ext = form_sanitizer($_POST['backup_type'], '.sql', 'backup_type');
-                $file = $file.$ext;
+
                 require_once INCLUDES."class.httpdownload.php";
                 $object = new \PHPFusion\httpdownload;
                 $object->use_resume = FALSE;
                 if ($ext == ".gz") {
                     $object->set_mime("application/x-gzip gz tgz");
                     $object->set_bydata(gzencode($contents, 9));
-                    $object->set_filename($file);
+                    $object->set_filename($file.'.sql'.$ext);
                 } else {
                     $object->set_mime("text/plain");
                     $object->set_bydata($contents);
-                    $object->set_filename($file);
+                    $object->set_filename($file.$ext);
                 }
                 $object->download();
                 exit;
@@ -504,4 +510,5 @@ class db_backup {
 
 $backup_admin = new db_backup();
 $backup_admin->__display();
+
 require_once THEMES."templates/footer.php";
