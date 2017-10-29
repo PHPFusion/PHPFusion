@@ -26,6 +26,9 @@ class Dynamics {
 
     private static $instance = NULL;
 
+    private function __construct() {
+    }
+
     public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new Static();
@@ -36,22 +39,13 @@ class Dynamics {
     }
 
     private function __load_dynamic_components() {
-        require_once DYNAMICS."includes/form_main.php";
-        require_once DYNAMICS."includes/form_text.php";
-        require_once DYNAMICS."includes/form_name.php";
-        require_once DYNAMICS."includes/form_select.php";
-        require_once DYNAMICS."includes/form_textarea.php";
-        require_once DYNAMICS."includes/form_hidden.php";
-        require_once DYNAMICS."includes/form_buttons.php";
-        require_once DYNAMICS."includes/form_ordering.php";
-        require_once DYNAMICS."includes/form_datepicker.php";
-        require_once DYNAMICS."includes/form_fileinput.php";
-        require_once DYNAMICS."includes/form_colorpicker.php";
-        require_once DYNAMICS."includes/form_geomap.php";
-        require_once DYNAMICS."includes/form_modal.php";
-        require_once DYNAMICS."includes/form_checkbox.php";
-        require_once DYNAMICS."includes/form_paragraph.php";
-        require_once DYNAMICS."includes/form_document.php";
+        $dynamic_folder = makefilelist(DYNAMICS.'includes/', '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'files');
+
+        if (!empty($dynamic_folder)) {
+            foreach ($dynamic_folder as $folder) {
+                require_once DYNAMICS."includes/".$folder;
+            }
+        }
 
         if (!defined("SELECT2")) {
             define("SELECT2", TRUE);
