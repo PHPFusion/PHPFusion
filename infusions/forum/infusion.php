@@ -73,7 +73,7 @@ $inf_newtable[] = DB_FORUM_RANKS." (
     rank_image VARCHAR(100) NOT NULL DEFAULT '',
     rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
     rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-    rank_apply TINYINT(4) DEFAULT '-101',
+    rank_apply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
     rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (rank_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
@@ -116,17 +116,17 @@ $inf_newtable[] = DB_FORUMS." (
     forum_rules TEXT NOT NULL,
     forum_mods TEXT NOT NULL,
     forum_access TINYINT(4) NOT NULL DEFAULT '0',
-    forum_post TINYINT(4) DEFAULT '-101',
-    forum_reply TINYINT(4) DEFAULT '-101',
+    forum_post TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
+    forum_reply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
     forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
-    forum_poll TINYINT(4) NOT NULL DEFAULT '-101',
-    forum_vote TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_poll TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    forum_vote TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_image VARCHAR(100) NOT NULL DEFAULT '',
-    forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_post_ratings TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_users TINYINT(1) NOT NULL DEFAULT '0',
     forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
-    forum_attach TINYINT(4) NOT NULL DEFAULT '-101',
-    forum_attach_download TINYINT(4) NOT NULL DEFAULT '-101',
+    forum_attach TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER."',
+    forum_attach_download TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
     forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -232,8 +232,8 @@ $inf_newtable[] = DB_FORUM_MOODS." (
     mood_name TEXT NOT NULL,
     mood_description TEXT NOT NULL,
     mood_icon VARCHAR(50) NOT NULL DEFAULT '',
-    mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
-    mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+    mood_notify SMALLINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    mood_access SMALLINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     mood_status SMALLINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (mood_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
@@ -300,22 +300,22 @@ if (!empty($enabled_languages)) {
         $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", FORUM.'locale/'.$language.'/forum_tags.php']);
 
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', '0', '2', '-101', '1', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', '0', '2', ".USER_LEVEL_MEMBER.", '1', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', '0', '2', '-101', '3', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', '0', '2', '-101', '4', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', '0', '2', ".USER_LEVEL_MEMBER.", '3', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', '0', '2', ".USER_LEVEL_MEMBER.", '4', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')";
 
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', '-103', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3601']."', 'rank_admin.png', 0, '1', '-102', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', ".USER_LEVEL_SUPER_ADMIN.", '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3601']."', 'rank_admin.png', 0, '1', ".USER_LEVEL_ADMIN.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3602']."', 'rank_mod.png', 0, '1', '-104', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3603']."', 'rank0.png', 0, '0', '-101', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3604']."', 'rank1.png', 10, '0', '-101', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3605']."', 'rank2.png', 50, '0', '-101', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', '-101', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', '-101', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', '-101', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3603']."', 'rank0.png', 0, '0', ".USER_LEVEL_MEMBER."', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3604']."', 'rank1.png', 10, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3605']."', 'rank2.png', 50, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
 
         $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['setup_3660']."', '".$locale['setup_3661']."', '#2e8c65', '1', '".$language."')";
 
@@ -331,10 +331,10 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newsthread.php', '0', '2', '-101', '1', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newsthread.php', '0', '2', ".USER_LEVEL_MEMBER.", '1', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=participated', '0', '2', '-101', '3', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', '0', '2', '-101', '4', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=participated', '0', '2', ".USER_LEVEL_MEMBER.", '3', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', '0', '2', ".USER_LEVEL_MEMBER.", '4', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".LANGUAGE."')";
 }

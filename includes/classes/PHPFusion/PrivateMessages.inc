@@ -709,7 +709,7 @@ class PrivateMessages {
 
         } else {
             $result = NULL;
-            if ($to <= -101 && $to >= -103) { // -101, -102, -103 only
+            if ($to <= USER_LEVEL_MEMBER && $to >= USER_LEVEL_SUPER_ADMIN) { // -101, -102, -103 only
                 $result = dbquery("SELECT user_id from ".DB_USERS." WHERE user_level <='".intval($to)."' AND user_status='0'");
             } else {
                 $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)." AND user_status='0'");

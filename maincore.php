@@ -157,10 +157,10 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
 }
 
 // User level, Admin Rights & User Group definitions
-define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
-define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);
-define("iADMIN", $userdata['user_level'] <= -102 ? 1 : 0);
-define("iSUPERADMIN", $userdata['user_level'] == -103 ? 1 : 0);
+define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
+define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
+define("iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0);
+define("iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0);
 define("iUSER", $userdata['user_level']);
 define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));

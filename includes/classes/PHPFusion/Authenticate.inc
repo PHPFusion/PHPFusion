@@ -180,7 +180,7 @@ class Authenticate {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
         }
-        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
+        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < USER_LEVEL_ADMIN && $user['user_theme'] != "Default") {
             $user['user_theme'] = "Default";
         }
     }
@@ -232,7 +232,7 @@ class Authenticate {
                     list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
                     if ($cookieExpiration > time() && $userID == $userdata['user_id']) {
                         $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."
-							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
+							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
 							LIMIT 1");
                         if (dbrows($result) == 1) {
                             $user = dbarray($result);
@@ -289,7 +289,7 @@ class Authenticate {
                 // Validate a provided password
             } elseif ($pass != "") {
                 $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-					WHERE user_id='".$userdata['user_id']."' AND user_level < '-".USER_LEVEL_MEMBER."' AND  user_status='0' AND user_actiontime='0'
+					WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
 					LIMIT 1");
                 if (dbrows($result) == 1) {
                     $user = dbarray($result);

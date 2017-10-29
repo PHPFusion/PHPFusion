@@ -215,15 +215,15 @@ abstract class ForumServer {
         $forum_rank_cache = self::forum_rank_cache();
 
         $forum_rank_css_class = array(
-            '-101' => 'label-member',
-            '-102' => 'label-mod',
-            '-103' => 'label-super-admin',
+            USER_LEVEL_MEMBER => 'label-member',
+            USER_LEVEL_ADMIN => 'label-mod',
+            USER_LEVEL_SUPER_ADMIN => 'label-super-admin',
         );
 
         $forum_rank_icon_class = array(
-            '-101' => 'fa fa-legal fa-fw',
-            '-102' => 'fa fa-legal fa-fw',
-            '-103' => 'fa fa-legal fa-fw',
+            USER_LEVEL_MEMBER => 'fa fa-legal fa-fw',
+            USER_LEVEL_ADMIN => 'fa fa-legal fa-fw',
+            USER_LEVEL_SUPER_ADMIN => 'fa fa-legal fa-fw',
             '-104' => 'fa fa-legal fa-fw',
         );
 

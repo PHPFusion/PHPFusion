@@ -837,9 +837,9 @@ function censorwords($text) {
 function getuserlevel($userlevel) {
     $locale = fusion_get_locale();
     $userlevels = array(
-        -101 => $locale['user1'],
-        -102 => $locale['user2'],
-        -103 => $locale['user3']
+        USER_LEVEL_MEMBER      => $locale['user1'],
+        USER_LEVEL_ADMIN       => $locale['user2'],
+        USER_LEVEL_SUPER_ADMIN => $locale['user3']
     );
 
     return isset($userlevels[$userlevel]) ? $userlevels[$userlevel] : NULL;
@@ -922,9 +922,9 @@ function pageAccess($rights, $debug = FALSE) {
 function checkgroup($group) {
     if (iSUPERADMIN) {
         return TRUE;
-    } elseif (iADMIN && ($group == "0" || $group == "-101" || $group == "-102")) {
+    } elseif (iADMIN && ($group == "0" || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
         return TRUE;
-    } elseif (iMEMBER && ($group == "0" || $group == "-101")) {
+    } elseif (iMEMBER && ($group == "0" || $group == USER_LEVEL_MEMBER)) {
         return TRUE;
     } elseif (iGUEST && $group == "0") {
         return TRUE;
@@ -947,9 +947,9 @@ function checkgroup($group) {
 function checkusergroup($group, $user_level, $user_groups) {
     if ($user_level == USER_LEVEL_SUPER_ADMIN) {
         return TRUE;
-    } elseif ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == '-101' || $group == '-102')) {
+    } elseif ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
         return TRUE;
-    } elseif ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == '-101')) {
+    } elseif ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
         return TRUE;
     } elseif ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
         return TRUE;
@@ -988,10 +988,10 @@ function cache_groups() {
 function getusergroups() {
     $locale = fusion_get_locale();
     $groups_array = array(
-        array("0", $locale['user0'], $locale['user0'], 'fa fa-user'),
-        array("-101", $locale['user1'], $locale['user1'], 'fa fa-user'),
-        array("-102", $locale['user2'], $locale['user2'], 'fa fa-user'),
-        array("-103", $locale['user3'], $locale['user3'], 'fa fa-user')
+        array(USER_LEVEL_PUBLIC, $locale['user0'], $locale['user0'], 'fa fa-user'),
+        array(USER_LEVEL_MEMBER, $locale['user1'], $locale['user1'], 'fa fa-user'),
+        array(USER_LEVEL_MEMBER, $locale['user2'], $locale['user2'], 'fa fa-user'),
+        array(USER_LEVEL_SUPER_ADMIN, $locale['user3'], $locale['user3'], 'fa fa-user')
     );
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
@@ -1092,7 +1092,7 @@ function blacklist($field) {
         $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                if ($data['user_level'] > -102) {
+                if ($data['user_level'] > USER_LEVEL_ADMIN) {
                     $blacklist[] = $data['user_id']; // all users to filter
                 }
             }

@@ -63,9 +63,9 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
             while ($data = dbarray($result)) {
                 $admin_rights .= (isset($admin_rights) ? "." : "").$data['admin_right'];
             }
-            $result = dbquery("UPDATE ".DB_USERS." SET user_level='".(isset($_POST['make_super']) ? "-103" : "-102")."', user_rights='$admin_rights' WHERE user_id='".$_POST['user_id']."'");
+            $result = dbquery("UPDATE ".DB_USERS." SET user_level='".(isset($_POST['make_super']) ? USER_LEVEL_SUPER_ADMIN : USER_LEVEL_ADMIN)."', user_rights='".$admin_rights."' WHERE user_id='".$_POST['user_id']."'");
         } else {
-            $result = dbquery("UPDATE ".DB_USERS." SET user_level='-102' WHERE user_id='".$_POST['user_id']."'");
+            $result = dbquery("UPDATE ".DB_USERS." SET user_level=".USER_LEVEL_ADMIN." WHERE user_id='".$_POST['user_id']."'");
         }
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         redirect(FUSION_SELF.$aidlink."&status=sn", TRUE);
@@ -76,7 +76,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 
 if (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1) {
     if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-        $result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level='-101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<='-102'");
+        $result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<=".USER_LEVEL_ADMIN."");
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         redirect(FUSION_SELF.$aidlink."&status=del", TRUE);
     } else {
@@ -99,9 +99,9 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
             foreach ($_POST['rights'] as $right) {
                 $user_rights .= ($user_rights != "" ? "." : "").stripinput($right);
             }
-            $result = dbquery("UPDATE ".DB_USERS." SET user_rights='$user_rights' WHERE user_id='".$_GET['user_id']."' AND user_level<='-102'");
+            $result = dbquery("UPDATE ".DB_USERS." SET user_rights='".$user_rights."' WHERE user_id='".$_GET['user_id']."' AND user_level<=".USER_LEVEL_ADMIN."");
         } else {
-            $result = dbquery("UPDATE ".DB_USERS." SET user_rights='' WHERE user_id='".$_GET['user_id']."' AND user_level<='-102'");
+            $result = dbquery("UPDATE ".DB_USERS." SET user_rights='' WHERE user_id='".$_GET['user_id']."' AND user_level<=".USER_LEVEL_ADMIN."");
         }
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         redirect(FUSION_SELF.$aidlink."&status=su", TRUE);
@@ -111,7 +111,7 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
 }
 
 if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
-    $result = dbquery("SELECT user_name, user_rights FROM ".DB_USERS." WHERE user_id='".$_GET['edit']."' AND user_level<='-102' ORDER BY user_id");
+    $result = dbquery("SELECT user_name, user_rights FROM ".DB_USERS." WHERE user_id='".$_GET['edit']."' AND user_level<=".USER_LEVEL_ADMIN." ORDER BY user_id");
     if (dbrows($result)) {
         $data = dbarray($result);
         $user_rights = explode(".", $data['user_rights']);
@@ -202,7 +202,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             $mysql_search .= "user_name LIKE '".$_POST['search_criteria']."%' ";
         }
         if ($mysql_search) {
-            $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level='-101' ORDER BY user_name");
+            $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level=".USER_LEVEL_MEMBER." ORDER BY user_name");
         }
         if (isset($result) && dbrows($result)) {
             echo openform('add_users_form', 'post', FUSION_SELF.$aidlink);
@@ -250,7 +250,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     closetable();
     opentable($locale['420']);
     $i = 0;
-    $result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<='-102' ORDER BY user_level DESC, user_name");
+    $result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN." ORDER BY user_level DESC, user_name");
     echo "<div class='table-responsive'><table cellpadding='0' cellspacing='1' class='table tbl-border center'>\n<thead>\n<tr>\n";
     echo "<th class='tbl2'>".$locale['421']."</th>\n";
     echo "<th width='1%' class='tbl2 text-center' style='white-space:nowrap'>".$locale['422']."</th>\n";
@@ -262,9 +262,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                                                                                               $data['user_rights']) : "".$locale['425']."")."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
         echo "<td width='1%' class='$row_color text-center' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
         echo "<td width='1%' class='$row_color text-center' style='white-space:nowrap'>\n";
-        if ($data['user_level'] == "-103" && $userdata['user_id'] == "1") {
+        if ($data['user_level'] == USER_LEVEL_SUPER_ADMIN && $userdata['user_id'] == "1") {
             $can_edit = TRUE;
-        } elseif ($data['user_level'] != "-103") {
+        } elseif ($data['user_level'] != USER_LEVEL_SUPER_ADMIN) {
             $can_edit = TRUE;
         } else {
             $can_edit = FALSE;
