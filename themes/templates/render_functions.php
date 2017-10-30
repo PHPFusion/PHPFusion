@@ -79,7 +79,7 @@ if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES.'favicons/') {
         $html = "";
         /* Src: http://realfavicongenerator.net/favicon_result?file_id=p1avd9jap61od55nq1l2e1e2q7q76#.WAbP6I995D8 */
-        if (file_exists($folder)) {
+        if (is_dir($folder)) {
             $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."apple-touch-icon.png'>\n";
             $html .= "<link rel='icon' type='image/png' href='".$folder."favicon-32x32.png' sizes='32x32'>\n";
             $html .= "<link rel='icon' type='image/png' href='".$folder."favicon-16x16.png' sizes='16x16'>\n";

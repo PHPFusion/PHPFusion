@@ -47,7 +47,7 @@ echo '<html>';
             echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.css"/>';
         }
         echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
-        echo render_favicons(IMAGES);
+        echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
         if (function_exists("get_head_tags")) {
             echo get_head_tags();
         }

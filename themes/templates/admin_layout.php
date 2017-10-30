@@ -57,7 +57,7 @@ if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
-echo render_favicons();
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
