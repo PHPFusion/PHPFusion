@@ -125,7 +125,7 @@ $inf_newtable[] = DB_FORUMS." (
     forum_post_ratings TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_users TINYINT(1) NOT NULL DEFAULT '0',
     forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
-    forum_attach TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER."',
+    forum_attach TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_attach_download TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
     forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -310,7 +310,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', ".USER_LEVEL_SUPER_ADMIN.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3601']."', 'rank_admin.png', 0, '1', ".USER_LEVEL_ADMIN.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3602']."', 'rank_mod.png', 0, '1', '-104', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3603']."', 'rank0.png', 0, '0', ".USER_LEVEL_MEMBER."', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3603']."', 'rank0.png', 0, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3604']."', 'rank1.png', 10, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3605']."', 'rank2.png', 50, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
         $mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', ".USER_LEVEL_MEMBER.", '".$language."')";
