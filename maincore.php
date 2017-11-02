@@ -34,7 +34,7 @@ require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
-    die("Prevented a XSS attack through a GET variable!");
+    die("Prevented an XSS attack through a GET variable!");
 }
 
 // Establish mySQL database connection
