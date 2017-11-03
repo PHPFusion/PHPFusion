@@ -194,8 +194,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     switch ($options['type']) {
         case "number":
             $input_type = "number";
-            $min = (!empty($options['number_min']) && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
-            $max = (!empty($options['number_max']) && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
+            $min = ((!empty($options['number_min']) || $options['number_min'] === "0") && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
+            $max = ((!empty($options['number_max']) || $options['number_max'] === "0") && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
             $step = "step='".str_replace(",", ".", $options['number_step'])."' ";
             break;
         case "text":
