@@ -863,14 +863,9 @@ function db_exists($table) {
     if (strpos($table, DB_PREFIX) === FALSE) {
         $table = DB_PREFIX.$table;
     }
-    $query = dbquery("SHOW TABLES");
-    while ($row = dbarraynum($query)) {
-        if ($row[0] == $table or $row[0] == strtolower($table)) {
-            return TRUE;
-        }
-    }
+    $query = dbquery("SHOW TABLES LIKE '$table'");
 
-    return FALSE;
+    return boolval(dbrows($query));
 }
 
 /**
