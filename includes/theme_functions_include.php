@@ -74,7 +74,7 @@ function showBenchmark($show_sql_performance = FALSE) {
         $modal .= closemodal();
         add_to_footer($modal);
     }
-    $render_time = substr((microtime(TRUE) - START_TIME), 0, 7).' seconds';
+    $render_time = substr((microtime(TRUE) - START_TIME), 0, 7);
     $_SESSION['performance'][] = $render_time;
     if (count($_SESSION['performance']) > 5) {
         array_shift($_SESSION['performance']);

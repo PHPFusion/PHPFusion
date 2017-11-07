@@ -83,7 +83,7 @@ switch ($_GET['section']) {
         if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
             include "admin/downloads.php";
         } else {
-            echo "<div class='well text-center'>\n";
+            echo "<div class='well text-center m-t-20'>\n";
             echo $locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
             echo "<a href='".INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=download_category'>".$locale['download_0253']."</a>".$locale['download_0254'];
             echo "</div>\n";
