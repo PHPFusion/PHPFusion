@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vrstva_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 256.5 256.5" style="enable-background:new 0 0 256.5 256.5;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#009F3C;stroke:#FFFFFF;stroke-width:0.5166;stroke-miterlimit:10;}
-	.st1{fill:#FFFFFF;}
-</style>
-<path class="st0" d="M223.6,256.3H32.9c-17.9,0-32.6-14.7-32.6-32.6V32.9c0-17.9,14.7-32.6,32.6-32.6h190.8
-	c17.9,0,32.6,14.7,32.6,32.6v190.8C256.3,241.6,241.6,256.3,223.6,256.3z"/>
-<path class="st1" d="M199.3,68.9c-29.3,0-51.7-8.4-70.7-26.8c-19,18.5-41.4,26.8-70.7,26.8c0,48.1-9.9,116.9,70.7,144.9
-	C209.2,185.9,199.3,117,199.3,68.9z M122.7,153.5L99.1,130l10.5-10.5l13,13l24.7-24.7l10.5,10.5L122.7,153.5z"/>
+<!-- Generator: Adobe Illustrator 22.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="security" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+<path fill="#009F3C" d="M223.3,256H32.6C14.7,256,0,241.3,0,223.4V32.6C0,14.7,14.7,0,32.6,0h190.8C241.3,0,256,14.7,256,32.6v190.8
+	C256,241.3,241.3,256,223.3,256z"/>
+<path fill="#FFFFFF" d="M198.3,69.2c-29,0-51.2-8.3-70-26.5c-18.8,18.3-41,26.5-70,26.5c0,47.6-9.8,115.7,70,143.5
+	C208.1,185,198.3,116.8,198.3,69.2z M122.5,152.9l-23.4-23.3l10.4-10.4l12.9,12.9l24.5-24.5l10.4,10.4L122.5,152.9z"/>
 </svg>

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/instagram.png' alt='Instagram'/>";
+$icon = "<img src='".IMAGES."user_fields/social/instagram.svg' alt='Instagram'/>";
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_instagram', $locale['uf_instagram'], $field_value, [
