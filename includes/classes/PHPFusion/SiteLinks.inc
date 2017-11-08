@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use PHPFusion\Rewrite\Router;
+
 /**
  * Class SiteLinks
  *
@@ -614,6 +616,30 @@ class SiteLinks {
                 // The default values for link_active is blank, not false or true.
                 // It is therefore encouraged to set true or false when adding links for best efficiency.
                 if (!is_bool($link_data['link_active'])) {
+                    // If the current link_url does not contain request parameters, this link should be active
+                    if (!stristr($link_data['link_url'], "?")) {
+                        if (defined('IN_PERMALINK')) {
+                            if (Router::getRouterInstance()->getFilePath() == $link_data['link_url']) {
+                                $secondary_active = true;
+                            }
+                        } else {
+                            // format the link
+                            $data_link_url = $link_data['link_url'];
+                            if (stristr($link_data['link_url'], "index.php")) {
+                                $data_link_url = str_replace("index.php", "", $data_link_url);
+                            }
+                            $url = parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']));
+                            $current_url = str_replace(fusion_get_settings('site_path'), "", $url['path']);
+                            if (stristr($url['path'], "index.php")) {
+                                $current_url = str_replace("index.php", "", $current_url);
+                            }
+                            if ($data_link_url == $current_url) {
+                                $secondary_active = true;
+                            }
+                        }
+                    }
+
+                    // not the first link
                     if (self::getMenuParam('start_page') !== $link_data['link_url']) {
                         // All Sublinks will be compared to - stable
                         $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
@@ -624,7 +650,6 @@ class SiteLinks {
 
                         // The breadcrumbs series of arrays - stable
                         $reference = $this->getLinkInstance();
-
                         if (!empty($reference)) {
 
                             $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
@@ -671,6 +696,7 @@ class SiteLinks {
                             }
 
                         }
+
                     }
                 }
 
