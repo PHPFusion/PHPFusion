@@ -147,7 +147,7 @@ class Core {
         self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
     }
 
-    protected static function getParam($prop = FALSE) {
+    public static function getParam($prop = FALSE) {
         if (isset(self::$options[$prop])) { // will return an error if $prop is not available
             return self::$options[$prop];
         } else {

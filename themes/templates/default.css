@@ -1194,7 +1194,6 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .file-preview-image {
-    display: table;
     width: 100%;
     height: 200px;
 }
@@ -1464,4 +1463,56 @@ label img, .control-label > img {
 .text-overflow-hide {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/**
+table class ordering
+ */
+.order-caret-up-current:after, .order-caret-down-current:hover:after, .order-caret-up:hover:after {
+    /*down*/
+    font-family: 'FontAwesome';
+    content: '\f0d8';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.order-caret-down-current:after, .order-caret-up-current:hover:after, .order-caret-down:hover:after {
+    font-family: 'FontAwesome';
+    content: '\f0d7';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.tbl_actions {
+    display: none;
+}
+
+tr:hover > td .tbl_actions {
+    display: block;
+}
+
+.tbl_actions > span:after {
+    content: "|";
+    display: inline-block;
+    padding: 0 5px;
+    color: #ccc;
+}
+
+.tbl_actions > span:last-child:after {
+    content: "";
+}
+
+.text-normal label {
+    font-weight: 400;
+}
+
+.thumb > img {
+    display: block;
+    width: 100%;
+}
+
+.remove_tag {
+
 }
