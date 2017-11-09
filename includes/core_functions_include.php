@@ -990,7 +990,7 @@ function getusergroups() {
     $groups_array = array(
         array(USER_LEVEL_PUBLIC, $locale['user0'], $locale['user0'], 'fa fa-user'),
         array(USER_LEVEL_MEMBER, $locale['user1'], $locale['user1'], 'fa fa-user'),
-        array(USER_LEVEL_MEMBER, $locale['user2'], $locale['user2'], 'fa fa-user'),
+        array(USER_LEVEL_ADMIN, $locale['user2'], $locale['user2'], 'fa fa-user'),
         array(USER_LEVEL_SUPER_ADMIN, $locale['user3'], $locale['user3'], 'fa fa-user')
     );
     $groups_cache = cache_groups();
