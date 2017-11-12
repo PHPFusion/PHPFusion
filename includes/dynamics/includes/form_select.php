@@ -32,6 +32,13 @@
  * @param bool  $input_value
  * @param array $options
  *
+ * Chaining a secondary field to another field
+ * $options['chainable']  true
+ * $options['chain_to_id']  the input id of the primary field that the current field is chained to
+ * $options['chain_index'] = a list of array with array of key & value
+ * array    key - current option value (i.e. +60)
+ *          value - parent value that this option value is chained against (i.e. Malaysia)
+ *
  * @return string
  *
  * @package dynamics/select2
@@ -44,13 +51,13 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = array(
-        'options'        => array(),
-        'required'       => FALSE,
-        'regex'          => '',
-        'input_id'       => $input_name,
-        'placeholder'    => $locale['choose'],
-        'deactivate'     => FALSE,
-        'safemode'       => FALSE,
+        'options'          => array(),
+        'required'         => FALSE,
+        'regex'            => '',
+        'input_id'         => $input_name,
+        'placeholder'      => $locale['choose'],
+        'deactivate'       => FALSE,
+        'safemode'         => FALSE,
         'allowclear'     => FALSE,
         'multiple'       => FALSE,
         'width'          => '',
@@ -66,18 +73,19 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'title_col'      => '',        // Chain Title Column Name
         'custom_query'   => '',     // If any replacement statement for the query
         'value_filter'   => array('col' => '', 'value' => NULL), // Specify if building opts has to specifically match these conditions
-        'optgroup'       => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
-        'option_pattern' => "&#8212;",
-        'max_select'     => FALSE,
-        'error_text'     => $locale['error_input_default'],
-        'class'          => '',
-        'inline'         => FALSE,
-        'tip'            => '',
-        'ext_tip'        => '',
-        'delimiter'      => ',',
-        'callback_check' => '',
-        'stacked'        => '',
-        'onchange'       => '',
+        'optgroup'         => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
+        'option_pattern'   => "&#8212;",
+        'max_select'       => FALSE,
+        'error_text'       => $locale['error_input_default'],
+        'class'            => '',
+        'inline'           => FALSE,
+        'tip'              => '',
+        'ext_tip'          => '',
+        'delimiter'        => ',',
+        'callback_check'   => '',
+        'stacked'          => '',
+        'onchange'         => '',
+        "select2_disabled" => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
     );
 
     $options += $default_options;
@@ -144,7 +152,9 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 }
             }
             /**
-             * Build chainable options
+             * Build Chainable Reference Array
+             * array key    current id
+             *      value   parent id
              */
             if (!function_exists('get_form_select_chain_index')) {
                 function get_form_select_chain_index($data, $options, $id = 0, $level = 0) {
@@ -160,20 +170,15 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                 }
             }
         }
+        // Automatic build chain index.
+        if ($options['chainable'] && $options['chain_to_id'] && empty($options['chain_index'])) {
+            $options['chain_index'] = get_form_select_chain_index($select_db[$options['db']], $options);
+        }
+
 
         if (!empty($select_db[$options['db']][0])) {
             // Build options and override declared options
             $options['options'] = get_form_select_opts($select_db[$options['db']], $options);
-
-            // Build a chain index and initialize the JS chain plugin
-            if ($options['chainable'] && $options['chain_to_id']) {
-                if (!defined('JS_SELECT_CHAINED')) {
-                    define('JS_SELECT_CHAINED', true);
-                    add_to_footer("<script src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
-                }
-                add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
-                $options['chain_index'] = get_form_select_chain_index($select_db[$options['db']], $options);
-            }
         } else {
             $options['options'] = array('0' => $locale['no_opts']);
             $options['deactivate'] = 1;
@@ -181,6 +186,19 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     } elseif (empty($options['options'])) {
         $options['options'] = array('0' => $locale['no_opts']);
         $options['deactivate'] = 1;
+    }
+
+    // Build a chain index and initialize the JS chain plugin
+    // $options['chainable']    - true
+    // $options['chain_to_id']  - parent id
+    // $options['chain_index'] - a list of array of current id and the parent id as value (see get_form_select_chain_index function how it's done)
+    if ($options['chainable'] && $options['chain_to_id'] && !empty($options['chain_index'])) {
+        if (!defined('JS_SELECT_CHAINED')) {
+            define('JS_SELECT_CHAINED', true);
+            add_to_footer("<script src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
+        }
+        add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
+
     }
 
     // Optgroup with Hierarchy
@@ -329,23 +347,24 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'delimiter'      => $options['delimiter'],
     ));
     // Initialize Select2
-    // Select 2 Multiple requires hidden DOM.
-    if ($options['jsonmode'] === FALSE) {
-        // not json mode (normal)
-        $max_js = '';
-        if ($options['multiple'] && $options['max_select']) {
-            $max_js = "maximumSelectionSize : ".$options['max_select'].",";
-        }
+    if ($options['select2_disabled'] === FALSE) {
+        // Select 2 Multiple requires hidden DOM.
+        if ($options['jsonmode'] === FALSE) {
+            // not json mode (normal)
+            $max_js = '';
+            if ($options['multiple'] && $options['max_select']) {
+                $max_js = "maximumSelectionSize : ".$options['max_select'].",";
+            }
 
-        $tag_js = '';
-        if ($options['tags']) {
-            $tag_value = json_encode(array_values($options['options']));
-            // The format yield must be : `tags:["red", "green", "blue", "orange", "white", "black", "purple", "cyan", "teal"]`
-            $tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
-        }
+            $tag_js = '';
+            if ($options['tags']) {
+                $tag_value = json_encode(array_values($options['options']));
+                // The format yield must be : `tags:["red", "green", "blue", "orange", "white", "black", "purple", "cyan", "teal"]`
+                $tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
+            }
 
-        if ($options['required']) {
-            \PHPFusion\OutputHandler::addToJQuery("
+            if ($options['required']) {
+                \PHPFusion\OutputHandler::addToJQuery("
 			var init_value = $('#".$options['input_id']."').select2('val');
 			if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
 			$('#".$options['input_id']."').select2({
@@ -355,8 +374,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 				".$tag_js."
 			}).bind('change', function(e) {	$('#dummy-".$options['input_id']."').val($(this).val()); });
 			");
-        } else {
-            \PHPFusion\OutputHandler::addToJQuery("
+            } else {
+                \PHPFusion\OutputHandler::addToJQuery("
 			$('#".$options['input_id']."').select2({
 				".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
 				".$max_js."
@@ -364,26 +383,27 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 				".$tag_js."
 			});
 			");
-        }
+            }
 
-    } else {
-        // json mode
-        \PHPFusion\OutputHandler::addToJQuery("
+        } else {
+            // json mode
+            \PHPFusion\OutputHandler::addToJQuery("
                 var this_data = [{id:0, text: '".$options['placeholder']."'}];
                 $('#".$options['input_id']."').select2({
                 placeholder: '".$options['placeholder']."',
                 data: this_data
                 });
             ");
-    }
-
-    // For Multiple Callback JS
-    if (is_array($input_value) && $options['multiple']) { // stores as value;
-        $vals = '';
-        foreach ($input_value as $arr => $val) {
-            $vals .= ($arr == count($input_value) - 1) ? "'$val'" : "'$val',";
         }
-        \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
+
+        // For Multiple Callback JS
+        if (is_array($input_value) && $options['multiple']) { // stores as value;
+            $vals = '';
+            foreach ($input_value as $arr => $val) {
+                $vals .= ($arr == count($input_value) - 1) ? "'$val'" : "'$val',";
+            }
+            \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
+        }
     }
 
     return (string)$html;
