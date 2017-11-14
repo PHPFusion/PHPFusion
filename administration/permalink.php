@@ -273,8 +273,9 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
     if ($rows > 0) {
         while ($data = dbarray($result)) {
              $driver[] = $data;
-            }
-            $edit_name = sprintf($locale['PL_405'], $permalink_name);
+        }
+
+        $edit_name = sprintf($locale['PL_405'], $permalink_name);
     } else {
         addNotice('danger', sprintf($locale['PL_422'], $permalink_name));
         redirect(clean_request('section', ['edit'], FALSE));
@@ -329,7 +330,7 @@ switch ($_GET['section']) {
             add_to_footer(ob_get_contents());
             ob_end_clean();
 
-            echo "<div class='text-right display-block'>\n";
+            echo "<div class='text-right display-block m-t-10 m-b-10'>\n";
             echo form_button('pButton', $locale['help'], $locale['help'], ['input_id' => 'pButton', 'type' => 'button']);
             echo form_button('savepermalinks', $locale['save_changes'], $locale['PL_413'], ['class' => 'btn-primary', 'input_id' => 'save_top']);
             echo "</div>\n";
@@ -337,9 +338,11 @@ switch ($_GET['section']) {
             // Driver Rules Installed
             openside($locale['PL_409']);
             $i = 1;
+
+            echo '<div class="list-group">';
             foreach ($driver as $data) {
 
-                echo "<div class='list-group-item m-b-20'>\n";
+                echo "<div class='list-group-item'>\n";
                 $source = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_source']);
                 $target = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_target']);
                 echo "<p class='m-t-10 m-b-10'>
@@ -356,6 +359,8 @@ switch ($_GET['section']) {
                 echo "</div>\n";
                 $i++;
             }
+            echo '</div>';
+
             echo form_button('savepermalinks', $locale['save_changes'], $locale['PL_413'], ['class' => 'btn-primary']);
             echo closeform();
             closeside();
