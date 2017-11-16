@@ -778,11 +778,13 @@ class UserFields extends QuantumFields {
                 }
                 if (!empty($fieldData['fields'])) {
                     foreach ($fieldData['fields'] as $_id => $_fields) {
-                        $user_fields .= strtr($field_template, [
-                            '{%field_id%}'    => $_id,
-                            '{%field_title%}' => $_fields['title'],
-                            '{%field_value%}' => $_fields['value']
-                        ]);
+                        if (!empty($_fields)) {
+                            $user_fields .= strtr($field_template, [
+                                '{%field_id%}'    => $_id,
+                                '{%field_title%}' => $_fields['title'],
+                                '{%field_value%}' => $_fields['value']
+                            ]);
+                        }
                     }
                 }
                 $extended_info .= strtr($field_wrapper, [
