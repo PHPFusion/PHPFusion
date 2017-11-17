@@ -418,7 +418,7 @@ class Shoutbox {
             add_to_jquery("$('.shoutbox-delete-btn').on('click', function() {return confirm('".self::$locale['SB_warning_shout']."');});");
 
             while ($data = dbarray($result)) {
-                $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
+                $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
                 echo "<div class='list-group-item clearfix'>\n";
                 echo '<div class="row">';
                 echo '<div class="col-sm-3">';
@@ -518,7 +518,7 @@ class Shoutbox {
                     echo "</div>\n";
                 }
 
-                $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 3600 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
+                $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
 
                 echo "<div class='shoutboxname'>\n";
                 echo ($data['user_name']) ? "<span class='side'>".profile_link($data['shout_name'], $data['user_name'],
