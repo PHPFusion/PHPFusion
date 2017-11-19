@@ -734,6 +734,9 @@ class SiteLinks {
                             $itemlink = " href='".$link_data['link_url']."' ";
                         }
                     }
+
+                    $itemlink = str_replace('%aidlink%', fusion_get_aidlink(), $itemlink);
+
                     $has_child = FALSE;
                     $l_1 = "";
                     $l_2 = "";

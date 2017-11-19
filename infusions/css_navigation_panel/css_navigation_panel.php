@@ -66,6 +66,8 @@ if (!function_exists("showsidelinks")) {
                         $item_link = BASEDIR.$link_data['link_url'];
                     }
 
+                    $item_link = str_replace('%aidlink%', fusion_get_aidlink(), $item_link);
+
                     $link_icon = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
 
                     echo "<li".($link_is_active ? " class='current-link active'" : "").">";
