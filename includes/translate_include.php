@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function format_word($count, $words, $options = array('add_count' => 1, 'show_html' => TRUE)) {
+function format_word($count, $words, $options = array('add_count' => 1, 'html' => true)) {
     return PHPFusion\Locale::format_word($count, $words, $options);
 }
 
