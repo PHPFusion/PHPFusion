@@ -78,8 +78,8 @@
         fileActionSettings: {
             removeTitle: 'A fájl eltávolítása',
             uploadTitle: 'fájl feltöltése',
-            uploadRetryTitle: 'Retry upload',
-            downloadTitle: 'Download file',
+            uploadRetryTitle: 'Feltöltés újból',
+            downloadTitle: 'Fájl letöltése',
             zoomTitle: 'Részletek megtekintése',
             dragTitle: 'Mozgatás / Átrendezés',
             indicatorNewTitle: 'Nem feltöltött',

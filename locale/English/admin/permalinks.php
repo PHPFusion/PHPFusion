@@ -26,7 +26,7 @@ $locale['PL_413'] = "Save";
 $locale['PL_414'] = "WARNING: Permalinks &amp; Custom Alias data will be permanently deleted!<br/>Are you sure you want to Disable this Permalink?";
 $locale['PL_415'] = "Permalink Rules will transform various site URLs to Search Engine Friendly URLs with options to customize the URL structure for your site.<br/>
                   You can turn on the Permalinks in the Settings Tab if your server supports mod_rewrite. You activate the various Permalinks found in the Disabled tab. You can edit the rules to further customize an URL to your preference directly in each Permalink module.<br/><br/>
-                  Please note that mod_rewrite or it´s equivalent is required for Permalinks to work.";
+                  Please note that mod_rewrite or it's equivalent is required for Permalinks to work.";
 
 // Admin Messages
 $locale['PL_420'] = "An Error occurred.";

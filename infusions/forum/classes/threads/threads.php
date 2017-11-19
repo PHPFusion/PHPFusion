@@ -990,7 +990,7 @@ class ForumThreads extends ForumServer {
                 $pdata['user_ip'] = ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '';
 
                 $pdata += array(
-                    'user_online'        => $pdata['user_lastvisit'] >= time() - 3600 ? TRUE : FALSE,
+                    'user_online'        => $pdata['user_lastvisit'] >= time() - 300 ? TRUE : FALSE,
                     'is_first_post'      => $pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE,
                     'is_last_post'       => $pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE,
                     'user_profile_link'  => profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']),
