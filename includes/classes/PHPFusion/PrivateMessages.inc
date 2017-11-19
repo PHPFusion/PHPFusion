@@ -581,7 +581,7 @@ class PrivateMessages {
         require_once INCLUDES."sendmail_include.php";
         require_once INCLUDES."flood_include.php";
 
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."messages.php");
 
         $strict = FALSE;
         $group_name = getgroupname($to);
