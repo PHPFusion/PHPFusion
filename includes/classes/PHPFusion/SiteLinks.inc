@@ -741,15 +741,18 @@ class SiteLinks {
 
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
-                        $l_1 = " class='dropdown-toggle' data-toggle='dropdown' ";
+                        $link_class = (!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '');
+                        $l_1 = " class='dropdown-toggle".$link_class."' data-toggle='dropdown' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? " tabindex='0'" : "";
+                    } else {
+                        $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
                     }
 
                     $li_class = array_filter($li_class);
-                    $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
+
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
                     $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.$tab_index.">" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
