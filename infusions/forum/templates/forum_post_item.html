@@ -9,8 +9,7 @@
             <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
             <div class='pull-right m-l-10'>
                 <div class='clearfix'>
-                    <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
-                    <div class='btn-group'>
+                    <div class='btn-group btn-group-xs'>
                         {quote_btn.{
                         <a class='btn btn-default btn-sm quote-link' href='{%link_url%}' title='{%link_title%}'>{%title%}</a>
                         }}
@@ -64,6 +63,8 @@
                             }}
                         </ul>
                     </div>
+                    <h3 class='display-inline-block pull-right m-l-5' style='margin-top: -1px;'><a href='#{%item_marker_id%}'>#{%item_id%}</a></h3>
+                    <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
                 </div>
             </div>
         </div>
