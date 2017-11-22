@@ -280,8 +280,8 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 			}
 		} else {
 			require_once "includes/db_handlers/mysql_functions_include.php";
-			$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-			$db_select = @mysql_select_db($db_name);
+			$db_connect = @mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+			$db_select = TRUE;
 		}
 		if ($db_connect) {
 			if ($db_select) {
@@ -1316,8 +1316,10 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 		}
 	} else {
 		require_once "includes/db_handlers/mysql_functions_include.php";
-		$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-		$db_select = @mysql_select_db($db_name);
+//		$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
+//		$db_select = @mysql_select_db($db_name);
+		$link = dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port="3306");
+//		unset($db_host, $db_user, $db_pass, $db_		
 	}
 	$error = "";
 	$error_pass = "0";
