@@ -45,12 +45,10 @@ if (iMEMBER) {
 		WHERE user_id='".$userdata['user_id']."'");
 }
 echo "<!DOCTYPE html>\n";
-//echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n"; // to delete?
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
 echo "<meta name='description' content='".$settings['description']."' />\n";
 echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
-echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
 echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";
 if (file_exists(IMAGES."favicon.ico")) {
 	echo "<link rel='shortcut icon' href='".IMAGES."favicon.ico' type='image/x-icon' />\n";
