@@ -476,16 +476,17 @@ class UserFieldsInput {
 			// on registration
 			$where = "";
 			if ($this->registration) {
-				$where = "field_registration='1'";
+				$where = " WHERE field_registration='1'";
 			}
 		} else {
 			// on edit.
 			if ((isset($_GET['profiles']) && ($_GET['profiles'] == 'biography' || $_GET['profiles'] == 'avatar')) || isset($_GET['aid'])) {
-				$where = "WHERE tufc.field_cat_page !='1'";
+				$where = " WHERE tufc.field_cat_page !='1'";
 			} else {
-				$where = "WHERE tufc.field_cat_page='1' AND tufc.field_cat_name LIKE '".strtolower(stripinput($_GET['profiles']))."'";
+				$where = " WHERE tufc.field_cat_page='1' AND tufc.field_cat_name LIKE '".strtolower(stripinput($_GET['profiles']))."'";
 			}
 		}
+           
 		$result = dbquery("
             SELECT tufc.*, tuf.* FROM ".DB_USER_FIELD_CATS." tufc
              INNER JOIN ".DB_USER_FIELDS." tuf ON (tufc.field_cat_id = tuf.field_cat)

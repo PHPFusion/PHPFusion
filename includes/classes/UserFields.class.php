@@ -471,7 +471,7 @@ class UserFields {
 		$result = dbquery("
         SELECT tufc.*, tuf.* FROM ".DB_USER_FIELD_CATS." tufc
          INNER JOIN ".DB_USER_FIELDS." tuf ON (tufc.field_cat_id = tuf.field_cat)
-        ".$where." ORDER BY field_cat_order, field_order
+        ".$where." ORDER BY  field_cat, field_cat_order, field_order
         ");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
