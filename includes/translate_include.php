@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 	exit;
 }
 function translate_lang_names($language) {
-	$translated_langs = array("Danish" => "Dansk", "Dutch" => "Dutch", "English" => "English", "French" => "Francais",
+	$translated_langs = array("Danish" => "Dansk", "Dutch" => "Nederlands", "English" => "English", "French" => "Francais",
 							  "German" => "Deutsch", "Hungarian" => "Magyar", "Italian" => "Italiano",
 							  "Lithuanian" => "Lithuanian", "Malay"=>"Malay", "Persian" => "Persian", "Polish" => "Polski",
 							  "Russian" => "Ruski", "Spanish" => "Espanol", "Swedish" => "Svenska",
