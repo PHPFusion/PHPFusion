@@ -39,8 +39,10 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 		// getmequick at gmail dot com
 		// http://www.php.net/manual/en/function.unserialize.php#71270
 		function unserializeFix($var) {
-			$var = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $var);
-			return unserialize($var);
+			$var = preg_replace_callback('!s:(\d+):"(.*?)";!', function($matches) {
+				return 's:'.strlen($matches[2]).':"'.$matches[2].'";';
+			}, $var);
+		return unserialize($var);
 		}
 
 		$data = dbarray($result);

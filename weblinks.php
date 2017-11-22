@@ -89,7 +89,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 				$_GET['rowstart'] = 0;
 			}
 			if ($rows != 0) {
-				$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count FROM ".DB_WEBLINKS." WHERE weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$settings['links_per_page']);
+				$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count, weblink_url FROM ".DB_WEBLINKS." WHERE weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$settings['links_per_page']);
 				$numrows = dbrows($result);
 				$i = 1;
 				while ($data = dbarray($result)) {
@@ -103,6 +103,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 					echo $new;
 					echo "<span class='text-lighter display-inline m-r-20'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</span>\n";
 					echo "<span class='text-lighter display-inline'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</span>\n";
+					echo "<img src='http://api.webthumbnail.org/?width=30&height=30&url=".$data['weblink_url']."'/>";
 					if ($data['weblink_description'] != "") echo "<div class='weblink-text text-smaller'>".nl2br(stripslashes($data['weblink_description']))."</div>\n";
 					echo "</aside>\n";
 					$i++;

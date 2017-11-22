@@ -98,8 +98,8 @@ if (iMEMBER) {
 	echo "<div class='panel-body text-center text-dark' >\n";
 	echo "<div>".showbanners()."</div>\n";
 	echo openform('loginpageform', 'loginpageform', 'POST', $action_url);
-	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
-	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],
+	echo form_text('', 'user_name', 'user_name', '', array('placeholder' => $locale['global_101']));
+	echo form_text('', 'user_pass', 'user_pass', '', array('placeholder' => $locale['global_102'],
 																			'password' => 1));
 	//echo $locale['global_101']."<br />\n<input type='text' name='user_name' class='textbox form-control' style='width:100px' /><br />\n";
 	//echo $locale['global_102']."<br />\n<input type='password' name='user_pass' class='textbox form-control' style='width:100px' /><br />\n";

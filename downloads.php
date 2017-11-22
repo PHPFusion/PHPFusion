@@ -87,7 +87,7 @@ if (dbrows($result) != 0) {
 	}
 	$dl_stats .= "</div>\n";
 }
-$dl_stats .= "</div>\n</div>\n";
+//$dl_stats .= "</div>\n</div>\n";
 $dl_stats .= "</div>\n</div>\n";
 // Filter form, list of existing cats and downloads
 if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
