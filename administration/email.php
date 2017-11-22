@@ -82,8 +82,10 @@ if (isset($_POST['save_template'])) {
 $result = dbquery("SELECT template_id, template_key, template_name, template_language FROM ".DB_EMAIL_TEMPLATES." ".(multilang_table("ET") ? "WHERE template_language='".LANGUAGE."'" : "")." ORDER BY template_id ASC");
 if (dbrows($result) != 0) {
 	$editlist = array();
-	while ($data = dbarray($result)) {
-		$template[$data['template_id']] = $data['template_name'];
+	if (dbrows($result) != 0) {
+		while ($data = dbarray($result)) {
+			$template[$data['template_id']] = $data['template_name'];
+		}
 	}
 }
 foreach ($template as $id => $tname) {
@@ -93,7 +95,7 @@ foreach ($template as $id => $tname) {
 }
 $_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
 $tab_active = tab_active($tab_title, $_GET['section'], 1);
-echo opentab($tab_title, $tab_active, 'menu', 1);
+echo opentab($tab_title, $tab_active, 'menu', "email.php");
 echo opentabbody($tab_title['title'][$_GET['section']], $_GET['section'], $tab_active);
 $template_id = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : 0;
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".$template_id."' LIMIT 1");

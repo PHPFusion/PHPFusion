@@ -89,6 +89,7 @@ while ($data = dbarray($result)) {
 					$html .= "</li>\n";
 				}
 			}
+			$html .= "</li>\n";
 			$html .= "</ul>\n";
 		}
 		return $html;

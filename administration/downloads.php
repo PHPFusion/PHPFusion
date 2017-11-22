@@ -404,7 +404,7 @@ if (!empty($result)) {
 		//echo form_fileinput('', 'download_file', 'download_file', DOWNLOADS, array('max_size'=>$settings['download_max_b'])); // all file types.
 		echo "<input type='file' name='download_file' class='textbox' style='width:100%' /><br />\n";
 		echo sprintf($locale['433'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
-		echo "<label><input type='checkbox' name='calc_upload' id='calc_upload' value='1' /> ".$locale['432']."</label>\n";
+		echo "<label><input type='checkbox' name='calc_upload' id='calc_upload' value='1' /> ".$locale['432']."</label>.<br />\n";
 	}
 	echo "</td>\n</tr>\n";
 	if ($settings['download_screenshot']) {
