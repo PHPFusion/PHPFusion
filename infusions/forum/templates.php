@@ -960,9 +960,10 @@ if (!function_exists('render_thread')) {
         }
 
         if (!empty($pdata)) {
+            $i = 1;
             foreach ($pdata as $post_id => $post_data) {
                 // once i run this, the instance poofed because the cache...
-                $post_items = render_post_item($post_data);
+                $post_items = render_post_item($post_data, $i);
                 //$post_items = '';
                 if ($post_id == $info['post_firstpost']) {
                     $html->set_block('post_firstpost_item', ['content' => $post_items]);
@@ -983,6 +984,8 @@ if (!function_exists('render_thread')) {
                 } else {
                     $html->set_block('post_item', ['content' => $post_items]);
                 }
+
+                $i++;
             }
         }
 
@@ -1020,7 +1023,7 @@ if (!function_exists('render_thread')) {
 
 /* Post Item */
 if (!function_exists('render_post_item')) {
-    function render_post_item($data) {
+    function render_post_item($data, $item_id = 0) {
         $html = \PHPFusion\Template::getInstance('forum_post');
         $html->set_template(FORUM.'templates/forum_post_item.html');
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
@@ -1029,6 +1032,7 @@ if (!function_exists('render_post_item')) {
         $html->set_tag('post_html_comment', "<!--forum_thread_prepost_".$data['post_id']."-->");
         $html->set_tag('post_date', $data['post_shortdate']);
         $html->set_tag('item_marker_id', $data['marker']['id']);
+        $html->set_tag('item_id', $item_id);
         $html->set_tag('user_avatar', $data['user_avatar_image']);
         $html->set_tag('user_avatar_rank', ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>" : ''));
         $html->set_tag('user_rank', ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>".$data['user_rank']."</span>" : ''));
