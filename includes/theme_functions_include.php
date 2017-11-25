@@ -460,7 +460,7 @@ function tab_active($tab_title, $default_active, $link_mode=false) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
 		$count = count($tab_title['title']);
 		if ($count > 0) {
-			for ($i = 0; $i <= $count; $i++) {
+			for ($i = 1; $i <= $count; $i++) {
 				$id = $tab_title['id'][$i];
 				if ($section == $id) {
 					return $id;
