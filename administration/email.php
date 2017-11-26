@@ -32,7 +32,9 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 if (isset($_POST['save_template'])) {
-	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
+//	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
+	// Defender does not work with hidden input fields, so workaround below
+	$template_id = isset($_POST['template_id']) && isnum($_POST['template_id']) ? $_POST['template_id'] : 0;
 	$template_format = form_sanitizer($_POST['template_format'], '', 'template_format');
 	$template_subject = form_sanitizer($_POST['template_subject'], '', 'template_subject');
 	$template_content = form_sanitizer($_POST['template_content'], '', 'template_content');
@@ -88,16 +90,21 @@ if (dbrows($result) != 0) {
 		}
 	}
 }
+$j= 1;
 foreach ($template as $id => $tname) {
-	$tab_title['title'][$id] = $tname;
-	$tab_title['id'][$id] = $id;
-	$tab_title['icon'][$id] = '';
+	$tab_title['title'][$j] = $tname;
+	$tab_title['id'][$j] = $j;
+	$tab_title['idx'][$j] = $id;	// added extra index to hold the index of the template in teh table
+	$tab_title['icon'][$j] = '';
+	$j++;
 }
+
 $_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
 $tab_active = tab_active($tab_title, $_GET['section'], 1);
 echo opentab($tab_title, $tab_active, 'menu', "email.php");
 echo opentabbody($tab_title['title'][$_GET['section']], $_GET['section'], $tab_active);
-$template_id = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : 0;
+$template_idi = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : 0;
+$template_id = $tab_title['idx'][$template_idi];  // Get index on the DB fro the new array key
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".$template_id."' LIMIT 1");
 if (dbrows($result)) {
 	$data = dbarray($result);
