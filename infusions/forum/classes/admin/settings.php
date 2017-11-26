@@ -355,7 +355,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo openform('forum_post_settings_frm', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         ?>
         <div class='clearfix'>
-            <?php echo form_button('save_forum_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']);
+            <?php echo form_button('save_forum_post_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']);
             echo form_button('recount_user_post', self::$locale['523'], '1');
             ?>
         </div>
