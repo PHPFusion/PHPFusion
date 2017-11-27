@@ -96,15 +96,32 @@ if (!function_exists('filename_exists')) {
 if (!function_exists('set_setting')) {
     // Sets the value of a setting in the settings_inf table
     function set_setting($setting_name, $setting_value, $setting_inf) {
-        $set_result = dbquery("SELECT settings_name FROM ".DB_SETTINGS_INF." WHERE settings_name='".$setting_name."' AND settings_inf='".$setting_inf."'");
         $return = TRUE;
-        if (dbrows($set_result)) {
-            $up_result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".$setting_value."' WHERE settings_name='".$setting_name."' AND settings_inf='".$setting_inf."'");
+
+        $bind = [
+            ':settings_name'  => $setting_name,
+            ':settings_inf'   => $setting_inf
+        ];
+
+        $resultQuery = "SELECT settings_name
+            FROM ".DB_SETTINGS_INF."
+            WHERE settings_name=:settings_name AND settings_inf=:settings_inf
+            ";
+
+        $result = dbquery($resultQuery, $bind);
+
+        $binds = [
+            ':settings_name'  => $setting_name,
+            ':settings_value' => $setting_value,
+            ':settings_inf'   => $setting_inf
+        ];
+        if (dbrows($result)) {
+            $up_result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:settings_value WHERE settings_name=:settings_name AND settings_inf=:settings_inf", $binds);
             if (!$up_result) {
                 $return = FALSE;
             }
         } else {
-            $in_result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$setting_name."', '".$setting_value."', '".$setting_inf."')");
+            $in_result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES (:settings_name, :settings_value, :settings_inf)", $binds);
             if (!$in_result) {
                 $return = FALSE;
             }
