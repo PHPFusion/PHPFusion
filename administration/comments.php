@@ -88,8 +88,8 @@ class Comments_Admin {
             $master_tab_title['icon'][] = 'fa fa-edit';
         }
 
-        opentable($this->locale['400']);
-        echo opentab($master_tab_title, $_GET['section'], 'comments_view', true);
+        opentable($this->locale['401']);
+        echo opentab($master_tab_title, $_GET['section'], 'comments_view', true, 'nav-tabs m-b-20');
 
         switch ($_GET['section']) {
             case "comments_view":
@@ -185,32 +185,33 @@ class Comments_Admin {
             $navresult = dbquery(self::get_NavQuery());
             $navrows = dbrows($navresult);
         }
+
         $info = [
             'table_name' => \PHPFusion\Admins::getInstance()->getCommentType($_GET['ctype'])." ".$this->locale['401'],
             'buttons'    => $this->comments_Button(),
             'no_data'    => (!$row) ? "<div class='alert alert-info text-center'>".$this->locale['434']."</div>\n" : '',
-            'page_nav'   => makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".$_GET['ctype'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;")
+            'page_nav'   => '<div class="m-t-5 m-b-5">'.makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".$_GET['ctype'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;").'</div>'
         ];
 
         if (self::$rows > 0) {
             if ($navrows) {
                 while ($data = dbarray($navresult)) {
-    	            $info['item_id'][$data['comment_item_id']] = $data['comment_item_id'];
+                    $info['item_id'][$data['comment_item_id']] = $data['comment_item_id'];
                 }
             }
 
             if ($row) {
 
                 while ($data = dbarray($result)) {
-    	            $info['data'][] = [
-    	                'edit_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".$_GET['ctype']."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
-    	                'del_link'  => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
-    	                'profile'   => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
-    	                'date'      => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
-    	                'ip'        => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
-    	                'subject'   => !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "",
-    	                'messages'  => "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."<hr>\n</div>\n",
-    	            ];
+                    $info['data'][] = [
+                        'edit_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".$_GET['ctype']."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
+                        'del_link'  => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
+                        'profile'   => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
+                        'date'      => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
+                        'ip'        => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
+                        'subject'   => !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "",
+                        'messages'  => "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."</div>\n",
+                    ];
                 }
             }
         }
@@ -220,40 +221,29 @@ class Comments_Admin {
     }
 
     public function reder_commentAdmin($info) {
-    	if (!empty($info)) {
-    		echo $info['buttons'];
-    		echo "<div class='display-block'>\n";
-            echo "<div class='display-inline-block pull-right'>".$info['page_nav']."</div>\n";
-    		if (!empty($info['item_id'])) {
-    		    echo "<div id='extDiv' ".(empty($info['item_id']) ? "style='display:none;'" : '')." class='text-center'>\n";
-                echo "<nav aria-label='Page navigation'>\n";
-                echo "<ul class='pagination pagination-sm'>\n";
-                foreach ($info['item_id'] as $ittemId){
-                    echo "<li".((!empty($_GET['comment_item_id']) && $_GET['comment_item_id'] == $ittemId) ? " class='active'" : '')."><a href='".FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$ittemId."'>".$ittemId."</a>\n</li>\n";
+        if (!empty($info)) {
+            echo $info['buttons'];
 
-                }
-                echo "</ul>\n</nav>\n";
-                echo "</div>\n";
-            }
-            echo "</div>\n";
-
-    		if (!empty($info['data'])) {
-   			    foreach ($info['data'] as $key => $coment) {
+            if (!empty($info['data'])) {
+                echo '<div class="list-group">';
+                foreach ($info['data'] as $key => $coment) {
                     echo "<div class='list-group-item'>\n";
                     echo "<div class='btn-group pull-right'>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['edit_link']."'>".$this->locale['edit']."</a>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['del_link']."'>".$this->locale['delete']."</a>\n";
                     echo "</div>\n";
-                    echo $coment['profile'].$coment['date'].$coment['ip'];
+                    echo $coment['profile'].' '.$coment['date'].$coment['ip'];
                     echo $coment['subject'];
                     echo $coment['messages'];
                     echo "</div>\n";
+                }
+                echo '</div>';
+            }
 
-    			}
-    		}
-    	echo !empty($info['no_data']) ? $info['no_data'] : '';
-    	}
+            echo $info['page_nav'];
 
+            echo !empty($info['no_data']) ? $info['no_data'] : '';
+        }
     }
 
     private static function delete_comments($comment_id) {
