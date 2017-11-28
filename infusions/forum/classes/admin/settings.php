@@ -318,7 +318,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         if (isset($_POST['save_forum_post_settings'])) {
             $inputArray = array(
                 'forum_ips'                  => form_sanitizer($_POST['forum_ips'], USER_LEVEL_SUPER_ADMIN, 'forum_ips'),
-                'attachmax'                  => form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000, 'calc_c'),
+                'forum_attachmax'            => form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000, 'calc_c'),
                 'forum_attachmax_count'      => form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count'),
                 'forum_attachtypes'          => form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes'),
                 'forum_edit_lock'            => form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock'),
@@ -377,6 +377,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 sort($mime_opts);
 
                 echo form_text('calc_b', self::$locale['508'], $calc_b, [
+                    'options'     => $calc_b,
                     'required'    => TRUE,
                     'type'        => 'number',
                     'error_text'  => self::$locale['error_rate'],
