@@ -433,8 +433,9 @@ class ForumAdminSettings extends ForumAdminInterface {
                     'error_text' => self::$locale['error_value'],
                     'inline'     => TRUE
                 ]);
+                $yes_no_extarray = ['1' => self::$locale['yes'], USER_LEVEL_SUPER_ADMIN => self::$locale['no']];
                 echo form_select('forum_ips', self::$locale['507'], $forum_settings['forum_ips'], [
-                    'options'    => $yes_no_array,
+                    'options'    => $yes_no_extarray,
                     'error_text' => self::$locale['error_value'],
                     'inline'     => TRUE
                 ]);
