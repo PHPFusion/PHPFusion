@@ -377,7 +377,6 @@ class ForumAdminSettings extends ForumAdminInterface {
                 sort($mime_opts);
 
                 echo form_text('calc_b', self::$locale['508'], $calc_b, [
-                    'options'     => $calc_b,
                     'required'    => TRUE,
                     'type'        => 'number',
                     'error_text'  => self::$locale['error_rate'],
@@ -419,7 +418,6 @@ class ForumAdminSettings extends ForumAdminInterface {
             <div class='col-xs-12 col-sm-6'>
                 <?php
                 openside(self::$locale['forum_143']);
-                echo "<span class='pull-right position-absolute small' style='right:30px;'>".self::$locale['537']."</span>\n";
                 echo form_btngroup('forum_edit_timelimit', self::$locale['536'], $forum_settings['forum_edit_timelimit'], [
                     'options'    => [
                         '0',
@@ -432,6 +430,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     'width'      => '100px',
                     'required'   => TRUE,
                     'error_text' => self::$locale['error_value'],
+                    'ext_tip'    => self::$locale['537'],
                     'inline'     => TRUE
                 ]);
                 $yes_no_extarray = ['1' => self::$locale['yes'], USER_LEVEL_SUPER_ADMIN => self::$locale['no']];

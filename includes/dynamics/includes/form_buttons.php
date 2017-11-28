@@ -22,7 +22,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
 
     $input_value = stripinput($input_value);
 
-    $default_options = array(
+    $default_options = [
         'input_id'    => $input_name,
         'input_value' => $input_name,
         'class'       => "btn-default",
@@ -33,7 +33,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'block'       => FALSE,
         'alt'         => $title,
         'data'        => [],
-    );
+    ];
 
     $options = $options + $default_options;
 
@@ -71,20 +71,21 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
 
-    $default_options = array(
-        'options'        => array($locale['disable'], $locale['enable']),
+    $default_options = [
+        'options'        => [$locale['disable'], $locale['enable']],
         'input_id'       => $input_name,
         'class'          => "btn-default",
         'icon'           => "",
-        "multiple"       => FALSE,
-        "delimiter"      => ",",
+        'multiple'       => FALSE,
+        'delimiter'      => ",",
         'deactivate'     => FALSE,
         'error_text'     => "",
         'inline'         => FALSE,
         'safemode'       => FALSE,
         'required'       => FALSE,
+        'ext_tip'        => '',
         'callback_check' => '',
-    );
+    ];
 
     $options += $default_options;
 
@@ -96,7 +97,7 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addNotice('danger', "<strong>$title</strong> - ".$options['error_text']);
         }
     }
 
@@ -118,23 +119,24 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $html .= "</div>\n";
     $html .= "<input name='$input_name' type='hidden' id='".$options['input_id']."-text' value='$input_value' />\n";
 
+    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
 
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
-    \defender::getInstance()->add_field_session(array(
-                                     'input_name'     => $input_name,
-                                     'title'          => trim($title, '[]'),
-                                     'id'             => $options['input_id'],
-                                     'type'           => 'dropdown',
-                                     'required'       => $options['required'],
-                                     'callback_check' => $options['callback_check'],
-                                     'safemode'       => $options['safemode'],
-                                     'error_text'     => $options['error_text'],
-                                     'delimiter'      => $options['delimiter'],
-                                 ));
+    \defender::getInstance()->add_field_session([
+        'input_name'     => $input_name,
+        'title'          => trim($title, '[]'),
+        'id'             => $options['input_id'],
+        'type'           => 'dropdown',
+        'required'       => $options['required'],
+        'callback_check' => $options['callback_check'],
+        'safemode'       => $options['safemode'],
+        'error_text'     => $options['error_text'],
+        'delimiter'      => $options['delimiter'],
+    ]);
     add_to_jquery("
     $('#".$options['input_id']." button').bind('click', function(e){
         $('#".$options['input_id']." button').removeClass('active');
