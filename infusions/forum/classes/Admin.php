@@ -503,7 +503,7 @@ class Admin extends ForumServer {
                                                                                                                                            'forum_id',
                                                                                                                                            'forum_cat',
                                                                                                                                            $action_data['subforums_to_forum'])."'
-				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
+                ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } elseif (!$action_data['delete_forums']) {
                             \defender::stop();
                             addNotice('danger', $locale['forum_notice_na']);
@@ -622,7 +622,7 @@ class Admin extends ForumServer {
         }
         // calculate and update total combined postcount on all threads to forum
         $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-		WHERE forum_id='".$forum_id."' GROUP BY forum_id");
+        WHERE forum_id='".$forum_id."' GROUP BY forum_id");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -1016,7 +1016,7 @@ class Admin extends ForumServer {
             'forum_type' => !empty($data['forum_type']) ? $data['forum_type'] : '', // redirect if not exist? no..
         );
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_030']]);
-        opentable($locale['forum_030']);
+        opentable($locale['forum_030'], 'm-t-15');
         $_access = getusergroups();
         $access_opts['0'] = $locale['531'];
         while (list($key, $option) = each($_access)) {
@@ -1161,10 +1161,10 @@ class Admin extends ForumServer {
         ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
         echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".$locale['forum_044']."</label>\n";
         add_to_jquery("
-	$('#forum_jump').change(function() {
-		location = '".FUSION_SELF.$aidlink."&parent_id='+$(this).val();
-	});
-	");
+    $('#forum_jump').change(function() {
+        location = '".FUSION_SELF.$aidlink."&parent_id='+$(this).val();
+    });
+    ");
         echo "</div>\n";
     }
 
@@ -1189,9 +1189,9 @@ class Admin extends ForumServer {
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows) ? intval($_GET['rowstart']) : 0;
 
         $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
-			".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
-			 ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
-			 ");
+            ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
+             ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
+             ");
 
         $rows = dbrows($result);
 

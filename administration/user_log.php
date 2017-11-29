@@ -51,7 +51,8 @@ if (isset($_POST) && !empty($_POST)) {
             $dbOrder .= " ".$expr;
         }
     }
-    if (isset($_POST['user'])) {        $user = form_sanitizer($_POST['user'], '', 'user');
+    if (isset($_POST['user'])) {
+        $user = form_sanitizer($_POST['user'], '', 'user');
 
         if (isnum($user)) {
             $dbWhere = "userlog_user_id='".$user."'";
@@ -73,14 +74,16 @@ if (isset($_POST) && !empty($_POST)) {
 
 // End $_GET Vars
 if (isset($_POST['log_id'])) {
-    if (isset($_POST['table_action']) && isset($_POST['log_id'])) {        $input = (isset($_POST['log_id'])) ? explode(",", form_sanitizer($_POST['log_id'], "", "log_id")) : "";
+    if (isset($_POST['table_action']) && isset($_POST['log_id'])) {
+        $input = (isset($_POST['log_id'])) ? explode(",", form_sanitizer($_POST['log_id'], "", "log_id")) : "";
         if (!empty($input)) {
             foreach ($input as $log_id) {
                 dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:logid", [':logid' => $log_id]);
             }
         }
     }
-    addNotice('info', $locale['UL_006']);
+
+    addNotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], false));
 }
 
