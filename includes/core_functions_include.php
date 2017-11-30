@@ -1650,7 +1650,9 @@ function fusion_get_user($user_id, $key = NULL) {
         // check how many times this query is made with the same user.
         $performance_test = $performance_test + 1;
     }
-
+    if (!isset($user[$user_id])) {
+        return NULL;
+    }
     return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : '');
 }
 
