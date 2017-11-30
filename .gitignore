@@ -12,3 +12,4 @@ config.php
 config-copy.php
 *.db
 .htaccess
+/home.php
