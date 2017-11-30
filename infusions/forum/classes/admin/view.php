@@ -1007,9 +1007,9 @@ class ForumAdminView extends ForumAdminInterface {
         unset($options[-101]); // no member group to moderate, unset.
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
-        opentable(self::$locale['forum_030']);
+        opentable(self::$locale['forum_030'], 'm-t-15');
         echo openform('permissionsForm', 'post', FUSION_REQUEST);
-        echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006']." : ".$data['forum_name']."</span>\n";
+        echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006'].": ".$data['forum_name']."</span>\n";
         openside();
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_000']."</span><br/>\n";
         echo form_select('forum_access', self::$locale['forum_031'], $data['forum_access'], array(

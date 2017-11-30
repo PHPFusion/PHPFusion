@@ -318,7 +318,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         if (isset($_POST['save_forum_post_settings'])) {
             $inputArray = array(
                 'forum_ips'                  => form_sanitizer($_POST['forum_ips'], USER_LEVEL_SUPER_ADMIN, 'forum_ips'),
-                'attachmax'                  => form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000, 'calc_c'),
+                'forum_attachmax'            => form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000, 'calc_c'),
                 'forum_attachmax_count'      => form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count'),
                 'forum_attachtypes'          => form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes'),
                 'forum_edit_lock'            => form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock'),
@@ -355,7 +355,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo openform('forum_post_settings_frm', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         ?>
         <div class='clearfix'>
-            <?php echo form_button('save_forum_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']);
+            <?php echo form_button('save_forum_post_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']);
             echo form_button('recount_user_post', self::$locale['523'], '1');
             ?>
         </div>
@@ -418,7 +418,6 @@ class ForumAdminSettings extends ForumAdminInterface {
             <div class='col-xs-12 col-sm-6'>
                 <?php
                 openside(self::$locale['forum_143']);
-                echo "<span class='pull-right position-absolute small' style='right:30px;'>".self::$locale['537']."</span>\n";
                 echo form_btngroup('forum_edit_timelimit', self::$locale['536'], $forum_settings['forum_edit_timelimit'], [
                     'options'    => [
                         '0',
@@ -431,10 +430,12 @@ class ForumAdminSettings extends ForumAdminInterface {
                     'width'      => '100px',
                     'required'   => TRUE,
                     'error_text' => self::$locale['error_value'],
+                    'ext_tip'    => self::$locale['537'],
                     'inline'     => TRUE
                 ]);
+                $yes_no_extarray = ['1' => self::$locale['yes'], USER_LEVEL_SUPER_ADMIN => self::$locale['no']];
                 echo form_select('forum_ips', self::$locale['507'], $forum_settings['forum_ips'], [
-                    'options'    => $yes_no_array,
+                    'options'    => $yes_no_extarray,
                     'error_text' => self::$locale['error_value'],
                     'inline'     => TRUE
                 ]);
