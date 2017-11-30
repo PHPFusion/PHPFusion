@@ -98,7 +98,7 @@ abstract class News extends NewsServer {
         $array = array();
         $array['news_categories'][0][0] = array(
             'link' => INFUSIONS."news/news.php?cat_id=0",
-            'name' => self::$locale['news_0006']
+            'name' => fusion_get_locale('news_0006', NEWS_LOCALE)
         );
         $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility 
         FROM ".DB_NEWS_CATS."
