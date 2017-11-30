@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
@@ -66,12 +66,12 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
             $content .= "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
             if ($inf['status'] > 0) {
                 if ($inf['status'] > 1) {
-                    $content .= form_button('infuse', $locale['416'], $inf['folder'], array('class' => 'btn-info m-t-5 infuse', 'icon' => ' fa fa-magnet', 'input_id' => 'infuse_'.$i));
+                    $content .= form_button('infuse', $locale['416'], $inf['folder'], ['class' => 'btn-info m-t-5 infuse', 'icon' => ' fa fa-magnet', 'input_id' => 'infuse_'.$i]);
                 } else {
-                    $content .= form_button('defuse', $locale['411'], $inf['folder'], array('class' => 'btn-default m-t-5 defuse', 'icon' => 'fa fa-trash', 'input_id' => 'defuse_'.$i));
+                    $content .= form_button('defuse', $locale['411'], $inf['folder'], ['class' => 'btn-default m-t-5 defuse', 'icon' => 'fa fa-trash', 'input_id' => 'defuse_'.$i]);
                 }
             } else {
-                $content .= form_button('infuse', $locale['401'], $inf['folder'], array('class' => 'btn-primary m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i));
+                $content .= form_button('infuse', $locale['401'], $inf['folder'], ['class' => 'btn-primary m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i]);
             }
             $content .= "</div>\n";
             $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n";

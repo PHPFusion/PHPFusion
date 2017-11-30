@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 if (!iADMIN || fusion_get_userdata('user_rights') == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
@@ -88,32 +88,35 @@ if (infusion_exists('gallery')) {
     $photos['comment'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P'");
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }
-$comments_type = array(
+$comments_type = [
     'C'  => $locale['272a'],
     'UP' => $locale['UP']
-);
+];
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
 
-$submit_type = array();
+$submit_type = [];
 $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
 
-$submit_link = array();
+$submit_link = [];
 $submit_link += \PHPFusion\Admins::getInstance()->getSubmitLink();
 
-$submit_data = array();
+$submit_data = [];
 $submit_data += \PHPFusion\Admins::getInstance()->getSubmitData();
 
-$link_type = array(
+$link_type = [
     'C'  => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
     'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
-);
+];
 $link_type += \PHPFusion\Admins::getInstance()->getLinkType();
 
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
-$global_infusions = array();
+$global_infusions = [];
 if ($infusions_count > 0) {
-    $inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS." ORDER BY inf_id ASC");
+    $inf_result = dbquery("SELECT *
+        FROM ".DB_INFUSIONS."
+        ORDER BY inf_id ASC
+    ");
     while ($_inf = dbarray($inf_result)) {
         $global_infusions[$_inf['inf_id']] = $_inf;
     }
@@ -123,13 +126,14 @@ if ($infusions_count > 0) {
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
 $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-                            FROM ".DB_COMMENTS." c LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
+                            FROM ".DB_COMMENTS." c
+                            LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
                             ORDER BY comment_datestamp DESC LIMIT 5
                             ");
 if ($global_comments['rows'] > $settings['comments_per_page']) {
     $global_comments['nav'] = makepagenav($_GET['c_rowstart'], $settings['comments_per_page'], $global_comments['rows'], 2);
 }
-$global_comments['data'] = array();
+$global_comments['data'] = [];
 if (dbrows($comments_result)) {
     while ($_comdata = dbarray($comments_result)) {
         $global_comments['data'][] = $_comdata;
@@ -141,9 +145,11 @@ if (dbrows($comments_result)) {
 $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
 $_GET['r_rowstart'] = isset($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? $_GET['r_rowstart'] : 0;
 $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-                    FROM ".DB_RATINGS." r LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
-                    ORDER BY rating_datestamp DESC LIMIT 5");
-$global_ratings['data'] = array();
+                    FROM ".DB_RATINGS." r
+                    LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
+                    ORDER BY rating_datestamp DESC LIMIT 5
+                    ");
+$global_ratings['data'] = [];
 if (dbrows($result) > 0) {
     while ($_ratdata = dbarray($result)) {
         $global_ratings['data'][] = $_ratdata;
@@ -158,10 +164,11 @@ if ($global_ratings['rows'] > $settings['comments_per_page']) {
 $global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
 $_GET['s_rowstart'] = isset($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? $_GET['s_rowstart'] : 0;
 $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-                FROM ".DB_SUBMISSIONS." s LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
-                ORDER BY submit_datestamp DESC LIMIT ".$_GET['s_rowstart'].", ".$settings['comments_per_page']."
-                ");
-$global_submissions['data'] = array();
+                FROM ".DB_SUBMISSIONS." s
+                LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
+                ORDER BY submit_datestamp DESC LIMIT :limit, :limit2
+                ", [':limit' => $_GET['s_rowstart'], ':limit2' => $settings['comments_per_page']]);
+$global_submissions['data'] = [];
 if (dbrows($result) > 0 && checkrights('SU')) {
     while ($_subdata = dbarray($result)) {
         $global_submissions['data'][] = $_subdata;
@@ -175,9 +182,13 @@ if ($global_submissions['rows'] > $settings['comments_per_page']) {
 }
 // Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
-    $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' ORDER BY admin_title");
+    $result = dbquery("SELECT *
+        FROM ".DB_ADMIN."
+        WHERE admin_page=:adminpage
+        ORDER BY admin_title
+    ", [':adminpage' => $_GET['pagenum']]);
     $admin_icons['rows'] = dbrows($result);
-    $admin_icons['data'] = array();
+    $admin_icons['data'] = [];
     if (dbrows($result)) {
         while ($_idata = dbarray($result)) {
             if (checkrights($_idata['admin_rights']) && $_idata['admin_link'] != "reserved") {

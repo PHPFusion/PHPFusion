@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess('SU');
 include THEME."theme.php";
 include THEMES.'templates/render_functions.php';
@@ -24,7 +24,11 @@ $urlprefix = "";
 $url = BASEDIR."index.php";
 
 if (isset($_GET['id']) && isnum($_GET['id'])) {
-    $result = dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='l' AND submit_id='".$_GET['id']."'");
+	$id = form_sanitizer($_GET['id'], '', 'id');
+    $result = dbquery("SELECT submit_criteria
+        FROM ".DB_SUBMISSIONS."
+        WHERE submit_type=:typ AND submit_id=:id", [':typ' => 'l', ':id' => $id]
+    );
     if (dbrows($result)) {
         $data = dbarray($result);
         $submit_criteria = unserialize($data['submit_criteria']);
