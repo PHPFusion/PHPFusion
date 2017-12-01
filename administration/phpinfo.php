@@ -30,31 +30,31 @@ $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowe
 
 $master_tab_title['title'][] = $locale['401'];
 $master_tab_title['id'][] = 'general';
-$master_tab_title['icon'][] = "fa fa-fw fa-image";
+$master_tab_title['icon'][] = "";
 $master_tab_title['title'][] = $locale['420'];
 $master_tab_title['id'][] = 'phpsettings';
-$master_tab_title['icon'][] = "fa fa-fw fa-image";
+$master_tab_title['icon'][] = "";
 $master_tab_title['title'][] = $locale['440'];
 $master_tab_title['id'][] = 'folderpermission';
-$master_tab_title['icon'][] = "fa fa-fw fa-image";
+$master_tab_title['icon'][] = "";
 $master_tab_title['title'][] = $locale['450'];
 $master_tab_title['id'][] = 'details';
-$master_tab_title['icon'][] = "fa fa-fw fa-image";
+$master_tab_title['icon'][] = "";
 
 opentable($locale['400']);
-echo opentab($master_tab_title, $_GET['section'], 'general', true);
+echo opentab($master_tab_title, $_GET['section'], 'general', TRUE, 'nav-tabs m-b-15');
 switch ($_GET['section']) {
     case "phpsettings":
-            phpsettings();
+        phpsettings();
         break;
     case "folderpermission":
-            folderpermission();
+        folderpermission();
         break;
     case "details":
-            details();
+        details();
         break;
     default:
-            general();
+        general();
         break;
 }
 echo closetab();
@@ -98,48 +98,48 @@ function phpsettings() {
     $phpinfo .= "<tr>\n<td class='tbl1' style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? ini_get('disable_functions') : $locale['430'])."</td></tr>\n";
     $phpinfo .= "</table>\n";
     echo $phpinfo;
-    }
+}
 
 function folderpermission() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
     $status = '';
     $folders = [ //path => have to be writeable or not
-        'administration/db_backups/'       => TRUE,
-        'images/'                          => TRUE,
-        'images/imagelist.js'              => TRUE,
-        'images/avatars/'                  => TRUE,
-        'images/smiley/'                   => TRUE,
-        'infusions/articles/images/'       => infusion_exists('articles'),
-        'infusions/blog/images/'           => infusion_exists('blog'),
-        'infusions/blog/images/thumbs/'    => infusion_exists('blog'),
-        'infusions/downloads/files/'       => infusion_exists('downloads'),
-        'infusions/downloads/images/'      => infusion_exists('downloads'),
-        'infusions/downloads/submissions/' => infusion_exists('downloads'),
-        'infusions/downloads/submissions/images/' => infusion_exists('downloads'),
-        'infusions/forum/attachments/'     => infusion_exists('forum'),
-        'infusions/forum/images/'          => infusion_exists('forum'),
-        'infusions/gallery/photos/'        => infusion_exists('gallery'),
-        'infusions/gallery/photos/thumbs/' => infusion_exists('gallery'),
-        'infusions/gallery/submissions/'   => infusion_exists('gallery'),
-        'infusions/gallery/submissions/thumbs/' => infusion_exists('gallery'),
-        'infusions/news/images/'           => infusion_exists('news'),
-        'infusions/news/images/thumbs/'    => infusion_exists('news'),
-        'robots.txt'                       => TRUE,
-        'config.php'                       => FALSE
+                 'administration/db_backups/'              => TRUE,
+                 'images/'                                 => TRUE,
+                 'images/imagelist.js'                     => TRUE,
+                 'images/avatars/'                         => TRUE,
+                 'images/smiley/'                          => TRUE,
+                 'infusions/articles/images/'              => infusion_exists('articles'),
+                 'infusions/blog/images/'                  => infusion_exists('blog'),
+                 'infusions/blog/images/thumbs/'           => infusion_exists('blog'),
+                 'infusions/downloads/files/'              => infusion_exists('downloads'),
+                 'infusions/downloads/images/'             => infusion_exists('downloads'),
+                 'infusions/downloads/submissions/'        => infusion_exists('downloads'),
+                 'infusions/downloads/submissions/images/' => infusion_exists('downloads'),
+                 'infusions/forum/attachments/'            => infusion_exists('forum'),
+                 'infusions/forum/images/'                 => infusion_exists('forum'),
+                 'infusions/gallery/photos/'               => infusion_exists('gallery'),
+                 'infusions/gallery/photos/thumbs/'        => infusion_exists('gallery'),
+                 'infusions/gallery/submissions/'          => infusion_exists('gallery'),
+                 'infusions/gallery/submissions/thumbs/'   => infusion_exists('gallery'),
+                 'infusions/news/images/'                  => infusion_exists('news'),
+                 'infusions/news/images/thumbs/'           => infusion_exists('news'),
+                 'robots.txt'                              => TRUE,
+                 'config.php'                              => FALSE
     ];
     add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
     //Check file/folder writeable
     $i = 0;
-        foreach ($folders as $folder => $writeable) {
-            $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
-            if (is_writable(BASEDIR.$folder) == TRUE) {
-                $status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['441']."</span>";
-            } else {
-                $status .= "<span class='".($writeable == TRUE ? "failed" : "passed")."'>".$locale['442']."</span>";
-            }
-            $status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
-            $i++;
+    foreach ($folders as $folder => $writeable) {
+        $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
+        if (is_writable(BASEDIR.$folder) == TRUE) {
+            $status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['441']."</span>";
+        } else {
+            $status .= "<span class='".($writeable == TRUE ? "failed" : "passed")."'>".$locale['442']."</span>";
         }
+        $status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
+        $i++;
+    }
     $phpinfo = "<table class='table table-hover table-striped table-responsive tab' id='folders'>\n";
     $phpinfo .= $status;
     $phpinfo .= "</table>\n";
@@ -151,7 +151,7 @@ function details() {
     if (!stristr(ini_get('disable_functions'), "phpinfo")) {
         //Generating new phpinfo style, compatible with PHP-Fusion styles
         ob_start();
-        $phpinfo = phpinfo();
+        phpinfo();
         $phpinfo = ob_get_contents();
         ob_end_clean();
         $phpinfo = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $phpinfo);
@@ -169,4 +169,5 @@ function details() {
     }
     echo $phpinfo;
 }
+
 require_once THEMES."templates/footer.php";

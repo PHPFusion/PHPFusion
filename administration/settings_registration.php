@@ -22,14 +22,14 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
 
 $settings2 = [
-        'login_method'       => fusion_get_settings('login_method'),
-        'license_agreement'  => fusion_get_settings('license_agreement'),
-        'enable_registration' => fusion_get_settings('enable_registration'),
-        'email_verification'  => fusion_get_settings('email_verification'),
-        'admin_activation'    => fusion_get_settings('admin_activation'),
-        'display_validation'  => fusion_get_settings('display_validation'),
-        'enable_terms'        => fusion_get_settings('enable_terms'),
-        'license_lastupdate'  => fusion_get_settings('license_lastupdate')
+    'login_method'        => fusion_get_settings('login_method'),
+    'license_agreement'   => fusion_get_settings('license_agreement'),
+    'enable_registration' => fusion_get_settings('enable_registration'),
+    'email_verification'  => fusion_get_settings('email_verification'),
+    'admin_activation'    => fusion_get_settings('admin_activation'),
+    'display_validation'  => fusion_get_settings('display_validation'),
+    'enable_terms'        => fusion_get_settings('enable_terms'),
+    'license_lastupdate'  => fusion_get_settings('license_lastupdate')
 ];
 
 if (isset($_POST['savesettings'])) {

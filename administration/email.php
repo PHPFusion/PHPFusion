@@ -38,7 +38,7 @@ if (isset($_POST['save_template'])) {
         addNotice('success', $locale['MAIL_001']);
         redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
-} elseif (isset($_POST['test_template'])) {
+} else if (isset($_POST['test_template'])) {
     $data = [
         'template_id'           => form_sanitizer($_POST['template_id'], '', 'template_id'),
         'template_key'          => form_sanitizer($_POST['template_key'], '', 'template_key'),
@@ -53,7 +53,7 @@ if (isset($_POST['save_template'])) {
         require_once INCLUDES."sendmail_include.php";
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, 'update');
         sendemail_template($data['template_key'], $locale['MAIL_002'], $locale['MAIL_003'], $locale['MAIL_004'], $locale['MAIL_005'], $locale['MAIL_006'],
-                           fusion_get_userdata('user_email'), $data['template_sender_name'], $data['template_sender_email']);
+            fusion_get_userdata('user_email'), $data['template_sender_name'], $data['template_sender_email']);
         addNotice('success', sprintf($locale['MAIL_007'], fusion_get_userdata('user_email')));
         redirect(FUSION_SELF.fusion_get_aidlink()."&amp;template_id=".$data['template_id']);
     }
@@ -82,7 +82,9 @@ opentable($locale['MAIL_000']);
 
 echo opentab($tab_title, $_GET['section'], "email-templates-tab", TRUE);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], TRUE);
-$result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id=:templateid LIMIT 1", [':templateid' =>$_GET['section']]);
+$result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id=:templateid LIMIT 1", [':templateid' => $_GET['section']]);
+$html_text = "";
+
 if (dbrows($result)) {
     $data = dbarray($result);
 
@@ -180,7 +182,7 @@ echo "</div>\n";
 
 openside("");
 echo form_text('template_subject', $locale['MAIL_025'], $data['template_subject'], [
-    'required'   => true,
+    'required'   => TRUE,
     'error_text' => $locale['MAIL_026'],
     'autosize'   => TRUE
 ]);

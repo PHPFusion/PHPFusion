@@ -100,7 +100,7 @@ echo form_text('smtp_host', $locale['664']."<br/>", $settings_misc['smtp_host'],
 ]);
 echo form_text('smtp_port', $locale['674'], $settings_misc['smtp_port'], [
     'max_length' => 10,
-    'inline' => TRUE
+    'inline'     => TRUE
 ]);
 echo form_select('smtp_auth', $locale['698'], $settings_misc['smtp_auth'], [
     'options' => $choice_arr,

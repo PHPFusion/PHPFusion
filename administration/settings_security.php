@@ -20,7 +20,7 @@ pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
-$available_captchas = array();
+$available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
     while (FALSE !== ($file = readdir($temp))) {
         if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
@@ -29,7 +29,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
     }
 }
 
-$Security_settings = array(
+$Security_settings = [
     'captcha'             => fusion_get_settings('captcha'),
     'recaptcha_public'    => fusion_get_settings('recaptcha_public'),
     'recaptcha_private'   => fusion_get_settings('recaptcha_private'),
@@ -46,13 +46,13 @@ $Security_settings = array(
     'bad_words'           => fusion_get_settings('bad_words'),
     'bad_word_replace'    => fusion_get_settings('bad_word_replace'),
     'user_name_ban'       => fusion_get_settings('user_name_ban')
-);
+];
 
 if (isset($_POST['savesettings'])) {
     $privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
     $maintenance_message = addslash(descript($_POST['maintenance_message']));
     // Save settings after validation
-    $Security_settings = array(
+    $Security_settings = [
         'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
         'privacy_policy'      => $privacy_policy,
         'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
@@ -64,26 +64,26 @@ if (isset($_POST['savesettings'])) {
         'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'           => form_sanitizer($_POST['bad_words'], '', 'bad_words'),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'        => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban')
-    );
+        'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban')
+    ];
     // Validate extra fields
     if ($Security_settings['captcha'] == "grecaptcha") {
         // appends captcha settings
-        $Security_settings += array(
+        $Security_settings += [
             'recaptcha_public'  => form_sanitizer($_POST['recaptcha_public'], '', 'recaptcha_public'),
             'recaptcha_private' => form_sanitizer($_POST['recaptcha_private'], '', 'recaptcha_private'),
             'recaptcha_theme'   => form_sanitizer($_POST['recaptcha_theme'], '', 'recaptcha_theme'),
             'recaptcha_type'    => form_sanitizer($_POST['recaptcha_type'], '', 'recaptcha_type'),
-        );
+        ];
     }
     if (\defender::safe()) {
         foreach ($Security_settings as $key => $value) {
-                $Array = [
-                    'settings_name'  => $key,
-                    'settings_value' => $value,
-                ];
-                dbquery_insert(DB_SETTINGS, $Array, 'update', ['primary_key' => 'settings_name']);
-            }
+            $Array = [
+                'settings_name'  => $key,
+                'settings_value' => $value,
+            ];
+            dbquery_insert(DB_SETTINGS, $Array, 'update', ['primary_key' => 'settings_name']);
+        }
         addNotice('success', $locale['900']);
     } else {
         addNotice('danger', $locale['901']);
@@ -107,11 +107,11 @@ echo "<div id='extDiv' ".($Security_settings['captcha'] !== 'grecaptcha' ? "styl
 if (!$Security_settings['recaptcha_public']) {
     $link = [
         'start' => '[RECAPTCHA_LINK]',
-        'end' => '[/RECAPTCHA_LINK]',
+        'end'   => '[/RECAPTCHA_LINK]',
     ];
     $link_replacements = [
         'start' => "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'>",
-        'end' => "</a>\n",
+        'end'   => "</a>\n",
     ];
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
     echo "<div class='alert alert-warning col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
@@ -133,9 +133,9 @@ echo form_text('recaptcha_private', $locale['grecaptcha_0101'], $Security_settin
 echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], $Security_settings['recaptcha_theme'], [
     'options' => [
         'light' => $locale['grecaptcha_0102a'],
-        'dark' => $locale['grecaptcha_0102b']
+        'dark'  => $locale['grecaptcha_0102b']
     ],
-    'inline' => TRUE
+    'inline'  => TRUE
 ]);
 echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $Security_settings['recaptcha_type'], [
     'options'  => [

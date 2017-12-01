@@ -30,12 +30,12 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
  */
 function get_default_search_opts() {
     global $locale;
-    static $search_opts = array();
-    static $filename_locale = array();
+    static $search_opts = [];
+    static $filename_locale = [];
     if (empty($search_opts)) {
-        $search_opts += array(
+        $search_opts += [
             'all' => $locale['419a'],
-        );
+        ];
         // Place converter to translate the names of the SDK files
         include LOCALE.LOCALESET."search/converter.php";
         $search_dir = INCLUDES."search/";
@@ -73,11 +73,11 @@ function validate_default_search($value) {
  * @return bool
  */
 function validate_site_port($value) {
-    return ((isnum($value) || empty($value)) && in_array($value, array(0, 80, 443)) or $value < 65001) ? TRUE : FALSE;
+    return ((isnum($value) || empty($value)) && in_array($value, [0, 80, 443]) or $value < 65001) ? TRUE : FALSE;
 }
 
 // These are the default settings and the only settings we expect to be posted
-$settings_main = array(
+$settings_main = [
     'siteintro'       => fusion_get_settings('siteintro'),
     'sitename'        => fusion_get_settings('sitename'),
     'sitebanner'      => fusion_get_settings('sitebanner'),
@@ -106,7 +106,7 @@ $settings_main = array(
     'logoposition_sm' => fusion_get_settings('logoposition_sm'),
     'logoposition_md' => fusion_get_settings('logoposition_md'),
     'logoposition_lg' => fusion_get_settings('logoposition_lg')
-);
+];
 
 // Saving settings
 if (isset($_POST['savesettings'])) {
@@ -158,7 +158,7 @@ if (isset($_POST['savesettings'])) {
                 'settings_name'  => $settings_key,
                 'settings_value' => $settings_value
             ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', array('primary_key' => 'settings_name'));
+            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
         }
         addNotice("success", $locale['900']);
         redirect(FUSION_REQUEST);
@@ -171,50 +171,50 @@ echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 echo fusion_get_function('openside', '');
 echo form_text('sitename', $locale['402'], $settings_main['sitename'], [
-               'inline'     => FALSE,
-               'max_length' => 255,
-               'required'   => TRUE,
-               'error_text' => $locale['error_value']
-               ]);
+    'inline'     => FALSE,
+    'max_length' => 255,
+    'required'   => TRUE,
+    'error_text' => $locale['error_value']
+]);
 
 echo form_text('siteemail', $locale['405'], $settings_main['siteemail'], [
-               'inline'     => FALSE,
-               'required'   => TRUE,
-               'max_length' => 128,
-               'type'       => 'email'
-               ]);
+    'inline'     => FALSE,
+    'required'   => TRUE,
+    'max_length' => 128,
+    'type'       => 'email'
+]);
 
 echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], [
-               'required'   => TRUE,
-               'inline'     => FALSE,
-               'max_length' => 32,
-               'error_text' => $locale['error_value']
-               ]);
+    'required'   => TRUE,
+    'inline'     => FALSE,
+    'max_length' => 32,
+    'error_text' => $locale['error_value']
+]);
 
 echo form_text('opening_page', $locale['413'], $settings_main['opening_page'], [
-               'required'   => TRUE,
-               'max_length' => 100,
-               'error_text' => $locale['error_value']
-               ]);
+    'required'   => TRUE,
+    'max_length' => 100,
+    'error_text' => $locale['error_value']
+]);
 
 echo form_textarea('siteintro', $locale['407'], stripslashes($settings_main['siteintro']), [
-                   'type'     =>'tinymce',
-                   'tinymce'  =>'simple',
-                   'autosize' => TRUE]);
+    'type'     => 'tinymce',
+    'tinymce'  => 'simple',
+    'autosize' => TRUE]);
 
 echo form_textarea('footer', $locale['412'], stripslashes($settings_main['footer']), [
-                   'autosize' => TRUE,
-                   'type'     =>'tinymce',
-                   'tinymce'  =>'simple'
-                   ]);
+    'autosize' => TRUE,
+    'type'     => 'tinymce',
+    'tinymce'  => 'simple'
+]);
 
 echo fusion_get_function('closeside', '');
 
 echo fusion_get_function('openside', '');
 echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], [
-               'inline'     => TRUE,
-               'required'   => TRUE,
-               'error_text' => $locale['error_value']]);
+    'inline'     => TRUE,
+    'required'   => TRUE,
+    'error_text' => $locale['error_value']]);
 
 $options_xs = [
     'logo-xs-left'   => $locale['404left'],
@@ -223,9 +223,9 @@ $options_xs = [
 ];
 
 echo form_select('logoposition_xs', $locale['404XS'], $settings_main['logoposition_xs'], [
-                 'inline'  => TRUE,
-                 'options' => $options_xs
-                 ]);
+    'inline'  => TRUE,
+    'options' => $options_xs
+]);
 
 $options_sm = [
     'logo-sm-left'   => $locale['404left'],
@@ -234,9 +234,9 @@ $options_sm = [
 ];
 
 echo form_select('logoposition_sm', $locale['404SM'], $settings_main['logoposition_sm'], [
-                 'inline'  => TRUE,
-                 'options' => $options_sm
-                 ]);
+    'inline'  => TRUE,
+    'options' => $options_sm
+]);
 
 $options_md = [
     'logo-md-left'   => $locale['404left'],
@@ -245,9 +245,9 @@ $options_md = [
 ];
 
 echo form_select('logoposition_md', $locale['404MD'], $settings_main['logoposition_md'], [
-                  'inline'  => TRUE,
-                  'options' => $options_md
-                  ]);
+    'inline'  => TRUE,
+    'options' => $options_md
+]);
 
 $options_lg = [
     'logo-lg-left'   => $locale['404left'],
@@ -256,9 +256,9 @@ $options_lg = [
 ];
 
 echo form_select('logoposition_lg', $locale['404LG'], $settings_main['logoposition_lg'], [
-                 'inline'  => TRUE,
-                 'options' => $options_lg
-                 ]);
+    'inline'  => TRUE,
+    'options' => $options_lg
+]);
 
 echo fusion_get_function('closeside', '');
 
@@ -266,9 +266,9 @@ echo fusion_get_function('openside', '');
 echo form_textarea('description', $locale['409'], $settings_main['description'], ['autosize' => TRUE]);
 echo form_textarea('keywords', $locale['410'], $settings_main['keywords'], ['autosize' => TRUE, 'ext_tip' => $locale['411']]);
 echo form_select('default_search', $locale['419'], $settings_main['default_search'], [
-                 'options'        => get_default_search_opts(),
-                 'callback_check' => 'validate_default_search'
-                 ]);
+    'options'        => get_default_search_opts(),
+    'callback_check' => 'validate_default_search'
+]);
 
 echo fusion_get_function('closeside', '');
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
@@ -286,37 +286,37 @@ $opts = ['http' => 'http://', 'https' => 'https://'];
 $opts['invalid_protocol'] = 'Invalid (test purposes)';
 
 echo form_select('site_protocol', $locale['426'], $settings_main['site_protocol'], [
-                 'inline'     => TRUE,
-                 'regex'      => 'http(s)?',
-                 'error_text' => $locale['error_value'],
-                 'options'    => $opts
-                 ]);
+    'inline'     => TRUE,
+    'regex'      => 'http(s)?',
+    'error_text' => $locale['error_value'],
+    'options'    => $opts
+]);
 
 echo form_text('site_host', $locale['427'], $settings_main['site_host'], [
-               'required'   => TRUE,
-               'inline'     => TRUE,
-               'max_length' => 255,
-               'error_text' => $locale['error_value']
-               ]);
+    'required'   => TRUE,
+    'inline'     => TRUE,
+    'max_length' => 255,
+    'error_text' => $locale['error_value']
+]);
 
 echo form_text('site_path', $locale['429'], $settings_main['site_path'], [
-               'required'   => TRUE,
-               'inline'     => TRUE,
-               'regex'      => '\/([a-z0-9-_]+\/)*?',
-               'max_length' => 255
-               ]);
+    'required'   => TRUE,
+    'inline'     => TRUE,
+    'regex'      => '\/([a-z0-9-_]+\/)*?',
+    'max_length' => 255
+]);
 
 echo form_text('site_port', $locale['430'], $settings_main['site_port'], [
-               'inline'         => TRUE,
-               'required'       => FALSE,
-               'placeholder'    => 80,
-               'max_length'     => 5,
-               'type'           => 'number',
-               'inner_width'    => '150px',
-               'error_text'     => $locale['430_error'],
-               'callback_check' => 'validate_site_port',
-               'ext_tip'        => $locale['430_desc']
-               ]);
+    'inline'         => TRUE,
+    'required'       => FALSE,
+    'placeholder'    => 80,
+    'max_length'     => 5,
+    'type'           => 'number',
+    'inner_width'    => '150px',
+    'error_text'     => $locale['430_error'],
+    'callback_check' => 'validate_site_port',
+    'ext_tip'        => $locale['430_desc']
+]);
 
 echo fusion_get_function('closeside', '');
 

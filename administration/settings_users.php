@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
 
-$settings2 = array(
+$settings2 = [
     'enable_deactivation'   => fusion_get_settings('enable_deactivation'),
     'deactivation_period'   => fusion_get_settings('deactivation_period'),
     'deactivation_response' => fusion_get_settings('deactivation_response'),
@@ -34,10 +34,10 @@ $settings2 = array(
     'userNameChange'        => fusion_get_settings('userNameChange'),
     'userthemes'            => fusion_get_settings('userthemes'),
     'multiple_logins'       => fusion_get_settings('multiple_logins')
-);
+];
 
 if (isset($_POST['savesettings'])) {
-    $settings2 = array(
+    $settings2 = [
         'enable_deactivation'   => form_sanitizer($_POST['enable_deactivation'], '0', 'enable_deactivation'),
         'deactivation_period'   => form_sanitizer($_POST['deactivation_period'], '365', 'deactivation_period'),
         'deactivation_response' => form_sanitizer($_POST['deactivation_response'], '14', 'deactivation_response'),
@@ -51,7 +51,7 @@ if (isset($_POST['savesettings'])) {
         'userthemes'            => form_sanitizer($_POST['userthemes'], '0', 'userthemes'),
         'multiple_logins'       => form_sanitizer($_POST['multiple_logins'], '0', 'multiple_logins')
 
-    );
+    ];
 
     if (\defender::safe()) {
         foreach ($settings2 as $settings_key => $settings_value) {
@@ -59,7 +59,7 @@ if (isset($_POST['savesettings'])) {
                 'settings_name'  => $settings_key,
                 'settings_value' => $settings_value
             ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', array('primary_key' => 'settings_name'));
+            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
         }
         if ($_POST['enable_deactivation'] == '0') {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
@@ -74,7 +74,7 @@ echo "<div class='well'>".$locale['user_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-$choice_opts = array('0' => $locale['no'], '1' => $locale['yes']);
+$choice_opts = ['0' => $locale['no'], '1' => $locale['yes']];
 echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], ['options' => $choice_opts]);
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], [
     'max_length' => 3, 'inner_width' => '150px', 'type' => 'number', 'ext_tip' => $locale['1004']]);

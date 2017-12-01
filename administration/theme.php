@@ -32,8 +32,8 @@ switch ($_GET['action']) {
         }
         break;
     default:
-        $tab_title['title'] = array($locale['theme_1010'], $locale['theme_1011']);
-        $tab_title['id'] = array("list", "upload");
+        $tab_title['title'] = [$locale['theme_1010'], $locale['theme_1011']];
+        $tab_title['id'] = ["list", "upload"];
         $active_set = isset($_POST['upload']) ? 1 : 0;
         $active_tab = tab_active($tab_title, $active_set);
         echo opentab($tab_title, $active_tab, 'theme_tab');

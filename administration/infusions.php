@@ -27,7 +27,7 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
-} elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
+} else if ($folder = filter_input(INPUT_POST, 'defuse')) {
     PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
 }
 
@@ -36,9 +36,9 @@ echo "<div class='text-right'>\n";
 echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 echo "</div>\n";
 $temp = opendir(INFUSIONS);
-$infs = array();
+$infs = [];
 while ($folder = readdir($temp)) {
-    if (!in_array($folder, array("..", ".")) && ($inf = PHPFusion\Installer\Infusion_Core::load_infusion($folder))) {
+    if (!in_array($folder, ["..", "."]) && ($inf = PHPFusion\Installer\Infusion_Core::load_infusion($folder))) {
         $infs[] = $inf;
     }
 }
@@ -82,7 +82,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
             $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
 
             $content .= "</div>\n</div>\n";
-    }
+        }
     } else {
         $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
     }

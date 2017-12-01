@@ -24,16 +24,17 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
 BreadCrumbs::getInstance()->addBreadCrumb([
-    'link' => ADMIN.'administrators.php'.fusion_get_aidlink(),
+    'link'  => ADMIN.'administrators.php'.fusion_get_aidlink(),
     'title' => $locale['ADM_420'],
 ]);
 
 if (isset($_POST['cancel'])) {
-    redirect(clean_request('', [''], false));
+    redirect(clean_request('', [''], FALSE));
 }
 
 if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['user_id']))) {
     if (isset($_POST['all_rights']) || isset($_POST['make_super'])) {
+        $admin_rights_array = [];
 
         $result = dbquery("SELECT DISTINCT admin_rights AS admin_right FROM ".DB_ADMIN." ORDER BY admin_right");
         while ($data = dbarray($result)) {
@@ -47,17 +48,17 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
         ]);
     } else {
         addNotice('success', $locale['ADM_463']);
-        redirect(clean_request('', [''], false));
+        redirect(clean_request('', [''], FALSE));
     }
     addNotice('success', $locale['ADM_400']);
-    redirect(clean_request('', [''], false));
+    redirect(clean_request('', [''], FALSE));
 }
 
 if (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1) {
     dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<=".USER_LEVEL_ADMIN."");
 
     addNotice('danger', $locale['ADM_402']);
-    redirect(clean_request('', ['remove'], false));
+    redirect(clean_request('', ['remove'], FALSE));
 }
 
 if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['user_id']) && $_GET['user_id'] != 1)) {
@@ -76,7 +77,7 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
     }
 
     addNotice('info', $locale['ADM_401']);
-    redirect(clean_request('', ['user_id'], false));
+    redirect(clean_request('', ['user_id'], FALSE));
 }
 
 if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
@@ -115,10 +116,10 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         foreach ($admin_pages as $page => $admin_page) {
             echo "<tr>\n<td colspan='$columns' class='info'><strong>".$admin_page_titles[$page]."</strong></td>\n</tr>\n";
             $mod = count($admin_page) % $columns;
-            if ($mod !== 0){
+            if ($mod !== 0) {
                 $admin_page = array_merge($admin_page, array_fill(0, $columns - (count($admin_page) % $columns), ''));
             }
-            $admin_page_rows = array_chunk($admin_page, $columns, true);
+            $admin_page_rows = array_chunk($admin_page, $columns, TRUE);
             foreach ($admin_page_rows as $row) {
                 echo "<tr>\n";
                 foreach ($row as $cell_num => $cell) {
@@ -126,7 +127,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                     if ($cell) {
                         $insecure = in_array($cell['admin_rights'], $risky_rights);
                         echo form_checkbox('rights[]', $cell['admin_title'], in_array($cell['admin_rights'], $user_rights), [
-                            'reverse_label' => true,
+                            'reverse_label' => TRUE,
                             'value'         => $cell['admin_rights'],
                             'required'      => $insecure,
                             'input_id'      => 'rights-'.$page.'-'.$cell_num,
@@ -143,10 +144,10 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</div>\n";
         echo "<div class='text-center row'>\n";
         echo " <div class='col-xs-6 col-md-2'>\n";
-        echo form_checkbox('check_all', $locale['ADM_445'], '', ['reverse_label' => true]);
+        echo form_checkbox('check_all', $locale['ADM_445'], '', ['reverse_label' => TRUE]);
         echo "</div>\n";
         echo "<div class='col-xs-6 col-md-2'>\n";
-        echo form_checkbox('check_secure', $locale['ADM_450'], '', ['reverse_label' => true]);
+        echo form_checkbox('check_secure', $locale['ADM_450'], '', ['reverse_label' => TRUE]);
         echo "</div>\n";
         echo "<div class='col-xs-6 col-md-8 text-left'>\n";
         echo form_button('update_admin', $locale['ADM_448'], $locale['ADM_448'], ['class' => 'btn-primary']);
@@ -202,17 +203,17 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     opentable($locale['ADM_410']);
     if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
         echo openform('searchform', 'post', FUSION_SELF.fusion_get_aidlink());
-        echo "<div class='table-responsive'>\n" ;
+        echo "<div class='table-responsive'>\n";
         echo "<table class='table table-hover table-striped'>\n";
         echo "<tr>\n";
         echo "<td class='text-center'>\n";
         echo form_user_select('search_criteria', $locale['ADM_411'], '', [
-            'required'    => true,
+            'required'    => TRUE,
             'max_select'  => 1,
             'class'       => 'center-block',
             'inner_width' => '50%',
             'width'       => '50%',
-            'allow_self'  => true,
+            'allow_self'  => TRUE,
         ]);
 
         echo "</td>\n";
@@ -225,7 +226,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</table>\n";
         echo "</div>\n";
         echo closeform();
-    } elseif (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
+    } else if (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
         $search_criteria = form_sanitizer($_POST['search_criteria'], '', 'search_criteria');
         $result = dbquery("
             SELECT user_id, user_name
@@ -242,11 +243,11 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             while ($data = dbarray($result)) {
                 $users .= "<tr>\n<td>";
                 $users .= form_checkbox('user_id', $data['user_name'], '', [
-                            'type'          => 'radio',
-                            'inline'        => true,
-                            'reverse_label' => true,
-                            'value'         => $data['user_id'],
-                        ]);
+                    'type'          => 'radio',
+                    'inline'        => TRUE,
+                    'reverse_label' => TRUE,
+                    'value'         => $data['user_id'],
+                ]);
                 $users .= "</td>\n</tr>";
             }
             echo openform('add_users_form', 'post', FUSION_SELF.fusion_get_aidlink());
@@ -260,13 +261,13 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             echo "<div class='panel-body'>\n";
             echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
             echo form_checkbox('all_rights', $locale['ADM_415'], '', [
-                'required'      => true,
-                'reverse_label' => true,
+                'required'      => TRUE,
+                'reverse_label' => TRUE,
             ]);
             if (fusion_get_userdata('user_level') == USER_LEVEL_SUPER_ADMIN) {
                 echo form_checkbox('make_super', $locale['ADM_416'], '', [
-                    'required'      => true,
-                    'reverse_label' => true,
+                    'required'      => TRUE,
+                    'reverse_label' => TRUE,
                 ]);
             }
             echo form_button('add_admin', $locale['ADM_461'], $locale['ADM_461'], ['class' => 'btn-primary']);

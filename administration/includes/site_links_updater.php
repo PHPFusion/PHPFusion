@@ -24,6 +24,7 @@ if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
         }
     }
 }
+
 if ($result) {
-    echo json_encode(array('status' => 200));
+    echo json_encode(['status' => 200]);
 }

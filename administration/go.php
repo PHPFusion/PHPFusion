@@ -24,7 +24,7 @@ $urlprefix = "";
 $url = BASEDIR."index.php";
 
 if (isset($_GET['id']) && isnum($_GET['id'])) {
-	$id = form_sanitizer($_GET['id'], '', 'id');
+    $id = form_sanitizer($_GET['id'], '', 'id');
     $result = dbquery("SELECT submit_criteria
         FROM ".DB_SUBMISSIONS."
         WHERE submit_type=:typ AND submit_id=:id", [':typ' => 'l', ':id' => $id]

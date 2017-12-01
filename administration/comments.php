@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
+
 use \PHPFusion\BreadCrumbs;
 
 class Comments_Admin {
@@ -41,7 +42,7 @@ class Comments_Admin {
                     $result = $this->delete_comments($_GET['comment_id']);
                     if ($result) {
                         addNotice('success', $this->locale['411']);
-                        redirect(clean_request('', ['section', 'action', 'comment_id'], false));
+                        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
                 default:
@@ -68,7 +69,7 @@ class Comments_Admin {
             'title' => $this->locale['401']
         ]);
 
-        $allowed_section = array('comments_view', 'comments_edit');
+        $allowed_section = ['comments_view', 'comments_edit'];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'comments_view';
 
         if ($_GET['section'] == 'comments_edit') {
@@ -82,14 +83,14 @@ class Comments_Admin {
         $master_tab_title['id'][] = 'comments_view';
         $master_tab_title['icon'][] = 'fa fa-comment';
 
-        if (!empty($_GET['comment_id'])){
+        if (!empty($_GET['comment_id'])) {
             $master_tab_title['title'][] = $this->locale['400'];
             $master_tab_title['id'][] = 'comments_edit';
             $master_tab_title['icon'][] = 'fa fa-edit';
         }
 
         opentable($this->locale['401']);
-        echo opentab($master_tab_title, $_GET['section'], 'comments_view', true, 'nav-tabs m-b-20');
+        echo opentab($master_tab_title, $_GET['section'], 'comments_view', TRUE, 'nav-tabs m-b-20');
 
         switch ($_GET['section']) {
             case "comments_view":
@@ -113,21 +114,21 @@ class Comments_Admin {
                 ':CommentMessage' => $comment_message,
                 ':CommentId'      => $_GET['comment_id']
             ]);
-        addNotice('success', $this->locale['410']);
-        redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], false));
+            addNotice('success', $this->locale['410']);
+            redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
         }
 
         if (isset($_GET['comment_id']) && isnum($_GET['comment_id'])) {
 
-        $result = dbquery(self::get_CommentsQuery());
-        $data = dbarray($result);
+            $result = dbquery(self::get_CommentsQuery());
+            $data = dbarray($result);
 
-        echo openform('settingsform', 'post', FUSION_REQUEST);
-        echo form_textarea('comment_message', '', $data['comment_message'], [
-            'autosize' => true, 'bbcode' => true, 'preview' => true, 'form_name' => 'settingsform'
-        ]);
-        echo form_button('save_comment', $this->locale['421'], $this->locale['421'], ['class' => 'btn-primary']);
-        echo closeform();
+            echo openform('settingsform', 'post', FUSION_REQUEST);
+            echo form_textarea('comment_message', '', $data['comment_message'], [
+                'autosize' => TRUE, 'bbcode' => TRUE, 'preview' => TRUE, 'form_name' => 'settingsform'
+            ]);
+            echo form_button('save_comment', $this->locale['421'], $this->locale['421'], ['class' => 'btn-primary']);
+            echo closeform();
         }
     }
 
@@ -179,7 +180,10 @@ class Comments_Admin {
     private function comments_view() {
         $row = '';
         $navrows = '';
-        if (!empty($_GET['ctype'])){
+        $result = '';
+        $navresult = '';
+
+        if (!empty($_GET['ctype'])) {
             $result = dbquery(self::get_CommentsQuery());
             $row = dbrows($result);
             $navresult = dbquery(self::get_NavQuery());
@@ -216,7 +220,7 @@ class Comments_Admin {
             }
         }
         openside(\PHPFusion\Admins::getInstance()->getCommentType($_GET['ctype'])." ".$this->locale['401']);
-        echo self::reder_commentAdmin($info);
+        self::reder_commentAdmin($info);
         closeside();
     }
 

@@ -79,7 +79,7 @@ if (isset($_POST['migrate'])) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_to', $locale['112']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_from', $locale['113']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_user', $locale['114']);
-                    $result = dbquery("DELETE FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$user_temp_id."'");
+                    $result = dbquery("DELETE FROM ".DB_MESSAGES."_options WHERE user_id='".$user_temp_id."'");
                 }
                 if (isset($_POST['articles']) == '1') {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_ARTICLES, 'article_name', $locale['115']);
@@ -120,7 +120,7 @@ user_posts_migrate_console();
 closetable();
 
 function user_posts_migrate_console() {
-    global $aidlink, $locale;
+    $locale = fusion_get_locale();
 
     $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS."");
     if (dbrows($result) > 0) {
@@ -140,92 +140,92 @@ function user_posts_migrate_console() {
     echo "<tr>\n";
     echo "<td>\n";
     echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ?: ''),
-                          ['placeholder' => $locale['127']]);
+        ['placeholder' => $locale['127']]);
     echo "</td>\n";
     echo "<td>\n";
     echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ?: ''),
-                          ['placeholder' => $locale['128']]);
+        ['placeholder' => $locale['128']]);
     echo "</td>\n";
     echo "<td>\n";
-    echo form_button('migrate', $locale['129'], $locale['129'], ['inline' => true, 'class' => 'btn btn-sm btn-primary']);
+    echo form_button('migrate', $locale['129'], $locale['129'], ['inline' => TRUE, 'class' => 'btn btn-sm btn-primary']);
     echo "</td>\n";
     echo "</tr>\n";
     echo "<tr>\n";
     echo "<td>".$locale['130']."</td>";
     echo "<td colspan='2'>\n";
     echo form_checkbox('comments', $locale['132'], (isset($_POST['comments']) == '1' ? $_POST['comments'] : 0), [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
-        'class'          => 'm-b-0'
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
     ]);
     echo form_checkbox('ratings', $locale['133'], (isset($_POST['ratings']) == '1' ? $_POST['ratings'] : 0), [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
-        'class'          => 'm-b-0'
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
     ]);
     echo form_checkbox('polls', $locale['134'], (isset($_POST['polls']) == '1' ? $_POST['polls'] : 0), [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
-        'class'          => 'm-b-0'
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
     ]);
     echo form_checkbox('messages', $locale['136'], (isset($_POST['messages']) == '1' ? $_POST['messages'] : 0), [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
-        'class'          => 'm-b-0'
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'class'         => 'm-b-0'
     ]);
     echo form_checkbox('user_level', $locale['142'], (isset($_POST['user_level']) == '1' ? $_POST['user_level'] : 0), [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
     ]);
 
     if (db_exists(DB_FORUMS)) {
         echo form_checkbox('forum', $locale['131'], (isset($_POST['forum']) == '1' ? $_POST['forum'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     if (db_exists(DB_ARTICLES)) {
         echo form_checkbox('articles', $locale['137'], (isset($_POST['articles']) == '1' ? $_POST['articles'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     if (db_exists(DB_NEWS)) {
         echo form_checkbox('news', $locale['138'], (isset($_POST['news']) == '1' ? $_POST['news'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     if (db_exists(DB_BLOG)) {
         echo form_checkbox('blog', $locale['139'], (isset($_POST['blog']) == '1' ? $_POST['blog'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     if (db_exists(DB_DOWNLOADS)) {
         echo form_checkbox('downloads', $locale['140'], (isset($_POST['downloads']) == '1' ? $_POST['downloads'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     if (db_exists(DB_PHOTOS)) {
         echo form_checkbox('photos', $locale['141'], (isset($_POST['photos']) == '1' ? $_POST['photos'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     $shoutbox = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
     if ($shoutbox > 0) {
         echo form_checkbox('shoutbox', $locale['135'], (isset($_POST['shoutbox']) == '1' ? $_POST['shoutbox'] : 0), [
-            'type'           => 'checkbox',
-            'reverse_label'  => TRUE,
-            'class'          => 'm-b-0'
+            'type'          => 'checkbox',
+            'reverse_label' => TRUE,
+            'class'         => 'm-b-0'
         ]);
     }
     echo "</td>\n";
@@ -234,10 +234,10 @@ function user_posts_migrate_console() {
     echo "<td>".$locale['143']."</td>";
     echo "<td colspan='2'>\n";
     echo form_checkbox('del_user', $locale['144'], '', [
-        'type'           => 'checkbox',
-        'reverse_label'  => TRUE,
-        'ext_tip'        => $locale['145'],
-        'class'          => 'm-b-0'
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE,
+        'ext_tip'       => $locale['145'],
+        'class'         => 'm-b-0'
     ]);
     echo "</td>\n";
     echo "</tr>\n";
@@ -285,7 +285,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                         echo "<div class='well text-center'>".count($old_user_rights)." ".$locale['154']." <strong>".$locale['155']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
                     }
                 } else {
-                    $rights_dump = array();
+                    $rights_dump = [];
                     foreach ($old_user_rights as $arr => $value) {
                         if (!in_array($value, $new_user_rights)) {
                             $rights_dump[] = $value;
@@ -313,7 +313,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                         echo "<div class='well text-center'>".count($old_user_groups)." ".$locale['154']." <strong>".$locale['158']."</strong> ".$locale['156']." ".$data['user_name']." ".$locale['151']." ".$cdata['user_name'].".</div>\n";
                     }
                 } else {
-                    $group_dump = array();
+                    $group_dump = [];
                     foreach ($old_user_groups as $arr => $value) {
                         if (!in_array($value, $new_user_groups)) {
                             $group_dump[] = $value;

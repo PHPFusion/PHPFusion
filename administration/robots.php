@@ -22,8 +22,8 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                                       'link'  => ADMIN.'robots.php'.fusion_get_aidlink(),
-                                       'title' => $locale['ROBOT_400']]);
+    'link'  => ADMIN.'robots.php'.fusion_get_aidlink(),
+    'title' => $locale['ROBOT_400']]);
 
 function write_Default() {
 
@@ -34,7 +34,7 @@ function write_Default() {
     $robots_content .= "Disallow: /themes/\n";
     $robots_content .= "Disallow: /print.php\n";
     $robots_content .= "Disallow: /infusions/latest_comments_panel/\n";
-   return $robots_content;
+    return $robots_content;
 }
 
 $file = BASEDIR."robots.txt";
@@ -87,9 +87,9 @@ echo "<div class='text-center well'><strong>".$locale['ROBOT_420']."</strong>";
 echo "<br/>";
 echo str_replace(['[LINK]', '[/LINK]'], ["<a href='http://www.robotstxt.org/' target='_blank'>", "</a>",], $locale['ROBOT_421']);
 echo "</div>";
-echo form_textarea('robots_content', '', $current, array('height' => '300px'));
-echo form_button('save_robots', $button, $button, array('class' => 'btn-primary m-r-10'));
-echo file_exists($file) ? form_button('set_default', $locale['ROBOT_423'], $locale['ROBOT_423'], array('class' => 'btn-default')) : "";
+echo form_textarea('robots_content', '', $current, ['height' => '300px']);
+echo form_button('save_robots', $button, $button, ['class' => 'btn-primary m-r-10']);
+echo file_exists($file) ? form_button('set_default', $locale['ROBOT_423'], $locale['ROBOT_423'], ['class' => 'btn-default']) : "";
 echo closeform();
 
 closetable();

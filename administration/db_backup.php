@@ -28,7 +28,7 @@ class db_backup {
     private $locale = [];
 
     private function execute_backup() {
-        global $db_name, $db_prefix, $pdo_enabled;
+        global $db_name, $db_prefix;
         if (isset($_POST['btn_create_backup'])) {
             ini_set('max_execution_time', 0);
             set_time_limit(600);
@@ -59,10 +59,12 @@ class db_backup {
 
                     $db = DatabaseFactory::getConnection();
                     $result = $db->query("SELECT * FROM $table");
+                    $column_list = '';
+                    $num_fields = '';
 
                     if ($result && dbrows($result)) {
                         echo $crlf."#".$crlf."# Table Data for `".$table."`".$crlf."#".$crlf;
-                        $column_list = "";
+
                         $num_fields = $db->countColumns($result);
                         for ($i = 0; $i < $num_fields; $i++) {
                             $column_meta = $result->getColumnMeta($i);
@@ -77,7 +79,7 @@ class db_backup {
                             $dump .= ($i > 0) ? ", " : "";
                             if (!isset($row[$i])) {
                                 $dump .= "NULL";
-                            } elseif ($row[$i] == "0" || $row[$i] != "") {
+                            } else if ($row[$i] == "0" || $row[$i] != "") {
                                 $type = $this->GetSqlFieldType($table, $i);
                                 if (substr($type, 0, 7) == "tinyint" || substr($type, 0, 8) == "smallint" || substr($type, 0,
                                         9) == "mediumint" || substr($type, 0,
@@ -89,8 +91,8 @@ class db_backup {
                                 ) {
                                     $dump .= $row[$i];
                                 } else {
-                                    $search_array = array('\\', '\'', "\x00", "\x0a", "\x0d", "\x1a");
-                                    $replace_array = array('\\\\', '\\\'', '\0', '\n', '\r', '\Z');
+                                    $search_array = ['\\', '\'', "\x00", "\x0a", "\x0d", "\x1a"];
+                                    $replace_array = ['\\\\', '\\\'', '\0', '\n', '\r', '\Z'];
                                     $row[$i] = str_replace($search_array, $replace_array, $row[$i]);
                                     $dump .= "'$row[$i]'";
                                 }
@@ -175,7 +177,6 @@ class db_backup {
                     $tmp2)) && !defined('FUSION_NULL')
             ) {
                 $restore_tblpre = form_sanitizer($_POST['restore_tblpre'], '', 'restore_tblpre');
-                $inf_dbname = $tmp1[1];
                 $inf_tblpre = $tmp2[1];
                 $result = array_slice($result, 7);
                 $results = preg_split("/;$/m", implode("", $result));
@@ -187,7 +188,6 @@ class db_backup {
                             $tbl = $tmp[1];
                             if (in_array($tbl, $_POST['list_tbl'])) {
                                 $result = preg_replace("/^DROP TABLE IF EXISTS `$inf_tblpre(.*?)`/im", "DROP TABLE IF EXISTS `$restore_tblpre\\1`", $result);
-                                $rct1 = dbquery($result);
                             }
                         }
                         if (preg_match("/^CREATE TABLE `(.*?)`/im", $result, $tmp)) {
@@ -227,10 +227,13 @@ class db_backup {
                 echo "<div class='text-center list-group-item'>\n";
                 echo $this->locale['401']."<br /><br />".$this->locale['402'];
                 echo "</div>\n";
-                echo form_button('btn_cancel', $this->locale['403'], $this->locale['403'], array('class' => 'btn-default spacer-xs'));
+                echo form_button('btn_cancel', $this->locale['403'], $this->locale['403'], ['class' => 'btn-default spacer-xs']);
                 echo closeform();
             }
-        } elseif (isset($_GET['action']) && $_GET['action'] == "restore") {
+        } else if (isset($_GET['action']) && $_GET['action'] == "restore") {
+            $backup_data = [];
+            $backup_name = '';
+            $file = '';
 
             if (is_uploaded_file($_FILES['upload_backup_file']['tmp_name'])) {
                 $temp_rand = rand(1000000, 9999999);
@@ -246,9 +249,9 @@ class db_backup {
             $info_dbname = '';
             $info_date = '';
             $info_tblpref = '';
-            $info_tbls = array();
-            $info_ins_cnt = array();
-            $info_inserts = array();
+            $info_tbls = [];
+            $info_ins_cnt = [];
+            $info_inserts = [];
             foreach ($backup_data as $resultline) {
                 if (preg_match_all("/^# Database Name: `(.*?)`/", $resultline, $resultinfo)) {
                     $info_dbname = $resultinfo[1][0];
@@ -302,7 +305,7 @@ class db_backup {
             echo "<td colspan='2' class='tbl'><strong>".$this->locale['432']."</strong> ".$info_date."</td>\n";
             echo "</tr>\n<tr>\n";
             echo "<td colspan='2' class='tbl'>\n";
-            echo form_text('restore_tblpre', $this->locale['415'], $info_tblpref, array('required' => 1, 'error_text' => ''));
+            echo form_text('restore_tblpre', $this->locale['415'], $info_tblpref, ['required' => 1, 'error_text' => '']);
             echo form_hidden('backup_file', '', $file);
             echo "</td>\n</tr>\n<tr>\n";
             echo "<td valign='top' class='tbl'><strong>".$this->locale['433']."</strong><br />\n";
@@ -317,24 +320,24 @@ class db_backup {
             echo "</tr>\n<tr>\n";
             echo "<td colspan='2' class='tbl text-center'>\n";
             echo "</tr>\n</tbody>\n</table>\n</div>";
-            echo form_button('btn_do_restore', $this->locale['438'], $this->locale['438'], array('class' => 'btn-primary m-r-10'));
-            echo form_button('btn_cancel', $this->locale['439'], $this->locale['439'], array('class' => 'btn-default'));
+            echo form_button('btn_do_restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary m-r-10']);
+            echo form_button('btn_cancel', $this->locale['439'], $this->locale['439'], ['class' => 'btn-default']);
             echo closeform();
 
         } else {
 
             $file_types = (function_exists("gzencode")) ? ".gz " : ""; // added
-            echo openform('restore', 'post', clean_request('action=restore', ['action'], FALSE), array('enctype' => 1, 'class' => 'spacer-xs'));
+            echo openform('restore', 'post', clean_request('action=restore', ['action'], FALSE), ['enctype' => 1, 'class' => 'spacer-xs']);
             echo "<div class='list-group-item'>\n";
-            echo form_fileinput("upload_backup_file", $this->locale['431'], "", array(
+            echo form_fileinput("upload_backup_file", $this->locale['431'], "", [
                 'inline'    => FALSE,
                 'type'      => "object",
                 "valid_ext" => $file_types,
                 'template'  => 'modern',
-            ));
+            ]);
             echo "<small>".$this->locale['440']." ".$file_types.".sql</small>\n"; // added
             echo "</div>\n";
-            echo form_button('restore', $this->locale['438'], $this->locale['438'], array('class' => 'btn-primary spacer-sm',));
+            echo form_button('restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary spacer-sm',]);
             echo closeform();
 
         }
@@ -383,19 +386,19 @@ class db_backup {
         echo "</tr>\n<tr>\n";
         echo "<td class='tbl text-right'><label for='backup_filename'>".$this->locale['431']." <span class='required'>*</span>\n</td>\n";
         echo "<td class='tbl'>\n";
-        echo form_text('backup_filename', '', "backup_".$this->stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", array(
+        echo form_text('backup_filename', '', "backup_".$this->stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", [
             'required'   => 1,
             'error_text' => $this->locale['481b']
-        ));
+        ]);
         echo "</tr>\n<tr>\n";
         echo "<td class='tbl text-right'><label for='backup_type'>".$this->locale['455']."</label></td>\n";
         echo "<td class='tbl'>\n";
-        $opts = array();
+        $opts = [];
         if (function_exists("gzencode")) {
             $opts['.gz'] = ".sql.gz ".$this->locale['456'];
         }
         $opts['.sql'] = ".sql";
-        echo form_select('backup_type', '', '', array('options' => $opts, 'placeholder' => $this->locale['choose']));
+        echo form_select('backup_type', '', '', ['options' => $opts, 'placeholder' => $this->locale['choose']]);
         echo "</td>\n</tr>\n<tr>\n";
         echo "<td colspan='2' class='tbl text-center'><br /><span style='color:#ff0000'>*</span> ".$this->locale['461']."</td>\n";
         echo "</tr>\n</tbody>\n</table>\n</div>";
@@ -418,13 +421,13 @@ class db_backup {
         echo '</div>';
 
         echo "</div>"; // .row
-        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], array('class' => 'btn-primary m-t-10'));
+        echo form_button('btn_create_backup', $this->locale['459'], $this->locale['459'], ['class' => 'btn-primary m-t-10']);
         echo closeform();
     }
 
     private function stripsiteinput($text) {
-        $search = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-        $replace = array("", "", "", "", "", "", "", "", "");
+        $search = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " "];
+        $replace = ["", "", "", "", "", "", "", "", ""];
         $text = str_replace($search, $replace, $text);
 
         return $text;

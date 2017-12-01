@@ -45,7 +45,7 @@ if (isset($_POST['savesettings'])) {
                 'settings_name'  => $settings_key,
                 'settings_value' => $settings_value
             ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', array('primary_key' => 'settings_name'));
+            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
         }
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
@@ -63,7 +63,7 @@ echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 
 openside('');
 
-$opts = array();
+$opts = [];
 foreach ($theme_files as $file) {
     $opts[$file] = $file;
 }
@@ -76,7 +76,7 @@ echo form_select('theme', $locale['418'], $settings_theme['theme'], [
     'width'          => '100%'
 ]);
 // Admin Panel theme requires extra checks
-$opts = array();
+$opts = [];
 foreach ($admin_theme_files as $file) {
     $opts[$file] = $file;
 }
@@ -92,16 +92,16 @@ $choice_opts = [
     1 => $locale['enable']
 ];
 echo form_select('bootstrap', $locale['437'], $settings_theme['bootstrap'], [
-                 'options' => $choice_opts,
-                 'inline'  => TRUE
+    'options' => $choice_opts,
+    'inline'  => TRUE
 ]);
 echo form_select('entypo', $locale['441'], $settings_theme['entypo'], [
-                 'options' => $choice_opts,
-                  'inline' => TRUE
+    'options' => $choice_opts,
+    'inline'  => TRUE
 ]);
 echo form_select('fontawesome', $locale['442'], $settings_theme['fontawesome'], [
-                 'options' => $choice_opts,
-                 'inline'  => TRUE
+    'options' => $choice_opts,
+    'inline'  => TRUE
 ]);
 
 closeside();
