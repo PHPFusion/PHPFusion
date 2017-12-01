@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
@@ -77,10 +77,18 @@ openside('');
 $choice_opts = ['0' => $locale['no'], '1' => $locale['yes']];
 echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], ['options' => $choice_opts]);
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], [
-    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number', 'ext_tip' => $locale['1004']]);
+    'max_length'  => 3,
+    'inner_width' => '150px',
+    'type'        => 'number',
+    'ext_tip'     => $locale['1004']
+]);
 
 echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], [
-    'max_length' => 3, 'inner_width' => '150px', 'type' => 'number', 'ext_tip' => $locale['1006']]);
+    'max_length'  => 3,
+    'inner_width' => '150px',
+    'type'        => 'number',
+    'ext_tip'     => $locale['1006']
+]);
 
 $action_opts = ['0' => $locale['1012'], '1' => $locale['1013']];
 echo form_select('deactivation_action', $locale['1011'], $settings2['deactivation_action'], ['options' => $action_opts]);

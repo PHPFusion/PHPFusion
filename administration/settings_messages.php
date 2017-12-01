@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess("S7");
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
@@ -39,13 +39,13 @@ if (isset($_POST['save_settings'])) {
     ];
 
     if (\defender::safe()) {
-        foreach ($pm_settings as $key => $value) {
+        foreach ($pm_settings as $settings_name => $settings_value) {
             $data = [
-                'settings_name'  => $key,
-                'settings_value' => $value
+                'settings_name'  => $settings_name,
+                'settings_value' => $settings_value
             ];
 
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$pm_settings[$key]."' WHERE settings_name='".$key."'");
+            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name', 'keep_session' => TRUE]);
         }
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
