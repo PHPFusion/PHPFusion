@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: bbcodes.php
-| Author: Wooya
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,35 +19,36 @@ require_once __DIR__.'/../maincore.php';
 pageAccess('BB');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/bbcodes.php");
+
 use \PHPFusion\BreadCrumbs;
 
 global $p_data;
 
-BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title'=> $locale['BBCA_400']]);
-    $allowed_section = ['bbcode_form', 'bbcode_list'];
-    $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'bbcode_form';
+BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
+$allowed_section = ['bbcode_form', 'bbcode_list'];
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'bbcode_form';
 
-    $_GET['section'] == 'bbcode_list' ? BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title'=> $locale['BBCA_400']]) : '';
+$_GET['section'] == 'bbcode_list' ? BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]) : '';
 
-    $tab_title['title'][] = $locale['BBCA_400a'];
-    $tab_title['id'][] = 'bbcode_form';
-    $tab_title['icon'][] = '';
+$tab_title['title'][] = $locale['BBCA_400a'];
+$tab_title['id'][] = 'bbcode_form';
+$tab_title['icon'][] = '';
 
-    $tab_title['title'][] = $locale['BBCA_401'];
-    $tab_title['id'][] = 'bbcode_list';
-    $tab_title['icon'][] = '';
+$tab_title['title'][] = $locale['BBCA_401'];
+$tab_title['id'][] = 'bbcode_list';
+$tab_title['icon'][] = '';
 
 opentable($locale['BBCA_400']);
 echo opentab($tab_title, $_GET['section'], 'bbcode_list', TRUE);
-    switch ($_GET['section']) {
-        case "bbcode_form":
-            bbcode_form();
-            break;
-        default:
-            bbcode_list();
-            break;
-    }
-    echo closetab();
+switch ($_GET['section']) {
+    case "bbcode_form":
+        bbcode_form();
+        break;
+    default:
+        bbcode_list();
+        break;
+}
+echo closetab();
 closetable();
 
 function bbcode_list() {
@@ -58,7 +59,7 @@ function bbcode_list() {
     if (isset($_POST['post_test'])) {
         $test_message = form_sanitizer($_POST['test_message'], '', 'test_message');
         $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
-                                                                           $test_message) ? 1 : 0;
+            $test_message) ? 1 : 0;
         if (\defender::safe()) {
             opentable($locale['BBCA_417']);
             echo "<div class='well'>\n";
@@ -73,22 +74,22 @@ function bbcode_list() {
     }
 
     opentable($locale['BBCA_401']);
-        echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=bbcode_list");
-        echo form_textarea('test_message', $locale['BBCA_418a'], $test_message, [
-            'required'   => TRUE,
-            'error_text' => $locale['BBCA_418b'],
-            'type'       => 'bbcode'
-        ]);
-        echo "<div class='col-xs-6 col-md-6 text-right'>\n";
-        echo form_checkbox('test_smileys', $locale['BBCA_418'], $smileys_checked, [
-            'type'          => 'checkbox',
-            'reverse_label' => TRUE
-        ]);
-        echo "</div>\n";
-        echo "<div class='col-xs-6 col-md-6 text-left'>\n";
-        echo form_button('post_test', $locale['BBCA_401'], $locale['BBCA_401'], ['class' => 'btn-primary']);
-        echo "</div>\n";
-        closeform();
+    echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=bbcode_list");
+    echo form_textarea('test_message', $locale['BBCA_418a'], $test_message, [
+        'required'   => TRUE,
+        'error_text' => $locale['BBCA_418b'],
+        'type'       => 'bbcode'
+    ]);
+    echo "<div class='col-xs-6 col-md-6 text-right'>\n";
+    echo form_checkbox('test_smileys', $locale['BBCA_418'], $smileys_checked, [
+        'type'          => 'checkbox',
+        'reverse_label' => TRUE
+    ]);
+    echo "</div>\n";
+    echo "<div class='col-xs-6 col-md-6 text-left'>\n";
+    echo form_button('post_test', $locale['BBCA_401'], $locale['BBCA_401'], ['class' => 'btn-primary']);
+    echo "</div>\n";
+    closeform();
     closetable();
 
 }
@@ -99,6 +100,7 @@ function bbcode_form() {
     $available_bbcodes = [];
     $textarea_name = "";
     $inputform_name = "";
+    $__BBCODE__ = [];
 
     if ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
@@ -107,15 +109,15 @@ function bbcode_form() {
         addNotice('info', $locale['BBCA_430']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
-    } elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
+    } else if ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$data['bbcode_id']."'");
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
         addNotice('info', $locale['BBCA_431']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
-    } elseif (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){1,50}$/i",
-                                                   $_GET['enable']) && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include_var.php") && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include.php")
+    } else if (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){1,50}$/i",
+            $_GET['enable']) && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include_var.php") && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include.php")
     ) {
         if (substr($_GET['enable'], 0, 1) != '!') {
             $data2 = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
@@ -131,7 +133,7 @@ function bbcode_form() {
         addNotice('info', $locale['BBCA_432']);
         redirect(clean_request('', ['section', 'enable'], FALSE));
 
-    } elseif (isset($_GET['disable']) && isnum($_GET['disable'])) {
+    } else if (isset($_GET['disable']) && isnum($_GET['disable'])) {
         $result = dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id='".$_GET['disable']."'");
         $result = dbquery("SELECT bbcode_order FROM ".DB_BBCODES." ORDER BY bbcode_order");
         $order = 1;
@@ -156,13 +158,13 @@ function bbcode_form() {
     $result = dbquery("SELECT * FROM ".DB_BBCODES." ORDER BY bbcode_order");
     sort($available_bbcodes);
     if (dbrows($result)) {
-    	opentable($locale['BBCA_402']);
+        opentable($locale['BBCA_402']);
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
         echo "<th><strong>".$locale['BBCA_403']."</strong></th>\n";
         echo "<th><strong>".$locale['BBCA_404']."</strong></th>\n";
         echo "<th><strong>".$locale['BBCA_405']."</strong></th>\n";
         echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
-        echo "<th text-center colspan='2'><strong>".$locale['BBCA_407']."</strong></th>\n";
+        echo "<th class='text-center' colspan='2'><strong>".$locale['BBCA_407']."</strong></th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
         $i = 1;
@@ -172,13 +174,13 @@ function bbcode_form() {
                 $up = $data['bbcode_order'] - 1;
                 $down = $data['bbcode_order'] + 1;
                 if ($i == 1) {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:0px;' /></a>\n";
+                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:none;' /></a>\n";
                 } else {
                     if ($i < $numrows) {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:0px;' /></a>\n";
-                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:0px;' /></a>\n";
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:none;' /></a>\n";
+                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:none;' /></a>\n";
                     } else {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:0px;' /></a>\n";
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:none;' /></a>\n";
                     }
                 }
             } else {
@@ -201,7 +203,7 @@ function bbcode_form() {
             echo "<tr>\n";
             if (file_exists(LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php")) {
                 $locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/".$data['bbcode_name'].".php");
-            } elseif (file_exists(LOCALE."English/bbcodes/".$data['bbcode_name'].".php")) {
+            } else if (file_exists(LOCALE."English/bbcodes/".$data['bbcode_name'].".php")) {
                 $locale = fusion_get_locale('', LOCALE."English/bbcodes/".$data['bbcode_name'].".php");
             }
             include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
@@ -231,6 +233,9 @@ function bbcode_form() {
         echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
+
+        $enabled_bbcodes = [];
+
         foreach ($available_bbcodes as $available_bbcode) {
             $__BBCODE__ = [];
             $check_path = __DIR__.'/../includes/bbcodes/images/';
@@ -248,7 +253,7 @@ function bbcode_form() {
 
                 if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php")) {
                     $locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php");
-                } elseif (file_exists(LOCALE."English/bbcodes/".$available_bbcode.".php")) {
+                } else if (file_exists(LOCALE."English/bbcodes/".$available_bbcode.".php")) {
                     $locale = fusion_get_locale('', LOCALE."English/bbcodes/".$available_bbcode.".php");
                 }
 
@@ -271,4 +276,5 @@ function bbcode_form() {
     closetable();
 
 }
+
 require_once THEMES."templates/footer.php";
