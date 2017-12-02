@@ -67,13 +67,13 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Adminlink
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "A",
-    "title" => $locale['setup_3002'],
-    "panel" => "articles_admin.php",
-);
+    "title"  => $locale['setup_3002'],
+    "panel"  => "articles_admin.php",
+];
 
 // Insert Settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', 'article')";
@@ -84,17 +84,17 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3325']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
 // Insert Multilanguage
-$inf_mlt[] = array(
-    "title" => $locale['articles']['title'],
+$inf_mlt[] = [
+    "title"  => $locale['articles']['title'],
     "rights" => "AR",
-);
+];
 
 // Multilanguage Sitelinks
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
-		
+
         // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '14', '1', '".$language."')";

@@ -23,18 +23,18 @@ class MemberPoll {
 
     private static $instance = NULL;
 
-    private static $locale = array();
+    private static $locale = [];
 
     private static $limit = 4;
 
-    private $data = array(
+    private $data = [
         'poll_id'         => 0,
         'poll_title'      => '',
-        'poll_opt'        => array('', ''),
+        'poll_opt'        => ['', ''],
         'poll_started'    => '',
         'poll_ended'      => '',
         'poll_visibility' => ''
-    );
+    ];
 
     public function __construct() {
         if (file_exists(INFUSIONS."member_poll_panel/locale/".LANGUAGE.".php")) {
@@ -71,6 +71,7 @@ class MemberPoll {
 
     private function set_admin_polldb() {
         if (isset($_POST['save'])) {
+            $poll_opt = [];
             $i = 0;
             while ($i < $_POST['opt_count']) {
                 foreach ($_POST['poll_opt_'.$i] as $key => $value) {
@@ -82,19 +83,19 @@ class MemberPoll {
             }
 
             $poll_option = array_filter($poll_opt);
-            $this->data = array(
+            $this->data = [
                 'poll_id'         => !empty($_GET['poll_id']) ? form_sanitizer($_GET['poll_id'], 0, 'poll_id') : 0,
                 'poll_title'      => form_sanitizer($_POST['poll_title'], '', 'poll_title', TRUE),
                 'poll_opt'        => serialize($poll_option),
                 'poll_visibility' => form_sanitizer($_POST['poll_visibility'], 0, 'poll_visibility'),
                 'poll_started'    => form_sanitizer($_POST['poll_started'], 0, 'poll_started'),
                 'poll_ended'      => (isset($_POST['poll_ended']) ? form_sanitizer($_POST['poll_ended'], 0, 'poll_ended') : 0)
-            );
+            ];
 
             if (\defender::safe()) {
                 addNotice("success", $this->data['poll_id'] == 0 ? self::$locale['POLL_005'] : self::$locale['POLL_006']);
                 dbquery_insert(DB_POLLS, $this->data, ($this->data['poll_id'] == 0 ? "save" : "update"));
-                redirect(clean_request("", array("section=poll", "aid"), TRUE));
+                redirect(clean_request("", ["section=poll", "aid"], TRUE));
             }
         }
     }
@@ -112,6 +113,7 @@ class MemberPoll {
             FROM ".DB_POLLS."
             WHERE poll_id='".intval($id)."'
         ");
+        $list = [];
         if (dbrows($result) > 0) {
             $list = dbarray($result);
         }
@@ -127,6 +129,7 @@ class MemberPoll {
         ");
 
         if (dbrows($result)) {
+            $pdata = [];
             while ($data = dbarray($result)) {
                 $pdata[] = $data;
             }
@@ -172,7 +175,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("DELETE FROM ".DB_POLLS." WHERE poll_id='".intval($id)."'");
             addNotice('success', self::$locale['POLL_007']);
-            redirect(clean_request("", array("section=poll", "aid"), TRUE));
+            redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
 
@@ -180,7 +183,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_started='".time()."' WHERE poll_id='".intval($id)."'");
             addNotice('success', self::$locale['POLL_008']);
-            redirect(clean_request("", array("section=poll", "aid"), TRUE));
+            redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
 
@@ -189,7 +192,7 @@ class MemberPoll {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_id='".intval($id)."'");
 
             addNotice('success', self::$locale['POLL_009']);
-            redirect(clean_request("", array("section=poll", "aid"), TRUE));
+            redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
 
@@ -198,7 +201,7 @@ class MemberPoll {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='0' WHERE poll_id='".intval($id)."'");
 
             addNotice('success', self::$locale['POLL_010']);
-            redirect(clean_request("", array("section=poll", "aid"), TRUE));
+            redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
 
@@ -216,14 +219,15 @@ class MemberPoll {
 
     public function _renderpollOption() {
         if ($this->_selectPoll()) {
+            $data = [];
             foreach ($this->_selectPoll() as $id => $dat) {
                 $poll_opt = unserialize($dat['poll_opt']);
-                $data[$id] = array(
+                $data[$id] = [
                     'poll_id'         => $dat['poll_id'],
                     'poll_started'    => $dat['poll_started'],
                     'poll_ended'      => $dat['poll_ended'],
                     'poll_visibility' => $dat['poll_visibility'],
-                );
+                ];
                 for ($i = 0; $i < count($poll_opt); $i++) {
                     $data[$id]['poll_title'] = unserialize($dat['poll_title']);
                     $data[$id]['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
@@ -241,8 +245,8 @@ class MemberPoll {
     public function _selectUserVote() {
         $data = $this->_renderpollOption();
         $info['vote'] = $this->_countPoll("");
-        $info_f = array();
-        $info_t = array();
+        $info_f = [];
+        $info_t = [];
         if (!empty($data)) {
             $i = 0;
             $ii = 0;
@@ -257,16 +261,14 @@ class MemberPoll {
 
                         $form_action = clean_request();
 
-                        $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, array('enctype' => TRUE));
+                        $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, ['enctype' => TRUE]);
                         $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
 
                         foreach ($dat['poll_option'] as $im1 => $data1) {
-                            $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
-                            $opt_votes = ($num_votes ? number_format(($num_votes / $info_f['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
                             $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1]);
                         }
 
-                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], array('class' => 'btn-primary'));
+                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
                         $info_f['poll_table'][$key]['poll_foot'][] = closeform();
                         $i++;
                     }
@@ -322,7 +324,7 @@ class MemberPoll {
             redirect(clean_request('section=poll', ['aid'], TRUE));
         }
 
-        $allowed_section = array("poll", "poll_vote");
+        $allowed_section = ["poll", "poll_vote"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
         $_GET['poll_id'] = isset($_GET['poll_id']) && isnum($_GET['poll_id']) ? $_GET['poll_id'] : 0;
@@ -362,7 +364,7 @@ class MemberPoll {
         echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['POLL_011'], $rows, $total_rows)."</span>\n";
         echo "</div>\n";
 
-        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
+        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"], TRUE)."&amp;") : "";
 
         if ($rows > 0) {
             echo "<div class='row m-t-20'>\n";
@@ -476,7 +478,7 @@ class MemberPoll {
                 echo "</div>\n"; // .col-xs-12
             }
             echo "</div>\n";
-			echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, INFUSIONS."member_poll_panel/polls_archive.php?").'</div>' : "";
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, INFUSIONS."member_poll_panel/polls_archive.php?").'</div>' : "";
         } else {
             echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";
         }
@@ -492,19 +494,21 @@ class MemberPoll {
                 ORDER BY v.vote_id
             ");
 
+            $data = [];
+
             while ($pdata = dbarray($result)) {
                 $voters[] = iMEMBER ? $pdata['vote_user'] : $pdata['vote_user_ip'];
                 $data = $pdata;
             }
 
             if ($data['poll_started'] < time() && (empty($data['poll_ended']) or ($data['poll_ended'] > time())) && (empty($voters) || !empty($data["poll_opt"]))) {
-                $vote_save = array(
+                $vote_save = [
                     'vote_user'         => iMEMBER ? fusion_get_userdata('user_id') : 0,
                     'vote_user_ip'      => USER_IP,
                     'vote_user_ip_type' => USER_IP_TYPE,
                     'vote_opt'          => form_sanitizer($_POST['check'], 0, 'check'),
                     'poll_id'           => intval($_POST['poll_id'])
-                );
+                ];
 
                 if (\defender::safe()) {
                     dbquery_insert(DB_POLL_VOTES, $vote_save, "save");
@@ -529,7 +533,6 @@ class MemberPoll {
                 $this->data = $this->_selectFormPoll(intval($_GET['poll_id']));
                 $this->data['poll_title'] = unserialize($this->data['poll_title']);
                 $this->data['poll_opt'] = unserialize($this->data['poll_opt']);
-                $opt_count = isset($_POST['opt_count']) ? $_POST['opt_count'] : count($this->data['poll_opt']);
             }
         }
 
@@ -547,21 +550,21 @@ class MemberPoll {
         }
 
         $opt_count = count($this->data['poll_opt']);
-        echo openform('addcat', 'post', FORM_REQUEST, array('class' => 'spacer-sm'));
+        echo openform('addcat', 'post', FORM_REQUEST, ['class' => 'spacer-sm']);
         echo "<div class='clearfix spacer-sm'>\n";
-        echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], array(
+        echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], [
             'class'    => 'btn-primary m-r-10',
             'inline'   => TRUE,
             'icon'     => 'fa fa-plus',
             'input_id' => 'button_1'
 
-        ));
-        echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], array(
+        ]);
+        echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], [
             'class'    => 'btn-success m-r-10',
             'inline'   => TRUE,
             'icon'     => 'fa fa-hdd-o',
             'input_id' => 'button_2'
-        ));
+        ]);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['input_id' => 'button_3']);
         echo "</div>\n";
 
@@ -569,17 +572,17 @@ class MemberPoll {
         echo form_hidden('opt_count', '', $opt_count);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-8 col-lg-9'>\n";
-        echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], array(
-            'required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['POLL_069'], 'inner_width' => '100%'));
+        echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
+            'required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['POLL_069'], 'inner_width' => '100%']);
 
         echo "<div class='panel panel-default'>\n";
         echo "<div class='panel-body'>\n";
         $i = 1;
         foreach ($this->data['poll_opt'] as $im1 => $data1) {
             $nam = "poll_opt_$im1";
-            echo \PHPFusion\QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, array(
+            echo \PHPFusion\QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, [
                 'required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['POLL_070']
-            ));
+            ]);
             echo($i < $opt_count ? "<hr/>\n" : '');
             $i++;
         }
@@ -587,28 +590,28 @@ class MemberPoll {
 
         echo "</div><div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
         openside('');
-        echo form_select('poll_visibility', self::$locale['POLL_044'], $this->data['poll_visibility'], array(
+        echo form_select('poll_visibility', self::$locale['POLL_044'], $this->data['poll_visibility'], [
             "inline"      => FALSE,
             'width'       => '100%',
             'inner_width' => '100%',
             'options'     => fusion_get_groups()
-        ));
-        echo form_datepicker('poll_started', self::$locale['POLL_048'], $this->data['poll_started'], array('inline' => FALSE, 'width' => '100%', 'inner_width' => '100%'));
-        echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], array('inline' => FALSE, 'width' => '100%', 'inner_width' => '100%'));
+        ]);
+        echo form_datepicker('poll_started', self::$locale['POLL_048'], $this->data['poll_started'], ['inline' => FALSE, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], ['inline' => FALSE, 'width' => '100%', 'inner_width' => '100%']);
         closeside();
         echo "</div>\n</div>\n";
 
-        echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], array(
+        echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], [
             'class'  => 'btn-primary m-r-10',
             'inline' => TRUE,
             'icon'   => 'fa fa-plus'
-        ));
+        ]);
 
-        echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], array(
+        echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], [
             'class'  => 'btn-success m-r-10',
             'inline' => TRUE,
             'icon'   => 'fa fa-hdd-o'
-        ));
+        ]);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
         echo closeform();
     }

@@ -29,7 +29,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Weblinks\\WeblinksSubmissions"      => WEBLINKS_CLASS."/weblinks/weblinks_submissions.php",
         "PHPFusion\\Weblinks\\WeblinksView"             => WEBLINKS_CLASS."/weblinks/weblinks_view.php",
         "PHPFusion\\Weblinks\\Weblinks"                 => WEBLINKS_CLASS."/weblinks/weblinks.php"
-	];
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];

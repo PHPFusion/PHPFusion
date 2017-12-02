@@ -49,9 +49,9 @@ if (dbrows($result)) {
             $poll_title[$language] = $pollData['poll_title'];
             for ($x = 0; $x <= 10; $x++) {
                 $opts_column = 'poll_opt_'.$x;
-				
+
                 if (!empty($pollData[$opts_column])) {
-					$poll_opts[$x][$language] = $pollData[$opts_column];
+                    $poll_opts[$x][$language] = $pollData[$opts_column];
                 }
             }
         }

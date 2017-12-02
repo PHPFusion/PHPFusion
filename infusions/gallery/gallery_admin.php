@@ -25,24 +25,24 @@ require_once INCLUDES."infusions_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
-if (!empty($_GET['section'])){
-	switch ($_GET['section']) {
-    	case "photo_form":
-        	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
-	        break;
-    	case "album_form":
-        	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
-	        break;
-    	case "actions":
-        	break;
-	    case "settings":
-    	    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
-        	break;
-	    case "submissions":
-    	    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
-        	break;
-	    default:
-	}
+if (!empty($_GET['section'])) {
+    switch ($_GET['section']) {
+        case "photo_form":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
+            break;
+        case "album_form":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
+            break;
+        case "actions":
+            break;
+        case "settings":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
+            break;
+        case "submissions":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
+            break;
+        default:
+    }
 }
 
 add_to_head("
@@ -99,7 +99,7 @@ $gallery_tab['icon'][] = "fa fa-inbox";
 $gallery_tab['title'][] = $locale['gallery_0006'];
 $gallery_tab['id'][] = "settings";
 $gallery_tab['icon'][] = "fa fa-cogs";
-$allowed_pages = array("album_form", "photo_form", "settings", "submissions", "actions");
+$allowed_pages = ["album_form", "photo_form", "settings", "submissions", "actions"];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
 $_GET['album'] = 0;
 
@@ -110,7 +110,7 @@ if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
     $sql = "SELECT album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id=:id";
     $param = [':id' => $_GET['album_id']];
     \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-        'link'  => clean_request("album_id=".$_GET['album_id'], array("aid"), FALSE),
+        'link'  => clean_request("album_id=".$_GET['album_id'], ["aid"], FALSE),
         "title" => dbresult(dbquery($sql, $param), 0)
     ]);
 }
@@ -145,23 +145,28 @@ closetable();
 require_once THEMES."templates/footer.php";
 /**
  * Gallery Photo Listing UI
+ * @param $id
+ * @param $type
+ * @return int
  */
 function rating_vote($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
-				IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+    $count_db = dbarray(dbquery("SELECT
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['total_votes'];
+    return $count_db['total_votes'];
 }
+
 function rating_count($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
-				COUNT(rating_id) AS rating_count
-				FROM ".DB_RATINGS."
-				WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+    $count_db = dbarray(dbquery("SELECT
+                COUNT(rating_id) AS rating_count
+                FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['rating_count'];
+    return $count_db['rating_count'];
 }
+
 function gallery_photo_listing() {
 
     $locale = fusion_get_locale();
@@ -173,18 +178,18 @@ function gallery_photo_listing() {
     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $photoRows ? $_GET['rowstart'] : 0;
     if (!empty($photoRows)) {
         $result = dbquery("
-		select photos.*,
-		album.*,
-		photos.photo_user as user_id, u.user_name, u.user_status, u.user_avatar,
-		count(comment_id) as comment_count
-		FROM ".DB_PHOTOS." photos
-		INNER JOIN ".DB_PHOTO_ALBUMS." album on photos.album_id = album.album_id
-		INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
-		LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = 'P'
-		WHERE ".groupaccess('album.album_access')." and photos.album_id = '".intval($_GET['album_id'])."'
-		GROUP BY photo_id
-		ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
-		");
+        select photos.*,
+        album.*,
+        photos.photo_user as user_id, u.user_name, u.user_status, u.user_avatar,
+        count(comment_id) as comment_count
+        FROM ".DB_PHOTOS." photos
+        INNER JOIN ".DB_PHOTO_ALBUMS." album on photos.album_id = album.album_id
+        INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
+        LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = 'P'
+        WHERE ".groupaccess('album.album_access')." and photos.album_id = '".intval($_GET['album_id'])."'
+        GROUP BY photo_id
+        ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
+        ");
         $rows = dbrows($result);
         // Photo Album header
 
@@ -212,8 +217,8 @@ function gallery_photo_listing() {
             echo "<div class='row m-t-20'>\n";
             $i = 1;
             while ($data = dbarray($result)) {
-            	$rcount = rating_count($data['photo_id'], 'P');
-            	$vcount = rating_vote($data['photo_id'], 'P');
+                $rcount = rating_count($data['photo_id'], 'P');
+                $vcount = rating_vote($data['photo_id'], 'P');
                 echo "<div class='col-xs-12' style='float:left; width:20%; padding:0 15px;'>\n";
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
@@ -270,14 +275,14 @@ function gallery_album_listing() {
     if (!empty($albumRows)) {
         // get albums.
         $gallery_sql = "SELECT album.album_id, album.album_title, album.album_image, album.album_thumb2, album.album_thumb1, album.album_order, album.album_user as user_id,
-		u.user_name, u.user_status, u.user_avatar,
-		COUNT(photo.photo_id) AS photo_count
-		FROM ".DB_PHOTO_ALBUMS." album
-		LEFT JOIN ".DB_PHOTOS." photo on photo.album_id=album.album_id
-		INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
-		".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album.album_access')."
-		GROUP BY album.album_id
-		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
+        u.user_name, u.user_status, u.user_avatar,
+        COUNT(photo.photo_id) AS photo_count
+        FROM ".DB_PHOTO_ALBUMS." album
+        LEFT JOIN ".DB_PHOTOS." photo on photo.album_id=album.album_id
+        INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
+        ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album.album_access')."
+        GROUP BY album.album_id
+        ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
         $result = dbquery($gallery_sql);
         $rows = dbrows($result);
         // Photo Album header
@@ -350,7 +355,7 @@ function gallery_album_listing() {
  * @return array
  */
 function get_albumOpts() {
-    $list = array();
+    $list = [];
     $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "")." order by album_order asc");
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {

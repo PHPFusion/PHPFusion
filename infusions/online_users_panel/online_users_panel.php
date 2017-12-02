@@ -24,12 +24,12 @@ openside($locale['global_010']);
 $user_online_query = "SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id";
 $result = dbquery($user_online_query);
 $guests = 0;
-$members = array();
+$members = [];
 while ($data = dbarray($result)) {
     if ($data['online_user'] == "0") {
         $guests++;
     } else {
-        $members[] = array($data['user_id'], $data['user_name'], $data['user_status']);
+        $members[] = [$data['user_id'], $data['user_name'], $data['user_status']];
     }
 }
 

@@ -46,5 +46,5 @@ if (db_exists(DB_NEWS)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_news']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

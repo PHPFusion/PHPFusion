@@ -93,9 +93,9 @@ if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('article');
 $check_array = [
-    'article_pagination' => 15,
+    'article_pagination'        => 15,
     'article_extended_required' => 0,
-    'article_allow_submission' => 1
+    'article_allow_submission'  => 1
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {

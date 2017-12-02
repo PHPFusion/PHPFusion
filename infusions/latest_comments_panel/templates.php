@@ -32,15 +32,15 @@ if (!function_exists('render_latest_comments')) {
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
         if (!empty($info['item'])) {
-                foreach ($info['item'] as $data) {
-                    $html->set_block('normal_comments', [
-                        'comments_subject'     => '<div data-trim-text="23">'.$data['subject'].'</div>',
-                        'comments_link_url'    => $data['link_url'],
-                        'comments_link_title'  => '<div data-trim-text="23">'.$data['link_title'].'</div>',
-                        'comments_user'        => $locale['global_070'].$data['profile_link'],
-                        'comments_bullet'      => $info['theme_bullet']
-                    ]);
-                }
+            foreach ($info['item'] as $data) {
+                $html->set_block('normal_comments', [
+                    'comments_subject'    => '<div data-trim-text="23">'.$data['subject'].'</div>',
+                    'comments_link_url'   => $data['link_url'],
+                    'comments_link_title' => '<div data-trim-text="23">'.$data['link_title'].'</div>',
+                    'comments_user'       => $locale['global_070'].$data['profile_link'],
+                    'comments_bullet'     => $info['theme_bullet']
+                ]);
+            }
         } else {
             $html->set_block('no_item', ['message' => $info['no_rows']]);
         }

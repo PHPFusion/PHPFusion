@@ -32,10 +32,10 @@ $inf_folder = "weblinks";
 $inf_image = "weblink.svg";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
-    "title" => $locale['weblinks']['title'],
+$inf_mlt[] = [
+    "title"  => $locale['weblinks']['title'],
     "rights" => "WL",
-);
+];
 
 // Create tables
 $inf_newtable[] = DB_WEBLINKS." (
@@ -71,13 +71,13 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', 'weblinks')";
 
 // Position these links under Content Administration
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "W",
-    "title" => $locale['setup_3029'],
-    "panel" => "weblinks_admin.php"
-);
+    "title"  => $locale['setup_3029'],
+    "panel"  => "weblinks_admin.php"
+];
 
 // always find and loop ALL languages
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

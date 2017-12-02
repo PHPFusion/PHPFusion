@@ -33,13 +33,13 @@ define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
 //\PHPFusion\Admins::getInstance()->setSubmitLink('n', INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 \PHPFusion\Admins::getInstance()->setSubmitData('n', [
-		'infusion_name' => 'news',
-		'link'          => INFUSIONS."news/news_submit.php",
-		'submit_link'   => "submit.php?stype=n",
-		'submit_locale' => fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"),
-		'title'         => fusion_get_locale('submit_0000', LOCALE.LOCALESET."submissions.php"),
-		'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-	]);
+    'infusion_name' => 'news',
+    'link'          => INFUSIONS."news/news_submit.php",
+    'submit_link'   => "submit.php?stype=n",
+    'submit_locale' => fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"),
+    'title'         => fusion_get_locale('submit_0000', LOCALE.LOCALESET."submissions.php"),
+    'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
 
 if (!defined("NEWS_LOCALE")) {
     if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {

@@ -18,8 +18,8 @@
 namespace PHPFusion\FAQ;
 
 class FaqSettingsAdmin extends FaqAdminModel {
-
     private static $instance = NULL;
+    private $locale = [];
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -36,16 +36,16 @@ class FaqSettingsAdmin extends FaqAdminModel {
 
         // Save
         if (isset($_POST['savesettings'])) {
-            $inputArray = array(
-                "faq_allow_submission"  => form_sanitizer($_POST['faq_allow_submission'], 0, "faq_allow_submission"),
-            );
+            $inputArray = [
+                "faq_allow_submission" => form_sanitizer($_POST['faq_allow_submission'], 0, "faq_allow_submission"),
+            ];
             // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
+                    $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "faq",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
                 addNotice("success", $this->locale['900']);
                 redirect(FUSION_REQUEST);
@@ -56,13 +56,13 @@ class FaqSettingsAdmin extends FaqAdminModel {
         }
 
         echo openform("settingsform", "post", FUSION_REQUEST);
-            echo "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n";
+        echo "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n";
 
-            echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], array(
-                'inline' => TRUE, 'options' => array($this->locale['disable'], $this->locale['enable'])
-            ));
+        echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
+            'inline' => TRUE, 'options' => [$this->locale['disable'], $this->locale['enable']]
+        ]);
 
-            echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
+        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], ["class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"]);
         echo closeform();
     }
 }

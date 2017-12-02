@@ -32,26 +32,26 @@ $inf_folder = "faq";
 $inf_image = "faq.svg";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
-    "title" => $locale['setup_3011'],
+$inf_mlt[] = [
+    "title"  => $locale['setup_3011'],
     "rights" => "FQ",
-);
+];
 
 // Create tables
 $inf_newtable[] = DB_FAQS." (
-	faq_id          MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	faq_cat_id      MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	faq_question    VARCHAR(200)          NOT NULL DEFAULT '',
-	faq_answer      TEXT                  NOT NULL,
-	faq_breaks      CHAR(1)               NOT NULL DEFAULT '',
-	faq_name        MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-	faq_datestamp   INT(10)      UNSIGNED NOT NULL DEFAULT '0',
-	faq_visibility  CHAR(4)               NOT NULL DEFAULT '0',
-	faq_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '0',
-	faq_language    VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY(faq_id),
-	KEY faq_cat_id (faq_cat_id),
-	KEY faq_datestamp (faq_datestamp)
+    faq_id          MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    faq_cat_id      MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    faq_question    VARCHAR(200)          NOT NULL DEFAULT '',
+    faq_answer      TEXT                  NOT NULL,
+    faq_breaks      CHAR(1)               NOT NULL DEFAULT '',
+    faq_name        MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+    faq_datestamp   INT(10)      UNSIGNED NOT NULL DEFAULT '0',
+    faq_visibility  CHAR(4)               NOT NULL DEFAULT '0',
+    faq_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '0',
+    faq_language    VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY(faq_id),
+    KEY faq_cat_id (faq_cat_id),
+    KEY faq_datestamp (faq_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FAQ_CATS." (
@@ -63,13 +63,13 @@ PRIMARY KEY(faq_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Position these links under Content Administration
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "FQ",
-    "title" => $locale['setup_3011'],
-    "panel" => "faq_admin.php",
-);
+    "title"  => $locale['setup_3011'],
+    "panel"  => "faq_admin.php",
+];
 
 // Insert Settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('faq_allow_submission', '1', 'faq')";

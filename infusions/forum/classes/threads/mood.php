@@ -26,9 +26,9 @@ use PHPFusion\QuantumFields;
  */
 class Forum_Mood extends ForumServer {
 
-    private static $mood_cache = array();
-    public $info = array();
-    private $post_data = array();
+    private static $mood_cache = [];
+    public $info = [];
+    private $post_data = [];
     private $post_id = 0;
     private $post_author = 0;
 
@@ -51,21 +51,21 @@ class Forum_Mood extends ForumServer {
         if (isset($_POST['post_mood']) && isnum($_POST['post_mood'])) {
             // if is a valid mood
             // insert into post notify
-            $notify_data = array(
-                'post_id' => form_sanitizer($_POST['post_id'], 0, 'post_id'),
-                'notify_mood_id' => intval($_POST['post_mood']),
+            $notify_data = [
+                'post_id'          => form_sanitizer($_POST['post_id'], 0, 'post_id'),
+                'notify_mood_id'   => intval($_POST['post_mood']),
                 'notify_datestamp' => time(),
-                'notify_user' => form_sanitizer($_POST['post_author'], 0, 'post_author'),
-                'notify_sender' => fusion_get_userdata('user_id'),
-                'notify_status' => 1,
-            );
+                'notify_user'      => form_sanitizer($_POST['post_author'], 0, 'post_author'),
+                'notify_sender'    => fusion_get_userdata('user_id'),
+                'notify_status'    => 1,
+            ];
 
             if (\defender::safe()) {
 
                 $mood_exists = dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") ? TRUE : FALSE;
 
                 $has_reacted = $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
-                                                  $notify_data['post_id']) ? TRUE : FALSE;
+                    $notify_data['post_id']) ? TRUE : FALSE;
 
                 if ($mood_exists === TRUE && $has_reacted === FALSE) {
                     dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
@@ -73,15 +73,15 @@ class Forum_Mood extends ForumServer {
                 }
             }
 
-        } elseif (isset($_POST['unpost_mood']) && isnum($_POST['unpost_mood'])) {
+        } else if (isset($_POST['unpost_mood']) && isnum($_POST['unpost_mood'])) {
             // if is a valid mood
             // insert into post notify
-            $notify_data = array(
-                'post_id' => form_sanitizer($_POST['post_id'], 0, 'post_id'),
+            $notify_data = [
+                'post_id'        => form_sanitizer($_POST['post_id'], 0, 'post_id'),
                 'notify_mood_id' => intval($_POST['unpost_mood']),
-                'notify_user' => form_sanitizer($_POST['post_author'], 0, 'post_author'),
-                'notify_sender' => fusion_get_userdata('user_id'),
-            );
+                'notify_user'    => form_sanitizer($_POST['post_author'], 0, 'post_author'),
+                'notify_sender'  => fusion_get_userdata('user_id'),
+            ];
 
             if (
                 \defender::safe() &&
@@ -89,7 +89,7 @@ class Forum_Mood extends ForumServer {
                 dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") &&
                 // Exists record check
                 $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
-                                   $notify_data['post_id'])
+                    $notify_data['post_id'])
             ) {
                 dbquery("DELETE FROM ".DB_POST_NOTIFY." WHERE post_id=".$notify_data['post_id']."
                 AND notify_mood_id=".$notify_data['notify_mood_id']."
@@ -104,7 +104,7 @@ class Forum_Mood extends ForumServer {
 
     public static function mood_exists($sender_id, $mood_id, $post_id) {
         return dbcount('(notify_user)', DB_POST_NOTIFY,
-                       "notify_sender='".$sender_id."'
+            "notify_sender='".$sender_id."'
                          AND notify_mood_id='".$mood_id."'
                          AND post_id='$post_id'");
     }
@@ -112,10 +112,12 @@ class Forum_Mood extends ForumServer {
     public function get_mood_message() {
 
         // whether any user has reacted to this post
-        $locale = fusion_get_locale("", array(FORUM_ADMIN_LOCALE, FORUM_LOCALE));
+        $locale = fusion_get_locale("", [FORUM_ADMIN_LOCALE, FORUM_LOCALE]);
 
-        $last_datestamp = array();
-        $mood_description = array();
+        $last_datestamp = [];
+        $mood_description = [];
+        $mood_user = [];
+        $mood_icon = [];
 
         $mood_cache = $this->cache_mood();
 

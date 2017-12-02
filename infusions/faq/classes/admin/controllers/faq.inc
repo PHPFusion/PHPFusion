@@ -20,8 +20,8 @@ namespace PHPFusion\FAQ;
 class FaqAdmin extends FaqAdminModel {
 
     private static $instance = NULL;
-    private $locale = array();
-    private $faq_data = array();
+    private $locale = [];
+    private $faq_data = [];
     private $form_action = FUSION_REQUEST;
 
     public static function getInstance() {
@@ -72,12 +72,12 @@ class FaqAdmin extends FaqAdminModel {
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['faq_id']) && isnum($_POST['faq_id'])) || (isset($_GET['faq_id']) && isnum($_GET['faq_id']))) {
 
             $id = (!empty($_POST['faq_id']) ? $_POST['faq_id'] : $_GET['faq_id']);
-            $criteria = array(
+            $criteria = [
                 'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
                 'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
                 'where'    => "ac.faq_id='$id'".(multilang_table("FQ") ? " AND ac.faq_language='".LANGUAGE."'" : ""),
 
-            );
+            ];
             $result = self::FaqData($criteria);
             if (dbrows($result) > 0) {
                 $this->faq_data = dbarray($result);
@@ -91,7 +91,7 @@ class FaqAdmin extends FaqAdminModel {
         self::faqContent_form();
     }
 
-    private static function FaqData(array $filters = array()) {
+    private static function FaqData(array $filters = []) {
 
         $result = dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
             FROM ".DB_FAQS." ac
@@ -119,7 +119,7 @@ class FaqAdmin extends FaqAdminModel {
                 $faq_answer = fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']);
             }
 
-            $this->faq_data = array(
+            $this->faq_data = [
                 'faq_id'         => form_sanitizer($_POST['faq_id'], 0, 'faq_id'),
                 'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
                 'faq_cat_id'     => isset($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : 0,
@@ -128,7 +128,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
                 'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
                 'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
-            );
+            ];
 
             // Line Breaks
             if (fusion_get_settings('tinymce_enabled') != 1) {
@@ -154,7 +154,7 @@ class FaqAdmin extends FaqAdminModel {
 
                 // Redirect
                 if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request("", array("ref", "action", "faq_id"), FALSE));
+                    redirect(clean_request("", ["ref", "action", "faq_id"], FALSE));
                 } else {
                     redirect(FUSION_REQUEST);
                 }
@@ -169,7 +169,7 @@ class FaqAdmin extends FaqAdminModel {
 
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
-            $faqExtendedSettings = array(
+            $faqExtendedSettings = [
                 'required'    => TRUE,
                 'preview'     => TRUE,
                 'html'        => TRUE,
@@ -178,14 +178,14 @@ class FaqAdmin extends FaqAdminModel {
                 'error_text'  => $this->locale['faq_0271'],
                 'form_name'   => 'faqform',
                 'wordcount'   => TRUE
-            );
+            ];
         } else {
-            $faqExtendedSettings = array(
+            $faqExtendedSettings = [
                 'required'   => TRUE,
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['faq_0271']
-            );
+            ];
         }
 
         // Start Form
@@ -198,11 +198,11 @@ class FaqAdmin extends FaqAdminModel {
             <!-- Display Left Column -->
             <div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>
                 <?php
-                echo form_text("faq_question", $this->locale['faq_0100'], $this->faq_data['faq_question'], array(
+                echo form_text("faq_question", $this->locale['faq_0100'], $this->faq_data['faq_question'], [
                     'required'   => TRUE,
                     'max_length' => 200,
                     'error_text' => $this->locale['faq_0271']
-                ));
+                ]);
                 echo form_textarea("faq_answer", $this->locale['faq_0251'], $this->faq_data['faq_answer'], $faqExtendedSettings);
                 ?>
             </div>
@@ -218,24 +218,24 @@ class FaqAdmin extends FaqAdminModel {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], array(
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], [
                     'inner_width' => '100%',
                     'inline'      => TRUE,
                     'options'     => $options,
-                ));
-                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], array(
+                ]);
+                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
                     'options'     => fusion_get_groups(),
                     'placeholder' => $this->locale['choose'],
                     'inner_width' => '100%',
                     'inline'      => TRUE,
-                ));
+                ]);
                 if (multilang_table('FQ')) {
-                    echo form_select("faq_language", $this->locale['language'], $this->faq_data['faq_language'], array(
+                    echo form_select("faq_language", $this->locale['language'], $this->faq_data['faq_language'], [
                         'options'     => fusion_get_enabled_languages(),
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
                         'inline'      => TRUE,
-                    ));
+                    ]);
                 } else {
                     echo form_hidden('faq_language', '', $this->faq_data['faq_language']);
                 }
@@ -245,26 +245,26 @@ class FaqAdmin extends FaqAdminModel {
                 }
                 closeside();
                 openside($this->locale['faq_0258']);
-                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], array(
+                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], [
                     'class'         => 'm-b-5',
                     'reverse_label' => TRUE
-                ));
+                ]);
 
                 if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox("faq_breaks", $this->locale['faq_0256'], $this->faq_data['faq_breaks'], array(
+                    echo form_checkbox("faq_breaks", $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
                         'value'         => 'y',
                         'class'         => 'm-b-5',
                         'reverse_label' => TRUE
-                    ));
+                    ]);
                 }
-                self::display_faqButtons('formend', false);
+                self::display_faqButtons('formend', FALSE);
                 closeside();
                 ?>
 
             </div>
         </div>
         <?php
-        self::display_faqButtons('formend', false);
+        self::display_faqButtons('formend', FALSE);
         echo closeform();
     }
 
@@ -314,17 +314,17 @@ class FaqAdmin extends FaqAdminModel {
         }
         echo openform('add_faq_cat', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo form_hidden('faq_cat_id', '', $this->cat_data['faq_cat_id']);
-        echo form_text('faq_cat_name', $this->locale['faq_0115'], $this->cat_data['faq_cat_name'], array('error_text' => $this->locale['460'], 'required' => TRUE, 'inline' => TRUE));
+        echo form_text('faq_cat_name', $this->locale['faq_0115'], $this->cat_data['faq_cat_name'], ['error_text' => $this->locale['460'], 'required' => TRUE, 'inline' => TRUE]);
         echo form_textarea('faq_cat_description', $this->locale['faq_0116'], $this->cat_data['faq_cat_description'], ['autosize' => TRUE, 'inline' => TRUE]);
         if (multilang_table("FQ")) {
-            echo form_select('faq_cat_language', $this->locale['faq_0117'], $this->cat_data['faq_cat_language'], array(
+            echo form_select('faq_cat_language', $this->locale['faq_0117'], $this->cat_data['faq_cat_language'], [
                 'options'     => fusion_get_enabled_languages(),
                 'inline'      => TRUE,
-                'placeholder' => $this->locale['choose']));
+                'placeholder' => $this->locale['choose']]);
         } else {
             echo form_hidden('cat_language', '', LANGUAGE);
         }
-        echo form_button('save_cat', $this->locale['faq_0118'], $this->locale['faq_0118'], array('class' => 'btn-primary m-t-10'));
+        echo form_button('save_cat', $this->locale['faq_0118'], $this->locale['faq_0118'], ['class' => 'btn-primary m-t-10']);
         echo closeform();
     }
 
@@ -334,12 +334,12 @@ class FaqAdmin extends FaqAdminModel {
      * @param      $unique_id
      * @param bool $breaker
      */
-    private function display_faqButtons($unique_id, $breaker = true) {
+    private function display_faqButtons($unique_id, $breaker = TRUE) {
         ?>
         <div class="m-t-20">
-            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id."")); ?>
-            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id."")); ?>
-            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id."")); ?>
+            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default", "icon" => "fa fa-fw fa-times", "input-id" => "cancel-".$unique_id.""]); ?>
+            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "save-".$unique_id.""]); ?>
+            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary", "icon" => "fa fa-fw fa-floppy-o", "input-id" => "save_and_close-".$unique_id.""]); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
@@ -351,7 +351,7 @@ class FaqAdmin extends FaqAdminModel {
      */
     private function display_faq_listing() {
         // Run functions
-        $allowed_actions = array_flip(array('publish', 'unpublish', 'delete', 'faq_display'));
+        $allowed_actions = array_flip(['publish', 'unpublish', 'delete', 'faq_display']);
 
         // Table Actions
         if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
@@ -409,33 +409,33 @@ class FaqAdmin extends FaqAdminModel {
 
         // Search
         $sql_condition = '';
-        $search_string = array();
+        $search_string = [];
         if (isset($_POST['p-submit-faq_text'])) {
-            $search_string['ac.faq_answer'] = array(
+            $search_string['ac.faq_answer'] = [
                 'input' => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'), 'operator' => 'LIKE'
-            );
+            ];
         }
 
         if (!empty($_POST['faq_status']) && isnum($_POST['faq_status']) && $_POST['faq_status'] == '1') {
-            $search_string['ac.faq_status'] = array('input' => 0, 'operator' => '=');
+            $search_string['ac.faq_status'] = ['input' => 0, 'operator' => '='];
         }
 
         if (!empty($_POST['faq_visibility'])) {
-            $search_string['ac.faq_visibility'] = array(
+            $search_string['ac.faq_visibility'] = [
                 'input' => form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility'), 'operator' => '='
-            );
+            ];
         }
 
         if (!empty($_POST['faq_language'])) {
-            $search_string['ac.faq_language'] = array(
+            $search_string['ac.faq_language'] = [
                 'input' => form_sanitizer($_POST['faq_language'], '', 'faq_language'), 'operator' => '='
-            );
+            ];
         }
 
         if (!empty($_POST['faq_name'])) {
-            $search_string['ac.faq_name'] = array(
+            $search_string['ac.faq_name'] = [
                 'input' => form_sanitizer($_POST['faq_name'], '', 'faq_name'), 'operator' => '='
-            );
+            ];
         }
 
         if (!empty($search_string)) {
@@ -456,14 +456,14 @@ class FaqAdmin extends FaqAdminModel {
             $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
         }
 
-        $criteria = array(
+        $criteria = [
             'criteria' => "ac.*, IF(a.faq_cat_name != '', a.faq_cat_name, '".$this->locale['faq_0010']."') 'faq_cat_name', u.user_id, u.user_name, u.user_status, u.user_avatar",
             'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name 
             LEFT JOIN ".DB_FAQ_CATS." a ON a.faq_cat_id=ac.faq_cat_id",
             'where'    => (multilang_table("FQ") ? "ac.faq_language='".LANGUAGE."'" : "").$sql_condition,
             //'sql_condition' => ,
             'limit'    => "LIMIT $rowstart, $limit"
-        );
+        ];
 
         $result = self::FaqData($criteria);
         // Query
@@ -473,7 +473,7 @@ class FaqAdmin extends FaqAdminModel {
         $info['max_rows'] = $max_rows;
         $info['faq_rows'] = dbrows($result);
         // Filters
-        $filter_values = array(
+        $filter_values = [
             'faq_question'   => !empty($_POST['faq_question']) ? form_sanitizer($_POST['faq_question'], '', 'faq_question') : '',
             'faq_answer'     => !empty($_POST['faq_answer']) ? form_sanitizer($_POST['faq_answer'], '', 'faq_answer') : '',
             'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], '', 'faq_status') : '',
@@ -481,7 +481,7 @@ class FaqAdmin extends FaqAdminModel {
             'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility') : '',
             'faq_language'   => !empty($_POST['faq_language']) ? form_sanitizer($_POST['faq_language'], '', 'faq_language') : '',
             'faq_name'       => !empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : '',
-        );
+        ];
 
         $filter_empty = TRUE;
         foreach ($filter_values as $val) {
@@ -495,7 +495,7 @@ class FaqAdmin extends FaqAdminModel {
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
         if ($result) {
-            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request('ref=faq_form', array('ref'), false)."'>
+            echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request('ref=faq_form', ['ref'], FALSE)."'>
                         <i class='fa fa-fw fa-plus'></i>".$this->locale['faq_0003']."</a>\n";
         }
         echo "<a class='btn btn-primary btn-sm m-r-10' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['faq_0119']."</a>
@@ -503,7 +503,7 @@ class FaqAdmin extends FaqAdminModel {
             <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin(' unpublish');\"><i class='fa fa-fw fa-ban'></i>".$this->locale['unpublish']."</a>
             <a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin(' delete');\"><i class='fa fa-fw fa-trash-o'></i>".$this->locale['delete']."</a>
         </div><div class='display-inline-block pull-left m-r-10' style='width: 300px;'>
-        ".form_text('faq_answer', '', $filter_values['faq_answer'], array(
+        ".form_text('faq_answer', '', $filter_values['faq_answer'], [
                 'placeholder'       => $this->locale['faq_0120'],
                 'append_button'     => TRUE,
                 'append_value'      => '<i class=\'fa fa-search\'></i>',
@@ -511,21 +511,21 @@ class FaqAdmin extends FaqAdminModel {
                 'width'             => '250px',
                 'inner_width'       => '250px',
                 'group_size'        => 'sm'
-            ))."
+            ])."
         </div>
         <div class='display-inline-block va'>
             <a class='btn btn-sm m-r-15 ".($filter_empty ? 'btn-default' : 'btn-info')."' id='toggle_options' href='#'>".$this->locale['faq_0120']."
                 <span id='filter_caret' class='fa fa-fw ".($filter_empty ? 'fa-caret-down' : 'fa-caret-up')."'></span>
             </a>
-            ".form_button('faq_clear', $this->locale['faq_0122'], 'clear', array('class' => 'btn-default btn-sm'))."
+            ".form_button('faq_clear', $this->locale['faq_0122'], 'clear', ['class' => 'btn-default btn-sm'])."
         </div>
         </div>
-        <div id='faq_filter_options'".($filter_empty ? ' style=\'display: none;\'' : '').">
+        <div id='faq_filter_options' ".($filter_empty ? ' style=\'display: none;\'' : '').">
         <div class='display-inline-block'>
         ".form_select('faq_status', '', $filter_values['faq_status'], [
                 'allowclear'  => TRUE,
                 'placeholder' => '- '.$this->locale['faq_0123'].' -',
-                'options'     => array(0 => $this->locale['faq_0124'], 1 => $this->locale['draft'])
+                'options'     => [0 => $this->locale['faq_0124'], 1 => $this->locale['draft']]
             ])."
         </div>
         <div class='display-inline-block'>
@@ -536,7 +536,7 @@ class FaqAdmin extends FaqAdminModel {
             ])."
         </div>
         <div class='display-inline-block'>\n";
-        $language_opts = array(0 => $this->locale['faq_0129']);
+        $language_opts = [0 => $this->locale['faq_0129']];
         $language_opts += fusion_get_enabled_languages();
         echo form_select('faq_language', '', $filter_values['faq_language'], [
             'allowclear'  => TRUE,
@@ -544,7 +544,7 @@ class FaqAdmin extends FaqAdminModel {
             'options'     => $language_opts
         ]);
         echo "</div><div class='display-inline-block'>\n";
-        $author_opts = array(0 => $this->locale['faq_0131']);
+        $author_opts = [0 => $this->locale['faq_0131']];
         $result0 = dbquery('
                         SELECT n.faq_name, u.user_id, u.user_name, u.user_status
                         FROM '.DB_FAQS.' n
@@ -557,11 +557,11 @@ class FaqAdmin extends FaqAdminModel {
                 $author_opts[$data['user_id']] = $data['user_name'];
             }
         }
-        echo form_select('faq_name', '', $filter_values['faq_name'], array(
+        echo form_select('faq_name', '', $filter_values['faq_name'], [
             'allowclear'  => TRUE,
             'placeholder' => '- '.$this->locale['faq_0130'].' -',
             'options'     => $author_opts
-        ));
+        ]);
         echo "</div>\n</div>\n";
         echo closeform();
         echo "</div>\n";
@@ -578,14 +578,14 @@ class FaqAdmin extends FaqAdminModel {
                 $cat_options[$cat_data['faq_cat_id']] = $cat_data['faq_cat_name'];
             }
 
-                echo "<div class='row'>\n";
-                    echo "<div class='col-xs-12 col-sm-6'>\n";
-                    echo form_select('faq_cat_id', $this->locale['faq_0009'], '', array('inline' => TRUE, 'options' => $cat_options, 'class' => 'm-b-0'));
-                    echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
-                    echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit']);
-                    echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger']);
-                    echo "</div>\n";
-                echo "</div>\n";
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-12 col-sm-6'>\n";
+            echo form_select('faq_cat_id', $this->locale['faq_0009'], '', ['inline' => TRUE, 'options' => $cat_options, 'class' => 'm-b-0']);
+            echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
+            echo form_button('edit_faq_cat', $this->locale['edit'], $this->locale['edit']);
+            echo form_button('delete_faq_cat', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger']);
+            echo "</div>\n";
+            echo "</div>\n";
             echo "</div>\n";
         }
 
@@ -608,7 +608,7 @@ class FaqAdmin extends FaqAdminModel {
                 $delete_link = clean_request("section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
-                        <td>".form_checkbox("faq_id[]", "", "", array("value" => $cdata['faq_id'], "class" => "m-0"))."</td>
+                        <td>".form_checkbox("faq_id[]", "", "", ["value" => $cdata['faq_id'], "class" => "m-0"])."</td>
                         <td><a href='$edit_link'>".$cdata['faq_question']."</a></td>
                         <td>".($cdata['faq_status'] ? $this->locale['no'] : $this->locale['yes'])."</td>
                         <td>".($cdata['faq_cat_id'] ? "<a href='$cat_edit_link'>" : "").$cdata['faq_cat_name'].($cdata['faq_cat_id'] ? "</a>" : "")."</td>
@@ -633,10 +633,10 @@ class FaqAdmin extends FaqAdminModel {
         }
         echo "</tbody>\n</table>\n</div>";
         echo "<div class='display-inline-block'>\n
-        ".form_select('faq_display', $this->locale['faq_0132'], $info['limit'], array(
+        ".form_select('faq_display', $this->locale['faq_0132'], $info['limit'], [
                 'width'       => '70px',
                 'inner_width' => '70px',
-                'options'     => array(5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50)))."
+                'options'     => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50]])."
         </div>";
         if ($info['max_rows'] > $info['faq_rows']) {
             echo "<div class='display-inline-block pull-right'>".makepagenav($info['rowstart'], $info['limit'], $info['max_rows'], 3, FUSION_SELF.fusion_get_aidlink().'&amp;faq_display='.$info['limit'].'&amp;')."</div>";
@@ -687,7 +687,7 @@ class FaqAdmin extends FaqAdminModel {
                 addNotice("warning", $this->locale['faq_0035']);
                 addNotice("warning", $this->locale['faq_0036']);
             }
-            redirect(clean_request("", array("ref", "action", "cat_id"), FALSE));
+            redirect(clean_request("", ["ref", "action", "cat_id"], FALSE));
         }
     }
 

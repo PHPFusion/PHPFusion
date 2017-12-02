@@ -299,7 +299,7 @@ if (!function_exists('forum_viewforum')) {
                                 'post_link'    => $locale['forum_0022']." <a href='".$postData['thread_link']['link']."'>".$postData['thread_link']['title']."</a>",
                                 'thread_link'  => $locale['forum_0023']." ".$postData['thread_link']['title'],
                                 'post_message' => parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE),
-                                'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>\n"
+                                //'post_link'    => "<a href='".$postData['thread_link']['link']."'>".$locale['forum_0024']."</a>\n"
                             ]);
                             $i++;
                         }
@@ -404,7 +404,7 @@ if (!function_exists('forum_filter')) {
         // Put into core views
         $locale = fusion_get_locale();
         // This one need to push to core.
-        $selector = array(
+        $selector = [
             'today'  => $locale['forum_0212'],
             '2days'  => $locale['forum_p002'],
             '1week'  => $locale['forum_p007'],
@@ -414,32 +414,32 @@ if (!function_exists('forum_filter')) {
             '3month' => $locale['forum_p090'],
             '6month' => $locale['forum_p180'],
             '1year'  => $locale['forum_3015']
-        );
+        ];
 
         // This one take out from default filtrations
         // Type $_GET['type']
-        $selector2 = array(
+        /*$selector2 = [
             'all'         => $locale['forum_0374'],
             'discussions' => $locale['forum_0222'],
             'attachments' => $locale['forum_0223'],
             'poll'        => $locale['forum_0314'],
             'solved'      => $locale['forum_0378'],
             'unsolved'    => $locale['forum_0379'],
-        );
+        ];*/
 
-        $selector3 = array(
+        $selector3 = [
             'author'  => $locale['forum_0052'],
             'time'    => $locale['forum_0381'],
             'subject' => $locale['forum_0051'],
             'reply'   => $locale['forum_0054'],
             'view'    => $locale['forum_0053'],
-        );
+        ];
 
         // how to stack it.
-        $selector4 = array(
+        $selector4 = [
             'descending' => $locale['forum_0230'],
             'ascending'  => $locale['forum_0231']
-        );
+        ];
         // temporarily fix before moving to TPL
         ob_start();
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id']) || isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
@@ -448,7 +448,8 @@ if (!function_exists('forum_filter')) {
                 <div class='pull-left'>
                     <?php echo $locale['forum_0388']; ?>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <button class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
+                                data-toggle='dropdown'>
                             <?php echo(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211']) ?>
                             <span class='caret'></span>
                         </button>
@@ -464,7 +465,8 @@ if (!function_exists('forum_filter')) {
                 <div class='pull-left'>
                     <?php echo $locale['forum_0225'] ?>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <button class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
+                                data-toggle='dropdown'>
                             <?php echo(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381']) ?>
                             <span class='caret'></span>
                         </button>
@@ -477,7 +479,8 @@ if (!function_exists('forum_filter')) {
                         </ul>
                     </div>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown'>
+                        <button class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
+                                data-toggle='dropdown'>
                             <?php echo(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230']) ?>
                             <span class='caret'></span>
                         </button>
@@ -582,14 +585,14 @@ if (!function_exists('forum_newtopic')) {
             $_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
             redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
         }
-        echo openmodal('newtopic', $locale['forum_0057'], array('button_id' => 'newtopic', 'class' => 'modal-md'));
+        echo openmodal('newtopic', $locale['forum_0057'], ['button_id' => 'newtopic', 'class' => 'modal-md']);
         $index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
         $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
 		 FROM ".DB_FORUMS." a
 		 LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
 		 WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
 		 (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
-        $options = array();
+        $options = [];
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $depth = get_depth($index, $data['forum_id']);
@@ -599,13 +602,13 @@ if (!function_exists('forum_newtopic')) {
             }
 
             echo "<div class='well clearfix m-t-10'>\n";
-            echo form_select('forum_sel', $locale['forum_0395'], '', array(
+            echo form_select('forum_sel', $locale['forum_0395'], '', [
                 'options' => $options,
                 'inline'  => 1,
                 'width'   => '100%'
-            ));
+            ]);
             echo "<div class='display-inline-block col-xs-12 col-sm-offset-3'>\n";
-            echo form_button('select_forum', $locale['forum_0396'], 'select_forum', array('class' => 'btn-primary btn-sm'));
+            echo form_button('select_forum', $locale['forum_0396'], 'select_forum', ['class' => 'btn-primary btn-sm']);
             echo "</div>\n";
             echo "</div>\n";
             echo closeform();
@@ -835,16 +838,16 @@ if (!function_exists('render_thread_item')) {
         echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
         echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
         echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_views'])."</h4>\n";
-        echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], array('add_count' => 0))."</span>";
+        echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], ['add_count' => 0])."</span>";
         echo "</div>\n";
         echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
         echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_postcount'])."</h4>\n";
-        echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], array('add_count' => 0))."</span>";
+        echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], ['add_count' => 0])."</span>";
         echo "</div>\n";
         if ($info['forum_type'] == '4') {
             echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
             echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['vote_count'])."</h4>\n";
-            echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], array('add_count' => 0))."</span>";
+            echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], ['add_count' => 0])."</span>";
             echo "</div>\n";
         }
         echo "</div>\n"; // end grid
@@ -869,8 +872,8 @@ if (!function_exists('render_thread')) {
 
         $locale = fusion_get_locale();
         // Shorts in core
-        $data = !empty($info['thread']) ? $info['thread'] : array();
-        $pdata = !empty($info['post_items']) ? $info['post_items'] : array();
+        $data = !empty($info['thread']) ? $info['thread'] : [];
+        $pdata = !empty($info['post_items']) ? $info['post_items'] : [];
         // End inspection
         $html->set_tag('breadcrumb', render_breadcrumbs());
         // need to change to pagenav

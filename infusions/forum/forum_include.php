@@ -71,21 +71,21 @@ function set_forumVotes($info, $points = 0) {
     // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
     // @todo: allow multiple votes / drop $res - Roadmap 9.1
     if (checkgroup($info['forum_vote']) && dbcount("('thread_id')", DB_FORUM_THREADS, "thread_locked='0'")) {
-        $data = array(
-            'forum_id' => $_GET['forum_id'],
-            'thread_id' => $_GET['thread_id'],
-            'post_id' => $_GET['post_id'],
-            'vote_points' => $points,
-            'vote_user' => $userdata['user_id'],
+        $data = [
+            'forum_id'       => $_GET['forum_id'],
+            'thread_id'      => $_GET['thread_id'],
+            'post_id'        => $_GET['post_id'],
+            'vote_points'    => $points,
+            'vote_user'      => $userdata['user_id'],
             'vote_datestamp' => time(),
-        );
+        ];
         $hasVoted = dbcount("('vote_user')", DB_FORUM_VOTES,
-                            "vote_user='".intval($userdata['user_id'])."' AND thread_id='".intval($_GET['thread_id'])."'");
+            "vote_user='".intval($userdata['user_id'])."' AND thread_id='".intval($_GET['thread_id'])."'");
         if (!$hasVoted) {
             $isSelfPost = dbcount("('post_id')", DB_FORUM_POSTS,
-                                  "post_id='".intval($_GET['post_id'])."' AND post_user='".intval($userdata['user_id'])."");
+                "post_id='".intval($_GET['post_id'])."' AND post_user='".intval($userdata['user_id'])."");
             if (!$isSelfPost) {
-                $result = dbquery_insert(DB_FORUM_VOTES, $data, 'save', array('noredirect' => 1, 'no_unique' => 1));
+                $result = dbquery_insert(DB_FORUM_VOTES, $data, 'save', ['noredirect' => 1, 'no_unique' => 1]);
                 if ($result && $info['forum_answer_threshold'] > 0) {
                     $vote_result = dbquery("SELECT SUM('vote_points'), thread_id FROM ".DB_FORUM_VOTES." WHERE post_id='".$data['post_id']."'");
                     $v_data = dbarray($vote_result);
@@ -111,7 +111,7 @@ function get_recentTopics($forum_id = 0) {
     return PHPFusion\Forums\ForumServer::get_recentTopics($forum_id);
 }
 
-function set_forumIcons(array $icons = array()) {
+function set_forumIcons(array $icons = []) {
     PHPFusion\Forums\ForumServer::set_forumIcons($icons);
 }
 

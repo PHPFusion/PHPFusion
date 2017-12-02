@@ -19,19 +19,18 @@
 $inf_version = '1.1';
 
 if (column_exists(DB_POLLS, 'poll_opt_0') && column_exists(DB_POLLS, 'poll_opt')) {
-	$result = dbquery("SELECT * FROM ".DB_POLLS);
-	if (dbrows($result) > 0) {
-	    while ($data = dbarray($result)) {
+    $result = dbquery("SELECT * FROM ".DB_POLLS);
+    if (dbrows($result) > 0) {
+        while ($data = dbarray($result)) {
+            $val = [];
+            for ($i = 0; $i < 10; $i++) {
+                $val[$i] = $data['poll_opt_'.$i];
+            }
+            $poll_option = array_filter($val);
 
-	    for ($i=0; $i<10; $i++) {
-
-	    $val[$i] = $data['poll_opt_'.$i];
-	    }
-	    $poll_option = array_filter($val);
-
-	    dbquery("UPDATE ".DB_POLLS." SET poll_opt='".serialize($poll_option)."' WHERE poll_id='".$data['poll_id']."'");
-	    }
-	}
+            dbquery("UPDATE ".DB_POLLS." SET poll_opt='".serialize($poll_option)."' WHERE poll_id='".$data['poll_id']."'");
+        }
+    }
 }
 if (column_exists(DB_POLLS, 'poll_opt_0')) {
     $inf_altertable[] = DB_POLLS." DROP poll_opt_0, DROP poll_opt_1, DROP poll_opt_2, DROP poll_opt_3, DROP poll_opt_4, DROP poll_opt_5, DROP poll_opt_6, DROP poll_opt_7, DROP poll_opt_8, DROP poll_opt_9";

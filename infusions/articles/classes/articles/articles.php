@@ -18,11 +18,10 @@
 namespace PHPFusion\Articles;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\SiteLinks;
 
 abstract class Articles extends ArticlesServer {
-    private static $locale = array();
-    public $info = array();
+    private static $locale = [];
+    public $info = [];
 
     protected function __construct() {
     }
@@ -42,22 +41,22 @@ abstract class Articles extends ArticlesServer {
         set_title(self::$locale['article_0000']);
 
         BreadCrumbs::getInstance()->addBreadCrumb(
-            array(
+            [
                 "link"  => INFUSIONS."articles/articles.php",
                 "title" => self::$locale['article_0000']
-            )
+            ]
         );
 
-        $info = array(
+        $info = [
             "article_cat_id"          => intval(0),
             "article_cat_name"        => self::$locale['article_0001'],
             "article_cat_description" => "",
             "article_cat_language"    => LANGUAGE,
-            "article_categories"      => array(),
+            "article_categories"      => [],
             "article_item_rows"       => 0,
             "article_last_updated"    => 0,
-            "article_items"           => array()
-        );
+            "article_items"           => []
+        ];
         $info = array_merge($info, self::get_ArticleFilters());
         $info = array_merge($info, self::get_ArticleCategories());
         $info = array_merge($info, self::get_ArticleItems());
@@ -73,11 +72,11 @@ abstract class Articles extends ArticlesServer {
      * @return array
      */
     private function get_ArticleFilters() {
-        $array['allowed_filters'] = array(
+        $array['allowed_filters'] = [
             "recent"  => self::$locale['article_0030'],
             "comment" => self::$locale['article_0031'],
             "rating"  => self::$locale['article_0032']
-        );
+        ];
         foreach ($array['allowed_filters'] as $type => $filter_name) {
             $filter_link = INFUSIONS."articles/articles.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "")."type=".$type;
             $array['article_filter'][$filter_link] = $filter_name;
@@ -93,7 +92,7 @@ abstract class Articles extends ArticlesServer {
      * @return mixed
      */
     protected function get_ArticleCategories() {
-        $info['article_categories'] = array();
+        $info['article_categories'] = [];
         $result = dbquery("
             SELECT article_cat_id, article_cat_name
             FROM ".DB_ARTICLE_CATS."
@@ -103,10 +102,10 @@ abstract class Articles extends ArticlesServer {
         ");
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
-                $info['article_categories'][$cdata['article_cat_id']] = array(
+                $info['article_categories'][$cdata['article_cat_id']] = [
                     "link" => INFUSIONS."articles/articles.php?cat_id=".$cdata['article_cat_id'],
                     "name" => $cdata['article_cat_name']
-                );
+                ];
             }
         }
 
@@ -120,7 +119,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    public function get_ArticleItems($filter = array()) {
+    public function get_ArticleItems($filter = []) {
 
         $info['article_total_rows'] = dbcount("(article_id)", DB_ARTICLES, groupaccess("article_visibility")." AND article_draft='0'");
 
@@ -132,6 +131,7 @@ abstract class Articles extends ArticlesServer {
             $info['article_item_rows'] = dbrows($result);
             if ($info['article_item_rows'] > 0) {
                 $article_count = 0;
+                $article_info = [];
                 while ($data = dbarray($result)) {
 
                     $article_count++;
@@ -155,7 +155,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return string
      */
-    protected static function get_ArticlesQuery(array $filters = array()) {
+    protected static function get_ArticlesQuery(array $filters = []) {
         $article_settings = self::get_article_settings();
 
         return "
@@ -188,7 +188,7 @@ abstract class Articles extends ArticlesServer {
     private static function check_ArticlesFilter() {
 
         /* Filter Construct */
-        $filter = array("recent", "comment", "rating");
+        $filter = ["recent", "comment", "rating"];
 
         if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
             switch ($_GET['type']) {
@@ -253,22 +253,22 @@ abstract class Articles extends ArticlesServer {
             }
 
             // Admin Informations
-            $adminActions = array();
+            $adminActions = [];
             if (iADMIN && checkrights("A")) {
-                $adminActions = array(
-                    "edit"   => array(
+                $adminActions = [
+                    "edit"   => [
                         "link"  => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=article_form&amp;article_id=".$data['article_id'],
                         "title" => self::$locale['edit']
-                    ),
-                    "delete" => array(
+                    ],
+                    "delete" => [
                         "link"  => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=article_form&amp;article_id=".$data['article_id'],
                         "title" => self::$locale['delete']
-                    )
-                );
+                    ]
+                ];
             }
 
             // Build Array
-            $info = array(
+            $info = [
                 # Article Category
                 "article_cat_id"           => $data['article_cat'],
                 "article_cat_name"         => $data['article_cat_name'],
@@ -309,13 +309,13 @@ abstract class Articles extends ArticlesServer {
                 # Page Nav
                 "page_count"               => $pagecount,
                 "article_pagenav"          => $articlePagenav
-            );
+            ];
             $info += $data;
 
             return (array)$info;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -328,18 +328,20 @@ abstract class Articles extends ArticlesServer {
     public function set_ArticlesCatInfo($article_cat_id) {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        $info = array(
+        $info = [
             "article_cat_id"          => intval(0),
             "article_cat_name"        => self::$locale['article_0001'],
             "article_cat_description" => "",
             "article_cat_language"    => LANGUAGE,
-            "article_categories"      => array(),
+            "article_categories"      => [],
             "article_item_rows"       => 0,
             "article_last_updated"    => 0,
-            "article_items"           => array()
-        );
+            "article_items"           => []
+        ];
         $info = array_merge($info, self::get_ArticleFilters());
         $info = array_merge($info, self::get_ArticleCategories());
+
+        $max_article_rows = '';
 
         // Filtered by Category ID.
         $select = "SELECT * FROM ".DB_ARTICLE_CATS." WHERE ".(multilang_table("AR") ? "article_cat_language='".LANGUAGE."' AND " : '')." article_cat_id=:cat_id AND article_cat_status=:status AND ".groupaccess("article_cat_visibility");
@@ -351,10 +353,10 @@ abstract class Articles extends ArticlesServer {
         if (dbrows($result)) {
             $data = dbarray($result);
             set_title(self::$locale['article_0000']);
-            BreadCrumbs::getInstance()->addBreadCrumb(array(
+            BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => INFUSIONS."articles/articles.php",
                 "title" => self::$locale['article_0000']
-            ));
+            ]);
             add_to_title(self::$locale['global_201'].$data['article_cat_name']);
 
             // Predefined variables, do not edit these values
@@ -371,7 +373,7 @@ abstract class Articles extends ArticlesServer {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_article_rows ? intval($_GET['rowstart']) : 0;
 
             if ($max_article_rows) {
-                $result = dbquery($this->get_ArticlesQuery(array("condition" => "a.article_cat='".$data['article_cat_id']."'")));
+                $result = dbquery($this->get_ArticlesQuery(["condition" => "a.article_cat='".$data['article_cat_id']."'"]));
                 $info['article_item_rows'] = dbrows($result);
                 $info['article_total_rows'] = $max_article_rows;
                 $this->article_cat_breadcrumbs($article_cat_index);
@@ -386,6 +388,7 @@ abstract class Articles extends ArticlesServer {
          */
         if ($max_article_rows) {
             $article_count = 0;
+            $article_info = [];
             while ($data = dbarray($result)) {
                 $article_count++;
                 if ($article_count == 1) {
@@ -423,10 +426,10 @@ abstract class Articles extends ArticlesServer {
                         ])
                 );
 
-                $crumb = array(
+                $crumb = [
                     "link"  => INFUSIONS."articles/articles.php?cat_id=".$_name['article_cat_id'],
                     "title" => $_name['article_cat_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -448,14 +451,14 @@ abstract class Articles extends ArticlesServer {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'][$i], "title" => $value));
+                BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'][$i], "title" => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             //add_to_title($locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(array("link" => $crumb['link'], "title" => $crumb['title']));
+            BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'], "title" => $crumb['title']]);
         }
     }
 
@@ -470,14 +473,14 @@ abstract class Articles extends ArticlesServer {
 
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(array(
+        BreadCrumbs::getInstance()->addBreadCrumb([
             "link"  => INFUSIONS."articles/articles.php",
             "title" => self::$locale['article_0000']
-        ));
+        ]);
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
 
-        $result = dbquery(self::get_ArticlesQuery(array("condition" => "a.article_id='".intval($article_id)."'", "limit" => "0,1")));
+        $result = dbquery(self::get_ArticlesQuery(["condition" => "a.article_id='".intval($article_id)."'", "limit" => "0,1"]));
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
@@ -503,16 +506,16 @@ abstract class Articles extends ArticlesServer {
             $this->article_cat_breadcrumbs($article_cat_index);
 
 
-            BreadCrumbs::getInstance()->addBreadCrumb(array(
+            BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
                 "title" => $data['article_subject']
-            ));
+            ]);
 
-            $default_info = array(
+            $default_info = [
                 "article_item"     => "",
-                "article_filter"   => array(),
-                "article_category" => array(),
-            );
+                "article_filter"   => [],
+                "article_category" => [],
+            ];
             $info = array_merge($default_info, self::get_ArticleFilters());
             $info = array_merge($info, self::get_ArticleCategories());
 

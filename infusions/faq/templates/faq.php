@@ -64,17 +64,17 @@ if (!function_exists("render_faq_item")) {
                 }
 
                 echo "<a data-toggle='collapse' href='#".$faq_id."' aria-expanded='false' aria-controls='".$faq_id."'>";
-                    echo "<h4 class='display-inline-block'>".$faq_data['faq_question']."</h4>";
+                echo "<h4 class='display-inline-block'>".$faq_data['faq_question']."</h4>";
                 echo "<a class='pull-right top' href='#' title=".$locale['faq_0002']."><i class='fa fa-arrow-up'></i></a>\n";
                 echo "</a>";
 
                 echo "<div class='collapse' id='".$faq_id."'>";
-                    echo $faq_data['faq_answer'];
+                echo $faq_data['faq_answer'];
 
-                    echo "<div>";
-                    echo $faq_print;
-                    echo $faq_admin;
-                    echo "</div>";
+                echo "<div>";
+                echo $faq_print;
+                echo $faq_admin;
+                echo "</div>";
                 echo "</div>";
                 echo "</div>";
             }

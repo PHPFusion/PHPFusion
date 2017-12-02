@@ -46,5 +46,5 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

@@ -81,9 +81,9 @@ $inf_dropcol[] = ['table' => DB_WEBLINK_CATS, 'column' => 'weblink_cat_access'];
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('weblinks');
 $check_array = [
-    'links_per_page' => 15,
+    'links_per_page'          => 15,
     'links_extended_required' => 1,
-    'links_allow_submission' => 1
+    'links_allow_submission'  => 1
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {

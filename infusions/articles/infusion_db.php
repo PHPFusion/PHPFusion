@@ -40,15 +40,15 @@ if (!defined("ARTICLE_CLASS")) {
     define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
 }
 if (!defined("IMAGES_A")) {
-	define("IMAGES_A", INFUSIONS."articles/images/");
+    define("IMAGES_A", INFUSIONS."articles/images/");
 }
 
 // Database
 if (!defined("DB_ARTICLE_CATS")) {
-	define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
+    define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
 }
 if (!defined("DB_ARTICLES")) {
-	define("DB_ARTICLES", DB_PREFIX."articles");
+    define("DB_ARTICLES", DB_PREFIX."articles");
 }
 
 // Admin Settings
@@ -59,10 +59,10 @@ if (!defined("DB_ARTICLES")) {
 //\PHPFusion\Admins::getInstance()->setSubmitLink("a", INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
 \PHPFusion\Admins::getInstance()->setSubmitData('a', [
-		'infusion_name' => 'articles',
-		'link'          => INFUSIONS."articles/article_submit.php",
-		'submit_link'   => "submit.php?stype=a",
-		'submit_locale' => fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"),
-		'title'         => fusion_get_locale('submit_0001', LOCALE.LOCALESET."submissions.php"),
-		'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-	]);
+    'infusion_name' => 'articles',
+    'link'          => INFUSIONS."articles/article_submit.php",
+    'submit_link'   => "submit.php?stype=a",
+    'submit_locale' => fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"),
+    'title'         => fusion_get_locale('submit_0001', LOCALE.LOCALESET."submissions.php"),
+    'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);

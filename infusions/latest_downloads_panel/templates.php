@@ -32,14 +32,14 @@ if (!function_exists('render_latest_downloads')) {
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
         if (!empty($info['item'])) {
-                foreach ($info['item'] as $data) {
-                    $html->set_block('downloads', [
-                        'download_url'   => $data['download_url'],
-                        'download_title' => '<div data-trim-text="35">'.$data['download_title'].'</div>',
-                        'author'        => $locale['global_070'].$data['profile_link'],
-                        'bullet'        => $info['theme_bullet']
-                    ]);
-                }
+            foreach ($info['item'] as $data) {
+                $html->set_block('downloads', [
+                    'download_url'   => $data['download_url'],
+                    'download_title' => '<div data-trim-text="35">'.$data['download_title'].'</div>',
+                    'author'         => $locale['global_070'].$data['profile_link'],
+                    'bullet'         => $info['theme_bullet']
+                ]);
+            }
         } else {
             $html->set_block('no_item', ['message' => $info['no_item']]);
         }

@@ -46,5 +46,5 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_downloads'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

@@ -51,5 +51,5 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_articles'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

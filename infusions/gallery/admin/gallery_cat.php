@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-$data = array(
+$data = [
     "album_id"          => 0,
     "album_title"       => "",
     "album_keywords"    => "",
@@ -27,9 +27,9 @@ $data = array(
     "album_thumb1"      => "",
     "album_thumb2"      => "",
     "album_order"       => dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "") + 1
-);
+];
 if (isset($_POST['save_album'])) {
-    $data = array(
+    $data = [
         "album_id"          => form_sanitizer($_POST['album_id'], 0, "album_id"),
         "album_title"       => form_sanitizer($_POST['album_title'], "", "album_title"),
         "album_keywords"    => form_sanitizer($_POST['album_keywords'], "", "album_keywords"),
@@ -42,7 +42,7 @@ if (isset($_POST['save_album'])) {
         "album_thumb2"      => "",
         "album_user"        => $userdata['user_id'],
         "album_datestamp"   => time(),
-    );
+    ];
     if (empty($data['album_order'])) {
         $data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS."
 				".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0) + 1;
@@ -110,22 +110,22 @@ if ($album_edit) {
 // edit features - add more in roadmap.
 // add features to purge all album photos and it's administration
 // add features to move all album photos to another album.
-echo openform('albumform', 'post', FUSION_REQUEST, array('enctype' => TRUE, 'class' => 'm-t-20'));
+echo openform('albumform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-20']);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 echo form_hidden('album_id', '', $data['album_id']);
-echo form_text('album_title', $locale['album_0001'], $data['album_title'], array(
+echo form_text('album_title', $locale['album_0001'], $data['album_title'], [
     'placeholder' => $locale['album_0002'],
     'inline'      => TRUE,
     'required'    => TRUE,
     'class'       => 'form-group-lg',
     "error_text"  => $locale['album_0015'],
-));
-echo form_textarea('album_description', $locale['album_0003'], $data['album_description'], array(
+]);
+echo form_textarea('album_description', $locale['album_0003'], $data['album_description'], [
     'placeholder' => $locale['album_0004'],
     'inline'      => TRUE,
     'type'        => 'bbcode',
     'form_name'   => 'albumform'
-));
+]);
 if ($data['album_image'] || $data['album_thumb1']) {
     echo "<div class='col-sm-offset-3'>\n";
     echo form_hidden("album_image", "", $data['album_image']);
@@ -140,7 +140,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
     echo form_checkbox("del_image", $locale['album_0016'], "", ['class' => 'p-l-15', 'reverse_label' => TRUE]);
     echo "</div>\n";
 } else {
-    $album_upload_settings = array(
+    $album_upload_settings = [
         "upload_path"       => INFUSIONS."gallery/photos/",
         'thumbnail_folder'  => 'thumbs',
         'thumbnail'         => TRUE,
@@ -160,7 +160,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
         "template"          => "modern",
         "class"             => "m-b-0",
         'valid_ext'         => $gll_settings['gallery_file_types'],
-    );
+    ];
     echo form_fileinput('album_image', $locale['album_0009'], "", $album_upload_settings);
     echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']),
             $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'],
@@ -168,15 +168,15 @@ if ($data['album_image'] || $data['album_thumb1']) {
 }
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
-echo form_select('album_access', $locale['album_0007'], $data['album_access'], array(
+echo form_select('album_access', $locale['album_0007'], $data['album_access'], [
     'options' => fusion_get_groups(),
     'inline'  => TRUE
-));
-echo form_select('album_language', $locale['album_0008'], $data['album_language'], array(
+]);
+echo form_select('album_language', $locale['album_0008'], $data['album_language'], [
     'options' => fusion_get_enabled_languages(),
     'inline'  => TRUE
-));
-echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], array(
+]);
+echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], [
     'max_length'  => 320,
     'inner_width' => '100%',
     'width'       => '100%',
@@ -184,8 +184,8 @@ echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'
     'tags'        => TRUE,
     'multiple'    => TRUE,
     "inline"      => TRUE,
-));
-echo form_text('album_order', $locale['album_0011'], $data['album_order'], array("type" => "number", 'inline' => TRUE));
+]);
+echo form_text('album_order', $locale['album_0011'], $data['album_order'], ["type" => "number", 'inline' => TRUE]);
 echo "</div>\n</div>\n";
-echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], array('class' => 'btn-success', 'icon' => 'fa fa-hdd-o'));
+echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();

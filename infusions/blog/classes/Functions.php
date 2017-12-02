@@ -174,7 +174,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
             $html = Comments::getInstance(
-                array(
+                [
                     'comment_item_type'     => 'B',
                     'comment_db'            => DB_BLOG,
                     'comment_col'           => 'blog_id',
@@ -186,7 +186,7 @@ class Functions {
                     'comment_allow_post'    => TRUE,
                     'comment_once'          => FALSE,
                     'comment_allow_ratings' => FALSE,
-                ), 'blog_comments'
+                ], 'blog_comments'
             )->showComments();
         }
 

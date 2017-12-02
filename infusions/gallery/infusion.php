@@ -31,10 +31,10 @@ $inf_folder = "gallery";
 $inf_image = "gallery.svg";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
+$inf_mlt[] = [
     "title"  => $locale['setup_3308'],
     "rights" => "PG",
-);
+];
 
 // Create tables
 $inf_newtable[] = DB_PHOTO_ALBUMS." (
@@ -76,13 +76,13 @@ $inf_newtable[] = DB_PHOTOS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Position these links under Content Administration
-$inf_adminpanel[] = array(
+$inf_adminpanel[] = [
     "image"  => $inf_image,
     "page"   => 1,
     "rights" => "PH",
     "title"  => $locale['setup_3308'],
     "panel"  => "gallery_admin.php"
-);
+];
 
 // Gallery settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_w', '200', 'gallery')";
@@ -119,10 +119,10 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$enabled_languages[$i]."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".LANGUAGE."')";
 }
 
-// Defuse cleaning	
+// Defuse cleaning
 $inf_droptable[] = DB_PHOTO_ALBUMS;
 $inf_droptable[] = DB_PHOTOS;
 

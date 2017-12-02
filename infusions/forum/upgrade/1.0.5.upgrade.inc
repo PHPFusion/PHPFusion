@@ -33,14 +33,14 @@ $inf_folder = "forum";
 $inf_image = "forums.svg";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
+$inf_mlt[] = [
     "title"  => $locale['forums']['title'],
     "rights" => "FO",
-);
-$inf_mlt[] = array(
+];
+$inf_mlt[] = [
     "title"  => $locale['setup_3038'],
     "rights" => "FR",
-);
+];
 /**
  * Forum Upgrades covering PHP-Fusion 7 to PHP-Fusion 9 RC4
  */
@@ -348,15 +348,15 @@ if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"]);
 
-        $sl_name_check = array(
-            $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')",
+        $sl_name_check = [
+            $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '2', '1', '".$language."')",
             $locale['setup_3324'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', ".USER_LEVEL_MEMBER.", '2', '0', '1', '1', '".$language."')",
             $locale['setup_3319'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".$language."')",
             $locale['setup_3320'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', ".USER_LEVEL_MEMBER.", '2', '0', '3', '1', '".$language."')",
             $locale['setup_3321'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', ".USER_LEVEL_MEMBER.", '2', '0', '4', '1', '".$language."')",
             $locale['setup_3322'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')",
             $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
-        );
+        ];
 
         foreach ($sl_name_check as $link_name => $_sql) {
             if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
@@ -364,7 +364,7 @@ if (!empty($enabled_languages)) {
             }
         }
         // Ranks
-        $rank_name_check = array(
+        $rank_name_check = [
             $locale['setup_3600'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', ".USER_LEVEL_SUPER_ADMIN.", '".$language."')",
             $locale['setup_3601'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3601']."', 'rank_admin.png', 0, '1', ".USER_LEVEL_ADMIN.", '".$language."')",
             $locale['setup_3602'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3602']."', 'rank_mod.png', 0, '1', '-104', '".$language."')",
@@ -374,7 +374,7 @@ if (!empty($enabled_languages)) {
             $locale['setup_3606'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', ".USER_LEVEL_MEMBER.", '".$language."')",
             $locale['setup_3607'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', ".USER_LEVEL_MEMBER.", '".$language."')",
             $locale['setup_3608'] => DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', ".USER_LEVEL_MEMBER.", '".$language."')",
-        );
+        ];
         foreach ($rank_name_check as $rank_name => $_sql) {
             if (!dbcount("(rank_id)", DB_FORUM_RANKS, "rank_title='".$rank_name."'")) {
                 $mlt_insertdbrow[$language][] = $_sql;
@@ -399,17 +399,17 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $language = LANGUAGE;
-    $sl_name_check = array(
-        $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '1', '".$language."')",
+    $sl_name_check = [
+        $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '2', '1', '".$language."')",
         $locale['setup_3324'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', ".USER_LEVEL_MEMBER.", '2', '0', '1', '1', '".$language."')",
         $locale['setup_3319'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".$language."')",
         $locale['setup_3320'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', ".USER_LEVEL_MEMBER.", '2', '0', '3', '1', '".$language."')",
         $locale['setup_3321'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', ".USER_LEVEL_MEMBER.", '2', '0', '4', '1', '".$language."')",
         $locale['setup_3322'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')",
         $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
-    );
+    ];
 
-    foreach ($link_name_check as $link_name => $_sql) {
+    foreach ($sl_name_check as $link_name => $_sql) {
         if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
             $mlt_insertdbrow[$language][] = $_sql;
         }
@@ -417,10 +417,10 @@ if (!empty($enabled_languages)) {
 }
 
 // Admin links
-$inf_adminpanel[] = array(
+$inf_adminpanel[] = [
     "image"  => $inf_image,
     "page"   => 1,
     "rights" => "F",
     "title"  => $locale['setup_3012'],
     "panel"  => "admin/forums.php"
-);
+];

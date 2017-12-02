@@ -32,7 +32,7 @@ if (!empty($_POST['filter_date'])) {
     $time_filter = (TIME - ($time_filter * 24 * 3600));
     $time_sql = "t.thread_lastpost < '$time_filter' AND ";
 }
-$opts = array(
+$opts = [
     '0'   => $locale['forum_p999'],
     '1'   => $locale['forum_p001'],
     '7'   => $locale['forum_p007'],
@@ -41,17 +41,17 @@ $opts = array(
     '90'  => $locale['forum_p090'],
     '180' => $locale['forum_p180'],
     '365' => $locale['forum_3015']
-);
+];
 $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', INFUSIONS."forum/index.php?section=tracked").
-    form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), array(
+    form_select('filter_date', $locale['forum_0009'], (isset($_POST['filter_date']) && $_POST['filter_date'] ? $_POST['filter_date'] : 0), [
         'options' => $opts,
         'width'   => '300px',
         'class'   => 'pull-left m-r-10',
-        'stacked' => form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default')),
-    )).closeform();
+        'stacked' => form_button('go', $locale['go'], $locale['go'], ['class' => 'btn-default']),
+    ]).closeform();
 
 $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
-    array(
+    [
         'count_query' => "SELECT tn.thread_id 
         FROM ".DB_FORUM_THREAD_NOTIFY." tn
         INNER JOIN ".DB_FORUM_THREADS." t ON tn.thread_id = t.thread_id
@@ -70,7 +70,7 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
         WHERE tn.notify_user='".$userdata['user_id']."' AND t.thread_hidden='0' AND $time_sql ".groupaccess('tf.forum_access')."
         GROUP BY tn.thread_id
         ORDER BY tn.notify_datestamp DESC"
-    )
+    ]
 );
 
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);

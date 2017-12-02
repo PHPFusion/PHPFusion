@@ -32,9 +32,9 @@ foreach ($check_array as $key => $value) {
 if (column_exists(DB_BLOG, 'blog_cat')) {
     $inf_altertable[] = DB_BLOG." CHANGE blog_cat blog_cat VARCHAR(50) NOT NULL DEFAULT '0'";
 } else {
-    $inf_newcol[] = array(
+    $inf_newcol[] = [
         'table'       => DB_BLOG,
         'column'      => 'blog_cat',
         'column_type' => "VARCHAR(50) NOT NULL DEFUALT '0'"
-    );
+    ];
 }

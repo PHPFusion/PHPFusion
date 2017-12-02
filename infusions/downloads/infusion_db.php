@@ -25,6 +25,7 @@ if (!defined("DOWNLOAD_ADMIN_LOCALE")) {
         define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/English/downloads_admin.php");
     }
 }
+
 define("DOWNLOADS", INFUSIONS."downloads/");
 define("IMAGES_D", INFUSIONS."downloads/images/");
 define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
@@ -37,10 +38,10 @@ define("DB_DOWNLOADS", DB_PREFIX."downloads");
 //\PHPFusion\Admins::getInstance()->setSubmitLink('d', INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
 \PHPFusion\Admins::getInstance()->setSubmitData('d', [
-		'infusion_name' => 'downloads',
-		'link'          => INFUSIONS."downloads/download_submit.php",
-		'submit_link'   => "submit.php?stype=d",
-		'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
-		'title'         => fusion_get_locale('submit_0002', LOCALE.LOCALESET."submissions.php"),
-		'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-	]);
+    'infusion_name' => 'downloads',
+    'link'          => INFUSIONS."downloads/download_submit.php",
+    'submit_link'   => "submit.php?stype=d",
+    'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
+    'title'         => fusion_get_locale('submit_0002', LOCALE.LOCALESET."submissions.php"),
+    'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);

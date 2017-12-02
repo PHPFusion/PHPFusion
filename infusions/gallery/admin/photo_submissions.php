@@ -23,7 +23,7 @@ $locale = fusion_get_locale();
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['close'])) {
-        redirect(clean_request("", array("submit_id"), FALSE));
+        redirect(clean_request("", ["submit_id"], FALSE));
     }
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 
@@ -34,7 +34,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         if (dbrows($result)) {
             $data = dbarray($result);
 
-            $callback_data = array(
+            $callback_data = [
                 "photo_id"             => 0,
                 "photo_title"          => form_sanitizer($_POST['photo_title'], "", "photo_title"),
                 "album_id"             => form_sanitizer($_POST['album_id'], "", "album_id"),
@@ -49,7 +49,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "photo_filename"       => form_sanitizer($_POST['photo_filename'], "", "photo_filename"),
                 "photo_thumb1"         => isset($_POST['photo_thumb1']) ? form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1") : "",
                 "photo_thumb2"         => isset($_POST['photo_thumb2']) ? form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2") : "",
-            );
+            ];
 
             if (defender::safe()) {
 
@@ -88,11 +88,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
                 addNotice("success", $locale['gallery_0160']);
-                redirect(clean_request("", array("submit_id"), FALSE));
+                redirect(clean_request("", ["submit_id"], FALSE));
 
             }
         } else {
-            redirect(clean_request("", array("submit_id"), FALSE));
+            redirect(clean_request("", ["submit_id"], FALSE));
         }
     } else {
         if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
@@ -109,7 +109,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($data['submit_id'])."'");
                 addNotice("success", $locale['gallery_0161']);
             }
-            redirect(clean_request("", array("submit_id"), FALSE));
+            redirect(clean_request("", ["submit_id"], FALSE));
         } else {
 
             $result = dbquery("SELECT
@@ -122,7 +122,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $submit_criteria = unserialize($data['submit_criteria']);
-                $callback_data = array(
+                $callback_data = [
                     "album_id"          => $submit_criteria['album_id'],
                     "photo_title"       => $submit_criteria['photo_title'],
                     "photo_keywords"    => $submit_criteria['photo_keywords'],
@@ -133,7 +133,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "photo_datestamp"   => $data['submit_datestamp'],
                     "photo_user"        => $data['user_id'],
                     "photo_order"       => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1
-                );
+                ];
                 add_to_title($locale['global_201'].$locale['gallery_0100'].$locale['global_200'].$callback_data['photo_title']."?");
                 $l_image = "";
                 $submissions_dir = INFUSIONS."gallery/submissions/";
@@ -152,33 +152,33 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
                 echo form_hidden("photo_datestamp", "", $callback_data['photo_datestamp']);
                 echo form_hidden("photo_user", "", $callback_data['photo_user']);
-                echo form_text("photo_title", $locale['photo_0001'], $callback_data['photo_title'], array(
+                echo form_text("photo_title", $locale['photo_0001'], $callback_data['photo_title'], [
                     "required"    => TRUE,
                     "placeholder" => $locale['photo_0002'],
                     "inline"      => TRUE
-                ));
-                echo form_select('photo_keywords', $locale['album_0005'], $callback_data['photo_keywords'], array(
+                ]);
+                echo form_select('photo_keywords', $locale['album_0005'], $callback_data['photo_keywords'], [
                     'placeholder' => $locale['album_0006'],
                     'inline'      => TRUE,
                     'multiple'    => TRUE,
                     "tags"        => TRUE,
                     'width'       => '100%',
-                ));
-                echo form_text('photo_order', $locale['photo_0013'], $callback_data['photo_order'], array(
+                ]);
+                echo form_text('photo_order', $locale['photo_0013'], $callback_data['photo_order'], [
                     "type"   => "number",
                     "inline" => TRUE,
                     "width"  => "100px"
-                ));
-                $snippetSettings = array(
+                ]);
+                $snippetSettings = [
                     "preview"     => TRUE,
                     "html"        => TRUE,
                     "autosize"    => TRUE,
                     "form_name"   => "inputform",
                     'placeholder' => $locale['photo_0009'],
                     "inline"      => TRUE,
-                );
+                ];
                 if (fusion_get_settings("tinymce_enabled")) {
-                    $snippetSettings = array("inline" => TRUE, "form_name" => "inputform", 'placeholder' => $locale['photo_0009'],);
+                    $snippetSettings = ["inline" => TRUE, "form_name" => "inputform", 'placeholder' => $locale['photo_0009'],];
                 }
                 echo form_textarea('photo_description', $locale['photo_0008'], $callback_data['photo_description'], $snippetSettings);
                 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
@@ -204,16 +204,16 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     echo "</div>\n";
                 }
                 openside("");
-                echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], array(
+                echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], [
                     'options' => get_albumOpts(),
                     'inline'  => TRUE
-                ));
-                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], array('class' => 'btn-primary m-r-10'));
+                ]);
+                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
                 closeside();
                 echo "</div></div>\n";
-                echo form_button('close', $locale['close'], $locale['close'], array('class' => 'btn-default m-r-10'));
-                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], array('class' => 'btn-primary m-r-10'));
-                echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], array('class' => 'btn-warning m-r-10'));
+                echo form_button('close', $locale['close'], $locale['close'], ['class' => 'btn-default m-r-10']);
+                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
+                echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], ['class' => 'btn-warning m-r-10']);
                 echo closeform();
             }
         }
@@ -236,10 +236,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         while ($data = dbarray($result)) {
             $submit_criteria = unserialize($data['submit_criteria']);
             echo "<tr>\n";
-            echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], array(
+            echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",
                     "aid"
-                ), TRUE)."'>".$submit_criteria['photo_title']."</a></td>\n";
+                ], TRUE)."'>".$submit_criteria['photo_title']."</a></td>\n";
             echo "<td>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
             echo "<td>".timer($data['submit_datestamp'])."</td>\n";
             echo "<td>".$data['submit_id']."</td>\n";

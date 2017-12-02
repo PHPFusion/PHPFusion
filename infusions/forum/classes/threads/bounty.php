@@ -31,12 +31,13 @@ class Forum_Bounty extends ForumServer {
      *
      * @var array
      */
-    private static $permissions = array();
-    private static $data = array();
+    private static $permissions = [];
+    private static $data = [];
 
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';
         $bounty_points = 50;
+        $points = '';
         $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
         if ($edit ? self::get_bounty_permissions('can_edit_bounty') : self::get_bounty_permissions('can_start_bounty')) {
@@ -82,13 +83,13 @@ class Forum_Bounty extends ForumServer {
             $bounty_field['openform'] = openform('set_bountyfrm', 'post', FUSION_REQUEST, ['class' => 'spacer-xs']);
             $bounty_field['closeform'] = closeform();
             $bounty_field['bounty_description'] = form_textarea('bounty_description', $locale['forum_2016'], $bounty_description, ['type' => 'bbcode']);
-            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'] , $bounty_points, ['options' => $points]) : '');
+            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'], $bounty_points, ['options' => $points]) : '');
             $bounty_field['bounty_button'] = form_button('save_bounty', $locale['forum_2018'], $locale['forum_2018'], ['class' => 'btn-primary']);
-            $info = array(
+            $info = [
                 'title'       => $locale['forum_2014'],
                 'description' => $locale['forum_2000'].self::$data['thread_subject'],
                 'field'       => $bounty_field
-            );
+            ];
             display_forum_bountyform($info);
         } else {
             redirect(FORUM.'index.php');
@@ -105,10 +106,10 @@ class Forum_Bounty extends ForumServer {
                 if ($post_data['post_author'] !== fusion_get_userdata('user_id')) {
                     // give the user the points.
                     dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id",
-                            [
-                                ':points'  => self::$data['thread_bounty'],
-                                ':user_id' => $post_data['post_author'],
-                            ]
+                        [
+                            ':points'  => self::$data['thread_bounty'],
+                            ':user_id' => $post_data['post_author'],
+                        ]
                     );
                     // log the points change
                     $d = [
@@ -124,13 +125,13 @@ class Forum_Bounty extends ForumServer {
                     $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($post_data['post_author'], 0, $title, stripinput($message));
                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
-                            [
-                                ':bounty'    => 0,
-                                ':desc'      => '',
-                                ':user'      => 0,
-                                ':start'     => 0,
-                                ':thread_id' => $post_data['thread_id']
-                            ]);
+                        [
+                            ':bounty'    => 0,
+                            ':desc'      => '',
+                            ':user'      => 0,
+                            ':start'     => 0,
+                            ':thread_id' => $post_data['thread_id']
+                        ]);
                     redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
                 }
                 redirect(FORUM.'postify.php?post=award&amp;error=7&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);

@@ -107,7 +107,7 @@ $info = [
     'openform'     => openform('contactform', 'post', FUSION_SELF, ['max_tokens' => 1]),
     'mail_name'    => form_text('mailname', $locale['402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64]),
     'email'        => form_text('email', $locale['403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64]),
-    'subject'      => form_text('subject', $locale['404'], $input['subject'],['required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64]),
+    'subject'      => form_text('subject', $locale['404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64]),
     'message'      => form_textarea('message', $locale['405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128]),
     'captcha_code' => $captcha,
     'button'       => form_button('sendmessage', $locale['406'], $locale['406'], ['class' => 'btn-primary', 'icon' => 'fa fa-send']),
@@ -117,7 +117,7 @@ $info = [
 ob_start();
 
 require_once INFUSIONS.'contact_form_panel/templates/contact_form_panel.php';
-echo render_contact_panel($info);
+render_contact_panel($info);
 
 echo strtr(ob_get_clean(), [
     '{%tablename%}'       => $info['tablename'],

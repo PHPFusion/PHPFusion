@@ -32,10 +32,10 @@ $inf_folder = "blog";
 $inf_image = "blog.svg";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
-    "title" => $locale['blog']['title'],
+$inf_mlt[] = [
+    "title"  => $locale['blog']['title'],
     "rights" => "BL",
-);
+];
 // Create tables
 $inf_newtable[] = DB_BLOG." (
 	blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -76,13 +76,13 @@ $inf_newtable[] = DB_BLOG_CATS." (
 // Automatic enable the archives panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3318']."', 'blog_archive_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 // Position these links under Content Administration
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "BLOG",
-    "title" => $locale['setup_3055'],
-    "panel" => "blog_admin.php"
-);
+    "title"  => $locale['setup_3055'],
+    "panel"  => "blog_admin.php"
+];
 
 // Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_ratio', '0', 'blog')";

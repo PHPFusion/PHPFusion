@@ -39,7 +39,8 @@ class Forum_Postify extends ForumServer {
 
         self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 
-        if (!iMEMBER) redirect(self::$default_redirect_link);
+        if (!iMEMBER)
+            redirect(self::$default_redirect_link);
 
         add_to_title(self::$locale['global_204']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
@@ -136,11 +137,13 @@ class Forum_Postify extends ForumServer {
             if (method_exists($postify, 'execute')) {
                 $postify->execute();
             } else {
-                if (iMOD) addNotice('danger', 'No action taken');
+                if (iMOD)
+                    addNotice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
         } else {
-            if (iMOD) addNotice('danger', 'No action taken');
+            if (iMOD)
+                addNotice('danger', 'No action taken');
             redirect(self::$default_redirect_link);
         }
     }

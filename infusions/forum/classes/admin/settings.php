@@ -15,10 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Locale;
 use PHPFusion\QuantumFields;
 
@@ -89,7 +87,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         <div class='well spacer-sm'>
             <?php echo str_replace(['[LINK]', '[/LINK]'],
                 ["<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."'>", "</a>"], self::$locale['forum_150']);
-        ?>
+            ?>
         </div>
         <?php
         echo openform('forum_uf_settings_frm', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
@@ -122,14 +120,12 @@ class ForumAdminSettings extends ForumAdminInterface {
                                     $uf_query = dbquery($uf_select, [':field_cat' => $data['field_cat_id']]);
                                     if (dbrows($uf_query)) {
                                         while ($cdata = dbarray($uf_query)) {
-                                            $locale = fusion_get_locale();
                                             if (empty($cdata['field_title']) && $cdata['field_type'] == 'file') {
                                                 $locale_file = LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php';
                                                 $var_file = INCLUDES.'user_fields/'.$cdata['field_name'].'_include_var.php';
                                                 if (file_exists($locale_file) && file_exists($var_file)) {
                                                     $user_field_name = '';
                                                     Locale::setLocale($locale_file);
-                                                    $locale = fusion_get_locale();
                                                     // after that i need to include the file.
                                                     include $var_file;
                                                 }
@@ -164,7 +160,7 @@ class ForumAdminSettings extends ForumAdminInterface {
     private function display_general_settings() {
 
         if (isset($_POST['save_forum_settings'])) {
-            $inputArray = array(
+            $inputArray = [
                 'numofthreads'              => form_sanitizer($_POST['numofthreads'], 20, 'numofthreads'),
                 'threads_per_page'          => form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page'),
                 'posts_per_page'            => form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page'),
@@ -178,25 +174,24 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'answering_points'          => form_sanitizer($_POST['answering_points'], 15, 'answering_points'),
                 'points_to_upvote'          => form_sanitizer($_POST['points_to_upvote'], 100, 'points_to_upvote'),
                 'points_to_downvote'        => form_sanitizer($_POST['points_to_downvote'], 100, 'points_to_downvote'),
-            );
+            ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
+                    $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
                 addNotice('success', self::$locale['900']);
                 redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs');
             } else {
                 addNotice("danger", self::$locale['901']);
-                $forum_settings = $inputArray;
             }
 
         }
 
         $forum_settings = $this->get_forum_settings();
-        $yes_no_array = array('1' => self::$locale['yes'], '0' => self::$locale['no']);
+        $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well spacer-sm'>
@@ -231,7 +226,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     'type'        => 'number'
                 ]);
                 echo form_text('numofthreads', self::$locale['505'], $forum_settings['numofthreads'], [
-            'ext_tip' => self::$locale['506'],
+                    'ext_tip'     => self::$locale['506'],
                     'error_text'  => self::$locale['error_value'],
                     'inline'      => TRUE,
                     'inner_width' => '100px',
@@ -239,18 +234,18 @@ class ForumAdminSettings extends ForumAdminInterface {
                     'type'        => 'number',
                 ]);
 
-                $timeframe_opts = array(
+                $timeframe_opts = [
                     '604800'   => self::$locale['527'],
                     '2419200'  => self::$locale['528'],
                     '31557600' => self::$locale['529'],
                     '0'        => self::$locale['530']
-                );
-                $lastpost_opts = array('0' => self::$locale['519'], '1' => self::$locale['533']);
+                ];
+                $lastpost_opts = ['0' => self::$locale['519'], '1' => self::$locale['533']];
                 for ($i = 2; $i <= 20; $i++) {
                     $array_opts[$i] = sprintf(self::$locale['532'], $i);
                 }
                 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
-                    echo alert(self::$locale['524'], '', array('class' => 'warning'));
+                    echo alert(self::$locale['524'], '', ['class' => 'warning']);
                 }
                 echo "<div class='clearfix'>\n";
                 echo form_select('popular_threads_timeframe', self::$locale['525'],
@@ -316,7 +311,7 @@ class ForumAdminSettings extends ForumAdminInterface {
     private function display_post_settings() {
 
         if (isset($_POST['save_forum_post_settings'])) {
-            $inputArray = array(
+            $inputArray = [
                 'forum_ips'                  => form_sanitizer($_POST['forum_ips'], USER_LEVEL_SUPER_ADMIN, 'forum_ips'),
                 'forum_attachmax'            => form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000, 'calc_c'),
                 'forum_attachmax_count'      => form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count'),
@@ -325,26 +320,25 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_edit_timelimit'       => form_sanitizer($_POST['forum_edit_timelimit'], '0', 'forum_edit_timelimit'),
                 'forum_last_post_avatar'     => form_sanitizer($_POST['forum_last_post_avatar'], '0', 'forum_last_post_avatar'),
                 'forum_editpost_to_lastpost' => form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost'),
-            );
+            ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
+                    $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
                 addNotice('success', self::$locale['900']);
-                redirect(clean_request('section=fs&ref=post', array('ref'), FALSE));
+                redirect(clean_request('section=fs&ref=post', ['ref'], FALSE));
             } else {
                 addNotice("danger", self::$locale['901']);
-                $forum_settings = $inputArray;
             }
 
         }
 
         $forum_settings = $this->get_forum_settings();
 
-        $yes_no_array = array('1' => self::$locale['yes'], '0' => self::$locale['no']);
+        $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well spacer-sm'>
@@ -369,7 +363,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
                 require_once INCLUDES."mimetypes_include.php";
                 $mime = mimeTypes();
-                $mime_opts = array();
+                $mime_opts = [];
                 foreach ($mime as $m => $Mime) {
                     $ext = ".$m";
                     $mime_opts[$ext] = $ext;

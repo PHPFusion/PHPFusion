@@ -15,12 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Articles;
 
 class ArticlesServer {
 
-    protected static $article_settings = array();
+    protected static $article_settings = [];
     private static $article_instance = NULL;
     private static $article_admin_instance = NULL;
 
@@ -46,6 +45,4 @@ class ArticlesServer {
         }
         return self::$article_settings;
     }
-
-
 }

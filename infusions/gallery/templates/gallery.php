@@ -27,7 +27,7 @@ if (!function_exists("render_gallery")) {
             echo $info['page_nav'];
         }
         if (isset($info['item'])) {
-            function render_photoAlbum(array $info = array()) {
+            function render_photoAlbum(array $info = []) {
                 // add admin edit.
                 global $gallery_settings;
                 $locale = fusion_get_locale();
@@ -94,7 +94,7 @@ if (!function_exists('render_photo_album')) {
         }
         echo "<!--sub_album_info-->";
         $counter = 0;
-        function render_photo_items(array $info = array()) {
+        function render_photo_items(array $info = []) {
             global $gallery_settings;
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
@@ -150,7 +150,7 @@ if (!function_exists('render_photo_album')) {
 if (!function_exists('render_photo')) {
     function render_photo($info) {
         $locale = fusion_get_locale();
-        $userdata = fusion_get_userdata();
+
         opentable($locale['450']);
         echo render_breadcrumbs();
         echo "<!--pre_photo-->";

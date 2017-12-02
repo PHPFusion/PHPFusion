@@ -49,7 +49,7 @@ class Functions {
             if ($size[0] <= $size[1]) {
                 $img_w = round(($size[0] * 200) / $size[1]);
                 $img_h = 200;
-            } elseif ($size[0] > $size[1]) {
+            } else if ($size[0] > $size[1]) {
                 $img_w = 300;
                 $img_h = round(($size[1] * 300) / $size[0]);
             } else {
@@ -84,7 +84,7 @@ class Functions {
                 if ($size [0] < $size [1]) {
                     $img_w = round(($size [0] * $width) / $size [1]);
                     $img_h = $width;
-                } elseif ($size [0] > $size [1]) {
+                } else if ($size [0] > $size [1]) {
                     $img_w = $height;
                     $img_h = round(($size [1] * $height) / $size [0]);
                 } else {
@@ -95,7 +95,7 @@ class Functions {
                 $img_w = $size [0];
                 $img_h = $size [1];
             }
-            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
         } else {
             $res = fusion_get_locale('forum_0188');
         }

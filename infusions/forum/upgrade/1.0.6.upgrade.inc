@@ -17,10 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $locale = fusion_get_locale("",
-    array(
+    [
         LOCALE.LOCALESET.'setup.php',
         INFUSIONS.'forum/locale/'.LOCALESET.'/forum_tags.php'
-    )
+    ]
 );
 
 $inf_version = '1.0.6';
@@ -73,14 +73,14 @@ if (!db_exists(DB_FORUM_USER_REP)) {
     $inf_newtable[] = $db_prefix."forum_user_reputation (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     rep_answer TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-	voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
-	datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (rep_id),
-	KEY post_id (post_id, user_id, voter_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    points_gain SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    voter_id SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    user_id MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0',
+    datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (rep_id),
+    KEY post_id (post_id, user_id, voter_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }

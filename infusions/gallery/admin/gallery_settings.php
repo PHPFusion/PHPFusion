@@ -19,12 +19,13 @@ pageAccess("PH");
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."admin/settings.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+
 if (isset($_POST['delete_watermarks'])) {
     $result = dbquery("SELECT album_id,photo_filename FROM ".DB_PHOTOS." ORDER BY album_id, photo_id");
     $rows = dbrows($result);
     if ($rows) {
-        $parts = array();
+        $parts = [];
         $watermark1 = "";
         $watermark2 = "";
         $photodir = "";
@@ -48,7 +49,7 @@ if (isset($_POST['delete_watermarks'])) {
 } else {
     if (isset($_POST['savesettings'])) {
 
-        $inputArray = array(
+        $inputArray = [
             "thumb_w"                     => form_sanitizer($_POST['thumb_w'], 200, "thumb_w"),
             "thumb_h"                     => form_sanitizer($_POST['thumb_h'], 200, "thumb_h"),
             "photo_w"                     => form_sanitizer($_POST['photo_w'], 800, "photo_w"),
@@ -67,15 +68,15 @@ if (isset($_POST['delete_watermarks'])) {
             "gallery_allow_submission"    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
             "gallery_extended_required"   => isset($_POST['gallery_extended_required']) ? 1 : 0,
             "gallery_file_types"          => form_sanitizer($_POST['gallery_file_types'], "", "gallery_file_types"),
-        );
+        ];
         if (defender::safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
-                $inputSettings = array(
+                $inputSettings = [
                     "settings_name"  => $settings_name,
                     "settings_value" => $settings_value,
                     "settings_inf"   => "gallery",
-                );
-                dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                ];
+                dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
             }
             addNotice("success", $locale['900']);
             redirect(FUSION_REQUEST);
@@ -195,7 +196,7 @@ echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $g
 ]);
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
-$mime_opts = array();
+$mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;
@@ -242,7 +243,7 @@ add_to_jquery("
         });
     ");
 function calculate_byte($download_max_b) {
-    $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+    $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
     foreach ($calc_opts as $byte => $val) {
         if ($download_max_b / $byte <= 999) {
             return $byte;
@@ -260,13 +261,13 @@ function color_mapper($field, $value) {
     $cvalue[] = "99";
     $cvalue[] = "CC";
     $cvalue[] = "FF";
-    $select = "";
+
     $select = "<select name='".$field."' class='textbox' onchange=\"document.getElementById('preview_".$field."').style.background = '#' + this.options[this.selectedIndex].value;\" ".(!$gll_settings['photo_watermark'] ? "disabled='disabled'" : "").">\n";
     for ($ca = 0; $ca < count($cvalue); $ca++) {
         for ($cb = 0; $cb < count($cvalue); $cb++) {
             for ($cc = 0; $cc < count($cvalue); $cc++) {
                 $hcolor = $cvalue[$ca].$cvalue[$cb].$cvalue[$cc];
-                $select .= "<option value='".$hcolor."'".($value == $hcolor ? " selected='selected' " : " ")."style='background-color:#".$hcolor.";'>#".$hcolor."</option>\n";
+                $select .= "<option value='".$hcolor."'".($value == $hcolor ? " selected='selected' " : " ")." style='background-color:#".$hcolor.";'>#".$hcolor."</option>\n";
             }
         }
     }

@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) die("Access Denied");
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
 require_once dirname(__FILE__).'/templates/default.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
@@ -29,7 +32,7 @@ if (iMEMBER) {
     SUM(message_folder=2) AS archive_count,
     SUM(message_read=0 AND message_folder=0) AS unread_count
     FROM ".DB_MESSAGES."
-    WHERE message_to=:user_id", array(':user_id' => $userdata['user_id']));
+    WHERE message_to=:user_id", [':user_id' => $userdata['user_id']]);
 
     $messages_count = dbarray($messages_count);
     $inbox_count = (int)$messages_count['inbox_count'];
@@ -86,23 +89,23 @@ if (iMEMBER) {
     if (iADMIN && checkrights("SU")) {
         $subm_count = dbcount("(submit_id)", DB_SUBMISSIONS);
         if ($subm_count) {
-                $submit_link = "<a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
-                    sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129'])."</a>";
+            $submit_link = "<a href='".ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0' class='side'>".
+                sprintf($locale['global_125'], $subm_count).($subm_count == 1 ? $locale['global_128'] : $locale['global_129'])."</a>";
         }
     }
 
     $info = [
-        'forum_exists'         => $forum_exists,
-        'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
-        'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
-        'user_level'           => $userdata['user_level'],
-        'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
-        'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
-        'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
-        'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
-        'submissions'          => $submissions_link_arr,
-        'submit'               => $submit_link,
-    ] + $userdata;
+            'forum_exists'         => $forum_exists,
+            'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
+            'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
+            'user_level'           => $userdata['user_level'],
+            'user_reputation'      => $forum_exists ? fusion_get_userdata('user_reputation') ?: 0 : '',
+            'user_reputation_icon' => $forum_exists ? "<i class='fa fa-dot-circle-o' title='".fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php')."'></i>\n" : '',
+            'user_pm_link'         => BASEDIR."messages.php?folder=inbox",
+            'user_pm_title'        => sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087']),
+            'submissions'          => $submissions_link_arr,
+            'submit'               => $submit_link,
+        ] + $userdata;
 
     ob_start();
     display_user_info_panel($info);
@@ -151,22 +154,22 @@ if (iMEMBER) {
         }
 
         $info = [
-            'title'            => $locale['global_100'],
-            'open_side'        => fusion_get_function('openside', $locale['global_100']),
-            'close_side'       => fusion_get_function('closeside'),
-            'login_openform'   => openform('loginform', 'post', $action_url),
-            'login_closeform'  => closeform(),
-            'login_name_field' => form_text('user_name', $locale['global_101'], '', array(
+            'title'                => $locale['global_100'],
+            'open_side'            => fusion_get_function('openside', $locale['global_100']),
+            'close_side'           => fusion_get_function('closeside'),
+            'login_openform'       => openform('loginform', 'post', $action_url),
+            'login_closeform'      => closeform(),
+            'login_name_field'     => form_text('user_name', $locale['global_101'], '', [
                 'placeholder' => $placeholder,
                 'required'    => 1
-            )),
-            'login_pass_field' => form_text('user_pass', $locale['global_102'], '', array(
+            ]),
+            'login_pass_field'     => form_text('user_pass', $locale['global_102'], '', [
                 'placeholder' => $locale['global_102'],
                 'type'        => 'password',
                 'required'    => 1
-            )),
+            ]),
             'login_remember_field' => form_checkbox('remember_me', $locale['global_103'], '', ['value' => 'y']),
-            'login_submit'         => form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary')),
+            'login_submit'         => form_button('login', $locale['global_104'], '', ['class' => 'm-t-20 m-b-20 btn-block btn-primary']),
             'registration_'        => (fusion_get_settings('enable_registration') ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>", '[/LINK]' => "</a>\n"]) : ''),
             'lostpassword_'        => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>", '[/LINK]' => "</a>"])
         ];

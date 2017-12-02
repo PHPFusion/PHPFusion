@@ -111,10 +111,10 @@ class Functions {
             $crumb = &$crumb;
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
-                $crumb = array(
+                $crumb = [
                     'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
                     'title' => $_name['download_cat_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -136,13 +136,13 @@ class Functions {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                     add_to_meta($value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             add_to_meta($crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);

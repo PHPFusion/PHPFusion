@@ -47,10 +47,10 @@ if (!defined('DB_FAQ_CATS')) define('DB_FAQ_CATS', DB_PREFIX.'faq_cats');
 //\PHPFusion\Admins::getInstance()->setSubmitType("q", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
 //\PHPFusion\Admins::getInstance()->setSubmitLink("q", INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setSubmitData('q', [
-		'infusion_name' => 'faqs',
-		'link'          => INFUSIONS."faq/faq_submit.php",
-		'submit_link'   => "submit.php?stype=q",
-		'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
-		'title'         => fusion_get_locale('submit_0006', LOCALE.LOCALESET."submissions.php"),
-		'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-	]);
+    'infusion_name' => 'faqs',
+    'link'          => INFUSIONS."faq/faq_submit.php",
+    'submit_link'   => "submit.php?stype=q",
+    'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
+    'title'         => fusion_get_locale('submit_0006', LOCALE.LOCALESET."submissions.php"),
+    'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);

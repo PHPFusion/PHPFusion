@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Forums\Post;
 
 use PHPFusion\Forums\ForumServer;
@@ -28,28 +27,28 @@ class QuickReply extends ForumServer {
         $notify_options = ForumServer::get_forum_settings('thread_notify');
         require_once FORUM."templates.php";
 
-        $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+        $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         if (!$user_sig) {
-            $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '1', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
         if ($notify_options) {
-            $options_field .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], array('class' => 'm-b-0', 'reverse_label' => TRUE));
+            $options_field .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
 
         $info += [
-            'openform'    => openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], array('class' => 'spacer-sm')),
+            'openform'    => openform('quick_reply_form', 'post', FORUM."viewthread.php?thread_id=".$info['thread_id'], ['class' => 'spacer-sm']),
             'description' => $locale['forum_0168'],
             'field'       => [
                 'message' => form_textarea('post_message', '', '',
-                    array(
+                    [
                         'placeholder' => $locale['forum_0601']."...",
                         'bbcode'      => TRUE,
                         'required'    => TRUE,
                         'preview'     => TRUE,
                         'form_name'   => 'quick_reply_form',
                         'height'      => '250px'
-                    )),
-                'button'  => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary')),
+                    ]),
+                'button'  => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
                 'options' => $options_field
             ]
         ];

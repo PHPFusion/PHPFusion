@@ -22,15 +22,11 @@ use PHPFusion\BreadCrumbs;
 
 class NewsAdminView extends NewsAdminModel {
 
-    private $allowed_pages = array("news", "news_category", "news_form", "submissions", "settings");
+    private $allowed_pages = ["news", "news_category", "news_form", "submissions", "settings"];
 
     public function display_admin() {
-
-        //@todo: remove this after beta rc5
-        //self::upgrade_news_gallery();
-
         if (isset($_GET['section']) && $_GET['section'] == 'back') {
-            redirect(clean_request('', array('ref', 'section', 'news_id', 'action', 'cat_id'), FALSE));
+            redirect(clean_request('', ['ref', 'section', 'news_id', 'action', 'cat_id'], FALSE));
         }
 
         $locale = self::get_newsAdminLocale();
@@ -68,19 +64,19 @@ class NewsAdminView extends NewsAdminModel {
                 $news_cat_title = $locale['news_0021'];
             }
         }
-		if (!empty($_GET['section'])){
-        	switch ($_GET['section']) {
-	            case "news_category":
-    	            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
-        	        break;
-            	case "settings":
-                	BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
-	                break;
-    	        case "submissions":
-        	        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
-            	    break;
-	            default:
-    	    }
+        if (!empty($_GET['section'])) {
+            switch ($_GET['section']) {
+                case "news_category":
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
+                    break;
+                case "settings":
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
+                    break;
+                case "submissions":
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
+                    break;
+                default:
+            }
         }
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
         $master_title['title'][] = $news_cat_title;

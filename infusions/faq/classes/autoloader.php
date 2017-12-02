@@ -18,8 +18,7 @@
 require_once INCLUDES."infusions_include.php";
 
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
+    $autoload_register_paths = [
         "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASS."/server.inc",
         "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASS."/admin/faq_admin_model.inc",
         "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASS."/admin/faq_admin_view.inc",
@@ -29,7 +28,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASS."/admin/controllers/faq.inc",
         "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASS."/faq/faq_view.inc",
         "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASS."/faq/faq.inc"
-    );
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];

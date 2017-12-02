@@ -15,22 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\FAQ;
 
 class FaqServer {
-
     private static $faq_instance = NULL;
     private static $faq_submit_instance = NULL;
     private static $faq_admin_instance = NULL;
 
-    protected static $faq_settings = array(
-        "faq_pagination" => 1,
+    protected static $faq_settings = [
+        "faq_pagination"       => 1,
         "faq_allow_submission" => 0
-    );
+    ];
 
     public function __construct() {
-   		self::$faq_settings = get_settings("faq");
+        self::$faq_settings = get_settings("faq");
     }
 
     public static function Faq() {
@@ -56,6 +54,4 @@ class FaqServer {
 
         return self::$faq_admin_instance;
     }
-
-
 }

@@ -17,15 +17,12 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Forums\ForumServer;
-
 class ForumAdminTags extends ForumAdminInterface {
 
     protected $data = [
         'tag_id'          => 0,
         'tag_title'       => '',
         'tag_description' => '',
-        'tag_language'    => '',
         'tag_color'       => '#2e8c65',
         'tag_status'      => 1,
         'tag_language'    => LANGUAGE,
@@ -52,9 +49,9 @@ class ForumAdminTags extends ForumAdminInterface {
             $tab['id'][] = "back";
             $tab['icon'][] = "fa fa-fw fa-arrow-left";
         } else {
-        $tab['title'][] = self::$locale['forum_tag_0102'];
-        $tab['id'][] = "tag_list";
-        $tab['icon'][] = "";
+            $tab['title'][] = self::$locale['forum_tag_0102'];
+            $tab['id'][] = "tag_list";
+            $tab['icon'][] = "";
         }
         $tab['title'][] = isset($_GET['tag_id']) && isnum($_GET['tag_id']) ? self::$locale['forum_tag_0104'] : self::$locale['forum_tag_0103'];
         $tab['id'][] = "tag_form";
@@ -83,8 +80,8 @@ class ForumAdminTags extends ForumAdminInterface {
 
         // Special Select
         $groups_arr = getusergroups();
-        $groups_except = array(USER_LEVEL_PUBLIC, USER_LEVEL_MEMBER, USER_LEVEL_ADMIN, USER_LEVEL_SUPER_ADMIN);
-        $group_opts = array();
+        $groups_except = [USER_LEVEL_PUBLIC, USER_LEVEL_MEMBER, USER_LEVEL_ADMIN, USER_LEVEL_SUPER_ADMIN];
+        $group_opts = [];
         foreach ($groups_arr as $group) {
             if (!in_array($group[0], $groups_except)) {
                 $group_opts[$group[0]] = $group[1];
@@ -117,23 +114,23 @@ class ForumAdminTags extends ForumAdminInterface {
             form_hidden('tag_id', '', $this->data['tag_id']).
 
             form_text('tag_title', self::$locale['forum_tag_0200'], $this->data['tag_title'],
-                      ['required' => TRUE, 'error_text' => self::$locale['414'], "inline" => TRUE]).
+                ['required' => TRUE, 'error_text' => self::$locale['414'], "inline" => TRUE]).
 
             form_textarea('tag_description', self::$locale['forum_tag_0201'], $this->data['tag_description'],
-                          [
-                              'inline' => TRUE,
-                              'type' => 'bbcode',
-                              'autosize' => TRUE,
-                              'preview' => TRUE,
-                          ]).
+                [
+                    'inline'   => TRUE,
+                    'type'     => 'bbcode',
+                    'autosize' => TRUE,
+                    'preview'  => TRUE,
+                ]).
 
             form_colorpicker('tag_color', self::$locale['forum_tag_0202'], $this->data['tag_color'],
-                             ['inline' => TRUE, 'required' => TRUE]);
+                ['inline' => TRUE, 'required' => TRUE]);
 
         if (multilang_table("FR")) {
             $html .=
                 form_select('tag_language', self::$locale['forum_tag_0203'], $this->data['tag_language'],
-                            ['inline' => TRUE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
+                    ['inline' => TRUE, 'options' => $language_opts, 'placeholder' => self::$locale['choose']]);
 
 
         } else {
@@ -141,15 +138,15 @@ class ForumAdminTags extends ForumAdminInterface {
         }
 
         $html .= form_checkbox('tag_status', self::$locale['forum_tag_0204'], $this->data['tag_status'],
-                               ['options' => [
-                                   1 => self::$locale['forum_tag_0205'],
-                                   0 => self::$locale['forum_tag_0206'],
-                                   ],
-                                'type'    => 'radio',
-                                'inline'  => TRUE,
-                               ]).
+                ['options' => [
+                    1 => self::$locale['forum_tag_0205'],
+                    0 => self::$locale['forum_tag_0206'],
+                ],
+                 'type'    => 'radio',
+                 'inline'  => TRUE,
+                ]).
 
-            form_button('save_tag', $button_locale, $button_locale,['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']).
+            form_button('save_tag', $button_locale, $button_locale, ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']).
             form_button('cancel_tag', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-times']).
             closeform();
 
@@ -161,14 +158,14 @@ class ForumAdminTags extends ForumAdminInterface {
 
         if (isset($_POST['save_tag'])) {
 
-            $this->data = array(
+            $this->data = [
                 'tag_id'          => form_sanitizer($_POST['tag_id'], '0', 'tag_id'),
                 'tag_title'       => form_sanitizer($_POST['tag_title'], '', 'tag_title'),
                 'tag_color'       => form_sanitizer($_POST['tag_color'], '', 'tag_color'),
                 'tag_description' => form_sanitizer($_POST['tag_description'], '', 'tag_description'),
                 'tag_status'      => isset($_POST['tag_status']) ? 1 : 0,
                 'tag_language'    => form_sanitizer($_POST['tag_language'], LANGUAGE, 'tag_language'),
-            );
+            ];
 
             if (\defender::safe()) {
 
@@ -198,6 +195,7 @@ class ForumAdminTags extends ForumAdminInterface {
             redirect(clean_request("section=ft", ["delete", "ref"], FALSE));
         }
     }
+
     /**
      * Ranks Listing
      * @return string
@@ -210,9 +208,9 @@ class ForumAdminTags extends ForumAdminInterface {
         ORDER BY tag_id DESC, tag_title ASC
         ";
 
-        $result = dbquery( $tag_list_query );
+        $result = dbquery($tag_list_query);
 
-        if ( dbrows($result) > 0 ) {
+        if (dbrows($result) > 0) {
             add_to_jquery("$('.tag-container').hover(
             function(e) { $(this).parent().find('.tag-action').show(); },
             function(e) { $(this).parent().find('.tag-action').hide(); }
@@ -231,11 +229,11 @@ class ForumAdminTags extends ForumAdminInterface {
                 $html .= "<div class='strong text-bigger m-b-5'>".$data['tag_title']."</div>\n";
                 $html .= "<p class='description'>".$data['tag_description']."</p>";
                 $html .= "<small>".($data['tag_status'] ? self::$locale['forum_tag_0205'] : self::$locale['forum_tag_0206'])."</small><br/><br/>".
-                "<span class='tag-action' style='display:none; height: 40px;'>".
-                "<a href='".clean_request("tag_id=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], false)."'>".self::$locale['edit']."</a> -\n".
-                "<a href='".clean_request("delete=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], false)."'>".self::$locale['delete']."</a>".
-                "</span>".
-                "</div>\n</div>\n</div>\n";
+                    "<span class='tag-action' style='display:none; height: 40px;'>".
+                    "<a href='".clean_request("tag_id=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['edit']."</a> -\n".
+                    "<a href='".clean_request("delete=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['delete']."</a>".
+                    "</span>".
+                    "</div>\n</div>\n</div>\n";
             }
 
             $html .= "</div>\n";

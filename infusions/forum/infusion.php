@@ -20,8 +20,8 @@ if (!defined("IN_FUSION")) {
 }
 
 $locale = fusion_get_locale('', [
-        LOCALE.LOCALESET."setup.php",
-        INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+    LOCALE.LOCALESET."setup.php",
+    INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
 ]);
 
 // Infusion general information
@@ -35,14 +35,14 @@ $inf_folder = 'forum';
 $inf_image = 'forums.svg';
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
-    'title' => $locale['forums']['title'],
+$inf_mlt[] = [
+    'title'  => $locale['forums']['title'],
     'rights' => 'FO',
-);
-$inf_mlt[] = array(
-    'title' => $locale['setup_3038'],
+];
+$inf_mlt[] = [
+    'title'  => $locale['setup_3038'],
     'rights' => 'FR',
-);
+];
 
 // Create tables
 $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
@@ -252,13 +252,13 @@ if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
 }
 // Admin links
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "F",
-    "title" => $locale['setup_3012'],
-    "panel" => "admin/forums.php"
-);
+    "title"  => $locale['setup_3012'],
+    "panel"  => "admin/forums.php"
+];
 
 // Insert Forum Settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '".USER_LEVEL_SUPER_ADMIN."', 'forum')";

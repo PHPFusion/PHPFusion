@@ -19,6 +19,7 @@
 require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
+
 use \PHPFusion\BreadCrumbs;
 
 $downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
@@ -31,10 +32,10 @@ require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
-if (!empty($_GET['section'])){
+if (!empty($_GET['section'])) {
     switch ($_GET['section']) {
         case "download_form":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' =>$locale['download_0002']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0002']]);
             break;
         case "download_category":
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
@@ -49,7 +50,7 @@ if (!empty($_GET['section'])){
             break;
     }
 }
-$allowed_section = array("downloads", "download_form", "download_settings", "download_category", "submissions");
+$allowed_section = ["downloads", "download_form", "download_settings", "download_category", "submissions"];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
@@ -164,8 +165,8 @@ function download_listing() {
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
-                                                                                                            array("section", "rowstart", "aid"),
-                                                                                                            TRUE)."'>\n";
+                    ["section", "rowstart", "aid"],
+                    TRUE)."'>\n";
             echo $catName;
             echo "</a>\n</li>\n";
         }
@@ -173,7 +174,7 @@ function download_listing() {
         echo "</div>\n";
     }
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid", "section"), TRUE)."&amp;");
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
     }
     echo "</div>\n";
 
@@ -183,7 +184,7 @@ function download_listing() {
             $download_url = '';
             if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
                 $download_url = INFUSIONS."downloads/downloads.php?file_id=".$data2['download_id'];
-            } elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
+            } else if (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
                 $download_url = $data2['download_url'];
             }
             echo "<li class='list-group-item'>\n";
@@ -215,7 +216,7 @@ function download_listing() {
 }
 
 function calculate_byte($download_max_b) {
-    $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+    $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
     foreach ($calc_opts as $byte => $val) {
         if ($download_max_b / $byte <= 999) {
             return $byte;

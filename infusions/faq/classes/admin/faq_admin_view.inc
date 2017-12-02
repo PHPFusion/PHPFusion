@@ -21,7 +21,7 @@ use PHPFusion\BreadCrumbs;
 
 class FaqAdminView extends FaqAdminModel {
 
-    private $allowed_pages = array('faq', 'faq_cat', 'faq_cat_form', 'faq_form', 'submissions', 'settings');
+    private $allowed_pages = ['faq', 'faq_cat', 'faq_cat_form', 'faq_form', 'submissions', 'settings'];
     private $locale = [];
 
     public function display_admin() {
@@ -29,7 +29,7 @@ class FaqAdminView extends FaqAdminModel {
 
         // Back and Check Section
         if (isset($_GET['section']) && $_GET['section'] == 'back') {
-            redirect(clean_request('', array('ref', 'section', 'action', 'faq_id', 'cat_id', 'submit_id'), FALSE));
+            redirect(clean_request('', ['ref', 'section', 'action', 'faq_id', 'cat_id', 'submit_id'], FALSE));
         }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
@@ -40,32 +40,32 @@ class FaqAdminView extends FaqAdminModel {
         $faqTitle = $this->locale['faq_0000'];
         BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
 
-		if (!empty($_GET['section'])){
-			switch ($_GET['section']) {
-			    case "settings":
-		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0006']]);
-			        break;
-			    case "submissions":
-		            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0005']]);
-			        break;
-			    default:
-			}
+        if (!empty($_GET['section'])) {
+            switch ($_GET['section']) {
+                case "settings":
+                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0006']]);
+                    break;
+                case "submissions":
+                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $this->locale['faq_0005']]);
+                    break;
+                default:
+            }
 
-        	if ($_GET['section'] == 'faq') {
-            	if (isset($_GET['ref'])) {
-                	switch ($_GET['ref']) {
-                    	case 'faq_form':
-                        	$faqTitle = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0004'] : $this->locale['faq_0003']);
-	                        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
-    	                    break;
-        	            case 'faq_cat_form':
-            	            $faqTitle = (!empty($_GET['faq_cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
-                	        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
-                    	    break;
-	                }
-    	        }
-        	}
-		}
+            if ($_GET['section'] == 'faq') {
+                if (isset($_GET['ref'])) {
+                    switch ($_GET['ref']) {
+                        case 'faq_form':
+                            $faqTitle = (!empty($_GET['faq_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0004'] : $this->locale['faq_0003']);
+                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+                            break;
+                        case 'faq_cat_form':
+                            $faqTitle = (!empty($_GET['faq_cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit' ? $this->locale['faq_0008'] : $this->locale['faq_0007']);
+                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+                            break;
+                    }
+                }
+            }
+        }
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {

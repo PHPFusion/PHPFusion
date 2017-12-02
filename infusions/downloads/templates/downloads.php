@@ -34,7 +34,7 @@ if (!function_exists('render_downloads')) {
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
-            echo opentable('');
+            opentable('');
             echo "<div class='clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-15'>";
             if ($data['admin_link']) {
@@ -114,7 +114,7 @@ if (!function_exists('render_downloads')) {
 
             echo $data['download_show_comments'];
             echo $data['download_allow_ratings'] ? "<a id='rate'>\n</a>\n".$data['download_show_ratings'] : '';
-            echo closetable();
+            closetable();
         } else {
             echo "<h3>".$info['download_title']."</h3>\n";
             if (!empty($info['download_cat_description'])) {
@@ -193,6 +193,7 @@ if (!function_exists('display_download_menu')) {
 
             return $html;
         }
+
         // The layout calling the above function
         ob_start();
         echo "<ul class='spacer-sm block'>\n";
@@ -215,8 +216,8 @@ if (!function_exists('display_download_menu')) {
         if (!empty($info['download_author'])) {
             foreach ($info['download_author'] as $author_id => $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
-					<a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
-					</li>\n";
+                    <a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
+                    </li>\n";
             }
         } else {
             echo "<li>".$locale['download_3002']."</li>\n";

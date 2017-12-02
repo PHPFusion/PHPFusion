@@ -46,5 +46,5 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_weblinks'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

@@ -28,7 +28,7 @@ if (!defined("IN_FUSION")) {
  */
 class News_Preview extends News {
 
-    private $news_data = array();
+    private $news_data = [];
 
     public function set_PreviewData($data) {
         $this->news_data = $data;
@@ -78,11 +78,11 @@ class News_Preview extends News {
             </script>";
         }
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
-        $default_info = array(
+        $default_info = [
             'news_item'     => '',
-            'news_filter'   => array(),
-            'news_category' => array(),
-        );
+            'news_filter'   => [],
+            'news_category' => [],
+        ];
         $info = array_merge_recursive($default_info, self::get_NewsFilter());
         $info = array_merge_recursive($info, self::get_NewsCategory());
 

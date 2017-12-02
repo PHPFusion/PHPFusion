@@ -5,7 +5,6 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: /shoutbox_panel/upgrade/1.1.0.upgrade.inc
-| Upgrade Shoutbox to Version 9.0.2 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the

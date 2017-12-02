@@ -19,27 +19,27 @@ require_once INCLUDES."mimetypes_include.php";
 $locale = fusion_get_locale();
 if (isset($_POST['savesettings'])) {
     // redo this part
-    $StoreArray = array(
-        "download_max_b" => form_sanitizer($_POST['calc_b'], 1, "calc_b") * form_sanitizer($_POST['calc_c'], 1500000, "calc_c"),
-        "download_types" => form_sanitizer($_POST['download_types'], "", "download_types"),
-        "download_screen_max_w" => form_sanitizer($_POST['download_screen_max_w'], 500, "download_screen_max_w"),
-        "download_screen_max_h" => form_sanitizer($_POST['download_screen_max_h'], 500, "download_screen_max_h"),
-        "download_screen_max_b" => form_sanitizer($_POST['calc_bb'], 1, "calc_bb") * form_sanitizer($_POST['calc_cc'], 1500000, "calc_cc"),
-        "download_thumb_max_h" => form_sanitizer($_POST['download_thumb_max_h'], 500, 'download_thumb_max_h'),
-        "download_thumb_max_w" => form_sanitizer($_POST['download_thumb_max_w'], 500, 'download_thumb_max_w'),
-        "download_screenshot" => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
-        "download_stats" => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
-        "download_pagination" => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
-        "download_allow_submission" => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
+    $StoreArray = [
+        "download_max_b"               => form_sanitizer($_POST['calc_b'], 1, "calc_b") * form_sanitizer($_POST['calc_c'], 1500000, "calc_c"),
+        "download_types"               => form_sanitizer($_POST['download_types'], "", "download_types"),
+        "download_screen_max_w"        => form_sanitizer($_POST['download_screen_max_w'], 500, "download_screen_max_w"),
+        "download_screen_max_h"        => form_sanitizer($_POST['download_screen_max_h'], 500, "download_screen_max_h"),
+        "download_screen_max_b"        => form_sanitizer($_POST['calc_bb'], 1, "calc_bb") * form_sanitizer($_POST['calc_cc'], 1500000, "calc_cc"),
+        "download_thumb_max_h"         => form_sanitizer($_POST['download_thumb_max_h'], 500, 'download_thumb_max_h'),
+        "download_thumb_max_w"         => form_sanitizer($_POST['download_thumb_max_w'], 500, 'download_thumb_max_w'),
+        "download_screenshot"          => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
+        "download_stats"               => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
+        "download_pagination"          => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
+        "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
         "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? TRUE : FALSE,
-        "download_extended_required" => isset($_POST['download_extended_required']) ? TRUE : FALSE,
-    );
-    if ($defender->safe()) {
+        "download_extended_required"   => isset($_POST['download_extended_required']) ? TRUE : FALSE,
+    ];
+    if (\defender::safe()) {
         foreach ($StoreArray as $key => $value) {
             $result = NULL;
-            if ($defender->safe()) {
-                $Array = array("settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads");
-                dbquery_insert(DB_SETTINGS_INF, $Array, 'update', array("primary_key" => "settings_name"));
+            if (\defender::safe()) {
+                $Array = ["settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads"];
+                dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }
         }
         addNotice('success', $locale['900']);
@@ -59,7 +59,7 @@ $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
 $calc_bb = $dl_settings['download_screen_max_b'] / $calc_cc;
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $mime = mimeTypes();
-$mime_opts = array();
+$mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;

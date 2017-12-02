@@ -45,5 +45,5 @@ if (db_exists(DB_BLOG)) {
         $rss->AddItem($settings['sitename'].' - '.$locale['rss_blog'], $settings['siteurl'], $locale['rss_nodata']);
     }
 
-    echo $rss->Write();
+    $rss->Write();
 }

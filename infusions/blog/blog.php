@@ -31,14 +31,14 @@ require_once INCLUDES."infusions_include.php";
 $settings = fusion_get_settings();
 
 if ($settings['tinymce_enabled'] == 1) {
-    $tinymce_list = array();
+    $tinymce_list = [];
     $image_list = makefilelist(IMAGES, ".|..|");
-    $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
+    $image_filter = ['png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF'];
     foreach ($image_list as $image_name) {
         $image_1 = explode('.', $image_name);
         $last_str = count($image_1) - 1;
         if (in_array($image_1[$last_str], $image_filter)) {
-            $tinymce_list[] = array('title' => $image_name, 'value' => IMAGES.$image_name);
+            $tinymce_list[] = ['title' => $image_name, 'value' => IMAGES.$image_name];
         }
     }
     $tinymce_list = json_encode($tinymce_list);
@@ -55,31 +55,31 @@ set_title($locale['blog_1000']);
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
-$info = array(
+$info = [
     'blog_title'            => $locale['blog_1000'],
     'blog_updated'          => '',
     'blog_image'            => '',
     'blog_language'         => LANGUAGE,
     'blog_categories'       => get_blogCatsData(),
     'blog_categories_index' => get_blogCatsIndex(),
-    'allowed_filters'       => array(
+    'allowed_filters'       => [
         'recent'  => $locale['blog_2001'],
         'comment' => $locale['blog_2002'],
         'rating'  => $locale['blog_2003']
-    ),
+    ],
     'blog_last_updated'     => 0,
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
     'blog_nav'              => '',
-);
-$info['blog_categories'][0][0] = array(
+];
+$info['blog_categories'][0][0] = [
     'blog_cat_id'       => 0,
     'blog_cat_parent'   => 0,
     'blog_cat_name'     => $locale['global_080'],
     'blog_cat_image'    => '',
     'blog_cat_language' => LANGUAGE,
     'blog_cat_link'     => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
-);
+];
 
 // controller: make filter types
 $filter = array_keys($info['allowed_filters']);
@@ -89,7 +89,7 @@ foreach ($info['allowed_filters'] as $type => $filter_name) {
     /**
      * Dynamic array filtration
      */
-    $preserved_keys = array();
+    $preserved_keys = [];
     if (!empty($_GET['cat_id'])) {
         $preserved_keys[] = "cat_id";
     }
@@ -107,7 +107,7 @@ foreach ($info['allowed_filters'] as $type => $filter_name) {
 
     $active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
 
-    $info['blog_filter'][$type] = array('title' => $filter_name, 'link' => $filter_link, 'active' => $active);
+    $info['blog_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
 
     unset($filter_link);
 }
@@ -156,7 +156,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             unset($item['user_admin_algo']);
             unset($item['user_admin_salt']);
 
-            $item += array(
+            $item += [
                 "blog_subject"       => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
                 "blog_blog"          => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_blog']),
                 "blog_extended"      => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_extended']),
@@ -165,7 +165,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
                 "blog_post_author"   => display_avatar($item, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
                 "blog_category_link" => "",
                 "blog_post_time"     => $locale['global_049']." ".timer($item['blog_datestamp']),
-            );
+            ];
 
             if (empty($item['blog_extended'])) {
                 $item['blog_extended'] = $item['blog_blog'];
@@ -241,10 +241,10 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             // Edit and Delete link
             $item['admin_link'] = '';
             if (iADMIN && checkrights('BLOG')) {
-                $item['admin_link'] = array(
+                $item['admin_link'] = [
                     'edit'   => INFUSIONS."blog/blog_admin.php".$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$item['blog_id'],
                     'delete' => INFUSIONS."blog/blog_admin.php".$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$item['blog_id'],
-                );
+                ];
             }
 
             if ($item['blog_pagecount'] > 1) {
@@ -302,7 +302,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
             if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
                 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                    "link"  => clean_request("", array("author"), TRUE),
+                    "link"  => clean_request("", ["author"], TRUE),
                     "title" => $info['allowed_filters'][$_GET['type']]
                 ]);
             }
@@ -321,7 +321,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
-    elseif ($_GET['cat_id'] !== NULL && validate_blogCats($_GET['cat_id'])) {
+    else if ($_GET['cat_id'] !== NULL && validate_blogCats($_GET['cat_id'])) {
 
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
@@ -389,7 +389,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             $archiveSql = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                "link"  => clean_request("", array("archive", "month"), TRUE),
+                "link"  => clean_request("", ["archive", "month"], TRUE),
                 "title" => showdate($locale['blog_archive'], $start_time),
             ]);
 
@@ -409,7 +409,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                "link"  => clean_request("", array("archive", "month"), TRUE),
+                "link"  => clean_request("", ["archive", "month"], TRUE),
                 "title" => $info['allowed_filters'][$_GET['type']]
             ]);
         }
@@ -451,7 +451,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
             $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
 
-            $cdata = array(
+            $cdata = [
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
                 'blog_anchor'            => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
                 'blog_blog'              => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $blog_blog),
@@ -470,7 +470,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
                 'blog_count_votes'       => format_word(sum_db($data['blog_id'], 'B'), $locale['fmt_vote']),
                 'blog_user_avatar'       => display_avatar($data, '35px', '', TRUE, 'img-rounded'),
                 'blog_user_link'         => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
-            );
+            ];
             // refetch category per item and parse as string
             if (!empty($data['blog_cat'])) {
                 $blog_cat = str_replace(".", ",", $data['blog_cat']);
@@ -505,12 +505,12 @@ if (dbrows($archive_result)) {
         $active = isset($_GET['archive']) && isnum($_GET['archive']) && ($_GET['archive'] == $a_data['blog_year']) &&
         isset($_GET['month']) && isnum($_GET['month']) && ($_GET['month'] == $a_data['blog_month']) ? TRUE : FALSE;
         $month_locale = explode('|', $locale['months']);
-        $info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] = array(
+        $info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] = [
             'title'  => $month_locale[$a_data['blog_month']],
             'link'   => INFUSIONS."blog/blog.php?archive=".$a_data['blog_year']."&amp;month=".$a_data['blog_month'].(isset($_GET['type']) && !empty($_GET['type']) ? "&amp;type=".$_GET['type'] : ""),
             'count'  => $a_data['blog_count'],
             'active' => $active
-        );
+        ];
     }
 }
 
@@ -523,40 +523,40 @@ $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) AS blog_count, u.
 if (dbrows($author_result)) {
     while ($at_data = dbarray($author_result)) {
         $active = isset($_GET['author']) && $_GET['author'] == $at_data['blog_name'] ? 1 : 0;
-        $info['blog_author'][$at_data['blog_name']] = array(
+        $info['blog_author'][$at_data['blog_name']] = [
             'title'  => $at_data['user_name'],
             'link'   => INFUSIONS."blog/blog.php?author=".$at_data['blog_name'],
             'count'  => $at_data['blog_count'],
             'active' => $active
-        );
+        ];
     }
 }
 
 function rating_db($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['sum_rating'];
+    return $count_db['sum_rating'];
 }
 
 function sum_db($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 COUNT(rating_item_id) AS count_votes
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['count_votes'];
+    return $count_db['count_votes'];
 }
 
 function count_comments($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 COUNT(comment_item_id) AS count_comment
                 FROM ".DB_COMMENTS."
                 WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
-return $count_db['count_comment'];
+    return $count_db['count_comment'];
 }
 
 render_main_blog($info);

@@ -20,9 +20,9 @@ pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
 
 $locale = fusion_get_locale('', [
-                                LOCALE.LOCALESET."admin/settings.php",
-                                INFUSIONS."blog/locale/".LOCALESET."blog_admin.php"
-                            ]);
+    LOCALE.LOCALESET."admin/settings.php",
+    INFUSIONS."blog/locale/".LOCALESET."blog_admin.php"
+]);
 
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
@@ -31,22 +31,22 @@ $aidlink = fusion_get_aidlink();
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.fusion_get_aidlink(), 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
-if (!empty($_GET['section'])){
-	switch ($_GET['section']) {
-	    case "blog_form":
-	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0401']]);
-	        break;
-	    case "blog_category":
-	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0502']]);
-	        break;
-	    case "settings":
-	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0406']]);
-	        break;
-	    case "submissions":
-	        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
-	        break;
-	    default:
-	}
+if (!empty($_GET['section'])) {
+    switch ($_GET['section']) {
+        case "blog_form":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0401']]);
+            break;
+        case "blog_category":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0502']]);
+            break;
+        case "settings":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0406']]);
+            break;
+        case "submissions":
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
+            break;
+        default:
+    }
 }
 
 if (isset($_POST['cancel'])) {
@@ -75,9 +75,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
         redirect(FUSION_SELF.$aidlink);
     }
 }
-$allowed_pages = array(
+$allowed_pages = [
     "blog", "blog_category", "blog_form", "submissions", "settings"
-);
+];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "blog";
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? TRUE : FALSE;
 $master_title['title'][] = $locale['blog_0400'];
@@ -131,10 +131,10 @@ function blog_listing() {
     $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 
     // add a filter browser
-    $catOpts = array(
+    $catOpts = [
         "all" => $locale['blog_0460'],
-        "0" => $locale['blog_0424']
-    );
+        "0"   => $locale['blog_0424']
+    ];
     $categories = dbquery("select blog_cat_id, blog_cat_name
 				from ".DB_BLOG_CATS." ".(multilang_table("BL") ? "where blog_cat_language='".LANGUAGE."'" : "")."");
     if (dbrows($categories) > 0) {
@@ -183,8 +183,8 @@ function blog_listing() {
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
-                                                                                                            array("section", "rowstart", "aid"),
-                                                                                                            TRUE)."'>\n";
+                    ["section", "rowstart", "aid"],
+                    TRUE)."'>\n";
             echo $catName;
             echo "</a>\n</li>\n";
         }
@@ -192,7 +192,7 @@ function blog_listing() {
         echo "</div>\n";
     }
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid", "section"), TRUE)."&amp;");
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
     }
     echo "</div>\n";
 
@@ -245,7 +245,7 @@ function blog_listing() {
     echo "</ul>\n";
 
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid", "section"), TRUE)."&amp;");
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
     }
 
 }
@@ -256,7 +256,7 @@ function blog_listing() {
  * @return int
  */
 function calculate_byte($total_bit) {
-    $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+    $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
     foreach ($calc_opts as $byte => $val) {
         if ($total_bit / $byte <= 999) {
             return (int)$byte;
@@ -268,9 +268,10 @@ function calculate_byte($total_bit) {
 
 /**
  * Function to progressively return closest full image_path
- * @param $blog_image
- * @param $blog_image_t1
- * @param $blog_image_t2
+ * @param      $blog_image
+ * @param      $blog_image_t1
+ * @param      $blog_image_t2
+ * @param bool $hiRes
  * @return string
  */
 function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {

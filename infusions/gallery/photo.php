@@ -56,11 +56,11 @@ function RGBtoArray($rgb) {
         $rgb_value = str_replace(")", "", $rgb);
         $rgb_value = explode(",", $rgb);
         if (count($rgb_value) == 3) {
-            return array(
+            return [
                 "r" => $rgb_value[0],
                 "g" => $rgb_value[1],
                 "b" => $rgb_value[2],
-            );
+            ];
         } else {
             return "bad rgb value. it does not contain 3 comma delimiter";
         }
@@ -92,7 +92,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         $img = IMAGES_G.$data['photo_filename'];
         $cop = BASEDIR.$gallery_settings['photo_watermark_image'];
         $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
-        if (in_array($ext, array('jpeg', 'jpg'))) {
+        if (in_array($ext, ['jpeg', 'jpg'])) {
             $image = ImageCreateFromJPEG($img);
         } else {
             if ($ext === 'png') {
@@ -136,7 +136,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     if ($image_dim_x < $image_dim_y) {
                         $thumb_w = round(($image_dim_x * $gallery_settings['photo_h']) / $image_dim_y);
                         $thumb_h = $gallery_settings['photo_h'];
-                    } elseif ($image_dim_x > $image_dim_y) {
+                    } else if ($image_dim_x > $image_dim_y) {
                         $thumb_w = $gallery_settings['photo_w'];
                         $thumb_h = round(($image_dim_y * $gallery_settings['photo_w']) / $image_dim_x);
                     } else {
@@ -157,8 +157,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             }
 
             if ($gallery_settings['photo_watermark_text']) {
-                $enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-                $dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
+                $enc = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;"];
+                $dec = ["&", "\"", "'", "\\", '\"', "\'", "<", ">"];
                 // drop the function and use a rgb output.
 
                 $black = ImageColorAllocate(($image2 ? $image2 : $image), 0, 0, 0);
@@ -232,4 +232,3 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 } else {
     redirect(BASEDIR."index.php");
 }
-

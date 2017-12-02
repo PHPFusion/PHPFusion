@@ -62,7 +62,7 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
             $object->use_resume = TRUE;
             $object->download();
             exit;
-        } elseif (!empty($data['download_url'])) {
+        } else if (!empty($data['download_url'])) {
             $res = 1;
             $url_prefix = (!strstr($data['download_url'], "http://") && !strstr($data['download_url'], "https://") ? "http://" : '');
             redirect($url_prefix.$data['download_url']);
@@ -73,21 +73,21 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
     }
 }
 
-$info = array(
+$info = [
     'download_title'        => $locale['download_1001'],
     'download_language'     => LANGUAGE,
     'download_categories'   => get_downloadCat(),
-    'allowed_filters'       => array(
+    'allowed_filters'       => [
         'download' => $locale['download_2003'],
         'recent'   => $locale['download_2002'],
         'comments' => $locale['download_2001'],
         'ratings'  => $locale['download_2004'],
-    ),
+    ],
     'download_last_updated' => 0,
     'download_max_rows'     => 0,
     'download_rows'         => 0,
     'download_nav'          => '',
-);
+];
 /* Filter Construct */
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'],
@@ -95,7 +95,7 @@ $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'],
 foreach ($info['allowed_filters'] as $type => $filter_name) {
     $filter_link = INFUSIONS."downloads/downloads.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
     $active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
-    $info['download_filter'][$type] = array('title' => $filter_name, 'link' => $filter_link, 'active' => $active);
+    $info['download_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
     unset($filter_link);
 }
 
@@ -164,10 +164,10 @@ if (isset($_GET['download_id'])) {
             /* Admin link */
             $data['admin_link'] = '';
             if (iADMIN && checkrights('D')) {
-                $data['admin_link'] = array(
+                $data['admin_link'] = [
                     'edit'   => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data['download_id'],
                     'delete' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=delete&amp;section=download_form&amp;download_id=".$data['download_id'],
-                );
+                ];
             }
             $info['download_title'] = $data['download_title'];
             $info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
@@ -229,12 +229,12 @@ if (isset($_GET['download_id'])) {
                 case 'comments':
                     $filter_condition = 'count_comment DESC';
                     $filter_count = 'COUNT(td.comment_item_id) AS count_comment,';
-                $filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
+                    $filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
                     break;
                 case 'ratings':
                     $filter_condition = 'sum_rating DESC';
                     $filter_count = 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,';
-                $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
+                    $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
                     break;
                 case 'download':
                     $filter_condition = 'download_count DESC';
@@ -301,7 +301,7 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
     $page_nav_link = "";
     if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id']."&amp;";
-    } elseif (!empty($_GET['author']) && isnum($_GET['author'])) {
+    } else if (!empty($_GET['author']) && isnum($_GET['author'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?author=".$_GET['author']."&amp;";
     }
 
@@ -326,41 +326,44 @@ $author_result = dbquery("SELECT b.download_title, b.download_user, count(b.down
 if (dbrows($author_result)) {
     while ($at_data = dbarray($author_result)) {
         $active = isset($_GET['author']) && $_GET['author'] == $at_data['download_user'] ? 1 : 0;
-        $info['download_author'][$at_data['download_user']] = array(
+        $info['download_author'][$at_data['download_user']] = [
             'title'  => $at_data['user_name'],
             'link'   => INFUSIONS."downloads/downloads.php?author=".$at_data['download_user'],
             'count'  => $at_data['download_count'],
             'active' => $active
-        );
+        ];
     }
 }
 
 render_downloads($info);
 require_once THEMES."templates/footer.php";
 function rating_db($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['sum_rating'];
+    return $count_db['sum_rating'];
 }
+
 function sum_db($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 COUNT(rating_item_id) AS count_votes
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
-return $count_db['count_votes'];
+    return $count_db['count_votes'];
 }
+
 function count_db($id, $type) {
-            $count_db = dbarray(dbquery("SELECT
+    $count_db = dbarray(dbquery("SELECT
                 COUNT(comment_item_id) AS count_comment
                 FROM ".DB_COMMENTS."
                 WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
-return $count_db['count_comment'];
+    return $count_db['count_comment'];
 }
+
 /**
  * Returns Downloads Category Hierarchy Tree Data
  *
@@ -430,12 +433,11 @@ function parseInfo($data) {
     $locale = fusion_get_locale();
     $download_image = '';
     if ($data['download_image'] && $dl_settings['download_screenshot'] == "1") {
-        $hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], TRUE);
         $lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE);
         $download_image = "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".thumbnail($lowRes_image_path,
                 '100px')."</a>";
     }
-    return array(
+    return [
         'download_anchor'            => "<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
         'download_description_short' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short']))))),
         'download_description'       => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description']))))),
@@ -454,5 +456,5 @@ function parseInfo($data) {
         'download_post_time'         => showdate('shortdate', $data['download_datestamp']),
         'download_post_time2'        => $locale['global_049']." ".timer($data['download_datestamp']),
         'download_file_link'         => file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
-    );
+    ];
 }

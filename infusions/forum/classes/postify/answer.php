@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Forums\Postify;
 
 use PHPFusion\BreadCrumbs;
@@ -46,6 +45,10 @@ class Postify_Answer extends Forum_Postify {
         );
         if (!empty($thread_data)) {
             Moderator::define_forum_mods($thread_data);
+
+            $title = '';
+            $description = '';
+
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
             // if this is an author or is a forum moderator
             if (($thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD)) {
@@ -222,6 +225,7 @@ class Postify_Answer extends Forum_Postify {
 
                 }
             }
+
             render_postify(
                 [
                     'title'       => $title,

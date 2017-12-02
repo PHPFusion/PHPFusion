@@ -26,7 +26,7 @@ namespace PHPFusion\Forums;
 class Moderator {
 
     private static $instance = NULL;
-    private $allowed_actions = array(
+    private $allowed_actions = [
         'renew',
         'delete',
         'nonsticky',
@@ -34,14 +34,14 @@ class Moderator {
         'lock',
         'unlock',
         'move'
-    );
+    ];
     private $thread_id = 0;
     private $post_id = 0;
     private $forum_id = 0;
     private $parent_id = 0;
     private $branch_id = 0;
     private $form_action = '';
-    private $locale = array();
+    private $locale = [];
 
     /**
      * Get Moderator Instance
@@ -254,12 +254,12 @@ class Moderator {
     private function mod_renew_thread() {
         if (iMOD) {
             $result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id, f.forum_cat
-					FROM ".DB_FORUM_POSTS." p
-					INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-					INNER JOIN ".DB_FORUMS." f on f.forum_id = t.forum_id
-					WHERE p.thread_id='".intval($this->thread_id)."' AND t.thread_hidden=0 AND p.post_hidden=0
-					ORDER BY p.post_id DESC LIMIT 1
-					");
+                    FROM ".DB_FORUM_POSTS." p
+                    INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                    INNER JOIN ".DB_FORUMS." f on f.forum_id = t.forum_id
+                    WHERE p.thread_id='".intval($this->thread_id)."' AND t.thread_hidden=0 AND p.post_hidden=0
+                    ORDER BY p.post_id DESC LIMIT 1
+                    ");
 
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -285,7 +285,7 @@ class Moderator {
                     ]);
 
                 ob_start();
-                echo openmodal('renew', $this->locale['forum_0207'], array('class' => 'modal-center', 'static' => 1));
+                echo openmodal('renew', $this->locale['forum_0207'], ['class' => 'modal-center', 'static' => 1]);
                 echo "<div style='text-align:center'><br />\n".$this->locale['forum_0759']."<br /><br />\n";
                 echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
                 echo "<a href='".FORUM."index.php'>".$this->locale['forum_0550']."</a><br /><br /></div>\n";
@@ -306,13 +306,13 @@ class Moderator {
     private function mod_delete_thread() {
         if (iMOD) {
             ob_start();
-            echo openmodal('deletethread', $this->locale['forum_0201'], array('class' => 'modal-center'));
+            echo openmodal('deletethread', $this->locale['forum_0201'], ['class' => 'modal-center']);
             echo "<div class='text-center'><br />\n";
             if (!isset($_POST['deletethread'])) {
                 echo openform('delform', 'post', $this->form_action."&amp;step=delete");
                 echo $this->locale['forum_0704']."<br /><br />\n";
-                echo form_button('deletethread', $this->locale['yes'], $this->locale['yes'], array('class' => 'm-r-10 btn-danger'));
-                echo form_button('cancelDelete', $this->locale['no'], $this->locale['no'], array('class' => 'm-r-10 btn-default'));
+                echo form_button('deletethread', $this->locale['yes'], $this->locale['yes'], ['class' => 'm-r-10 btn-danger']);
+                echo form_button('cancelDelete', $this->locale['no'], $this->locale['no'], ['class' => 'm-r-10 btn-default']);
                 echo "</form>\n";
                 echo closeform();
             } else {
@@ -364,13 +364,11 @@ class Moderator {
 
     /**
      * SQL action remove thread
-     * @return array of affected rows
      *               - post deleted
      *               - attachment deleted
      *               - user thread tracking deleted.
      */
     private function remove_thread() {
-
         $response = FALSE;
 
         if (self::verify_thread($this->thread_id) && self::verify_forum($this->forum_id)) {
@@ -417,7 +415,6 @@ class Moderator {
     /**
      * Refresh db_forum forum's stats
      * @param bool $delete_thread true if thread deletion
-     * @return int
      */
     private function refresh_forum($delete_thread = FALSE) {
         if (self::verify_forum($this->forum_id)) {
@@ -425,21 +422,21 @@ class Moderator {
             // last post id from a given forum id.
             if ($remaining_threads_count) {
                 $result = dbquery("SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp,
-							COUNT(p.post_id) AS post_count FROM ".DB_FORUM_POSTS." p
-							INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-							WHERE p.forum_id='".$this->forum_id."' AND t.thread_hidden='0' AND p.post_hidden='0'
-							ORDER BY p.post_datestamp DESC LIMIT 1");
+                            COUNT(p.post_id) AS post_count FROM ".DB_FORUM_POSTS." p
+                            INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                            WHERE p.forum_id='".$this->forum_id."' AND t.thread_hidden='0' AND p.post_hidden='0'
+                            ORDER BY p.post_datestamp DESC LIMIT 1");
                 if (dbrows($result) > 0) {
                     $pdata = dbarray($result); // yielded LAST post
                     $result = dbquery("UPDATE ".DB_FORUMS." SET
-							forum_lastpostid = '".$pdata['post_id']."',
-							forum_lastpost = '".$pdata['post_datestamp']."',
-							forum_postcount = '".$pdata['post_count']."',
-							".($delete_thread ? "forum_threadcount = '".(dbcount("(thread_id)", DB_FORUM_THREADS,
-                                                                                 "forum_id='".$this->forum_id."'"))."'," : '')."
-							forum_lastuser = '".$pdata['post_author']."'
-							WHERE forum_id = '".$this->forum_id."'
-							");
+                            forum_lastpostid = '".$pdata['post_id']."',
+                            forum_lastpost = '".$pdata['post_datestamp']."',
+                            forum_postcount = '".$pdata['post_count']."',
+                            ".($delete_thread ? "forum_threadcount = '".(dbcount("(thread_id)", DB_FORUM_THREADS,
+                                "forum_id='".$this->forum_id."'"))."'," : '')."
+                            forum_lastuser = '".$pdata['post_author']."'
+                            WHERE forum_id = '".$this->forum_id."'
+                            ");
                 }
             } else {
                 dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid = '0', forum_lastpost='0', forum_postcount=0, forum_threadcount=0, forum_lastuser='0' WHERE forum_id='".intval($this->forum_id)."'");
@@ -455,7 +452,7 @@ class Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0202'], array('class' => 'modal-center'));
+            echo openmodal('lockthread', $this->locale['forum_0202'], ['class' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0711']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -474,7 +471,7 @@ class Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0720'], array('class' => 'modal-center'));
+            echo openmodal('lockthread', $this->locale['forum_0720'], ['class' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0721']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -493,7 +490,7 @@ class Moderator {
         if (iMOD) {
             $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0204'], array('class' => 'modal-center'));
+            echo openmodal('lockthread', $this->locale['forum_0204'], ['class' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0731']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -512,7 +509,7 @@ class Moderator {
         if (iMOD) {
             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
-            echo openmodal('lockthread', $this->locale['forum_0205'], array('class' => 'modal-center'));
+            echo openmodal('lockthread', $this->locale['forum_0205'], ['class' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$this->locale['forum_0741']."</strong><br /><br />\n";
             echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$this->locale['forum_0549']."</a><br /><br />\n";
@@ -530,7 +527,7 @@ class Moderator {
         if (iMOD) {
 
             ob_start();
-            echo openmodal('movethread', $this->locale['forum_0206'], array('class' => 'modal-center'));
+            echo openmodal('movethread', $this->locale['forum_0206'], ['class' => 'modal-center']);
 
             if (isset($_POST['move_thread'])) {
 
@@ -556,7 +553,7 @@ class Moderator {
                 $currentThreadArray = dbarray(
                     dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser
                         FROM ".DB_FORUM_THREADS." WHERE thread_id=".$thread_id."
-						AND thread_hidden='0'")
+                        AND thread_hidden='0'")
                 );
 
                 if ($currentThreadPostCount == 0 || empty($currentThreadArray)) {
@@ -617,7 +614,7 @@ class Moderator {
             } else {
 
                 echo openform('moveform', 'post',
-                              INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move");
+                    INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move");
 
                 // disable all forum that is type 1.
                 $disabled_opts[] = $this->forum_id;
@@ -630,15 +627,15 @@ class Moderator {
                 }
 
                 echo form_select_tree('new_forum_id', $this->locale['forum_0751'], '',
-                                      array(
-                                          'input_id' => "new_forum_id",
-                                          'no_root' => TRUE,
-                                          'inline' => TRUE,
-                                          'disable_opts' => $disabled_opts
-                                      ),
-                                      DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat').
+                        [
+                            'input_id'     => "new_forum_id",
+                            'no_root'      => TRUE,
+                            'inline'       => TRUE,
+                            'disable_opts' => $disabled_opts
+                        ],
+                        DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat').
 
-                    form_button('move_thread', $this->locale['forum_0206'], $this->locale['forum_0206'], array('class' => 'btn-primary')).
+                    form_button('move_thread', $this->locale['forum_0206'], $this->locale['forum_0206'], ['class' => 'btn-primary']).
 
                     closeform();
 
@@ -750,7 +747,7 @@ class Moderator {
                  * Scan for Posts
                  */
                 $move_posts = "";
-                $array_post = array();
+                $array_post = [];
                 $first_post_found = FALSE;
                 foreach ($post_items as $move_post_id) {
                     if (isnum($move_post_id)) {
@@ -767,10 +764,10 @@ class Moderator {
 
                     // Current Status Before Move.
                     $move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) 'num_posts'
-									FROM ".DB_FORUM_POSTS."
-									WHERE post_id IN (".$move_posts.")
-									AND thread_id='".intval($this->thread_id)."'
-									GROUP BY thread_id");
+                                    FROM ".DB_FORUM_POSTS."
+                                    WHERE post_id IN (".$move_posts.")
+                                    AND thread_id='".intval($this->thread_id)."'
+                                    GROUP BY thread_id");
 
                     if (dbrows($move_result)) {
 
@@ -779,7 +776,7 @@ class Moderator {
                         $post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."'");
 
                         ob_start();
-                        echo openmodal('forum0300', $this->locale['forum_0176'], array('class' => 'modal-center'));
+                        echo openmodal('forum0300', $this->locale['forum_0176'], ['class' => 'modal-center']);
                         if ($first_post_found) {
                             // there is a first post.
                             echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
@@ -799,62 +796,62 @@ class Moderator {
                         if (!isset($_POST['new_forum_id']) && !$f_post_blo) {
 
                             $fl_result = dbquery("
-										SELECT f.forum_id, f.forum_name, f.forum_type, f2.forum_name 'forum_cat_name',
-										(	SELECT COUNT(thread_id) FROM ".DB_FORUM_THREADS." th WHERE f.forum_id=th.forum_id AND th.thread_id !='".intval($this->thread_id)."'
-											GROUP BY th.forum_id
-										) AS threadcount
+                                        SELECT f.forum_id, f.forum_name, f.forum_type, f2.forum_name 'forum_cat_name',
+                                        (	SELECT COUNT(thread_id) FROM ".DB_FORUM_THREADS." th WHERE f.forum_id=th.forum_id AND th.thread_id !='".intval($this->thread_id)."'
+                                            GROUP BY th.forum_id
+                                        ) AS threadcount
                                         FROM ".DB_FORUMS." f
                                         LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-										WHERE ".groupaccess('f.forum_access')."
-										ORDER BY f2.forum_order ASC, f.forum_order ASC
-										");
+                                        WHERE ".groupaccess('f.forum_access')."
+                                        ORDER BY f2.forum_order ASC, f.forum_order ASC
+                                        ");
 
                             if (dbrows($fl_result)) {
-                                $exclude_opts = array();
+                                $exclude_opts = [];
                                 while ($data = dbarray($fl_result)) {
                                     if (empty($data['threadcount']) || $data['forum_type'] == '1') {
                                         $exclude_opts[] = $data['forum_id'];
                                     }
                                 }
                                 echo openform('modopts', 'post', $this->form_action);
-                                echo form_select_tree('new_forum_id', $this->locale['forum_0301'], '', array(
+                                echo form_select_tree('new_forum_id', $this->locale['forum_0301'], '', [
                                     'disable_opts' => $exclude_opts,
                                     'no_root'      => 1,
                                     'inline'       => FALSE,
                                     'inner_width'  => '100%'
-                                ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+                                ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 
                                 foreach ($array_post as $value) {
-                                    echo form_hidden("delete_item_post[]", "", $value, array("input_id" => "delete_post[$value]"));
+                                    echo form_hidden("delete_item_post[]", "", $value, ["input_id" => "delete_post[$value]"]);
                                 }
                                 echo form_hidden('move_posts', '', 1);
                                 echo modalfooter(
-                                    form_button($this->locale['forum_0302'], $this->locale['forum_0208'], $this->locale['forum_0208'], array('class' => 'btn-primary'))
+                                    form_button($this->locale['forum_0302'], $this->locale['forum_0208'], $this->locale['forum_0208'], ['class' => 'btn-primary'])
                                 );
                                 echo closeform();
                             } else {
                                 echo "<strong>".$this->locale['forum_0310']."</strong><br /><br />\n";
                                 echo "<a href='".$this->form_action."'>".$this->locale['forum_0309']."</a><br /><br />\n";
                             }
-                        } elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !isset($_POST['new_thread_subject']) && !$f_post_blo) {
+                        } else if (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !isset($_POST['new_thread_subject']) && !$f_post_blo) {
                             // Select Threads in Selected Forum.
                             // build the list.
                             $tl_result = dbquery("
-							SELECT thread_id, thread_subject
-							FROM ".DB_FORUM_THREADS."
-							WHERE forum_id='".intval($_POST['new_forum_id'])."' AND thread_id !='".intval($pdata['thread_id'])."' AND thread_hidden='0'
-							ORDER BY thread_subject ASC
-							");
+                            SELECT thread_id, thread_subject
+                            FROM ".DB_FORUM_THREADS."
+                            WHERE forum_id='".intval($_POST['new_forum_id'])."' AND thread_id !='".intval($pdata['thread_id'])."' AND thread_hidden='0'
+                            ORDER BY thread_subject ASC
+                            ");
 
                             if (dbrows($tl_result)) {
-                                $thread_list = array();
+                                $thread_list = [];
                                 while ($tl_data = dbarray($tl_result)) {
                                     $thread_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
                                 }
                                 echo openform('modopts', 'post', $this->form_action."&amp;sv");
                                 echo form_hidden('new_forum_id', '', $_POST['new_forum_id']); // has val
                                 if (!isset($_POST['new_thread_select'])) {
-                                    echo form_checkbox('new_thread_select', '', '', array(
+                                    echo form_checkbox('new_thread_select', '', '', [
                                         'type'     => 'radio',
                                         'options'  => [
                                             0 => $this->locale['forum_0300'],
@@ -862,15 +859,15 @@ class Moderator {
                                         ],
                                         'inline'   => TRUE,
                                         'required' => TRUE,
-                                    ));
+                                    ]);
                                 } else {
                                     $thread_type = stripinput($_POST['new_thread_select']);
                                     if (!empty($thread_type)) {
-                                        echo form_select('new_thread_id', $this->locale['forum_0303'], '', array(
+                                        echo form_select('new_thread_id', $this->locale['forum_0303'], '', [
                                             'options'     => $thread_list,
                                             'inline'      => FALSE,
                                             'inner_width' => '100%',
-                                        ));
+                                        ]);
                                         echo form_hidden('new_thread_select', '', 0);
                                     } else {
                                         echo form_text('new_thread_subject', $this->locale['forum_2000'], '', ['required' => TRUE, 'max_length' => 250, 'inline' => FALSE]);
@@ -878,19 +875,19 @@ class Moderator {
                                     }
                                 }
                                 foreach ($array_post as $value) {
-                                    echo form_hidden("delete_item_post[]", "", $value, array("input_id" => "delete_post[$value]"));
+                                    echo form_hidden("delete_item_post[]", "", $value, ["input_id" => "delete_post[$value]"]);
                                 }
                                 echo form_hidden('move_posts', '', 1);
 
                                 echo modalfooter(
-                                    form_button($this->locale['forum_0176'], $this->locale['forum_0208'], $this->locale['forum_0208'], array('class' => 'btn-primary'))
+                                    form_button($this->locale['forum_0176'], $this->locale['forum_0208'], $this->locale['forum_0208'], ['class' => 'btn-primary'])
                                 );
                             } else {
                                 echo $this->locale['forum_0308']."<br /><br />\n";
                                 echo "<a href='".$this->form_action."'>".$this->locale['forum_0309']."</a>\n";
                             }
 
-                        } elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id']) || isset($_POST['new_thread_subject'])) {
+                        } else if (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id']) || isset($_POST['new_thread_subject'])) {
 
                             $_POST['new_thread_id'] = isset($_POST['new_thread_id']) ? $_POST['new_thread_id'] : 0;
 
@@ -952,12 +949,12 @@ class Moderator {
 
                                     // Get the latest post
                                     $new_thread = dbarray(dbquery("
-													SELECT post_id, post_author, post_datestamp
-													FROM ".DB_FORUM_POSTS."
-													WHERE thread_id=:new_thread_id
-													ORDER BY post_datestamp DESC
-													LIMIT 1
-													", [':new_thread_id' => $param[':new_thread_id']]
+                                                    SELECT post_id, post_author, post_datestamp
+                                                    FROM ".DB_FORUM_POSTS."
+                                                    WHERE thread_id=:new_thread_id
+                                                    ORDER BY post_datestamp DESC
+                                                    LIMIT 1
+                                                    ", [':new_thread_id' => $param[':new_thread_id']]
                                     ));
                                     $param[':thread_lastpost'] = $new_thread['post_datestamp'];
                                     $param[':thread_lastpostid'] = $new_thread['post_id'];
@@ -1018,7 +1015,7 @@ class Moderator {
                                         "));
 
                                         dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".intval($thread_lastpost_res['post_datestamp'])."',
-										thread_lastpostid='".intval($thread_lastpost_res['post_id'])."', thread_postcount=thread_postcount-".intval($pdata['num_posts']).", thread_lastuser='".intval($thread_lastpost_res['post_author'])."' WHERE thread_id='".intval($pdata['thread_id'])."'");
+                                        thread_lastpostid='".intval($thread_lastpost_res['post_id'])."', thread_postcount=thread_postcount-".intval($pdata['num_posts']).", thread_lastuser='".intval($thread_lastpost_res['post_author'])."' WHERE thread_id='".intval($pdata['thread_id'])."'");
 
                                         dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($thread_lastpost_res['post_datestamp'])."', forum_postcount=forum_postcount-".intval($pdata['num_posts']).", forum_lastuser='".intval($thread_lastpost_res['post_author'])."' WHERE forum_id='".intval($pdata['forum_id'])."'");
                                     }

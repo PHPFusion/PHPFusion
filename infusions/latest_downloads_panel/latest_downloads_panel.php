@@ -51,4 +51,3 @@ if (dbrows($result)) {
 }
 
 render_latest_downloads($info);
-

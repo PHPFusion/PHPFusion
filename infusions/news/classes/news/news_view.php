@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\News;
-use PHPFusion\OpenGraph;
+
 use PHPFusion\OpenGraphNews;
 
 /**
@@ -32,12 +31,12 @@ class NewsView extends News {
             // Item Result
             $info = $this->set_NewsItemInfo($_GET['readmore']);
             render_news_item($info);
-	        OpenGraphNews::ogNews($_GET['readmore']);
-        } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+            OpenGraphNews::ogNews($_GET['readmore']);
+        } else if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             // Category Result
             $info = $this->set_NewsCatInfo($_GET['cat_id']);
             display_main_news($info);
-	        OpenGraphNews::ogNewsCat($_GET['cat_id']);
+            OpenGraphNews::ogNewsCat($_GET['cat_id']);
         } else {
             // All Results
             $info = $this->set_NewsInfo();

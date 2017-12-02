@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_contact_panel')) {
     function render_contact_panel(array $info = array()) {
-        echo openside('{%tablename%}');
+        openside('{%tablename%}');
             echo '<div class="text-center well">{%prmessages%}</div>';
             echo '{%open_form%}';
             echo '{%mail_name_field%}';
@@ -34,6 +34,6 @@ if (!function_exists('render_contact_panel')) {
             echo '{%captcha%}';
             echo '{%send_button%}';
             echo '{%close_form%}';
-        echo closeside();
+        closeside();
     }
 }

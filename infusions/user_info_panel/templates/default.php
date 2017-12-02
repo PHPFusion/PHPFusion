@@ -24,7 +24,7 @@ if (!function_exists('display_user_info_panel')) {
      *
      * @param array $info
      */
-    function display_user_info_panel(array $info = array()) {
+    function display_user_info_panel(array $info = []) {
         if (iMEMBER) : ?>
 
             {%openside%}

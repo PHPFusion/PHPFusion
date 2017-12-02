@@ -32,30 +32,30 @@ $inf_image = "news.svg";
 
 // Create tables
 $inf_newtable[1] = DB_NEWS." (
-	news_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	news_subject VARCHAR(200) NOT NULL DEFAULT '',
-	news_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	news_news TEXT NOT NULL,
-	news_extended TEXT NOT NULL,
-	news_keywords VARCHAR(250) NOT NULL DEFAULT '',
-	news_breaks CHAR(1) NOT NULL DEFAULT '',
-	news_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-	news_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	news_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	news_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	news_visibility TINYINT(4) NOT NULL DEFAULT '0',
-	news_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	news_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	news_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	news_image_align VARCHAR(15) NOT NULL DEFAULT '',
-	news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    news_subject VARCHAR(200) NOT NULL DEFAULT '',
+    news_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_news TEXT NOT NULL,
+    news_extended TEXT NOT NULL,
+    news_keywords VARCHAR(250) NOT NULL DEFAULT '',
+    news_breaks CHAR(1) NOT NULL DEFAULT '',
+    news_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+    news_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    news_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    news_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    news_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    news_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    news_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    news_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    news_image_align VARCHAR(15) NOT NULL DEFAULT '',
+    news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	news_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	news_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	news_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (news_id),
-	KEY news_datestamp (news_datestamp),
-	KEY news_reads (news_reads)
+    news_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    news_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    news_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (news_id),
+    KEY news_datestamp (news_datestamp),
+    KEY news_reads (news_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[2] = DB_NEWS_IMAGES." (
@@ -67,29 +67,29 @@ $inf_newtable[2] = DB_NEWS_IMAGES." (
     news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
     news_image_user MEDIUMINT(9) NOT NULL DEFAULT '0',
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (news_image_id)
+    PRIMARY KEY (news_image_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[3] = DB_NEWS_CATS." (
-	news_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
-	news_cat_image VARCHAR(100) NOT NULL DEFAULT '',
-	news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0',
-	news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (news_cat_id)
+    news_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+    news_cat_image VARCHAR(100) NOT NULL DEFAULT '',
+    news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (news_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Position these links under Content Administration
-$inf_adminpanel[] = array(
-    "image" => $inf_image,
-    "page" => 1,
+$inf_adminpanel[] = [
+    "image"  => $inf_image,
+    "page"   => 1,
     "rights" => "N",
-    "title" => $locale['setup_3018'],
-    "panel" => "news_admin.php",
-);
+    "title"  => $locale['setup_3018'],
+    "panel"  => "news_admin.php",
+];
 
 // Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_readmore', '1', 'news')";
@@ -110,10 +110,10 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_file_types', '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', 'news')";
 
 // Multilanguage table for Administration
-$inf_mlt[] = array(
-    "title" => $locale['news']['title'],
+$inf_mlt[] = [
+    "title"  => $locale['news']['title'],
     "rights" => "NS",
-);
+];
 
 // always find and loop ALL languages
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

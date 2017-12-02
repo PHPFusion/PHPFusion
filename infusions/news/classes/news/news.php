@@ -16,7 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\News;
 
 use PHPFusion\BreadCrumbs;
@@ -24,8 +23,8 @@ use PHPFusion\Feedback\Comments;
 
 abstract class News extends NewsServer {
 
-    protected static $locale = array();
-    public $info = array();
+    protected static $locale = [];
+    public $info = [];
 
     protected function __construct() {
     }
@@ -49,16 +48,16 @@ abstract class News extends NewsServer {
             'title' => self::$locale['news_0004']
         ]);
 
-        $info = array(
+        $info = [
             'news_cat_id'       => intval(0),
             'news_cat_name'     => self::$locale['news_0004'],
             'news_cat_image'    => '',
             'news_cat_language' => LANGUAGE,
-            'news_categories'   => array(),
+            'news_categories'   => [],
             'news_image'        => '',
             'news_item_rows'    => 0,
-            'news_items'        => array()
-        );
+            'news_items'        => []
+        ];
 
         $info = array_merge_recursive($info, self::get_NewsFilter());
         $info = array_merge_recursive($info, self::get_NewsCategory());
@@ -75,11 +74,11 @@ abstract class News extends NewsServer {
      * @return array
      */
     protected static function get_NewsFilter() {
-        $array['allowed_filters'] = array(
+        $array['allowed_filters'] = [
             'recent'  => self::$locale['news_0011'],
             'comment' => self::$locale['news_0012'],
             'rating'  => self::$locale['news_0013']
-        );
+        ];
         foreach ($array['allowed_filters'] as $type => $filter_name) {
             $filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
             $array['news_filter'][$filter_link] = $filter_name;
@@ -95,11 +94,11 @@ abstract class News extends NewsServer {
      * @return mixed
      */
     public static function get_NewsCategory() {
-        $array = array();
-        $array['news_categories'][0][0] = array(
+        $array = [];
+        $array['news_categories'][0][0] = [
             'link' => INFUSIONS."news/news.php?cat_id=0",
             'name' => fusion_get_locale('news_0006', NEWS_LOCALE)
-        );
+        ];
         $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility 
         FROM ".DB_NEWS_CATS."
         ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
@@ -107,13 +106,13 @@ abstract class News extends NewsServer {
             while ($data = dbarray($result)) {
                 $id = $data['news_cat_id'];
                 $parent_id = $data['news_cat_parent'] === NULL ? "NULL" : $data['news_cat_parent'];
-                $array['news_categories'][$parent_id][$id] = array(
+                $array['news_categories'][$parent_id][$id] = [
                     'link'       => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
                     'parent'     => $data['news_cat_parent'],
                     'name'       => $data['news_cat_name'],
                     'icon'       => IMAGES_NC.$data['news_cat_image'],
                     'visibility' => $data['news_cat_visibility']
-                );
+                ];
             }
         }
 
@@ -127,7 +126,7 @@ abstract class News extends NewsServer {
      *
      * @return array
      */
-    public function get_NewsItem($filter = array()) {
+    public function get_NewsItem($filter = []) {
 
         $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
         if ($info['news_total_rows']) {
@@ -136,6 +135,8 @@ abstract class News extends NewsServer {
             $info['news_item_rows'] = dbrows($result);
             if ($info['news_item_rows'] > 0) {
                 $news_count = 0;
+                $news_info = [];
+
                 while ($data = dbarray($result)) {
                     $news_count++;
                     if ($news_count == 1) {
@@ -156,7 +157,7 @@ abstract class News extends NewsServer {
      *
      * @return string
      */
-    protected static function get_NewsQuery(array $filters = array()) {
+    protected static function get_NewsQuery(array $filters = []) {
         $news_settings = self::get_news_settings();
         $cat_filter = self::check_NewsFilter();
         $query = "SELECT tn.*, tc.*,
@@ -216,9 +217,9 @@ abstract class News extends NewsServer {
 
         return $count_db['count_comment'];
     }
-//    protected function check_NewsFilter() {
+    //    protected function check_NewsFilter() {
 
-//    }
+    //    }
     /**
      * Sql filter between $_GET['type']
      * most commented
@@ -228,7 +229,7 @@ abstract class News extends NewsServer {
     protected static function check_NewsFilter() {
 
         /* Filter Construct */
-        $filter = array('recent', 'comment', 'rating');
+        $filter = ['recent', 'comment', 'rating'];
 
         if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
             $current_filter = $_GET['type'];
@@ -236,14 +237,14 @@ abstract class News extends NewsServer {
             if ($current_filter == 'recent') {
                 // order by datestamp.
                 $cat_filter['order'] = 'news_datestamp DESC';
-            } elseif ($current_filter == 'comment') {
+            } else if ($current_filter == 'comment') {
                 // order by comment_count
                 $cat_filter = [
                     'order' => 'count_comment DESC',
                     'count' => 'COUNT(td.comment_item_id) AS count_comment,',
                     'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
                 ];
-            } elseif ($current_filter == 'rating') {
+            } else if ($current_filter == 'rating') {
                 // order by download_title
                 $cat_filter = [
                     'order' => 'sum_rating DESC',
@@ -345,7 +346,7 @@ abstract class News extends NewsServer {
             $news_cat_image = "<a href='".$info['news_link']."'>";
             if (!empty($data['news_image_t2']) && $news_settings['news_image_frontpage'] == 0) {
                 $news_cat_image .= $image."</a>";
-            } elseif (!empty($data['news_cat_image'])) {
+            } else if (!empty($data['news_cat_image'])) {
                 $news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
             }
 
@@ -371,21 +372,21 @@ abstract class News extends NewsServer {
                 }
             }
 
-            $admin_actions = array();
+            $admin_actions = [];
             if (iADMIN && checkrights("N")) {
-                $admin_actions = array(
-                    "edit"   => array(
+                $admin_actions = [
+                    "edit"   => [
                         'link'  => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'],
                         'title' => self::$locale['edit']
-                    ),
-                    "delete" => array(
+                    ],
+                    "delete" => [
                         'link'  => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'],
                         'title' => self::$locale['delete']
-                    )
-                );
+                    ]
+                ];
             }
 
-            $info = array(
+            $info = [
                 "news_id"               => $data['news_id'],
                 'news_subject'          => $news_subject,
                 'news_link'             => $info['news_link'],
@@ -422,13 +423,13 @@ abstract class News extends NewsServer {
                 'news_admin_actions'    => $admin_actions,
                 "news_sticky"           => $data['news_sticky'],
                 "print_link"            => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
-            );
+            ];
             $info += $data;
 
             return (array)$info;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -442,16 +443,16 @@ abstract class News extends NewsServer {
 
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
-        $info = array(
+        $info = [
             'news_cat_id'       => 0,
             'news_cat_name'     => self::$locale['news_0004'],
             'news_cat_image'    => '',
             'news_cat_language' => LANGUAGE,
-            'news_categories'   => array(),
+            'news_categories'   => [],
             'news_image'        => '',
             'news_item_rows'    => 0,
-            'news_items'        => array()
-        );
+            'news_items'        => []
+        ];
 
         $info = array_merge_recursive($info, self::get_NewsFilter());
         $info = array_merge_recursive($info, self::get_NewsCategory());
@@ -485,7 +486,7 @@ abstract class News extends NewsServer {
 
             if ($max_news_rows) {
 
-                $result = dbquery($this->get_NewsQuery(array('condition' => "news_cat='".$data['news_cat_id']."'")));
+                $result = dbquery($this->get_NewsQuery(['condition' => "news_cat='".$data['news_cat_id']."'"]));
                 $info['news_item_rows'] = dbrows($result);
                 $info['news_total_rows'] = $max_news_rows;
                 $this->news_cat_breadcrumbs($news_cat_index);
@@ -497,7 +498,7 @@ abstract class News extends NewsServer {
              */
             //redirect(INFUSIONS."news/news.php");
             //}
-        } elseif ($_GET['cat_id'] == 0) {
+        } else if ($_GET['cat_id'] == 0) {
 
             $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
             AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
@@ -506,7 +507,7 @@ abstract class News extends NewsServer {
 
             if ($max_news_rows) {
                 // apply filter.
-                $result = dbquery($this->get_NewsQuery(array('condition' => 'news_cat=0')));
+                $result = dbquery($this->get_NewsQuery(['condition' => 'news_cat=0']));
 
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
@@ -558,10 +559,10 @@ abstract class News extends NewsServer {
             $crumb = &$crumb;
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
-                $crumb = array(
+                $crumb = [
                     'link'  => INFUSIONS."news/news.php?cat_id=".$_name['news_cat_id'],
                     'title' => $_name['news_cat_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -588,7 +589,7 @@ abstract class News extends NewsServer {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
@@ -615,10 +616,10 @@ abstract class News extends NewsServer {
 
         $result = dbquery(
             self::get_NewsQuery(
-                array(
+                [
                     'condition' => 'tn.news_id='.intval($news_id),
                     'limit'     => '1'
-                )
+                ]
             )
         );
 
@@ -650,11 +651,11 @@ abstract class News extends NewsServer {
                 'title' => $data['news_subject']
             ]);
 
-            $default_info = array(
+            $default_info = [
                 'news_item'     => '',
-                'news_filter'   => array(),
-                'news_category' => array(),
-            );
+                'news_filter'   => [],
+                'news_category' => [],
+            ];
             $info = array_merge_recursive($default_info, self::get_NewsFilter());
             $info = array_merge_recursive($info, self::get_NewsCategory());
 
@@ -691,7 +692,7 @@ abstract class News extends NewsServer {
         $html = '';
         if (fusion_get_settings('comments_enabled') && $data['news_allow_comments'] == TRUE) {
             $html .= Comments::getInstance(
-                array(
+                [
                     'comment_item_type'     => 'N',
                     'comment_db'            => DB_NEWS,
                     'comment_col'           => 'news_id',
@@ -702,7 +703,7 @@ abstract class News extends NewsServer {
                     'comment_allow_reply'   => TRUE,
                     'comment_allow_post'    => TRUE,
                     'comment_once'          => FALSE,
-                ), 'news_comments'
+                ], 'news_comments'
             )->showComments();
         }
 
@@ -710,7 +711,7 @@ abstract class News extends NewsServer {
     }
 
     protected static function get_NewsGalleryData($data) {
-        $row = array();
+        $row = [];
         $result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_id='".$data['news_id']."'");
         if (dbrows($result) > 0) {
             while ($gData = dbarray($result)) {

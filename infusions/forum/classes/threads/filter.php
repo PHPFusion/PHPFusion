@@ -19,50 +19,50 @@ namespace PHPFusion\Forums\Threads;
 
 class ThreadFilter {
 
-    public $filter_info = array();
+    public $filter_info = [];
 
-    public $filter_sql = array(
+    public $filter_sql = [
         'condition' => FALSE,
-        'order' => FALSE,
-    );
+        'order'     => FALSE,
+    ];
 
     public function set_filterInfo() {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
-        $time_array = array(
-            'today' => strtotime('today'),
-            '2days' => strtotime('-2 days'),
-            '1week' => strtotime('-1 week'),
-            '2week' => strtotime('-2 weeks'),
+        $time_array = [
+            'today'  => strtotime('today'),
+            '2days'  => strtotime('-2 days'),
+            '1week'  => strtotime('-1 week'),
+            '2week'  => strtotime('-2 weeks'),
             '1month' => strtotime('-2 months'),
             '2month' => strtotime('-2 months'),
             '3month' => strtotime('-2 months'),
             '6month' => strtotime('-6 months'),
-            '1year' => strtotime('-1 year'),
-        );
+            '1year'  => strtotime('-1 year'),
+        ];
 
-        $type_array = array(
+        $type_array = [
             'all'         => '',
             'discussions' => " AND (a.attach_id IS NULL OR a.attach_count ='0') AND thread_poll='0'",
             'attachments' => " AND (a.attach_id IS NOT NULL OR a.attach_count > 0) AND thread_poll='0'",
             'poll'        => " AND (a.attach_id IS NULL OR a.attach_count ='0') AND thread_poll ='1'",
             'solved'      => " AND t.thread_answered = '1'",
             'unsolved'    => " AND t.thread_answered = '0'",
-        );
+        ];
 
-        $sort_array = array(
-            'author' => 't.thread_author',
-            'time' => 't.thread_lastpost',
+        $sort_array = [
+            'author'  => 't.thread_author',
+            'time'    => 't.thread_lastpost',
             'subject' => 't.thread_subject',
-            'reply' => 't.thread_postcount',
-            'view' => 't.thread_views'
-        );
+            'reply'   => 't.thread_postcount',
+            'view'    => 't.thread_views'
+        ];
 
-        $order_array = array(
-            'ascending' => 'ASC',
+        $order_array = [
+            'ascending'  => 'ASC',
             'descending' => 'DESC'
-        );
+        ];
 
         $time = (isset($_GET['time']) && isset($time_array[$_GET['time']]) ? $_GET['time'] : '');
         $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
@@ -74,7 +74,7 @@ class ThreadFilter {
 
         if ($time) {
             if ($time !== 'today') {
-                $start_time = intval( $time_array[ $time ] );
+                $start_time = intval($time_array[$time]);
                 $timeCol = "AND (t.thread_lastpost BETWEEN '$start_time' AND '".TIME."')";
             } else {
                 $timeCol = "AND (t.thread_lastpost >= ".intval($time_array[$time]).")";
@@ -94,10 +94,10 @@ class ThreadFilter {
             $orderCol = $order_array[$order];
         }
 
-        $this->filter_sql = array(
+        $this->filter_sql = [
             'condition' => $timeCol.$typeCol,
-            'order' => $sortCol.$orderCol,
-        );
+            'order'     => $sortCol.$orderCol,
+        ];
 
         // Filter Links
         $timeExt = isset($_GET['time']) ? "&amp;time=".$time : '';
@@ -105,14 +105,14 @@ class ThreadFilter {
         $sortExt = isset($_GET['sort']) ? "&amp;sort=".$sort : '';
         $orderExt = isset($_GET['order']) ? "&amp;order=".$order : '';
 
-        $baseLink = clean_request("", array("time", "type", "sort", "order"), FALSE);
+        $baseLink = clean_request("", ["time", "type", "sort", "order"], FALSE);
         if (isset($_GET['viewforum']) && isset($_GET['forum_id'])) {
             $baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
         }
 
         $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 
-        $this->filter_info['time'] = array(
+        $this->filter_info['time'] = [
             $locale['forum_0211'] => $baseLink,
             $locale['forum_0212'] => $timeLink.'&amp;time=today', // must be static.
             $locale['forum_3008'] => $timeLink.'&amp;time=2days',
@@ -123,44 +123,44 @@ class ThreadFilter {
             $locale['forum_3013'] => $timeLink.'&amp;time=3month',
             $locale['forum_3014'] => $timeLink.'&amp;time=6month',
             $locale['forum_3015'] => $timeLink.'&amp;time=1year'
-        );
+        ];
 
         $typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
 
-        $this->filter_info['type'] = array(
+        $this->filter_info['type'] = [
             $locale['forum_0390'] => $typeLink.'&amp;type=all',
             $locale['forum_0222'] => $typeLink.'&amp;type=discussions',
             $locale['forum_0223'] => $typeLink.'&amp;type=attachments',
             $locale['forum_0224'] => $typeLink.'&amp;type=poll',
             $locale['forum_0378'] => $typeLink.'&amp;type=solved',
             $locale['forum_0379'] => $typeLink.'&amp;type=unsolved',
-        );
+        ];
 
         $sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
 
-        $this->filter_info['sort'] = array(
+        $this->filter_info['sort'] = [
             $locale['forum_0052'] => $sortLink.'&amp;sort=author',
             $locale['forum_0381'] => $sortLink.'&amp;sort=time',
             $locale['forum_0051'] => $sortLink.'&amp;sort=subject',
             $locale['forum_0054'] => $sortLink.'&amp;sort=reply',
             $locale['forum_0053'] => $sortLink.'&amp;sort=view',
-        );
+        ];
 
         $orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
 
-        $this->filter_info['order'] = array(
+        $this->filter_info['order'] = [
             $locale['forum_0230'] => $orderLink.'&amp;order=descending',
             $locale['forum_0231'] => $orderLink.'&amp;order=ascending'
-        );
+        ];
 
     }
 
     public function get_filterInfo() {
-        return (array) $this->filter_info;
+        return (array)$this->filter_info;
     }
 
     public function get_filterSQL() {
-        return (array) $this->filter_sql;
+        return (array)$this->filter_sql;
     }
 
 }

@@ -21,7 +21,6 @@ use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Post\NewThread;
 use PHPFusion\Forums\Postify\Forum_Postify;
 use PHPFusion\Forums\Threads\Forum_Mood;
-use PHPFusion\Forums\Threads\ForumMood;
 use PHPFusion\Forums\Threads\ThreadFilter;
 
 abstract class ForumServer {
@@ -66,9 +65,9 @@ abstract class ForumServer {
 
     public static $postify_instance = NULL;
 
-    protected static $forum_settings = array();
+    protected static $forum_settings = [];
 
-    static private $forum_icons = array(
+    static private $forum_icons = [
         'forum'    => 'fa fa-folder fa-fw',
         'thread'   => 'fa fa-comments-o fa-fw',
         'link'     => 'fa fa-link fa-fw',
@@ -82,7 +81,7 @@ abstract class ForumServer {
         'hot'      => 'fa fa-heartbeat fa-fw',
         'sticky'   => 'fa fa-thumb-tack fa-fw',
         'reads'    => 'fa fa-ticket fa-fw',
-    );
+    ];
     /**
      * Get records of cached forum ranks
      * @staticvar array $forum_rank_cache
@@ -105,10 +104,9 @@ abstract class ForumServer {
     /**
      * Set and Modify Forum Icons
      * @param array $icons
-     * @return array
      */
-    public static function set_forumIcons(array $icons = array()) {
-        self::$forum_icons = array(
+    public static function set_forumIcons(array $icons = []) {
+        self::$forum_icons = [
             'forum'    => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
             'thread'   => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
             'link'     => !empty($icons['link']) ? $icons['link'] : 'fa fa-link fa-fw',
@@ -122,7 +120,7 @@ abstract class ForumServer {
             'hot'      => !empty($icons['hot']) ? $icons['hot'] : 'fa fa-heartbeat fa-fw',
             'sticky'   => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
             'reads'    => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
-        );
+        ];
     }
 
     /**
@@ -195,8 +193,8 @@ abstract class ForumServer {
 
     /**
      * Get HTML source of forum rank images of a member
-     * @param int $posts The number of posts of the member
-     * @param int $level The level of the member
+     * @param int   $posts The number of posts of the member
+     * @param int   $level The level of the member
      * @param array $groups The groups of the member
      * @return string HTML source of forum rank images
      */
@@ -204,7 +202,7 @@ abstract class ForumServer {
 
         $forum_settings = self::get_forum_settings();
 
-        $ranks = array();
+        $ranks = [];
 
         if (!$forum_settings['forum_ranks']) {
             return '';
@@ -214,18 +212,18 @@ abstract class ForumServer {
 
         $forum_rank_cache = self::forum_rank_cache();
 
-        $forum_rank_css_class = array(
-            USER_LEVEL_MEMBER => 'label-member',
-            USER_LEVEL_ADMIN => 'label-mod',
+        $forum_rank_css_class = [
+            USER_LEVEL_MEMBER      => 'label-member',
+            USER_LEVEL_ADMIN       => 'label-mod',
             USER_LEVEL_SUPER_ADMIN => 'label-super-admin',
-        );
+        ];
 
-        $forum_rank_icon_class = array(
-            USER_LEVEL_MEMBER => 'fa fa-legal fa-fw',
-            USER_LEVEL_ADMIN => 'fa fa-legal fa-fw',
+        $forum_rank_icon_class = [
+            USER_LEVEL_MEMBER      => 'fa fa-legal fa-fw',
+            USER_LEVEL_ADMIN       => 'fa fa-legal fa-fw',
             USER_LEVEL_SUPER_ADMIN => 'fa fa-legal fa-fw',
-            '-104' => 'fa fa-legal fa-fw',
-        );
+            '-104'                 => 'fa fa-legal fa-fw',
+        ];
 
         // Moderator ranks
         if (!empty($forum_rank_cache['mod'])) {
@@ -317,18 +315,18 @@ abstract class ForumServer {
 
         $forum_settings = self::get_forum_settings();
 
-        $known_types = array(
+        $known_types = [
             0 => 'post',
             1 => 'mod'
-        );
+        ];
 
         if (self::$forum_rank_cache === NULL and $forum_settings['forum_ranks']) {
 
-            self::$forum_rank_cache = array(
-                'post'    => array(),
-                'mod'     => array(),
-                'special' => array(),
-            );
+            self::$forum_rank_cache = [
+                'post'    => [],
+                'mod'     => [],
+                'special' => [],
+            ];
 
             $cache_query = "
             SELECT rank_title, rank_image, rank_type, rank_posts, rank_apply, rank_language
@@ -503,7 +501,7 @@ abstract class ForumServer {
 
     /**
      * Mood Instance
-     * @return null|ForumMood
+     * @return null
      */
     public static function mood() {
         if (self::$forum_mood_instance === NULL) {
@@ -520,12 +518,10 @@ abstract class ForumServer {
         return self::$postify_instance;
     }
 
-
-
     /**
      * Forum Breadcrumbs Generator
      * @param array $forum_index - requires a dbquery_tree() output
-     * @param int $forum_id
+     * @param int   $forum_id
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
 
@@ -538,10 +534,10 @@ abstract class ForumServer {
         function forum_breadcrumb_arrays($index, $id, &$crumb = FALSE) {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
-                $crumb = array(
+                $crumb = [
                     'link'  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
                     'title' => $_name['forum_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -570,7 +566,7 @@ abstract class ForumServer {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
