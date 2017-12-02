@@ -45,8 +45,8 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         }
     }
 
-    $check_path = $_SERVER['DOCUMENT_ROOT'].fusion_get_settings('site_path').'includes/bbcodes/images/';
-    $img_path = fusion_get_settings('siteurl').'includes/bbcodes/images/';
+    $check_path = __DIR__.'/bbcodes/images/';
+    $img_path = FUSION_ROOT.fusion_get_settings('site_path').'includes/bbcodes/images/';
 
     foreach ($__BBCODE__ as $bbdata) {
     switch ($check_path.$bbdata['value']) {
