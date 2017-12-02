@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
 pageAccess('SB');
 
@@ -160,13 +160,13 @@ class Banners {
         openside('');
         echo openform('banner_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=edit", ['enctype' => TRUE]);
         echo form_textarea($_GET['banner_id'], self::$locale[$_GET['banner_id']], stripslashes(fusion_get_settings($_GET['banner_id'])), [
-            "preview"   => TRUE,
-            "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-            "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
-            "autosize"  => TRUE,
-            "form_name" => "banner_form",
-            "wordcount" => TRUE,
-            "inline"    => FALSE
+            'preview'   => TRUE,
+            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+            'autosize'  => TRUE,
+            'form_name' => 'banner_form',
+            'wordcount' => TRUE,
+            'inline'    => FALSE
         ]);
         echo form_button('save_banners', self::$locale['save'], self::$locale['save'], ['class' => 'btn-success']);
         echo closeform();

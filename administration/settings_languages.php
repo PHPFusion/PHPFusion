@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess("LANG");
 require_once THEMES."templates/admin_header.php";
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-$locale += fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
+$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
 
 // Just follow the display of the current admin language.
 $settings = fusion_get_settings();

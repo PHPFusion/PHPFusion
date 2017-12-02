@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess('APWR');
 require_once THEMES."templates/admin_header.php";
 
@@ -41,9 +41,11 @@ class admin_reset_admin {
                 $input = (isset($_POST['reset_id'])) ? explode(",", form_sanitizer($_POST['reset_id'], "", "reset_id")) : "";
                 if (!empty($input)) {
                     foreach ($input as $reset_id) {
-                        self::delete_admin_reset($reset_id);
+                        dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => $reset_id]);
                     }
                 }
+                addNotice('warning', self::$locale['apw_429']);
+                redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
             }
 
         }
@@ -55,7 +57,7 @@ class admin_reset_admin {
                 break;
         }
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title" => self::$locale['apw_title']]);
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'admin_reset.php'.fusion_get_aidlink(), 'title' => self::$locale['apw_title']]);
         self::set_adminsdb();
     }
 
@@ -77,7 +79,7 @@ class admin_reset_admin {
                     ""
                 ))));
 
-                $result = dbquery("SELECT user_id, user_name, user_email, user_language
+                $result = dbquery("SELECT user_id, user_password, user_admin_password, user_name, user_email, user_language
                     FROM ".DB_USERS."
                     WHERE ".$user_sql."
                     ORDER BY user_level DESC, user_id"
@@ -90,12 +92,23 @@ class admin_reset_admin {
                     $adminPass->inputNewPassword = $newAdminPass;
                     $adminPass->inputNewPassword2 = $newAdminPass;
                     $adminPassIsReset = ($adminPass->isValidNewPassword() === 0 ? TRUE : FALSE);
+                    $newAdminAlgo = $adminPass->getNewAlgo();
+                    $newAdminSalt = $adminPass->getNewSalt();
+                    $newAdminPassword = $adminPass->getNewHash();
+                    $updat = "user_admin_algo='".$newAdminAlgo."', user_admin_salt='".$newAdminSalt."', user_admin_password='".$newAdminPassword."'";
 
                     if (!empty($reset_login)) {
                         $loginPass = new PasswordAuth();
                         $newLoginPass = $loginPass->getNewPassword(12);
+                        $loginPass->inputPassword = $data['user_password'];
                         $loginPass->inputNewPassword = $newLoginPass;
                         $loginPass->inputNewPassword2 = $newLoginPass;
+                        $loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE);
+                        $new_admin_algo = $loginPass->getNewAlgo();
+                        $new_admin_salt = $loginPass->getNewSalt();
+                        $new_admin_password = $loginPass->getNewHash();
+                        $updat .= ", user_algo='".$new_admin_algo."', user_salt='".$new_admin_salt."', user_password='".$new_admin_password."'";
+
                         $message = str_replace(
                             [
                                 "[SITEURL]",
@@ -113,7 +126,7 @@ class admin_reset_admin {
                                 $userdata['user_name'],
                                 $reset_message
                             ], fusion_get_locale('apw_409', LOCALE.$data['user_language']."/admin/admin_reset.php"));
-                        $loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE);
+
                     } else {
                         $message = str_replace(
                             [
@@ -133,6 +146,8 @@ class admin_reset_admin {
                         );
                         $loginPassIsReset = TRUE;
                     }
+
+                    $loginPassIsReset ? dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'") : '';
 
                     if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], self::$locale['apw_407'].fusion_get_settings('sitename'), $message)) {
                         $reset_success[] = ['user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email']];
@@ -172,7 +187,7 @@ class admin_reset_admin {
 
                 $this->data = [
                     'reset_id'        => 0,
-                    'reset_admin_id'  => $userdata['user_id'],
+                    'reset_admin_id'  => fusion_get_userdata('user_id'),
                     'reset_timestamp' => time(),
                     'reset_sucess'    => $sucess_ids,
                     'reset_failed'    => $failed_ids,
