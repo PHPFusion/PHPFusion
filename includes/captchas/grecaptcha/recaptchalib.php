@@ -48,7 +48,6 @@ class ReCaptcha {
 
     /**
      * @param string $secret shared secret between site and ReCAPTCHA server.
-     * @param $secret
      * @return object
      */
     public static function getInstance($secret) {
@@ -91,12 +90,12 @@ class ReCaptcha {
         }
         $getResponse = $this->_submitHttpGet(
             self::$_siteVerifyUrl,
-            array(
-                'secret' => $this->_secret,
+            [
+                'secret'   => $this->_secret,
                 'remoteip' => $remoteIp,
-                'v' => self::$_version,
+                'v'        => self::$_version,
                 'response' => $response
-            )
+            ]
         );
         $answers = json_decode($getResponse, TRUE);
         $recaptchaResponse = new ReCaptchaResponse();
@@ -122,7 +121,7 @@ class ReCaptcha {
         $req = $this->_encodeQS($data);
         $response = file_get_contents($path.$req);
 
-        return $response;
+        return (array)$response;
     }
 
     /**
@@ -143,5 +142,3 @@ class ReCaptcha {
         return $req;
     }
 }
-
-?>

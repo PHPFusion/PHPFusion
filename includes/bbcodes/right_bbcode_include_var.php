@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$__BBCODE__[] = array(
-    "description" => $locale['bb_right_description'], "value" => "right", "bbcode_start" => "[right]",
-    "bbcode_end" => "[/right]", "usage" => "[right]".$locale['bb_right_usage']."[/right]"
-);
+$__BBCODE__[] = [
+    "description" => $locale['bb_right_description'],
+    "value"       => "right", "bbcode_start" => "[right]", "bbcode_end" => "[/right]",
+    "usage"       => "[right]".$locale['bb_right_usage']."[/right]"
+];

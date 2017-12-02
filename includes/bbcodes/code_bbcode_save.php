@@ -22,8 +22,8 @@ function unstripinput($text) {
     if (QUOTES_GPC) {
         $text = stripslashes($text);
     }
-    $search = array("\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-    $replace = array("\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">");
+    $search = ["\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;"];
+    $replace = ["\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">"];
     $text = str_replace($search, $replace, $text);
 
     return $text;
@@ -31,8 +31,8 @@ function unstripinput($text) {
 
 if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['post_id']) && isnum($_GET['post_id'])) && (isset($_GET['code_id']) && isnum($_GET['code_id']))) {
     $result = dbquery("SELECT fp.*, ff.* FROM ".DB_FORUM_POSTS." AS fp
-		INNER JOIN ".DB_FORUMS." AS ff ON ff.forum_id=fp.forum_id
-		WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'");
+        INNER JOIN ".DB_FORUMS." AS ff ON ff.forum_id=fp.forum_id
+        WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
         $text = $data['post_message'];
@@ -48,4 +48,3 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
         }
     }
 }
-

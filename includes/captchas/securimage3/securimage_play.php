@@ -30,12 +30,12 @@ require_once dirname(__FILE__).'/securimage.php';
 
 // if using database, adjust these options as necessary and change $img = new Securimage(); to $img = new Securimage($options);
 // see test.mysql.php or test.sqlite.php for examples
-$options = array(
-    'use_database' => FALSE,
-    'database_name' => '',
-    'database_user' => '',
+$options = [
+    'use_database'    => FALSE,
+    'database_name'   => '',
+    'database_user'   => '',
     'database_driver' => Securimage::SI_DRIVER_MYSQL
-);
+];
 
 $img = new Securimage();
 

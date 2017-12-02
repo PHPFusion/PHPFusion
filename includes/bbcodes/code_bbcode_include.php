@@ -32,6 +32,8 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
         function ($m) use (&$i) {
             global $pid;
 
+            $data = [];
+
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css" type="text/css"/>');
             add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
 

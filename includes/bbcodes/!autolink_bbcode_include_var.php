@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$__BBCODE__[] = array(
-    "description" => $locale['bb_autolink_description'], "value" => "!autolink", "bbcode_start" => "",
-    "bbcode_end" => "", "usage" => $locale['bb_autolink_usage']
-);
+$__BBCODE__[] = [
+    "description"  => $locale['bb_autolink_description'],
+    "value"        => "!autolink", "bbcode_start" => "", "bbcode_end" => "",
+    "usage"        => $locale['bb_autolink_usage']
+];

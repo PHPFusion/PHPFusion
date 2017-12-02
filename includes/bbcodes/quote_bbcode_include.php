@@ -43,7 +43,7 @@ for ($i = 0; $i < $qcount; $i++) {
 
 // Add once only
 if (!defined('bbcode_quote_js')) {
-    define('bbcode_quote_js', true);
+    define('bbcode_quote_js', TRUE);
     if (function_exists('add_to_footer')) {
         add_to_footer("<script type='text/javascript'>".jsminify("/* <![CDATA[ */
         jQuery(document).ready(function() {

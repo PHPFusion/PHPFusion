@@ -22,18 +22,18 @@ if (!function_exists("img_bbcode_callback")) {
     function img_bbcode_callback($matches) {
         if (substr($matches[3], -1, 1) != "/") {
             return "<span class='forum-img-wrapper'><img src='".$matches[1].str_replace(
-                array(
-                    "?",
-                    "&amp;",
-                    "&",
-                    "="
-                ),
-                "",
-                $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' /></span>";
+                    [
+                        "?",
+                        "&amp;",
+                        "&",
+                        "="
+                    ],
+                    "",
+                    $matches[3]).$matches[4]."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' /></span>";
         } else {
             return $matches[0];
         }
     }
 }
 $text = preg_replace_callback("#\[img\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#si", "img_bbcode_callback",
-                              $text);
+    $text);

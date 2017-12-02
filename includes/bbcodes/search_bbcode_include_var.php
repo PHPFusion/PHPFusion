@@ -43,15 +43,13 @@ if (!function_exists("generate_search_opts")) {
     }
 }
 
-$__BBCODE__[] = array(
-    'description' => $locale['bb_search_description'], 'value' => "search",
-    'bbcode_start' => "[search=".$locale['bb_search_where']."]", 'bbcode_end' => "[/search]",
-    'usage' => "[search=".$locale['bb_search_where']."]".$locale['bb_search_usage']."[/search]",
-    'onclick' => "return overlay(this, 'bbcode_search_".$textarea_name."', 'rightbottom');",
-    'onmouseover' => "", 'onmouseout' => "",
-    'html_start' => "<div id='bbcode_search_".$textarea_name."' class='tbl1 bbcode-popup' style='display: none; border:1px solid black; position: absolute; width: auto; height: auto; text-align: center' onclick=\"overlayclose('bbcode_search_".$textarea_name."');\">",
+$__BBCODE__[] = [
+    'description'    => $locale['bb_search_description'],
+    'value'          => "search", 'bbcode_start' => "[search=".$locale['bb_search_where']."]", 'bbcode_end' => "[/search]",
+    'usage'          => "[search=".$locale['bb_search_where']."]".$locale['bb_search_usage']."[/search]",
+    'onclick'        => "return overlay(this, 'bbcode_search_".$textarea_name."', 'rightbottom');", 'onmouseover' => "", 'onmouseout' => "",
+    'html_start'     => "<div id='bbcode_search_".$textarea_name."' class='tbl1 bbcode-popup' style='display: none; border:1px solid black; position: absolute; width: auto; height: auto; text-align: center' onclick=\"overlayclose('bbcode_search_".$textarea_name."');\">",
     'includejscript' => "", 'calljscript' => "",
-    'phpfunction' => "echo generate_search_opts('".$textarea_name."', '".$inputform_name."');",
-    'html_middle' => "", 'html_end' => "</div>"
-);
-
+    'phpfunction'    => "echo generate_search_opts('".$textarea_name."', '".$inputform_name."');",
+    'html_middle'    => "", 'html_end' => "</div>"
+];

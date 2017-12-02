@@ -18,8 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$__BBCODE__[] = array(
-    "description" => $locale["bb_youtube_description"], "value" => "youtube",
-    "bbcode_start" => "[youtube]", "bbcode_end" => "[/youtube]",
-    "usage" => "[youtube]".$locale["bb_youtube_usage"]."[/youtube]"
-);
+$__BBCODE__[] = [
+    "description" => $locale["bb_youtube_description"],
+    "value"       => "youtube", "bbcode_start" => "[youtube]", "bbcode_end" => "[/youtube]",
+    "usage"       => "[youtube]".$locale["bb_youtube_usage"]."[/youtube]"
+];

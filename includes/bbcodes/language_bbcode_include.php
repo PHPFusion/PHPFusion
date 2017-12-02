@@ -24,10 +24,10 @@ $enabled_languages = array_keys($language_opts);
 
 foreach ($enabled_languages as $language) {
 
-	if (LANGUAGE == $language) {
-		$text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '\1', $text);
-	} else {
-		$text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '', $text);
-	}
+    if (LANGUAGE == $language) {
+        $text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '\1', $text);
+    } else {
+        $text = preg_replace('#\['.$language.'\](.*?)\[/'.$language.'\]#si', '', $text);
+    }
 
 }

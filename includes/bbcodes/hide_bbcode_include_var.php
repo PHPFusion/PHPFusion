@@ -19,11 +19,12 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (iADMIN) {
-    $__BBCODE__[] = array(
-        "description" => $locale['bb_hide_description'], "value" => "hide",
+    $__BBCODE__[] = [
+        "description"  => $locale['bb_hide_description'],
+        "value"        => "hide",
         "bbcode_start" => "[hide]", "bbcode_end" => "[/hide]",
-        "usage" => "[hide]".$locale['bb_hide_usage']."[/hide]"
-    );
+        "usage"        => "[hide]".$locale['bb_hide_usage']."[/hide]"
+    ];
 } else {
     $__BBCODE_NOT_QUOTABLE__[] = "hide";
 }

@@ -19,5 +19,5 @@ require_once "securimage.php";
 $securimage = new Securimage();
 $captcha_code = stripinput($_POST['captcha_code']);
 if ($securimage->check(form_sanitizer($captcha_code)) == TRUE) {
-	$_CAPTCHA_IS_VALID = TRUE;
+    $_CAPTCHA_IS_VALID = TRUE;
 }

@@ -26,11 +26,11 @@ require_once INCLUDES."captchas/grecaptcha/recaptchalib.php"; //a required libra
 $resp = NULL;
 $error = NULL;
 // this is required to work with localhost
-$googleArray = array(
-    "ip" => fusion_get_settings("siteurl"), //$_SERVER["REMOTE_ADDR"],
+$googleArray = [
+    "ip"      => fusion_get_settings("siteurl"), //$_SERVER["REMOTE_ADDR"],
     "captcha" => !empty($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : FALSE,
-    "secret" => fusion_get_settings("recaptcha_private")
-);
+    "secret"  => fusion_get_settings("recaptcha_private")
+];
 $reCaptcha = ReCaptcha::getInstance($googleArray['secret']);
 $resp = $reCaptcha->verifyResponse($googleArray['ip'], $googleArray['captcha']);
 if ($resp != NULL && $resp->success && $error == NULL) {
