@@ -26,10 +26,10 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_FORUMS)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-	$bind = [
-             ':language' => LANGUAGE,
-             ':cat'      => '0',
-             ];
+    $bind = [
+        ':language' => LANGUAGE,
+        ':cat'      => '0',
+    ];
     $fresult = "
             SELECT f.forum_id, f.forum_name, f2.forum_name 'forum_cat_name'
             FROM ".DB_FORUMS." f
@@ -37,42 +37,42 @@ if (db_exists(DB_FORUMS)) {
             ".(multilang_table('FO') ? "WHERE f.forum_language=:language AND " : 'WHERE ').groupaccess('f.forum_access')."
             AND f.forum_cat!=:cat ORDER BY f2.forum_order ASC, f.forum_order ASC
             ";
-	$result = dbquery($fresult, $bind);
-    
-    $flist = array('0' => fusion_get_locale('f401', LOCALE.LOCALESET."search/forums.php"));
+    $result = dbquery($fresult, $bind);
+
+    $flist = ['0' => fusion_get_locale('f401', LOCALE.LOCALESET."search/forums.php")];
     while ($data2 = dbarray($result)) {
         $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
     }
 
-    $form_elements += array(
-        'forums' => array(
-            'enabled' => array(
+    $form_elements += [
+        'forums' => [
+            'enabled'   => [
                 '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
                 '7' => 'chars'
-            ),
-            'disabled' => array(),
-            'display' => array(),
-            'nodisplay' => array(),
-        )
-    );
+            ],
+            'disabled'  => [],
+            'display'   => [],
+            'nodisplay' => [],
+        ]
+    ];
 
-    $radio_button += array(
+    $radio_button += [
         'forums' => form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), Search_Engine::get_param('stype'),
-                                  array(
-                                      'type' => 'radio',
-                                      'value' => 'forums',
-                                      'reverse_label' => TRUE,
-                                      'onclick' => 'display(this.value)',
-                                      'input_id' => 'forums'
-                                  )
+                [
+                    'type'          => 'radio',
+                    'value'         => 'forums',
+                    'reverse_label' => TRUE,
+                    'onclick'       => 'display(this.value)',
+                    'input_id'      => 'forums'
+                ]
             ).form_select('forum_id', '', Search_Engine::get_param('forum_id'),
-                          array(
-                              'options' => $flist,
-                              'inline' => TRUE,
-                              'inner_width' => '150px',
-                              'allowclear' => TRUE
-                          ))
-    );
+                [
+                    'options'     => $flist,
+                    'inline'      => TRUE,
+                    'inner_width' => '150px',
+                    'allowclear'  => TRUE
+                ])
+    ];
 
     add_to_jquery('
       $("#advanced_search_form #forums-field").addClass("display-inline-block");

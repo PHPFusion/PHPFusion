@@ -112,40 +112,40 @@ class InstallerAdminSetup extends Install_Core {
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
             $content .= form_hidden('transfer', '', '1');
             $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
-                array(
+                [
                     'required'       => TRUE,
                     'inline'         => TRUE,
                     'maxlength'      => 30,
                     'error_text'     => self::$locale['setup_5010'],
                     'callback_check' => 'username_check'
-                )
+                ]
             );
             $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
-                array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
+                ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
             $content .= form_text('password1', self::$locale['setup_1505'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
             $content .= form_text('password2', self::$locale['setup_1506'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
             $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
             $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
 
         }
 
-        self::$step = array(
-            1 => array(
+        self::$step = [
+            1 => [
                 'name'  => 'step',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_TRANSFER
-            ),
-            2 => array(
+            ],
+            2 => [
                 'name'  => 'step',
                 'class' => 'm-l-15 btn-default',
                 'label' => self::$locale['setup_0124'],
                 'value' => self::STEP_INTRO
-            )
-        );
+            ]
+        ];
 
         return $content;
     }
@@ -194,53 +194,53 @@ class InstallerAdminSetup extends Install_Core {
         $content .= renderNotices(getNotices());
 
         $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
-            array(
+            [
                 'inline' => TRUE, 'required' => TRUE, 'placeholder' => self::$locale['setup_1215'], 'class' => 'form-group-lg'
-            ));
+            ]);
         $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
-            array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            ['inline' => TRUE, 'required' => TRUE, 'type' => 'email']);
         $content .= form_text('siteusername', self::$locale['setup_1513'], self::$siteData['siteusername'],
-            array(
+            [
                 'required'   => TRUE,
                 'inline'     => TRUE,
                 'maxlength'  => 30,
                 'error_text' => self::$locale['setup_5011']
-            )
+            ]
         );
-		$timezones = timezone_abbreviations_list();
-		$timezoneArray = array();
-		foreach ($timezones as $zones) {
-			foreach ($zones as $zone) {
-				if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
-					if (!in_array($zone['timezone_id'], $timezoneArray)) {
-						$timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
-					}
-				}
-			}
-		}
-		unset($timezones);
-        $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
+        $timezones = timezone_abbreviations_list();
+        $timezoneArray = [];
+        foreach ($timezones as $zones) {
+            foreach ($zones as $zone) {
+                if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
+                    if (!in_array($zone['timezone_id'], $timezoneArray)) {
+                        $timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
+                    }
+                }
+            }
+        }
+        unset($timezones);
+        $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], ['options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE]);
         $content .= "<hr />\n";
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
         $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
-            array(
+            [
                 'required'       => TRUE,
                 'inline'         => TRUE,
                 'maxlength'      => 30,
                 'error_text'     => self::$locale['setup_5010'],
                 'callback_check' => 'username_check'
-            )
+            ]
         );
         $content .= form_text('password1', self::$locale['setup_1505'], self::$userData['password1'],
-            array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => ''));
+            ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
         $content .= form_text('password2', self::$locale['setup_1506'], self::$userData['password2'],
-            array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => ''));
+            ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
         $content .= form_text('admin_password1', self::$locale['setup_1507'], self::$userData['admin_password1'],
-            array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => ''));
+            ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
         $content .= form_text('admin_password2', self::$locale['setup_1508'], self::$userData['admin_password2'],
-            array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => ''));
+            ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
         $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
-            array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
+            ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
         $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1512']."</h4>\n".self::$locale['setup_1001']."</div>\n";
         $checkbox_options = [];
         foreach (self::$locale_files as $languageKey => $languageName) {
@@ -248,23 +248,23 @@ class InstallerAdminSetup extends Install_Core {
             $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
         }
         $content .= form_checkbox('enabled_languages[]', '',
-            !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
+            !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, [
                 'required'       => TRUE,
                 'reverse_label'  => TRUE,
                 'class'          => 'm-0 p-0 input-md',
                 'options'        => $checkbox_options,
                 'deactivate_key' => self::$localeset,
                 'delimiter'      => '.' // Refer to L1051, L1060 and fusion_get_enabled_languages(); it's '.'
-            ));
+            ]);
         $content .= "<hr />\n";
 
-        self::$step = array(
-            1 => array(
+        self::$step = [
+            1 => [
                 'name'  => 'step',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_PRIMARY_ADMIN_FORM
-            )
-        );
+            ]
+        ];
 
         return $content;
     }
@@ -362,6 +362,7 @@ class InstallerAdminSetup extends Install_Core {
                         dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".self::$siteData['enabled_languages']."'");
 
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
+                        $installed_languages = [];
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
                                 $installed_languages[] = $data['link_language'];
@@ -383,6 +384,7 @@ class InstallerAdminSetup extends Install_Core {
                          * Need to run another check with email_templates because installed languages might be different.
                          */
                         $result = dbquery("SELECT template_language FROM ".DB_PREFIX."email_templates GROUP by template_language ASC");
+                        $installed_languages = [];
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
                                 $installed_languages[] = $data['template_language'];

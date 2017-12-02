@@ -23,13 +23,13 @@ abstract class resource extends Admins {
 
     public static $page_title = "";
 
-    private static $user_drop = array();
+    private static $user_drop = [];
 
     private static $aidlink = "";
 
-    private static $userdata = array();
+    private static $userdata = [];
 
-    protected static $locale = array();
+    protected static $locale = [];
 
     public function __construct() {
         self::$page_title = $this->set_page_title();
@@ -61,19 +61,19 @@ abstract class resource extends Admins {
 
                         $page_rights = $page_data['admin_rights'];
 
-                        return array(
+                        return [
                             "title" => $page_section.$locale['global_201'].$page_title,
-                            "icon" => "<img class='img-responsive' alt='$page_title' src='".get_image("ac_".$page_rights)."'/>",
-                        );
+                            "icon"  => "<img class='img-responsive' alt='$page_title' src='".get_image("ac_".$page_rights)."'/>",
+                        ];
                     }
                 }
             }
         }
 
-        return array(
+        return [
             "title" => self::$locale['artemis_admin'],
             "icon"  => "<img class='img-responsive' alt='PHP-Fusion 9' src='".IMAGES."php-fusion-icon.png'/>",
-        );
+        ];
     }
 
     public static function add_css($file) {
@@ -136,13 +136,13 @@ abstract class resource extends Admins {
 
         self::$aidlink = $aidlink;
 
-        self::$user_drop = array(
-            BASEDIR."edit_profile.php" => self::$locale['edit']." ".self::$locale['profile'],
+        self::$user_drop = [
+            BASEDIR."edit_profile.php"                               => self::$locale['edit']." ".self::$locale['profile'],
             BASEDIR."profile.php?lookup=".self::$userdata['user_id'] => self::$locale['view']." ".self::$locale['profile'],
-            "---" => "---",
-            FUSION_REQUEST."&amp;logout" => self::$locale['admin-logout'],
-            BASEDIR."index.php?logout=yes" => self::$locale['logout']
-        );
+            "---"                                                    => "---",
+            FUSION_REQUEST."&amp;logout"                             => self::$locale['admin-logout'],
+            BASEDIR."index.php?logout=yes"                           => self::$locale['logout']
+        ];
     }
 
     public static function get_udrop() {

@@ -45,13 +45,13 @@
  *
  */
 
-function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
+function form_text($input_name, $label = "", $input_value = "", array $options = []) {
 
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
-    $default_options = array(
+    $default_options = [
         'type'               => 'text',
         'required'           => FALSE,
         'label_icon'         => '',
@@ -96,23 +96,23 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'password_strength'  => FALSE,
         'data'               => [],
         'append_html'        => ''
-    );
+    ];
 
     $options += $default_options;
 
-    $valid_types = array(
+    $valid_types = [
         'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
-    );
+    ];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
     // always trim id
     $options['input_id'] = trim($options['input_id'], "[]");
 
-    $options += array(
-        'append_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
+    $options += [
+        'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
-    );
+    ];
 
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
@@ -123,15 +123,15 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     // Error messages based on settings
     if ($options['type'] == 'password') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
-    } elseif ($options['type'] == 'email') {
+    } else if ($options['type'] == 'email') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_email'] : $options['error_text'];
-    } elseif ($options['type'] == 'number') {
+    } else if ($options['type'] == 'number') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_number'] : $options['error_text'];
-    } elseif ($options['type'] == 'url') {
+    } else if ($options['type'] == 'url') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_url'] : $options['error_text'];
-    } elseif ($options['regex']) {
+    } else if ($options['regex']) {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_regex'] : $options['error_text'];
-    } elseif ($options['safemode']) {
+    } else if ($options['safemode']) {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_safemode'] : $options['error_text'];
     } else {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
@@ -184,7 +184,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<span class='input-group-btn'>\n";
         $html .= "<button id='".$options['input_id']."-prepend-btn' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
-    } elseif ($options['prepend_value']) {
+    } else if ($options['prepend_value']) {
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
     }
 
@@ -218,7 +218,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<button id='".$options['input_id']."-append-btn' name='".$options['append_button_name']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button>\n";
         $html .= "</span>\n";
 
-    } elseif ($options['append_value']) {
+    } else if ($options['append_value']) {
 
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-append'>".$options['append_value']."</span>\n";
 
@@ -241,19 +241,19 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= "</div>\n";
 
     // Add input settings in the SESSION
-    \defender::getInstance()->add_field_session(array(
-                                                   'input_name'     => $input_name,
-                                                   'title'          => trim($title, '[]'),
-                                                   'id'             => $options['input_id'],
-                                                   'type'           => $options['type'],
-                                                   'required'       => $options['required'],
-                                                   'safemode'       => $options['safemode'],
-                                                   'regex'          => $options['regex'],
-                                                   'callback_check' => $options['callback_check'],
-                                                   'delimiter'      => $options['delimiter'],
-                                                   'min_length'     => $options['min_length'],
-                                                   'max_length'     => $options['max_length']
-                                               ));
+    \defender::getInstance()->add_field_session([
+        'input_name'     => $input_name,
+        'title'          => trim($title, '[]'),
+        'id'             => $options['input_id'],
+        'type'           => $options['type'],
+        'required'       => $options['required'],
+        'safemode'       => $options['safemode'],
+        'regex'          => $options['regex'],
+        'callback_check' => $options['callback_check'],
+        'delimiter'      => $options['delimiter'],
+        'min_length'     => $options['min_length'],
+        'max_length'     => $options['max_length']
+    ]);
 
     // This should affect all number inputs by type, not by ID
     if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {

@@ -26,7 +26,7 @@ $user_id = (isset($_POST['user_id']) && isnum($_POST['user_id'])) ? $_POST['user
 $user_query = dbquery("SELECT user_id, user_blacklist FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."' LIMIT 1");
 if (dbrows($user_query) > 0) {
     $data = dbarray($user_query);
-    $user_blacklist = $data['user_blacklist'] ? explode('.', $data['user_blacklist']) : array();
+    $user_blacklist = $data['user_blacklist'] ? explode('.', $data['user_blacklist']) : [];
     if (in_array($user_id, $user_blacklist)) {
         $user_blacklist = array_flip($user_blacklist);
         unset($user_blacklist[$user_id]);

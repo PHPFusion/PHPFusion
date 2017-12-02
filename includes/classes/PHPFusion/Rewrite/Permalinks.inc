@@ -26,18 +26,20 @@ namespace PHPFusion\Rewrite;
  */
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = TRUE;
+    public $debug_regex = true;
 
-    private static $permalink_instance = NULL;
+    private static $permalink_instance = null;
 
     /**
      * Get the instance of the class
+     *
      * @return static
      */
     public static function getPermalinkInstance() {
-        if (self::$permalink_instance === NULL) {
+        if (self::$permalink_instance === null) {
             self::$permalink_instance = new static();
         }
+
         return self::$permalink_instance;
     }
 
@@ -46,12 +48,14 @@ class Permalinks extends RewriteDriver {
      * Returns the Output
      * This function will first call the handleOutput() and then it will return the
      * modified Output for SEO.
+     *
      * @param $output - output
      * @return string
      */
     public function getOutput($output) {
         $this->set_output($output);
         $this->handleOutput();
+
         return $this->output;
     }
 
@@ -120,14 +124,13 @@ class Permalinks extends RewriteDriver {
 
     /**
      * Append File Root
-     *
      * Append the ROOT Dir Path to all relative links, which are from website
      * This function will append the root directory path for all links, which
      * are in website. (Not External HTTP links)
      */
     protected function appendRootAll() {
         if (preg_match("/(href|src|action)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
-            $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
+            $basedir = str_replace([".", "/"], ["\.", "\/"], BASEDIR);
             $basedir = preg_replace("~(href|src|action)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i", "$1=$2".ROOT."$3$4$5", $this->output);
             // Remove ../ before http://
             $loop = 7;
@@ -145,6 +148,7 @@ class Permalinks extends RewriteDriver {
 
     /**
      * Attempt to handle url routing
+     *
      * @param $content
      */
     public function handle_url_routing($content) {
@@ -168,7 +172,6 @@ class Permalinks extends RewriteDriver {
 
     /**
      * Import the Available Patterns from Database
-     *
      * This will Import all the available Patterns for the Handlers
      * from the Database and put it into $pattern_search and
      * $pattern_replace array.
@@ -177,7 +180,7 @@ class Permalinks extends RewriteDriver {
      */
     protected function importPatterns() {
         if (!empty($this->handlers)) {
-            $types = array();
+            $types = [];
             foreach ($this->handlers as $key => $value) {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
@@ -192,7 +195,7 @@ class Permalinks extends RewriteDriver {
                     if ($data['pattern_cat'] == "normal") {
                         $this->pattern_search[$data['rewrite_name']][] = $data['pattern_target'];
                         $this->pattern_replace[$data['rewrite_name']][] = $data['pattern_source'];
-                    } elseif ($data['pattern_cat'] == "alias") {
+                    } else if ($data['pattern_cat'] == "alias") {
                         $this->alias_pattern[$data['rewrite_name']][$data['pattern_source']] = $data['pattern_target'];
                     }
                 }
@@ -203,7 +206,7 @@ class Permalinks extends RewriteDriver {
 
     private function prepare_alias_lookup() {
         if (!empty($this->handlers)) {
-            $fields = array();
+            $fields = [];
             foreach ($this->handlers as $key => $value) {
                 $fields[] = "'".$value."'";
             }
@@ -215,7 +218,7 @@ class Permalinks extends RewriteDriver {
                 while ($alias = dbarray($aliases)) {
                     //$this->replaceAliasPatterns($data);
                     $alias_php_url = $this->getAliasURL($alias['alias_url'], $alias['alias_php_url'],
-                                                        $alias['alias_type']);
+                        $alias['alias_type']);
                     $field = $alias['alias_type'];
 
                     if (array_key_exists(1, $alias_php_url) && strcmp(PERMALINK_CURRENT_PATH, $alias_php_url[1]) == 0) {
@@ -231,7 +234,7 @@ class Permalinks extends RewriteDriver {
                             $search_string = $search;
 
                             $alias_search = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field],
-                                                        $search_string);
+                                $search_string);
                             $alias_search = $this->cleanRegex($alias_search);
                             $alias_search = "~^".$alias_search."$";
 
@@ -249,16 +252,16 @@ class Permalinks extends RewriteDriver {
                                     $match = $this->cleanRegex($match);
                                     // Replace Tags with their suitable matches
                                     $replace_str = $this->replaceOtherTags($field, $search_string, $replace_str,
-                                                                           $matches, $count);
+                                        $matches, $count);
                                     $replace_str = $this->cleanURL($replace_str);
 
-                                    $this->regex_statements['alias'][$field][] = array($match => $replace_str);
-                                    $this->regex_statements['alias_redirect'][$field][] = array($alias_search => $replace_str);
+                                    $this->regex_statements['alias'][$field][] = [$match => $replace_str];
+                                    $this->regex_statements['alias_redirect'][$field][] = [$alias_search => $replace_str];
                                 }
                             } else {
-                                $this->regex_statements['failed_alias'][$field][] = array(
+                                $this->regex_statements['failed_alias'][$field][] = [
                                     "search" => $search, "status" => "failed"
-                                );
+                                ];
                             }
                         }
                     }
@@ -270,7 +273,6 @@ class Permalinks extends RewriteDriver {
 
     /**
      * Get Alias URL for Permalink
-     *
      * This function will return an Array of 2 elements for a specific Alias:
      * 1. The Permalink URL of Alias
      * 2. PHP URL of the Alias
@@ -281,7 +283,7 @@ class Permalinks extends RewriteDriver {
      * @return array
      */
     private function getAliasURL($url, $php_url, $type) {
-        $return_url = array();
+        $return_url = [];
         // 1 => $search, 2 => $replace
         if (isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
             foreach ($this->alias_pattern[$type] as $search => $replace) {

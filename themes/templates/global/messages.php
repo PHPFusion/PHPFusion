@@ -53,8 +53,8 @@ if (!function_exists('display_inbox')) {
                 // It's a straight
 
                 if (!empty($info['items'])) {
-                    $unread = array();
-                    $read = array();
+                    $unread = [];
+                    $read = [];
                     if ($is_inbox) {
                         foreach ($info['items'] as $message_id => $messageData) {
                             if ($messageData['message_read']) {
@@ -76,11 +76,11 @@ if (!function_exists('display_inbox')) {
                             echo '<div class="table-responsive"><table id="unread_tbl" class="table table-hover">';
                             foreach ($unread as $id => $messageData) {
                                 echo "<tr>\n";
-                                echo "<td>".form_checkbox("pmID", "", "", array(
+                                echo "<td>".form_checkbox("pmID", "", "", [
                                         "input_id" => "pmID-".$id,
                                         "value"    => $id,
                                         "class"    => "m-b-0"
-                                    ))."</td>\n";
+                                    ])."</td>\n";
                                 echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
                                 echo "<td class='col-xs-7'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
@@ -98,11 +98,11 @@ if (!function_exists('display_inbox')) {
                             echo '<div class="table-responsive"><table id="read_tbl"  class="table table-hover">';
                             foreach ($read as $id => $messageData) {
                                 echo "<tr>\n";
-                                echo "<td>".form_checkbox("pmID", "", "", array(
+                                echo "<td>".form_checkbox("pmID", "", "", [
                                         "input_id" => "pmID-".$id,
                                         "value"    => $id,
                                         "class"    => "m-b-0"
-                                    ))."</td>\n";
+                                    ])."</td>\n";
                                 echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
                                 echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
@@ -117,11 +117,11 @@ if (!function_exists('display_inbox')) {
                             echo '<div class="table-responsive"><table id="read_tbl"  class="table table-hover">';
                             foreach ($read as $id => $messageData) {
                                 echo "<tr>\n";
-                                echo "<td>".form_checkbox("pmID", "", "", array(
+                                echo "<td>".form_checkbox("pmID", "", "", [
                                         "input_id" => "pmID-".$id,
                                         "value"    => $id,
                                         "class"    => "m-b-0"
-                                    ))."</td>\n";
+                                    ])."</td>\n";
                                 echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
                                 echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
                                 echo "<td>".showdate($locale['date_day'], $messageData['message_datestamp'])."</td>\n";
@@ -144,23 +144,23 @@ if (!function_exists('display_inbox')) {
             <?php if (!isset($_GET['msg_send'])) : ?>
                 <div class="col-xs-12 col-sm-3">
                     <a class='btn btn-primary btn-block text-white' href='<?php echo $info['button']['new']['link'] ?>'>
-                    <?php echo $info['button']['new']['name'] ?>
-                </a>
-                <?php
-                $i = 0;
-                echo "<ul class='m-t-20 nav'>\n";
-                foreach ($info['folders'] as $key => $folderData) {
-                    echo "<li><a href='".$folderData['link']."' class='text-dark ".($_GET['folder'] == $key ? "strong" : '')."'>".$folderData['title'];
-                    if ($i < count($info['folders']) - 1) {
-                        $total_key = $key."_total";
-                        echo "<div class='pull-right'>(".$info[$total_key].")</div>";
+                        <?php echo $info['button']['new']['name'] ?>
+                    </a>
+                    <?php
+                    $i = 0;
+                    echo "<ul class='m-t-20 nav'>\n";
+                    foreach ($info['folders'] as $key => $folderData) {
+                        echo "<li><a href='".$folderData['link']."' class='text-dark ".($_GET['folder'] == $key ? "strong" : '')."'>".$folderData['title'];
+                        if ($i < count($info['folders']) - 1) {
+                            $total_key = $key."_total";
+                            echo "<div class='pull-right'>(".$info[$total_key].")</div>";
+                        }
+                        echo "</a></li>\n";
+                        $i++;
                     }
-                    echo "</a></li>\n";
-                    $i++;
-                }
-                echo "</ul>\n";
-                ?>
-            </div>
+                    echo "</ul>\n";
+                    ?>
+                </div>
             <?php endif; ?>
             <div class="col-xs-12 col-sm-<?php echo(!isset($_GET['msg_send']) ? 9 : 12) ?>">
                 <!-- start inbox actions -->
@@ -168,7 +168,8 @@ if (!function_exists('display_inbox')) {
                     <div class="inbox_header m-b-20">
                         <?php if (isset($_GET['msg_read'])) : ?>
                             <a href="<?php echo $info['button']['back']['link'] ?>" class="btn btn-default">
-                                <i title="<?php echo $info['button']['back']['title'] ?>" class="fa fa-long-arrow-left"></i>
+                                <i title="<?php echo $info['button']['back']['title'] ?>"
+                                   class="fa fa-long-arrow-left"></i>
                             </a>
                         <?php endif; ?>
                         <?php echo $info['actions_form']; ?>

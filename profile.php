@@ -28,13 +28,13 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     if (iADMIN) {
         $user_status = "";
     }
-    $user_data = array();
+    $user_data = [];
     $result = dbquery("SELECT u.*, s.suspend_reason
-		FROM ".DB_USERS." u
-		LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-		WHERE user_id='".$_GET['lookup']."'".$user_status."
-		ORDER BY suspend_date DESC
-		LIMIT 1");
+        FROM ".DB_USERS." u
+        LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
+        WHERE user_id='".$_GET['lookup']."'".$user_status."
+        ORDER BY suspend_date DESC
+        LIMIT 1");
     if (dbrows($result)) {
         $user_data = dbarray($result);
     } else {
@@ -59,9 +59,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
 
-	PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
+    PHPFusion\OpenGraph::ogUserProfile($_GET['lookup']);
 
-} elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
+} else if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
     /*
      * Show group
      */

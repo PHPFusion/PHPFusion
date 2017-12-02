@@ -23,13 +23,13 @@ $icon = "<img src='".IMAGES."user_fields/social/psn.svg' alt='PSN'/>";
 // Display user field input
 if ($profile_method == "input") {
 
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'error_text'       => $locale['uf_psn_error'],
             'regex_error_text' => $locale['uf_psn_error_1'],
             'placeholder'      => $locale['uf_psn_desc'],
             'label_icon'       => $icon
-        ) + $options;
+        ] + $options;
 
     $user_fields = form_text('user_psn', $locale['uf_psn'], $field_value, [
         'inline'      => TRUE,
@@ -37,14 +37,14 @@ if ($profile_method == "input") {
         'error_text'  => $locale['uf_psn_error'],
         'label_icon'  => $icon,
     ]);
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
     if ($field_value) {
         $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://my.playstation.com/".$field_value : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_psn_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
+    $user_fields = [
         'title' => $icon.$locale['uf_psn'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

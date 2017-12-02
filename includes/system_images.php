@@ -16,7 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 use PHPFusion\ImageRepo;
 
 /**

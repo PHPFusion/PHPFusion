@@ -25,7 +25,7 @@ $modules = \PHPFusion\Admins::getInstance()->getSubmitData();
 $_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) ? $_GET['stype'] : "";
 
 if (!empty($modules) && $_GET['stype']) {
-   require_once $modules[$_GET['stype']]['link'];
+    require_once $modules[$_GET['stype']]['link'];
 } else {
     redirect('index.php');
 }

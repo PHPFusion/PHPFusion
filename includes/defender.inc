@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -20,20 +19,20 @@
 +--------------------------------------------------------*/
 
 class defender {
-
-    public static $input_errors = array();
+    public static $input_errors = [];
     private static $debug = FALSE;
     private static $defender_instance = NULL;
     private static $remote_file = '';
-    public $ref = array();
+    public $ref = [];
     public $error_title = '';
-    public $field = array();
+    public $field = [];
+    private static $inputName;
 
     // Declared by Form Sanitizer
     public $field_name = '';
     public $field_value = '';
     public $field_default = '';
-    public $field_config = array(
+    public $field_config = [
         'type'        => '',
         'value'       => '',
         //'default' => '',
@@ -43,8 +42,8 @@ class defender {
         'path'        => '',
         'thumbnail_1' => '',
         'thumbnail_2' => '',
-    );
-    private static $input_error_text = array();
+    ];
+    private static $input_error_text = [];
 
     private function __construct() {
     }
@@ -88,7 +87,7 @@ class defender {
      *
      * @return string
      */
-    public static function serialize(array $array = array()) {
+    public static function serialize(array $array = []) {
         $return_default = "";
         if (is_array($array)) {
             return base64_encode(serialize($array));
@@ -113,7 +112,7 @@ class defender {
      * @return array|mixed
      */
     public static function unserialize($string) {
-        $return_default = array();
+        $return_default = [];
         if (!empty($string)) {
             $array = unserialize(base64_decode($string));
             if (!empty($array)) {
@@ -149,7 +148,7 @@ class defender {
                     $file = $file_arr[0];
                 }
                 $hash = $encrypt ? md5($file) : $file;
-            } elseif (!empty($_POST['file'])) {
+            } else if (!empty($_POST['file'])) {
                 if (stristr($_POST['file'], '?')) {
                     $file_arr = explode('?', $_POST['file']);
                     $file = $file_arr[0];
@@ -274,7 +273,7 @@ class defender {
      */
     public function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
 
-        $val = array();
+        $val = [];
 
         if ($input_name) {
 
@@ -366,7 +365,7 @@ class defender {
                         return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
                     }
                 } else {
-                    $secured = array();
+                    $secured = [];
                     foreach ($value as $arr => $unsecured) {
                         if (intval($unsecured)) {
                             $secured[] = stripinput($unsecured); // numbers
@@ -468,6 +467,7 @@ class defender {
  * @param bool|FALSE $is_multiLang
  *
  * @return mixed
+ * @throws Exception
  */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);

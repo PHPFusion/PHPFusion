@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
     $locale = fusion_get_locale();
-    $codes = (isset($htmlcode) && ($htmlcode !== "")) ? $htmlcode : "";
     if (!is_array($array)) {
-        $array = array();
         $button_class = "btn-default";
         $button_img = "pictogram-popup pictogram-white";
         $button_text = $locale['show'];

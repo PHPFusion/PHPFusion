@@ -47,11 +47,11 @@ if (!iMEMBER) {
         $path = BASEDIR.(!stristr(fusion_get_settings('opening_page'), '.php') ? fusion_get_settings('opening_page').'/index.php' : fusion_get_settings('opening_page'));
     }
     $info = [
-        "open_form"    => openform('loginpageform', 'POST', $path),
-        "user_name"    => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
-        "user_pass"    => form_text('user_pass', "", $user_password, ['placeholder' => $locale['global_102'], 'type' => 'password', 'inline' => TRUE]),
-        "remember_me"  => form_checkbox('remember_me', $locale['global_103'], ""),
-        "login_button" => form_button('login', $locale['global_104'], $locale['global_104'], ['class' => 'btn-primary btn-block m-b-20']),
+        "open_form"            => openform('loginpageform', 'POST', $path),
+        "user_name"            => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
+        "user_pass"            => form_text('user_pass', "", $user_password, ['placeholder' => $locale['global_102'], 'type' => 'password', 'inline' => TRUE]),
+        "remember_me"          => form_checkbox('remember_me', $locale['global_103'], ""),
+        "login_button"         => form_button('login', $locale['global_104'], $locale['global_104'], ['class' => 'btn-primary btn-block m-b-20']),
         "registration_link"    => (fusion_get_settings('enable_registration')) ? "<p>".$locale['global_105']."</p>\n" : "",
         "forgot_password_link" => $locale['global_106'],
         "close_form"           => closeform()

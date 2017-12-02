@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_colorpicker($input_name, $label = '', $input_value = '', array $options = array()) {
+function form_colorpicker($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale();
 
@@ -28,7 +28,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = stripinput($input_name);
     $input_value = stripinput($input_value);
-    $default_options = array(
+    $default_options = [
         'input_id'    => $input_name,
         'required'    => FALSE,
         'placeholder' => '',
@@ -42,7 +42,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'icon'        => "",
         "tip"         => "",
         'format'      => 'hex', //options = the color format - hex | rgb | rgba.
-    );
+    ];
     $options += $default_options;
     if (!$options['width']) {
         $options['width'] = $default_options['width'];
@@ -74,15 +74,15 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type'       => 'color',
-                                     'title'      => $title,
-                                     'id'         => $input_id,
-                                     'required'   => $options['required'],
-                                     'safemode'   => $options['safemode'],
-                                     'error_text' => $options['error_text']
-                                 ));
+    \defender::getInstance()->add_field_session([
+        'input_name' => $input_name,
+        'type'       => 'color',
+        'title'      => $title,
+        'id'         => $input_id,
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text']
+    ]);
     add_to_jquery("$('#$input_id').colorpicker({ format : '".$options['format']."'  });");
 
     return $html;

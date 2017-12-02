@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$default_mobile_icon = array(
+$default_mobile_icon = [
     'index.php' => 'entypo home', 'articles.php' => 'entypo docs',
     'article_cats.php' => 'entypo docs', 'downloads.php' => 'entypo box',
     'faq.php' => 'entypo info', 'forum/index.php' => 'entypo icomment',
@@ -25,4 +25,4 @@ $default_mobile_icon = array(
     'submit.php?stype=l' => 'entypo cloud', 'submit.php?stype=n' => 'entypo cloud',
     'submit.php?stype=a' => 'entypo cloud', 'submit.php?stype=p' => 'entypo cloud',
     'submit.php?stype=d' => 'entypo cloud',
-);
+];

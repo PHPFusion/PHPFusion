@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 class UserFieldsInput {
@@ -37,7 +36,7 @@ class UserFieldsInput {
     // New for UF 2.00
     private $_userName;
     // Passwords
-    private $data = array();
+    private $data = [];
 
     private $_isValidCurrentPassword = FALSE;
     private $_isValidCurrentAdminPassword = FALSE;
@@ -63,7 +62,7 @@ class UserFieldsInput {
     public function getData() {
         if (!empty($this->userData['user_password'])) {
             $this->data['user_hash'] = $this->userData['user_password'];
-        } elseif (isset($_POST['user_hash'])) {
+        } else if (isset($_POST['user_hash'])) {
             $this->data['user_hash'] = form_sanitizer($_POST['user_hash'], '', 'user_hash');
         }
 
@@ -134,10 +133,10 @@ class UserFieldsInput {
                     require_once LOCALE.LOCALESET."admin/members_email.php";
                     require_once INCLUDES."sendmail_include.php";
                     $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
-                    $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
-                    $replace_with = array(
+                    $replace_this = ["[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]"];
+                    $replace_with = [
                         $this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']
-                    );
+                    ];
                     $message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
                     sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'],
                         $subject, $message);
@@ -178,7 +177,7 @@ class UserFieldsInput {
         if ($this->_method == "validate_insert") {
 
             // Compulsory Core Fields
-            return array(
+            return [
                 'user_id'         => 0,
                 'user_hide_email' => $this->_userHideEmail,
                 'user_avatar'     => '',
@@ -196,7 +195,7 @@ class UserFieldsInput {
                 'user_language'   => LANGUAGE,
                 'user_timezone'   => fusion_get_settings('timeoffset'),
                 'user_reputation' => 0
-            );
+            ];
 
         }
 
@@ -221,7 +220,7 @@ class UserFieldsInput {
                     $defender->setInputError('user_name');
                     $defender->setErrorText('user_name', $locale['u120']);
 
-                } elseif (in_array($this->_userName, $uban)) {
+                } else if (in_array($this->_userName, $uban)) {
                     // Check for contains username
                     $defender->stop();
                     $defender->setInputError('user_name');
@@ -314,7 +313,7 @@ class UserFieldsInput {
                 \defender::setErrorText('user_password1', $locale['u134'].$locale['u143a']);
             }
 
-        } elseif ($this->_method == 'validate_update') {
+        } else if ($this->_method == 'validate_update') {
 
             $this->_userPassword = self::_getPasswordInput('user_password');
 
@@ -354,9 +353,9 @@ class UserFieldsInput {
                                 $this->data['user_algo'] = $this->_newUserPasswordAlgo;
                                 $this->data['user_salt'] = $this->_newUserPasswordSalt;
                                 $this->data['user_password'] = $this->_newUserPasswordHash;
-                                if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
+                                //if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
                                     //Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
-                                }
+                                //}
                                 break;
                             case '1':
                                 // New Password equal old password
@@ -495,7 +494,7 @@ class UserFieldsInput {
             // override the requirements of password to change email address of a member in admin panel
             if (defined('ADMIN_PANEL') && (iSUPERADMIN or (iADMIN && checkrights('M')))) {
                 $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
-            } elseif (!$this->registration) {
+            } else if (!$this->registration) {
                 $this->verify_password();
             }
             // Require user password for email change
@@ -505,7 +504,7 @@ class UserFieldsInput {
 
                     if (dbcount("(blacklist_id)", DB_BLACKLIST,
                         ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
-                        array(':email' => $this->_userEmail))) {
+                        [':email' => $this->_userEmail])) {
                         // this email blacklisted.
                         \defender::stop();
                         \defender::setInputError('user_email');
@@ -711,26 +710,26 @@ class UserFieldsInput {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
                 addNotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
-                $input = array(
+                $input = [
                     "mailname" => $this->userData['user_name'],
                     "email"    => $this->userData['user_email'],
                     "subject"  => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
                     "message"  => str_replace(
-                        array(
+                        [
                             "[SITENAME]",
                             "[SITEUSERNAME]",
                             "USER_NAME",
                             "[PASSWORD]"
-                        ),
-                        array(
+                        ],
+                        [
                             $settings['sitename'],
                             $settings['siteusername'],
                             $this->userData['user_name'],
                             $this->_newUserPassword,
-                        ),
+                        ],
                         $locale['global_457']
                     )
-                );
+                ];
                 if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
                     $input['message'])
                 ) {

@@ -24,26 +24,26 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_BLOG)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $form_elements += array(
-        'blog' => array(
-            'enabled' => array(
+    $form_elements += [
+        'blog' => [
+            'enabled'   => [
                 '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
                 '7' => 'chars'
-            ),
-            'disabled' => array(),
-            'display' => array(),
-            'nodisplay' => array(),
-        )
-    );
-    $radio_button += array(
+            ],
+            'disabled'  => [],
+            'display'   => [],
+            'nodisplay' => [],
+        ]
+    ];
+    $radio_button += [
         'blog' => form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/blog.php"), Search_Engine::get_param('stype'),
-                                array(
-                                    'type' => 'radio',
-                                    'value' => 'blog',
-                                    'reverse_label' => TRUE,
-                                    'onclick' => 'display(this.value)',
-                                    'input_id' => 'blog'
-                                )
+            [
+                'type'          => 'radio',
+                'value'         => 'blog',
+                'reverse_label' => TRUE,
+                'onclick'       => 'display(this.value)',
+                'input_id'      => 'blog'
+            ]
         )
-    );
+    ];
 }

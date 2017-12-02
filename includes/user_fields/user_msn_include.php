@@ -26,15 +26,15 @@ if (!defined("IN_FUSION")) {
 $icon = "<img src='".IMAGES."user_fields/social/msn.svg' alt='MSN'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
         'inline'      => TRUE,
         'max_length'  => 50,
         'error_text'  => $locale['uf_msn_error'],
         'placeholder' => $locale['uf_msn_id'],
         'label_icon'  => $icon,
-    );
+    ];
     $user_fields = form_text('user_msn', $locale['uf_msn'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_msn'], 'value' => hide_email($field_value) ?: "");
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = ['title' => $icon.$locale['uf_msn'], 'value' => hide_email($field_value) ?: ""];
 }

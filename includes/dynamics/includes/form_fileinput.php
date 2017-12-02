@@ -26,15 +26,15 @@
  *
  * @return string
  */
-function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
-    $template_choices = array('classic', 'modern', 'thumbnail');
+    $template_choices = ['classic', 'modern', 'thumbnail'];
 
-    $default_options = array(
+    $default_options = [
         'input_id'          => $input_name,
         'upload_path'       => IMAGES,
         'required'          => FALSE,
@@ -78,7 +78,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'hide_upload'       => FALSE,
         'hide_remove'       => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
-    );
+    ];
 
     $options += $default_options;
 
@@ -117,10 +117,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             if ($options['type'] == 'image') {
                 $format = "image/*";
                 $browseLabel = $locale['df_301'];
-            } elseif ($options['type'] == 'video') {
+            } else if ($options['type'] == 'video') {
                 $format = "video/*";
                 $browseLabel = $locale['df_302'];
-            } elseif ($options['type'] == 'audio') {
+            } else if ($options['type'] == 'audio') {
                 $format = "audio/*";
                 $browseLabel = $locale['df_303'];
             }
@@ -132,7 +132,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $value = '';
     if (!empty($input_value)) {
         if (is_array($input_value)) {
-            $value = array();
+            $value = [];
             foreach ($input_value as $c_value) {
                 $value[] = (file_exists($options['upload_path'].$c_value)) ? $options['upload_path'].$c_value : $c_value;
             }
@@ -174,7 +174,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= "<h5>".$locale['global_901']."</h5>";
         if (!empty($files_list)) {
             $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
-                array('input_id' => $options['input_id']."-mediaSelector"));
+                ['input_id' => $options['input_id']."-mediaSelector"]);
             $html .= "<hr/>";
             $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
             foreach ($files_list as $files) {
@@ -209,9 +209,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= "</div>\n";
 
     \defender::getInstance()->add_field_session(
-        array(
+        [
             'input_name'        => trim($input_name, '[]'),
-            'type'              => ((array)$options['type'] == array('image') ? 'image' : 'file'),
+            'type'              => ((array)$options['type'] == ['image'] ? 'image' : 'file'),
             'title'             => $title,
             'id'                => $options['input_id'],
             'required'          => $options['required'],
@@ -237,7 +237,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             'multiple'          => $options['multiple'],
             'valid_ext'         => $options['valid_ext'],
             'replace_upload'    => $options['replace_upload'],
-        )
+        ]
     );
 
     $extra_data_js = "";
@@ -257,7 +257,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     }
     if ($options['media']) {
         \defender::getInstance()->add_field_session(
-            array(
+            [
                 'input_name' => $input_name."-mediaSelector",
                 'title'      => trim($title, '[]'),
                 'id'         => $options['input_id']."-mediaSelector",
@@ -265,7 +265,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 'path'       => $options['upload_path'],
                 'required'   => $options['required'],
                 'safemode'   => $options['safemode'],
-            )
+            ]
         );
     }
     switch ($options['template']) {

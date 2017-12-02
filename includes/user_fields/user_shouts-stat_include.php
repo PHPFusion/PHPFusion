@@ -24,13 +24,13 @@ if ($profile_method == "input") {
     $user_fields = '';
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
         if (infusion_exists('shoutbox')) {
-    	    $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_shouts-stat']."</div>";
-		}
+            $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_shouts-stat']."</div>";
+        }
     }
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
     if (infusion_exists('shoutbox')) {
-		$user_fields = array(
-			'title' => $locale['uf_shouts-stat'],
-			'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'")));
-	}
+        $user_fields = [
+            'title' => $locale['uf_shouts-stat'],
+            'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"))];
+    }
 }

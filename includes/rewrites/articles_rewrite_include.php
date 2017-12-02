@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
+$regex = [
     "%article_id%"       => "([0-9]+)",
     "%c_start%"          => "([0-9]+)",
     "%comment_id%"       => "([0-9]+)",
@@ -33,9 +33,9 @@ $regex = array(
     "%type%"             => "(A)",
     "%stype%"            => "(a)",
     "%hash_stop%"        => "\#(?=\s*|)",
-);
+];
 
-$pattern = array(
+$pattern = [
     "print/%type%/%article_id%/%article_title%"                                        => "print.php?type=%type%&amp;item_id=%article_id%",
     "submit-%stype%/articles"                                                          => "submit.php?stype=%stype%",
     "submit-%stype%/articles/submitted-and-thank-you"                                  => "submit.php?stype=%stype%&amp;submitted=A",
@@ -48,18 +48,18 @@ $pattern = array(
     "articles/%article_id%-%rowstart%/%article_title%"                                 => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
     "articles/category/%article_cat_id%/%article_cat_name%"                            => "infusions/articles/articles.php?cat_id=%article_cat_id%",
     "articles"                                                                         => "infusions/articles/articles.php",
-);
+];
 
-$pattern_tables["%article_id%"] = array(
+$pattern_tables["%article_id%"] = [
     "table"       => DB_ARTICLES,
     "primary_key" => "article_id",
-    "id"          => array("%article_id%" => "article_id"),
-    "columns"     => array("%article_title%" => "article_subject",)
-);
+    "id"          => ["%article_id%" => "article_id"],
+    "columns"     => ["%article_title%" => "article_subject",]
+];
 
-$pattern_tables["%article_cat_id%"] = array(
+$pattern_tables["%article_cat_id%"] = [
     "table"       => DB_ARTICLE_CATS,
     "primary_key" => "article_cat_id",
-    "id"          => array("%article_cat_id%" => "article_cat_id"),
-    "columns"     => array("%article_cat_name%" => "article_cat_name",)
-);
+    "id"          => ["%article_cat_id%" => "article_cat_id"],
+    "columns"     => ["%article_cat_name%" => "article_cat_name",]
+];

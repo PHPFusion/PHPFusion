@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
+function form_checkbox($input_name, $label = '', $input_value = '0', array $options = []) {
 
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 
-    $default_options = array(
+    $default_options = [
         'input_id'       => $input_name,
         'inline'         => FALSE,
         'inline_options' => FALSE,
@@ -28,9 +28,9 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'class'          => "",
         'type'           => 'checkbox',
         'toggle'         => FALSE,
-        'toggle_text'    => array($locale['no'], $locale['yes']),
-        'options'        => array(),
-        'options_value'  => array(),
+        'toggle_text'    => [$locale['no'], $locale['yes']],
+        'options'        => [],
+        'options_value'  => [],
         'delimiter'      => ',',
         'safemode'       => FALSE,
         'keyflip'        => FALSE,
@@ -42,7 +42,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
         'onclick'        => ''
-    );
+    ];
 
     $options += $default_options;
 
@@ -73,7 +73,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $off_label = "";
     $switch_class = "";
 
-    $option_value = array();
+    $option_value = [];
     $default_checked = FALSE;
 
     if (!empty($options['options']) && is_array($options['options'])) {
@@ -84,7 +84,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
         // if there are options, and i want the options to be having input value.
         // options_value
-        $input_value = array();
+        $input_value = [];
 
         $default_checked = empty($option_value) ? TRUE : FALSE;
 
@@ -151,16 +151,16 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(array(
-            'input_name' => str_replace("[]", "", $input_name),
-            'title'      => trim($title, '[]'),
-            'id'         => $options['input_id'],
-            'type'       => $options['type'],
-            'required'   => $options['required'],
-            'safemode'   => $options['safemode'],
-            'error_text' => $options['error_text'],
-            'delimiter'  => $options['delimiter'],
-        ));
+    \defender::getInstance()->add_field_session([
+        'input_name' => str_replace("[]", "", $input_name),
+        'title'      => trim($title, '[]'),
+        'id'         => $options['input_id'],
+        'type'       => $options['type'],
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text'],
+        'delimiter'  => $options['delimiter'],
+    ]);
 
     return $html;
 }

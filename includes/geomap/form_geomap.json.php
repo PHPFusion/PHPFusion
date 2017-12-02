@@ -27,16 +27,16 @@
 +--------------------------------------------------------*/
 
 function root_level() {
-	$folder_level = "";
-	$i = 0;
-	while (!file_exists($folder_level."config.php")) {
-		$folder_level .= "../";
-		$i++;
-		if ($i == 8) {
-			die("config.php file not found");
-		}
-	}
-	return $folder_level;
+    $folder_level = "";
+    $i = 0;
+    while (!file_exists($folder_level."config.php")) {
+        $folder_level .= "../";
+        $i++;
+        if ($i == 8) {
+            die("config.php file not found");
+        }
+    }
+    return $folder_level;
 }
 
 $level = root_level();
@@ -45,18 +45,18 @@ require_once $level."maincore.php";
 require_once INCLUDES."geomap/geomap.inc.php";
 $id = (isset($_GET['id']) && ($_GET['id'])) ? form_sanitizer($_GET['id'], "") : '';
 //$id = "Malaysia";
-$states_array[] = array("id" => "Other", "text" => fusion_get_locale('other_states'));
+$states_array[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
 foreach ($states as $key => $value) {
-	if ($id == $key) {
-		if (!empty($value)) {
-			$array = array();
-			$rows = count($value);
-			$i = 0;
-			foreach ($value as $name => $region) {
-				$states_array[] = array('id' => "".$region."", 'text' => "".$region."");
-			}
-		}
-	}
+    if ($id == $key) {
+        if (!empty($value)) {
+            $array = [];
+            $rows = count($value);
+            $i = 0;
+            foreach ($value as $name => $region) {
+                $states_array[] = ['id' => "".$region."", 'text' => "".$region.""];
+            }
+        }
+    }
 }
 echo json_encode($states_array);
 //echo json_encode(array('id'=>"1", 'text'=>"2"));

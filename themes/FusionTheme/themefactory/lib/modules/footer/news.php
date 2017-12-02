@@ -28,13 +28,14 @@ class News {
             // Latest News
             require_once INFUSIONS."news/infusion_db.php";
             require_once NEWS_CLASS."autoloader.php";
-            $data = NewsView::News()->get_NewsItem(array("limit" => "0,3", "order" => "news_datestamp DESC"));
+            $data = NewsView::News()->get_NewsItem(["limit" => "0,3", "order" => "news_datestamp DESC"]);
             if (!empty($data['news_items'])) : ?>
                 <ul class="list-style-none">
                 <?php foreach ($data['news_items'] as $news_id => $news_data) : ?>
                     <li class="m-b-20">
                         <div class="pull-left m-r-15" style="width:20%">
-                            <div class="display-block overflow-hide" style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
+                            <div class="display-block overflow-hide"
+                                 style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
                                 <img class="center-xy" style="position:absolute; min-height: 70px; min-width: 70px;"
                                      src="<?php echo $news_data['news_image_optimized'] ?>"
                                      title="<?php echo $news_data['news_subject'] ?>"

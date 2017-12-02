@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
-use PHPFusion\Infusion;
 use PHPFusion\Installer\Steps\InstallerPermissions;
-use PHPFusion\Locale;
 use PHPFusion\OutputHandler;
 use PHPFusion\Steps\InstallerAdminSetup;
 use PHPFusion\Steps\InstallerDbSetup;
@@ -56,10 +54,10 @@ class Install_Core extends Infusion_Core {
      * back can be STEP_INTRODUCTION;
      * @var array
      */
-    protected static $step = array(
+    protected static $step = [
         //  'next' => FALSE,
         //  'previous' => FALSE,
-    );
+    ];
 
     protected static $connection = [
         'db_host'         => '',
@@ -97,7 +95,7 @@ class Install_Core extends Infusion_Core {
      * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
      * entirely.
      */
-    protected static $locale_files = array();
+    protected static $locale_files = [];
     protected static $document;
 
     /*
@@ -115,6 +113,7 @@ class Install_Core extends Infusion_Core {
     }
 
     public static function getInstance() {
+        $settings = fusion_get_settings();
 
         if (self::$setup_instance == NULL) {
 
@@ -184,7 +183,7 @@ class Install_Core extends Infusion_Core {
                 // current session
                 if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-                } elseif (isset($_POST['step'])) {
+                } else if (isset($_POST['step'])) {
                     $_SESSION['step'] = $_POST['step'];
                 }
                 define('INSTALLATION_STEP', $_SESSION['step']);
@@ -238,7 +237,7 @@ class Install_Core extends Infusion_Core {
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
-            $default_path = array();
+            $default_path = [];
             if (isset($db_host)) {
                 $default_path['db_host'] = $db_host;
             }
@@ -276,8 +275,8 @@ class Install_Core extends Infusion_Core {
     }
 
     public static function createRandomPrefix($length = 5) {
-        $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
-        $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
+        $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789"];
+        $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
         $prefix = "";
         for ($i = 0; $i < $length; $i++) {
             $type = mt_rand(0, 1);
@@ -319,7 +318,7 @@ class Install_Core extends Infusion_Core {
     public function install_phpfusion() {
         $current_content = $this->get_InstallerContent();
         $content = Console_Core::getInstance()->getView($current_content);
-        echo strtr(Console_Core::getInstance()->getLayout(), array('{%content%}' => $content));
+        echo strtr(Console_Core::getInstance()->getLayout(), ['{%content%}' => $content]);
     }
 
     private function get_InstallerContent() {

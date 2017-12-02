@@ -39,26 +39,26 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
         $item_count = "0 ".$locale['m402']." ".$locale['522']."<br />\n";
 
         $rows = dbcount("(user_id)", DB_USERS, "user_status=:user_status AND user_name LIKE :stext",
-                        array(
-                            ':user_status'=>0,
-                            ':stext'=>'%'.Search_Engine::get_param('stext').'%'
-                        )
+            [
+                ':user_status' => 0,
+                ':stext'       => '%'.Search_Engine::get_param('stext').'%'
+            ]
         );
         if ($rows != 0) {
 
             $item_count = "<a href='".BASEDIR."search.php?stype=members&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['m401'] : $locale['m402'])." ".$locale['522']."</a><br />\n";
-            $order_by = array(
+            $order_by = [
                 '0' => ' DESC',
                 '1' => ' ASC',
-            );
+            ];
             $sortby = !empty(Search_Engine::get_param('order')) ? 'ORDER BY user_name'.$order_by[Search_Engine::get_param('order')] : '';
             $limit = (Search_Engine::get_param('stype') != 'all' ? ' LIMIT '.Search_Engine::get_param('rowstart').',10' : '');
             $result = dbquery("SELECT user_id, user_name, user_status, user_level, user_avatar FROM ".DB_USERS."
             WHERE user_status=:user_status AND user_name LIKE :user_name ".$sortby.$limit
-            , array(
+                , [
                     ':user_status' => 0,
-                    ':user_name' => '%'.Search_Engine::get_param('stext').'%'
-                              ));
+                    ':user_name'   => '%'.Search_Engine::get_param('stext').'%'
+                ]);
             /*
              * HTML
              */

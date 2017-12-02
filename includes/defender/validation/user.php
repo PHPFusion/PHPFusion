@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class User
  * Validates User type Input
@@ -93,5 +94,4 @@ class User extends \Defender\Validation {
             return $return_value;
         }
     }
-
 }

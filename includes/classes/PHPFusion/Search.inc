@@ -33,10 +33,11 @@ class Search extends Search_Engine {
         self::display_search_form();
         if (strlen(self::get_param('stext')) >= 3) {
             self::display_results();
-        } elseif (isset($_POST['stext'])) {
+        } else if (isset($_POST['stext'])) {
             self::display_noResults();
         }
     }
+
     /**
      * Template for search form
      * @return string
@@ -75,6 +76,7 @@ class Search extends Search_Engine {
         </div></div>
         ".fusion_get_function('closetable');
     }
+
     /**
      * Template for search no results when stext is less than 3
      * @return string

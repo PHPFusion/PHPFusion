@@ -35,7 +35,7 @@ if (isset($_POST['sendmessage'])) {
         if (isset($_POST[$key])) {
             // Subject needs 'special' treatment
             if ($key == 'subject') {
-                $input['subject'] = substr(str_replace(array("\r", "\n", "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
+                $input['subject'] = substr(str_replace(["\r", "\n", "@"], "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
                 $input['subject'] = form_sanitizer($input['subject'], $input[$key], $key);
                 // Others don't
             } else {

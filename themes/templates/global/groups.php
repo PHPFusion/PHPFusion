@@ -37,7 +37,7 @@ if (!function_exists('render_user_group')) {
         echo "<th class='col-xs-1'>".$locale['status']."</th>\n";
         echo "</tr>\n";
         if (!empty($info['group_members'])) {
-            foreach($info['group_members'] as $member_id => $mData) {
+            foreach ($info['group_members'] as $member_id => $mData) {
                 echo "<tr>\n";
                 echo "<td class='col-xs-1'>".display_avatar($mData, '50px', '', FALSE, 'img-rounded')."</td>\n";
                 echo "<td>".profile_link($mData['user_id'], $mData['user_name'], $mData['user_status'])."</td>\n";

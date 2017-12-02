@@ -98,19 +98,19 @@ class InstallerIntroduction extends Install_Core {
 
         $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
         $content .= form_select('localeset', '', LANGUAGE,
-                                array(
-                                    'options' => self::$locale_files,
-                                )
+            [
+                'options' => self::$locale_files,
+            ]
         );
         if (isset($_GET['error']) && $_GET['error'] == 'license') {
             $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
         }
         $content .= form_checkbox('license', self::$locale['setup_0005'], '',
-                                  array(
-                                      'reverse_label' => TRUE,
-                                      'required' => TRUE,
-                                      'error_text' => self::$locale['setup_5000']
-                                  )
+            [
+                'reverse_label' => TRUE,
+                'required'      => TRUE,
+                'error_text'    => self::$locale['setup_5000']
+            ]
         );
 
         add_to_jquery('
@@ -131,13 +131,13 @@ class InstallerIntroduction extends Install_Core {
         });
         ");
 
-        self::$step = array(
-            1 => array(
-                'name' => 'step',
+        self::$step = [
+            1 => [
+                'name'  => 'step',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_INTRO
-            )
-        );
+            ]
+        ];
 
         return $content;
     }
@@ -184,34 +184,33 @@ class InstallerIntroduction extends Install_Core {
             $content .= form_hidden('localeset', '', LANGUAGE);
             $content .= "<h5><strong>".self::$locale['setup_1017']."</strong></h5>\n";
             $content .= "<div class='m-b-20'>".self::$locale['setup_1018']."</div>\n";
-            $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success'));
+            $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, ['class' => 'btn-success']);
             $content .= "<hr/>\n";
             // Change Primary Admin Details
             $content .= "<h5><strong>".self::$locale['setup_1011']."</strong></h5>\n";
             $content .= "<div class='m-b-20'>".self::$locale['setup_1012']."</div>\n";
-            $content .= form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, array('class' => 'btn-primary'));
+            $content .= form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, ['class' => 'btn-primary']);
             $content .= "<hr/>\n";
             // Infusions Installer
             $content .= "<h5><strong>".self::$locale['setup_1008']."</strong></h5>\n";
             $content .= "<div class='m-b-20'>".self::$locale['setup_1009']."</div>\n";
-            $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary'));
+            $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, ['class' => 'btn-primary']);
             $content .= "<hr/>\n";
             // Build htaccess
             if (isset(self::$connection['db_prefix'])) {
                 $content .= "<h5><strong>".self::$locale['setup_1014']."</strong></h5>\n";
                 $content .= "<div class='m-b-20'>".self::$locale['setup_1015']."</div>\n";
-                $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-default'));
+                $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', ['class' => 'btn-default']);
                 $content .= "<hr/>\n";
             }
             $content .= "<h5><strong>".self::$locale['setup_1004']."</strong></h5>\n";
             $content .= "<div class='m-b-20'>".self::$locale['setup_1005']."<br/><br/><p class='text-danger strong'>".self::$locale['setup_1006']."</p></div>\n";
             //$content .= "<div class='alert alert-danger strong'><p>".self::$locale['setup_1006']."</p>\n";
-            $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger'));
+            $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', ['class' => 'btn-danger']);
             //$content .= "</div>\n";
             $content .= "<hr/>\n";
         }
 
         return $content;
     }
-
 }

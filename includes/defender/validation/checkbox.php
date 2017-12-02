@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Checkbox
  * Validates Checkbox Input
@@ -32,7 +33,7 @@ class Checkbox extends \Defender\Validation {
             \defender::getInstance()->setInputError(self::$inputName);
         }
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 $vars[] = stripinput($val);
             }
@@ -40,7 +41,7 @@ class Checkbox extends \Defender\Validation {
             $value = implode($delimiter, $vars);
 
             return $value;
-        } elseif (!empty(self::$inputValue)) {
+        } else if (!empty(self::$inputValue)) {
             if (isnum(self::$inputValue)) {
                 if (self::$inputValue == 1) {
                     return 1;

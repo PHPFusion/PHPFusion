@@ -30,6 +30,7 @@ use ThemeFactory\Lib\Installer\HomeInstall;
 class MainFrame extends Core {
 
     public function __construct() {
+        parent::__construct();
         self::set_body_span();
         /**
          * First time installation on default install.
@@ -94,7 +95,7 @@ class MainFrame extends Core {
     }
 
     private function NebulaHeader() {
-        echo renderNotices(getNotices(array('all', FUSION_SELF)));
+        echo renderNotices(getNotices(['all', FUSION_SELF]));
         $defaultBg = ($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "");
         $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
         echo "<header ".$headerBg.">\n";

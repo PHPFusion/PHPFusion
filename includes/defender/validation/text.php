@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Text
  * Validates Text Input
  */
-class Text extends \Defender\Validation  {
+class Text extends \Defender\Validation {
 
     /**
      * validate and sanitize a text
@@ -38,7 +39,7 @@ class Text extends \Defender\Validation  {
         self::$inputConfig += $default_length;
 
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 if (self::$inputConfig['max_length']) {
                     // Input max length needs a value.
@@ -111,8 +112,4 @@ class Text extends \Defender\Validation  {
         }
         return FALSE;
     }
-
-
-
-
 }

@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemePack\Nebula\Templates;
 
 use ThemeFactory\Core;
@@ -44,7 +43,8 @@ class News extends Core {
         ?>
         <ul class='list-group-item list-style-none p-b-15'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
+                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5>
+                </a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -95,7 +95,7 @@ class News extends Core {
                         </a>
                     </li>
                 <?php endforeach;
-            }?>
+            } ?>
         </ul>
         <?php
         closeside();
@@ -113,14 +113,16 @@ class News extends Core {
                 <div class='post-image'>
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg') == FALSE) : ?>
                         <a href='<?php echo $info['news_link'] ?>'>
-                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>' alt='<?php echo $info['news_subject'];?>'>
+                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'
+                                 alt='<?php echo $info['news_subject']; ?>'>
                         </a>
                     <?php endif; ?>
                 </div>
                 <div class='post-title'>
                     <h3>
                         <a href='<?php echo $info['news_url'] ?>' rel='bookmark'>
-                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
+                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>
+                                :</strong><?php echo $info['news_subject'] ?>
                         </a>
                     </h3>
                 </div>
@@ -131,7 +133,8 @@ class News extends Core {
                 <div class='post-meta'>
                     <ul class="meta-left">
                         <li><?php echo showdate('newsdate', $info['news_datestamp']) ?></li>
-                        <li><?php echo fusion_get_locale('NB_200') ?> <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?> / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
+                        <li><?php echo fusion_get_locale('NB_200') ?> <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?>
+                            / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
 
                     </ul>
                     <ul class='meta-right'>
@@ -152,14 +155,17 @@ class News extends Core {
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg')) : ?>
                         <div class='pull-left m-r-15' style='width: 100px;'>
                             <a href='<?php echo $info['news_link'] ?>'>
-                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>' alt='<?php echo $info['news_subject'];?>'>
+                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'
+                                     alt='<?php echo $info['news_subject']; ?>'>
                             </a>
-                </div>
+                        </div>
                     <?php endif; ?>
                     <p>
                         <?php echo $info['news_news'] ?>
                         <?php if ($info['news_ext'] == 'y') : ?>
-                            ... <a class='text-uppercase text-smaller' href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?> +</a>
+                            ... <a class='text-uppercase text-smaller'
+                                   href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?>
+                                +</a>
                         <?php endif; ?>
                     </p>
                 </div>
@@ -191,7 +197,8 @@ class News extends Core {
         ?>
         <ul class='list-group-item list-style-none p-b-15'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
+                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5>
+                </a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -225,7 +232,8 @@ class News extends Core {
                 <ul class='meta-right'>
                     <li><i class='fa fa-eye'></i> <?php echo number_format($news['news_reads']) ?></li>
                     <li>
-                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>' href='<?php echo $news['print_link'] ?>' target='_blank'>
+                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>'
+                           href='<?php echo $news['print_link'] ?>' target='_blank'>
                             <i class='fa fa-print'></i>
                             <?php echo fusion_get_locale('news_0002') ?>
                         </a>
@@ -270,7 +278,9 @@ class News extends Core {
             <div class='post-gallery'>
                 <?php $animate_delay = 200; ?>
                 <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                    <div class='post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 270px; height: 200px;' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
+                    <div class='post-gallery-item wow overflow-hide fadeInUp'
+                         style='margin: -1px; width: 270px; height: 200px;' data-wow-duration='700ms'
+                         data-wow-delay='<?php echo $animate_delay ?>ms'>
                         <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
                     </div>
                     <?php $animate_delay = $animate_delay + 150; ?>

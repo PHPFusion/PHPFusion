@@ -19,7 +19,7 @@ namespace Artemis\Viewer;
 
 class adminApps {
 
-    private $result = array();
+    private $result = [];
 
     public function display_apps_result() {
 
@@ -29,7 +29,7 @@ class adminApps {
 
                 echo json_encode($this->result);
 
-            } elseif ($_GET['mode'] == "html") {
+            } else if ($_GET['mode'] == "html") {
 
                 $locale = fusion_get_locale();
 
@@ -48,7 +48,7 @@ class adminApps {
                     $app_icon_url = strtr(
                         get_image("ac_".$data['admin_rights']), [
                             INFUSIONS => fusion_get_settings('siteurl').'infusions/',
-                            ADMIN => fusion_get_settings('siteurl').'administration/'
+                            ADMIN     => fusion_get_settings('siteurl').'administration/'
                         ]
                     );
 
@@ -61,52 +61,49 @@ class adminApps {
                         <li>
                             <a href="<?php echo $link ?>">
                                 <div class="app_icon">
-                                    <img class="img-responsive" alt="<?php echo $title ?>" src="<?php echo $app_icon_url ?>"/>
+                                    <img class="img-responsive" alt="<?php echo $title ?>"
+                                         src="<?php echo $app_icon_url ?>"/>
                                 </div>
                                 <div class="apps">
                                     <h4><?php echo $title ?></h4>
                                 </div>
                             </a>
                         </li>
-                        <?php
+                    <?php
                     endif;
                 }
 
             } else {
 
-            echo "<li class=\"app_search_error\"><span>API Error - Mode is not of a valid type</span></li>";
+                echo "<li class=\"app_search_error\"><span>API Error - Mode is not of a valid type</span></li>";
 
+            }
+
+        } else {
+
+            if (!isset($_GET['mode'])) {
+                echo "<li class=\"app_search_error\"><span>API Error - Please specify a mode of return</span></li>";
+
+            } else {
+
+                if ($_GET['mode'] == "html") {
+
+                    echo "<li class=\"app_search_error\"><span>".$this->result['message']."</span></li>\n";
+
+                } else if ($_GET['mode'] == "json") {
+
+                    echo json_encode($this->result);
+
+                }
+            }
         }
-
-    } else {
-
-if (!isset($_GET['mode'])) {
-echo "<li class=\"app_search_error\"><span>API Error - Please specify a mode of return</span></li>";
-
-}
-
-else {
-
-    if ($_GET['mode'] == "html") {
-
-        echo "<li class=\"app_search_error\"><span>".$this->result['message']."</span></li>\n";
-
-    } elseif ($_GET['mode'] == "json") {
-
-        echo json_encode($this->result);
-
     }
-}
-}
-}
 
-/**
- * @param array $result
- */
-public
-function setResult($result) {
-    $this->result = $result;
-}
-
-
+    /**
+     * @param array $result
+     */
+    public
+    function setResult($result) {
+        $this->result = $result;
+    }
 }

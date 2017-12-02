@@ -89,7 +89,7 @@ if (iADMIN) {
         addNotice("warning maintenance-alert", fusion_get_locale('global_190'), 'all');
     }
     if (!fusion_get_userdata('user_admin_password')) {
-        addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."edit_profile.php'>", "</a>"), fusion_get_locale('global_199')), 'all');
+        addNotice("warning", str_replace(["[LINK]", "[/LINK]"], ["<a href='".BASEDIR."edit_profile.php'>", "</a>"], fusion_get_locale('global_199')), 'all');
     }
 }
 
@@ -112,7 +112,7 @@ if (!empty($fusion_jquery_tags)) {
     $jquery_tags .= $fusion_jquery_tags;
 }
 
-$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, array('flaggedComments' => FALSE));
+$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, ['flaggedComments' => FALSE]);
 echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
 
 // Load bootstrap javascript

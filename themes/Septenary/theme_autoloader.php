@@ -23,16 +23,14 @@
 require_once INCLUDES."theme_functions_include.php";
 
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
+    $autoload_register_paths = [
         "PHPFusion\\SeptenaryTheme"      => THEME."includes/septenary.php",
         "PHPFusion\\SeptenaryComponents" => THEME."includes/components.php",
-    );
+    ];
 
     $fullPath = isset($autoload_register_paths[$className]) ? $autoload_register_paths[$className] : "";
 
     if (is_file($fullPath)) {
         require $fullPath;
     }
-
 });

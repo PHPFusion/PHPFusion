@@ -21,7 +21,7 @@ require_once THEMES."templates/global/login.php";
 $locale = fusion_get_locale();
 add_to_title($locale['global_200'].$locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
-$info = array();
+$info = [];
 if (!iMEMBER) {
     if (isset($_GET['error']) && isnum($_GET['error'])) {
         if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
@@ -47,8 +47,8 @@ if (!iMEMBER) {
                     switch ($_GET['status']) {
                         case 1:
                             $data = dbarray(dbquery("SELECT suspend_reason FROM ".DB_SUSPENDS."
-								WHERE suspended_user='".$id."'
-								ORDER BY suspend_date DESC  LIMIT 1"));
+                                WHERE suspended_user='".$id."'
+                                ORDER BY suspend_date DESC  LIMIT 1"));
                             addNotice("danger", $locale['global_406']." ".$data['suspend_reason']);
                             break;
                         case 2:
@@ -56,9 +56,9 @@ if (!iMEMBER) {
                             break;
                         case 3:
                             $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason FROM ".DB_SUSPENDS." s
-								LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
-								WHERE s.suspended_user='".$id."'
-								ORDER BY s.suspend_date DESC LIMIT 1"));
+                                LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
+                                WHERE s.suspended_user='".$id."'
+                                ORDER BY s.suspend_date DESC LIMIT 1"));
                             addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
                             break;
                         case 4:

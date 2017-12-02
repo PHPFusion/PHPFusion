@@ -20,5 +20,4 @@
  * PasswordAuth class for compatibility reason
  */
 class PasswordAuth extends PHPFusion\PasswordAuth {
-
 }

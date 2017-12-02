@@ -49,7 +49,7 @@ class adminPanel extends resource {
             <div class="app_menu">
                 <header class="affix">
                     <h3><?php echo $locale['spotlight'] ?></h3>
-                    <?php echo form_text("search_app", "", "", array("placeholder" => $locale['spotlight_search'])); ?>
+                    <?php echo form_text("search_app", "", "", ["placeholder" => $locale['spotlight_search']]); ?>
                 </header>
                 <div class="app_list">
                     <?php $this->app_nav() ?>
@@ -83,7 +83,7 @@ class adminPanel extends resource {
                 if (fusion_get_settings("rendertime_enabled")) : ?>
                     <li><?php echo showrendertime() ?></li>
                     <li><?php echo showMemoryUsage() ?></li>
-                    <li><?php self::$locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
+                    <li><?php echo self::$locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
                 <?php endif; ?>
                 <li class="pull-right"><strong>Artemis <?php echo self::$locale['render_engine'] ?> 3.2</strong></li>
             </ul>
@@ -153,19 +153,21 @@ class adminPanel extends resource {
                 $href_src = "";
                 if ($has_page) {
                     $href_src = "data-load=\"$i\"";
-                } elseif (!$is_menu_action) {
+                } else if (!$is_menu_action) {
                     $href_src = "href=\"".ADMIN.$aidlink."&amp;pagenum=$i\"";
                 }
                 ?>
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
-                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
+                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
                     </a>
-                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>"
+                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i) ?>
                     </a>
                 </li>
-                <?php
+            <?php
             endforeach;
             ?>
         </ul>
@@ -215,14 +217,15 @@ class adminPanel extends resource {
                         <li <?php echo $secondary_active ?>>
                             <a href="<?php echo $link ?>">
                                 <div class="app_icon">
-                                    <img class="img-responsive" alt="<?php echo $title ?>" src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
+                                    <img class="img-responsive" alt="<?php echo $title ?>"
+                                         src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
                                 </div>
                                 <div class="apps">
                                     <h4><?php echo $title ?></h4>
                                 </div>
                             </a>
                         </li>
-                        <?php
+                    <?php
                     endif;
 
                 endforeach;
@@ -258,7 +261,7 @@ class adminPanel extends resource {
                         <?php echo display_avatar($userdata, "30px", "m-r-10", "", "img-rounded") ?>
                         <span class="hidden-xs hidden-sm hidden-md">
                             <?php echo $locale['welcome'].", <strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n";
-                        ?>
+                            ?>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php
@@ -276,7 +279,8 @@ class adminPanel extends resource {
                     </ul>
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".$aidlink ?>">
+                    <a title="<?php echo $locale['settings'] ?>"
+                       href="<?php echo ADMIN."settings_main.php".$aidlink ?>">
                         <?php echo $locale['settings'] ?>
                     </a>
                 </li>
@@ -320,17 +324,17 @@ class adminPanel extends resource {
 
                 while ($data = dbarray($msg_result)) {
 
-                    $messages[] = array(
-                        "link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
-                        "title" => $data['message_subject'],
-                        "sender" => array(
-                            "user_id" => $data['sender_id'],
-                            "user_name" => $data['sender_name'],
+                    $messages[] = [
+                        "link"      => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+                        "title"     => $data['message_subject'],
+                        "sender"    => [
+                            "user_id"     => $data['sender_id'],
+                            "user_name"   => $data['sender_name'],
                             "user_avatar" => $data['sender_avatar'],
                             "user_status" => $data['sender_status'],
-                        ),
+                        ],
                         "datestamp" => timer($data['message_datestamp']),
-                    );
+                    ];
 
                 }
 
@@ -432,6 +436,4 @@ class adminPanel extends resource {
             echo "<footer ".($class ? "class='$class'" : "")."><h3>$title</h3></footer>";
         }
     }
-
-
 }

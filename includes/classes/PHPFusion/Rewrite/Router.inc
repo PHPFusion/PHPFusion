@@ -31,13 +31,15 @@ class Router extends RewriteDriver {
     /**
      * True = SEF URL to FilePath
      * False = File Path to SEF URL
+     *
      * @var bool
      */
-    public $routing = TRUE;
+    public $routing = true;
     /**
      * Name of the php file which will be loaded
      * for the permalink.
      * example: news.php, articles.php
+     *
      * @data_type String
      * @access private
      */
@@ -46,24 +48,26 @@ class Router extends RewriteDriver {
      * Array of Parameters with their
      * corresponding Tags.
      * example: thread_id => %thread_id%
+     *
      * @data_type Array
      * @access private
      */
-    private $parameters = array();
+    private $parameters = [];
     /**
      * Array of Parameters with their
      * actual values.
      * example: thread_id => 1, rowstart => 20
+     *
      * @data_type Array
      * @access private
      */
-    private $get_parameters = array();
+    private $get_parameters = [];
 
     public function get_FileParams() {
         return $this->get_parameters;
     }
 
-    private static $router_instance = NULL;
+    private static $router_instance = null;
 
     public function __construct() {
         // Pretty URL
@@ -71,9 +75,10 @@ class Router extends RewriteDriver {
     }
 
     public static function getRouterInstance() {
-        if (self::$router_instance === NULL) {
+        if (self::$router_instance === null) {
             self::$router_instance = new static();
         }
+
         return self::$router_instance;
     }
 
@@ -97,6 +102,7 @@ class Router extends RewriteDriver {
      * Call all the functions to process rewrite detection and further actions.
      * This will call all the other functions after all the included files have been included
      * and all the patterns have been made.
+     *
      * @access public
      */
     public function rewritePage() {
@@ -128,7 +134,6 @@ class Router extends RewriteDriver {
 
     /**
      * Import the Available Patterns from Database
-     *
      * This will Import all the available Patterns for the Handlers
      * from the Database and put it into $pattern_search and
      * $pattern_replace array.
@@ -137,7 +142,7 @@ class Router extends RewriteDriver {
      */
     private function importPatterns() {
         if (!empty($this->handlers)) {
-            $types = array();
+            $types = [];
             foreach ($this->handlers as $key => $value) {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
@@ -150,7 +155,7 @@ class Router extends RewriteDriver {
                     if ($data['pattern_cat'] == "normal") {
                         $this->pattern_search[$data['rewrite_name']][] = $data['pattern_source'];
                         $this->pattern_replace[$data['rewrite_name']][] = $data['pattern_target'];
-                    } elseif ($data['pattern_cat'] == "alias") {
+                    } else if ($data['pattern_cat'] == "alias") {
                         $this->alias_pattern[$data['rewrite_name']][$data['pattern_source']] = $data['pattern_target'];
                     }
                 }
@@ -160,7 +165,6 @@ class Router extends RewriteDriver {
 
     /**
      * Checks if there is any matching Alias or not
-     *
      * This function will check if there is any matching Alias for the URI or not.
      *
      * @access private
@@ -187,12 +191,14 @@ class Router extends RewriteDriver {
                 $this->setVariables();
 
                 $this->setWarning(7, $this->requesturi); // Alias Found
-                return TRUE;
+
+                return true;
             }
         } else {
 
             $this->setWarning(1, $this->requesturi); // Alias not found
-            return FALSE;
+
+            return false;
         }
     }
 
@@ -201,10 +207,12 @@ class Router extends RewriteDriver {
      * This function will return an Array of 2 elements for a specific Alias:
      * 1. The Permalink URL of Alias
      * 2. PHP URL of the Alias
+     *
      * @param string $url The Permalink URL (incomplete)
      * @param string $php_url The PHP URL (incomplete)
      * @param string $type Type of Alias
      * @access private
+     * @return mixed|string
      */
     private function getAliasURL($url, $php_url, $type) {
         if (isset($this->alias_pattern) && isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
@@ -222,7 +230,6 @@ class Router extends RewriteDriver {
 
     /**
      * Explodes a URL into Filename and Get Parameters
-     *
      * This function will explode the URL into its Filename and Get Parameters
      * Example: viewthread.php?thread_id=1&amp;rowstart=20
      * then :
@@ -235,9 +242,10 @@ class Router extends RewriteDriver {
      * @param string $url The URL
      * @param string $param_delimiter The Parameters to explode by
      * @access private
+     * @return array
      */
     private function explodeURL($url, $param_delimiter = "&amp;") {
-        $url_info = array();
+        $url_info = [];
         // Explode URL
         $pathinfo = explode("?", $url);
         // Save the File path in 1st position of array
@@ -264,6 +272,7 @@ class Router extends RewriteDriver {
      * Call the Functions to Set GET Parameters and Query String
      * This function will call the functions to set Server GET parameters
      * and the QUERY_STRING.
+     *
      * @access private
      */
     private function setVariables() {
@@ -290,6 +299,7 @@ class Router extends RewriteDriver {
      * Set the new QUERY_STRING
      * This function will set the values of QUERY_STRING to new value
      * which is calculated in buildParams().
+     *
      * @access private
      */
     public function setquerystring() {
@@ -303,6 +313,7 @@ class Router extends RewriteDriver {
     /**
      * Builds the $_GET parameters
      * This function will build the GET parameters and also the Query String.
+     *
      * @access private
      */
     private function buildParams() {
@@ -325,7 +336,6 @@ class Router extends RewriteDriver {
 
     /**
      * Checks if there is any matching Alias Pattern or not
-     *
      * This function will check if there is any matching Alias Pattern for the URI or not.
      * Example: If a Thread request is like: "post-your-site-rowstart-20", then it will
      * try to find any pattern like: "post-your-site-rowstart-%thread_rowstart%"
@@ -334,7 +344,7 @@ class Router extends RewriteDriver {
      */
     private function checkAliasPatterns() {
         if (is_array($this->alias_pattern)) {
-            $match_found = FALSE;
+            $match_found = false;
             $alias = "";
             foreach ($this->alias_pattern as $type => $alias_patterns) {
                 foreach ($alias_patterns as $search => $replace) {
@@ -367,30 +377,32 @@ class Router extends RewriteDriver {
                                 }
                                 // Call the function to set server variables
                                 $this->setVariables();
-                                $match_found = TRUE;
+                                $match_found = true;
                                 break;
                             }
                         }
                     }
                 }
             }
-            if ($match_found == TRUE) {
+            if ($match_found == true) {
                 $this->setWarning(8, $alias); // Alias Pattern Found
-                return TRUE;
+
+                return true;
             } else {
                 $this->setWarning(2, $this->requesturi); // Alias Pattern Not Found
-                return FALSE;
+
+                return false;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
      * Builds the Regex pattern for a specific Type string
-     *
      * This function will build the Regex pattern for a specific string, which is
      * passed to the function.
+     *
      * @param        $pattern
      * @param string $type
      * @return mixed|string
@@ -408,7 +420,6 @@ class Router extends RewriteDriver {
 
     /**
      * Builds the Regular Expressions Patterns
-     *
      * This function will create the Regex patterns and will put the built patterns
      * in $patterns_regex array. This array will then used in preg_match function
      * to match against current request.
@@ -418,7 +429,7 @@ class Router extends RewriteDriver {
      */
     private function checkPattern() {
 
-        $match_found = FALSE;
+        $match_found = false;
 
         if (is_array($this->pattern_search)) {
 
@@ -428,7 +439,7 @@ class Router extends RewriteDriver {
 
                     foreach ($RawSearchPatterns as $key => $search) {
 
-                        if ($match_found == FALSE) {
+                        if ($match_found == false) {
 
                             if (isset($this->pattern_replace[$type][$key]) && isset($this->pattern_search[$type][$key])) {
 
@@ -455,7 +466,7 @@ class Router extends RewriteDriver {
                                          */
                                         preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
 
-                                        $tag_values = array();
+                                        $tag_values = [];
 
                                         if (!empty($tag_matches[0])) {
 
@@ -478,12 +489,12 @@ class Router extends RewriteDriver {
 
                                         if (isset($url_info[1]) && !empty($urlParams)) {
 
-                                            $parameters = array();
+                                            $parameters = [];
 
                                             foreach ($url_info[1] as $paramKey => $paramVal) {
 
                                                 if (!$paramVal) {
-                                                    $paramVal = TRUE;
+                                                    $paramVal = true;
                                                 }
 
                                                 $value = (isset($tag_values[$paramKey])) ? $tag_values[$paramKey] : $paramVal;
@@ -521,9 +532,9 @@ class Router extends RewriteDriver {
 
     /**
      * Index Include File
-     *
      * Returns the filename of the php file which will be included.
      * If this file is blank, index.php will redirect to 404 error page
+     *
      * @access public
      */
     public function getFilePath() {
@@ -532,6 +543,7 @@ class Router extends RewriteDriver {
 
     /**
      * Get the Current URL
+     *
      * @return string
      */
     public function getCurrentURL() {
@@ -540,7 +552,6 @@ class Router extends RewriteDriver {
 
     /**
      * Show Warnings or Debugging Information
-     *
      * This function will show the Warnings or Debugging Information
      * if Warnings are enabled or if Debug Mode is enabled.
      *
@@ -554,7 +565,7 @@ class Router extends RewriteDriver {
         }
         echo "<script type='text/javascript'>
         function rewritestoggledebugdiv() {
-	        $('#rewrites-debug-info').slideToggle('slow');
+            $('#rewrites-debug-info').slideToggle('slow');
         }
         </script>\n";
         echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
@@ -635,8 +646,8 @@ class Router extends RewriteDriver {
         echo "Module Property Information:<br />";
         foreach ($this->pattern_tables as $type => $val) {
             $propHTML = '';
-            foreach($val as $val_pattern => $arrayProp) {
-                $propHTML .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$val_pattern} will be translated on ".$arrayProp['table']." WHERE ".$arrayProp['primary_key'] ." is equals to $val_pattern<br/>\n";
+            foreach ($val as $val_pattern => $arrayProp) {
+                $propHTML .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$val_pattern} will be translated on ".$arrayProp['table']." WHERE ".$arrayProp['primary_key']." is equals to $val_pattern<br/>\n";
             }
             echo "&nbsp;&nbsp;&nbsp;&nbsp;".$type." rewrite module <br/>".$propHTML."<br />";
         }

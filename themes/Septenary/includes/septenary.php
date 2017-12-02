@@ -20,7 +20,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 class SeptenaryTheme extends SeptenaryComponents {
@@ -30,7 +29,7 @@ class SeptenaryTheme extends SeptenaryComponents {
      * @return $this
      */
     public static $septenary_instance = NULL;
-    protected static $locale = array();
+    protected static $locale = [];
     private $left_html = "";
     private $top_html = "";
     private $upper_html = "";
@@ -82,7 +81,7 @@ class SeptenaryTheme extends SeptenaryComponents {
         echo "<div class='".self::col_span()." main-content'>\n";
         echo showbanners(1);
         // Get all notices, we also include notices that are meant to be displayed on all pages
-        echo renderNotices(getNotices(array('all', FUSION_SELF)));
+        echo renderNotices(getNotices(['all', FUSION_SELF]));
         echo $this->upper_html.U_CENTER;
         echo CONTENT;
         echo $this->lower_html.L_CENTER;

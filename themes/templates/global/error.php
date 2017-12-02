@@ -20,20 +20,21 @@
  * Provides override methods for Theme Developers
  */
 if (!function_exists("display_error_page")) {
-    function display_error_page(array $info = array()) {
+    function display_error_page(array $info = []) {
         opentable('<i class=\'fa fa-warning fa-fw m-r-5 text-warning\'></i>{%title%}');
         ?>
         <div class='row spacer-sm'>
             <div class='col-xs-12 col-sm-3 text-center'>
-                <img class='img-responsive' src='{%image_src%}' alt='{%title%}' border='0' />
+                <img class='img-responsive' src='{%image_src%}' alt='{%title%}' border='0'/>
             </div>
             <div class='col-xs-12 col-sm-9'>
                 <span class='va' style='height:160px'></span>
                 <span class='va'>
                     <h4>{%error_code%}</h4>
+                </span>
                 <div>{%message%}</div>
                 <div class='spacer-sm'><a class='button' href='{%back_link%}'>{%back_title%}</a></div>
-            </span>
+
             </div>
         </div>
         <?php

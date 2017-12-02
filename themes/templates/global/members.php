@@ -68,7 +68,7 @@ if (!function_exists('render_members')) {
 
                     echo "<td class='col-xs-1'>".$members['user_avatar']."</td>\n";
                     echo "<td class='col-xs-2'><span class='side'>".profile_link($members['user_id'], $members['user_name'],
-                                                                                 $members['user_status'])."</span></td>\n";
+                            $members['user_status'])."</span></td>\n";
                     echo "<td class='col-xs-3'>\n".($groups ? $groups : $members['default_group'])."</td>\n";
                     echo "<td class='col-xs-2'>".getuserlevel($members['user_level'])."</td>\n";
                     echo "<td class='col-xs-2'>".translate_lang_names($members['user_language'])."</td>\n";

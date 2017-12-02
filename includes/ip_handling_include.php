@@ -77,4 +77,3 @@ if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
     redirect("http://www.google.com/");
 }
 unset($check_value);
-

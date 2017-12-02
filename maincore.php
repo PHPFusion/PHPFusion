@@ -87,8 +87,8 @@ define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI
 
 // Variables initializing
 $mysql_queries_count = 0;
-$mysql_queries_time = array();
-$locale = array();
+$mysql_queries_time = [];
+$locale = [];
 
 // Calculate ROOT path for Permalinks
 $current_path = html_entity_decode($_SERVER['REQUEST_URI']);
@@ -149,7 +149,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
         unset($auth, $_POST['user_name'], $_POST['user_pass']);
         redirect(FUSION_REQUEST);
     }
-} elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+} else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
     redirect(BASEDIR.$settings['opening_page']);
 } else {
@@ -240,12 +240,12 @@ $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 // Set theme using $_GET as well.
 // Set theme
 if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) && theme_exists($_GET['themes'])) {
-    $newUserTheme = array(
-        "user_id" => $userdata['user_id'],
+    $newUserTheme = [
+        "user_id"    => $userdata['user_id'],
         "user_theme" => stripinput($_GET['themes']),
-    );
+    ];
     dbquery_insert(DB_USERS, $newUserTheme, "update");
-    redirect(clean_request("", array("themes"), FALSE));
+    redirect(clean_request("", ["themes"], FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 

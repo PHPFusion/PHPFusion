@@ -60,7 +60,7 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
-		case "FQ":
+        case "FQ":
             if (!infusion_exists('faq')) {
                 redirect(BASEDIR."error.php?code=404");
             }
@@ -75,20 +75,20 @@ if (isset($_GET['type'])) {
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
-				$res = TRUE;
-				$faq = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['faq_answer']));
-				if ($data['faq_breaks'] == "y") {
-					$faq = nl2br($faq);
-				}
-				echo "<strong>".$data['faq_question']."</strong><br />\n";
-				echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']))."</span>\n";
-				echo "<hr />".$faq."\n";
+                $res = TRUE;
+                $faq = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['faq_answer']));
+                if ($data['faq_breaks'] == "y") {
+                    $faq = nl2br($faq);
+                }
+                echo "<strong>".$data['faq_question']."</strong><br />\n";
+                echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']))."</span>\n";
+                echo "<hr />".$faq."\n";
             }
             if (!$res) {
                 redirect($settings['opening_page']);
             }
             break;
-		case "A":
+        case "A":
             if (!infusion_exists('articles')) {
                 redirect(BASEDIR."error.php?code=404");
             }
@@ -104,14 +104,14 @@ if (isset($_GET['type'])) {
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
-				$res = TRUE;
-				$article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
-				if ($data['article_breaks'] == "y") {
-					$article = nl2br($article);
-				}
-				echo "<strong>".$data['article_subject']."</strong><br />\n";
-				echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
-				echo "<hr />".$article."\n";
+                $res = TRUE;
+                $article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
+                if ($data['article_breaks'] == "y") {
+                    $article = nl2br($article);
+                }
+                echo "<strong>".$data['article_subject']."</strong><br />\n";
+                echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
+                echo "<hr />".$article."\n";
             }
             if (!$res) {
                 redirect($settings['opening_page']);
@@ -144,7 +144,7 @@ if (isset($_GET['type'])) {
                         $news_extended = "";
                     }
                     echo "<strong>".$data['news_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['news_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['news_datestamp']))."</span>\n";
                     echo "<hr />".$news."\n";
                     if ($news_extended) {
                         echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";
@@ -182,7 +182,7 @@ if (isset($_GET['type'])) {
                         $blog_extended = "";
                     }
                     echo "<strong>".$data['blog_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate",$data['blog_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']))."</span>\n";
                     echo "<hr />".$blog."\n";
                     if ($blog_extended) {
                         echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
@@ -214,7 +214,7 @@ if (isset($_GET['type'])) {
                         $res = TRUE;
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
-                        echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
+                        echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
                         echo nl2br(parseubb(parsesmileys($data['post_message'])));
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
@@ -254,7 +254,7 @@ if (isset($_GET['type'])) {
                                 echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                             }
                             echo "<div style='margin-left:20px'>\n";
-                            echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
+                            echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
                             echo nl2br(parseubb(parsesmileys($data['post_message'])));
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";

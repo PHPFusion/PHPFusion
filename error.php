@@ -33,6 +33,7 @@ function replaceDir($output = "") {
 
     return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
+
 add_handler("replaceDir");
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
@@ -42,8 +43,8 @@ $default = [
     'image_src' => IMAGES."error/unknown.png",
     'status'    => '505',
     'back'      => [
-        'url'    => BASEDIR.'index.php',
-        'title'  => $locale['errret']
+        'url'   => BASEDIR.'index.php',
+        'title' => $locale['errret']
     ]
 ];
 

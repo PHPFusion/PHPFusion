@@ -34,15 +34,15 @@ if (db_exists(DB_PHOTOS)) {
         if (!defined("SAFEMODE")) {
             define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
         }
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "photo_datestamp",
             'subject'   => "photo_title",
             'author'    => "photo_user",
-        );
-        $order_by = array(
+        ];
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND photo_datestamp>='.(TIME - Search_Engine::get_param('datelimit').' OR album_datestamp>='.(TIME - Search_Engine::get_param('datelimit'))).' ' : '');

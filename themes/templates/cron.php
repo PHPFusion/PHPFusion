@@ -31,8 +31,8 @@ if (fusion_get_settings("cronjob_hour") < (TIME - 360)) {
  */
 if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
     $new_time = TIME;
-    $user_datestamp = array(':user_datestamp' => TIME - 86400);
-    $notify_datestamp = array(':notify_datestamp' => TIME - 1209600);
+    $user_datestamp = [':user_datestamp' => TIME - 86400];
+    $notify_datestamp = [':notify_datestamp' => TIME - 1209600];
     if (infusion_exists('forum')) {
         dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", $notify_datestamp);
     }
@@ -45,15 +45,15 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
         require_once INCLUDES."sendmail_include.php";
         $result = dbquery("SELECT user_id, user_name, user_email FROM ".DB_USERS."
 			WHERE user_status=:status AND user_actiontime!=:action_time_start AND user_actiontime < :action_time_end
-			LIMIT 10", array(
+			LIMIT 10", [
             ':status'            => 3,
             ':action_time_start' => 0,
             ':action_time_end'   => TIME
-        ));
+        ]);
 
         while ($data = dbarray($result)) {
             dbquery("UPDATE ".DB_USERS." SET user_status=:status, user_actiontime=:status WHERE user_id=:user_id",
-                array(':status' => 0, ':user_id' => $data['user_id'])
+                [':status' => 0, ':user_id' => $data['user_id']]
             );
 
             $subject = $locale['global_451'];
@@ -69,19 +69,19 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
     }
 
     $usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < :action_time_start AND user_actiontime!=:action_time_end AND user_status=:user_status",
-        array(
+        [
             ':action_time_start' => TIME,
             ':action_time_end'   => 0,
             ':user_status'       => 7
-        )
+        ]
     );
 
     if ($usr_deactivate) {
-        $deactivate_param = array(
+        $deactivate_param = [
             ':action_time_start' => TIME,
             ':action_time_end'   => 0,
             ':status'            => 0,
-        );
+        ];
         $result = dbquery("SELECT user_id FROM ".DB_USERS."
 			WHERE user_actiontime < :action_time_start AND user_actiontime!=:action_time_end AND user_status=:status
 			LIMIT 10", $deactivate_param);
@@ -98,7 +98,7 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
 
             while ($data = dbarray($result)) {
 
-                $user_mysql = array(':user_id', $data['user_id'], ':user_id_2' => $data['user_id']);
+                $user_mysql = [':user_id', $data['user_id'], ':user_id_2' => $data['user_id']];
 
                 dbquery("DELETE FROM ".DB_USERS." WHERE user_id=:user_id", $user_mysql);
                 dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name=:user_id", $user_mysql);
@@ -106,9 +106,12 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user=:user_id", $user_mysql);
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:user_id", $user_mysql);
 
-                if (infusion_exists('articles')) dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", $user_mysql);
-                if (infusion_exists('news')) dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", $user_mysql);
-                if (infusion_exists('member_poll_panel')) dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", $user_mysql);
+                if (infusion_exists('articles'))
+                    dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", $user_mysql);
+                if (infusion_exists('news'))
+                    dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", $user_mysql);
+                if (infusion_exists('member_poll_panel'))
+                    dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", $user_mysql);
                 if (infusion_exists('forum')) {
                     dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", $user_mysql);
                     dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", $user_mysql);

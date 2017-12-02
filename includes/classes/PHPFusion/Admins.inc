@@ -21,28 +21,27 @@ namespace PHPFusion;
  * Class Admin
  * This class is called in templates/admin_header.php
  * Determine how to we set variables on 3rd party script
- *
  */
 class Admins {
 
-    private static $instance = NULL;
+    private static $instance = null;
     /**
      * @var array - default section icons
      */
-    public $admin_section_icons = array(
+    public $admin_section_icons = [
         '0' => "<i class='fa fa-fw fa-dashboard'></i>",
         '1' => "<i class='fa fa-fw fa-microphone'></i>",
         '2' => "<i class='fa fa-fw fa-users'></i>",
         '3' => "<i class='fa fa-fw fa-cog'></i>",
         '4' => "<i class='fa fa-fw fa-wrench'></i>",
         '5' => "<i class='fa fa-fw fa-cubes'></i>"
-    );
+    ];
     /**
      * Default core administration pages
      *
      * @var array
      */
-    public $admin_page_icons = array(
+    public $admin_page_icons = [
         'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
         'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'PM'   => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
@@ -79,28 +78,29 @@ class Admins {
         'S9'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
         'S10'  => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
         'S12'  => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
-    );
+    ];
     /**
      * @var array
      */
-    private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
-    private static $admin_pages = array();
+    private $admin_sections = [1 => false, 2 => false, 3 => false, 4 => false, 5 => false];
+    private static $admin_pages = [];
     /**
      * @var array
      */
-    private $admin_page_link = array();
+    private $admin_page_link = [];
     /**
      *    Constructor class. No Params
      */
     private $current_page = '';
-    private static $locale = '';
-    private $comment_type = array();
-    private $submit_type = array();
-    private $submit_link = array();
-    private $link_type = array();
+    private static $locale = [];
+    private $comment_type = [];
+    private $submit_type = [];
+    private $submit_link = [];
+    private $link_type = [];
     private $submit_data = [];
 
-    private function __construct() {}
+    private function __construct() {
+    }
 
     /**
      * @return object
@@ -117,14 +117,14 @@ class Admins {
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
             self::$admin_pages = $this->getAdminPages();
-            $this->admin_sections = array_filter(array_merge(array(
+            $this->admin_sections = array_filter(array_merge([
                 0 => self::$locale['ac00'],
                 1 => self::$locale['ac01'],
                 2 => self::$locale['ac02'],
                 3 => self::$locale['ac03'],
                 4 => self::$locale['ac04'],
                 5 => self::$locale['ac05'],
-            ), $this->admin_sections));
+            ], $this->admin_sections));
             $this->admin_sections = array_values($this->admin_sections);
             $this->current_page = $this->_currentPage();
         }
@@ -164,18 +164,19 @@ class Admins {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
+
         return $path;
     }
 
     /**
-     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons         - Section Icons
+     * @param $icons - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
-        self::$admin_pages[$page] = array();
+        self::$admin_pages[$page] = [];
     }
 
     public function getAdminLocale() {
@@ -209,7 +210,7 @@ class Admins {
         self::$admin_pages = $this->getAdminPages();
         if (empty($active_key) && !empty(self::$admin_pages)) {
             foreach (self::$admin_pages as $key => $data) {
-                $link = array();
+                $link = [];
                 foreach ($data as $arr => $admin_data) {
                     $link[] = $admin_data['admin_link'];
                 }
@@ -238,8 +239,8 @@ class Admins {
         $this->admin_page_icons[$rights] = $icons;
     }
 
-    public function getLinkType($type = NULL) {
-        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
+    public function getLinkType($type = null) {
+        return ($type !== null ? (isset($this->link_type[$type]) ? $this->link_type[$type] : null) : $this->link_type);
     }
 
     /**
@@ -252,15 +253,16 @@ class Admins {
 
     /**
      * Get Submit Type
-     * @param null $type submit stype prefix
      *
+     * @param null $type submit stype prefix
      * @return array|mixed|null
      */
-    public function getSubmitType($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
+    public function getSubmitType($type = null) {
+        return ($type !== null ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : null) : $this->submit_type);
     }
+
     /**
-     * @param $type  - submissions prefix
+     * @param $type - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -268,17 +270,18 @@ class Admins {
     }
 
     /**
-     * @param $type  - submissions prefix
+     * @param $type - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
-    public function setSubmitData($type, array $options = array()) {
-        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
+    public function setSubmitData($type, array $options = []) {
+        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : null;
     }
 
-    public function getSubmitData($type = NULL) {
+    public function getSubmitData($type = null) {
 
-        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+        return ($type !== null ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : null) : $this->submit_data);
     }
+
     /**
      * @param $link     Admin submission url
      * @param $type     Submissions stype prefix
@@ -287,16 +290,16 @@ class Admins {
         $this->submit_link[$type] = $link;
     }
 
-    public function getSubmitLink($type = NULL) {
-        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
+    public function getSubmitLink($type = null) {
+        return ($type !== null ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : null) : $this->submit_link);
     }
 
-    public function getCommentType($type = NULL) {
-        return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
+    public function getCommentType($type = null) {
+        return ($type !== null ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : null) : $this->comment_type);
     }
 
     /**
-     * @param $type  - comment prefix
+     * @param $type - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -321,10 +324,9 @@ class Admins {
      * Displays vertical collapsible administration navigation
      *
      * @param bool|FALSE $image_icon
-     *
      * @return string
      */
-    public function vertical_admin_nav($image_icon = FALSE) {
+    public function vertical_admin_nav($image_icon = false) {
 
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
@@ -334,7 +336,7 @@ class Admins {
 
         foreach ($admin_sections as $i => $section_name) {
 
-            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
+            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? true : false;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
@@ -354,7 +356,7 @@ class Admins {
 
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
 
-                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
+                    $icons = ($image_icon === true) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
                     $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                 }
@@ -381,7 +383,6 @@ class Admins {
 
     /**
      * @param $page_number
-     *
      * @return string
      */
     public function get_admin_section_icons($page_number) {
@@ -389,7 +390,7 @@ class Admins {
             return $this->admin_section_icons[$page_number];
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -408,7 +409,6 @@ class Admins {
      * Get the administration page icons
      *
      * @param $admin_rights
-     *
      * @return bool
      */
     public function get_admin_icons($admin_rights) {
@@ -417,22 +417,21 @@ class Admins {
             return $this->admin_page_icons[$admin_rights];
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
      * Displays horizontal administration navigation
      *
      * @param bool $icon_only
-     *
      * @return string
      */
-    public function horizontal_admin_nav($icon_only = FALSE) {
+    public function horizontal_admin_nav($icon_only = false) {
         $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
         foreach ($this->admin_sections as $i => $section_name) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-            $admin_text = $icon_only == FALSE ? " ".$section_name : "";
+            $admin_text = $icon_only == false ? " ".$section_name : "";
             $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";

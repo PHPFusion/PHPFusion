@@ -21,20 +21,20 @@ if (!defined("IN_FUSION")) {
 
 class Switcher {
     public $selected = '';
-    private $args;
+    private $args = [];
     private $changed = FALSE;
-    private $buttons = array();
+    private $buttons = [];
     private $class;
-    private $cookies;
+    private $cookie;
     private $dir;
     private $enabled = TRUE;
-    private $error = FALSE;
     private $ext;
     private $mode;
     private $name;
     private $post;
-    private $props = array();
+    private $props = [];
     private $separator;
+    private $default;
 
     public function __construct($mode, $dir, $ext, $default, $class = '', $separator = " ", $auto = TRUE, $args = '') {
         $this->args = $args;
@@ -58,9 +58,10 @@ class Switcher {
     }
 
     private function getProps() {
+        $props = [];
+
         if ($this->mode == 'select') {
             $dirHandle = opendir($this->dir);
-            $props = array();
             if ($dirHandle) {
                 while (FALSE !== ($file = readdir($dirHandle))) {
                     if (!is_dir($this->dir.'/'.$file) && preg_match("/[A-z0-9]+\.".$this->ext."\z/", $file)) {
@@ -68,8 +69,8 @@ class Switcher {
                     }
                 }
             }
-        } elseif ($this->mode == 'increment') {
-            $props = array('less', 'reset', 'more');
+        } else if ($this->mode == 'increment') {
+            $props = ['less', 'reset', 'more'];
         }
 
         return $props;
@@ -77,7 +78,6 @@ class Switcher {
 
     private function getSelected() {
         $cookie_val = isset($this->cookie['theme_'.$this->name]) ? $this->cookie['theme_'.$this->name] : '';
-        $value = '';
 
         if ($this->mode == 'select') {
             if (isset($this->post['change_'.$this->name])) {
@@ -88,14 +88,14 @@ class Switcher {
                         return $prop;
                     }
                 }
-            } elseif (!empty($cookie_val)) {
+            } else if (!empty($cookie_val)) {
                 if (in_array($cookie_val, $this->props)) {
                     return $cookie_val;
                 }
             }
 
             return $this->default;
-        } elseif ($this->mode == 'increment') {
+        } else if ($this->mode == 'increment') {
             if (is_numeric($cookie_val) && !isset($this->post['reset_x'])) {
                 $value = $cookie_val;
             } else {
@@ -107,7 +107,7 @@ class Switcher {
                     if (!isset($this->args['min']) || $value + $this->args['step'] >= $this->args['min']) {
                         $value = $value - $this->args['step'];
                     }
-                } elseif (isset($this->post['more_x'])) {
+                } else if (isset($this->post['more_x'])) {
                     if (!isset($this->args['max']) || $value + $this->args['step'] <= $this->args['max']) {
                         $value = $value + $this->args['step'];
                     }

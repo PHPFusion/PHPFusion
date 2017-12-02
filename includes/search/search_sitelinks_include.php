@@ -31,10 +31,10 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
     $item_count = "0 ".$locale['s402']." ".$locale['522']."<br />\n";
 
 
-    $order_by = array(
+    $order_by = [
         '0' => ' DESC',
         '1' => ' ASC',
-    );
+    ];
 
     $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY link_title".$order_by[Search_Engine::get_param('order')] : '';
     $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
@@ -60,24 +60,26 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
 
         if ($rows != 0) {
 
-            $default_link_data = array(
-                "link_id" => 0,
-                "link_name" => "",
-                "link_cat" => 0,
-                "link_url" => "",
-                "link_icon" => "",
-                "link_class" => "",
-                "link_active" => '',
-                "link_title" => FALSE, // true to add dropdown-header class to li.
+            $default_link_data = [
+                "link_id"       => 0,
+                "link_name"     => "",
+                "link_cat"      => 0,
+                "link_url"      => "",
+                "link_icon"     => "",
+                "link_class"    => "",
+                "link_active"   => '',
+                "link_title"    => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
-                "link_window" => FALSE,
-            );
+                "link_window"   => FALSE,
+            ];
 
             $item_count = "<a href='".BASEDIR."search.php?stype=sitelinks&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['s401'] : $locale['s402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$sortby.$limit, $param);
 
             $search_result = '';
+            $itemlink = '';
+
             while ($link_data = dbarray($result)) {
                 $link_data += $default_link_data;
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
@@ -110,10 +112,10 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_SL')."' alt='".$locale['s400']."' style='width:32px;'/>",
-                '{%icon_class%}' => "fa fa-sitemap fa-lg fa-fw",
-                '{%search_title%}' => $locale['s400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_SL')."' alt='".$locale['s400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-sitemap fa-lg fa-fw",
+                '{%search_title%}'   => $locale['s400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
 

@@ -36,7 +36,7 @@ class Minifier {
      *
      * @var array
      */
-    protected static $defaultOptions = array('flaggedComments' => TRUE);
+    protected static $defaultOptions = ['flaggedComments' => TRUE];
     /**
      * The input javascript to be minified.
      *
@@ -80,7 +80,7 @@ class Minifier {
      *
      * @var array
      */
-    protected $locks = array();
+    protected $locks = [];
 
     /**
      * Takes a string containing javascript and removes unneeded characters in
@@ -91,7 +91,7 @@ class Minifier {
      * @throws \Exception
      * @return bool|string
      */
-    public static function minify($js, $options = array()) {
+    public static function minify($js, $options = []) {
         try {
             ob_start();
 
@@ -131,7 +131,7 @@ class Minifier {
         /* lock things like <code>"asd" + ++x;</code> */
         $lock = '"LOCK---'.crc32(time()).'"';
 
-        $matches = array();
+        $matches = [];
         preg_match('/([+-])(\s+)([+-])/S', $js, $matches);
         if (empty($matches)) {
             return $js;
@@ -206,7 +206,7 @@ class Minifier {
         if ($this->c === '/') {
             return $this->processOneLineComments($startIndex);
 
-        } elseif ($this->c === '*') {
+        } else if ($this->c === '*') {
             return $this->processMultiLineComments($startIndex);
         }
 

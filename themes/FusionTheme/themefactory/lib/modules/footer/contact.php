@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemeFactory\Lib\Modules\Footer;
 
 class Contact {
@@ -24,13 +23,13 @@ class Contact {
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."contact.php");
         $settings = fusion_get_settings();
-        $input = array(
+        $input = [
             'mailname'     => '',
             'email'        => '',
             'subject'      => '',
             'message'      => '',
             'captcha_code' => '',
-        );
+        ];
 
         if (isset($_POST['sendmessages'])) {
 
@@ -38,7 +37,7 @@ class Contact {
                 if (isset($_POST[$key])) {
                     // Subject needs 'special' treatment
                     if ($key == 'subject') {
-                        $input['subject'] = substr(str_replace(array("\r", "\n", "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
+                        $input['subject'] = substr(str_replace(["\r", "\n", "@"], "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
                         $input['subject'] = form_sanitizer($input['subject'], $input[$key], $key);
                     } else {
                         $input[$key] = form_sanitizer($_POST[$key], $input[$key], $key);
@@ -103,18 +102,18 @@ class Contact {
         echo "<h4>".$locale['400']."</h4>\n";
         echo "<!--contact_pre_idx-->";
         echo openform('contactform', 'post', FORM_REQUEST);
-        echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64));
+        echo form_text('mailname', $locale['402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64]);
         echo form_text('email', $locale['403'], $input['email'],
-            array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
-        echo form_text('subject', $locale['404'], $input['subject'], array('required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64));
-        echo form_textarea('message', $locale['405'], $input['message'], array('required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128));
+            ['required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64]);
+        echo form_text('subject', $locale['404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64]);
+        echo form_textarea('message', $locale['405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128]);
         if (iGUEST) {
             include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
             if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-                echo form_text('captcha_code', $locale['408'], '', array('required' => TRUE, 'autocomplete_off' => TRUE));
+                echo form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
             }
         }
-        echo form_button('sendmessages', $locale['406'], $locale['406'], array('class' => 'btn-primary btn-lg'));
+        echo form_button('sendmessages', $locale['406'], $locale['406'], ['class' => 'btn-primary btn-lg']);
         echo closeform();
         echo "<!--contact_sub_idx-->";
     }

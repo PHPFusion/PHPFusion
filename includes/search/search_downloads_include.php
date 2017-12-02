@@ -32,16 +32,16 @@ if (db_exists(DB_DOWNLOADS)) {
 
     if (Search_Engine::get_param('stype') == 'downloads' || Search_Engine::get_param('stype') == 'all') {
 
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "download_datestamp",
             'subject'   => "download_title",
             'author'    => "download_user",
-        );
+        ];
 
-        $order_by = array(
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
 
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
 

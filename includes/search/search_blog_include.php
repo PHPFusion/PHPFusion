@@ -29,15 +29,15 @@ if (db_exists(DB_BLOG)) {
     $formatted_result = '';
     $item_count = "0 ".$locale['n402']." ".$locale['522']."<br />\n";
     if (Search_Engine::get_param('stype') == "blog" || Search_Engine::get_param('stype') == "all") {
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "blog_datestamp",
             'subject'   => "blog_subject",
             'author'    => "blog_name",
-        );
-        $order_by = array(
+        ];
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : "";
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND blog_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');

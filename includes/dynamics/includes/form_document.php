@@ -17,7 +17,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_document($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+function form_document($input_name, $label = '', $input_value = FALSE, array $options = []) {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
 
@@ -55,7 +55,7 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         $input_value['5'] = "";
     }
 
-    $options += array(
+    $options += [
         'required'     => FALSE,
         'placeholder'  => '',
         'deactivate'   => FALSE,
@@ -72,16 +72,16 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         'safemode'     => FALSE,
         'date_format'  => !empty($options['date_format']) ? $options['date_format'] : 'dd-mm-yyyy',
         'week_start'   => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
-    );
+    ];
 
-    $error_key = array(
+    $error_key = [
         0 => $options['error_text'],
         1 => $options['error_text_2'],
         2 => $options['error_text_3'],
         3 => $options['error_text_4'],
         4 => $options['error_text_5'],
         5 => $options['error_text_6'],
-    );
+    ];
 
     $error_class = "";
     for ($i = 0; $i <= 5; $i++) {
@@ -128,15 +128,15 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
     $html .= "</div>\n"; // close inner row
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
-    \defender::getInstance()->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type'       => 'document',
-                                     'label'      => $title,
-                                     'id'         => $input_id,
-                                     'required'   => $options['required'],
-                                     'safemode'   => $options['safemode'],
-                                     'error_text' => $options['error_text']
-                                 ));
+    \defender::getInstance()->add_field_session([
+        'input_name' => $input_name,
+        'type'       => 'document',
+        'label'      => $title,
+        'id'         => $input_id,
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text']
+    ]);
     if ($options['deactivate'] !== 1) {
         add_to_jquery("
             $('#$input_id-field .input-group.date').datepicker({

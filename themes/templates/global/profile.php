@@ -29,27 +29,29 @@ if (!function_exists('display_register_form')) {
      *
      * @return string
      */
-    function display_register_form(array $info = array()) {
+    function display_register_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
         <!---HTML---->
         {%tab_header%}
         <!--register_pre_idx-->
-        <div id='register_form' class='row m-t-20'><div class='col-xs-12 col-sm-12'>
-               {%open_form%}
-               {%user_id%}
-               {%user_name_field%}
-               {%user_email_field%}
-               {%user_hide_email_field%}
-               {%user_avatar_field%}
-               {%user_password_field%}
-               {%user_admin_password_field%}
-               {%custom_fields%}
-               {%captcha_fields%}
-               {%eula%}
-               {%post_button%}
-               {%close_form%}
-       </div></div>
+        <div id='register_form' class='row m-t-20'>
+            <div class='col-xs-12 col-sm-12'>
+                {%open_form%}
+                {%user_id%}
+                {%user_name_field%}
+                {%user_email_field%}
+                {%user_hide_email_field%}
+                {%user_avatar_field%}
+                {%user_password_field%}
+                {%user_admin_password_field%}
+                {%custom_fields%}
+                {%captcha_fields%}
+                {%eula%}
+                {%post_button%}
+                {%close_form%}
+            </div>
+        </div>
         <!--register_sub_idx-->
         {%tab_footer%}
         <!---//HTML---->
@@ -67,7 +69,7 @@ if (!function_exists('display_profile_form')) {
      *
      * @return string
      */
-    function display_profile_form(array $info = array()) {
+    function display_profile_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
         <!--HTML-->
@@ -117,7 +119,11 @@ if (!function_exists('display_user_profile')) {
             <div class='spacer-sm'>
                 <div class='clearfix p-15 p-t-0'>
                     <div class='pull-left m-r-10'>{%user_avatar%}</div>
-                    <div class='overflow-hide'><h4 class='m-0'>{%user_name%}<br/><small>{%user_level%}</small></h4></div>
+                    <div class='overflow-hide'>
+                        <h4 class='m-0'>{%user_name%}<br/>
+                            <small>{%user_level%}</small>
+                        </h4>
+                    </div>
                 </div>
                 <div class='clearfix'>{%admin_buttons%}</div>
                 <hr/>
@@ -140,7 +146,7 @@ if (!function_exists('display_user_field')) {
         ?>
         <div id='{%field_id%}' class='row spacer-xs'>
             <label class='col-xs-12 col-sm-3'><strong>{%field_title%}</strong></label>
-        <div class='col-xs-12 col-sm-9'><span class='profile_text'>{%field_value%}</span></div>
+            <div class='col-xs-12 col-sm-9'><span class='profile_text'>{%field_value%}</span></div>
         </div>
         <?php
     }

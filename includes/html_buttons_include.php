@@ -158,7 +158,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
         if ($images && $folder) {
             if (is_array($folder)) {
-                $options = array();
+                $options = [];
                 foreach ($folder as $dir) {
                     if (file_exists($dir)) {
                         $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');
@@ -181,14 +181,14 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
             }
 
             $res .= form_select($textarea.'-insertimage', '', '',
-                                array(
-                                    'options'     => $options,
-                                    'placeholder' => $locale['html_011'],
-                                    'allowclear'  => TRUE,
-                                    'width'       => '200px',
-                                    'class'       => 'm-0'
+                [
+                    'options'     => $options,
+                    'placeholder' => $locale['html_011'],
+                    'allowclear'  => TRUE,
+                    'width'       => '200px',
+                    'class'       => 'm-0'
 
-                                )
+                ]
             );
             add_to_jquery("
             $('#$textarea-insertimage').bind('change', function(e){
@@ -203,4 +203,3 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
     return $res;
 }
-

@@ -46,7 +46,7 @@ class ComposeSettings extends PageAdmin {
                             <div class="well text-center">
                                 <?php echo self::$locale['page_0310'] ?><br/>
                                 <a class="btn btn-primary m-t-20"
-                                   href="<?php echo clean_request('add_sl=true', array('add_sl'), FALSE) ?>">
+                                   href="<?php echo clean_request('add_sl=true', ['add_sl'], FALSE) ?>">
                                     <?php echo self::$locale['page_0311'] ?>
                                 </a>
                             </div>
@@ -54,20 +54,20 @@ class ComposeSettings extends PageAdmin {
 
                         <?php
                         // Whether has link data or not
-                        $data = array(
-                            'link_id' => self::$data['page_link_cat'],
-                            'link_name' => self::$data['page_title'],
-                            'link_url' => 'viewpage.php?page_id='.self::$data['page_id'],
-                            'link_icon' => '',
-                            'link_cat' => 0,
-                            'link_language' => LANGUAGE,
-                            'link_visibility' => self::$data['page_access'],
-                            'link_order' => 0,
-                            'link_position' => 1,
-                            'link_window' => 0,
+                        $data = [
+                            'link_id'          => self::$data['page_link_cat'],
+                            'link_name'        => self::$data['page_title'],
+                            'link_url'         => 'viewpage.php?page_id='.self::$data['page_id'],
+                            'link_icon'        => '',
+                            'link_cat'         => 0,
+                            'link_language'    => LANGUAGE,
+                            'link_visibility'  => self::$data['page_access'],
+                            'link_order'       => 0,
+                            'link_position'    => 1,
+                            'link_window'      => 0,
                             'link_position_id' => 0,
-                            'link_status' => 1
-                        );
+                            'link_status'      => 1
+                        ];
 
                         if ($has_link) {
                             $data = SiteLinks::get_SiteLinks(self::$data['page_link_cat']);
@@ -78,24 +78,24 @@ class ComposeSettings extends PageAdmin {
 
                             if (isset($_POST['save_link'])) {
 
-                                $data = array(
-                                    "link_id" => $data['link_id'],
-                                    "link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
-                                    "link_name" => form_sanitizer($_POST['link_name'], '', 'link_name'),
-                                    "link_url" => $data['link_url'],
-                                    "link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
-                                    "link_language" => $data['link_language'],
+                                $data = [
+                                    "link_id"         => $data['link_id'],
+                                    "link_cat"        => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
+                                    "link_name"       => form_sanitizer($_POST['link_name'], '', 'link_name'),
+                                    "link_url"        => $data['link_url'],
+                                    "link_icon"       => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
+                                    "link_language"   => $data['link_language'],
                                     "link_visibility" => $data['link_visibility'],
-                                    "link_position" => form_sanitizer($_POST['link_position'], '', 'link_position'),
-                                    "link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
-                                    "link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0,
-                                                                    0,
-                                                                    'link_window'),
-                                    "link_status" => form_sanitizer($_POST['link_status'] , 0 , 'link_status')
-                                );
+                                    "link_position"   => form_sanitizer($_POST['link_position'], '', 'link_position'),
+                                    "link_order"      => form_sanitizer($_POST['link_order'], '', 'link_order'),
+                                    "link_window"     => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0,
+                                        0,
+                                        'link_window'),
+                                    "link_status"     => form_sanitizer($_POST['link_status'], 0, 'link_status')
+                                ];
                                 if ($data['link_position'] > 3) {
                                     $data['link_position'] = form_sanitizer($_POST['link_position_id'], 3,
-                                                                            'link_position_id');
+                                        'link_position_id');
                                 }
                                 $data['link_position_id'] = $data['link_position'];
 
@@ -111,11 +111,11 @@ class ComposeSettings extends PageAdmin {
                                     if (!empty($data['link_id'])) {
 
                                         dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order",
-                                                      $data['link_id'],
-                                                      "link_id",
-                                                      $data['link_cat'], "link_cat", multilang_table("SL"),
-                                                      "link_language",
-                                                      "update");
+                                            $data['link_id'],
+                                            "link_id",
+                                            $data['link_cat'], "link_cat", multilang_table("SL"),
+                                            "link_language",
+                                            "update");
 
                                         dbquery_insert(DB_SITE_LINKS, $data, 'update');
 
@@ -124,10 +124,10 @@ class ComposeSettings extends PageAdmin {
                                     } else {
 
                                         dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order",
-                                                      $data['link_id'],
-                                                      "link_id",
-                                                      $data['link_cat'], "link_cat", multilang_table("SL"),
-                                                      "link_language", "save");
+                                            $data['link_id'],
+                                            "link_id",
+                                            $data['link_cat'], "link_cat", multilang_table("SL"),
+                                            "link_language", "save");
 
                                         dbquery_insert(DB_SITE_LINKS, $data, 'save');
 
@@ -139,7 +139,7 @@ class ComposeSettings extends PageAdmin {
 
                                     }
 
-                                    redirect(clean_request('', array('add_sl'), FALSE));
+                                    redirect(clean_request('', ['add_sl'], FALSE));
                                 }
                             }
 
@@ -155,40 +155,39 @@ class ComposeSettings extends PageAdmin {
                                 ");
 
                             echo form_text('link_name', self::$locale['page_0315'], $data['link_name'],
-                                           array('required' => TRUE, 'inline' => TRUE)).
+                                    ['required' => TRUE, 'inline' => TRUE]).
                                 form_select('link_position', self::$locale['page_0316'], $data['link_position'],
-                                            array(
-                                                'options' => SiteLinks::get_SiteLinksPosition(),
-                                                'inline' => TRUE,
-                                                'stacked' => form_text('link_position_id', '', '',
-                                                    //$this->data['link_position_id'],
-                                                                       array(
-                                                                           'required' => TRUE,
-                                                                           'placeholder' => 'ID',
-                                                                           'type' => 'number',
-                                                                           'type' => 'number',
-                                                                           'width' => '150px',
-                                                                           'class' => 'm-b-0'
-                                                                       )
-                                                )
-                                            )).
+                                    [
+                                        'options' => SiteLinks::get_SiteLinksPosition(),
+                                        'inline'  => TRUE,
+                                        'stacked' => form_text('link_position_id', '', '',
+                                            //$this->data['link_position_id'],
+                                            [
+                                                'required'    => TRUE,
+                                                'placeholder' => 'ID',
+                                                'type'        => 'number',
+                                                'width'       => '150px',
+                                                'class'       => 'm-b-0'
+                                            ]
+                                        )
+                                    ]).
                                 form_text('link_order', self::$locale['page_0317'], $data['link_order'],
-                                          array('type' => 'number', 'width' => '150px', 'inline' => TRUE)).
+                                    ['type' => 'number', 'width' => '150px', 'inline' => TRUE]).
                                 form_text('link_icon', self::$locale['page_0318'], $data['link_icon'],
-                                          array('width' => '150px', 'inline' => TRUE)).
+                                    ['width' => '150px', 'inline' => TRUE]).
                                 form_select('link_status', self::$locale['page_0319a'], $data['link_status'],
                                     ['inline' => TRUE, 'options' => [0 => self::$locale['unpublish'], 1 => self::$locale['publish']]]).
-                                form_select_tree('link_cat', self::$locale['page_0319'], $data['link_cat'], array(
-                                    "parent_value" => self::$locale['parent'],
-                                    'inline' => TRUE,
-                                    'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
-                                    'disable_opts' => self::$data['page_link_cat'],
+                                form_select_tree('link_cat', self::$locale['page_0319'], $data['link_cat'], [
+                                    "parent_value"  => self::$locale['parent'],
+                                    'inline'        => TRUE,
+                                    'query'         => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+                                    'disable_opts'  => self::$data['page_link_cat'],
                                     'hide_disabled' => FALSE,
-                                    'class' => 'm-b-0'
-                                ), DB_SITE_LINKS, "link_name", "link_id", "link_cat")."<hr/>",
-                            form_button('save_link', self::$locale['page_0321'], 'save_link', array('class' => 'btn-primary'));
+                                    'class'         => 'm-b-0'
+                                ], DB_SITE_LINKS, "link_name", "link_id", "link_cat")."<hr/>",
+                            form_button('save_link', self::$locale['page_0321'], 'save_link', ['class' => 'btn-primary']);
                             ?>
-                            <a class="btn btn-default" href="<?php echo clean_request('', array('add_sl'), FALSE) ?>">
+                            <a class="btn btn-default" href="<?php echo clean_request('', ['add_sl'], FALSE) ?>">
                                 <?php echo self::$locale['cancel'] ?>
                             </a>
                             <?php
@@ -202,54 +201,54 @@ class ComposeSettings extends PageAdmin {
                     <div class="panel-heading"><strong><?php echo self::$locale['page_0330'] ?></strong></div>
                     <div class="panel-body">
                         <?php
-                        echo form_btngroup("page_left_panel", self::$locale['page_0331'], self::$data['page_left_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                        echo form_btngroup("page_left_panel", self::$locale['page_0331'], self::$data['page_left_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            )).
-                            form_btngroup("page_right_panel", self::$locale['page_0332'], self::$data['page_right_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                                ],
+                                'width'   => '100%'
+                            ]).
+                            form_btngroup("page_right_panel", self::$locale['page_0332'], self::$data['page_right_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            )).
-                            form_btngroup("page_header_panel", self::$locale['page_0333'], self::$data['page_header_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                                ],
+                                'width'   => '100%'
+                            ]).
+                            form_btngroup("page_header_panel", self::$locale['page_0333'], self::$data['page_header_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            )).
-                            form_btngroup("page_top_panel", self::$locale['page_0334'], self::$data['page_top_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                                ],
+                                'width'   => '100%'
+                            ]).
+                            form_btngroup("page_top_panel", self::$locale['page_0334'], self::$data['page_top_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            )).
-                            form_btngroup("page_bottom_panel", self::$locale['page_0335'], self::$data['page_bottom_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                                ],
+                                'width'   => '100%'
+                            ]).
+                            form_btngroup("page_bottom_panel", self::$locale['page_0335'], self::$data['page_bottom_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            )).
-                            form_btngroup("page_footer_panel", self::$locale['page_0336'], self::$data['page_footer_panel'], array(
-                                'inline' => TRUE,
-                                'options' => array(
+                                ],
+                                'width'   => '100%'
+                            ]).
+                            form_btngroup("page_footer_panel", self::$locale['page_0336'], self::$data['page_footer_panel'], [
+                                'inline'  => TRUE,
+                                'options' => [
                                     0 => self::$locale['disable'],
                                     1 => self::$locale['enable']
-                                ),
-                                'width' => '100%'
-                            ));
+                                ],
+                                'width'   => '100%'
+                            ]);
                         ?>
                     </div>
                 </div>

@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 /**
@@ -26,12 +25,13 @@ namespace PHPFusion;
 class Template {
 
     private static $instance = NULL;
-    private $template = array();
-    private $block = array();
-    private $block_render = array();
-    private $block_source = array();
-    private $tag = array();
+    private $template = [];
+    private $block = [];
+    private $block_render = [];
+    private $block_source = [];
+    private $tag = [];
     private static $key = '';
+
     /**
      * @param $key
      *
@@ -78,9 +78,9 @@ class Template {
      * This function adds a subitem for every set_block used
      *
      * @param       $block_id   The name of the unique block id
-     * @param array $value      The replacements sets
+     * @param array $value The replacements sets
      */
-    public function set_block($block_id, array $value = array()) {
+    public function set_block($block_id, array $value = []) {
         $filtered_value = [];
 
         foreach ($value as $tag => $val) {
@@ -92,7 +92,7 @@ class Template {
     /**
      * Sets a tag to string conversion
      *
-     * @param $html_tag     {%tag%} in html file is 'tag'
+     * @param $html_tag {%tag%} in html file is 'tag'
      * @param $value        the value of the string
      */
     public function set_tag($html_tag, $value) {

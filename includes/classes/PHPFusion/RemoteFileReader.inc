@@ -39,7 +39,7 @@ class RemoteFileReader {
     private function _setRequestMethod() {
         if (function_exists("curl_init")) {
             $this->_requestMethod = 1;
-        } elseif (ini_get("allow_url_fopen") == 1) {
+        } else if (ini_get("allow_url_fopen") == 1) {
             $this->_requestMethod = 2;
         } else {
             $this->_errorNumber = 700;
@@ -50,7 +50,7 @@ class RemoteFileReader {
     private function _getRemoteFileContent() {
         if ($this->_requestMethod == 1) {
             $this->_getCurlContent();
-        } elseif ($this->_requestMethod == 2) {
+        } else if ($this->_requestMethod == 2) {
             $this->_getFopenContent();
         }
     }
@@ -81,7 +81,7 @@ class RemoteFileReader {
     // Get the content of the remote file
 
     private function _getHttpStatus($code) {
-        $httpStatus = array(
+        $httpStatus = [
             100 => "Continue", 101 => "Switching Protocols", 200 => "OK", 201 => "Created",
             202 => "Accepted", 203 => "Non-Authoritative Information", 204 => "No Content",
             205 => "Reset Content", 206 => "Partial Content", 300 => "Multiple Choices",
@@ -96,7 +96,7 @@ class RemoteFileReader {
             417 => "Expectation Failed", 500 => "Internal Server Error", 501 => "Not Implemented",
             502 => "Bad Gateway", 503 => "Service Unavailable", 504 => "Gateway Timeout",
             505 => "HTTP Version Not Supported"
-        );
+        ];
         if (isset($httpStatus[$code])) {
             return $httpStatus[$code];
         } else {
@@ -143,6 +143,6 @@ class RemoteFileReader {
      * and a key 'message' containing the human readable error message.
      */
     public function getError() {
-        return array("number" => $this->_errorNumber, "message" => $this->_errorMessage);
+        return ["number" => $this->_errorNumber, "message" => $this->_errorMessage];
     }
 }

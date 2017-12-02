@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Number
  * Validates Number Input
@@ -34,7 +35,7 @@ class Number extends \Defender\Validation {
         }
 
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 if (!empty($val) && isnum($val, TRUE)) {
                     $vars[] = $val;
@@ -45,13 +46,11 @@ class Number extends \Defender\Validation {
 
             return $value; // empty str is returned if $vars ends up empty
 
-        } elseif (empty(self::$inputValue) || isnum(self::$inputValue, TRUE)) {
+        } else if (empty(self::$inputValue) || isnum(self::$inputValue, TRUE)) {
             return self::$inputValue;
         } else {
             return FALSE;
         }
 
     }
-
-
 }

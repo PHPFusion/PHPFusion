@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -31,17 +30,17 @@ class FusionThemeAdmin {
     public function settings() {
         $settings = get_theme_settings("FusionTheme");
         if (isset($_POST['save_settings'])) {
-            $inputArray = array(
+            $inputArray = [
                 "theme_pack" => form_sanitizer($_POST['theme_pack'], "", "theme_pack"),
-            );
+            ];
             if (defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $sqlArray = array(
+                    $sqlArray = [
                         "settings_name"  => $settings_name,
                         "settings_value" => $settings_value,
                         "settings_theme" => "FusionTheme",
-                    );
-                    dbquery_insert(DB_SETTINGS_THEME, $sqlArray, "update", array("primary_key" => "settings_name"));
+                    ];
+                    dbquery_insert(DB_SETTINGS_THEME, $sqlArray, "update", ["primary_key" => "settings_name"]);
                     addNotice("success", fusion_get_locale('WIDGET_001', THEME.'locale/'.LANGUAGE.'.php'));
                 }
                 if (defender::safe()) {
@@ -49,11 +48,11 @@ class FusionThemeAdmin {
                 }
             }
         }
-        echo openform("main_settings", "post", FUSION_REQUEST, array("class" => "clearfix m-t-20"));
-        echo form_select("theme_pack", fusion_get_locale('theme_1037', LOCALE.LOCALESET."admin/theme.php"), $settings['theme_pack'], array(
+        echo openform("main_settings", "post", FUSION_REQUEST, ["class" => "clearfix m-t-20"]);
+        echo form_select("theme_pack", fusion_get_locale('theme_1037', LOCALE.LOCALESET."admin/theme.php"), $settings['theme_pack'], [
             "options" => $this->get_template_list(), "required" => TRUE, "inline" => TRUE
-        ));
-        echo form_button("save_settings", fusion_get_locale('save_changes'), "save", array("class" => "btn-primary"));
+        ]);
+        echo form_button("save_settings", fusion_get_locale('save_changes'), "save", ["class" => "btn-primary"]);
         echo closeform();
     }
 
@@ -63,7 +62,7 @@ class FusionThemeAdmin {
      * @return array
      */
     public function get_template_list() {
-        $_list = array();
+        $_list = [];
         $file_list = makefilelist($this->theme_pack_dir, $this->exclude_list, TRUE, "folders");
         foreach ($file_list as $files) {
             $_list[$files] = str_replace(".php", "", str_replace("_", " ", ucwords($files)));

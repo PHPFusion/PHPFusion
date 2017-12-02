@@ -16,8 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -30,20 +32,20 @@ if (db_exists(DB_ARTICLES)) {
         $formatted_result = '';
         $item_count = "0 ".$locale['a402']." ".$locale['522']."<br />\n";
 
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "article_datestamp",
-            'subject' => "article_subject",
-            'author' => "article_name",
-        );
-        $order_by = array(
+            'subject'   => "article_subject",
+            'author'    => "article_name",
+        ];
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : "");
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND article_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
 
-        switch(Search_Engine::get_param('fields')) {
+        switch (Search_Engine::get_param('fields')) {
             case 2:
                 Search_Engine::search_column('article_subject', 'article');
                 Search_Engine::search_column('article_article', 'article');
@@ -57,6 +59,8 @@ if (db_exists(DB_ARTICLES)) {
                 Search_Engine::search_column('article_subject', 'article');
         }
 
+        $query = '';
+
         if (!empty(Search_Engine::get_param('search_param'))) {
 
             $query = "SELECT ta.*, tac.*, u.user_id, u.user_name, u.user_status, u.user_level, u.user_avatar
@@ -64,8 +68,8 @@ if (db_exists(DB_ARTICLES)) {
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             INNER JOIN ".DB_USERS." u ON ta.article_name=u.user_id
             ".(multilang_table('AR') ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")
-            .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions('article')
-            .$date_search;
+                .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions('article')
+                .$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
@@ -73,7 +77,6 @@ if (db_exists(DB_ARTICLES)) {
         }
 
         if ($rows != 0) {
-
             $item_count = "<a href='".BASEDIR."search.php?stype=articles&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
 
             $result = dbquery($query.$date_search.$sortby.$limit, Search_Engine::get_param('search_param'));
@@ -109,10 +112,10 @@ if (db_exists(DB_ARTICLES)) {
 
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}' => "<img src='".ImageRepo::getimage('ac_A')."' alt='".$locale['a400']."' style='width:32px;'/>",
-                '{%icon_class%}' => "fa fa-book fa-lg fa-fw",
-                '{%search_title%}' => $locale['a400'],
-                '{%search_result%}' => $item_count,
+                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_A')."' alt='".$locale['a400']."' style='width:32px;'/>",
+                '{%icon_class%}'     => "fa fa-book fa-lg fa-fw",
+                '{%search_title%}'   => $locale['a400'],
+                '{%search_result%}'  => $item_count,
                 '{%search_content%}' => $search_result
             ]);
         }

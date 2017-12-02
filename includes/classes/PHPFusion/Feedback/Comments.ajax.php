@@ -24,10 +24,10 @@ if (isset($_GET['action']) && iMEMBER) {
     if ($_GET['action'] == 'edit') {
         // Fetch Data Only
         $eresult = dbquery("SELECT tcm.*, tcu.user_name
-				FROM ".DB_COMMENTS." tcm
-				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'
-				");
+                FROM ".DB_COMMENTS." tcm
+                LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
+                WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'
+                ");
         if (dbrows($eresult)) {
             $edata = dbarray($eresult);
             $edata['comment_options'] = \defender::unserialize($_POST['comment_options']);
@@ -38,12 +38,12 @@ if (isset($_GET['action']) && iMEMBER) {
             }
             exit;
         }
-    } elseif ($_GET['action'] == 'delete' && isnum($_POST['comment_id'])) {
+    } else if ($_GET['action'] == 'delete' && isnum($_POST['comment_id'])) {
 
         $eresult = dbquery("SELECT tcm.*, tcu.user_name
-				FROM ".DB_COMMENTS." tcm
-				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'");
+                FROM ".DB_COMMENTS." tcm
+                LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
+                WHERE comment_id='".intval($_POST['comment_id'])."' AND comment_hidden='0'");
         if (dbrows($eresult) > 0) {
             $edata = dbarray($eresult);
             //$ajax_respond = \defender::unserialize($_POST['comment_options']);

@@ -31,15 +31,15 @@ if (db_exists(DB_WEBLINKS)) {
         $settings = fusion_get_settings();
         $item_count = "0 ".$locale['w402']." ".$locale['522']."<br />\n";
 
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "weblink_datestamp",
             'subject'   => "weblink_name",
             'author'    => "weblink_datestamp",
-        );
-        $order_by = array(
+        ];
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : "";
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND weblink_datestamp>='.(TIME - Search_Engine::get_param('datelimit')) : '');
@@ -57,6 +57,8 @@ if (db_exists(DB_WEBLINKS)) {
             default:
                 Search_Engine::search_column('weblink_name', 'weblinks');
         }
+
+        $query = '';
 
         if (!empty(Search_Engine::get_param('search_param'))) {
 

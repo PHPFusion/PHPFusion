@@ -15,19 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 class Images {
 
-    private static $locale = array();
-    private static $settings = array();
-    private static $instances = array();
+    private static $locale = [];
+    private static $settings = [];
+    private static $instances = [];
     private $data = [
         'image_list'  => 0,
         'image_count' => 0,
         'afolder'     => "",
-        'folders'     => array(),
+        'folders'     => [],
     ];
 
     /**
@@ -180,14 +179,14 @@ class Images {
             include INCLUDES."buildlist.php";
         }
         addNotice('warning', self::$locale['401']);
-        redirect(clean_request("", array("section", "action", "view"), FALSE));
+        redirect(clean_request("", ["section", "action", "view"], FALSE));
     }
 
     public function display_admin() {
         opentable(self::$locale['460']);
-        $allowed_section = array("list", "upload", 'edit');
+        $allowed_section = ["list", "upload", 'edit'];
         if (isset($_GET['section']) && $_GET['section'] == "back") {
-            redirect(clean_request("", array("section", "action", "view"), FALSE));
+            redirect(clean_request("", ["section", "action", "view"], FALSE));
         }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'list';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $_GET['ifolder'] : '';
@@ -225,18 +224,17 @@ class Images {
     }
 
     public function edit_image() {
-        $aidlink = fusion_get_aidlink();
         if (isset($_GET['view']) && in_array($_GET['view'], $this->data['image_list'])) {
             echo "<div class='text-center m-t-20'>\n";
             $image_ext = strrchr($this->data['afolder'].stripinput($_GET['view']), ".");
-            if (in_array($image_ext, array(".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", ".SVG"))) {
+            if (in_array($image_ext, [".gif", ".GIF", ".ico", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".svg", ".SVG"])) {
                 echo "<img class='img-responsive img-thumbnail' src='".$this->data['afolder'].stripinput($_GET['view'])."' title='".stripinput($_GET['view'])."' alt='".stripinput($_GET['view'])."'/><br /><br />\n";
             } else {
                 echo "<div class='alert alert-info text-center'>".self::$locale['441']."</div>\n";
             }
             echo "</div>\n";
             echo "<div class='text-center'>\n";
-            $delete_link = clean_request("section=list&action=delete&view=".stripinput($_GET['view']), array("section", "action", "view"), FALSE);
+            $delete_link = clean_request("section=list&action=delete&view=".stripinput($_GET['view']), ["section", "action", "view"], FALSE);
             echo "<a class='btn btn-danger' href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['442']."</a>";
             echo "</div>\n";
         }
@@ -256,8 +254,8 @@ class Images {
         if ($this->data['image_list']) {
             echo "<div class='table-responsive'><table class='table table-hover'>\n";
             for ($i = 0; $i < $this->data['image_count']; $i++) {
-                $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
-                $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], array("section", "action", "view"), FALSE);
+                $edit_link = clean_request("section=edit&action=edit&view=".$this->data['image_list'][$i], ["section", "action", "view"], FALSE);
+                $delete_link = clean_request("section=list&action=delete&view=".$this->data['image_list'][$i], ["section", "action", "view"], FALSE);
                 echo "<tr>\n<td>".$this->data['image_list'][$i]."</td>\n";
                 echo "<td class='text-right'>\n";
                 echo "<a href='".$edit_link."'>".self::$locale['461']."</a> -\n";
@@ -266,7 +264,7 @@ class Images {
             }
             echo "</table>\n</div>";
             if (self::$settings['tinymce_enabled'] == 1) {
-                $upd_link = clean_request("action=update", array("action"), FALSE);
+                $upd_link = clean_request("action=update", ["action"], FALSE);
                 echo "<div class='text-center well'><a href='".$upd_link."'>".self::$locale['464']."</a></div>\n";
             }
         } else {
@@ -292,15 +290,15 @@ class Images {
                         }
                         if (\defender::safe()) {
                             addNotice('success', self::$locale['420']);
-                            redirect(clean_request("", array("section"), FALSE));
+                            redirect(clean_request("", ["section"], FALSE));
                         }
                     }
                 }
             }
         }
 
-        echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE, 'class' => 'm-t-15'));
-        echo form_fileinput("myfile", self::$locale['421'], "", array(
+        echo openform('uploadform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-15']);
+        echo form_fileinput("myfile", self::$locale['421'], "", [
             'upload_path' => $this->data['afolder'],
             'type'        => 'image',
             'valid_ext'   => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP,.svg,.SVG,.tiff,.TIFF',
@@ -308,10 +306,10 @@ class Images {
             'max_height'  => $this->data['folders'][$_GET['ifolder']]['fileinp']['max_height'],
             'max_byte'    => $this->data['folders'][$_GET['ifolder']]['fileinp']['max_byte'],
             'required'    => TRUE
-        ));
+        ]);
         echo "<div class='small m-b-10'>".sprintf(self::$locale['425'], parsebytesize($this->data['folders'][$_GET['ifolder']]['fileinp']['max_byte']))."</div>\n";
 
-        echo form_button('uploadimage', self::$locale['420'], self::$locale['420'], array('class' => 'btn-primary'));
+        echo form_button('uploadimage', self::$locale['420'], self::$locale['420'], ['class' => 'btn-primary']);
         echo closeform();
     }
 

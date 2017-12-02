@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
+function form_textarea($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale('', [
         LOCALE.LOCALESET."admin/html_buttons.php",
@@ -31,11 +31,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if (!empty($options['bbcode'])) {
         $options['type'] = "bbcode";
-    } elseif (!empty($options['html'])) {
+    } else if (!empty($options['html'])) {
         $options['type'] = "html";
     }
 
-    $default_options = array(
+    $default_options = [
         'input_id'            => $input_name,
         'type'                => '',
         'inline_editing'      => FALSE,
@@ -72,13 +72,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce_skin'        => 'lightgray',
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5
-    );
+    ];
 
     $options += $default_options;
 
     if ($options['type'] == "tinymce") {
 
-        $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], array(TRUE, 'simple', 'advanced')) ? $options['tinymce'] : "simple";
+        $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], [TRUE, 'simple', 'advanced']) ? $options['tinymce'] : "simple";
 
         $default_tinymce_css = (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."templates/tinymce.css");
 
@@ -86,7 +86,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         $options['tinymce_spellcheck'] = $options['tinymce_spellcheck'] == TRUE ? 'true' : 'false';
 
-        $tinymce_list = array();
+        $tinymce_list = [];
         if (!empty($options['path']) && $options['tinymce_image'] == TRUE) {
             $image_list = [];
             if (is_array($options['path'])) {
@@ -105,7 +105,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     $image_1 = explode('.', $image_name);
                     $last_str = count($image_1) - 1;
                     if (in_array(".".$image_1[$last_str], $options['file_filter'])) {
-                        $tinymce_list[] = array('title' => $image_name, 'value' => $key.$image_name);
+                        $tinymce_list[] = ['title' => $image_name, 'value' => $key.$image_name];
                     }
                 }
             }
@@ -274,7 +274,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         if ($options['bbcode']) {
             $options['type'] = 'bbcode';
-        } elseif ($options['html']) {
+        } else if ($options['html']) {
             $options['type'] = 'html';
         }
 
@@ -310,7 +310,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0 p-r-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9' : '')."'>\n" : '';
     $tab_active = 0;
-    $tab_title = array();
+    $tab_title = [];
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
         $tab_title['title'][] = $locale['preview'];
         $tab_title['id'][] = "prw-".$options['input_id'];
@@ -332,7 +332,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= "<div class='bbcode_input'>\n";
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
-    } elseif ($options['type'] == "html" && $options['form_name']) {
+    } else if ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div class='m-t-10 m-b-10'>\n";
         $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']); // @todo: image_path to be turned off by default
         $html .= $options['preview'] ? "</div>\n" : "";
@@ -420,7 +420,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(array(
+    \defender::getInstance()->add_field_session([
         'input_name' => $input_name,
         'type'       => 'textarea',
         'title'      => $label,
@@ -428,7 +428,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'required'   => $options['required'],
         'safemode'   => $options['safemode'],
         'error_text' => $options['error_text']
-    ));
+    ]);
 
     return $html;
 }
@@ -442,7 +442,7 @@ function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $cla
             $v_title = str_replace("-", " ", $v);
             $tab_id = $tab_title['id'][$arr];
             $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-            $link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
+            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
             if ($link_mode) {
                 $html .= ($link_active_arrkey == $tab_id) ? "<li class='active m-r-10'>\n" : "<li class='m-r-10'>\n";
             } else {

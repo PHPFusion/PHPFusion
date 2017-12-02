@@ -19,14 +19,14 @@ namespace PHPFusion\Page;
 
 class PageModel {
 
-    protected static $admin_composer_opts = array();
-    protected static $composerData = array();
-    protected static $widgets = array();
+    protected static $admin_composer_opts = [];
+    protected static $composerData = [];
+    protected static $widgets = [];
     protected static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
     /**
      * @var array - default custom page data
      */
-    protected static $data = array(
+    protected static $data = [
         'page_id'           => 0,
         'page_cat'          => 0,
         'page_link_cat'     => 0,
@@ -46,11 +46,11 @@ class PageModel {
         'page_footer_panel' => 1,
         'page_top_panel'    => 1,
         'page_bottom_panel' => 1
-    );
+    ];
     /**
      * @var array - default grid row data
      */
-    protected static $rowData = array(
+    protected static $rowData = [
         'page_grid_id'           => 0,
         'page_id'                => 0,
         'page_grid_container'    => 0,
@@ -58,11 +58,11 @@ class PageModel {
         'page_grid_html_id'      => '',
         'page_grid_class'        => '',
         'page_grid_order'        => 1,
-    );
+    ];
     /**
      * @var array - default grid column data
      */
-    protected static $colData = array(
+    protected static $colData = [
         'page_id'            => 0,
         'page_grid_id'       => 0,
         'page_content_id'    => 0,
@@ -70,7 +70,7 @@ class PageModel {
         'page_content'       => '',
         'page_content_order' => 1,
         'page_options'       => ''
-    );
+    ];
     private static $page_instance = NULL;
 
     /**
@@ -103,7 +103,7 @@ class PageModel {
      * @return array;
      */
     public static function load_customPage($id) {
-        $array = array();
+        $array = [];
         if (isnum($id)) {
             $array = dbarray(
                 dbquery("
@@ -143,26 +143,26 @@ class PageModel {
         echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink);
         echo "<div class='pull-left m-t-0'>\n";
 
-        $edit_opts = array();
+        $edit_opts = [];
         if (dbrows($result) != 0) {
             while ($data = dbarray($result)) {
                 $edit_opts[$data['page_id']] = $data['page_title'];
             }
         }
         echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '',
-            array(
+            [
                 "options"  => $edit_opts,
                 "class"    => 'm-b-0',
                 "required" => TRUE,
-            ));
+            ]);
         echo form_hidden('section', '', 'cp2');
         echo form_hidden('aid', '', iAUTH);
         echo "</div>\n";
-        echo form_button('action', $locale['edit'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
-        echo form_button('action', $locale['delete'], 'delete', array(
+        echo form_button('action', $locale['edit'], 'edit', ['class' => 'btn-default pull-left m-l-10 m-r-10']);
+        echo form_button('action', $locale['delete'], 'delete', [
             'class' => 'btn-danger pull-left',
             'icon'  => 'fa fa-trash'
-        ));
+        ]);
         echo closeform();
         echo "</div>\n";
     }
@@ -209,6 +209,7 @@ class PageModel {
      */
     protected static function cache_widget() {
         if (empty(self::$widgets)) {
+            $list = [];
             $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
             foreach ($file_list as $folder) {
                 $widget_title = '';
@@ -240,7 +241,7 @@ class PageModel {
                         }
                     }
 
-                    $list[$folder] = array(
+                    $list[$folder] = [
                         'widget_name'        => $folder,
                         'widget_title'       => ucfirst($widget_title),
                         'widget_folder'      => $folder,
@@ -248,7 +249,7 @@ class PageModel {
                         'widget_description' => $widget_description,
                         'admin_instance'     => $adminObj,
                         'display_instance'   => $displayObj,
-                    );
+                    ];
                 }
             }
             self::$widgets = $list;
@@ -259,7 +260,7 @@ class PageModel {
 
     /**
      * @param $max_column_limit - max grid count per row
-     * @param $current_count    - current actual count if is a fluid design
+     * @param $current_count - current actual count if is a fluid design
      *
      * @return string
      */

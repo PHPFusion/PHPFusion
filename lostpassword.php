@@ -28,7 +28,7 @@ $obj = new PHPFusion\LostPassword();
 if (isset($_GET['user_email']) && isset($_GET['account'])) {
     $obj->checkPasswordRequest($_GET['user_email'], $_GET['account']);
     $obj->displayOutput();
-} elseif (isset($_POST['send_password'])) {
+} else if (isset($_POST['send_password'])) {
     $obj->sendPasswordRequest($_POST['email']);
     $obj->displayOutput();
 } else {

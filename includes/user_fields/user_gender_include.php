@@ -61,7 +61,7 @@ if ($profile_method == "input") {
         ] + $options;
     $user_fields = $input_type('user_gender', $locale['uf_gender'], $field_value, $options);
     // Display user field input
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
     if ($field_value) {
         $user_fields = [
             'title' => $locale['uf_gender'],

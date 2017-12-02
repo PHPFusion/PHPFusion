@@ -24,8 +24,8 @@ if (empty($modules)) {
     redirect("index.php");
 }
 foreach ($modules as $db => $submit) {
-        opentable(sprintf($submit['title'], ''));
-        echo "<a href='".$submit['submit_link']."'>".sprintf($submit['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php")))."</a>";
-        closetable();
+    opentable(sprintf($submit['title'], ''));
+    echo "<a href='".$submit['submit_link']."'>".sprintf($submit['title'], str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET."global.php")))."</a>";
+    closetable();
 }
 require_once THEMES."templates/footer.php";

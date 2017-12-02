@@ -32,11 +32,11 @@ while ($row = dbarray($result)) {
         $result2 = dbquery("SHOW COLUMNS FROM ".$table);
         // We must change all data like find/replace in columns of broken chars, this may differ for each locales.
         // Please help to complete this list if you know what´s missing with your locale set
-        while ($column = dbarray($result2)) {
+        /*while ($column = dbarray($result2)) {
             if (column_exists($table, $column['Field'], FALSE)) {
                 // Fix on user_offset column
                 // Execution time can be more than 30 seconds ---- this is too slow.
-                /* if ($column['Field'] !== 'user_offset') {
+                if ($column['Field'] !== 'user_offset') {
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'ÃŸ','ß')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¤','ä')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¼','ü')";
@@ -193,9 +193,9 @@ while ($row = dbarray($result)) {
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&and;','∧')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&or;','∨')";
                     $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."`, '&crarr;','↵')";
-                } */
+                }
             }
-        }
+        }*/
     }
 }
 
@@ -215,7 +215,7 @@ define('DB_WEBLINKS', DB_PREFIX."weblinks");
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
-$del_table = array();
+$del_table = [];
 /*
 if (db_exists(DB_PREFIX.'articles')) {
     if (empty(dbcount("(article_id)", DB_ARTICLES))) {
@@ -457,8 +457,8 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
         'PO' => db_exists(DB_PREFIX.'polls'),
         'ET' => TRUE,
         'WL' => db_exists(DB_WEBLINKS),
-        'SL' => true,
-        'PN' => true,
+        'SL' => TRUE,
+        'PN' => TRUE,
         'PA' => db_exists(DB_PHOTOS) ? TRUE : FALSE,
     ];
     $mlt_array = [
@@ -617,21 +617,21 @@ if (db_exists(DB_USER_FIELD_CATS)) {
         $field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0) + 1;
         // Install a new default set of UF cats
         $ufc_sql = DB_USER_FIELD_CATS." (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
-        $ufc_sql .= implode(",\n", array(
+        $ufc_sql .= implode(",\n", [
             "('".($field_cat_id++)."', '".$locale['setup_3640']."', 0, '', '', '', '1')",
             "('".($field_cat_id++)."', '".$locale['setup_3641']."', 1, '', '', '', '1')",
             "('".($field_cat_id++)."', '".$locale['setup_3642']."', 1, '', '', '', '2')",
             "('".($field_cat_id++)."', '".$locale['setup_3643']."', 1, '', '', '', '3')",
             "('".($field_cat_id++)."', '".$locale['setup_3644']."', 1, '', '', '', '4')",
-        ));
+        ]);
         $inf_insertdbrow[] = $ufc_sql;
     }
 }
 
 if (db_exists(DB_USER_FIELDS)) {
-// Install User Fields
-    $previous_install = array();
-    $uf_to_install = array();
+    // Install User Fields
+    $previous_install = [];
+    $uf_to_install = [];
     $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS);
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
@@ -672,7 +672,7 @@ if (db_exists(DB_USER_FIELDS)) {
     }
 }
 if (db_exists(DB_INFUSIONS)) {
-// The infusions table should not exist in any version prior to this:
+    // The infusions table should not exist in any version prior to this:
     $check_infusions = [
         DB_ARTICLES          => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '0')",

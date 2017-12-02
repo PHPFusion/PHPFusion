@@ -31,16 +31,16 @@ if (db_exists(DB_FORUMS)) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'search/forums.php');
         $item_count = "0 ".$locale['f403']." ".$locale['522']."<br  />\n";
 
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "post_datestamp",
             'subject'   => "thread_subject",
             'author'    => "post_author",
-        );
+        ];
 
-        $order_by = array(
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
         $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND post_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');

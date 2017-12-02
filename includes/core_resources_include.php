@@ -39,13 +39,13 @@ require_once __DIR__.'/multisite_include.php';
  *        "inline"=>true)); into administration/security_settings.php
  */
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
-DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
-    'host' => $db_host,
-    'user' => $db_user,
+DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), [
+    'host'     => $db_host,
+    'user'     => $db_user,
     'password' => $db_pass,
     'database' => $db_name,
-    'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
-));
+    'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+]);
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";

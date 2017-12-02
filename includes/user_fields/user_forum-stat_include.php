@@ -25,10 +25,10 @@ if ($profile_method == "input") {
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
         $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
     }
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
     if (infusion_exists('forum')) {
-    	$user_fields = array(
-    		'title' => $locale['uf_forum-stat'],
-    		'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".intval($_GET['lookup'])."'"))."");
-	}
+        $user_fields = [
+            'title' => $locale['uf_forum-stat'],
+            'value' => number_format(dbcount("(forum_id)", DB_FORUM_POSTS, "post_author='".intval($_GET['lookup'])."'")).""];
+    }
 }

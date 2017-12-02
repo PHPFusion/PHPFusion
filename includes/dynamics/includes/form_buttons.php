@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_button($input_name, $title, $input_value, array $options = array()) {
+function form_button($input_name, $title, $input_value, array $options = []) {
     $html = "";
 
     $input_value = stripinput($input_value);
@@ -47,7 +47,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
 
     if ($options['type'] == 'link') {
         $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</a>";
-    } elseif ($options['type'] == 'button') {
+    } else if ($options['type'] == 'button') {
         $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
     } else {
         $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
@@ -64,7 +64,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
  * @param array  $options
  * @return string
  */
-function form_btngroup($input_name, $label = "", $input_value, array $options = array()) {
+function form_btngroup($input_name, $label = "", $input_value, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

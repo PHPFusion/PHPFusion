@@ -20,37 +20,31 @@ namespace PHPFusion;
 
 /**
  * Class BreadCrumbs
- *
  * <p><strong>Get instances by keys:</strong>
  * <code>
  * <?php
  * $bcDefault = BreadCrumbs::getInstance();
  * $bcCustom = BreadCrumbs::getInstance('custom');
  * </code></p>
- *
  * <p><strong>Hide the home of $bcCustom</strong>
  * <code>
  * <?php
  * $bcCustom->hideHome();
  * </code></p>
- *
  * <p><strong>Set the last breadcrumb clickable (it is rendered as a simple text by default)</strong>
  * <code>
  * <?php
  * $bcCustom->setLastClicklable();
  * </code></p>
- *
  * <p><strong>You can override the default CSS classes of the wrapper HTML node</strong>
  * <code>
  * $bcCustom->setCssClasses('breadcrumb-custom');
  * </code></p>
- *
  * <p><strong>Be careful! If you want to add a new class, use this method</strong>
  * <code>
  * <?php
  * $bcCustom->addCssClasses('additional-class1 additional-class2');
  * </code></p>
- *
  * <p><strong>Get the items as associative arrays</strong>
  * <code>
  * <?php
@@ -65,26 +59,26 @@ class BreadCrumbs {
     /**
      * @var static[]
      */
-    private static $instances = array();
+    private static $instances = [];
 
     /**
      * @var array
      */
-    private $breadcrumbs = array();
+    private $breadcrumbs = [];
 
     /**
      * Whether to add the 'Home' link
      *
      * @var bool
      */
-    private $showHome = TRUE;
+    private $showHome = true;
 
     /**
      * Whether to make last breadcrumb a link
      *
      * @var bool
      */
-    private $isLastClickable = FALSE;
+    private $isLastClickable = false;
 
     /**
      * The class wrapping the breacrumbs
@@ -94,30 +88,30 @@ class BreadCrumbs {
     private $cssClasses = 'breadcrumb';
 
     public function __construct() {
-        $this->addBreadCrumb(array(
+        $this->addBreadCrumb([
             'link'  => BASEDIR.'index.php',
             'title' => fusion_get_locale('home'),
             'class' => 'home-link crumb'
-                             ));
+        ]);
     }
 
     /**
      * Add a link to the breadcrumb
      *
      * @param array $link Keys: link, title
-     *
      * @return static
      */
     public function addBreadCrumb(array $link) {
-        $link += array(
+        $link += [
             'title' => '',
-            'link' => '',
+            'link'  => '',
             'class' => 'crumb'
-        );
+        ];
         $link['title'] = $link['title']; //trim(parse_textarea($link['title'], TRUE, TRUE, FALSE));
         if (!empty($link['title']) && !empty($link['link'])) {
             $this->breadcrumbs[] = $link;
         }
+
         return $this;
     }
 
@@ -125,7 +119,6 @@ class BreadCrumbs {
      * Get an instance by key
      *
      * @param string $key
-     *
      * @return static
      */
     public static function getInstance($key = 'default') {
@@ -169,17 +162,16 @@ class BreadCrumbs {
      * @return static
      */
     public function hideHome() {
-        return $this->showHome(FALSE);
+        return $this->showHome(false);
     }
 
     /**
      * Show or hide the link to home page
      *
      * @param bool $state
-     *
      * @return static
      */
-    public function showHome($state = TRUE) {
+    public function showHome($state = true) {
         $this->showHome = (bool)$state;
 
         return $this;
@@ -187,10 +179,9 @@ class BreadCrumbs {
 
     /**
      * @param bool $clickable
-     *
      * @return static
      */
-    public function setLastClickable($clickable = TRUE) {
+    public function setLastClickable($clickable = true) {
         $this->isLastClickable = (bool)$clickable;
 
         return $this;

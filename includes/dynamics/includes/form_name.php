@@ -32,7 +32,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         $input_value['2'] = "";
     }
 
-    $options += array(
+    $options += [
         'input_id'     => $input_name,
         'required'     => FALSE,
         'placeholder'  => '',
@@ -44,7 +44,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         'error_text_2' => !empty($options['error_text']) ? $options['error_text_2'] : $locale['lastname_error'],
         'tip'          => '',
         'safemode'     => FALSE,
-    );
+    ];
     $error_class = \defender::inputHasError($input_name.'-firstname') || \defender::inputHasError($input_name.'-lastname') ? "has-error " : "";
     $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
@@ -65,16 +65,16 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     $html .= "</div>\n"; // close inner row
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
-    \defender::getInstance()->add_field_session(array(
-                                     'input_name'   => $input_name,
-                                     'type'         => 'name',
-                                     'title'        => $title,
-                                     'id'           => $options['input_id'],
-                                     'required'     => $options['required'],
-                                     'safemode'     => $options['safemode'],
-                                     'error_text'   => $options['error_text'],
-                                     'error_text_2' => $options['error_text_2']
-                                 ));
+    \defender::getInstance()->add_field_session([
+        'input_name'   => $input_name,
+        'type'         => 'name',
+        'title'        => $title,
+        'id'           => $options['input_id'],
+        'required'     => $options['required'],
+        'safemode'     => $options['safemode'],
+        'error_text'   => $options['error_text'],
+        'error_text_2' => $options['error_text_2']
+    ]);
 
     return $html;
 }

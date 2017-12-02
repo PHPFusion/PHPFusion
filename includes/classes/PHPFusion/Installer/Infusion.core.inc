@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Installer;
 
 /**
@@ -67,11 +66,11 @@ class Infusion_Core {
                     $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
                 }
                 if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-                    $adminpanel += array(
+                    $adminpanel += [
                         'rights' => '',
                         'title'  => '',
                         'panel'  => '',
-                    );
+                    ];
                     $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')";
                     $result = dbquery($insert_sql);
                     if (dbrows($result)) {
@@ -99,7 +98,7 @@ class Infusion_Core {
     public function infuse($folder) {
         $error = FALSE;
         if ((self::$inf = self::load_infusion($folder))) {
-            $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
+            $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 if (self::$inf['version'] > $data['inf_version']) {
@@ -143,10 +142,10 @@ class Infusion_Core {
                                         }
                                     }
                                     if ($error === FALSE) {
-                                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", array(
+                                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", [
                                             ':version' => self::$inf['version'],
                                             ':id'      => $data['inf_id'],
-                                        ));
+                                        ]);
                                     }
                                 }
 
@@ -188,7 +187,7 @@ class Infusion_Core {
      * @return array
      */
     public static function load_infusion($folder) {
-        $infusion = array();
+        $infusion = [];
         $inf_title = "";
         $inf_description = "";
         $inf_version = "";
@@ -197,19 +196,19 @@ class Infusion_Core {
         $inf_weburl = "";
         $inf_folder = "";
         $inf_image = "";
-        $inf_newtable = array();
-        $inf_insertdbrow = array();
-        $inf_droptable = array();
-        $inf_altertable = array();
-        $inf_deldbrow = array();
-        $inf_sitelink = array();
-        $inf_adminpanel = array();
-        $inf_mlt = array();
-        $mlt_insertdbrow = array();
-        $mlt_deldbrow = array();
-        $inf_delfiles = array();
-        $inf_newcol = array();
-        $inf_dropcol = array();
+        $inf_newtable = [];
+        $inf_insertdbrow = [];
+        $inf_droptable = [];
+        $inf_altertable = [];
+        $inf_deldbrow = [];
+        $inf_sitelink = [];
+        $inf_adminpanel = [];
+        $inf_mlt = [];
+        $mlt_insertdbrow = [];
+        $mlt_deldbrow = [];
+        $inf_delfiles = [];
+        $inf_newcol = [];
+        $inf_dropcol = [];
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
@@ -225,7 +224,7 @@ class Infusion_Core {
                 $inf_image = $inf_image_tmp;
             }
 
-            $infusion = array(
+            $infusion = [
                 'name'            => str_replace('_', ' ', $inf_title),
                 'title'           => $inf_title,
                 'description'     => $inf_description,
@@ -248,8 +247,8 @@ class Infusion_Core {
                 'mlt_insertdbrow' => $mlt_insertdbrow,
                 'mlt_deldbrow'    => $mlt_deldbrow,
                 'delfiles'        => $inf_delfiles
-            );
-            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
+            ];
+            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
             /*
              * Status Remarks
              * 2 - When upgrade is a must
@@ -275,7 +274,7 @@ class Infusion_Core {
      * @return array
      */
     public static function load_upgrade($folder, $upgrade_file_path) {
-        $infusion = array();
+        $infusion = [];
         $inf_title = "";
         $inf_description = "";
         $inf_version = "";
@@ -284,20 +283,20 @@ class Infusion_Core {
         $inf_weburl = "";
         $inf_folder = "";
         $inf_image = "";
-        $inf_newtable = array();
-        $inf_altertable = array();
-        $inf_newcol = array();
-        $inf_updatedbrow = array();
-        $inf_sitelink = array();
-        $inf_adminpanel = array();
-        $inf_mlt = array();
-        $mlt_insertdbrow = array();
-        $inf_insertdbrow = array();
-        $inf_dropcol = array();
-        $inf_droptable = array();
-        $inf_delfiles = array();
-        $inf_deldbrow = array();
-        $mlt_deldbrow = array();
+        $inf_newtable = [];
+        $inf_altertable = [];
+        $inf_newcol = [];
+        $inf_updatedbrow = [];
+        $inf_sitelink = [];
+        $inf_adminpanel = [];
+        $inf_mlt = [];
+        $mlt_insertdbrow = [];
+        $inf_insertdbrow = [];
+        $inf_dropcol = [];
+        $inf_droptable = [];
+        $inf_delfiles = [];
+        $inf_deldbrow = [];
+        $mlt_deldbrow = [];
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
@@ -312,7 +311,7 @@ class Infusion_Core {
                 $inf_image = $inf_image_tmp;
             }
 
-            $infusion = array(
+            $infusion = [
                 'name'            => str_replace('_', ' ', $inf_title),
                 'title'           => $inf_title,
                 'description'     => $inf_description,
@@ -336,10 +335,10 @@ class Infusion_Core {
                 'delfiles'        => $inf_delfiles,
                 'dropcol'         => $inf_dropcol,
                 'droptable'       => $inf_droptable,
-            );
+            ];
 
             $folder = str_replace(INFUSIONS, '', $folder);
-            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
+            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
             $infusion['status'] = dbrows($result)
                 ? (version_compare($infusion['version'], dbresult($result, 0), ">=")
                     ? 2
@@ -371,7 +370,7 @@ class Infusion_Core {
      */
     public function defuse($folder) {
 
-        $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
+        $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
         $infData = dbarray($result);
 
         $inf = self::load_infusion($folder);
@@ -453,9 +452,9 @@ class Infusion_Core {
                 dbquery("DROP TABLE IF EXISTS ".$droptable);
             }
         }
-        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
+        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [
             ':folder' => $infData['inf_folder']
-        ));
+        ]);
         addNotice("success", sprintf(self::$locale['424'], $inf['title']));
         redirect(FUSION_REQUEST);
     }
@@ -501,14 +500,14 @@ class Infusion_Core {
 
                 $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0) + 1;
 
-                $sitelink += array(
+                $sitelink += [
                     "title"      => "",
                     "cat"        => 0,
                     "url"        => "",
                     "icon"       => "",
                     "visibility" => 0,
                     "position"   => 3,
-                );
+                ];
 
                 $link_url_path = "".str_replace("../", "", INFUSIONS).$inf['folder']."/";
 

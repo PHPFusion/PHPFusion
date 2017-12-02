@@ -112,7 +112,7 @@ class Batch_Core extends Install_Core {
      * Generate the statements required
      */
 
-    private static $required_default = array();
+    private static $required_default = [];
 
     /*
      * The batch runtime will generate two kinds of results.
@@ -155,7 +155,7 @@ class Batch_Core extends Install_Core {
         if (self::$runtime_results === NULL) {
 
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
-                          TRUE)) {
+                TRUE)) {
 
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
@@ -214,7 +214,7 @@ class Batch_Core extends Install_Core {
                         }
 
                         self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
-                            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
+                            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
                             '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
                         ]);
                     }
@@ -222,8 +222,8 @@ class Batch_Core extends Install_Core {
                 } else {
 
                     self::$runtime_results['add_column'][self::$table_name][$col_name] = strtr(self::ADD_COLUMN_STATEMENT, [
-                        '{%table%}' => self::$connection['db_prefix'].self::$table_name,
-                        '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr),
+                        '{%table%}'         => self::$connection['db_prefix'].self::$table_name,
+                        '{%table_attr%}'    => $this->get_table_attr($col_name, $col_attr),
                         '{%column_before%}' => $last_column_name
                     ]);
 
@@ -332,12 +332,12 @@ class Batch_Core extends Install_Core {
 
         // Generate lines
         return trim(strtr(self::TABLE_ATTR_STATEMENT, [
-            '{%col_name%}' => $col_name." ",
-            '{%type%}' => $col_attr['type'],
-            '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-            '{%default%}' => $default_create." ",
-            '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-            '{%unsigned%}' => $unsigned,
+            '{%col_name%}'       => $col_name." ",
+            '{%type%}'           => $col_attr['type'],
+            '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+            '{%default%}'        => $default_create." ",
+            '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+            '{%unsigned%}'       => $unsigned,
             '{%auto_increment%}' => $auto_increment,
         ]));
     }
@@ -360,8 +360,8 @@ class Batch_Core extends Install_Core {
      */
     private function batch_create_table() {
         // No table found, just create the table as new
-        $line = array();
-        $keys = array();
+        $line = [];
+        $keys = [];
         $statement_type = self::TABLE_ATTR_STATEMENT;
 
         if (!empty(self::$table_cols)) {
@@ -393,12 +393,12 @@ class Batch_Core extends Install_Core {
 
                 // Generate lines
                 $line[] = trim(strtr($statement_type, [
-                    '{%col_name%}' => $col_name." ",
-                    '{%type%}' => $col_attr['type'],
-                    '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-                    '{%default%}' => $default_create." ",
-                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-                    '{%unsigned%}' => $unsigned,
+                    '{%col_name%}'       => $col_name." ",
+                    '{%type%}'           => $col_attr['type'],
+                    '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+                    '{%default%}'        => $default_create." ",
+                    '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+                    '{%unsigned%}'       => $unsigned,
                     '{%auto_increment%}' => $auto_increment,
                 ]));
             }
@@ -411,9 +411,9 @@ class Batch_Core extends Install_Core {
         }
 
         return strtr(self::CREATE_TABLE_STATEMENT, [
-            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
+            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
             '{%table_attr%}' => implode(',', $line),
-            '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
+            '{%collation%}'  => Batch_Core::FUSION_TABLE_COLLATION
         ]);
 
     }
@@ -428,6 +428,7 @@ class Batch_Core extends Install_Core {
 
         if ($table_rows = get_table_rows($table_name, $localeset)) {
             if (isset($table_rows['insert'])) {
+                $values = [];
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
                 foreach ($table_rows['insert'] as $count => $inserts) {
@@ -436,8 +437,8 @@ class Batch_Core extends Install_Core {
 
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
-                    '{%table%}' => DB_PREFIX.$table_name,
-                    '{%key%}' => "($key)",
+                    '{%table%}'  => DB_PREFIX.$table_name,
+                    '{%key%}'    => "($key)",
                     '{%values%}' => implode(",\n", array_values($values))
                 ]);
             }

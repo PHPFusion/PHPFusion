@@ -20,11 +20,11 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
+$regex = [
     "%rowstart%" => "([0-9]+)",
-);
+];
 
-$pattern = array(
-    "polls-archive"					=> "infusions/member_poll_panel/polls_archive.php",
-    "polls-archive-row-%rowstart%"	=> "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%",
-);
+$pattern = [
+    "polls-archive"                => "infusions/member_poll_panel/polls_archive.php",
+    "polls-archive-row-%rowstart%" => "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%",
+];

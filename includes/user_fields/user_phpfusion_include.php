@@ -22,15 +22,15 @@ if (!defined("IN_FUSION")) {
 $icon = "<img src='".IMAGES."php-fusion-icon.png' alt='PHP Fusion'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'      => TRUE,
             'max_length'  => 20,
             'error_text'  => $locale['uf_phpfusion_error'],
             'placeholder' => $locale['uf_phpfusion_id'],
             'label_icon'  => $icon,
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_phpfusion', $locale['uf_phpfusion'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_phpfusion'], 'value' => $field_value ?: '');
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = ['title' => $icon.$locale['uf_phpfusion'], 'value' => $field_value ?: ''];
 }

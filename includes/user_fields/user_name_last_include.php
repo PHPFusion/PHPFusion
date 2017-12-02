@@ -20,8 +20,8 @@ if (!defined("IN_FUSION")) {
 }
 
 if ($profile_method == "input") {
-    $options += array('inline' => TRUE, 'max_length' => 20);
+    $options += ['inline' => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_name_last', $locale['uf_name_last'], $field_value, $options);
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_name_last'], 'value' => $field_value ?: "");
+} else if ($profile_method == "display") {
+    $user_fields = ['title' => $locale['uf_name_last'], 'value' => $field_value ?: ""];
 }

@@ -20,5 +20,4 @@
  * Authenticate class for compatibility reason
  */
 class Authenticate extends PHPFusion\Authenticate {
-
 }

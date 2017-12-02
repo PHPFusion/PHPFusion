@@ -71,7 +71,8 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
         }
         ob_start();
         ?>
-        <div class="text-center <?php echo $boxData['box_class'] ?>" style="padding:<?php echo $boxData['box_padding']."px" ?>">
+        <div class="text-center <?php echo $boxData['box_class'] ?>"
+             style="padding:<?php echo $boxData['box_padding']."px" ?>">
             <div class="display-block clearfix" <?php echo($box_style ? "style='".$box_style."'" : '') ?>>
                 <!--Icon-->
                 <?php echo $icon ?>

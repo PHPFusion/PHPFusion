@@ -30,7 +30,7 @@ class loginPanel extends resource {
 
         $userdata = self::get_userdata();
 
-        echo renderNotices(getNotices(array('all', FUSION_SELF)));
+        echo renderNotices(getNotices(['all', FUSION_SELF]));
         ?>
         <section id="devlpr" class="login_page">
             <div class="login_bg">
@@ -48,7 +48,7 @@ class loginPanel extends resource {
                         if (!\defender::safe()) {
                             setNotice('danger', $locale['global_182']);
                         }
- 
+
                         $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_REQUEST; //FUSION_SELF."?".FUSION_QUERY;
                         echo openform('admin-login-form', 'post', $form_action);
 
@@ -70,15 +70,15 @@ class loginPanel extends resource {
                         </div>
                         <div class="text-left">
                             <?php
-                            echo form_text('admin_password', $locale['global_102'], "", array(
-                                'callback_check' => 'check_admin_pass',
-                                'placeholder' => $locale['281'],
+                            echo form_text('admin_password', $locale['global_102'], "", [
+                                'callback_check'   => 'check_admin_pass',
+                                'placeholder'      => $locale['281'],
                                 'autocomplete_off' => 1,
-                                'type' => 'password',
-                                'required' => TRUE
-                            ));
+                                'type'             => 'password',
+                                'required'         => TRUE
+                            ]);
                             echo form_button('admin_login', $locale['login'], 'Sign in',
-                                             array('class' => 'btn-primary btn-block'));
+                                ['class' => 'btn-primary btn-block']);
                             echo closeform();
                             ?>
                         </div>

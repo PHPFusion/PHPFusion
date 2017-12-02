@@ -20,6 +20,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$pattern = array(
+$pattern = [
     "shoutbox-archive" => "infusions/shoutbox_panel/shoutbox_archive.php",
-);
+];

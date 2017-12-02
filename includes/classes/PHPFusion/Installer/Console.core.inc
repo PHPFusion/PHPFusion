@@ -32,14 +32,14 @@ class Console_Core extends Install_Core {
     }
 
     public static function getView($content) {
-        $steps = array(
+        $steps = [
             '1' => self::$locale['setup_0101'],
             '2' => self::$locale['setup_0102'],
             '3' => self::$locale['setup_0103'],
             '4' => self::$locale['setup_0104'],
             '5' => self::$locale['setup_0106'],
             '6' => self::$locale['setup_0105'],
-        );
+        ];
         $html = "<div class='block-container center-x'>\n";
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
         $html .= "<div class='block'>\n";
@@ -54,7 +54,7 @@ class Console_Core extends Install_Core {
         foreach ($steps as $key => $value) {
             if ($key !== 4) {
                 $active = intval(INSTALLATION_STEP) === $key;
-                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:none;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
             }
         }
         $html .= "</div>\n";
@@ -69,9 +69,9 @@ class Console_Core extends Install_Core {
                 $default_class['class'] = "btn-primary";
                 $button_prop += $default_class;
                 $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'],
-                                     array(
-                                         'class' => $button_prop['class'],
-                                     ));
+                    [
+                        'class' => $button_prop['class'],
+                    ]);
             }
         }
         $html .= "</div>\n</div>\n"; // end col-8 & row
@@ -120,14 +120,13 @@ class Console_Core extends Install_Core {
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
-            $html .= "<script type=\"text/javascript\">\n$(function() {\n";
-            $html .= "var diff_height = $('.block-container').height() - $('body').height();
+            $html .= "<script type=\"text/javascript\">$(function() {
+            var diff_height = $('.block-container').height() - $('body').height();
             if (diff_height > 1) {
             $('.block-container').css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
             }
-            ";
-            $html .= $fusion_jquery_tags;
-            $html .= "});\n</script>\n";
+            ".$fusion_jquery_tags."
+            });\n</script>\n";
         }
         $html .= OutputHandler::$pageFooterTags;
         $html .= "</body>\n";

@@ -47,13 +47,13 @@ class OutputHandler {
      *
      * @var string[]
      */
-    private static $pageMeta = array();
+    private static $pageMeta = [];
     /**
      * PHP code to execute using eval replace anything in the output
      *
      * @var callback[]
      */
-    private static $outputHandlers = array();
+    private static $outputHandlers = [];
 
     /**
      * Set the new title of the page
@@ -92,10 +92,10 @@ class OutputHandler {
     public static function addToMeta($name, $addition = "") {
         $settings = \fusion_get_settings();
         if (empty(self::$pageMeta)) {
-            self::$pageMeta = array(
+            self::$pageMeta = [
                 "description" => $settings['description'],
-                "keywords" => $settings['keywords']
-            );
+                "keywords"    => $settings['keywords']
+            ];
         }
         if (isset(self::$pageMeta[$name])) {
             self::$pageMeta[$name] .= ",".$addition;
@@ -184,20 +184,16 @@ class OutputHandler {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
         }
 
-        if (self::$pageTitle) {
-
-        }
-
         if (self::$pageTitle != $settings['sitename']) {
             $output = preg_replace("#<title>.*</title>#i",
                 "<title>".self::$pageTitle.(self::$pageTitle ? fusion_get_locale('global_200') : '').$settings['sitename']."</title>",
-                                   $output, 1);
+                $output, 1);
         }
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
                 $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />",
-                                       $output, 1);
+                    $output, 1);
             }
         }
 

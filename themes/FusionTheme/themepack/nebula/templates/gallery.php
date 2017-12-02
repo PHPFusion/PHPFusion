@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemePack\Nebula\Templates;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -25,7 +25,7 @@ class Gallery {
 
     private static $gallery_settings = [];
 
-    public static function render_gallery(array $info = array()) {
+    public static function render_gallery(array $info = []) {
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
         $html .= fusion_get_function('opentable', $locale['400']);
@@ -53,7 +53,7 @@ class Gallery {
         return $html;
     }
 
-    public static function render_photo_album(array $info = array()) {
+    public static function render_photo_album(array $info = []) {
         add_to_head("<link rel='stylesheet' href='".THEME."themepack/nebula/css/gallery.css' type='text/css' />");
         $locale = fusion_get_locale();
         $html = render_breadcrumbs();
@@ -96,7 +96,7 @@ class Gallery {
         return $html;
     }
 
-    public static function render_photo(array $info = array()) {
+    public static function render_photo(array $info = []) {
         $locale = fusion_get_locale();
         $html = opentable('opentable', $locale['450']);
         $html .= render_breadcrumbs();
@@ -139,7 +139,7 @@ class Gallery {
         return $html;
     }
 
-    private static function render_photoAlbum(array $info = array()) {
+    private static function render_photoAlbum(array $info = []) {
         // add admin edit.
         $locale = fusion_get_locale();
         $html = "<div class='panel panel-default'>\n";
@@ -166,7 +166,7 @@ class Gallery {
         return $html;
     }
 
-    private static function render_photo_items(array $info = array()) {
+    private static function render_photo_items(array $info = []) {
         $locale = fusion_get_locale();
         $html = "<div class='panel panel-default'>\n";
         $html .= "<div class='panel-image-wrapper'>\n";

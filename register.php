@@ -28,7 +28,7 @@ if (iMEMBER or fusion_get_settings('enable_registration') == 0) {
     redirect("index.php");
 }
 
-$errors = array();
+$errors = [];
 
 if (isset($_GET['email']) && isset($_GET['code'])) {
 
@@ -65,7 +65,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
         redirect(fusion_get_settings('opening_page'));
     }
 
-} elseif (isset($_POST['register'])) {
+} else if (isset($_POST['register'])) {
 
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->validation = $settings['display_validation'];
@@ -75,7 +75,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
     $userInput->registration = TRUE;
     $insert = $userInput->saveInsert();
 
-    if ($insert && $defender->safe()) {
+    if ($insert && \defender::safe()) {
         redirect(fusion_get_settings('opening_page'));
     }
     unset($userInput);

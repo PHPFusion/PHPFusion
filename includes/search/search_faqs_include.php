@@ -29,10 +29,10 @@ if (db_exists(DB_FAQS)) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."search/faqs.php");
         $formatted_result = '';
         $item_count = "0 ".$locale['fq402']." ".$locale['522']."<br />\n";
-        $order_by = array(
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
         $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY faq_id".$order_by[Search_Engine::get_param('order')] : '';
 
         switch (Search_Engine::get_param('fields')) {
@@ -50,8 +50,8 @@ if (db_exists(DB_FAQS)) {
 
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT faq_question, faq_answer, faq_cat_id
-            	FROM ".DB_FAQS."
-			    ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
+                FROM ".DB_FAQS."
+                ".(multilang_table("FQ") ? "WHERE faq_language='".LANGUAGE."' AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {

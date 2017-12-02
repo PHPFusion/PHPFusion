@@ -20,10 +20,10 @@ if (!defined("IN_FUSION")) {
 }
 
 if ($profile_method == "input") {
-    $options += array("inline" => TRUE, "number" => TRUE, 'max_length' => 20);
+    $options += ["inline" => TRUE, "number" => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_phone_mobile', $locale['uf_phone_mobile'], $field_value, $options);
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
 
-    $user_fields = array('title' => $locale['uf_phone_mobile'], 'value' => $field_value ?: "");
+    $user_fields = ['title' => $locale['uf_phone_mobile'], 'value' => $field_value ?: ""];
 
 }

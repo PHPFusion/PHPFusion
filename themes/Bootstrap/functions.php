@@ -36,12 +36,12 @@ function total_side_span($value) {
 
 // Step 2 - get the balance out of max 12 for center settings after deduction of total side_length
 function center_grid_settings($side_grid_settings) {
-    return array(
+    return [
         'desktop_size' => (12 - total_side_span($side_grid_settings['desktop_size'])) > 0 ? 12 - total_side_span($side_grid_settings['desktop_size']) : 12,
         'laptop_size'  => (12 - total_side_span($side_grid_settings['laptop_size'])) > 0 ? 12 - total_side_span($side_grid_settings['laptop_size']) : 12,
         'tablet_size'  => (12 - total_side_span($side_grid_settings['tablet_size'])) > 0 ? 12 - total_side_span($side_grid_settings['tablet_size']) : 12,
         'phone_size'   => (12 - total_side_span($side_grid_settings['phone_size'])) > 0 ? 12 - total_side_span($side_grid_settings['phone_size']) : 12,
-    );
+    ];
 }
 
 // Step 3 - Output of various css grid class required
@@ -74,5 +74,3 @@ function opentable($title) {
 function closetable() {
     echo " ";
 }
-
-

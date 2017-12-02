@@ -21,7 +21,7 @@ use PHPFusion\Search;
 
 class Search_Engine extends Search_Model {
 
-    protected static $search_instance = NULL;
+    protected static $search_instance = null;
 
     /*
      * Template
@@ -39,42 +39,45 @@ class Search_Engine extends Search_Model {
     protected static $search_item = '';
     protected static $search_item_list = '';
     protected static $search_item_image = '';
-    public static $locale = array();
+    public static $locale = [];
 
     /**
      * Returns params
+     *
      * @param null $key
      * @return array|null
      */
-    public static function get_param($key = NULL) {
+    public static function get_param($key = null) {
         $info = [
-            'stype' => self::$search_type,
-            'stext' => self::$search_text,
-            'method' => self::$search_method,
-            'datelimit' => self::$search_date_limit,
-            'fields' => self::$search_fields,
-            'sort' => self::$search_sort,
-            'chars' => self::$search_chars,
-            'order' => self::$search_order,
-            'forum_id' => self::$forum_id,
+            'stype'        => self::$search_type,
+            'stext'        => self::$search_text,
+            'method'       => self::$search_method,
+            'datelimit'    => self::$search_date_limit,
+            'fields'       => self::$search_fields,
+            'sort'         => self::$search_sort,
+            'chars'        => self::$search_chars,
+            'order'        => self::$search_order,
+            'forum_id'     => self::$forum_id,
             'memory_limit' => self::$memory_limit,
-            'composevars' => self::$composevars,
-            'rowstart' => self::$rowstart,
+            'composevars'  => self::$composevars,
+            'rowstart'     => self::$rowstart,
             'search_param' => self::$search_param,
         ];
 
-        return $key === NULL ? $info : (isset($info[$key]) ? $info[$key] : NULL);
+        return $key === null ? $info : (isset($info[$key]) ? $info[$key] : null);
     }
 
     /**
      * Returns the search engine instance
+     *
      * @return null|static
      */
     public static function getInstance() {
-        if (self::$search_instance === NULL) {
+        if (self::$search_instance === null) {
             self::$search_instance = new Static();
             self::$search_instance->init();
         }
+
         return self::$search_instance;
     }
 
@@ -87,11 +90,13 @@ class Search_Engine extends Search_Model {
 
     /**
      * Returns the search locale
+     *
      * @return array|null|string
      */
     protected function get_search_locale() {
         return self::$locale;
     }
+
     /**
      * Controller for search form
      */
@@ -109,18 +114,18 @@ class Search_Engine extends Search_Model {
             }
         }
         $options_table .= "<tr>\n<td>\n
-        ".form_checkbox('stype', $locale['407'], self::get_param('stype'), array(
-                               'type' => 'radio',
-                               'value' => 'all',
-                               'onclick' => 'display(this.value)',
-                               'reverse_label' => TRUE
-                           )
-        )."</td>\n</tr>\n</table>\n";
+        ".form_checkbox('stype', $locale['407'], self::get_param('stype'), [
+                    'type'          => 'radio',
+                    'value'         => 'all',
+                    'onclick'       => 'display(this.value)',
+                    'reverse_label' => true
+                ]
+            )."</td>\n</tr>\n</table>\n";
 
         /*
          * Date limit
          */
-        $date_opts = array(
+        $date_opts = [
             '0'        => $locale['421'],
             '86400'    => $locale['422'],
             '604800'   => $locale['423'],
@@ -128,113 +133,113 @@ class Search_Engine extends Search_Model {
             '2419200'  => $locale['425'],
             '7257600'  => $locale['426'],
             '14515200' => $locale['427'],
-        );
-        $disabled_status = FALSE;
+        ];
+        $disabled_status = false;
         if (isset($form_elements[self::get_param('stype')]['disabled'])) {
-            $disabled_status = !empty($form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
+            $disabled_status = !empty($form_elements[self::get_param('stype')]['disabled']) ? true : false;
             if (self::get_param('stype') != 'all') {
-                $disabled_status = in_array("datelimit", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
+                $disabled_status = in_array("datelimit", $form_elements[self::get_param('stype')]['disabled']) ? true : false;
             }
         }
         if (self::get_param('stype') == "all") {
-            $disabled_status = TRUE;
+            $disabled_status = true;
         }
         //$search_areas = "<p><strong>".$locale['406']."</strong></p>\n";
         $search_areas = "<table style='width:100%'>\n<tr>\n";
         $search_areas .= "<td>".$locale['420']."</td>\n";
         $search_areas .= "<td>\n";
         $search_areas .= form_select('datelimit', '', self::get_param('datelimit'),
-                         array(
-                             'inner_width' => '150px',
-                             'options' => $date_opts,
-                             'deactivate' => $disabled_status
-                         ));
+            [
+                'inner_width' => '150px',
+                'options'     => $date_opts,
+                'deactivate'  => $disabled_status
+            ]);
         $search_areas .= "</td>\n";
         $search_areas .= "</tr>\n<tr>\n";
         $search_areas .= "<td>&nbsp;</td>\n";
         $search_areas .= "<td>";
         $search_areas .= form_checkbox('fields', $locale['430'], self::get_param('fields'),
-                           array(
-                               'type'          => 'radio',
-                               'value'         => '2',
-                               'reverse_label' => TRUE,
-                               'input_id'      => 'fields1',
-                               'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                           )
+            [
+                'type'          => 'radio',
+                'value'         => '2',
+                'reverse_label' => true,
+                'input_id'      => 'fields1',
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $search_areas .= form_checkbox('fields', $locale['431'], self::get_param('fields'),
-                           array(
-                               'type'          => 'radio',
-                               'value'         => '1',
-                               'reverse_label' => TRUE,
-                               'input_id'      => 'fields2',
-                               'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                           )
+            [
+                'type'          => 'radio',
+                'value'         => '1',
+                'reverse_label' => true,
+                'input_id'      => 'fields2',
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $search_areas .= form_checkbox('fields', $locale['432'], self::get_param('fields'),
-                           array(
-                               'type' => 'radio',
-                               'value' => '0',
-                               'reverse_label' => TRUE,
-                               'input_id' => 'fields3',
-                               'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3",
-                                                                                                                                                 $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                           )
+            [
+                'type'          => 'radio',
+                'value'         => '0',
+                'reverse_label' => true,
+                'input_id'      => 'fields3',
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3",
+                    $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $search_areas .= "</td>\n</tr>\n</table>\n";
         /*
          * Sort
          */
-        $sort_opts = array(
+        $sort_opts = [
             'datestamp' => $locale['441'],
-            'subject' => $locale['442'],
-            'author' => $locale['443']
-        );
+            'subject'   => $locale['442'],
+            'author'    => $locale['443']
+        ];
         $sort = "<table class='table'><td>".$locale['440']."&nbsp;</td>\n";
         $sort .= "<td>\n";
-        $sort .= form_select('sort', '', self::get_param('sort'), array(
+        $sort .= form_select('sort', '', self::get_param('sort'), [
             'inner_width' => '150px',
-            'options' => $sort_opts,
-            'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort",
-                                                                                                                              $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-        ));
+            'options'     => $sort_opts,
+            'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort",
+                $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+        ]);
         $sort .= form_checkbox('order', $locale['450'], self::get_param('order'),
-                                array(
-                                    'type' => 'radio',
-                                    'value' => '0',
-                                    'reverse_label' => TRUE,
-                                    'input_id' => 'order1',
-                                    'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1",
-                                                                                                                                                      $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                                )
+            [
+                'type'          => 'radio',
+                'value'         => '0',
+                'reverse_label' => true,
+                'input_id'      => 'order1',
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1",
+                    $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $sort .= form_checkbox('order', $locale['451'], self::get_param('order'),
-                                array(
-                                    'type' => 'radio',
-                                    'value' => '1',
-                                    'reverse_label' => TRUE,
-                                    'input_id' => 'order2',
-                                    'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                                )
+            [
+                'type'          => 'radio',
+                'value'         => '1',
+                'reverse_label' => true,
+                'input_id'      => 'order2',
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $sort .= "</td>\n</tr>\n</table>\n";
         /*
          * Char list
          */
-        $char_opts = array(
-            '50' => '50',
+        $char_opts = [
+            '50'  => '50',
             '100' => '100',
             '150' => '150',
             '200' => '200'
-        );
+        ];
         $char_areas = "<table class='table'><tr><td>".$locale['460']."</td>\n";
         $char_areas .= "<td>\n";
-        $char_areas .= form_select('chars', '', self::get_param('chars'), array(
-                                    'inner_width' => '150px',
-                                    'options' => $char_opts,
-                                    'deactivate' => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("chars",
-                                                                                                                                                      $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
-                                )
+        $char_areas .= form_select('chars', '', self::get_param('chars'), [
+                'inner_width' => '150px',
+                'options'     => $char_opts,
+                'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("chars",
+                    $form_elements[self::get_param('stype')]['disabled']) ? true : false) : false)
+            ]
         );
         $char_areas .= "</td>\n</tr>\n</table>\n";
 
@@ -242,38 +247,38 @@ class Search_Engine extends Search_Model {
          * Bind
          */
         $info = [
-            'openform' => openform('advanced_search_form', 'post', BASEDIR.'search.php'),
-            'closeform' => closeform(),
-            'search_form_stext' => form_text('stext', str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']), urldecode(self::get_param('stext')), array('inline'=> FALSE, 'placeholder'=>$locale['401'])),
-            'search_form_button' => form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary')),
-            'search_form_method' => form_checkbox('method', '', self::get_param('method'),
-                                                       array(
-                                                           "options" => array(
-                                                               'OR' => $locale['403'],
-                                                               'AND' => $locale['404']
-                                                           ),
-                                                           'type' => 'radio',
-                                                           'reverse_label' => TRUE,
-                                                       )),
+            'openform'            => openform('advanced_search_form', 'post', BASEDIR.'search.php'),
+            'closeform'           => closeform(),
+            'search_form_stext'   => form_text('stext', str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']), urldecode(self::get_param('stext')), ['inline' => false, 'placeholder' => $locale['401']]),
+            'search_form_button'  => form_button('search', $locale['402'], $locale['402'], ['class' => 'btn-primary']),
+            'search_form_method'  => form_checkbox('method', '', self::get_param('method'),
+                [
+                    "options"       => [
+                        'OR'  => $locale['403'],
+                        'AND' => $locale['404']
+                    ],
+                    'type'          => 'radio',
+                    'reverse_label' => true,
+                ]),
             'search_form_sources' => $options_table,
-            'search_areas' => $search_areas,
-            'sort_areas' => $sort,
-            'char_areas' => $char_areas
+            'search_areas'        => $search_areas,
+            'sort_areas'          => $sort,
+            'char_areas'          => $char_areas
         ];
         /*
          * Replace
          */
         echo $info['openform'];
-        echo strtr(Search::render_search(), array(
-            '{%title%}' => str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']),
-            '{%search_text%}' => $info['search_form_stext'],
-            '{%search_button%}' => $info['search_form_button'],
-            '{%search_method%}' => $info['search_form_method'],
+        echo strtr(Search::render_search(), [
+            '{%title%}'          => str_replace('[SITENAME]', fusion_get_settings('sitename'), self::$locale['400']),
+            '{%search_text%}'    => $info['search_form_stext'],
+            '{%search_button%}'  => $info['search_form_button'],
+            '{%search_method%}'  => $info['search_form_method'],
             '{%search_sources%}' => $info['search_form_sources'],
-            '{%search_areas%}' => $info['search_areas'],
-            '{%sort_areas%}' => $info['sort_areas'],
-            '{%char_areas%}' => $info['char_areas'],
-        ));
+            '{%search_areas%}'   => $info['search_areas'],
+            '{%sort_areas%}'     => $info['sort_areas'],
+            '{%char_areas%}'     => $info['char_areas'],
+        ]);
         echo $info['closeform'];
         /*
          * Javascript
@@ -314,6 +319,7 @@ class Search_Engine extends Search_Model {
         $search_js .= "break;}}";
         add_to_footer("<script type='text/javascript'>".jsminify($search_js)."</script>");
     }
+
     /**
      * Controller for display the search results
      */
@@ -323,8 +329,8 @@ class Search_Engine extends Search_Model {
         add_to_title($locale['global_201'].$locale['408']);
 
         $search_text = explode(' ', urldecode(self::$search_text));
-        $qualified_search_text = array();
-        $disqualified_search_text = array();
+        $qualified_search_text = [];
+        $disqualified_search_text = [];
 
         /*
          * @todo: roadmap on author
@@ -367,7 +373,7 @@ class Search_Engine extends Search_Model {
          */
         if (self::get_param('stype') == "all") {
             $dh = opendir(INCLUDES."search");
-            while (FALSE !== ($entry = readdir($dh))) {
+            while (false !== ($entry = readdir($dh))) {
                 if ($entry != "." && $entry != ".." && preg_match("/include.php/i", $entry)) {
                     self::__Load($entry);
                 }
@@ -387,7 +393,7 @@ class Search_Engine extends Search_Model {
             echo "<div class='well m-t-10 text-center strong'>".sprintf($locale['502'], $txt)."</div><br />";
         }
 
-        $c_search_result_array = count(self::$search_result_array);
+        /*$c_search_result_array = count(self::$search_result_array);
 
         if (self::get_param('stype') == "all") {
             $from = self::get_param('rowstart');
@@ -395,7 +401,7 @@ class Search_Engine extends Search_Model {
         } else {
             $from = 0;
             $to = $c_search_result_array < 10 ? $c_search_result_array : 10;
-        }
+        }*/
 
         /*
          * HTML output
@@ -404,31 +410,31 @@ class Search_Engine extends Search_Model {
             parent::search_navigation(0);
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
-                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/>".sprintf($locale['530'], self::$site_search_count) : "<br/>".self::$site_search_count." ".$locale['510'])
+                '{%result_text%}'  => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/>".sprintf($locale['530'], self::$site_search_count) : "<br/>".self::$site_search_count." ".$locale['510'])
             ]);
-        }
-        else {
+        } else {
             echo strtr(Search::render_search_count(), [
                 '{%search_count%}' => self::$items_count,
-                '{%result_text%}' => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
+                '{%result_text%}'  => ((self::$site_search_count > 100 || parent::search_globalarray("")) ? "<br/><strong>".sprintf($locale['530'], self::$site_search_count)."</strong>" : $locale['500'])
             ]);
         }
 
         echo "<div class='search_result'>\n";
         echo "<div class='block'>\n";
-        foreach(self::$search_result_array as $results) {
+        foreach (self::$search_result_array as $results) {
             echo $results;
         }
 
         // Now it is by per module. Therefore rowstart does not apply
         //for ($i = $from; $i < $to; $i++) {
-          //  echo self::$search_result_array[$i];
+        //  echo self::$search_result_array[$i];
         //}
         echo "</div>\n";
         echo "</div>\n";
 
         //echo self::$navigation_result;
     }
+
     /**
      * Controller for omitting search
      */
@@ -436,17 +442,21 @@ class Search_Engine extends Search_Model {
         $locale = self::$locale;
         add_to_title($locale['global_201'].$locale['408']);
         echo strtr(Search::render_search_no_result(), [
-            '{%title%}' => $locale['408'],
+            '{%title%}'   => $locale['408'],
             '{%content%}' => $locale['501'],
         ]);
     }
+
     /**
      * Prevents class cloning
      */
-    private function __clone() {}
+    private function __clone() {
+    }
+
     /**
      * Load the search driver file
      * - Prevents string mutation
+     *
      * @param $path
      */
     protected static function __Load($path) {

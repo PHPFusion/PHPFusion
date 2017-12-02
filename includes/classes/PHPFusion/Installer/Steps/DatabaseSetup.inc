@@ -19,7 +19,6 @@ namespace PHPFusion\Steps;
 
 use PHPFusion\Installer\Batch_Core;
 use PHPFusion\Installer\Install_Core;
-use PHPFusion\Installer\Lib\HomeInstall;
 use PHPFusion\Installer\Requirements;
 
 class InstallerDbSetup extends Install_Core {
@@ -46,65 +45,65 @@ class InstallerDbSetup extends Install_Core {
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
         $content .= renderNotices(getNotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
-                              array(
-                                  'inline'           => TRUE,
-                                  'required'         => TRUE,
-                                  'placeholder'      => self::$locale['setup_1225'],
-                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
-                              ));
+            [
+                'inline'           => TRUE,
+                'required'         => TRUE,
+                'placeholder'      => self::$locale['setup_1225'],
+                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
+            ]);
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
-                              array(
-                                  'inline'           => TRUE,
-                                  'required'         => TRUE,
-                                  'placeholder'      => self::$locale['setup_1220'],
-                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
-                              ));
+            [
+                'inline'           => TRUE,
+                'required'         => TRUE,
+                'placeholder'      => self::$locale['setup_1220'],
+                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
+            ]);
         $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'],
-                              array(
-                                  'inline'           => TRUE,
-                                  'required'         => TRUE,
-                                  'placeholder'      => self::$locale['setup_1221'],
-                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
-                              ));
+            [
+                'inline'           => TRUE,
+                'required'         => TRUE,
+                'placeholder'      => self::$locale['setup_1221'],
+                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
+            ]);
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'],
-                              array(
-                                  'type'             => 'password',
-                                  'inline'           => TRUE,
-                                  'required'         => FALSE,
-                                  'placeholder'      => self::$locale['setup_1222'],
-                                  'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
-                              ));
+            [
+                'type'             => 'password',
+                'inline'           => TRUE,
+                'required'         => FALSE,
+                'placeholder'      => self::$locale['setup_1222'],
+                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
+            ]);
         $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1092']."</h4>\n</div>\n";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'],
-                              array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => self::$locale['setup_1223']
-                              ));
+            [
+                'inline'      => TRUE,
+                'required'    => TRUE,
+                'placeholder' => self::$locale['setup_1223']
+            ]);
         $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'],
-                              array(
-                                  'inline' => TRUE,
-                                  'required' => TRUE,
-                                  'placeholder' => self::$locale['setup_1224']
-                              ));
+            [
+                'inline'      => TRUE,
+                'required'    => TRUE,
+                'placeholder' => self::$locale['setup_1224']
+            ]);
         $options[0] = 'MySQLi';
         if (defined('PDO::ATTR_DRIVER_NAME')) {
             $options[1] = 'PDO';
         }
         $content .= form_select('pdo_enabled', self::$locale['setup_1208'], 1,
-                                array(
-                                    'options' => $options,
-                                    'inline' => TRUE,
-                                )
+            [
+                'options' => $options,
+                'inline'  => TRUE,
+            ]
         );
 
-        self::$step = array(
-            1 => array(
-                'name' => 'step',
+        self::$step = [
+            1 => [
+                'name'  => 'step',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_DB_SETTINGS_SAVE
-            )
-        );
+            ]
+        ];
 
         return $content;
     }
@@ -120,22 +119,26 @@ class InstallerDbSetup extends Install_Core {
         if (isset($_POST['step'])) {
 
             self::$connection = [
-                'db_host' => \defender::getInstance()->form_sanitizer($_POST['db_host'], '', 'db_host'),
-                'db_user' => \defender::getInstance()->form_sanitizer($_POST['db_user'], '', 'db_user'),
-                'db_pass' => \defender::getInstance()->form_sanitizer($_POST['db_pass'], '', 'db_pass'),
-                'db_name' => \defender::getInstance()->form_sanitizer($_POST['db_name'], '', 'db_name'),
-                'db_prefix' => \defender::getInstance()->form_sanitizer($_POST['db_prefix'], '', 'db_prefix'),
-                'cookie_prefix' => \defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], '', 'cookie_prefix'),
-                'pdo_enabled' => \defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
-                'localeset' => \defender::getInstance()->form_sanitizer($_POST['localeset'], '', 'localeset'),
+                'db_host'         => \defender::getInstance()->form_sanitizer($_POST['db_host'], '', 'db_host'),
+                'db_user'         => \defender::getInstance()->form_sanitizer($_POST['db_user'], '', 'db_user'),
+                'db_pass'         => \defender::getInstance()->form_sanitizer($_POST['db_pass'], '', 'db_pass'),
+                'db_name'         => \defender::getInstance()->form_sanitizer($_POST['db_name'], '', 'db_name'),
+                'db_prefix'       => \defender::getInstance()->form_sanitizer($_POST['db_prefix'], '', 'db_prefix'),
+                'cookie_prefix'   => \defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], '', 'cookie_prefix'),
+                'pdo_enabled'     => \defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
+                'localeset'       => \defender::getInstance()->form_sanitizer($_POST['localeset'], '', 'localeset'),
                 'secret_key_salt' => self::createRandomPrefix(32),
-                'secret_key' => self::createRandomPrefix(32),
+                'secret_key'      => self::createRandomPrefix(32),
             ];
 
-            if (!defined('DB_PREFIX')) define('DB_PREFIX', self::$connection['db_prefix']);
-            if (!defined('COOKIE_PREFIX')) define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
-            if (!defined('SECRET_KEY_SALT')) define('SECRET_KEY_SALT', self::createRandomPrefix(32));
-            if (!defined('SECRET_KEY')) define('SECRET_KEY', self::createRandomPrefix(32));
+            if (!defined('DB_PREFIX'))
+                define('DB_PREFIX', self::$connection['db_prefix']);
+            if (!defined('COOKIE_PREFIX'))
+                define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
+            if (!defined('SECRET_KEY_SALT'))
+                define('SECRET_KEY_SALT', self::createRandomPrefix(32));
+            if (!defined('SECRET_KEY'))
+                define('SECRET_KEY', self::createRandomPrefix(32));
 
         } else {
             $db_host = '';
@@ -145,14 +148,14 @@ class InstallerDbSetup extends Install_Core {
             $pdo_enabled = '';
             include BASEDIR."config_temp.php";
             self::$connection = [
-                'db_host' => $db_host,
-                'db_user' => $db_user,
-                'db_pass' => $db_pass,
-                'db_name' => $db_name,
-                'db_prefix' => DB_PREFIX,
+                'db_host'       => $db_host,
+                'db_user'       => $db_user,
+                'db_pass'       => $db_pass,
+                'db_name'       => $db_name,
+                'db_prefix'     => DB_PREFIX,
                 'cookie_prefix' => COOKIE_PREFIX,
-                'pdo_enabled' => $pdo_enabled,
-                'localeset' => LOCALESET,
+                'pdo_enabled'   => $pdo_enabled,
+                'localeset'     => LOCALESET,
             ];
         }
 
@@ -172,13 +175,13 @@ class InstallerDbSetup extends Install_Core {
 
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-                $final_message = self::$locale['setup_1210'];
+                //$final_message = self::$locale['setup_1210'];
 
                 // Go for point system differentiation
                 $current_count = 0;
                 if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
 
-                    $final_message = self::$locale['setup_1211'];
+                    //$final_message = self::$locale['setup_1211'];
 
                     // Create missing new tables
                     if (!empty($to_create)) {
@@ -268,7 +271,7 @@ class InstallerDbSetup extends Install_Core {
                     $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
-                        $message = "<strong>Building version upgrades...</strong>\n";
+                        //$message = "<strong>Building version upgrades...</strong>\n";
                         if (!$debug_process) {
                             foreach ($to_upgrade as $filename => $file_upgrades) {
                                 $current_count = $current_count + 1;
@@ -293,11 +296,11 @@ class InstallerDbSetup extends Install_Core {
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                             }
                             if (!$error) {
-                                $message = "<strong>Updating your OS to latest version.</strong>\n";
-                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                                //$message = "<strong>Updating your OS to latest version.</strong>\n";
+                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
                                     ':version_value' => $filename,
                                     ':version_col'   => 'version'
-                                ));
+                                ]);
                                 //addNotice('warning', $message);
                             }
                         } else {
@@ -340,5 +343,4 @@ class InstallerDbSetup extends Install_Core {
             redirect(FUSION_REQUEST);
         }
     }
-
 }

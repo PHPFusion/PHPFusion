@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
+
 /**
  * Class Locale
  *
@@ -53,7 +53,7 @@ class Locale {
      * @param $filename
      */
     public static function load_locale_file($filename) {
-        $locale = array();
+        $locale = [];
         self::$locale_file[$filename] = debug_backtrace();
         include_once $filename;
         self::$locale += $locale;
@@ -76,7 +76,7 @@ class Locale {
                         self::load_locale_file($file);
                     }
                 }
-            } elseif (!isset(self::$locale_file[$include_file])) {
+            } else if (!isset(self::$locale_file[$include_file])) {
                 self::load_locale_file($include_file);
             }
         }
@@ -101,14 +101,14 @@ class Locale {
      *
      * @return string
      */
-    public static function format_word($count, $words, $options = array()) {
+    public static function format_word($count, $words, $options = []) {
 
-        $default_options = array(
+        $default_options = [
             'add_count'     => TRUE,
             'html'          => FALSE,
             'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>",
             'language'      => LANGUAGE,
-        );
+        ];
 
         $options += $default_options;
 
@@ -138,7 +138,7 @@ class Locale {
                 if ($b != 1) {
                     if ($a == 1) {
                         $form = 0;
-                    } elseif ($a >= 2 && $a <= 4) {
+                    } else if ($a >= 2 && $a <= 4) {
                         $form = 1;
                     }
                 }
@@ -154,10 +154,10 @@ class Locale {
         if ($options['add_count']) {
             if ($options['html'] && !empty($options['html_template'])) {
                 return strtr($options['html_template'],
-                    array(
+                    [
                         "{%count%}"  => $count,
                         "{%result%}" => $result
-                    )
+                    ]
                 );
             } else {
                 return $count.' '.$result;
@@ -175,7 +175,7 @@ class Locale {
      * @return mixed
      */
     public static function translate_country_names($country) {
-        $translated_countries = array(
+        $translated_countries = [
             "China"           => "中国",
             "Czech Republic"  => "Česko",
             "Denmark"         => "Danmark",
@@ -193,7 +193,7 @@ class Locale {
             "Taiwan"          => "台湾",
             "The Netherlands" => "Nederland",
             "Ukraine"         => "Україна",
-        );
+        ];
 
         if (!empty($translated_countries[$country])) {
             return $translated_countries[$country];
@@ -213,7 +213,7 @@ class Locale {
      * @return array|mixed|null
      */
     public static function translate_lang_names($key = NULL) {
-        $translated_langs = array(
+        $translated_langs = [
             "Chinese_Simplified"  => "中文-简体",
             "Chinese_Traditional" => "中文-繁体",
             "Czech"               => "Čeština",
@@ -236,7 +236,7 @@ class Locale {
             "Swedish"             => "Svenska",
             "Turkish"             => "Türkçe",
             "Ukrainian"           => "Українська",
-        );
+        ];
 
         return $key === NULL ? $translated_langs : (isset($translated_langs[$key]) ? $translated_langs[$key] : $key);
     }
@@ -257,7 +257,7 @@ class Locale {
          * 2. http://blog.xoundboy.com/?p=235
          * 3. https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
          */
-        $language_codes = array(
+        $language_codes = [
             'en' => 'English',
             'aa' => 'Afar',
             'ab' => 'Abkhazian',
@@ -393,7 +393,7 @@ class Locale {
             'yo' => 'Yoruba',
             'zh' => 'Chinese',
             'zu' => 'Zulu',
-        );
+        ];
 
         $iso_codes = array_flip($language_codes);
         if ($iso_to_lang) {

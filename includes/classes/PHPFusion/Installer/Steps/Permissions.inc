@@ -67,22 +67,22 @@ class InstallerPermissions extends Install_Core {
         $content .= "</table>\n<br />\n<br />\n";
         // can proceed
         if ($system_health > 6) {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
+            self::$step = [
+                1 => [
+                    'name'  => 'step',
                     'label' => self::$locale['setup_0121'],
                     'value' => self::STEP_DB_SETTINGS_FORM
-                )
-            );
+                ]
+            ];
         } else {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'type' => 'tryagain',
+            self::$step = [
+                1 => [
+                    'name'  => 'step',
+                    'type'  => 'tryagain',
                     'label' => self::$locale['setup_0122'],
                     'value' => self::STEP_DB_SETTINGS_FORM
-                )
-            );
+                ]
+            ];
             $content .= form_hidden('license', '', '1');
         }
 

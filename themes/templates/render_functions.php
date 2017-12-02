@@ -77,7 +77,7 @@ if (!function_exists("render_breadcrumbs")) {
 
 if (!function_exists('render_favicons')) {
     function render_favicons($folder = '') {
-    	$folder = ($folder == '' ? IMAGES.'favicons/' : $folder);
+        $folder = ($folder == '' ? IMAGES.'favicons/' : $folder);
         $html = "";
         /* Src: http://realfavicongenerator.net/favicon_result?file_id=p1avd9jap61od55nq1l2e1e2q7q76#.WAbP6I995D8 */
         if (is_dir($folder)) {

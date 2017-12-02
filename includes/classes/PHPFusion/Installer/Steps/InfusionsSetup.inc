@@ -54,12 +54,12 @@ class InstallerInfusions extends Install_Core {
             define("iUSER_RIGHTS", $userdata['user_rights']);
             define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
             // Get enabled language settings
-            $enabled_languages = array_keys(fusion_get_enabled_languages());
+            //$enabled_languages = array_keys(fusion_get_enabled_languages());
             // If language change is initiated and if the selected language is valid
             if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
                 $lang = stripinput($_GET['lang']);
                 set_language($lang);
-                $redirectPath = clean_request("", array("lang"), FALSE);
+                $redirectPath = clean_request("", ["lang"], FALSE);
                 redirect($redirectPath);
             }
             // Main language detection procedure
@@ -85,15 +85,15 @@ class InstallerInfusions extends Install_Core {
 
             if (($folder = filter_input(INPUT_POST, 'infuse'))) {
                 Infusion_Core::getInstance()->infuse($folder);
-            } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
+            } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
                 Infusion_Core::getInstance()->defuse($folder);
             }
 
             $content = "";
             $temp = opendir(INFUSIONS);
-            $infs = array();
+            $infs = [];
             while ($folder = readdir($temp)) {
-                if (!in_array($folder, array("..", ".")) && ($inf = Infusion_Core::load_infusion($folder))) {
+                if (!in_array($folder, ["..", "."]) && ($inf = Infusion_Core::load_infusion($folder))) {
                     $infs[] = $inf;
                 }
             }
@@ -119,14 +119,14 @@ class InstallerInfusions extends Install_Core {
                     if ($inf['status'] > 0) {
                         if ($inf['status'] > 1) {
                             $content .= form_button('infuse', $locale['416'], $inf['folder'],
-                                array('class' => 'btn-info m-t-5 btn-sm infuse', 'icon' => 'fa fa-cube'));
+                                ['class' => 'btn-info m-t-5 btn-sm infuse', 'icon' => 'fa fa-cube']);
                         } else {
                             $content .= form_button('defuse', $locale['411'], $inf['folder'],
-                                array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'fa fa-trash'));
+                                ['class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'fa fa-trash']);
                         }
                     } else {
                         $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                            array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'fa fa-magnet'));
+                            ['class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'fa fa-magnet']);
                     }
                     $content .= "</div>\n";
                     $content .= "<div class='col-xs-6 col-sm-7 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";
@@ -139,14 +139,14 @@ class InstallerInfusions extends Install_Core {
                 $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
             }
             $content .= "</div>\n</div>\n";
-            self::$step = array(
-                1 => array(
+            self::$step = [
+                1 => [
                     'class' => 'pull-right btn-success',
                     'name'  => 'step',
                     'label' => self::$locale['setup_0120'],
                     'value' => self::STEP_EXIT
-                ),
-            );
+                ],
+            ];
         }
 
         return $content;

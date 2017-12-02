@@ -18,19 +18,17 @@
 namespace PHPFusion;
 
 class Smileys {
-    private static $locale = array();
-    private static $instances = array();
+    private static $locale = [];
+    private static $instances = [];
 
-    private $data = array(
-        'smiley_id' => 0,
-        'smiley_code' => "",
+    private $data = [
+        'smiley_id'    => 0,
+        'smiley_code'  => "",
         'smiley_image' => "",
-        'smiley_text' => "",
-    );
+        'smiley_text'  => "",
+    ];
 
     private $formaction = '';
-
-    private $panel_data = array();
 
     public function __construct() {
 
@@ -54,15 +52,15 @@ class Smileys {
                 break;
             default:
                 if (isset($_GET['smiley_text'])) {
-                $this->data['smiley_text'] = str_replace(array('.gif', '.png', '.jpg', '.svg'), '', $_GET['smiley_text']);
-                $this->data['smiley_image'] = $_GET['smiley_text'];
-                $this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form";
+                    $this->data['smiley_text'] = str_replace(['.gif', '.png', '.jpg', '.svg'], '', $_GET['smiley_text']);
+                    $this->data['smiley_image'] = $_GET['smiley_text'];
+                    $this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form";
                 } else {
-                $this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form";
+                    $this->formaction = FUSION_SELF.$aidlink."&amp;section=smiley_form";
                 }
                 break;
         }
-    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'smileys.php'.fusion_get_aidlink(), "title"=> self::$locale['SMLY_403']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'smileys.php'.fusion_get_aidlink(), "title" => self::$locale['SMLY_403']]);
         self::set_smileydb();
     }
 
@@ -79,7 +77,7 @@ class Smileys {
     }
 
     private function load_all_smileys() {
-        $list = array();
+        $list = [];
         $result = dbquery("SELECT smiley_id, smiley_code, smiley_image, smiley_text
         FROM ".DB_SMILEYS."
         ORDER BY smiley_text ASC");
@@ -103,7 +101,7 @@ class Smileys {
             }
         }
 
-        return array();
+        return [];
     }
 
     static function verify_smileys($id) {
@@ -118,57 +116,54 @@ class Smileys {
         if (self::verify_smileys($id)) {
             $data = self::load_smileys($id);
             dbquery("DELETE FROM ".DB_SMILEYS." WHERE smiley_id='".intval($id)."'");
-            if (!empty(isset($_GET['inact']))){
-                if (!empty($data['smiley_image']) && file_exists(IMAGES."smiley/".$data['smiley_image'])){
+            if (!empty(isset($_GET['inact']))) {
+                if (!empty($data['smiley_image']) && file_exists(IMAGES."smiley/".$data['smiley_image'])) {
                     unlink(IMAGES."smiley/".$data['smiley_image']);
                 }
             }
             addNotice('warning', (isset($_GET['inact']) ? self::$locale['SMLY_412'] : self::$locale['SMLY_413']));
-            redirect(clean_request("", array("section=smiley_list", "aid"), TRUE));
+            redirect(clean_request("", ["section=smiley_list", "aid"], TRUE));
         }
     }
 
     private function set_smileydb() {
-
-        $aidlink = fusion_get_aidlink();
-
         if (isset($_POST['smiley_save'])) {
-        $smiley_code = $_POST['smiley_code'];
+            $smiley_code = $_POST['smiley_code'];
 
-        if (QUOTES_GPC) {
-        $_POST['smiley_code'] = stripslashes($_POST['smiley_code']);
-        $smiley_code = str_replace(array("\"", "'", "\\", '\"', "\'", "<", ">"), "", $_POST['smiley_code']);
-        }
-
-        if (!empty(isset($_POST['smiley_image']))){
-            $this->data['smiley_image'] = form_sanitizer($_POST['smiley_image'], '', 'smiley_image');
-        }
-
-        if (!empty($_FILES['smiley_file']) && is_uploaded_file($_FILES['smiley_file']['tmp_name'])) {
-
-            $upload = form_sanitizer($_FILES['smiley_file'], "", "smiley_file");
-            if ($upload['error'] == 0) {
-            $this->data['smiley_image'] = $upload['image_name'];
+            if (QUOTES_GPC) {
+                $_POST['smiley_code'] = stripslashes($_POST['smiley_code']);
+                $smiley_code = str_replace(["\"", "'", "\\", '\"', "\'", "<", ">"], "", $_POST['smiley_code']);
             }
-        }
 
-        $this->data['smiley_id'] = isset($_POST['smiley_id']) ? form_sanitizer($_POST['smiley_id'], '0', 'smiley_id') : 0;
-        $this->data['smiley_code'] = isset($_POST['smiley_code']) ? form_sanitizer($smiley_code, '', 'smiley_code') : '';
-        $this->data['smiley_text'] = isset($_POST['smiley_text']) ? form_sanitizer($_POST['smiley_text'], '', 'smiley_text') : '';
+            if (!empty(isset($_POST['smiley_image']))) {
+                $this->data['smiley_image'] = form_sanitizer($_POST['smiley_image'], '', 'smiley_image');
+            }
 
-        $error = "";
-        $error .= empty($this->data['smiley_image']) ? self::$locale['SMLY_418'] : "";
-        $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_code='".$this->data['smiley_code']."'") ? self::$locale['SMLY_415'] : "";
-        $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_text='".$this->data['smiley_text']."'") ? self::$locale['SMLY_414'] : "";
+            if (!empty($_FILES['smiley_file']) && is_uploaded_file($_FILES['smiley_file']['tmp_name'])) {
 
-        if (\defender::safe()) {
-            if ($error == ""){
-                dbquery_insert(DB_SMILEYS, $this->data, empty($this->data['smiley_id']) ? 'save' : 'update');
-                addNotice('success', empty($this->data['smiley_id']) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
-                redirect(clean_request("", array("section=smiley_list", "aid"), TRUE));
+                $upload = form_sanitizer($_FILES['smiley_file'], "", "smiley_file");
+                if ($upload['error'] == 0) {
+                    $this->data['smiley_image'] = $upload['image_name'];
+                }
+            }
 
-            } else {
-               addNotice('danger', $error);
+            $this->data['smiley_id'] = isset($_POST['smiley_id']) ? form_sanitizer($_POST['smiley_id'], '0', 'smiley_id') : 0;
+            $this->data['smiley_code'] = isset($_POST['smiley_code']) ? form_sanitizer($smiley_code, '', 'smiley_code') : '';
+            $this->data['smiley_text'] = isset($_POST['smiley_text']) ? form_sanitizer($_POST['smiley_text'], '', 'smiley_text') : '';
+
+            $error = "";
+            $error .= empty($this->data['smiley_image']) ? self::$locale['SMLY_418'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_code='".$this->data['smiley_code']."'") ? self::$locale['SMLY_415'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_text='".$this->data['smiley_text']."'") ? self::$locale['SMLY_414'] : "";
+
+            if (\defender::safe()) {
+                if ($error == "") {
+                    dbquery_insert(DB_SMILEYS, $this->data, empty($this->data['smiley_id']) ? 'save' : 'update');
+                    addNotice('success', empty($this->data['smiley_id']) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
+                    redirect(clean_request("", ["section=smiley_list", "aid"], TRUE));
+
+                } else {
+                    addNotice('danger', $error);
 
                 }
             }
@@ -177,8 +172,8 @@ class Smileys {
 
     public function display_admin() {
 
-    opentable(self::$locale['SMLY_403']);
-        $allowed_section = array("smiley_form", "smiley_list");
+        opentable(self::$locale['SMLY_403']);
+        $allowed_section = ["smiley_form", "smiley_list"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'smiley_list';
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $this->verify_smileys($_GET['smiley_id']) : 0;
 
@@ -191,21 +186,21 @@ class Smileys {
 
         echo opentab($tab_title, $_GET['section'], 'smiley_list', TRUE);
 
-    switch ($_GET['section']) {
-        case "smiley_form":
-            $this->add_smiley_form();
-        break;
-        default:
-        $this->smiley_listing();
-        break;
-    }
+        switch ($_GET['section']) {
+            case "smiley_form":
+                $this->add_smiley_form();
+                break;
+            default:
+                $this->smiley_listing();
+                break;
+        }
 
         echo closetab();
-    closetable();
+        closetable();
     }
 
     public function smiley_listing() {
-       global $aidlink;
+        global $aidlink;
 
         $all_smileys = self::load_all_smileys();
         $smileys_list = self::smiley_list();
@@ -213,7 +208,7 @@ class Smileys {
         echo '<div class="m-t-10">';
         echo '<h2>'.self::$locale['SMLY_404'].'</h2>';
 
-        if(!empty($all_smileys)) {
+        if (!empty($all_smileys)) {
             echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             echo "<tr>\n";
             echo "<td class='col-xs-2'><strong>".self::$locale['SMLY_430']."</strong></td>\n";
@@ -230,7 +225,7 @@ class Smileys {
                 echo "<td class='col-xs-4'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=edit&amp;smiley_id=".$info['smiley_id']."'>".self::$locale['edit']."<i class='fa fa-edit m-l-10'></i></a> \n";
                 echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_417']."');\">".self::$locale['SMLY_435']."<i class='fa fa-trash m-l-10'></i></a> \n";
                 echo "<a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;action=delete&amp;inact=1&amp;smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".self::$locale['SMLY_416']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n</tr>\n";
-                }
+            }
             echo "</table>\n</div>";
         } else {
             echo "<div class='well text-center'>".self::$locale['SMLY_440']."</div>\n";
@@ -239,15 +234,15 @@ class Smileys {
 
         echo '<div class="m-t-10">';
         echo '<h2>'.self::$locale['SMLY_405'].'</h2>';
-        if(!empty($smileys_list)) {
+        if (!empty($smileys_list)) {
             echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
-                foreach ($smileys_list as $list) {
+            foreach ($smileys_list as $list) {
                 echo "<tr>\n";
-                echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$list."' alt='' title='' style='border:0px;' /></td>\n";
-                echo "<td class='col-xs-2'>".ucwords(str_replace(array('.gif', '.png', '.jpg', '.svg'), '', $list))."</td>\n";
+                echo "<td class='col-xs-2'><img src='".IMAGES."smiley/".$list."' alt='' title='' style='border:none;' /></td>\n";
+                echo "<td class='col-xs-2'>".ucwords(str_replace(['.gif', '.png', '.jpg', '.svg'], '', $list))."</td>\n";
                 echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=smiley_form&amp;smiley_text=".$list."'>".self::$locale['add']."<i class='fa fa-plus-square m-l-10'></i></a></td>\n";
                 echo "</tr>\n";
-                }
+            }
             echo "</table>\n</div>";
         } else {
             echo "<div class='well text-center'>".self::$locale['SMLY_441']."</div>\n";
@@ -256,8 +251,8 @@ class Smileys {
     }
 
     private function smiley_list() {
-        $smiley_list = array();
-        $smiley = array();
+        $smiley_list = [];
+        $smiley = [];
         $result = dbquery("SELECT smiley_id, smiley_code, smiley_image, smiley_text
         FROM ".DB_SMILEYS."
         ORDER BY smiley_id");
@@ -284,43 +279,43 @@ class Smileys {
 
         fusion_confirm_exit();
         echo '<div class="m-t-10">';
-        echo openform('smiley_form', 'post', $this->formaction, array('enctype' => TRUE));
+        echo openform('smiley_form', 'post', $this->formaction, ['enctype' => TRUE]);
 
         echo form_hidden('smiley_id', '', $this->data['smiley_id']);
-        $image_opts = array();
+        $image_opts = [];
         $image_files = makefilelist(IMAGES."smiley/", ".|..|index.php", TRUE);
         foreach ($image_files as $filename) {
             $name = explode(".", $filename);
             $image_opts[$filename] = ucwords($name[0]);
         }
-        if ($this->data['smiley_image']){
-        echo form_select('smiley_image', self::$locale['SMLY_421'], $this->data['smiley_image'], array(
-            'options' => $image_opts,
-            'required' => TRUE,
-            'inline' => TRUE,
-            'error_text' => self::$locale['SMLY_438'],
-            ));
+        if ($this->data['smiley_image']) {
+            echo form_select('smiley_image', self::$locale['SMLY_421'], $this->data['smiley_image'], [
+                'options'    => $image_opts,
+                'required'   => TRUE,
+                'inline'     => TRUE,
+                'error_text' => self::$locale['SMLY_438'],
+            ]);
         }
-        if (!$this->data['smiley_image']){
-        echo form_fileinput('smiley_file', '', '', array(
-            'upload_path' => IMAGES.'smiley/',
-            'delete_original' => TRUE,
-            'template' => 'modern',
-            'type' => 'image',
-            'required' => TRUE,
-            ));
+        if (!$this->data['smiley_image']) {
+            echo form_fileinput('smiley_file', '', '', [
+                'upload_path'     => IMAGES.'smiley/',
+                'delete_original' => TRUE,
+                'template'        => 'modern',
+                'type'            => 'image',
+                'required'        => TRUE,
+            ]);
         }
-        echo form_text('smiley_code', self::$locale['SMLY_420'], $this->data['smiley_code'], array(
-            'required' => TRUE,
-            'inline' => TRUE,
+        echo form_text('smiley_code', self::$locale['SMLY_420'], $this->data['smiley_code'], [
+            'required'   => TRUE,
+            'inline'     => TRUE,
             'error_text' => self::$locale['SMLY_437']
-        ));
-        echo form_text('smiley_text', self::$locale['SMLY_422'], $this->data['smiley_text'], array(
-            'required' => TRUE,
-            'inline' => TRUE,
+        ]);
+        echo form_text('smiley_text', self::$locale['SMLY_422'], $this->data['smiley_text'], [
+            'required'   => TRUE,
+            'inline'     => TRUE,
             'error_text' => self::$locale['SMLY_439'],
-        ));
-        echo form_button('smiley_save', ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), array('class' => 'btn-primary'));
+        ]);
+        echo form_button('smiley_save', ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), ($this->data['smiley_id'] ? self::$locale['SMLY_424'] : self::$locale['SMLY_423']), ['class' => 'btn-primary']);
         echo closeform();
         add_to_jquery("
         function showMeSmileys(item) {

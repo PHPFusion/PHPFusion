@@ -39,7 +39,7 @@ class PageComposer extends PageAdmin {
             self::validate_PageSQL();
         }
 
-        echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
+        echo openform('inputform', 'post', FUSION_REQUEST, ["class" => "m-t-20"]);
 
         echo form_hidden('page_id', '', self::$data['page_id']);
 
@@ -56,13 +56,13 @@ class PageComposer extends PageAdmin {
         echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'nav-tabs m-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
-        echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], array('class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o'));
-        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o'));
+        echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
+        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o']);
         if (self::$is_editing) {
-            echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default m-r-10', 'icon' => 'fa fa-times'));
+            echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-times']);
             echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'><i class='fa fa-eye'></i> ".self::$locale['view']."</a>";
             $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? self::$locale['enable']." TINYMCE" : self::$locale['disable']." TINYMCE";
-            echo form_button('tinymce_switch', $val, $val, array('class' => 'btn-default m-l-10', 'type' => 'button'));
+            echo form_button('tinymce_switch', $val, $val, ['class' => 'btn-default m-l-10', 'type' => 'button']);
         }
         echo "</div>\n";
         echo "<hr/>";
@@ -93,18 +93,18 @@ class PageComposer extends PageAdmin {
                 case 'pg_composer':
                     break;
                 case 'pg_settings':
-                    self::$data = array(
-                        'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+                    self::$data = [
+                        'page_id'           => form_sanitizer($_POST['page_id'], 0, 'page_id'),
                         'page_header_panel' => !empty($_POST['page_header_panel']) ? 1 : 0,
                         'page_footer_panel' => !empty($_POST['page_footer_panel']) ? 1 : 0,
-                        'page_left_panel' => !empty($_POST['page_left_panel']) ? 1 : 0,
-                        'page_right_panel' => !empty($_POST['page_right_panel']) ? 1 : 0,
-                        'page_top_panel' => !empty($_POST['page_top_panel']) ? 1 : 0,
+                        'page_left_panel'   => !empty($_POST['page_left_panel']) ? 1 : 0,
+                        'page_right_panel'  => !empty($_POST['page_right_panel']) ? 1 : 0,
+                        'page_top_panel'    => !empty($_POST['page_top_panel']) ? 1 : 0,
                         'page_bottom_panel' => !empty($_POST['page_bottom_panel']) ? 1 : 0,
-                        'page_link_cat' => self::$data['page_link_cat'],
-                        'page_title' => self::$data['page_title'],
-                        'page_access' => self::$data['page_access'],
-                    );
+                        'page_link_cat'     => self::$data['page_link_cat'],
+                        'page_title'        => self::$data['page_title'],
+                        'page_access'       => self::$data['page_access'],
+                    ];
 
                     if (\defender::safe()) {
                         self::execute_PageSQL();
@@ -112,26 +112,26 @@ class PageComposer extends PageAdmin {
                     }
                     break;
                 case 'pg_content';
-                    self::$data = array(
-                        'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
-                        'page_cat' => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
-                        'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
-                        'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
-                        'page_content' => addslash($_POST['page_content']),
-                        'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                        'page_status' => form_sanitizer($_POST['page_status'], '', 'page_status'),
-                        'page_datestamp' => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),
-                        'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
-                        'page_user' => fusion_get_userdata('user_id'),
-                        'page_grid_id' => self::$data['page_grid_id'],
-                        'page_content_id' => self::$data['page_content_id'],
-                        'page_left_panel' => self::$data['page_left_panel'],
-                        'page_right_panel' => self::$data['page_right_panel'],
-                        'page_top_panel' => self::$data['page_top_panel'],
+                    self::$data = [
+                        'page_id'           => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+                        'page_cat'          => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
+                        'page_title'        => form_sanitizer($_POST['page_title'], '', 'page_title'),
+                        'page_access'       => form_sanitizer($_POST['page_access'], 0, 'page_access'),
+                        'page_content'      => addslash($_POST['page_content']),
+                        'page_keywords'     => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
+                        'page_status'       => form_sanitizer($_POST['page_status'], '', 'page_status'),
+                        'page_datestamp'    => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),
+                        'page_language'     => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
+                        'page_user'         => fusion_get_userdata('user_id'),
+                        'page_grid_id'      => self::$data['page_grid_id'],
+                        'page_content_id'   => self::$data['page_content_id'],
+                        'page_left_panel'   => self::$data['page_left_panel'],
+                        'page_right_panel'  => self::$data['page_right_panel'],
+                        'page_top_panel'    => self::$data['page_top_panel'],
                         'page_bottom_panel' => self::$data['page_bottom_panel'],
                         'page_header_panel' => self::$data['page_header_panel'],
                         'page_footer_panel' => self::$data['page_footer_panel']
-                    );
+                    ];
 
                     if (\defender::safe()) {
                         self::execute_PageSQL();
@@ -159,8 +159,8 @@ class PageComposer extends PageAdmin {
 
     private static function execute_PageRedirect() {
         if (isset($_POST['save'])) {
-            redirect(clean_request('action=edit&cpid='.self::$data['page_id'], array('section', 'composer_tab', 'aid'), TRUE));
-        } elseif (isset($_POST['save_and_close'])) {
+            redirect(clean_request('action=edit&cpid='.self::$data['page_id'], ['section', 'composer_tab', 'aid'], TRUE));
+        } else if (isset($_POST['save_and_close'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
         }
     }
@@ -177,32 +177,34 @@ class PageComposer extends PageAdmin {
                 dbquery("UPDATE ".DB_CUSTOM_PAGES_CONTENT." SET page_content='".self::$data['page_content']."' WHERE page_grid_id=".self::$data['page_grid_id']." AND page_content_id=".self::$data['page_content_id']);
 
             } else {
+                $rowData = [];
+                $colData = [];
 
                 // create new rows
                 if (empty(self::$data['page_grid_id'])) {
-                    $rowData = array(
-                        'page_grid_id' => 0,
-                        'page_id' => self::$data['page_id'],
+                    $rowData = [
+                        'page_grid_id'           => 0,
+                        'page_id'                => self::$data['page_id'],
                         'page_grid_column_count' => 1,
-                        'page_grid_html_id' => '',
-                        'page_grid_class' => '',
-                        'page_grid_order' => 1,
-                        'page_widget' => 'content'
-                    );
+                        'page_grid_html_id'      => '',
+                        'page_grid_class'        => '',
+                        'page_grid_order'        => 1,
+                        'page_widget'            => 'content'
+                    ];
                     dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
                     $rowData['page_grid_id'] = dblastid();
                 }
 
                 if (empty(self::$data['page_content_id'])) {
-                    $colData = array(
-                        'page_id' => self::$data['page_id'],
-                        'page_grid_id' => $rowData['page_grid_id'],
-                        'page_content_id' => 0,
-                        'page_content_type' => 'content',
-                        'page_content' => self::$data['page_content'],
+                    $colData = [
+                        'page_id'            => self::$data['page_id'],
+                        'page_grid_id'       => $rowData['page_grid_id'],
+                        'page_content_id'    => 0,
+                        'page_content_type'  => 'content',
+                        'page_content'       => self::$data['page_content'],
                         'page_content_order' => 1,
-                        'page_options' => '',
-                    );
+                        'page_options'       => '',
+                    ];
                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
                     $colData['page_content_id'] = dblastid();
                 }

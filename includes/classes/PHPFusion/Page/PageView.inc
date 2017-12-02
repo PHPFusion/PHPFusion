@@ -21,13 +21,14 @@ class PageView extends PageController {
 
     /**
      * Return page composer object
+     *
      * @param bool|FALSE $set_info
      * @return null|static
      */
-    protected static $page_instance = NULL;
+    protected static $page_instance = null;
 
-    public static function getInstance($set_info = FALSE, $page_id = 0) {
-        if (self::$page_instance === NULL) {
+    public static function getInstance($set_info = false, $page_id = 0) {
+        if (self::$page_instance === null) {
             self::$page_instance = new static();
             if ($set_info) {
                 self::set_PageInfo($page_id);
@@ -54,23 +55,23 @@ class PageView extends PageController {
                 $row_htmlClass = ($row_prop['page_grid_class'] ? " ".$row_prop['page_grid_class'] : "");
                 // check if there are any content in this row, if no, don't render
                 if ($row_prop['page_content'] or $row_prop['page_options']) :
-                ?>
-                <div id="<?php echo $row_htmlId ?>" class="row<?php echo $row_htmlClass ?>">
-                    <?php if ($row_prop['page_grid_container']) : ?>
-                    <div class="container">
-                        <?php endif;
-                    foreach ($columns as $column_id => $colData) :
-                        if ($colData['page_content_id']) :
-                            ?>
-                            <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
-                                <?php echo self::display_Widget($colData) ?>
-                            </div>
-                        <?php endif;
-                    endforeach;
-                        if ($row_prop['page_grid_container']) : ?>
+                    ?>
+                    <div id="<?php echo $row_htmlId ?>" class="row<?php echo $row_htmlClass ?>">
+                        <?php if ($row_prop['page_grid_container']) : ?>
+                        <div class="container">
+                            <?php endif;
+                            foreach ($columns as $column_id => $colData) :
+                                if ($colData['page_content_id']) :
+                                    ?>
+                                    <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
+                                        <?php echo self::display_Widget($colData) ?>
+                                    </div>
+                                <?php endif;
+                            endforeach;
+                            if ($row_prop['page_grid_container']) : ?>
+                        </div>
+                    <?php endif; ?>
                     </div>
-                <?php endif; ?>
-                </div>
                 <?php endif; ?>
             <?php endif;
         endforeach;

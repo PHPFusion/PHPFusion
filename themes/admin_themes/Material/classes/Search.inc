@@ -94,6 +94,8 @@ class Search {
     }
 
     private function DisplayResult() {
+        $locale = fusion_get_locale();
+
         if (!empty($this->result['data'])) {
             foreach ($this->result['data'] as $data) {
                 if (stristr($data['admin_link'], '/infusions/')) {

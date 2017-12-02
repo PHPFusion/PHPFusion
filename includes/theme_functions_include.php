@@ -138,11 +138,11 @@ function showprivacypolicy() {
  * @return string
  */
 if (!function_exists("alert")) {
-    function alert($title, array $options = array()) {
-        $options += array(
+    function alert($title, array $options = []) {
+        $options += [
             "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
             "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
-        );
+        ];
         if ($options['dismiss'] == TRUE) {
             $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>$title</div>";
         } else {
@@ -157,7 +157,7 @@ if (!function_exists("alert")) {
 // Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
-        $settings_arr = array();
+        $settings_arr = [];
         $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'");
         if (dbrows($set_result)) {
             while ($set_data = dbarray($set_result)) {
@@ -179,28 +179,28 @@ if (!function_exists('get_theme_settings')) {
 function fusion_sort_table($table_id) {
     add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
     add_to_jquery("
-	$('#".$table_id."').tablesorter();
-	");
+    $('#".$table_id."').tablesorter();
+    ");
 
     return "tablesorter";
 }
 
 if (!function_exists("label")) {
-    function label($label, array $options = array()) {
-        $options += array(
+    function label($label, array $options = []) {
+        $options += [
             "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        );
+            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        ];
 
         return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
     }
 }
 if (!function_exists("badge")) {
-    function badge($label, array $options = array()) {
-        $options += array(
+    function badge($label, array $options = []) {
+        $options += [
             "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        );
+            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        ];
 
         return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
     }
@@ -221,15 +221,15 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @param array $options
      * @return string
      */
-    function openmodal($id, $title, $options = array()) {
+    function openmodal($id, $title, $options = []) {
         $locale = fusion_get_locale();
-        $options += array(
+        $options += [
             'class'        => !empty($options['class']) ?: 'modal-lg',
             'button_id'    => '',
             'button_class' => '',
             'static'       => FALSE,
             'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
-        );
+        ];
 
         $modal_trigger = '';
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
@@ -238,9 +238,9 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
         if ($options['static'] && !empty($modal_trigger)) {
             PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
-        } elseif ($options['static'] && empty($options['button_id'])) {
+        } else if ($options['static'] && empty($options['button_id'])) {
             PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-        } elseif ($modal_trigger && empty($options['static'])) {
+        } else if ($modal_trigger && empty($options['static'])) {
             PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
             if (!$options['hidden']) {
@@ -290,13 +290,15 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 if (!function_exists("progress_bar")) {
     /**
      * Render a progress bar
-     * @param      $num - str or array
-     * @param bool $title - str or array
-     * @param bool $class
-     * @param bool $height
-     * @param bool $reverse
-     * @param bool $as_percent
-     * @param bool $disabled
+     * @param        $num - str or array
+     * @param bool   $title - str or array
+     * @param bool   $class
+     * @param bool   $height
+     * @param bool   $reverse
+     * @param bool   $as_percent
+     * @param bool   $disabled
+     * @param bool   $hide_info
+     * @param string $class_
      * @return string
      */
     function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
@@ -306,24 +308,24 @@ if (!function_exists("progress_bar")) {
                 $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
                 if ($num > 71) {
                     $auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-                } elseif ($num > 55) {
+                } else if ($num > 55) {
                     $auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-                } elseif ($num > 25) {
+                } else if ($num > 25) {
                     $auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-                } elseif ($num < 25) {
+                } else if ($num < 25) {
                     $auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
                 }
 
                 return $auto_class;
             }
         }
-        $_barcolor = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
-        $_barcolor_reverse = array(
+        $_barcolor = ['progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger'];
+        $_barcolor_reverse = [
             'progress-bar-success',
             'progress-bar-info',
             'progress-bar-warning',
             'progress-bar-danger'
-        );
+        ];
         $html = '';
         if (is_array($num)) {
             $i = 0;
@@ -394,39 +396,39 @@ if (!function_exists("check_panel_status")) {
             if ($settings['exclude_left'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
             }
-        } elseif ($side == "upper") {
+        } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_upper']);
             }
-        } elseif ($side == "aupper") {
+        } else if ($side == "aupper") {
             if ($settings['exclude_aupper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_aupper']);
             }
-        } elseif ($side == "lower") {
+        } else if ($side == "lower") {
             if ($settings['exclude_lower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_lower']);
             }
-        } elseif ($side == "blower") {
+        } else if ($side == "blower") {
             if ($settings['exclude_blower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_blower']);
             }
-        } elseif ($side == "right") {
+        } else if ($side == "right") {
             if ($settings['exclude_right'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
-        } elseif ($side == "user1") {
+        } else if ($side == "user1") {
             if ($settings['exclude_user1'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user1']);
             }
-        } elseif ($side == "user2") {
+        } else if ($side == "user2") {
             if ($settings['exclude_user2'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user2']);
             }
-        } elseif ($side == "user3") {
+        } else if ($side == "user3") {
             if ($settings['exclude_user3'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user3']);
             }
-        } elseif ($side == "user4") {
+        } else if ($side == "user4") {
             if ($settings['exclude_user4'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user4']);
             }
@@ -487,16 +489,16 @@ if (!function_exists("showsublinks")) {
      * Displays Site Links Navigation Bar
      * @param string $sep - Custom seperator text
      * @param string $class - Class
-     * @param array $options
+     * @param array  $options
      *
      * Notice: There is a more powerful method now that offers more powerful manipulation methods
      * that non oo approach cannot ever achieve using cache and the new mutator method
      * SiteLinks::setSubLinks($sep, $class, $options)->showsublinks(); for normal usage
      * @return string
      */
-    function showsublinks($sep = "", $class = "navbar-default", array $options = array()) {
+    function showsublinks($sep = "", $class = "navbar-default", array $options = []) {
         $options += [
-            'seperator' => $sep,
+            'seperator'    => $sep,
             'navbar_class' => $class,
         ];
         return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
@@ -552,9 +554,9 @@ if (!function_exists("newscat")) {
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."'$link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='news_cats.php?cat_id=0'$link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=0'  $link_class>".$locale['global_080']."</a>";
         }
 
         return "<!--news_cat-->".$res." $sep ";
@@ -612,7 +614,7 @@ if (!function_exists("itemoptions")) {
             if (iADMIN && checkrights($item_type)) {
                 $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
-        } elseif ($item_type == "A") {
+        } else if ($item_type == "A") {
             if (iADMIN && checkrights($item_type)) {
                 $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
@@ -685,14 +687,14 @@ if (!function_exists('tablebreak')) {
 if (!function_exists('display_avatar')) {
     function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
         if (empty($userdata)) {
-            $userdata = array();
+            $userdata = [];
         }
-        $userdata += array(
-            'user_id' => 0,
-            'user_name' => '',
+        $userdata += [
+            'user_id'     => 0,
+            'user_name'   => '',
             'user_avatar' => '',
             'user_status' => ''
-        );
+        ];
 
         if (!$userdata['user_id']) {
             $userdata['user_id'] = 1;
@@ -783,10 +785,10 @@ if (!function_exists("thumbnail")) {
 if (!function_exists("lorem_ipsum")) {
     function lorem_ipsum($length) {
         $text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>\n";
-		$text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
-		$text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
-		$text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
-		$text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
+        $text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
+        $text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
+        $text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
+        $text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
 
         return trim_text($text, $length);
     }
@@ -812,20 +814,20 @@ if (!function_exists("timer")) {
         }
         //	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
         //	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
-        $timer = array(
-            $year => $locale['fmt_year'],
-            $month => $locale['fmt_month'],
-            $day => $locale['fmt_day'],
-            $hour => $locale['fmt_hour'],
+        $timer = [
+            $year   => $locale['fmt_year'],
+            $month  => $locale['fmt_month'],
+            $day    => $locale['fmt_day'],
+            $hour   => $locale['fmt_hour'],
             $minute => $locale['fmt_minute'],
             $second => $locale['fmt_second']
-        );
+        ];
         foreach ($timer as $arr => $unit) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
-                $string = \PHPFusion\Locale::format_word($answer, $unit, array('add_count' => FALSE));
+                $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
@@ -853,22 +855,22 @@ if (!function_exists("countdown")) {
         $day = 24 * $hour;
         $month = days_current_month() * $day;
         $year = (date("L", $updated) > 0) ? 366 * $day : 365 * $day;
-        $timer = array(
-            $year => $locale['year'],
-            $month => $locale['month'],
-            $day => $locale['day'],
-            $hour => $locale['hour'],
+        $timer = [
+            $year   => $locale['year'],
+            $month  => $locale['month'],
+            $day    => $locale['day'],
+            $hour   => $locale['hour'],
             $minute => $locale['minute'],
             $second => $locale['second']
-        );
-        $timer_b = array(
-            $year => $locale['year_a'],
-            $month => $locale['month_a'],
-            $day => $locale['day_a'],
-            $hour => $locale['hour_a'],
+        ];
+        $timer_b = [
+            $year   => $locale['year_a'],
+            $month  => $locale['month_a'],
+            $day    => $locale['day_a'],
+            $hour   => $locale['hour_a'],
             $minute => $locale['minute_a'],
             $second => $locale['second_a']
-        );
+        ];
         foreach ($timer as $arr => $unit) {
             $calc = $updated / $arr;
             if ($calc >= 1) {
@@ -984,7 +986,7 @@ if (!function_exists("tab_active")
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
 
-            $getArray = array($getname);
+            $getArray = [$getname];
             if (!empty($cleanup_GET)) {
                 $getArray = array_merge_recursive($cleanup_GET, $getArray);
             }
@@ -1060,23 +1062,23 @@ if (!function_exists("tab_active")
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
-        public function closetab(array $options = array()) {
+        public function closetab(array $options = []) {
             $locale = fusion_get_locale();
-            $default_options = array(
+            $default_options = [
                 "tab_nav" => FALSE,
-            );
+            ];
             $options += $default_options;
             if ($options['tab_nav'] == TRUE) {
                 $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
                 $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
                 add_to_jquery("
-				$('.btnNext').click(function(){
-				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
-				});
-				$('.btnPrevious').click(function(){
-				  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-				});
-			");
+                $('.btnNext').click(function(){
+                  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                });
+                $('.btnPrevious').click(function(){
+                  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+                });
+            ");
                 echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
             }
 
@@ -1093,9 +1095,9 @@ if (!function_exists("tab_active")
     /**
      * Current Tab Active Selector
      *
-     * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
+     * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-     * @param bool $getname        - set getname and turn tabs into link that listens to getname
+     * @param bool $getname - set getname and turn tabs into link that listens to getname
      *
      * @return string
      * @todo: options base
@@ -1110,11 +1112,11 @@ if (!function_exists("tab_active")
      * @param               $tab_title          entire array consisting of ['title'], ['id'], ['icon']
      * @param               $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
      * @param               $id                 unique ID
-     * @param bool|FALSE    $link               default false for jquery, true for php (will reload page)
-     * @param bool|FALSE    $class              the class for the nav
-     * @param string        $getname            the get request
-     * @param array         $cleanup_GET        the request key that needs to be deleted
-     * @param bool|FALSE    $remember           set to true to automatically remember tab using cookie.
+     * @param bool|FALSE    $link default false for jquery, true for php (will reload page)
+     * @param bool|FALSE    $class the class for the nav
+     * @param string        $getname the get request
+     * @param array         $cleanup_GET the request key that needs to be deleted
+     * @param bool|FALSE    $remember set to true to automatically remember tab using cookie.
      *                                          Example:
      *                                          $tab_title['title'][] = "Tab 1";
      *                                          $tab_title['id'][] = "tab1";
@@ -1142,7 +1144,7 @@ if (!function_exists("tab_active")
      * @param      $tab_title               deprecated, however this function is replaceable, and the params are accessible.
      * @param      $tab_id
      * @param bool $link_active_arrkey
-     * @param bool $link                    deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool $link deprecated, however this function is replaceable, and the params are accessible.
      * @param bool $key
      *
      * @return mixed
@@ -1159,7 +1161,7 @@ if (!function_exists("tab_active")
         return $fusion_tabs->closetabbody();
     }
 
-    function closetab(array $options = array()) {
+    function closetab(array $options = []) {
         global $fusion_tabs;
 
         return $fusion_tabs->closetab($options);
@@ -1205,14 +1207,14 @@ if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
         PHPFusion\OutputHandler::addToJQuery("
-			$('form').change(function() {
-				window.onbeforeunload = function() {
-					return true;
-				}
-				$(':button').bind('click', function() {
-					window.onbeforeunload = null;
-				});
-			});
-		");
+            $('form').change(function() {
+                window.onbeforeunload = function() {
+                    return true;
+                }
+                $(':button').bind('click', function() {
+                    window.onbeforeunload = null;
+                });
+            });
+        ");
     }
 }

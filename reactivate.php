@@ -22,26 +22,26 @@ require_once INCLUDES."suspend_include.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."reactivate.php");
 
 if (iMEMBER) {
-   redirect(BASEDIR."index.php");
+    redirect(BASEDIR."index.php");
 }
 
 if (isset($_GET['error']) && isnum($_GET['error'])) {
-	$text = "";
+    $text = "";
     switch ($_GET['error']) {
         case 1:
-        	$text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
+            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
             break;
         case 2:
-        	$text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
+            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
             break;
         case 3:
-        	$text = str_replace(['[LINK]', '[/LINK]', '[SITEEMAIL]'],
-            	["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
-            	$locale['503']
+            $text = str_replace(['[LINK]', '[/LINK]', '[SITEEMAIL]'],
+                ["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
+                $locale['503']
             );
             break;
         default:
-        	redirect(BASEDIR."index.php");
+            redirect(BASEDIR."index.php");
     }
     opentable($locale['500']);
     echo "<div class='alert alert-danger text-center'>".$text."</div>\n";
@@ -52,7 +52,7 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
     $result = dbquery("SELECT user_name, user_email, user_actiontime, user_password
                       FROM ".DB_USERS."
                       WHERE user_id='".$_GET['user_id']."' AND user_actiontime>'0' AND user_status='7'"
-                      );
+    );
     if (dbrows($result)) {
         $data = dbarray($result);
         $code = md5($data['user_actiontime'].$data['user_password']);

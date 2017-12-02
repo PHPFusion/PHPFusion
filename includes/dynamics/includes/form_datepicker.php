@@ -73,7 +73,7 @@
  */
 
 
-function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
+function form_datepicker($input_name, $label = '', $input_value = '', array $options = []) {
     // there was no sanitization?
     $locale = fusion_get_locale();
 
@@ -97,47 +97,47 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $input_name = stripinput($input_name);
 
-    $default_options = array(
-        'input_id'                => $input_name,
-        'required'                => FALSE,
-        'placeholder'             => '',
-        'deactivate'              => FALSE,
-        'width'                   => '',
-        'inner_width'             => '250px',
-        'class'                   => '',
-        'inline'                  => FALSE,
-        'error_text'              => $locale['error_input_default'],
-        'date_format_js'          => $locale['datepicker_js'],
-        'date_format_php'         => $locale['datepicker_php'],
-        'delimiter'               => '-',
-        'fieldicon_off'           => FALSE,
-        'filtered_dates'          => array(), // must be an array
-        'include_filtered_dates'  => (boolean)FALSE, // if TRUE, then only days filtered are selectable
-        'weekend'                 => array(), // 0 for Sunday, 1 for Monday, 6 for Saturday
-        'disable_weekend'         => (boolean)FALSE, // if true, all weekend will be non-selectable
-        'type'                    => 'timestamp',
-        'tip'                     => '',
-        'showTime'                => (boolean)FALSE,
-        'week_start'              => fusion_get_settings('week_start'),
-        'join_to_id'              => '',
-        'join_from_id'            => '',
-        'debug'                   => '',
-    );
+    $default_options = [
+        'input_id'               => $input_name,
+        'required'               => FALSE,
+        'placeholder'            => '',
+        'deactivate'             => FALSE,
+        'width'                  => '',
+        'inner_width'            => '250px',
+        'class'                  => '',
+        'inline'                 => FALSE,
+        'error_text'             => $locale['error_input_default'],
+        'date_format_js'         => $locale['datepicker_js'],
+        'date_format_php'        => $locale['datepicker_php'],
+        'delimiter'              => '-',
+        'fieldicon_off'          => FALSE,
+        'filtered_dates'         => [], // must be an array
+        'include_filtered_dates' => (boolean)FALSE, // if TRUE, then only days filtered are selectable
+        'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
+        'disable_weekend'        => (boolean)FALSE, // if true, all weekend will be non-selectable
+        'type'                   => 'timestamp',
+        'tip'                    => '',
+        'showTime'               => (boolean)FALSE,
+        'week_start'             => fusion_get_settings('week_start'),
+        'join_to_id'             => '',
+        'join_from_id'           => '',
+        'debug'                  => '',
+    ];
 
     $options += $default_options;
 
     if (!empty($input_value)) {
         if ($options['type'] == "timestamp") {
-            $input_value = date($options['date_format_php'], isnum($input_value) ? $input_value : strtotime(str_replace('-','/', $input_value)));
-        } elseif ($options['type'] == "date") {
+            $input_value = date($options['date_format_php'], isnum($input_value) ? $input_value : strtotime(str_replace('-', '/', $input_value)));
+        } else if ($options['type'] == "date") {
             if (stristr($input_value, $options['delimiter'])) {
                 $input_value = explode($options['delimiter'], $input_value);
                 if (count($input_value) == 3) {
-                    $params = array(
+                    $params = [
                         'year'  => $input_value[0],
                         'month' => $input_value[1],
                         'day'   => $input_value[2]
-                    );
+                    ];
                     if (checkdate($params['month'], $params['day'], $params['year'])) {
                         $input_value = (implode("-", $params)." 00:00:00");
                     }
@@ -153,7 +153,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     }
 
     // Format disabled or enabled dates as JS array
-    $dateFilter = array();
+    $dateFilter = [];
     if (!empty($options['filtered_dates']) && is_array($options['filtered_dates'])) {
         $date_filtered = "";
         $dateFilter[0] = "disabledDates: ";
@@ -167,13 +167,13 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     }
 
     // Format for Weekend
-    $weekendFilter = array();
+    $weekendFilter = [];
     if ($options['disable_weekend']) {
         $weekendFilter[0] = "daysOfWeekDisabled: ";
         $weekendFilter[1] = (!empty($options['weekend']) && is_array($options['weekend'])) ? "[".implode(",", $options['weekend'])."]" : "[0,6]";
     }
 
-    if (!in_array($options['type'], array('date', 'timestamp'))) {
+    if (!in_array($options['type'], ['date', 'timestamp'])) {
         $options['type'] = $default_options['type'];
     }
 
@@ -203,17 +203,17 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(array(
-            'input_name'  => $input_name,
-            'type'        => $options['type'],
-            'title'       => $title,
-            'id'          => $input_id,
-            'required'    => $options['required'],
-            'safemode'    => TRUE,
-            'error_text'  => $options['error_text'],
-            "delimiter"   => $options['delimiter'],
-            'date_format' => $options['date_format_php'],
-    ));
+    \defender::getInstance()->add_field_session([
+        'input_name'  => $input_name,
+        'type'        => $options['type'],
+        'title'       => $title,
+        'id'          => $input_id,
+        'required'    => $options['required'],
+        'safemode'    => TRUE,
+        'error_text'  => $options['error_text'],
+        "delimiter"   => $options['delimiter'],
+        'date_format' => $options['date_format_php'],
+    ]);
 
     if (!$options['deactivate']) {
 

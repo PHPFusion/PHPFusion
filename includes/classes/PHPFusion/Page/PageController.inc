@@ -27,13 +27,13 @@ use PHPFusion\Panels;
  */
 class PageController extends PageModel {
 
-    protected static $info = array(
+    protected static $info = [
         'title'   => '',
         'error'   => '',
         'body'    => '',
         'count'   => 0,
         'pagenav' => '',
-    );
+    ];
 
     public static function display_Widget($colData) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."custom_pages.php");
@@ -48,7 +48,7 @@ class PageController extends PageModel {
                 } else {
                     return $locale['page_405'];
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 echo $locale['page_401'].' ', $locale['page_404'], "\n";
             }
         }
@@ -84,7 +84,7 @@ class PageController extends PageModel {
         $html = ob_get_contents();
         ob_end_clean();
 
-        return (string) $html;
+        return (string)$html;
     }
 
     /**
