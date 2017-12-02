@@ -33,3 +33,4 @@ $locale['apw_426'] = "No password is modified.";
 $locale['apw_427'] = "Options";
 $locale['apw_428'] = "Do you realy want to delete this log?";
 $locale['apw_429'] = "Log deleted";
+$locale['apw_430'] = "Select All";
