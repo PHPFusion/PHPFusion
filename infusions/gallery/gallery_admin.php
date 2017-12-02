@@ -19,15 +19,10 @@ require_once "../../maincore.php";
 pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
 $aidlink = fusion_get_aidlink();
-if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-} else {
-    $locale = fusion_get_locale('', LOCALE."English/admin/settings.php");
-}
-$locale = fusion_get_locale('', GALLERY_ADMIN_LOCALE) + $locale;
+$locale = fusion_get_locale('', [GALLERY_ADMIN_LOCALE, LOCALE.LOCALESET."admin/settings.php"]);
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0001']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
 if (!empty($_GET['section'])){
