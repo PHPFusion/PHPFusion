@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
 
 /**
