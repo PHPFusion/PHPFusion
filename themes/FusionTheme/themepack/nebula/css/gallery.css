@@ -32,6 +32,7 @@ Gallery CSS for FusionTheme
     padding-bottom: 5px;
     height: 50px;
     overflow: hidden;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     content: "";
     position: relative;
@@ -54,5 +55,7 @@ Gallery CSS for FusionTheme
     left: 0;
     display: block;
     top: 0;
+    background: -webkit-linear-gradient(transparent 32px, white);
+    background: -o-linear-gradient(transparent 32px, white);
     background: linear-gradient(transparent 32px, white);
 }

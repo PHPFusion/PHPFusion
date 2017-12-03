@@ -130,12 +130,16 @@ Grids
 .row.flexbox {
     display: -webkit-flex;
     display: -ms-flexbox;
+    display: -webkit-box;
     display: flex;
     overflow: hidden;
 }
 
 /** adding .flexbox and .auto_width to .row will euqalize all child column height AND clumn width **/
 .row.flexbox.auto_width > div {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
 }
 /** Need to used inside a block type div and height width specify **/
@@ -151,6 +155,8 @@ Grids
 .center-x {
     position: relative;
     left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
@@ -158,6 +164,8 @@ Grids
     position: relative;
     left: 50%;
     top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 
@@ -683,6 +691,7 @@ ul {
 
 /* resets panelfor accordion */
 li.panel {
+    -webkit-box-shadow: none !important;
     box-shadow: none !important;
     margin-bottom: 0 !important;
     background: none;
@@ -988,6 +997,7 @@ table {
 
 /* Modal */
 .modal {
+    cursor: -webkit-zoom-out;
     cursor: zoom-out;
     text-align: center;
     padding: 0 !important;
@@ -1163,6 +1173,8 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 .icon-stack > .icon::before {
     position: absolute;
     top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 100%;
     text-align: center;
@@ -1290,6 +1302,9 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .comment-actions > .btn-group {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
 }
 
@@ -1462,6 +1477,7 @@ label img, .control-label > img {
 
 .text-overflow-hide {
     overflow: hidden;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
 

@@ -21,6 +21,8 @@
 
 .carousel-fade .carousel-inner .item {
     opacity: 0;
+    -webkit-transition-property: opacity;
+    -o-transition-property: opacity;
     transition-property: opacity;
     height: 100%;
 }

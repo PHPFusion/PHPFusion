@@ -13,11 +13,17 @@ Morphs Mobile Icons
 
 .navbar-toggle .icon-bar {
     width: 22px;
+    -webkit-transition: all 0.2s;
+    -o-transition: all 0.2s;
     transition: all 0.2s;
 }
 
 .navbar-toggle .top-bar {
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+    -webkit-transform-origin: 10% 10%;
+    -ms-transform-origin: 10% 10%;
     transform-origin: 10% 10%;
 }
 
@@ -26,11 +32,17 @@ Morphs Mobile Icons
 }
 
 .navbar-toggle .bottom-bar {
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
+    -webkit-transform-origin: 10% 90%;
+    -ms-transform-origin: 10% 90%;
     transform-origin: 10% 90%;
 }
 
 .navbar-toggle.collapsed .top-bar {
+    -webkit-transform: rotate(0);
+    -ms-transform: rotate(0);
     transform: rotate(0);
 }
 
@@ -39,6 +51,8 @@ Morphs Mobile Icons
 }
 
 .navbar-toggle.collapsed .bottom-bar {
+    -webkit-transform: rotate(0);
+    -ms-transform: rotate(0);
     transform: rotate(0);
 }
 
