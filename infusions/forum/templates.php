@@ -89,11 +89,11 @@ if (!function_exists('render_forum_main')) {
                 }
             }
 
-            /*foreach ($info['forums'][$id] as $forum_id => $data) {
+            foreach ($info['forums'][$id] as $forum_id => $data) {
                 $content = render_forum_item($data);
 
                 $html->set_block('forum_content', ['forum_content' => $content]);
-            }*/
+            }
         } else {
             $html->set_block('no_item', ['message' => $locale['forum_0328']]);
         }
