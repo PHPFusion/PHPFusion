@@ -61,11 +61,11 @@ if (!function_exists('render_forum_main')) {
                 'new_thread_link_title' => $info['new_topic_link']['title']
             ]);
 
-            $chtml = \PHPFusion\Template::getInstance('forum_su_index');
-            $chtml->set_template(FORUM.'templates/index/forum_item.html');
-
             foreach ($info['forums'][$id] as $forum_id => $data) {
                 if ($data['forum_type'] == 1) {
+                    $chtml = \PHPFusion\Template::getInstance('forum_su_index');
+                    $chtml->set_template(FORUM.'templates/index/forum_item.html');
+
                     $chtml->set_block('category_header', [
                         'forum_title_link'  => $data['forum_link']['title'],
                         'threads_title'     => $locale['forum_0002'],
@@ -84,16 +84,16 @@ if (!function_exists('render_forum_main')) {
                         }
                         $html->set_block('forum_content', ['forum_content' => $category_header.$content]);
                     } else {
-                        $chtml->set_block('no_item', ['message' => $locale['forum_0327']]);
+                        $html->set_block('no_item', ['message' => $locale['forum_0327']]);
                     }
                 }
             }
 
-            foreach ($info['forums'][$id] as $forum_id => $data) {
+            /*foreach ($info['forums'][$id] as $forum_id => $data) {
                 $content = render_forum_item($data);
 
                 $html->set_block('forum_content', ['forum_content' => $content]);
-            }
+            }*/
         } else {
             $html->set_block('no_item', ['message' => $locale['forum_0328']]);
         }
@@ -159,7 +159,7 @@ if (!function_exists('render_forum_item')) {
 
         $l_html = \PHPFusion\Template::getInstance('forum_item_lastpost');
         $l_html->set_template(FORUM.'templates/index/forum_item_lastpost.html'); // we have already cached it earlier?
-        if (empty($data['thread_lastpost'])) {
+        if (empty($data['forum_lastpost'])) {
             $l_html->set_block('forum_no_lastpost', [
                 'message' => $locale['forum_0005']
             ]);
