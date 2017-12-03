@@ -1109,9 +1109,9 @@ if (!function_exists("tab_active")
     /**
      * Render Tab Links
      *
-     * @param               $tab_title          entire array consisting of ['title'], ['id'], ['icon']
-     * @param               $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param               $id                 unique ID
+     * @param array         $tab_title          entire array consisting of ['title'], ['id'], ['icon']
+     * @param string        $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param string        $id                 unique ID
      * @param bool|FALSE    $link default false for jquery, true for php (will reload page)
      * @param bool|FALSE    $class the class for the nav
      * @param string        $getname the get request

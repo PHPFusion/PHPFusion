@@ -598,6 +598,8 @@ function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, 
  */
 function parseubb($text, $selected = "") {
     $bbcode_cache = cache_bbcode();
+    $sel_bbcodes = [];
+
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
@@ -612,6 +614,7 @@ function parseubb($text, $selected = "") {
             \PHPFusion\Locale::setLocale($locale_file);
         }
     }
+
     $locale = fusion_get_locale();
 
     foreach ($bbcode_cache as $bbcode) {
@@ -705,7 +708,7 @@ function formatcode($text) {
 /**
  * Highlights given words in subject
  *
- * @param string $word The highlighted word
+ * @param array  $word The highlighted word
  * @param string $subject The source text
  *
  * @return string
@@ -1014,7 +1017,7 @@ function getusergroups() {
  * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
  * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
  *
- * @return array
+ * @return bool
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
@@ -1084,9 +1087,7 @@ function groupaccess($field) {
 /**
  * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
  *
- * @global string[] $userdata
- *
- * @param strig     $field The name of the field
+ * @param string     $field The name of the field
  *
  * @return string It can return an empty condition!
  */
@@ -1301,7 +1302,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 }
 
 /**
- * @param        $scroll_url    The ajax script that loads the content
+ * @param string $scroll_url    The ajax script that loads the content
  * @param int    $rowstart Current rowstart - $_GET['rowstart']
  * @param int    $total_count The total rows - dbrows($result);
  * @param string $getname Default is 'rowstart'
@@ -1411,8 +1412,8 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @global string[] $settings
  * @global string[] $userdata
  *
- * @param           $format     shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param           $val        unix timestamp
+ * @param string    $format     shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
+ * @param int       $val        unix timestamp
  * @param array     $options
  *
  * @return string
@@ -1496,28 +1497,25 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 /**
  * User profile link
  *
- * @global array    $locale
- * @global string[] $settings
- *
  * @param int       $user_id
  * @param string    $user_name
  * @param int       $user_status
  * @param string    $class html class of link
- *
+ * @param bool      $display_link
  * @return string
  */
 function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
-
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     $class = ($class ? " class='$class'" : "");
+
     if ((in_array($user_status, [
                 0,
                 3,
                 7
             ]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE
     ) {
-        $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
+        $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."' ".$class.">".$user_name."</a>";
     } else if ($user_status == "5" || $user_status == "6") {
         $link = $locale['user_anonymous'];
     } else {
@@ -1585,10 +1583,10 @@ function fusion_get_settings($key = NULL) {
  *
  * Fetch a given locale key
  *
- * @param null   $key - The key of one setting
+ * @param string $key - The key of one setting
  * @param string $include_file - The full path of the file which to be included, can be either string or array
  *
- * @return array|null
+ * @return null
  */
 function fusion_get_locale($key = NULL, $include_file = '') {
     $locale = \PHPFusion\Locale::__getInstance('Default');
@@ -1616,9 +1614,9 @@ function fusion_get_username($user_id) {
 /**
  * Get a user own data
  *
- * @param $key - The column of one user information
+ * @param string $key - The column of one user information
  *
- * @return array|null
+ * @return null
  */
 function fusion_get_userdata($key = NULL) {
     global $userdata;

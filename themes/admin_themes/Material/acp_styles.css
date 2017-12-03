@@ -225,6 +225,8 @@ main {
 }
 .sidebar-toggled .toggleicon span {
     background: none;
+    -webkit-transition-delay: 0s, 0s;
+    transition-delay: 0s, 0s;
 }
 .sidebar-toggled .toggleicon span::before {
     top: 0;

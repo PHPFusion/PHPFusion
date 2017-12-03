@@ -92,8 +92,6 @@ class Infusion_Core {
      * Execute Installation according to Infusion Standard Developer Kit
      *
      * @param $folder
-     *
-     * @return bool
      */
     public function infuse($folder) {
         $error = FALSE;

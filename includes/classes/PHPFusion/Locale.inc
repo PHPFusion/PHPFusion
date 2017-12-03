@@ -66,7 +66,7 @@ class Locale {
     /**
      * Iinclude a new locale file
      *
-     * @param $include_file     Can be an array or a string
+     * @param string $include_file     Can be an array or a string
      */
     public static function setLocale($include_file) {
         if (!empty($include_file)) {

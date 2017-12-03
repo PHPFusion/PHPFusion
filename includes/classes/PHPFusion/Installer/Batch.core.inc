@@ -105,7 +105,7 @@ class Batch_Core extends Install_Core {
      */
     private static $batch = NULL;
     private static $table_name = '';
-    private static $table_cols = '';
+    private static $table_cols = [];
 
 
     /*
@@ -131,7 +131,7 @@ class Batch_Core extends Install_Core {
      * Use Infusions Core installer to perform upgrades
      */
     private static $upgrade_runtime = [];
-    private $js = "";
+    private $js = [];
 
     public static function getInstance() {
 
