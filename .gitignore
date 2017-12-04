@@ -13,3 +13,4 @@ config-copy.php
 *.db
 .htaccess
 /home.php
+/infusions/news/news_cats/
