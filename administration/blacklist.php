@@ -55,7 +55,7 @@ class Blaclist {
         self::set_adminsdb();
     }
 
-    public static function getInstance($key = TRUE) {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
@@ -305,5 +305,5 @@ class Blaclist {
     }
 }
 
-Blaclist::getInstance(TRUE)->display_admin();
+Blaclist::getInstance()->display_admin();
 require_once THEMES."templates/footer.php";

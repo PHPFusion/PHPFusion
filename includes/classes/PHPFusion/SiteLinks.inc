@@ -655,7 +655,7 @@ class SiteLinks {
                         if (!empty($reference)) {
 
                             $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
-                            $uriQuery = '';
+                            $uriQuery = [];
                             if (!empty($uri['query'])) {
                                 parse_str($uri['query'], $uriQuery);
                             }

@@ -482,14 +482,14 @@ class Atom {
 
         if (isset($_POST['save_theme'])) {
 
-            $modal = openmodal('dbi', sprintf($locale['theme_2005'], ucwords($this->theme_name)), [
+            /*$modal = openmodal('dbi', sprintf($locale['theme_2005'], ucwords($this->theme_name)), [
                 'class'     => 'zindex-boost modal-center',
                 'button_id' => 'save_theme',
                 'static'    => 1
             ]);
             $modal .= "<div class='overflow-hide'>".$locale['theme_2006']."</div>\n";
             $modal .= closemodal();
-            //add_to_footer($modal);
+            add_to_footer($modal);*/
 
             $fieldArrays = $this->data;
             foreach ($fieldArrays as $fieldNames => $fieldDefaults) {

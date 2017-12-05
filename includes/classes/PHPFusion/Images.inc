@@ -40,10 +40,13 @@ class Images {
         switch ($last) {
             case 'g':
                 $val = (int)$val * 1024;
+                break;
             case 'm':
                 $val = (int)$val * 1024;
+                break;
             case 'k':
                 $val = (int)$val * 1024;
+                break;
         }
 
         return (int)$val;

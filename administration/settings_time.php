@@ -60,6 +60,7 @@ if (isset($_POST['savesettings'])) {
 }
 
 $timezones = DateTimeZone::listIdentifiers(DateTimeZone::AMERICA | DateTimeZone::AFRICA | DateTimeZone::ARCTIC | DateTimeZone::ASIA | DateTimeZone::ATLANTIC | DateTimeZone::EUROPE | DateTimeZone::INDIAN | DateTimeZone::PACIFIC); //gives both african and american time zones
+$timezoneArray = [];
 
 foreach ($timezones as $zone) {
     $zone = explode('/', $zone); // 0 => Continent, 1 => City

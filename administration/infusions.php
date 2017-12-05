@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: infusions.php
 | Author: PHP-Fusion Development Team
-| Co-Author: Christian Damsgaard Jorgensen (PMM)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

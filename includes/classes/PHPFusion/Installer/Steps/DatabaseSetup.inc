@@ -273,6 +273,8 @@ class InstallerDbSetup extends Install_Core {
                         $error = FALSE;
                         //$message = "<strong>Building version upgrades...</strong>\n";
                         if (!$debug_process) {
+                            $filename = '';
+
                             foreach ($to_upgrade as $filename => $file_upgrades) {
                                 $current_count = $current_count + 1;
                                 $microtime = microtime(TRUE);

@@ -477,7 +477,7 @@ class db_backup {
         return $tbl_count;
     }
 
-    private function gzcompressfile($source, $level = FALSE) {
+    /*private function gzcompressfile($source, $level = FALSE) {
         $dest = $source.".gz";
         $mode = "wb".$level;
         $error = FALSE;
@@ -499,9 +499,11 @@ class db_backup {
         } else {
             return $dest;
         }
-    }
+    }*/
 
     private function GetSqlFieldType($table, $i) {
+        $new_data = [];
+
         $result = dbquery("SHOW COLUMNS FROM ".$table);
         while ($data = dbarray($result)) {
             $new_data[] = $data;

@@ -25,7 +25,7 @@ require_once THEMES."templates/admin_header.php";
 /**
  * Class fusion_panels
  */
-class fusion_panel_admin {
+class PanelsAdmin {
     /**
      * @var array|bool
      */
@@ -696,7 +696,6 @@ class fusion_panel_admin {
      * @return array
      */
     private static function get_includeOpts() {
-
         return [
             3 => self::$locale['459'],
             2 => self::$locale['467'],
@@ -728,7 +727,8 @@ class fusion_panel_admin {
     static function get_accessOpts() {
         $ref = [];
         $user_groups = getusergroups();
-        while (list($key, $user_group) = each($user_groups)) {
+
+        foreach ($user_groups as $key => $user_group) {
             $ref[$user_group[0]] = $user_group[1];
         }
 
@@ -737,7 +737,7 @@ class fusion_panel_admin {
 
 }
 
-$panel = new fusion_panel_admin();
+$panel = new PanelsAdmin();
 $panel->display_admin();
 
 require_once THEMES."templates/footer.php";

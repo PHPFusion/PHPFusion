@@ -33,7 +33,7 @@ abstract class Search_Model {
     protected static $global_string_count = 0;
 
     protected static $memory_limit = 0;
-    protected static $memory_exhausted = false;
+    protected static $memory_exhausted = FALSE;
 
     // Query Formatting
     protected static $fields_count = 0;
@@ -166,7 +166,7 @@ abstract class Search_Model {
         if (empty(self::$available_modules)) {
             self::$available_modules = ['0' => 'all'];
             $search_dir = INCLUDES."search/";
-            $search_files = makefilelist($search_dir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', true, 'files');
+            $search_files = makefilelist($search_dir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
             $search_files = array_flip($search_files);
             foreach ($search_files as $key => $file_to_check) {
                 if (preg_match("/include_button.php/i", $key)) {
@@ -188,9 +188,9 @@ abstract class Search_Model {
             self::$global_string_count += strlen($search_result);
             if (self::$memory_limit > self::$global_string_count) {
                 self::$search_result_array[] = $search_result;
-                self::$memory_exhausted = false;
+                self::$memory_exhausted = FALSE;
             } else {
-                self::$memory_exhausted = true;
+                self::$memory_exhausted = TRUE;
             }
         }
 

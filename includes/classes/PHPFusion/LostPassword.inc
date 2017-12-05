@@ -124,6 +124,8 @@ class LostPassword extends PasswordAuth {
 
     public function displayErrors() {
         $locale = fusion_get_locale();
+        $message = '';
+
         if ($this->_error != "") {
             switch ($this->_error) {
                 case 1:

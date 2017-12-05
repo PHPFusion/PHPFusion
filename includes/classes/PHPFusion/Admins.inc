@@ -24,7 +24,7 @@ namespace PHPFusion;
  */
 class Admins {
 
-    private static $instance = null;
+    private static $instance = NULL;
     /**
      * @var array - default section icons
      */
@@ -82,7 +82,7 @@ class Admins {
     /**
      * @var array
      */
-    private $admin_sections = [1 => false, 2 => false, 3 => false, 4 => false, 5 => false];
+    private $admin_sections = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
     private static $admin_pages = [];
     /**
      * @var array
@@ -239,8 +239,8 @@ class Admins {
         $this->admin_page_icons[$rights] = $icons;
     }
 
-    public function getLinkType($type = null) {
-        return ($type !== null ? (isset($this->link_type[$type]) ? $this->link_type[$type] : null) : $this->link_type);
+    public function getLinkType($type = NULL) {
+        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
     }
 
     /**
@@ -257,8 +257,8 @@ class Admins {
      * @param null $type submit stype prefix
      * @return array|mixed|null
      */
-    public function getSubmitType($type = null) {
-        return ($type !== null ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : null) : $this->submit_type);
+    public function getSubmitType($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
     }
 
     /**
@@ -274,28 +274,28 @@ class Admins {
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
-        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : null;
+        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
     }
 
-    public function getSubmitData($type = null) {
+    public function getSubmitData($type = NULL) {
 
-        return ($type !== null ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : null) : $this->submit_data);
+        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
     }
 
     /**
-     * @param $link     Admin submission url
-     * @param $type     Submissions stype prefix
+     * @param string $link Admin submission url
+     * @param string $type Submissions stype prefix
      */
     public function setSubmitLink($type, $link) {
         $this->submit_link[$type] = $link;
     }
 
-    public function getSubmitLink($type = null) {
-        return ($type !== null ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : null) : $this->submit_link);
+    public function getSubmitLink($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
     }
 
-    public function getCommentType($type = null) {
-        return ($type !== null ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : null) : $this->comment_type);
+    public function getCommentType($type = NULL) {
+        return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
     }
 
     /**
@@ -326,7 +326,7 @@ class Admins {
      * @param bool|FALSE $image_icon
      * @return string
      */
-    public function vertical_admin_nav($image_icon = false) {
+    public function vertical_admin_nav($image_icon = FALSE) {
 
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
@@ -336,7 +336,7 @@ class Admins {
 
         foreach ($admin_sections as $i => $section_name) {
 
-            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? true : false;
+            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
@@ -356,7 +356,7 @@ class Admins {
 
                     $secondary_active = $data['admin_link'] == $this->_currentPage() ? "class='active'" : '';
 
-                    $icons = ($image_icon === true) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
+                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
                     $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                 }
@@ -390,7 +390,7 @@ class Admins {
             return $this->admin_section_icons[$page_number];
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -417,7 +417,7 @@ class Admins {
             return $this->admin_page_icons[$admin_rights];
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -426,12 +426,12 @@ class Admins {
      * @param bool $icon_only
      * @return string
      */
-    public function horizontal_admin_nav($icon_only = false) {
+    public function horizontal_admin_nav($icon_only = FALSE) {
         $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
         foreach ($this->admin_sections as $i => $section_name) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-            $admin_text = $icon_only == false ? " ".$section_name : "";
+            $admin_text = $icon_only == FALSE ? " ".$section_name : "";
             $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";

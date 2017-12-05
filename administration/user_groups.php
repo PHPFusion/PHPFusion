@@ -96,7 +96,7 @@ class UserGroups {
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'user_groups.php'.fusion_get_aidlink(), "title" => self::$locale['GRP_420']]);
     }
 
-    public static function getInstance($key = TRUE) {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
             self::$instance->update_group();
@@ -262,6 +262,8 @@ class UserGroups {
             $master_tab_title['icon'][] = "";
         }
 
+        $view = '';
+
         switch ($_GET['section']) {
             case "usergroup_form":
                 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $master_tab_title['title'][1]]);
@@ -410,8 +412,8 @@ class UserGroups {
             $html .= "</tbody>\n";
             $html .= "</table>\n</div>";
             $html .= "<div class='spacer-xs'>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('add_users_form','groups_add[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('add_users_form','groups_add[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('add_users_form','groups_add[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('add_users_form','groups_add[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
             $html .= form_button('add_sel', self::$locale['GRP_450'], self::$locale['GRP_450'], ['class' => 'btn-primary']);
             $html .= "</div>\n";
             $html .= closeform();
@@ -444,8 +446,8 @@ class UserGroups {
             }
             $html .= "</tbody></table>\n";
             $html .= "<div class='spacer-xs pull-right m-t-10'>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('rem_users_form','group[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('rem_users_form','group[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('rem_users_form','group[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('rem_users_form','group[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
             $html .= form_button('remove_sel', self::$locale['GRP_461'], self::$locale['GRP_461'], ['class' => 'btn-danger']);
             $html .= form_button('remove_all', self::$locale['GRP_462'], self::$locale['GRP_462'], ['class' => 'btn-danger']);
             $html .= "</div>\n";
@@ -459,18 +461,16 @@ class UserGroups {
         $html .= "</div>\n";
         $html .= "</div>\n";
 
-        add_to_footer("<script type='text/javascript'>\n/* <![CDATA[ */\n
+        add_to_footer("<script type='text/javascript'>\n
         function setChecked(frmName,chkName,val) {"."\n
         dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n
-        if(dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
-        }\n}\n}\n
-        /* ]]>*/\n
-        </script>\n
-        ");
+        if (dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
+        }}}\n
+        </script>\n");
 
         return $html;
     }
 }
 
-UserGroups::getInstance(TRUE)->display_admin();
+UserGroups::getInstance()->display_admin();
 require_once THEMES."templates/footer.php";

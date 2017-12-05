@@ -140,7 +140,6 @@ class SqlHandler {
         $result = dbquery("SHOW COLUMNS FROM ".$old_table);
         $data = [];
         if (dbrows($result) > 0) {
-            $i = 1;
             while ($data = dbarray($result)) {
                 if ($data['Field'] == $column_name) {
                     break;

@@ -720,6 +720,8 @@ class Securimage {
      */
     protected $gdsignaturecolor;
 
+    protected $gdnoisecolor;
+
     /**
      * Create a new securimage object, pass options to set in the constructor.
      * The object can then be used to display a captcha, play an audible captcha, or validate a submission.
@@ -1022,6 +1024,7 @@ class Securimage {
      */
     protected function checkTablesExist() {
         $table = $this->pdo_conn->quote($this->database_table);
+        $query = '';
 
         switch ($this->database_driver) {
             case self::SI_DRIVER_SQLITE3:
@@ -1313,8 +1316,6 @@ class Securimage {
      */
     public function getCode($array = FALSE, $returnExisting = FALSE) {
         $code = [];
-        $time = 0;
-        $disp = 'error';
 
         if ($returnExisting && strlen($this->code) > 0) {
             if ($array) {
@@ -1352,8 +1353,7 @@ class Securimage {
                 $code['display'] = $code['code_disp'];
                 unset($code['code_disp']);
             }
-        } else { /* no code stored in session or sqlite database, validation will fail */
-        }
+        } /* no code stored in session or sqlite database, validation will fail */
 
         if ($array == TRUE) {
             return $code;
@@ -1584,7 +1584,7 @@ class Securimage {
                 sprintf('<a tabindex="-1" class="captcha_play_button" href="%sid=%s" onclick="return false">',
                     $play_path, uniqid()
                 )."\n".
-                sprintf('<img class="captcha_play_image" height="%d" width="%d" src="%s" alt="Play CAPTCHA Audio" style="border: 0px">', $icon_size,
+                sprintf('<img class="captcha_play_image" height="%d" width="%d" src="%s" alt="Play CAPTCHA Audio" style="border: none;">', $icon_size,
                     $icon_size, htmlspecialchars($icon_path))."\n".
                 sprintf('<img class="captcha_loading_image rotating" height="%d" width="%d" src="%s" alt="Loading audio" style="display: none">',
                     $icon_size, $icon_size, htmlspecialchars($load_path))."\n".

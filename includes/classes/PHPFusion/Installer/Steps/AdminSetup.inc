@@ -304,13 +304,13 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                     case 2:
                         \defender::stop();
-                        \defender::setInputError('password2', self::$locale['setup_5012']);
+                        \defender::setInputError('password2');
                         addNotice('danger', self::$locale['setup_5012']);
 
                         break;
                     case 3:
                         \defender::stop();
-                        \defender::setInputError('password1', self::$locale['setup_5012']);
+                        \defender::setInputError('password1');
                         addNotice('danger', self::$locale['setup_5013']);
                         break;
                 }
@@ -325,12 +325,12 @@ class InstallerAdminSetup extends Install_Core {
                         break;
                     case 2:
                         \defender::stop();
-                        \defender::setInputError('admin_password2', self::$locale['setup_5015']);
+                        \defender::setInputError('admin_password2');
                         addNotice('danger', self::$locale['setup_5015']);
                         break;
                     case 3:
                         \defender::stop();
-                        \defender::setInputError('admin_password1', self::$locale['setup_5017']);
+                        \defender::setInputError('admin_password1');
                         addNotice('danger', self::$locale['setup_5017']);
                         break;
                 }

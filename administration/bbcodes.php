@@ -27,8 +27,7 @@ global $p_data;
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
 $allowed_section = ['bbcode_form', 'bbcode_list'];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'bbcode_form';
-
-$_GET['section'] == 'bbcode_list' ? BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]) : '';
+if ($_GET['section'] == 'bbcode_list') BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
 
 $tab_title['title'][] = $locale['BBCA_400a'];
 $tab_title['id'][] = 'bbcode_form';
@@ -39,7 +38,7 @@ $tab_title['id'][] = 'bbcode_list';
 $tab_title['icon'][] = '';
 
 opentable($locale['BBCA_400']);
-echo opentab($tab_title, $_GET['section'], 'bbcode_list', TRUE);
+echo opentab($tab_title, $_GET['section'], 'bbcode_list', TRUE, 'nav-tabs m-b-15');
 switch ($_GET['section']) {
     case "bbcode_form":
         bbcode_form();

@@ -565,7 +565,7 @@ class CustomPage {
     }
 
     /**
-     * @return data array from object initial or constructor when overriden.
+     * @return array data - array from object initial or constructor when overriden.
      */
     public function getData() {
         return $this->data;

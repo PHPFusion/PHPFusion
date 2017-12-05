@@ -87,7 +87,6 @@ class admin_reset_admin {
 
                 while ($data = dbarray($result)) {
                     $adminPass = new PasswordAuth();
-                    $newLoginPass = "";
                     $newAdminPass = $adminPass->getNewPassword(12);
                     $adminPass->inputNewPassword = $newAdminPass;
                     $adminPass->inputNewPassword2 = $newAdminPass;
@@ -147,7 +146,7 @@ class admin_reset_admin {
                         $loginPassIsReset = TRUE;
                     }
 
-                    $loginPassIsReset ? dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'") : '';
+                    if ($loginPassIsReset) dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'");
 
                     if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], self::$locale['apw_407'].fusion_get_settings('sitename'), $message)) {
                         $reset_success[] = ['user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email']];

@@ -645,6 +645,9 @@ class Comments {
             SELECT rating_id FROM ".DB_RATINGS." WHERE rating_item_id='".$comment_data['comment_item_id']."'
             AND rating_type='".$comment_data['comment_type']."' AND rating_user='".$comment_data['comment_name']."'
             ";
+
+            $ratings_data = [];
+
             $ratings_id = dbresult(dbquery($ratings_query), 0);
             if ($this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote') && isset($_POST['comment_rating'])) {
                 $ratings_data = [
@@ -1016,6 +1019,8 @@ class Comments {
      * Parse Comment Results
      */
     private function parse_comments_data($row, $i, $can_reply = TRUE) {
+        $garray = [];
+
         if (!isnum($row['comment_name'])) {
             $garray = [
                 'user_id'     => 0,

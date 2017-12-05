@@ -40,7 +40,7 @@ class httpdownload {
     var $data_type = 0;
     var $data_section = 0; //section download
     /**
-     * @var ObjectHandler
+     * @var array ObjectHandler
      **/
     var $handler = ['auth' => NULL];
     var $use_resume = TRUE;

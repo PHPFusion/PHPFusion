@@ -77,8 +77,8 @@ class Template {
      * Sets to repeat on a subitem defined in the HTML markup  - {block_id.{<subitem_html>}}
      * This function adds a subitem for every set_block used
      *
-     * @param       $block_id   The name of the unique block id
-     * @param array $value The replacements sets
+     * @param string $block_id The name of the unique block id
+     * @param array $value     The replacements sets
      */
     public function set_block($block_id, array $value = []) {
         $filtered_value = [];
@@ -92,8 +92,8 @@ class Template {
     /**
      * Sets a tag to string conversion
      *
-     * @param $html_tag {%tag%} in html file is 'tag'
-     * @param $value        the value of the string
+     * @param string $html_tag {%tag%} in html file is 'tag'
+     * @param string $value        the value of the string
      */
     public function set_tag($html_tag, $value) {
         $this->tag['{%'.$html_tag.'%}'] = $value;

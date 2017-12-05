@@ -759,7 +759,7 @@ class QuantumFields extends \SqlHandler {
                     }
                 } else {
                     if ($this->debug) {
-                        notify($this->locale['fields_0655'], $this->locale['fields_0656']);
+                        addNotice('info', $this->locale['fields_0655'].'<br/>'.$this->locale['fields_0656']);
                     } else {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -941,7 +941,7 @@ class QuantumFields extends \SqlHandler {
             $tab_active = \FusionTabs::tab_active($tab_title, $active ?: $default_active);
             $tabs = new \FusionTabs();
             $tabs->set_remember(TRUE);
-            echo $tabs->opentab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', [], TRUE);
+            echo $tabs->opentab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', []);
             foreach ($this->page[0] as $page_id => $page_details) {
                 echo $tabs->opentabbody($tab_title['id'][$page_id], $tab_active);
                 // load all categories here.

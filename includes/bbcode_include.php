@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 
 function display_bbcodes($width, $textarea_name = "message", $inputform_name = "inputform", $selected = "") {
     $bbcode_cache = cache_bbcode();
+    $sel_bbcodes = '';
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
@@ -103,7 +104,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
             $bbcodes .= "<script type='text/javascript' src='".INCLUDES."bbcodes/".$bbdata['includejscript']."'></script>\n";
         }
         if (array_key_exists('calljscript', $bbdata) && $bbdata['calljscript'] != "") {
-            $bbcodes .= "<script type='text/javascript'>\n<!--\n".$bbdata['calljscript']."\n-->\n</script>\n";
+            $bbcodes .= "<script type='text/javascript'>\n<!--".$bbdata['calljscript']."-->\n</script>\n";
         }
         if (array_key_exists('phpfunction', $bbdata) && $bbdata['phpfunction'] != "") {
             $bbcodes .= $phpfunction;

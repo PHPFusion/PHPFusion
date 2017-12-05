@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace Administration\Members;
 
 use Administration\Members\Sub_Controllers\Members_Action;
@@ -24,7 +23,6 @@ use Administration\Members\Sub_Controllers\Members_Profile;
 use PHPFusion\BreadCrumbs;
 
 class Members_Admin {
-
     private static $instance = NULL;
     protected static $locale = [];
     protected static $settings = [];
@@ -154,7 +152,7 @@ class Members_Admin {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
 
-                        if (isset($_POST['deactivate_users']) && defender::safe()) {
+                        if (isset($_POST['deactivate_users']) && \defender::safe()) {
                             require_once INCLUDES."sendmail_include.php";
                             $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
                                         WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'

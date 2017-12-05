@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: email.php
-| Author: MarcusG
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -258,7 +258,7 @@ echo "<button type='button' class='btn btn-default button' value='[SITEURL]' onc
 echo "<button type='button' class='btn btn-default button' value='[THREAD_URL]' onclick=\"insertText('template_content', '[THREAD_URL]', 'emailtemplateform');\">".$locale['MAIL_042']."</button>\n";
 echo "</div>\n";
 echo "<div id='html_buttons' class='".($data['template_format'] == "html" ? "m-t-5" : "display-none")."'>\n";
-echo "<button type='button' class='btn btn-default button' value='".$locale['MAIL_043']."' onMousedown=\"javascript:this.form.template_content.focus();this.form.template_content.select();\" onmouseup=\"addText('template_content', '&lt;body style=\'background-color:#D7F9D7;\'&gt;', '&lt;/body&gt;', 'emailtemplateform');\">\n".$locale['MAIL_043']."</button>\n";
+echo "<button type='button' class='btn btn-default button' value='".$locale['MAIL_043']."' onMousedown=\"this.form.template_content.focus();this.form.template_content.select();\" onmouseup=\"addText('template_content', '&lt;body style=\'background-color:#D7F9D7;\'&gt;', '&lt;/body&gt;', 'emailtemplateform');\">\n".$locale['MAIL_043']."</button>\n";
 $folder = BASEDIR."images/";
 $image_files = makefilelist($folder, ".|..|index.php", TRUE);
 $opts = [];

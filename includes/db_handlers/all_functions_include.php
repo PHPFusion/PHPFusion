@@ -86,15 +86,15 @@ register_shutdown_function(function () {
         $html .= "</div>\n";
         $html .= "<style>.queries-log code {white-space: normal} .queries-log hr {border-color: #ccc}</style>\n";
         $html .= "<script>
-		$('.query-more-btn').click(function(e){
-			e.preventDefault();
-			$(this).next('table').toggle();
-		});
-		$('.queries-btn').click(function(){
-			$(this).hide();
-			$('.queries-log').toggle();
-		})
-		</script>";
+        $('.query-more-btn').click(function(e){
+            e.preventDefault();
+            $(this).next('table').toggle();
+        });
+        $('.queries-btn').click(function(){
+            $(this).hide();
+            $('.queries-log').toggle();
+        })
+        </script>";
 
         echo $html;
     }

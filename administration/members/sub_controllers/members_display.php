@@ -20,6 +20,7 @@ namespace Administration\Members\Sub_Controllers;
 use Administration\Members\Members_Admin;
 use Administration\Members\Members_View;
 use PHPFusion\QuantumFields;
+
 /**
  * Class Members_Display
  *
@@ -30,9 +31,11 @@ class Members_Display extends Members_Admin {
         add_to_footer("<script type='text/javascript' src='".ADMIN."members/js/user_display.js'></script>");
 
         $c_name = 'usertbl_results';
-        $default_selected = array('user_timezone', 'user_joined', 'user_lastvisit', 'user_groups');
-        $default_status_selected = array('0');
+        $default_selected = ['user_timezone', 'user_joined', 'user_lastvisit', 'user_groups'];
+        $default_status_selected = ['0'];
         $s_name = 'usertbl_status';
+        $selected_status = [];
+        $statuses = [];
 
         if (isset($_POST['apply_filter'])) {
             // Display Cookie
@@ -88,7 +91,7 @@ class Members_Display extends Members_Admin {
 
         $user_fields = array_map('trim', explode(',', $cookie_selected));
         // Sanitize fields
-        $selected_fields = array();
+        $selected_fields = [];
         if (!empty($user_fields)) {
             foreach ($user_fields as $field_name) {
                 if (isset($usertable_column[$field_name])) {
@@ -120,33 +123,33 @@ class Members_Display extends Members_Admin {
         ];
 
         $field_checkboxes = [
-            'user_hide_email' => form_checkbox('display[user_hide_email]', $tLocale['user_hide_email'], (isset($selected_fields['user_hide_email']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_joined'     => form_checkbox('display[user_joined]', $tLocale['user_joined'], (isset($selected_fields['user_joined']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_lastvisit'  => form_checkbox('display[user_lastvisit]', $tLocale['user_lastvisit'], (isset($selected_fields['user_lastvisit']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_ip'         => form_checkbox('display[user_ip]', $tLocale['user_ip'], (isset($selected_fields['user_ip']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_ip_type'    => form_checkbox('display[user_ip_type]', $tLocale['user_ip_type'], (isset($selected_fields['user_ip_type']) ? 1 : 0), array('reverse_label' => TRUE)),
-            'user_groups'     => form_checkbox('display[user_groups]', $tLocale['user_groups'], (isset($selected_fields['user_groups']) ? 1 : 0), array('reverse_label' => TRUE)),
+            'user_hide_email' => form_checkbox('display[user_hide_email]', $tLocale['user_hide_email'], (isset($selected_fields['user_hide_email']) ? 1 : 0), ['reverse_label' => TRUE]),
+            'user_joined'     => form_checkbox('display[user_joined]', $tLocale['user_joined'], (isset($selected_fields['user_joined']) ? 1 : 0), ['reverse_label' => TRUE]),
+            'user_lastvisit'  => form_checkbox('display[user_lastvisit]', $tLocale['user_lastvisit'], (isset($selected_fields['user_lastvisit']) ? 1 : 0), ['reverse_label' => TRUE]),
+            'user_ip'         => form_checkbox('display[user_ip]', $tLocale['user_ip'], (isset($selected_fields['user_ip']) ? 1 : 0), ['reverse_label' => TRUE]),
+            'user_ip_type'    => form_checkbox('display[user_ip_type]', $tLocale['user_ip_type'], (isset($selected_fields['user_ip_type']) ? 1 : 0), ['reverse_label' => TRUE]),
+            'user_groups'     => form_checkbox('display[user_groups]', $tLocale['user_groups'], (isset($selected_fields['user_groups']) ? 1 : 0), ['reverse_label' => TRUE]),
         ];
-        $extra_checkboxes = array();
+        $extra_checkboxes = [];
         $result = dbquery("SELECT field_id, field_name, field_title FROM ".DB_USER_FIELDS." ORDER BY field_cat, field_order ASC");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $name = $data['field_name'];
             $title = (QuantumFields::is_serialized($data['field_title']) ? QuantumFields::parse_label($data['field_title']) : $data['field_title']);
             $tLocale[$name] = $title;
-            $extra_checkboxes[$name] = form_checkbox("display[".$name."]", $title, (isset($selected_fields[$name]) ? 1 : 0), array('input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE));
+            $extra_checkboxes[$name] = form_checkbox("display[".$name."]", $title, (isset($selected_fields[$name]) ? 1 : 0), ['input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE]);
         }
 
-        $field_status = array();
+        $field_status = [];
         for ($i = 0; $i < 9; $i++) {
             if ($i < 8 || self::$settings['enable_deactivation'] == 1) {
-                $field_status[$i] = form_checkbox('user_status['.$i.']', getsuspension($i), (isset($selected_status[$i]) ? 1 : 0), array('input_id' => 'user_status_'.$i, 'reverse_label' => TRUE));
+                $field_status[$i] = form_checkbox('user_status['.$i.']', getsuspension($i), (isset($selected_status[$i]) ? 1 : 0), ['input_id' => 'user_status_'.$i, 'reverse_label' => TRUE]);
             }
         }
 
-        $search_bind = array();
+        $search_bind = [];
         $search_cond = '';
-        $field_to_search = array_merge(array_values(array('user_name', 'user_id', 'user_email')), array_keys($extra_checkboxes));
+        $field_to_search = array_merge(array_values(['user_name', 'user_id', 'user_email']), array_keys($extra_checkboxes));
         if (!empty($_POST['search_text'])) {
             $search_text = form_sanitizer($_POST['search_text'], '', 'search_text');
             if (!empty($search_text)) {
@@ -163,38 +166,37 @@ class Members_Display extends Members_Admin {
 
         if (!empty($selected_status)) {
             $status_cond = " WHERE user_status IN (".implode(',', $selected_status).") ";
-            $status_bind = array();
+            $status_bind = [];
             foreach ($selected_status as $susp_i) {
                 $statuses[$susp_i] = $susp_i;//'<strong>'.getsuspension($susp_i).'</strong>';
             }
         } else {
             $status_cond = ' WHERE user_status=:status';
-            $status_bind = array(
+            $status_bind = [
                 ':status' => 0,
-            );
-            $statuses = array(0 => 0);
+            ];
+            $statuses = [0 => 0];
         }
 
         $query_bind = array_merge($status_bind, $search_bind);
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rowCount ? intval($_GET['rowstart']) : 0;
         $limit = 16;
-        if (in_array(2, $selected_status)){
+        if (in_array(2, $selected_status)) {
             $nquery = "SELECT * FROM ".DB_NEW_USERS."";
-        	$nresult = dbquery($nquery);
-        	$nrows = dbrows($nresult);
-        	$i=999999;
+            $nresult = dbquery($nquery);
+            $i = 999999;
             while ($data = dbarray($nresult)) {
-            	 $list[$data['user_name']] = [
-            	 'user_id' => $i,
-                 'checkbox' => '',
-            	 'user_name' => $data['user_name']."<br />".getsuspension(2),
-            	 'user_level' => self::$locale['ME_562'],
-            	 'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
-            	 'user_email' => $data['user_email'],
-            	 'user_joined' => showdate('longdate', $data['user_datestamp'])
-            	 ];
-            $i++;
+                $list[$data['user_name']] = [
+                    'user_id'      => $i,
+                    'checkbox'     => '',
+                    'user_name'    => $data['user_name']."<br />".getsuspension(2),
+                    'user_level'   => self::$locale['ME_562'],
+                    'user_actions' => "<a href='".self::$status_uri['delete'].$data['user_name']."&amp;newuser=1'>".self::$locale['delete']."</a>",
+                    'user_email'   => $data['user_email'],
+                    'user_joined'  => showdate('longdate', $data['user_datestamp'])
+                ];
+                $i++;
             }
 
         }
@@ -206,7 +208,7 @@ class Members_Display extends Members_Admin {
         $page_nav = $rowCount > $limit ? makepagenav($rowstart, $limit, $rowCount, 5, FUSION_SELF.fusion_get_aidlink().'&amp;') : '';
         $interface = new static();
 
-        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map(array($interface, 'list_uri'), $statuses)), $rows, $rowCount);
+        $list_sum = sprintf(self::$locale['ME_407'], implode(', ', array_map([$interface, 'list_uri'], $statuses)), $rows, $rowCount);
 
         if ($rows != '0') {
             while ($data = dbarray($result)) {
@@ -225,7 +227,7 @@ class Members_Display extends Members_Admin {
                                 $group = array_filter(explode('.', $data[$data_key]));
                                 $groups = "<ul class='block'>";
                                 foreach ($group as $group_id) {
-                                    $groups .= "<li><a href='".BASEDIR."profile.php?group_id='".$group_id."'>".getgroupname($group_id)."</a></li>\n";
+                                    $groups .= '<li><a href="'.BASEDIR.'profile.php?group_id='.$group_id.'">'.getgroupname($group_id).'</a></li>';
                                 }
                                 $groups .= "</ul>\n";
                                 $data[$data_key] = $groups;
@@ -260,43 +262,43 @@ class Members_Display extends Members_Admin {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
         }
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE))."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
+        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th><th colspan='".(count($selected_fields))."' class='text-right'>$page_nav</th></tr>\n";
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
 
         if (!empty($list)) {
             $list_result = '';
             foreach ($list as $user_id => $prop) {
-                $list_result .= call_user_func_array(array($interface, 'list_func'), array($user_id, $list, $selected_fields));
+                $list_result .= call_user_func_array([$interface, 'list_func'], [$user_id, $list, $selected_fields]);
             }
         }
         /*
          * User Actions Button
          */
-        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, array('class' => 'btn-success m-r-10')).
-            form_button('action', self::$locale['ME_500'], self::USER_BAN, array('class' => ' btn-default m-r-10')).
-            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, array('class' => ' btn-default m-r-10')).
-            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, array('class' => ' btn-default m-r-10')).
-            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, array('class' => ' btn-default m-r-10')).
-            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, array('class' => ' btn-default m-r-10')).
-            form_button('action', self::$locale['ME_506'], self::USER_ANON, array('class' => ' btn-default m-r-10'));
+        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, ['class' => 'btn-success m-r-10']).
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, ['class' => ' btn-default m-r-10']).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, ['class' => ' btn-default m-r-10']).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, ['class' => ' btn-default m-r-10']).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, ['class' => ' btn-default m-r-10']).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, ['class' => ' btn-default m-r-10']).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, ['class' => ' btn-default m-r-10']);
 
-        $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), array('class' => 'form-inline'));
+        $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
-        $html .= strtr(Members_View::display_members(), array(
-                '{%filter_text%}'         => form_text('search_text', '', '', array('placeholder'        => self::$locale['ME_401'],
-                                                                                    'append'             => TRUE,
-                                                                                    'append_button'      => TRUE,
-                                                                                    'append_value'       => self::$locale['search'],
-                                                                                    'append_form_value'  => 'search_member',
-                                                                                    'append_button_name' => 'search_member',
-                                                                                    'class'              => 'm-b-0'
-                )),
-                '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', array('icon' => 'caret')),
+        $html .= strtr(Members_View::display_members(), [
+                '{%filter_text%}'         => form_text('search_text', '', '', ['placeholder'        => self::$locale['ME_401'],
+                                                                               'append'             => TRUE,
+                                                                               'append_button'      => TRUE,
+                                                                               'append_value'       => self::$locale['search'],
+                                                                               'append_form_value'  => 'search_member',
+                                                                               'append_button_name' => 'search_member',
+                                                                               'class'              => 'm-b-0'
+                ]),
+                '{%filter_button%}'       => form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', ['icon' => 'caret']),
                 '{%action_button%}'       => "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>\n",
                 '{%filter_status%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>",
                 '{%filter_options%}'      => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>",
                 '{%filter_extras%}'       => "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>",
-                '{%filter_apply_button%}' => form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', array('class' => 'btn-primary')),
+                '{%filter_apply_button%}' => form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', ['class' => 'btn-primary']),
                 '{%page_count%}'          => $list_sum,
                 '{%list_head%}'           => $table_head,
                 '{%list_column%}'         => $table_subheader,
@@ -304,7 +306,7 @@ class Members_Display extends Members_Admin {
                 '{%list_footer%}'         => $table_footer,
                 '{%page_nav%}'            => $page_nav,
                 '{%user_actions%}'        => $user_actions,
-            )
+            ]
         );
         $html .= closeform();
         return $html;

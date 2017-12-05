@@ -173,9 +173,9 @@ class Members_Profile extends Members_Admin {
                             $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
                             dbquery("UPDATE ".DB_FORUM_THREADS." SET
                             thread_lastpost='".$last_thread_post['post_datestamp']."',
-							thread_lastpostid='".$last_thread_post['post_id']."',
-							thread_lastuser='".$last_thread_post['post_author']."'
-							WHERE thread_id='".$thread['thread_id']."'"
+                            thread_lastpostid='".$last_thread_post['post_id']."',
+                            thread_lastuser='".$last_thread_post['post_author']."'
+                            WHERE thread_id='".$thread['thread_id']."'"
                             );
                             // Update thread posts count
                             $posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$thread['thread_id']."'");
@@ -236,10 +236,14 @@ class Members_Profile extends Members_Admin {
         echo "</div>\n";
     }
 
-    public static function delete_unactivated_user() {        if (isset($_POST['delete_newuser'])) {        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
+    public static function delete_unactivated_user() {
+        if (isset($_POST['delete_newuser'])) {
+        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
         redirect(clean_request('', array('ref', 'lookup', 'newuser'), FALSE));
-        }
-        echo "<div class='well'>\n";
+
+        }
+
+        echo "<div class='well'>\n";
         echo "<h4>".self::$locale['ME_454']."</h4>";
         echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_REQUEST);

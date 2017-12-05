@@ -155,10 +155,10 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<li>\n<a value='H6' class='pointer' onclick=\"addText('".$textarea."', '&lt;h6&gt;', '&lt;/h6&gt;', '".$formname."');\"><span class='strong' style='font-size:9px; font-family: Georgia, \"Times New Roman\", Times, serif !important;'>Heading 6</span></a>\n</li>\n";
         $res .= "</ul>\n";
         $res .= "</div>\n";
+        $options = [];
 
         if ($images && $folder) {
             if (is_array($folder)) {
-                $options = [];
                 foreach ($folder as $dir) {
                     if (file_exists($dir)) {
                         $file_list = makefilelist($dir, '.|..|index.php', TRUE, 'files', 'js|psd|rar|zip|7s|_DS_STORE|doc|docx|docs|md|php');

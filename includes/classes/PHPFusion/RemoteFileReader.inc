@@ -26,7 +26,7 @@ class RemoteFileReader {
 
     /**
      * Constructor method for the RemoteFileReader Class
-     * @param remoteURL - the URL to the remote file.
+     * @param string remoteURL - the URL to the remote file.
      */
     public function __construct($remoteURL) {
         $this->_requestURL = $remoteURL;

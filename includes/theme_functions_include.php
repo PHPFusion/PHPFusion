@@ -517,7 +517,6 @@ if (!function_exists("showsubdate")) {
 if (!function_exists("newsposter")) {
     function newsposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
         $res .= $locale['global_071'].showdate("newsdate", $info['news_date']);
@@ -597,9 +596,9 @@ if (!function_exists("articlecat")) {
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."'$link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='articles.php?cat_id=0'$link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='articles.php?cat_id=0' $link_class>".$locale['global_080']."</a>";
         }
 
         return "<!--article_cat-->".$res." $sep ";
@@ -1141,7 +1140,7 @@ if (!function_exists("tab_active")
     }
 
     /**
-     * @param      $tab_title               deprecated, however this function is replaceable, and the params are accessible.
+     * @param string $tab_title               deprecated, however this function is replaceable, and the params are accessible.
      * @param      $tab_id
      * @param bool $link_active_arrkey
      * @param bool $link deprecated, however this function is replaceable, and the params are accessible.

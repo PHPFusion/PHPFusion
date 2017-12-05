@@ -210,7 +210,7 @@ if (!function_exists('upload_file')) {
                 $target_file = stripfilename(substr($file['name'], 0, strrpos($file['name'], ".")));
             }
             $file_ext = strtolower(strrchr($file['name'], "."));
-            $file_dest = $target_folder;
+            //$file_dest = $target_folder;
             $upload_file = [
                 "source_file"   => $source_file,
                 "source_size"   => $file['size'],

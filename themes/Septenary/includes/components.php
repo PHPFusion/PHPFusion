@@ -157,12 +157,12 @@ class SeptenaryComponents {
     public static function theme_output($output) {
 
         $search = [
-            "@><img src='reply' alt='(.*?)' style='border:0px' />@si",
-            "@><img src='newthread' alt='(.*?)' style='border:0px;?' />@si",
-            "@><img src='web' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-            "@><img src='pm' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-            "@><img src='quote' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
-            "@><img src='forum_edit' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
+            "@><img src='reply' alt='(.*?)' style='border:none' />@si",
+            "@><img src='newthread' alt='(.*?)' style='border:none;?' />@si",
+            "@><img src='web' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='pm' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='quote' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='forum_edit' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
             "@<a href='".ADMIN."comments.php(.*?)&amp;ctype=(.*?)&amp;cid=(.*?)'>(.*?)</a>@si"
         ];
         $replace = [

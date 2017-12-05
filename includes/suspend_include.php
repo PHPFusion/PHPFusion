@@ -102,7 +102,6 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
         echo "<td class='tbl2' width='250'>".$locale['susp105']."</td>\n";
         echo "<td class='tbl2' width='150'>".$locale['susp106']."</td>\n";
         echo "</tr>\n";
-        $i = 1;
         while ($data = dbarray($result)) {
 
             $suspension = ($data['suspend_type'] != 2 ? getsuspension($data['suspend_type']) : $locale['susp111']);

@@ -176,11 +176,11 @@ class Panels {
     /**
      * Get all available panels
      *
-     * @param string $excluded_panels
+     * @param array $excluded_panels
      *
      * @return array
      */
-    public static function get_available_panels($excluded_panels = '') {
+    public static function get_available_panels($excluded_panels = []) {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);

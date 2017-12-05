@@ -21,9 +21,7 @@ pageAccess('ROB');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-    'link'  => ADMIN.'robots.php'.fusion_get_aidlink(),
-    'title' => $locale['ROBOT_400']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
 
 function write_Default() {
 
