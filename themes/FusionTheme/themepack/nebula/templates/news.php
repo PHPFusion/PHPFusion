@@ -270,8 +270,6 @@ class News extends Core {
         </article>
 
         <?php if (!empty($news['news_gallery'])) :
-            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
-            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
             ?>
             <hr/>
             <?php openside(fusion_get_locale('news_0019')) ?>

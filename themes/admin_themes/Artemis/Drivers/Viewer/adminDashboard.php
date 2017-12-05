@@ -271,7 +271,7 @@ class adminDashboard extends resource {
                             $ratings_item = isset($comments_type[$ratings_data['rating_type']]) ? $comments_type[$ratings_data['rating_type']] : $locale['ratings'];
                             echo "<!--Start Rating Item-->\n";
                             echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                            echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+                            echo "<div class='pull-left display-inline-block' style='margin-top:0; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                             echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
                             echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
                             echo strtr($ratings_url, ['{%item%}' => $ratings_item]);

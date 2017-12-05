@@ -113,6 +113,8 @@ class Login {
                             <?php
                             $open = "";
                             $close = "";
+                            $tab_title = [];
+
                             if (isset($info['section']) && count($info['section']) > 1) {
                                 foreach ($info['section'] as $page_section) {
                                     $tab_title['title'][$page_section['id']] = $page_section['name'];
