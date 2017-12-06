@@ -104,7 +104,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
             $bbcodes .= "<script type='text/javascript' src='".INCLUDES."bbcodes/".$bbdata['includejscript']."'></script>\n";
         }
         if (array_key_exists('calljscript', $bbdata) && $bbdata['calljscript'] != "") {
-            $bbcodes .= "<script type='text/javascript'>\n<!--".$bbdata['calljscript']."-->\n</script>\n";
+            $bbcodes .= "<script type='text/javascript'>\n<!--\n".$bbdata['calljscript']."\n-->\n</script>\n";
         }
         if (array_key_exists('phpfunction', $bbdata) && $bbdata['phpfunction'] != "") {
             $bbcodes .= $phpfunction;
@@ -128,6 +128,7 @@ function strip_bbcodes($text) {
     if (iADMIN) {
         return $text;
     }
+
     $textarea_name = "";
     $inputform_name = "";
     $bbcode_cache = cache_bbcode();
@@ -137,12 +138,15 @@ function strip_bbcodes($text) {
 
         include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
     }
+
     if (!empty($__BBCODE_NOT_QUOTABLE__) and is_array($__BBCODE_NOT_QUOTABLE__)) {
         foreach ($__BBCODE_NOT_QUOTABLE__ as $bbname) {
             $text = preg_replace('#\['.$bbname.'(.*?)\](.*?)\[/'.$bbname.'\]#si', '', $text);
         }
-        unset ($__BBCODE_NOT_QUOTABLE__);
+
+        unset($__BBCODE_NOT_QUOTABLE__);
     }
 
     return $text;
 }
+
