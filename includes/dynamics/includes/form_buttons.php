@@ -48,9 +48,9 @@ function form_button($input_name, $title, $input_value, array $options = []) {
     if ($options['type'] == 'link') {
         $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</a>";
     } else if ($options['type'] == 'button') {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button'".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? " disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
     } else {
-        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled ' : '')."btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit'".(!empty($options_data) ? implode(' ', $options_data) : '').($options['deactivate'] ? " disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']." ".$options['icon_class']."'></i>" : '').$title."</button>\n";
     }
 
     return $html;
@@ -91,7 +91,7 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
 
     $error_class = "";
     if (\defender::inputHasError($input_name)) {
-        $error_class = "has-error ";
+        $error_class = "has-error";
         if (!empty($options['error_text'])) {
             $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
