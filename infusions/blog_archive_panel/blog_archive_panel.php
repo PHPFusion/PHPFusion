@@ -19,21 +19,22 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
-    $locale += fusion_get_locale("", INFUSIONS."blog/locale/".LOCALESET."blog.php");
-} else {
-    $locale += fusion_get_locale("", INFUSIONS."blog/locale/English/blog.php");
-}
+$locale = fusion_get_locale('', BLOG_LOCALE);
 
 openside($locale['blog_1004']);
-$blog_result = "SELECT
-                blog_id, blog_subject, blog_datestamp
-                FROM ".DB_BLOG."
-                WHERE blog_draft = 0
-                AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND blog_language='".LANGUAGE."'" : "")."
-                ORDER BY blog_datestamp DESC
-                ";
-$result = dbquery($blog_result);
+$bind = [
+    ':draft'    => '0',
+    ':language' => LANGUAGE,
+];
+
+$blogQuery = "SELECT blog_id, blog_subject, blog_datestamp
+    FROM ".DB_BLOG."
+    WHERE blog_draft =:draft
+    AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND blog_language=:language" : "")."
+    ORDER BY blog_datestamp DESC
+";
+
+$result = dbquery($blogQuery, $bind);
 if (dbrows($result)) {
     echo "<ul class='blog_archive_inner list-style-none' id='blog_archive'>\n";
     $data = [];
@@ -43,9 +44,9 @@ if (dbrows($result)) {
         $data[$year][$month][] = $row;
     }
     foreach ($data as $blog_year => $blog_months) {
-        echo '<li>';
-        echo '<a data-toggle="collapse" data-parent="#blog_archive" href="#link-'.$blog_year.'"><b>'.$blog_year.'</b></a>';
-        echo '<ul id="link-'.$blog_year.'" class="collapse">';
+        echo "<li>";
+        echo "<a data-toggle='collapse' data-parent='#blog_archive' href='#link-".$blog_year."'><b>".$blog_year."</b></a>";
+        echo "<ul id='link-".$blog_year."' class='collapse'>";
         foreach ($blog_months as $blog_month => $blog_entries) {
             echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
             foreach ($blog_entries as $blog_entry) {
@@ -53,8 +54,8 @@ if (dbrows($result)) {
                         25)."</a></li>";
             }
         }
-        echo '</ul>';
-        echo '</li>';
+        echo "</ul>";
+        echo "</li>";
     }
     echo "</ul>\n";
 } else {
