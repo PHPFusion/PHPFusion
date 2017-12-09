@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/admin_header.php";
 require_once WEBLINKS_CLASS."autoloader.php";
 PHPFusion\Weblinks\WeblinksServer::WeblinksAdmin()->display_admin();
