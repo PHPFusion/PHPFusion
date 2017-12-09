@@ -90,9 +90,11 @@ if (!function_exists('render_forum_main')) {
             }
 
             foreach ($info['forums'][$id] as $forum_id => $data) {
-                $content = render_forum_item($data);
+                if ($data['forum_type'] != 1) {
+                    $content = render_forum_item($data);
 
-                $html->set_block('forum_content', ['forum_content' => $content]);
+                    $html->set_block('forum_content', ['forum_content' => $content]);
+                }
             }
         } else {
             $html->set_block('no_item', ['message' => $locale['forum_0328']]);
@@ -156,7 +158,6 @@ if (!function_exists('render_forum_item')) {
         $locale = fusion_get_locale();
         $html = \PHPFusion\Template::getInstance('forum_item');
         $html->set_template(FORUM.'templates/index/forum_item.html');
-
         $l_html = \PHPFusion\Template::getInstance('forum_item_lastpost');
         $l_html->set_template(FORUM.'templates/index/forum_item_lastpost.html'); // we have already cached it earlier?
         if (empty($data['forum_lastpost'])) {
