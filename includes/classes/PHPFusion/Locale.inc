@@ -40,6 +40,7 @@ class Locale {
      * @return mixed
      */
     public static function __getInstance($key) {
+
         if (self::$instance[$key] === NULL) {
             self::$instance[$key] = new Static();
         }
@@ -54,9 +55,9 @@ class Locale {
      */
     public static function load_locale_file($filename) {
         $locale = [];
-        self::$locale_file[$filename] = debug_backtrace();
-        include_once $filename;
+        include $filename;
         self::$locale += $locale;
+        self::$locale_file[$filename] = debug_backtrace();
     }
 
     public static function get_loaded_files() {
