@@ -22,7 +22,7 @@ class OpenGraphDownloads extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `download_title`, `download_description_short`, `download_keywords`, `download_image_thumb` FROM `".DB_DOWNLOADS."` WHERE `download_id` = '$download_id'");
+        $result = dbquery("SELECT `download_title`, `download_description_short`, `download_keywords`, `download_image_thumb` FROM `".DB_DOWNLOADS."` WHERE `download_id` = :download", [':download' => $download_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$download_id;

@@ -22,7 +22,7 @@ class OpenGraphBlogs extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `blog_subject`, `blog_blog`, `blog_keywords`, `blog_image_t1` FROM `".DB_BLOG."` WHERE `blog_id` = '$blog_id'");
+        $result = dbquery("SELECT `blog_subject`, `blog_blog`, `blog_keywords`, `blog_image_t1` FROM `".DB_BLOG."` WHERE `blog_id` = :blogid", [':blogid' => $blog_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$blog_id;
@@ -44,7 +44,7 @@ class OpenGraphBlogs extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `blog_cat_name`, `blog_cat_image` FROM `".DB_BLOG_CATS."` WHERE `blog_cat_id` = '$cat_id'");
+        $result = dbquery("SELECT `blog_cat_name`, `blog_cat_image` FROM `".DB_BLOG_CATS."` WHERE `blog_cat_id` = :cat_id", [':cat_id' => $cat_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$cat_id;

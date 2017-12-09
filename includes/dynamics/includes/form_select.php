@@ -255,7 +255,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
 
     $error_class = "";
     if (\defender::inputHasError($input_name)) {
-        $error_class = "has-error ";
+        $error_class = " has-error ";
         if (!empty($options['error_text'])) {
             $new_error_text = \defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
@@ -265,7 +265,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide' : '').$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';

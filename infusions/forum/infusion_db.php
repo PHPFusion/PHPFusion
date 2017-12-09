@@ -18,6 +18,11 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
+if (!defined("LASTVISITED")) {
+define('LASTVISITED', Authenticate::setLastVisitCookie());
+}
+
 define("FORUM", INFUSIONS."forum/");
 define("RANKS", FORUM."ranks/");
 

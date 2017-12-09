@@ -899,6 +899,7 @@ class ForumThreads extends ForumServer {
                                     $module_file_path = INCLUDES.'user_fields/'.$fieldAttr['field_name'].'_include.php';
                                     $module_locale_file_path = LOCALE.LOCALESET.'user_fields/'.$fieldAttr['field_name'].'.php';
                                     if (file_exists($module_file_path) && file_exists($module_locale_file_path)) {
+                                        $profile_method = 'display';
                                         $user_fields = [];
                                         include($module_locale_file_path);
                                         include($module_file_path);

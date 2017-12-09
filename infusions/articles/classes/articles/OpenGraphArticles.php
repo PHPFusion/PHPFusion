@@ -22,7 +22,7 @@ class OpenGraphArticles extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `article_subject`, `article_snippet`, `article_keywords` FROM `".DB_ARTICLES."` WHERE `article_id` = '$article_id'");
+        $result = dbquery("SELECT `article_subject`, `article_snippet`, `article_keywords` FROM `".DB_ARTICLES."` WHERE `article_id` = :article", [':article' => $article_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/articles/articles.php?readmore='.$article_id;
@@ -39,7 +39,7 @@ class OpenGraphArticles extends OpenGraph {
     public static function ogArticleCat($cat_id = 0) {
         $settings = fusion_get_settings();
         $info = [];
-        $result = dbquery("SELECT `article_cat_name`, `article_cat_description` FROM `".DB_ARTICLE_CATS."` WHERE `article_cat_id` = '$cat_id'");
+        $result = dbquery("SELECT `article_cat_name`, `article_cat_description` FROM `".DB_ARTICLE_CATS."` WHERE `article_cat_id` = :cat_id", [':cat_id' => $cat_id]);
 
         if (dbrows($result)) {
             $data = dbarray($result);

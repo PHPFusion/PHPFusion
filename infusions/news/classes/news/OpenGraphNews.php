@@ -22,7 +22,7 @@ class OpenGraphNews extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `news_subject`, `news_news`, `news_keywords` FROM `".DB_NEWS."` WHERE `news_id` = '$news_id'");
+        $result = dbquery("SELECT `news_subject`, `news_news`, `news_keywords` FROM `".DB_NEWS."` WHERE `news_id` = :newsid", [':newsid' => $news_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/news/news.php?readmore='.$news_id;
@@ -31,7 +31,7 @@ class OpenGraphNews extends OpenGraph {
             $info['description'] = $data['news_news'] ? fusion_first_words(strip_tags(html_entity_decode($data['news_news'])), 50) : $settings['description'];
             $info['type'] = 'article';
 
-            $result_img = dbquery("SELECT `news_image_t1` FROM `".DB_NEWS_IMAGES."` WHERE `news_id` = '$news_id'");
+            $result_img = dbquery("SELECT `news_image_t1` FROM `".DB_NEWS_IMAGES."` WHERE `news_id` = :newsid", [':newsid' => $news_id]);
             if (dbrows($result_img)) {
                 $data_img = dbarray($result_img);
                 $info['image'] = $settings['siteurl'].'infusions/news/images/thumbs/'.$data_img['news_image_t1'];
@@ -47,7 +47,7 @@ class OpenGraphNews extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT `news_cat_name`, `news_cat_image` FROM `".DB_NEWS_CATS."` WHERE `news_cat_id` = '$cat_id'");
+        $result = dbquery("SELECT `news_cat_name`, `news_cat_image` FROM `".DB_NEWS_CATS."` WHERE `news_cat_id` = :catid", [':catid' => $cat_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/news/news.php?cat_id='.$cat_id;

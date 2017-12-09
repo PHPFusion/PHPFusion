@@ -424,7 +424,7 @@ class UserGroups {
         if ($rows > 0) {
             $html .= fusion_get_function('openside', self::$locale['GRP_460']);
             $html .= "<div class='clearfix spacer-xs'>\n";
-            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"], TRUE)."&amp;")."</div>\n" : "");
+            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ['rowstart'], FALSE)."&amp;")."</div>\n" : "");
             $html .= "<div class='overflow-hide'>".sprintf(self::$locale['GRP_427'], $rows, $total_rows)."</div>\n";
             $html .= "</div>\n";
             $html .= openform('rem_users_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);
