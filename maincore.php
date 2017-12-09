@@ -227,7 +227,7 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 }
 
 //$lastvisited = Authenticate::setLastVisitCookie();
-define('LASTVISITED', Authenticate::setLastVisitCookie());
+//define('LASTVISITED', Authenticate::setLastVisitCookie());
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
