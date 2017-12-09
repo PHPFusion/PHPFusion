@@ -93,6 +93,7 @@ if (!defined('BASEDIR')) {
  * Include core files that is required in working order
  */
 
+require_once __DIR__.'/theme_functions_include.php';
 require_once __DIR__.'/core_functions_include.php';
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__."/sqlhandler.inc.php";
