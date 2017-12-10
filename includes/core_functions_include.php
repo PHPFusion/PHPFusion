@@ -1507,7 +1507,7 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
-    $class = ($class ? " class='$class'" : "");
+    $class = ($class ? "class='$class'" : "");
 
     if ((in_array($user_status, [
                 0,
