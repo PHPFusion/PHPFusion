@@ -27,8 +27,8 @@ use \PHPFusion\OutputHandler;
 class AdminPanel extends Components {
     public function __construct() {
         OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.min.js"></script>');
-        OutputHandler::addToHead('<link rel="stylesheet" href="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.css"/>');
-        OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.js"></script>');
+        OutputHandler::addToHead('<link rel="stylesheet" href="'.MATERIAL.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
+        OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');
         OutputHandler::addToJquery('$(".sidebar, .sidebar-sm .admin-submenu, .sidebar-sm .search-box, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 550, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
 
         $sections = Admins::getInstance()->getAdminSections();
@@ -173,7 +173,7 @@ class AdminPanel extends Components {
                 "url": "'.$_SERVER['REQUEST_URI'].'"
             };
             $.ajax({
-                url: "'.MATERIAL.'search.php'.fusion_get_aidlink().'",
+                url: "'.MATERIAL.'acp_search.php'.fusion_get_aidlink().'",
                 method: "get",
                 data: $.param(data),
                 beforeSend: function () {
