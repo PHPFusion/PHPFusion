@@ -44,7 +44,7 @@ if (!function_exists("showsidelinks")) {
         if (!empty($data[$id])) {
             foreach ($data[$id] as $link_id => $link_data) {
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+                    $link_target = ($link_data['link_window'] == "1" ? "target='_blank'" : "");
 
                     if ($start_page == $link_data['link_url']) {
                         $link_is_active = TRUE;
