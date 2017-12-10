@@ -8,13 +8,15 @@
         </div>
     </div>
 </div>
-<div class='navbar navbar-inverse' style='margin-top:-15px; border-radius: 0;'>
-    <ul class='nav navbar-nav'>
-        {navbar_item.{
-        <li {%active%}><a href='{%link%}'>{%title%}</a></li>
-        }}
-    </ul>
-</div>
+<nav class='navbar navbar-inverse forum-navbar' style='margin-top:-15px; border-radius: 0;'>
+    <div class="container-fluid">
+        <ul class='nav navbar-nav'>
+            {navbar_item.{
+            <li {%active%}><a href='{%link%}'>{%title%}</a></li>
+            }}
+        </ul>
+    </div>
+</nav>
 {rules.{
 <div>{%forum_rules%}</div>}}
 <div class='spacer-md'>
