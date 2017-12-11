@@ -20,7 +20,6 @@ if (!defined('IN_FUSION')) {
 }
 
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once INCLUDES.'theme_functions_include.php';
 require_once MATERIAL.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);

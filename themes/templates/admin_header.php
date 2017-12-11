@@ -29,15 +29,15 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
 
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
-require_once THEMES."templates/render_functions.php";
 
-if (preg_match("/^([a-z0-9_-]){2,50}$/i",
-        $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")
-) {
+if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {
     require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
 } else {
     die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
+
+require_once INCLUDES."theme_functions_include.php";
+require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
     $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",

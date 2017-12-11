@@ -19,7 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_themes/Old_School/includes/functions.php";
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 

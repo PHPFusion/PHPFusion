@@ -20,7 +20,6 @@ if (!defined("IN_FUSION")) {
 }
 
 define("THEME_BULLET", "&middot;");
-require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
 
 function render_page() {
