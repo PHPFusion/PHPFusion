@@ -61,31 +61,33 @@ class Search {
     }
 
     private function SearchPages() {
-        $available_pages = Admins::getInstance()->getAdminPages();
-        $search_string   = $_GET['pagestring'];
+        if (isset($_GET['pagestring'])) {
+            $available_pages = Admins::getInstance()->getAdminPages();
+            $search_string = $_GET['pagestring'];
 
-        if (strlen($search_string) >= 2) {
-            $pages = flatten_array($available_pages);
-            $result_rows = 0;
+            if (strlen($search_string) >= 2) {
+                $pages = flatten_array($available_pages);
+                $result_rows = 0;
 
-            if (!empty($pages)) {
-                foreach ($pages as $page) {
-                    if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
-                        $this->result['data'][] = $page;
-                        $result_rows++;
+                if (!empty($pages)) {
+                    foreach ($pages as $page) {
+                        if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
+                            $this->result['data'][] = $page;
+                            $result_rows++;
+                        }
                     }
+                } else {
+                    $this->result['status'] = 102;
+                }
+
+                if ($result_rows > 0) {
+                    $this->result['count'] = $result_rows;
+                } else {
+                    $this->result['status'] = 104;
                 }
             } else {
-                $this->result['status'] = 102;
+                $this->result['status'] = 103;
             }
-
-            if ($result_rows > 0) {
-                $this->result['count'] = $result_rows;
-            } else {
-                $this->result['status'] = 104;
-            }
-        } else {
-            $this->result['status'] = 103;
         }
     }
 
@@ -114,7 +116,7 @@ class Search {
 
                 $icon = strtr(get_image('ac_'.$data['admin_rights']), [
                     INFUSIONS => fusion_get_settings('siteurl').'infusions/',
-                    ADMIN => fusion_get_settings('siteurl').'administration/'
+                    ADMIN     => fusion_get_settings('siteurl').'administration/'
                 ]);
 
                 if (checkrights($data['admin_rights'])) {

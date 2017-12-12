@@ -20,8 +20,7 @@ if (!defined('IN_FUSION')) {
 }
 
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once INCLUDES.'theme_functions_include.php';
-require_once MATERIAL.'theme_autoloader.php';
+require_once MATERIAL.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
@@ -56,9 +55,8 @@ function closetable() {
     Material\Components::CloseTable();
 }
 
-function replace_meta($output = '') {
+\PHPFusion\OutputHandler::addHandler(function ($output = '') {
     $color = !check_admin_pass('') ? '2c3e50' : '243447';
-    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);
-}
 
-add_handler('replace_meta');
+    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);
+});

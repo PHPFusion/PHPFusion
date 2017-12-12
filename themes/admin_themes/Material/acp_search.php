@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/search.php
+| Filename: Material/acp_search.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once '../../../maincore.php';
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once MATERIAL.'theme_autoloader.php';
+require_once MATERIAL.'acp_autoloader.php';
 
 new Material\Search();
 exit();
