@@ -35,7 +35,7 @@ class PageView extends PageController {
             }
         }
 
-        return (object)self::$page_instance;
+        return self::$page_instance;
     }
 
     /**

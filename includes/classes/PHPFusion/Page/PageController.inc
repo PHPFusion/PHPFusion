@@ -81,10 +81,8 @@ class PageController extends PageModel {
         }
         ob_start();
         display_page_content($htmlArray);
-        $html = ob_get_contents();
-        ob_end_clean();
 
-        return (string)$html;
+        return ob_get_clean();
     }
 
     /**
