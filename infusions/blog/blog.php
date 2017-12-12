@@ -325,6 +325,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
+
             $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? "blog_cat_language='".LANGUAGE."' AND " : "")." blog_cat_id='".intval($_GET['cat_id'])."'"));
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
@@ -332,7 +333,8 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             ]);
             add_to_title($locale['global_201'].$res['blog_cat_name']);
             $info['blog_title'] = $res['blog_cat_name'];
-            $catFilter = "and blog_cat=".intval($_GET['cat_id']);
+            $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
+
         } else {
             // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
@@ -349,11 +351,12 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             ]);
         }
 
-        $info['blog_max_rows'] = dbrows(dbquery("select blog_id from ".DB_BLOG."
-            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE")." ".groupaccess("blog_visibility")."
-            AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
-            ".$catFilter."
-            "));
+        $max_rows_sql = "SELECT blog_id from ".DB_BLOG."
+        ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE")." ".groupaccess("blog_visibility")."
+        AND (blog_start='0' || blog_start<='".TIME."') AND (blog_end='0' || blog_end>='".TIME."') AND blog_draft='0'
+        $catFilter";
+
+        $info['blog_max_rows'] = dbrows(dbquery($max_rows_sql));
 
         //xss
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
@@ -560,7 +563,9 @@ function count_comments($id, $type) {
 }
 
 render_main_blog($info);
+
 require_once THEMES."templates/footer.php";
+
 /**
  * Returns Blog Category Hierarchy Tree Data
  *

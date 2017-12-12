@@ -56,7 +56,7 @@ class Functions {
      * @return bool|string
      */
     public static function validate_blogCat($id) {
-        if (is_numeric($id)) {
+        if (isnum($id)) {
             if ($id < 1) {
                 return 1;
             } else {
