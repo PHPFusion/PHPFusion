@@ -44,6 +44,7 @@ DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID()
     'user'     => $db_user,
     'password' => $db_pass,
     'database' => $db_name,
+    'charset'  => 'utf8mb4',
     'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 ]);
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
