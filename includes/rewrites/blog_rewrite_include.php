@@ -36,7 +36,7 @@ $regex = [
     "%blog_cat_id%"   => "([1-9]{1}[0-9]*)",
     "%hash_stop%"     => "\#(?=\s*|)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
-    "%stype%"         => "(b)",
+    "%stype%"         => "(b)"
 ];
 
 $pattern = [
@@ -60,7 +60,7 @@ $pattern = [
     "blog/category/uncategorized"                                            => "infusions/blog/blog.php?cat_id=0",
     "blog/category/filter/uncategorized"                                     => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
     "blog/category/%blog_cat_id%/%blog_cat_name%"                            => "infusions/blog/blog.php?cat_id=%blog_cat_id%",
-    "blog"                                                                   => "infusions/blog/blog.php",
+    "blog"                                                                   => "infusions/blog/blog.php"
 ];
 
 $alias_pattern = [
@@ -68,7 +68,7 @@ $alias_pattern = [
     "blog/%alias%"                             => "%alias_target%",
     "blog/%alias%#comments"                    => "%alias_target%%hash_stop%#comments",
     "blog/%alias%/%blog_step%/%blog_rowstart%" => "%alias_target%&amp;step=%blog_step%&amp;rowstart=%blog_rowstart%",
-    "blog/%alias%/%blog_step%"                 => "%alias_target%&amp;step=%blog_step%",
+    "blog/%alias%/%blog_step%"                 => "%alias_target%&amp;step=%blog_step%"
 ];
 
 $pattern_tables["%blog_id%"] = [
@@ -77,7 +77,7 @@ $pattern_tables["%blog_id%"] = [
     "id"          => ["%blog_id%" => "blog_id"],
     "columns"     => [
         "%blog_title%" => "blog_subject",
-        "%blog_start%" => "blog_start",
+        "%blog_start%" => "blog_start"
     ]
 ];
 

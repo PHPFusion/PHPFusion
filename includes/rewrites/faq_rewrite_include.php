@@ -24,7 +24,7 @@ $regex = [
     "%faq_cat_id%"   => "([0-9]+)",
     "%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%type%"         => "(FQ)",
-    "%stype%"        => "(q)",
+    "%stype%"        => "(q)"
 ];
 
 $pattern = [
@@ -32,7 +32,7 @@ $pattern = [
     "submit/%stype%/frequently-asked-questions"                         => "submit.php?stype=%stype%",
     "submit/%stype%/frequently-asked-questions/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=FQ",
     "frequently-asked-questions"                                        => "infusions/faq/faq.php",
-    "frequently-asked-questions/category/%faq_cat_id%"                  => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
+    "frequently-asked-questions/category/%faq_cat_id%"                  => "infusions/faq/faq.php?cat_id=%faq_cat_id%"
 ];
 
 $pattern_tables["%cat_id%"] = [

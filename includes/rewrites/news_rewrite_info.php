@@ -21,4 +21,4 @@ if (!defined("IN_FUSION")) {
 }
 $permalink_name = $locale['pl_news_title'];
 $permalink_desc = $locale['pl_news_desc'];
-$permalink_tags_desc = array("%news_id%" => $locale['pl_tags_001'], "%news_title%" => $locale['pl_tags_002']);
+$permalink_tags_desc = ["%news_id%" => $locale['pl_tags_001'], "%news_title%" => $locale['pl_tags_002']];

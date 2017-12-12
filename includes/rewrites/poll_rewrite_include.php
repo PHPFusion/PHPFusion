@@ -21,10 +21,10 @@ if (!defined("IN_FUSION")) {
 }
 
 $regex = [
-    "%rowstart%" => "([0-9]+)",
+    "%rowstart%" => "([0-9]+)"
 ];
 
 $pattern = [
     "polls-archive"                => "infusions/member_poll_panel/polls_archive.php",
-    "polls-archive-row-%rowstart%" => "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%",
+    "polls-archive-row-%rowstart%" => "infusions/member_poll_panel/polls_archive.php?rowstart=%rowstart%"
 ];

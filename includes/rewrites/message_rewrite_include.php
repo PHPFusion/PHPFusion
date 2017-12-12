@@ -27,7 +27,7 @@ $regex = [
     "%folder_inbox%"   => "(inbox)",
     "%folder_outbox%"  => "(outbox)",
     "%folder_archive%" => "(archive)",
-    "%user_name%"      => "([a-zA-Z._]+)",
+    "%user_name%"      => "([a-zA-Z._]+)"
 ];
 
 $pattern = [
@@ -37,7 +37,7 @@ $pattern = [
     "messages/%folder_inbox%/%msg_id%/message-from-%user_name%"   => "messages.php?folder=%folder_inbox%&amp;msg_read=%msg_id%",
     "messages/%folder_archive%/%msg_id%/message-with-%user_name%" => "messages.php?folder=%folder_archive%&amp;msg_read=%msg_id%",
     "messages/%folder%"                                           => "messages.php?folder=%folder%",
-    "messages"                                                    => "messages.php",
+    "messages"                                                    => "messages.php"
 ];
 
 if (isset($_GET['folder'])) {
@@ -63,6 +63,6 @@ if (isset($_GET['folder'])) {
         "primary_key" => "message_id",
         "query"       => "message_user='".$userdata['user_id']."'",
         "id"          => ["%msg_id%" => "message_id"],
-        "columns"     => ["%user_name%" => "user_name"],
+        "columns"     => ["%user_name%" => "user_name"]
     ];
 }

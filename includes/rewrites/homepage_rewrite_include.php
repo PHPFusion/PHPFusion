@@ -29,7 +29,7 @@ $regex = [
     "%sort_order%"  => "([a-zA-Z]+)",
     "%search_text%" => "([0-9a-zA-Z._]+)",
     "%search%"      => "([a-zA-Z]+)",
-    "%rowstart%"    => "([0-9]+)",
+    "%rowstart%"    => "([0-9]+)"
 ];
 
 $pattern = [
@@ -47,5 +47,5 @@ $pattern = [
     "website-members"                                                       => "members.php",
     "create/ref=%time%"                                                     => "register.php?ref=%time%",
     "contact"                                                               => "contact.php",
-    "registration"                                                          => "register.php",
+    "registration"                                                          => "register.php"
 ];

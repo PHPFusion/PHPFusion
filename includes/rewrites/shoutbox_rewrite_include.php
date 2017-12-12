@@ -21,5 +21,5 @@ if (!defined("IN_FUSION")) {
 }
 
 $pattern = [
-    "shoutbox-archive" => "infusions/shoutbox_panel/shoutbox_archive.php",
+    "shoutbox-archive" => "infusions/shoutbox_panel/shoutbox_archive.php"
 ];
