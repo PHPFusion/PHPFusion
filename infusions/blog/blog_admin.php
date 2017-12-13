@@ -97,7 +97,7 @@ $master_title['id'][] = 'settings';
 $master_title['icon'][] = 'fa fa-cogs';
 $tab_active = $_GET['section'];
 opentable($locale['blog_0405']);
-echo opentab($master_title, $tab_active, 'blog', TRUE);
+echo opentab($master_title, $tab_active, "blog", TRUE, "", "section", ['rowstart', 'filter_cid']);
 switch ($_GET['section']) {
     case "blog_form":
         include "admin/blog.php";
@@ -146,17 +146,13 @@ function blog_listing() {
     $catFilter = "";
     if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
         if ($_GET['filter_cid'] > 0) {
-            $catFilter = "and ".in_group("blog_cat", intval($_GET['filter_cid']));
+            $catFilter = in_group("blog_cat", intval($_GET['filter_cid']));
         }
     }
 
-    $langFilter = multilang_table("BL") ? "blog_language='".LANGUAGE."'" : "";
+    $langFilter = multilang_table("BL") ? ($catFilter != '' ? " AND " : '')."blog_language='".LANGUAGE."'" : "";
 
-    if ($catFilter && $langFilter) {
-        $filter = $catFilter." AND ".$langFilter;
-    } else {
-        $filter = $catFilter.$langFilter;
-    }
+    $filter = $catFilter.$langFilter;
 
     $result = dbquery("
 	SELECT blog_id, blog_cat, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft
@@ -192,7 +188,8 @@ function blog_listing() {
         echo "</div>\n";
     }
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
+    	$filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["section"], FALSE).$filter);
     }
     echo "</div>\n";
 
@@ -245,7 +242,8 @@ function blog_listing() {
     echo "</ul>\n";
 
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
+    	$filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["section"], FALSE).$filter);
     }
 
 }
