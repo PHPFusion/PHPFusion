@@ -35,7 +35,7 @@ $pattern = [
     "weblinks/%weblink_cat_id%/%weblink_id%/%weblink_name%"    => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
     "weblinks/%weblink_cat_id%/%weblink_cat_name%"             => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
     "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
-    "weblinks"                                                 => "infusions/weblinks/weblinks.php",
+    "weblinks"                                                 => "infusions/weblinks/weblinks.php"
 ];
 
 $pattern_tables["%weblink_id%"] = [
@@ -43,7 +43,7 @@ $pattern_tables["%weblink_id%"] = [
     "primary_key" => "weblink_id",
     "id"          => ["%weblink_id%" => "weblink_id"],
     "columns"     => [
-        "%weblink_name%" => "weblink_name",
+        "%weblink_name%" => "weblink_name"
     ]
 ];
 

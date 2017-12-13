@@ -541,7 +541,7 @@ function get_core_tables($localeset) {
             'type' => 'TEXT'
         ], //message_message TEXT NOT NULL,
         'message_smileys'   => [
-            'type'   => 'SMALLINT',
+            'type'   => 'CHAR',
             'length' => 1,
         ], //message_smileys CHAR(1) NOT NULL DEFAULT '', @note: changed
         'message_read'      => [

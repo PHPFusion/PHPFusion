@@ -24,13 +24,13 @@ $regex = [
     "%user_id%"   => "([0-9]+)",
     "%group_id%"  => "([0-9]+)",
     "%section%"   => "([0-9]+)",
-    "%user_name%" => "([0-9a-zA-Z._\W]+)",
+    "%user_name%" => "([0-9a-zA-Z._\W]+)"
 ];
 
 $pattern = [
     "profile-section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
     "profile-%user_id%/%user_name%"                   => "profile.php?lookup=%user_id%",
-    "profile-group-%group_id%"                        => "profile.php?group_id=%group_id%",
+    "profile-group-%group_id%"                        => "profile.php?group_id=%group_id%"
 
 ];
 
@@ -39,6 +39,6 @@ $pattern_tables["%user_id%"] = [
     "primary_key" => "user_id",
     "id"          => ["%user_id%" => "user_id"],
     "columns"     => [
-        "%user_name%" => "user_name",
+        "%user_name%" => "user_name"
     ]
 ];

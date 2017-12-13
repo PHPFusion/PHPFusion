@@ -33,7 +33,7 @@ $regex = [
     "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%stype%"         => "(n)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
-    "%hash_stop%"     => "\#(?=\s*|)",
+    "%hash_stop%"     => "\#(?=\s*|)"
 ];
 
 $pattern = [
@@ -52,14 +52,14 @@ $pattern = [
     "news/category/filter/uncategorized"                                     => "infusions/news/news.php?cat_id=0&amp;filter=false",
     "news/category/%news_cat_id%/%news_cat_name%"                            => "infusions/news/news.php?cat_id=%news_cat_id%",
     "news/category/%news_cat_id%/filter/%filter_type%"                       => "infusions/news/news.php?cat_id=%news_cat_id%&amp;type=%filter_type%",
-    "news"                                                                   => "infusions/news/news.php",
+    "news"                                                                   => "infusions/news/news.php"
 ];
 
 $alias_pattern = [
     "news/%alias%"                             => "%alias_target%",
     "news/%alias%#comments"                    => "%alias_target%%hash_stop%#comments",
     "news/%alias%/%news_step%/%news_rowstart%" => "%alias_target%&amp;step=%news_step%&amp;rowstart=%news_rowstart%",
-    "news/%alias%/%news_step%"                 => "%alias_target%&amp;step=%news_step%",
+    "news/%alias%/%news_step%"                 => "%alias_target%&amp;step=%news_step%"
 ];
 
 $pattern_tables["%news_id%"] = [
@@ -68,7 +68,7 @@ $pattern_tables["%news_id%"] = [
     "id"          => ["%news_id%" => "news_id"],
     "columns"     => [
         "%news_title%" => "news_subject",
-        "%news_start%" => "news_start",
+        "%news_start%" => "news_start"
     ]
 ];
 

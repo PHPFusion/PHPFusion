@@ -45,7 +45,7 @@ $regex = [
     "%order%"        => "([a-zA-Z]+)",
     "%filter%"       => "([0-9]+)",
     "%print_type%"   => "(F)",
-    "%sorting%"      => "([a-zA-Z]+)",
+    "%sorting%"      => "([a-zA-Z]+)"
 ];
 
 $pattern = [];
@@ -59,12 +59,13 @@ $forum_filterTypes = [
     "time-%time%"   => "time=%time%",
     "type-%type%"   => "type=%type%",
     "sort-%sort%"   => "sort=%sort%",
-    "order-%order%" => "order=%order%",
+    "order-%order%" => "order=%order%"
 ];
 $fKeyPrefix = "forum/%forum_id%";
 $fKeyAppend = "/filters";
 $fKeyAppend2 = "/page-%rowstart%/filters";
 $fRulePrefix = "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%";
+
 if (!function_exists("filter_implode")) {
     function filter_implode($arr, $delimiter, $temp_string, &$collect) {
         if ($temp_string != "") {
@@ -81,6 +82,7 @@ if (!function_exists("filter_implode")) {
         }
     }
 }
+
 $_keys = [];
 $_val = [];
 $filter_values = [];
@@ -114,7 +116,7 @@ $pattern += $filter_sef_rules_rowstart;
 */
 $pattern += [
     "forum/newthread-post/%action%/%error_code%/%forum_id%/%thread_id%/%thread_name%"         => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%"
 ];
 
 $pattern += [
@@ -124,7 +126,7 @@ $pattern += [
     "forum/create-new-thread"              => "infusions/forum/newthread.php",
     "forum/tags/%tag_id%/%tag_name%"       => "infusions/forum/tags.php?tag_id=%tag_id%",
     "forum/tags"                           => "infusions/forum/tags.php",
-    "forum"                                => "infusions/forum/index.php",
+    "forum"                                => "infusions/forum/index.php"
 ];
 
 // Thread View  viewthread.php
@@ -142,15 +144,15 @@ $pattern += [
     "forum/thread/view-%pid%/%thread_id%/%thread_name%#post_%post_id%"              => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
     "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%"              => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%"                              => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
-    "print/F/%rowstart%/%thread_id%/%thread_name%"                                  => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
+    "print/F/%rowstart%/%thread_id%/%thread_name%"                                  => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%"
 ];
 
 $pattern += [
-    "forum/%section%" => "infusions/forum/index.php?section=%section%",
+    "forum/%section%" => "infusions/forum/index.php?section=%section%"
 ];
 // Buttons & Forms
 $pattern += [
-    "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
+    "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%"
 ];
 
 $pattern += [
@@ -159,16 +161,15 @@ $pattern += [
     "forum/my-post-rows-%rowstart%"                                 => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
     "forum/new-post"                                                => "infusions/forum_threads_list_panel/new_posts.php",
     "forum/tracked-threads"                                         => "infusions/forum_threads_list_panel/my_tracked_threads.php",
-    "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
+    "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%"
 ];
-
 
 $pattern_tables["%forum_id%"] = [
     "table"       => DB_FORUMS,
     "primary_key" => "forum_id",
     "id"          => ["%forum_id%" => "forum_id"],
     "columns"     => [
-        "%forum_name%" => "forum_name",
+        "%forum_name%" => "forum_name"
     ],
 ];
 
@@ -177,7 +178,7 @@ $pattern_tables["%thread_id%"] = [
     "primary_key" => "thread_id",
     "id"          => ["%thread_id%" => "thread_id"],
     "columns"     => [
-        "%thread_name%" => "thread_subject",
+        "%thread_name%" => "thread_subject"
     ]
 ];
 
@@ -186,7 +187,7 @@ $pattern_tables["%post_id%"] = [
     "primary_key" => "post_id",
     "id"          => ["%post_id%" => "post_id"],
     "columns"     => [
-        "%post_message%" => "post_message",
+        "%post_message%" => "post_message"
     ]
 ];
 
@@ -195,6 +196,6 @@ $pattern_tables["%tag_id%"] = [
     "primary_key" => "tag_id",
     "id"          => ["%tag_id%" => "tag_id"],
     "columns"     => [
-        "%tag_name%" => "tag_title",
+        "%tag_name%" => "tag_title"
     ]
 ];

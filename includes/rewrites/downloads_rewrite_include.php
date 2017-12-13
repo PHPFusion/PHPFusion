@@ -34,17 +34,17 @@ $regex = [
 ];
 
 $pattern = [
-    "submit-%stype%/files"                                     => "submit.php?stype=%stype%",
-    "submit-%stype%/files/submitted-and-thank-you"             => "submit.php?stype=%stype%&amp;submitted=d",
-    "downloads/author/%author_id%/%author_name%"               => "infusions/downloads/downloads.php?author=%author_id%",
-    "downloads/filter/%filter_type%"                           => "infusions/downloads/downloads.php?type=%filter_type%",
-    "downloads/filter/{%download_cat_id%}/%filter_type%"       => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
-    "downloads/%cat_id%/%download_id%/%download_title%"        => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-    "downloads/%download_id%/%download_title%"                 => "infusions/downloads/downloads.php?download_id=%download_id%",
-    "downloads/cat-%cat_id%/%download_id%/%download_title%"    => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-    "downloads/file/%download_id%/%download_title%"            => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
-    "downloads/category/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
-    "downloads"                                                => "infusions/downloads/downloads.php",
+    "submit-%stype%/files"                                                     => "submit.php?stype=%stype%",
+    "submit-%stype%/files/submitted-and-thank-you"                             => "submit.php?stype=%stype%&amp;submitted=d",
+    "downloads/author/%author_id%/%author_name%"                               => "infusions/downloads/downloads.php?author=%author_id%",
+    "downloads/filter/%filter_type%"                                           => "infusions/downloads/downloads.php?type=%filter_type%",
+    "downloads/filter/%filter_type%/category/%download_cat_id%"                => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;type=%filter_type%",
+    "downloads/category/%download_cat_id%/%download_cat_name%"                 => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
+    "downloads/category/%download_cat_id%/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;file_id=%download_id%",
+    "downloads/category/%download_cat_id%/%download_id%/%download_title%"      => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;download_id=%download_id%",
+    "downloads/file/%download_id%/%download_title%"                            => "infusions/downloads/downloads.php?file_id=%download_id%",
+    "downloads/%download_id%/%download_title%"                                 => "infusions/downloads/downloads.php?download_id=%download_id%",
+    "downloads"                                                                => "infusions/downloads/downloads.php"
 ];
 
 $pattern_tables["%download_id%"] = [
@@ -52,7 +52,7 @@ $pattern_tables["%download_id%"] = [
     "primary_key" => "download_id",
     "id"          => ["%download_id%" => "download_id"],
     "columns"     => [
-        "%download_title%" => "download_title",
+        "%download_title%" => "download_title"
     ]
 ];
 
@@ -61,7 +61,7 @@ $pattern_tables["%download_cat_id%"] = [
     "primary_key" => "download_cat_id",
     "id"          => ["%download_cat_id%" => "download_cat_id"],
     "columns"     => [
-        "%download_cat_name%" => "download_cat_name",
+        "%download_cat_name%" => "download_cat_name"
     ]
 ];
 
@@ -70,6 +70,6 @@ $pattern_tables["%author_id%"] = [
     "primary_key" => "user_id",
     "id"          => ["%author_id%" => "user_id"],
     "columns"     => [
-        "%author_name%" => "user_name",
+        "%author_name%" => "user_name"
     ]
 ];

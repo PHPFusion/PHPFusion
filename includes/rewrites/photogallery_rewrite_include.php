@@ -29,7 +29,7 @@ $regex = [
     "%c_start%"     => "([0-9]+)",
     "%stype%"       => "(p)",
     "%comment_id%"  => "([0-9]+)",
-    "%hash_stop%"   => "\#(?=\s*|)",
+    "%hash_stop%"   => "\#(?=\s*|)"
 ];
 
 $pattern = [
@@ -40,7 +40,7 @@ $pattern = [
     "gallery/photo/comments-%c_start%/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%&amp;c_start=%c_start%",
     "gallery/photo/%photo_id%/%photo_title%"                    => "infusions/gallery/gallery.php?photo_id=%photo_id%",
     "gallery/%album_id%/%album_title%"                          => "infusions/gallery/gallery.php?album_id=%album_id%",
-    "gallery"                                                   => "infusions/gallery/gallery.php",
+    "gallery"                                                   => "infusions/gallery/gallery.php"
 ];
 
 
