@@ -27,6 +27,6 @@ $_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) ? $_G
 if (!empty($modules) && $_GET['stype']) {
     require_once $modules[$_GET['stype']]['link'];
 } else {
-    redirect('index.php');
+    redirect(BASEDIR.'index.php');
 }
 require_once THEMES."templates/footer.php";

@@ -21,14 +21,13 @@ if (!db_exists(DB_BLOG)) {
 }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-$locale = fusion_get_locale('', BLOG_LOCALE);
-
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 
 $settings = fusion_get_settings();
+$locale = fusion_get_locale('', BLOG_LOCALE);
 
 if ($settings['tinymce_enabled'] == 1) {
     $tinymce_list = [];
@@ -55,6 +54,7 @@ set_title($locale['blog_1000']);
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
+
 $info = [
     'blog_title'            => $locale['blog_1000'],
     'blog_updated'          => '',
