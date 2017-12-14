@@ -389,7 +389,7 @@ class Forum extends ForumServer {
                                     $result = dbquery($query, $sql_param);
                                     $rows = dbrows($result);
                                     if ($rows) {
-                                        if ($this->forum_info['max_user_count'] > $rows) {
+                                        if ($this->forum_info['max_user_count'] > $this->forum_info['posts_per_page']) {
                                             $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $rows, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=people&amp;');
                                         }
                                         while ($data = dbarray($result)) {
