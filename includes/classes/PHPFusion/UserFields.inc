@@ -187,7 +187,7 @@ class UserFields extends QuantumFields {
                     ]
                 );
             } else {
-                $this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
+                $this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0, ['input_id' => 'userid']);
                 $this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
                         'type'             => 'password',
                         'autocomplete_off' => 1,
@@ -214,7 +214,7 @@ class UserFields extends QuantumFields {
                         'error_text'       => $locale['u133']
                     ]
                 );
-                $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password']);
+                $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password'], ['input_id' => 'userhash']);
             }
             $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
 

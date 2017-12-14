@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\OutputHandler;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -237,14 +238,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
         } else if ($options['static'] && empty($options['button_id'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
         } else if ($modal_trigger && empty($options['static'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
             if (!$options['hidden']) {
-                PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
             }
         }
         $html = '';
@@ -565,7 +566,6 @@ if (!function_exists("newscat")) {
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
@@ -763,7 +763,7 @@ if (!function_exists("thumbnail")) {
         $html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
         $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
         if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
-            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
+            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alr='Thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
             $html .= "<img src='holder.js/".$size."x".$size."/text:'/>\n";
@@ -1016,7 +1016,8 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
@@ -1070,7 +1071,7 @@ if (!function_exists("tab_active")
             if ($options['tab_nav'] == TRUE) {
                 $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
                 $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-                add_to_jquery("
+                OutputHandler::addToJQuery("
                 $('.btnNext').click(function(){
                   $('.nav-tabs > .active').next('li').find('a').trigger('click');
                 });
@@ -1088,8 +1089,6 @@ if (!function_exists("tab_active")
             return "</div>\n";
         }
     }
-
-    $fusion_tabs = new FusionTabs();
 
     /**
      * Current Tab Active Selector
@@ -1134,7 +1133,7 @@ if (!function_exists("tab_active")
      * @return string
      */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
     }
@@ -1149,19 +1148,19 @@ if (!function_exists("tab_active")
      * @return mixed
      */
     function opentabbody($tab_title, $tab_id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->opentabbody($tab_id, $link_active_arrkey, $key);
     }
 
     function closetabbody() {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetabbody();
     }
 
     function closetab(array $options = []) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetab($options);
     }
@@ -1205,7 +1204,7 @@ if (!function_exists("display_comments")) {
 if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
-        PHPFusion\OutputHandler::addToJQuery("
+        OutputHandler::addToJQuery("
             $('form').change(function() {
                 window.onbeforeunload = function() {
                     return true;
