@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {die("Access Denied");}
 
 $q = stripinput($_GET['q']);
 // since search is on user_name.
-$result = dbquery("SELECT user_id, user_name, user_avatar, user_level 
+$result = dbquery("SELECT user_id, user_name, user_avatar, user_level
     FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status=:status AND
     user_name LIKE :Q ".(!isset($_GET['allow_self']) ? "AND user_id !='".fusion_get_userdata('user_id')."'" : "")."
     ORDER BY user_level DESC, user_name ASC", [
@@ -40,6 +40,6 @@ if (dbrows($result)) {
 		$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level");
 	}
 } else {
-	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');
+	$user_opts[] = array('id' => '', 'text' => fusion_get_locale("500", LOCALE.LOCALESET."search.php"), 'avatar' => '', 'level' => '');
 }
 echo json_encode($user_opts);
