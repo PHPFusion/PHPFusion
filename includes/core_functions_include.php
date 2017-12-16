@@ -1656,7 +1656,8 @@ function fusion_get_user($user_id, $key = NULL) {
     if (!isset($user[$user_id])) {
         return NULL;
     }
-    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : '');
+
+    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : NULL);
 }
 
 /**
