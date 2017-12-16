@@ -103,7 +103,7 @@ function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
     $res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
-    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
+    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html' ".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 
     return $res;
 }
@@ -533,10 +533,10 @@ if (!function_exists("newsopts")) {
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         if (!isset($_GET['readmore']) && $info['news_ext'] == "y") {
-            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
+            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' ".$link_class.">".$locale['global_072']."</a> ".$sep." ";
         }
         if ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
-            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
+            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments' ".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
         }
         if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1")) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
@@ -566,7 +566,6 @@ if (!function_exists("newscat")) {
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
@@ -764,10 +763,10 @@ if (!function_exists("thumbnail")) {
         $html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
         $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
         if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
-            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
+            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
-            $html .= "<img src='holder.js/".$size."x".$size."/text:'/>\n";
+            $html .= "<img src='holder.js/".$size."x".$size."/text:' alt='thumbnail'/>\n";
         }
         $html .= $url || $colorbox ? "</a>" : '';
         $html .= "</div>\n";
@@ -1017,6 +1016,10 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
+                if (!defined('JS_COOKIES')) {
+                    define('JS_COOKIES', TRUE);
+                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                }
                 OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
