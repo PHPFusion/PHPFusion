@@ -44,7 +44,7 @@ function flood_control($field, $table, $where, $debug = FALSE) {
                             suspend_log($userdata['user_id'], 4, $locale['global_440'], TRUE);
                             $message = str_replace("[USER_NAME]", $userdata['user_name'], $locale['global_442']);
                             $message = str_replace("[USER_IP]", USER_IP, $message);
-                            $message = str_replace("[USER_IP]", USER_IP, $message);
+                            $message = str_replace("[SITENAME]", $settings['sitename'], $message);
                             $message = str_replace("[SITE_EMAIL]", $settings['siteemail'], $message);
                             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_441']);
