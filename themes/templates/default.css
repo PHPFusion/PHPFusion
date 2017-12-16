@@ -465,40 +465,40 @@ Grids
 
 /* display family */
 .overflow-hide {
-    overflow: hidden !important;
+    overflow: hidden;
 }
 
 .display-none {
-    display: none !important;
+    display: none;
 }
 
 .display-block {
-    display: block !important;
+    display: block;
     width: 100%;
 }
 
 .display-inline {
-    display: inline !important;
+    display: inline;
 }
 
 .display-inline-block {
-    display: inline-block !important;
+    display: inline-block;
 }
 
 .display-table {
-    display: table !important;
+    display: table;
 }
 
 .display-table-cell {
-    display: table-cell !important;
+    display: table-cell;
 }
 
 .position-relative {
-    position: relative !important;
+    position: relative;
 }
 
 .position-absolute {
-    position: absolute !important;
+    position: absolute;
 }
 
 .transition {
