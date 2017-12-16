@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\OutputHandler;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -237,14 +238,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
         } else if ($options['static'] && empty($options['button_id'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
         } else if ($modal_trigger && empty($options['static'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
             if (!$options['hidden']) {
-                PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
             }
         }
         $html = '';
@@ -1016,7 +1017,7 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
