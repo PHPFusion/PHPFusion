@@ -216,7 +216,7 @@ function download_listing() {
 }
 
 function calculate_byte($download_max_b) {
-    $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
+    $calc_opts = fusion_get_locale('1020', LOCALE.LOCALESET."admin/settings.php");
     foreach ($calc_opts as $byte => $val) {
         if ($download_max_b / $byte <= 999) {
             return $byte;

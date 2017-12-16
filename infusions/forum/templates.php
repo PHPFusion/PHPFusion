@@ -46,7 +46,7 @@ if (!function_exists('render_forum')) {
  * Template File templates/index/forum_index.html
  */
 if (!function_exists('render_forum_main')) {
-    function render_forum_main(array $info, $id = 0) {
+    function render_forum_main(array $info = [], $id = 0) {
         $locale = fusion_get_locale();
 
         $html = \PHPFusion\Template::getInstance('forum_index');
@@ -76,11 +76,9 @@ if (!function_exists('render_forum_main')) {
                     $category_header = $chtml->get_output();
                     // repeat this.
                     if (isset($info['forums'][0][$forum_id]['child'])) {
-                        $i = 1;
                         $content = '';
                         foreach ($info['forums'][0][$forum_id]['child'] as $sub_forum_id => $cdata) {
-                            $content .= render_forum_item($cdata, $i);
-                            $i++;
+                            $content .= render_forum_item($cdata);
                         }
                         $html->set_block('forum_content', ['forum_content' => $category_header.$content]);
                     } else {
@@ -182,7 +180,8 @@ if (!function_exists('render_forum_item')) {
             'forum_moderators'       => !empty($data['forum_moderators']) ? $data['forum_moderators'] : ' ---',
             'forum_thread_count'     => $data['forum_threadcount_word'],
             'forum_post_count'       => $data['forum_postcount_word'],
-            'forum_lastpost'         => $l_html->get_output()
+            'forum_lastpost'         => $l_html->get_output(),
+            'forum_icon'             => !empty($data['forum_image']) ? thumbnail(INFUSIONS."forum/images/".$data['forum_image'], '45px', FALSE, FALSE, TRUE, 'm-r-5') : $data['forum_icon_lg']
         ];
 
         $html->set_block('forums', $template_arr);
@@ -589,10 +588,10 @@ if (!function_exists('forum_newtopic')) {
         echo openmodal('newtopic', $locale['forum_0057'], ['button_id' => 'newtopic', 'class' => 'modal-md']);
         $index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
         $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
-		 FROM ".DB_FORUMS." a
-		 LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
-		 WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
-		 (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
+         FROM ".DB_FORUMS." a
+         LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
+         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
+         (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
         $options = [];
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
@@ -853,9 +852,9 @@ if (!function_exists('render_thread_item')) {
         }
         echo "</div>\n"; // end grid
         echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
-			".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."<br/>
-			".trimlink(strip_tags($info['thread_last']['post_message']), 100)."
-		</div>\n";
+            ".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."<br/>
+            ".trimlink(strip_tags($info['thread_last']['post_message']), 100)."
+        </div>\n";
         echo "</div>\n";
         echo "</div>\n";
     }
@@ -967,7 +966,7 @@ if (!function_exists('render_thread')) {
             $i = 1;
             foreach ($pdata as $post_id => $post_data) {
                 // once i run this, the instance poofed because the cache...
-                $post_items = render_post_item($post_data, $i);
+                $post_items = render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
                 //$post_items = '';
                 if ($post_id == $info['post_firstpost']) {
                     $html->set_block('post_firstpost_item', ['content' => $post_items]);

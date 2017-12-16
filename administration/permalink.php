@@ -153,7 +153,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     $result = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=".$rewrite_id['rewrite_id']);
     $result = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
 
-    addNotice("success", sprintf($locale['426'], $rewrite_name));
+    addNotice("success", sprintf($locale['PL_426'], $rewrite_name));
     redirect(FUSION_SELF.fusion_get_aidlink()."&amp;error=0&amp;section=pl");
 
 } else if (isset($_GET['reinstall'])) {

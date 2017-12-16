@@ -994,7 +994,6 @@ if (!function_exists("tab_active")
                     $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
                 }
             }
-
             $html = "<div class='nav-wrapper'>\n";
             $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
@@ -1016,12 +1015,10 @@ if (!function_exists("tab_active")
             }
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
-
             if (empty($link) && $this->remember) {
-                // load the cookies js.
-                add_to_jquery("                                
+                \PHPFusion\OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
-                    var cookieName = '".$this->cookie_name."';                    
+                    var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
                     Cookies.set(cookieName, cookieValue);
                 });
@@ -1030,10 +1027,6 @@ if (!function_exists("tab_active")
                     $('#".$id."').find('#'+Cookies.get(cookieName)).click();
                 }
                 ");
-                if (!defined("JS_COOKIES")) {
-                    define("JS_COOKIES", true);
-                    add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js' type='text/javascript' ></script>");
-                }
             }
 
             return (string)$html;
@@ -1077,7 +1070,7 @@ if (!function_exists("tab_active")
             if ($options['tab_nav'] == TRUE) {
                 $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
                 $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-                add_to_jquery("
+                OutputHandler::addToJQuery("
                 $('.btnNext').click(function(){
                   $('.nav-tabs > .active').next('li').find('a').trigger('click');
                 });
@@ -1141,12 +1134,12 @@ if (!function_exists("tab_active")
      * @return string
      */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
         if ($remember) {
             $fusion_tabs->set_remember(true);
         }
 
-        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET);
+        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
     }
 
     /**
@@ -1159,19 +1152,19 @@ if (!function_exists("tab_active")
      * @return mixed
      */
     function opentabbody($tab_title, $tab_id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->opentabbody($tab_id, $link_active_arrkey, $key);
     }
 
     function closetabbody() {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetabbody();
     }
 
     function closetab(array $options = []) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetab($options);
     }
@@ -1215,7 +1208,7 @@ if (!function_exists("display_comments")) {
 if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
-        PHPFusion\OutputHandler::addToJQuery("
+        OutputHandler::addToJQuery("
             $('form').change(function() {
                 window.onbeforeunload = function() {
                     return true;

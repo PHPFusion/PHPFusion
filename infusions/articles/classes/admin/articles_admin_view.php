@@ -112,7 +112,7 @@ class ArticlesAdminView extends ArticlesAdminModel {
         // Display Content
         opentable(self::$locale['article_0000']);
 
-        echo opentab($master_title, $_GET['section'], "articles_admin", TRUE, "", "section");
+        echo opentab($master_title, $_GET['section'], "articles_admin", TRUE, "", "section", ['article_display', 'rowstart']);
         switch ($_GET['section']) {
             case "article_category":
                 ArticlesCategoryAdmin::getInstance()->displayArticlesAdmin();
