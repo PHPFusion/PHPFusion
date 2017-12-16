@@ -994,6 +994,7 @@ if (!function_exists("tab_active")
                     $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
                 }
             }
+
             $html = "<div class='nav-wrapper'>\n";
             $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
@@ -1015,10 +1016,12 @@ if (!function_exists("tab_active")
             }
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
+
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                // load the cookies js.
+                add_to_jquery("                                
                 $('#".$id." > li').on('click', function() {
-                    var cookieName = '".$this->cookie_name."';
+                    var cookieName = '".$this->cookie_name."';                    
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
                     Cookies.set(cookieName, cookieValue);
                 });
@@ -1027,6 +1030,10 @@ if (!function_exists("tab_active")
                     $('#".$id."').find('#'+Cookies.get(cookieName)).click();
                 }
                 ");
+                if (!defined("JS_COOKIES")) {
+                    define("JS_COOKIES", true);
+                    add_to_footer("<script src='".INCLUDES."jquery/jquery.cookie.js' type='text/javascript' ></script>");
+                }
             }
 
             return (string)$html;
@@ -1135,8 +1142,11 @@ if (!function_exists("tab_active")
      */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
         global $fusion_tabs;
+        if ($remember) {
+            $fusion_tabs->set_remember(true);
+        }
 
-        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
+        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET);
     }
 
     /**
