@@ -103,7 +103,7 @@ function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
     $res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
-    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html' ".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
+    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 
     return $res;
 }
@@ -122,7 +122,7 @@ function showprivacypolicy() {
     $html = '';
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
-        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
+        $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
         $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
         $modal .= closemodal();
         add_to_footer($modal);
@@ -159,7 +159,7 @@ if (!function_exists("alert")) {
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
         $settings_arr = [];
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'");
+        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
         if (dbrows($set_result)) {
             while ($set_data = dbarray($set_result)) {
                 $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
