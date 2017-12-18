@@ -506,6 +506,7 @@ class UserFields {
 		$i = 1;
 		$c_html = '';
 		foreach ($cats as $cat) {
+			$c_html="";
 			if (array_key_exists($cat['field_cat'], $fields) && $fields[$cat['field_cat']]) {
 				$html .= "<!--userfield_precat_".$i."-->\n";
 				// this is show in profile.
@@ -524,7 +525,7 @@ class UserFields {
 				}
 			}
 		}
-		if (!$c_html) {
+		if (strlen(trim($c_html))<=0) {
 			$html .= "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n";
 		}
 		if (count($fields > 0)) {
