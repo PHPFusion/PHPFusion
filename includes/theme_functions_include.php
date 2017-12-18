@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\OutputHandler;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -121,7 +122,7 @@ function showprivacypolicy() {
     $html = '';
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
-        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
+        $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
         $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
         $modal .= closemodal();
         add_to_footer($modal);
@@ -158,7 +159,7 @@ if (!function_exists("alert")) {
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
         $settings_arr = [];
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'");
+        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
         if (dbrows($set_result)) {
             while ($set_data = dbarray($set_result)) {
                 $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
@@ -237,14 +238,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
         } else if ($options['static'] && empty($options['button_id'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
         } else if ($modal_trigger && empty($options['static'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
             if (!$options['hidden']) {
-                PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
             }
         }
         $html = '';
@@ -532,10 +533,10 @@ if (!function_exists("newsopts")) {
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         if (!isset($_GET['readmore']) && $info['news_ext'] == "y") {
-            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
+            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' ".$link_class.">".$locale['global_072']."</a> ".$sep." ";
         }
         if ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
-            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
+            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments' ".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
         }
         if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1")) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
@@ -565,7 +566,6 @@ if (!function_exists("newscat")) {
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
-        $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
@@ -763,10 +763,10 @@ if (!function_exists("thumbnail")) {
         $html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
         $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
         if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
-            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
+            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
-            $html .= "<img src='holder.js/".$size."x".$size."/text:'/>\n";
+            $html .= "<img src='holder.js/".$size."x".$size."/text:' alt='thumbnail'/>\n";
         }
         $html .= $url || $colorbox ? "</a>" : '';
         $html .= "</div>\n";
@@ -1016,7 +1016,11 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                if (!defined('JS_COOKIES')) {
+                    define('JS_COOKIES', TRUE);
+                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                }
+                OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
