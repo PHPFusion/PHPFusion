@@ -142,6 +142,8 @@ abstract class RewriteDriver {
     protected $buffer_search_regex = [];
     protected $path_search_regex = [];
 
+    protected $dbid = [];
+
     /**
      * Import Handlers from Database
      * This will import all the Enabled Handlers from the Database Table
@@ -528,8 +530,7 @@ abstract class RewriteDriver {
 
                     reset($tag_values);
 
-                    while (list($regexTag, $tag_replacement) = each($tag_values)) {
-
+                    foreach ($tag_values as $regexTag => $tag_replacement) {
                         for ($i = 0; $i < count($output_matches[0]); $i++) {
 
                             $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
@@ -569,7 +570,7 @@ abstract class RewriteDriver {
 
                     }
 
-                    $output_capture_buffer = [
+                    /*$output_capture_buffer = [
                         "search"          => $search,
                         "output_matches"  => $output_matches[0],
                         "replace_matches" => $replace_matches[0],
@@ -578,7 +579,7 @@ abstract class RewriteDriver {
                         "tag_values"      => $tag_values,
                         "statements"      => $statements,
                         "loop_counter"    => $loop_count,
-                    ];
+                    ];*/
 
                 } else {
 
@@ -850,8 +851,8 @@ abstract class RewriteDriver {
                     }
 
                     reset($tag_values);
-                    while (list($regexTag, $tag_replacement) = each($tag_values)) {
 
+                    foreach ($tag_values as $regexTag => $tag_replacement) {
                         for ($i = 0; $i < count($output_matches[0]); $i++) {
 
                             $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
@@ -868,7 +869,7 @@ abstract class RewriteDriver {
                         $this->redirect_301($this->cleanURL($statements[0]['replace']));
                     }
 
-                    $output_capture_buffer = [
+                    /*$output_capture_buffer = [
                         "search"          => $search,
                         "output_matches"  => $output_matches[0],
                         "replace_matches" => $replace_matches[0],
@@ -877,7 +878,7 @@ abstract class RewriteDriver {
                         "tag_values"      => $tag_values,
                         "statements"      => $statements,
                         "loop_counter"    => $loop_count,
-                    ];
+                    ];*/
 
                 } else {
 
@@ -898,7 +899,7 @@ abstract class RewriteDriver {
      * This function invoked to prevent of caching any kinds of Non SEO URL on render.
      * Let search engine mark as 301 permanently
      *
-     * @param      $target The target URL
+     * @param string $target The target URL
      * @param bool $debug
      * @access protected
      */

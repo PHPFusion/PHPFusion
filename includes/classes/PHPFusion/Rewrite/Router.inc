@@ -52,7 +52,7 @@ class Router extends RewriteDriver {
      * @data_type Array
      * @access private
      */
-    private $parameters = [];
+    //private $parameters = [];
     /**
      * Array of Parameters with their
      * actual values.
@@ -403,7 +403,7 @@ class Router extends RewriteDriver {
      * This function will build the Regex pattern for a specific string, which is
      * passed to the function.
      *
-     * @param        $pattern
+     * @param string $pattern
      * @param string $type
      * @return mixed|string
      */

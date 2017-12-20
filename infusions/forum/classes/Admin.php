@@ -1018,7 +1018,7 @@ class Admin extends ForumServer {
         opentable($locale['forum_030'], 'm-t-15');
         $_access = getusergroups();
         $access_opts['0'] = $locale['531'];
-        while (list($key, $option) = each($_access)) {
+        foreach ($_access as $key => $option) {
             $access_opts[$option['0']] = $option['1'];
         }
         $public_access_opts = $access_opts;

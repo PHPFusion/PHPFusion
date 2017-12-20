@@ -155,7 +155,7 @@ class SiteLinks {
     public static function get_LinkVisibility() {
         static $visibility_opts = [];
         $user_groups = getusergroups();
-        while (list($key, $user_group) = each($user_groups)) {
+        foreach ($user_groups as $key => $user_group) {
             $visibility_opts[$user_group['0']] = $user_group['1'];
         }
 
