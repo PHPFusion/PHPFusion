@@ -39,36 +39,36 @@ $inf_mlt[] = [
 
 // Create tables
 $inf_newtable[] = DB_WEBLINKS." (
-	weblink_id			MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	weblink_name		VARCHAR(100)          NOT NULL DEFAULT '',
-	weblink_description	TEXT			      NOT NULL,
-	weblink_url			VARCHAR(200)	      NOT NULL DEFAULT '',
-	weblink_cat			MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	weblink_datestamp	INT(10)      UNSIGNED NOT NULL DEFAULT '0',
-	weblink_visibility	TINYINT(4)            NOT NULL DEFAULT '0',
-	weblink_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
-	weblink_count		SMALLINT(5)  UNSIGNED NOT NULL DEFAULT '0',
-	weblink_language	VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (weblink_id),
-	KEY weblink_datestamp (weblink_datestamp),
-	KEY weblink_count (weblink_count)
+    weblink_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    weblink_name VARCHAR(100) NOT NULL DEFAULT '',
+    weblink_description TEXT NOT NULL,
+    weblink_url VARCHAR(200) NOT NULL DEFAULT '',
+    weblink_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    weblink_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    weblink_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    weblink_count SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    weblink_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (weblink_id),
+    KEY weblink_datestamp (weblink_datestamp),
+    KEY weblink_count (weblink_count)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_WEBLINK_CATS." (
-	weblink_cat_id			MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	weblink_cat_parent		MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	weblink_cat_name		VARCHAR(100)          NOT NULL DEFAULT '',
-	weblink_cat_description	TEXT                  NOT NULL,
-	weblink_cat_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
-	weblink_cat_visibility	TINYINT(4)            NOT NULL DEFAULT '0',
-	weblink_cat_language	VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (weblink_cat_id)
+    weblink_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    weblink_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    weblink_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+    weblink_cat_description TEXT NOT NULL,
+    weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (weblink_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_extended_required', '1', 'weblinks')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', 'weblinks')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_extended_required', '1', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', '".$inf_folder."')";
 
 // Position these links under Content Administration
 $inf_adminpanel[] = [
@@ -112,4 +112,4 @@ $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='WC'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='WL'";
-$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='weblinks'";
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";

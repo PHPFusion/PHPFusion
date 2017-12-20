@@ -34,36 +34,36 @@ $inf_image = "articles.svg";
 
 // Tables
 $inf_newtable[] = DB_ARTICLES." (
-	article_id             MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	article_subject        VARCHAR(200)          NOT NULL DEFAULT '',
-	article_cat            MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	article_snippet        TEXT                  NOT NULL,
-	article_article        TEXT                  NOT NULL,
-	article_keywords       VARCHAR(250)          NOT NULL DEFAULT '',
-	article_breaks         CHAR(1)               NOT NULL DEFAULT '',
-	article_name           MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-	article_datestamp      INT(10)      UNSIGNED NOT NULL DEFAULT '0',
-	article_visibility     CHAR(4)               NOT NULL DEFAULT '0',
-	article_reads          INT(10)      UNSIGNED NOT NULL DEFAULT '0',
-	article_draft          TINYINT(1)   UNSIGNED NOT NULL DEFAULT '0',
-	article_allow_comments TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
-	article_allow_ratings  TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
-	article_language       VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (article_id),
-	KEY article_cat (article_cat),
-	KEY article_datestamp (article_datestamp),
-	KEY article_reads (article_reads)
+    article_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    article_subject VARCHAR(200) NOT NULL DEFAULT '',
+    article_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    article_snippet TEXT NOT NULL,
+    article_article TEXT NOT NULL,
+    article_keywords VARCHAR(250) NOT NULL DEFAULT '',
+    article_breaks CHAR(1) NOT NULL DEFAULT '',
+    article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+    article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    article_visibility CHAR(4) NOT NULL DEFAULT '0',
+    article_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    article_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    article_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    article_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    article_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (article_id),
+    KEY article_cat (article_cat),
+    KEY article_datestamp (article_datestamp),
+    KEY article_reads (article_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_ARTICLE_CATS." (
-	article_cat_id          MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	article_cat_parent      MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	article_cat_name        VARCHAR(100)          NOT NULL DEFAULT '',
-	article_cat_description TEXT                  NOT NULL,
-	article_cat_visibility  CHAR(4)               NOT NULL DEFAULT '0',
-	article_cat_status      TINYINT(1)   UNSIGNED NOT NULL DEFAULT '1',
-	article_cat_language    VARCHAR(50)           NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (article_cat_id)
+    article_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    article_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+    article_cat_description TEXT NOT NULL,
+    article_cat_visibility CHAR(4) NOT NULL DEFAULT '0',
+    article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (article_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Adminlink
@@ -76,9 +76,9 @@ $inf_adminpanel[] = [
 ];
 
 // Insert Settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', 'article')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '1', 'article')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', 'article')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '1', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', '".$inf_folder."')";
 
 // Insert Panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3325']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
@@ -107,7 +107,7 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '13', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '14', '1', '".LANGUAGE."')";
 }
 
 // Deinstallation
@@ -119,7 +119,7 @@ $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='A'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='AR'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='A'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='latest_articles_panel'";
-$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='article'";
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/articles/articles.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='a'";

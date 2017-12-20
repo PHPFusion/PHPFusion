@@ -38,43 +38,45 @@ $inf_mlt[] = [
 ];
 // Create tables
 $inf_newtable[] = DB_BLOG." (
-	blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	blog_subject VARCHAR(200) NOT NULL DEFAULT '',
-	blog_image VARCHAR(100) NOT NULL DEFAULT '',
-	blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
-	blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
-	blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-	blog_cat VARCHAR(50) NOT NULL DEFAULT '0',
-	blog_blog TEXT NOT NULL,
-	blog_extended TEXT NOT NULL,
-	blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
-	blog_breaks CHAR(1) NOT NULL DEFAULT '',
-	blog_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-	blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	blog_visibility TINYINT(4) NOT NULL DEFAULT '0',
-	blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	blog_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	blog_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-	blog_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (blog_id),
-	KEY blog_datestamp (blog_datestamp),
-	KEY blog_reads (blog_reads)
+    blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    blog_subject VARCHAR(200) NOT NULL DEFAULT '',
+    blog_image VARCHAR(100) NOT NULL DEFAULT '',
+    blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
+    blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
+    blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
+    blog_cat VARCHAR(50) NOT NULL DEFAULT '0',
+    blog_blog TEXT NOT NULL,
+    blog_extended TEXT NOT NULL,
+    blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
+    blog_breaks CHAR(1) NOT NULL DEFAULT '',
+    blog_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+    blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    blog_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    blog_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    blog_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+    blog_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (blog_id),
+    KEY blog_datestamp (blog_datestamp),
+    KEY blog_reads (blog_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_BLOG_CATS." (
-	blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-	blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-	blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
-	blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
-	blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
-	PRIMARY KEY (blog_cat_id)
+    blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+    blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
+    blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
+    PRIMARY KEY (blog_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 // Automatic enable the archives panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3318']."', 'blog_archive_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
+
 // Position these links under Content Administration
 $inf_adminpanel[] = [
     "image"  => $inf_image,
@@ -85,20 +87,20 @@ $inf_adminpanel[] = [
 ];
 
 // Insert settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_ratio', '0', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_link', '1', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_w', '400', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_h', '300', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_w', '100', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_h', '100', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_w', '1800', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_h', '1600', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_b', '150000', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_pagination', '12', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission', '1', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission_files', '1', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_extended_required', '0', 'blog')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_file_types', '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', 'blog')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_ratio', '0', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_link', '1', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_w', '400', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_h', '300', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_w', '100', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_h', '100', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_w', '1800', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_h', '1600', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_b', '150000', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_pagination', '12', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission', '1', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission_files', '1', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_extended_required', '0', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_file_types', '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', '".$inf_folder."')";
 
 // always find and loop ALL languages
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
@@ -146,7 +148,7 @@ $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='B'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='B'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='blog_archive_panel'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='BLOG'";
-$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";

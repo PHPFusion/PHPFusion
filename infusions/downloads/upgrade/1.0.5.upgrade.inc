@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
-require_once(INCLUDES.'infusions_include.php');
+require_once INCLUDES.'infusions_include.php';
 
 $array_check = [
     // Option to use keywords in downloads
