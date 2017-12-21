@@ -937,12 +937,15 @@ if (!function_exists('render_thread')) {
                 'link_url'   => $info['buttons']['newthread']['link'],
                 'disabled'   => (empty($info['buttons']['newthread']) ? "disabled" : ""),
             ]);
-            $html->set_block('reply_btn', [
-                'link_title' => $info['buttons']['reply']['title'],
-                'title'      => $info['buttons']['reply']['title'],
-                'link_url'   => $info['buttons']['reply']['link'],
-                'disabled'   => (empty($info['buttons']['reply']) ? "disabled" : ""),
-            ]);
+
+            if (!empty($info['buttons']['reply'])) {
+                $html->set_block('reply_btn', [
+                    'link_title' => $info['buttons']['reply']['title'],
+                    'title'      => $info['buttons']['reply']['title'],
+                    'link_url'   => $info['buttons']['reply']['link'],
+                    'disabled'   => (empty($info['buttons']['reply']) ? "disabled" : ""),
+                ]);
+            }
         }
         if (!empty($info['buttons']['notify'])) {
             $html->set_block('notify_btn', [
@@ -971,13 +974,15 @@ if (!function_exists('render_thread')) {
                 if ($post_id == $info['post_firstpost']) {
                     $html->set_block('post_firstpost_item', ['content' => $post_items]);
                     if ($info['permissions']['can_post']) {
-                        $html->set_block('thread_info', [
-                            'thread_post' => $info['thread_posts'],
-                            'disabled'    => (empty($info['buttons']['reply']) ? 'disabled' : ''),
-                            'link_url'    => $info['buttons']['reply']['link'],
-                            'link_title'  => $info['buttons']['reply']['title'],
-                            'title'       => $info['buttons']['reply']['title'],
-                        ]);
+                        if (!empty($info['buttons']['reply'])) {
+                            $html->set_block('thread_info', [
+                                'thread_post' => $info['thread_posts'],
+                                'disabled'    => (empty($info['buttons']['reply']) ? 'disabled' : ''),
+                                'link_url'    => $info['buttons']['reply']['link'],
+                                'link_title'  => $info['buttons']['reply']['title'],
+                                'title'       => $info['buttons']['reply']['title']
+                            ]);
+                        }
                         if ($info['thread_bounty']) {
                             $html->set_block('thread_bounty_info', [
                                 'message' => $info['thread_bounty']

@@ -1215,11 +1215,6 @@ Forum
     margin-top: -3px;
 }
 
-.dropdown-menu.forum-post-options li > span {
-    padding: 3px 20px;
-    display: block;
-}
-
 .emulated-legend {
     font-size: 14px !important;
 }
