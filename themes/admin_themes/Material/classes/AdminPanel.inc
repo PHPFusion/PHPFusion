@@ -26,6 +26,7 @@ use \PHPFusion\OutputHandler;
  */
 class AdminPanel extends Components {
     public function __construct() {
+        OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
         OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.min.js"></script>');
         OutputHandler::addToHead('<link rel="stylesheet" href="'.MATERIAL.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>');
         OutputHandler::addToFooter('<script type="text/javascript" src="'.MATERIAL.'assets/mCustomScrollbar/jquery.mCustomScrollbar.min.js"></script>');

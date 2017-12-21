@@ -25,6 +25,13 @@ require_once MATERIAL.'acp_autoloader.php';
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 
+$toggled = (isset($_COOKIE['sidebar-toggled']) && $_COOKIE['sidebar-toggled'] == 1) ?' sidebar-toggled' : '';
+$sm = (isset($_COOKIE['sidebar-sm']) && $_COOKIE['sidebar-sm'] == 1) ? ' sidebar-sm' : '';
+
+if (isset($_COOKIE['sidebar-toggled']) || isset($_COOKIE['sidebar-sm'])) {
+    define('THEME_BODY', '<body class="'.$toggled.$sm.'">');
+}
+
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 function render_admin_panel() {

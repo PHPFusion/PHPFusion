@@ -36,9 +36,11 @@ class adminPanel extends resource {
         if (!empty($notices)) {
             echo renderNotices($notices);
         }
+
+        $collapsed = isset($_COOKIE['acpState']) && $_COOKIE['acpState'] == 0 ? ' collapsed' : '';
         ?>
         <section id="devlpr" class="adminPanel">
-            <div class="left_menu">
+            <div class="left_menu<?php echo $collapsed; ?>">
                 <header>
                     <h2>Artemis</h2>
                 </header>
@@ -46,7 +48,7 @@ class adminPanel extends resource {
                     <?php $this->left_nav(); ?>
                 </div>
             </div>
-            <div class="app_menu">
+            <div class="app_menu<?php echo $collapsed; ?>">
                 <header class="affix">
                     <h3><?php echo $locale['spotlight'] ?></h3>
                     <?php echo form_text("search_app", "", "", ["placeholder" => $locale['spotlight_search']]); ?>
@@ -55,7 +57,7 @@ class adminPanel extends resource {
                     <?php $this->app_nav() ?>
                 </div>
             </div>
-            <div id="main_content" class="content">
+            <div id="main_content" class="content<?php echo $collapsed; ?>">
                 <header class="header affix" data-spy="affix" data-offset-top="10">
                     <?php $this->adminHeader() ?>
                 </header>
