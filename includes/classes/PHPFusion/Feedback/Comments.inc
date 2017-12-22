@@ -975,18 +975,16 @@ class Comments {
                 }
 
                 $comment_query = "
-                SELECT tcm.* ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? ", tcr.rating_vote 'ratings'" : '')."
-                FROM ".DB_COMMENTS." tcm
-                ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? "LEFT JOIN ".DB_RATINGS." tcr ON tcr.rating_item_id=tcm.comment_item_id AND tcr.rating_type=tcm.comment_type" : '')."
-                WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat = 0
-                ORDER BY comment_id ASC, comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC LIMIT :start, :end
+                    SELECT tcm.* ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? ", tcr.rating_vote 'ratings'" : '')."
+                    FROM ".DB_COMMENTS." tcm
+                    ".($this->getParams('comment_allow_ratings') && fusion_get_settings('ratings_enabled') ? "LEFT JOIN ".DB_RATINGS." tcr ON tcr.rating_item_id=tcm.comment_item_id AND tcr.rating_type=tcm.comment_type" : '')."
+                    WHERE comment_item_id=:comment_item_id AND comment_type=:comment_item_type AND comment_hidden=:comment_hidden AND comment_cat = 0
+                    ORDER BY comment_id ASC, comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC LIMIT ".self::$c_start.", ".$this->cpp."
                 ";
                 $comment_bind = [
                     ':comment_item_id'   => $this->getParams('comment_item_id'),
                     ':comment_item_type' => $this->getParams('comment_item_type'),
-                    ':comment_hidden'    => 0,
-                    ':start'             => self::$c_start,
-                    ':end'               => $this->cpp,
+                    ':comment_hidden'    => 0
                 ];
 
                 $query = dbquery($comment_query, $comment_bind);
