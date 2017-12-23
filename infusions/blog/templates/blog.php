@@ -249,16 +249,6 @@ if (!function_exists('display_blog_submit')) {
                         $locale['blog_0704'])."</a></p>\n";
                 echo "</div>\n";
 
-            } else if ($criteriaArray['preview']) {
-
-                opentable($locale['blog_0141']);
-                echo "<h4>".$criteriaArray['blog_subject']."</h4>\n";
-                echo "<p class='text-bigger'>".parse_textarea($criteriaArray['blog_blog'])."</p>\n";
-                if (!empty($criteriaArray['blog_body'])) {
-                    echo parse_textarea($criteriaArray['blog_body']);
-                }
-                closetable();
-
             } else {
                 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['blog_0700']);
                 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";

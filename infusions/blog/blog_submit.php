@@ -106,16 +106,16 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             "blog_language" => form_sanitizer($_POST['blog_language'], "", "blog_language"),
         ];
     }
-    $criteriaArray['preview'] = false;
     $criteriaArray['submitted'] = false;
-    if (isset($_GET['submitted']) && $_GET['submitted'] == "b") {
-        $criteriaArray['submitted'] = true;
-    } else {
-        if (isset($_POST['preview_blog'])) {
-            if (defender::safe()) {
-                $criteriaArray['preview'] = true;
-            }
+    if (\defender::safe() && isset($_POST['preview_blog'])) {
+        $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
+        $footer .= nl2br(parse_textarea($criteriaArray['blog_blog']));
+        if ($criteriaArray['blog_body']) {
+            $footer .= "<hr class='m-t-20 m-b-20'>\n";
+            $footer .= nl2br(parse_textarea($criteriaArray['blog_body']));
         }
+        $footer .= closemodal();
+        add_to_footer($footer);
     }
 }
 
