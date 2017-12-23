@@ -153,8 +153,8 @@ function download_listing() {
     echo "<span class='pull-right m-t-10'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
-        echo "<div class='dropdown'>\n";
-        echo "<a class='btn btn-default dropdown-toggle ' style='width: 200px;' data-toggle='dropdown'>\n";
+        echo "<div class='dropdown pull-left m-r-10'>\n";
+        echo "<a class='btn btn-default btn-sm dropdown-toggle' data-target='#' href='#' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {

@@ -17,9 +17,6 @@
 +--------------------------------------------------------*/
 use PHPFusion\Authenticate;
 
-// Uncomment to compress and minify PHP-Fusion
-//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Minify PHP output
-
 // Uncomment to see server errors without modifying php.ini
 ini_set('display_errors', '1');
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
@@ -67,7 +64,8 @@ ini_set('session.cookie_lifetime', 172800); // 48 hours
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
 @session_start();
-//ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
+//ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
+//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Uncomment to compress and minify PHP-Fusion
 ob_start();
 
 // Sanitise $_SERVER globals
