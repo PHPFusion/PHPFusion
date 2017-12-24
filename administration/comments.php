@@ -45,6 +45,13 @@ class Comments_Admin {
                         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
                     }
                     break;
+                case 'delban':
+                    $result = $this->ban_comments($_GET['comment_id']);
+                    if ($result) {
+                        addNotice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
+                        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
+                    }
+                    break;
                 default:
                     break;
             }
@@ -166,7 +173,7 @@ class Comments_Admin {
         $order = "c.comment_datestamp ASC";
 
         $query = "SELECT
-            c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type,
+            c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_ip_type, c.comment_type,
             u.user_id, u.user_name, u.user_status
             FROM ".DB_COMMENTS." AS c
             LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
@@ -208,13 +215,14 @@ class Comments_Admin {
 
                 while ($data = dbarray($result)) {
                     $info['data'][] = [
-                        'edit_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".$_GET['ctype']."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
-                        'del_link'  => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
-                        'profile'   => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
-                        'date'      => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
-                        'ip'        => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
-                        'subject'   => !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "",
-                        'messages'  => "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."</div>\n",
+                        'edit_link'   => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".$_GET['ctype']."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
+                        'del_link'    => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
+                        'delban_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".$_GET['ctype']."&amp;action=delban&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['435']."');\"",
+                        'profile'     => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
+                        'date'        => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
+                        'ip'          => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
+                        'subject'     => !empty($data['comment_subject']) ? "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_subject'])))."</div>\n" : "",
+                        'messages'    => "<div class='m-t-10'>".nl2br(parseubb(parsesmileys($data['comment_message'])))."</div>\n",
                     ];
                 }
             }
@@ -235,6 +243,7 @@ class Comments_Admin {
                     echo "<div class='btn-group pull-right'>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['edit_link']."'>".$this->locale['edit']."</a>\n";
                     echo "<a class='btn btn-xs btn-default' href='".$coment['del_link']."'>".$this->locale['delete']."</a>\n";
+                    echo "<a class='btn btn-xs btn-default' href='".$coment['delban_link']."'>".$this->locale['431']."</a>\n";
                     echo "</div>\n";
                     echo $coment['profile'].' '.$coment['date'].$coment['ip'];
                     echo $coment['subject'];
@@ -253,6 +262,32 @@ class Comments_Admin {
     private static function delete_comments($comment_id) {
         $result = NULL;
         if (isnum($comment_id)) {
+            $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
+
+            return $result;
+        }
+
+        return $result;
+
+    }
+
+    private function ban_comments($comment_id) {
+        $result = NULL;
+        if (isnum($comment_id)) {$resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
+
+            $data = dbarray($resultquery);
+
+            $info = [
+                'blacklist_id'        => '',
+                'blacklist_user_id'   => fusion_get_userdata('user_id'),
+                'blacklist_ip'        => $data['comment_ip'],
+                'blacklist_ip_type'   => $data['comment_ip_type'],
+                'blacklist_email'     => '',
+                'blacklist_reason'    => $this->locale['436'],
+                'blacklist_datestamp' => time()
+            ];
+
+            dbquery_insert(DB_BLACKLIST, $info, 'save');
             $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
 
             return $result;
