@@ -5,7 +5,6 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: /member_poll/upgrade/1.1.upgrade.inc
-| Upgrade Member Poll to Version 9.0.2 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -32,6 +31,7 @@ if (column_exists(DB_POLLS, 'poll_opt_0') && column_exists(DB_POLLS, 'poll_opt')
         }
     }
 }
+
 if (column_exists(DB_POLLS, 'poll_opt_0')) {
     $inf_altertable[] = DB_POLLS." DROP poll_opt_0, DROP poll_opt_1, DROP poll_opt_2, DROP poll_opt_3, DROP poll_opt_4, DROP poll_opt_5, DROP poll_opt_6, DROP poll_opt_7, DROP poll_opt_8, DROP poll_opt_9";
 }

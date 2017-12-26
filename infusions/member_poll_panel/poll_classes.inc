@@ -20,13 +20,9 @@
  * Class MemberPoll
  */
 class MemberPoll {
-
     private static $instance = NULL;
-
     private static $locale = [];
-
     private static $limit = 4;
-
     private $data = [
         'poll_id'         => 0,
         'poll_title'      => '',
@@ -100,7 +96,7 @@ class MemberPoll {
         }
     }
 
-    public static function getInstance($key = TRUE) {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
@@ -247,6 +243,8 @@ class MemberPoll {
         $info['vote'] = $this->_countPoll("");
         $info_f = [];
         $info_t = [];
+        $render = [];
+
         if (!empty($data)) {
             $i = 0;
             $ii = 0;

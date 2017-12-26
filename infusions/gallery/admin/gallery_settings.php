@@ -100,65 +100,65 @@ echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gal
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='thumb_w'>".$locale['gallery_0203']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('thumb_w', '', $gll_settings['thumb_w'], [
+    ".form_text('thumb_w', '', $gll_settings['thumb_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
         <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
-	".form_text('thumb_h', '', $gll_settings['thumb_h'], [
+    ".form_text('thumb_h', '', $gll_settings['thumb_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
         <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>
-	</div>\n
+    </div>\n
 </div>\n
 ";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['gallery_0205']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('photo_w', '', $gll_settings['photo_w'], [
+    ".form_text('photo_w', '', $gll_settings['photo_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
-	".form_text('photo_h', '', $gll_settings['photo_h'], [
+    <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
+    ".form_text('photo_h', '', $gll_settings['photo_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
-	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
-	</div>\n
+    <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
+    </div>\n
 </div>\n";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['gallery_0206']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
+    ".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
-	<i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
-	".form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
+    <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
+    ".form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         "type"       => "number",
         'width'      => '150px'
     ])."
-	<small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
-	</div>\n
+    <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
+    </div>\n
 </div>\n";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['gallery_0207']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('calc_b', '', $calc_b, [
+    ".form_text('calc_b', '', $calc_b, [
         'required'   => 1,
         "type"       => "number",
         'error_text' => $locale['error_rate'],
@@ -166,8 +166,8 @@ echo "<div class='display-block overflow-hide'>
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
-	".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'])."
-	</div>\n
+    ".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'])."
+    </div>\n
 </div>\n
 ";
 closeside();
@@ -243,7 +243,7 @@ add_to_jquery("
         });
     ");
 function calculate_byte($download_max_b) {
-    $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
+    $calc_opts = fusion_get_locale('1020');
     foreach ($calc_opts as $byte => $val) {
         if ($download_max_b / $byte <= 999) {
             return $byte;

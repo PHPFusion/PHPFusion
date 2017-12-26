@@ -57,7 +57,7 @@ if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access', FALSE)) {
 $array_check = [
     'download_max_b'               => 512000,
     'download_types'               => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
-    'download_screen_max_b'        => '150000',
+    'download_screen_max_b'        => 153600,
     'download_screen_max_w'        => '1920',
     'download_screen_max_h'        => '1080',
     'download_screenshot'          => 1,

@@ -105,10 +105,10 @@ class Functions {
      * @param $index
      */
     public static function downloadCats_breadcrumbs($index) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
                 $crumb = [
@@ -158,14 +158,11 @@ class Functions {
      */
     public static function get_download_image_path($download_image, $download_image_thumb, $hiRes = FALSE) {
         if (!$hiRes) {
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
-            }
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
-            }
             if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
                 return DOWNLOADS.'images/'.$download_image;
+            }
+            if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
+                return DOWNLOADS.'images/'.$download_image_thumb;
             }
         } else {
             if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
@@ -173,9 +170,6 @@ class Functions {
             }
             if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
                 return DOWNLOADS.'images/'.$download_image_thumb;
-            }
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
             }
         }
 

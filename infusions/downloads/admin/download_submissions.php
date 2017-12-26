@@ -50,7 +50,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ];
             if (defender::safe()) {
                 // move files
-                if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."/submissions/".$callback_data['download_file'])) {
+                if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."submissions/".$callback_data['download_file'])) {
                     $dest = DOWNLOADS."files/";
                     $temp_file = $callback_data['download_file'];
                     $callback_data['download_file'] = filename_exists($dest, $callback_data['download_file']);
@@ -59,7 +59,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     unlink(DOWNLOADS."submissions/".$temp_file);
                 }
                 // move images
-                if (!empty($callback_data['download_image']) && file_exists(DOWNLOADS."/submissions/images/".$callback_data['download_image'])) {
+                if (!empty($callback_data['download_image']) && file_exists(DOWNLOADS."submissions/images/".$callback_data['download_image'])) {
                     $dest = DOWNLOADS."images/";
                     $temp_file = $callback_data['download_image'];
                     $callback_data['download_image'] = filename_exists($dest, $callback_data['download_image']);
@@ -68,7 +68,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     unlink(DOWNLOADS."submissions/images/".$temp_file);
                 }
                 // move thumbnail
-                if (!empty($callback_data['download_image_thumb']) && file_exists(DOWNLOADS."/submissions/images/".$callback_data['download_image_thumb'])) {
+                if (!empty($callback_data['download_image_thumb']) && file_exists(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'])) {
                     $dest = DOWNLOADS."images/";
                     $temp_file = $callback_data['download_image_thumb'];
                     $callback_data['download_image_thumb'] = filename_exists($dest, $callback_data['download_image_thumb']);
@@ -102,7 +102,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 if (!empty($delCriteria['download_image_thumb']) && file_exists(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image_thumb'])) {
                     unlink(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image_thumb']);
                 }
-                if (!empty($delCriteria['download_file']) && file_exists(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_file'])) {
+                if (!empty($delCriteria['download_file']) && file_exists(INFUSIONS."downloads/submisisons/".$delCriteria['download_file'])) {
                     unlink(INFUSIONS."downloads/submisisons/".$delCriteria['download_file']);
                 }
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($callback_data['submit_id'])."'");

@@ -35,7 +35,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * Handle Preview and Publish of a Article Submission
      */
     private function handlePostSubmission() {
-
         if (isset($_POST['publish_submission']) || isset($_POST['preview_submission'])) {
 
             // Check posted Informations
@@ -292,8 +291,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      */
     private function displaySubmissionList() {
         $result = dbquery("
-            SELECT
-                s.submit_id, s.submit_criteria, s.submit_datestamp, u.user_id, u.user_name, u.user_status, u.user_avatar
+            SELECT s.submit_id, s.submit_criteria, s.submit_datestamp, u.user_id, u.user_name, u.user_status, u.user_avatar
             FROM ".DB_SUBMISSIONS." AS s
             LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user
             WHERE s.submit_type='a'

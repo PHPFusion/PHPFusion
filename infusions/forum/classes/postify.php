@@ -97,14 +97,6 @@ class Forum_Postify extends ForumServer {
         return (array)$link;
     }
 
-    /**
-     * @param $class_actions
-     *
-     * @return object
-     * @throws \Exception
-     */
-    private static $valid_action = ['on', 'off', 'new', 'reply', 'edit', 'newpoll', 'editpoll', 'deletepoll', 'voteup', 'votedown', 'answer'];
-
     private function load_postify($class_actions) {
         /*
          * Overrides

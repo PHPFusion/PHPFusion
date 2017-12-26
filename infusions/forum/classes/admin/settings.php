@@ -22,7 +22,6 @@ use PHPFusion\QuantumFields;
 
 /**
  * Class ForumAdminSettings
- *
  * @package PHPFusion\Forums\Admin
  */
 class ForumAdminSettings extends ForumAdminInterface {
@@ -34,7 +33,7 @@ class ForumAdminSettings extends ForumAdminInterface {
             $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
-                    $result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
+                    dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
                 }
                 addNotice('success', self::$locale['forum_061']);
                 redirect(FUSION_REQUEST);
@@ -245,7 +244,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     $array_opts[$i] = sprintf(self::$locale['532'], $i);
                 }
                 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
-                    echo alert(self::$locale['524'], '', ['class' => 'warning']);
+                    echo alert(self::$locale['524'], ['class' => 'warning']);
                 }
                 echo "<div class='clearfix'>\n";
                 echo form_select('popular_threads_timeframe', self::$locale['525'],
@@ -370,23 +369,29 @@ class ForumAdminSettings extends ForumAdminInterface {
                 }
                 sort($mime_opts);
 
-                echo form_text('calc_b', self::$locale['508'], $calc_b, [
-                    'required'    => TRUE,
-                    'type'        => 'number',
-                    'error_text'  => self::$locale['error_rate'],
-                    'width'       => '100%',
-                    'inner_width' => '100px',
-                    'max_length'  => '3',
-                    'inline'      => TRUE,
-                    'ext_tip'     => self::$locale['509'],
-                    'stacked'     => form_select('calc_c', '', $calc_c, [
-                        'options'     => $calc_opts,
-                        'placeholder' => self::$locale['choose'],
-                        'class'       => 'display-inline-block',
-                        'width'       => '150px',
-                        'inner_width' => '150px'
-                    ])
+                echo '<div class="display-block overflow-hide">';
+                echo '<label class="control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" for="calc_b">'.self::$locale['508'].'</label>';
+                echo '<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">';
+                echo form_text('calc_b', '', $calc_b, [
+                    'required'   => TRUE,
+                    'type'       => 'number',
+                    'error_text' => self::$locale['error_rate'],
+                    'inline'     => TRUE,
+                    'width'      => '100px',
+                    'max_length' => 4,
+                    'class'      => 'pull-left m-r-10'
                 ]);
+                echo form_select('calc_c', '', $calc_c, [
+                    'options'     => $calc_opts,
+                    'placeholder' => self::$locale['choose'],
+                    'class'       => 'pull-left',
+                    'inner_width' => '100%',
+                    'width'       => '180px',
+                    'ext_tip'     => self::$locale['509']
+                ]);
+                echo '</div>';
+                echo '</div>';
+
                 $range = range(1, 10);
                 echo form_btngroup('forum_attachmax_count', self::$locale['534'], $forum_settings['forum_attachmax_count'], [
                     'options'    => array_combine(range(1, count($range)), array_values($range)),

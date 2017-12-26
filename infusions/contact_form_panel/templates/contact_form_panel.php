@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists('render_contact_panel')) {
-    function render_contact_panel(array $info = array()) {
+    function render_contact_panel(array $info = []) {
         openside('{%tablename%}');
             echo '<div class="text-center well">{%prmessages%}</div>';
             echo '{%open_form%}';

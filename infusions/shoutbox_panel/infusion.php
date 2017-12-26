@@ -45,6 +45,7 @@ $inf_mlt[] = [
     "title"  => $inf_title,
     "rights" => "SB"
 ];
+
 // Delete any items not required below.
 $inf_newtable[] = DB_SHOUTBOX." (
     shout_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -57,7 +58,7 @@ $inf_newtable[] = DB_SHOUTBOX." (
     shout_language VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY (shout_id),
     KEY shout_datestamp (shout_datestamp)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // shoutbox deletion of MLT shouts
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
@@ -70,9 +71,16 @@ if (!empty($enabled_languages)) {
 
 //Infuse insertations
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('guest_shouts', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('hidden_shouts', '0', '".$inf_folder."')";
+
+$settings = [
+    'visible_shouts' => 5,
+    'guest_shouts'   => 0,
+    'hidden_shouts'  => 0
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 //Defuse cleaning
 $inf_droptable[] = DB_SHOUTBOX;

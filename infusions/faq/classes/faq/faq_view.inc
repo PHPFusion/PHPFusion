@@ -19,7 +19,7 @@
 namespace PHPFusion\FAQ;
 
 /**
- * Controller package for if/else
+ * Controller package
  * Class FaqView
  *
  * @package PHPFusion\Faq

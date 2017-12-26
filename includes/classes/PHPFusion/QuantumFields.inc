@@ -1977,8 +1977,8 @@ class QuantumFields extends \SqlHandler {
             }
             $calc_opts = [
                 1       => $this->locale['fields_0490'],
-                1000    => $this->locale['fields_0491'],
-                1000000 => $this->locale['fields_0492']
+                1024    => $this->locale['fields_0491'],
+                1048576 => $this->locale['fields_0492']
             ];
             $calc_c = $this->calculate_byte($this->field_data['field_config']['field_max_b']);
             $calc_b = $this->field_data['field_config']['field_max_b'] / $calc_c;
@@ -2139,19 +2139,19 @@ class QuantumFields extends \SqlHandler {
     /*
      * Calculation of Byte
      */
-    private function calculate_byte($download_max_b) {
+    private function calculate_byte($max_b) {
         $calc_opts = [
             1       => $this->locale['fields_0490'],
-            1000    => $this->locale['fields_0491'],
-            1000000 => $this->locale['fields_0492']
+            1024    => $this->locale['fields_0491'],
+            1048576 => $this->locale['fields_0492']
         ];
         foreach ($calc_opts as $byte => $val) {
-            if ($download_max_b / $byte <= 999) {
+            if ($max_b / $byte <= 999) {
                 return $byte;
             }
         }
 
-        return 1000000;
+        return 1048576;
     }
 
     /**

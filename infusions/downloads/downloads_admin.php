@@ -32,24 +32,7 @@ require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
-if (!empty($_GET['section'])) {
-    switch ($_GET['section']) {
-        case "download_form":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0002']]);
-            break;
-        case "download_category":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
-            break;
-        case "download_settings":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
-            break;
-        case "submissions":
-            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
-            break;
-        default:
-            break;
-    }
-}
+
 $allowed_section = ["downloads", "download_form", "download_settings", "download_category", "submissions"];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
@@ -79,6 +62,7 @@ $master_tab_title['icon'][] = "fa fa-cogs";
 
 opentable($locale['download_0001']);
 echo opentab($master_tab_title, $_GET['section'], "download_admin", TRUE);
+
 switch ($_GET['section']) {
     case "download_form":
         if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
@@ -89,15 +73,19 @@ switch ($_GET['section']) {
             echo "<a href='".INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=download_category'>".$locale['download_0253']."</a>".$locale['download_0254'];
             echo "</div>\n";
         }
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0002']]);
         break;
     case "download_category":
         include "admin/download_cats.php";
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
         break;
     case "download_settings":
         include "admin/download_settings.php";
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
         break;
     case "submissions":
         include "admin/download_submissions.php";
+        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
         break;
     default:
         download_listing();
@@ -109,7 +97,8 @@ require_once THEMES."templates/footer.php";
 
 /* Download Listing */
 function download_listing() {
-    global $aidlink, $locale;
+    $aidlink = fusion_get_aidlink();
+    $locale = fusion_get_locale();
 
     $limit = 15;
     $total_rows = dbcount("(download_id)", DB_DOWNLOADS, "");
@@ -140,13 +129,11 @@ function download_listing() {
         $filter = $catFilter.$langFilter;
     }
 
-    $list_query = "SELECT d.*, dc.download_cat_id, dc.download_cat_name
+    $result = dbquery("SELECT d.*, dc.download_cat_id, dc.download_cat_name
     FROM ".DB_DOWNLOADS." d
     INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
     ".($filter ? "WHERE $filter " : "")."
-    ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit";
-
-    $result = dbquery($list_query);
+    ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit");
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";

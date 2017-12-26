@@ -23,13 +23,12 @@ include_once INFUSIONS."latest_comments_panel/templates.php";
 $displayComments = 10;
 $comments_per_page = fusion_get_settings('comments_per_page');
 
-$comment_query = "SELECT tc.comment_id, tc.comment_item_id, tc.comment_type, tc.comment_message, tu.user_id, tu.user_name, tu.user_status
+$result = dbquery("SELECT tc.comment_id, tc.comment_item_id, tc.comment_type, tc.comment_message, tu.user_id, tu.user_name, tu.user_status
     FROM ".DB_COMMENTS." tc
     LEFT JOIN ".DB_USERS." tu ON tu.user_id = tc.comment_name
     WHERE tc.comment_hidden='0'
     ORDER BY tc.comment_datestamp DESC
-";
-$result = dbquery($comment_query);
+");
 
 $info['title'] = $locale['global_025'];
 $info['theme_bullet'] = THEME_BULLET;
@@ -43,22 +42,20 @@ if (dbrows($result)) {
         }
         switch ($data['comment_type']) {
             case "N":
-                $ndata = [
+                $results = dbquery("SELECT ns.news_subject
+                    FROM ".DB_NEWS." as ns
+                    LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
+                    WHERE ns.news_id=:n_id AND (ns.news_start='0' OR ns.news_start<=:n_stime)
+                    AND (ns.news_end='0' OR ns.news_end>=:n_etime) AND ns.news_draft='0'
+                    AND ".groupaccess('ns.news_visibility')."
+                    ".(multilang_table("NS") ? "AND ns.news_language=:n_language" : "")."
+                    ORDER BY ns.news_datestamp DESC
+                ", [
                     ':n_id'       => $data['comment_item_id'],
                     ':n_stime'    => time(),
                     ':n_etime'    => time(),
                     ':n_language' => LANGUAGE,
-                ];
-                $news_query = "SELECT
-                ns.news_subject
-                FROM ".DB_NEWS." as ns
-                LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
-                WHERE ns.news_id=:n_id AND (ns.news_start='0' OR ns.news_start<=:n_stime)
-                AND (ns.news_end='0' OR ns.news_end>=:n_etime) AND ns.news_draft='0'
-                AND ".groupaccess('ns.news_visibility')."
-                ".(multilang_table("NS") ? "AND ns.news_language=:n_language" : "")."
-                ORDER BY ns.news_datestamp DESC";
-                $results = dbquery($news_query, $ndata);
+                ]);
 
                 if (dbrows($results)) {
                     $news_data = dbarray($results);
@@ -77,17 +74,15 @@ if (dbrows($result)) {
                 }
                 continue;
             case "A":
-                $ndata = [
+                $results = dbquery("SELECT ar.article_subject
+                    FROM ".DB_ARTICLES." as ar
+                    INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
+                    WHERE ar.article_id=:n_id AND ar.article_draft='0' AND ".groupaccess('ar.article_visibility').(multilang_table("AR") ? " AND ar.article_language=:n_language" : "")."
+                    ORDER BY ar.article_datestamp DESC
+                ", [
                     ':n_id'       => $data['comment_item_id'],
                     ':n_language' => LANGUAGE,
-                ];
-                $article_query = "SELECT
-                ar.article_subject
-                FROM ".DB_ARTICLES." as ar
-                INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
-                WHERE ar.article_id=:n_id AND ar.article_draft='0' AND ".groupaccess('ar.article_visibility').(multilang_table("AR") ? " AND ar.article_language=:n_language" : "")."
-                ORDER BY ar.article_datestamp DESC";
-                $results = dbquery($article_query, $ndata);
+                ]);
 
                 if (dbrows($results)) {
                     $article_data = dbarray($results);
@@ -106,17 +101,15 @@ if (dbrows($result)) {
                 }
                 continue;
             case "P":
-                $ndata = [
+                $results = dbquery("SELECT p.photo_title
+                    FROM ".DB_PHOTOS." as p
+                    INNER JOIN ".DB_PHOTO_ALBUMS." as a ON p.album_id=a.album_id
+                    WHERE p.photo_id=:n_id AND ".groupaccess('a.album_access').(multilang_table("PG") ? " AND a.album_language=:n_language" : "")."
+                    ORDER BY p.photo_datestamp DESC
+                ", [
                     ':n_id'       => $data['comment_item_id'],
                     ':n_language' => LANGUAGE,
-                ];
-                $article_query = "SELECT
-                p.photo_title
-                FROM ".DB_PHOTOS." as p
-                INNER JOIN ".DB_PHOTO_ALBUMS." as a ON p.album_id=a.album_id
-                WHERE p.photo_id=:n_id AND ".groupaccess('a.album_access').(multilang_table("PG") ? " AND a.album_language=:n_language" : "")."
-                ORDER BY p.photo_datestamp DESC";
-                $results = dbquery($article_query, $ndata);
+                ]);
 
                 if (dbrows($results)) {
                     $photo_data = dbarray($results);
@@ -134,17 +127,15 @@ if (dbrows($result)) {
                 }
                 continue;
             case "D":
-                $ndata = [
+                $results = dbquery("SELECT d.download_title
+                    FROM ".DB_DOWNLOADS." as d
+                    INNER JOIN ".DB_DOWNLOAD_CATS." as c ON c.download_cat_id=d.download_cat
+                    WHERE d.download_id=:n_id AND ".groupaccess('d.download_visibility').(multilang_table("DL") ? " AND c.download_cat_language=:n_language" : "")."
+                    ORDER BY d.download_datestamp DESC
+                ", [
                     ':n_id'       => $data['comment_item_id'],
                     ':n_language' => LANGUAGE,
-                ];
-                $download_query = "SELECT
-                d.download_title
-                FROM ".DB_DOWNLOADS." as d
-                INNER JOIN ".DB_DOWNLOAD_CATS." as c ON c.download_cat_id=d.download_cat
-                WHERE d.download_id=:n_id AND ".groupaccess('d.download_visibility').(multilang_table("DL") ? " AND c.download_cat_language=:n_language" : "")."
-                ORDER BY d.download_datestamp DESC";
-                $results = dbquery($download_query, $ndata);
+                ]);
 
                 if (dbrows($results)) {
                     $download_data = dbarray($results);
@@ -163,17 +154,15 @@ if (dbrows($result)) {
                 }
                 continue;
             case "B":
-                $ndata = [
+                $results = dbquery("SELECT d.blog_subject
+                    FROM ".DB_BLOG." as d
+                    INNER JOIN ".DB_BLOG_CATS." as c ON c.blog_cat_id=d.blog_cat
+                    WHERE d.blog_id=:n_id AND ".groupaccess('d.blog_visibility').(multilang_table("BL") ? " AND d.blog_language=:n_language" : "")."
+                    ORDER BY d.blog_datestamp DESC
+                ", [
                     ':n_id'       => $data['comment_item_id'],
                     ':n_language' => LANGUAGE,
-                ];
-                $blog_query = "SELECT
-                d.blog_subject
-                FROM ".DB_BLOG." as d
-                INNER JOIN ".DB_BLOG_CATS." as c ON c.blog_cat_id=d.blog_cat
-                WHERE d.blog_id=:n_id AND ".groupaccess('d.blog_visibility').(multilang_table("BL") ? " AND d.blog_language=:n_language" : "")."
-                ORDER BY d.blog_datestamp DESC";
-                $results = dbquery($blog_query, $ndata);
+                ]);
 
                 if (dbrows($results)) {
                     $blog_data = dbarray($results);

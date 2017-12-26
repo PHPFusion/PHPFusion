@@ -414,7 +414,7 @@ abstract class Articles extends ArticlesServer {
 
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
 
                 $_name = dbarray(dbquery("SELECT article_cat_id, article_cat_name, article_cat_parent
@@ -470,8 +470,8 @@ abstract class Articles extends ArticlesServer {
      * @return array
      */
     public function set_ArticlesItemInfo($article_id) {
-
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
+        $info = [];
 
         BreadCrumbs::getInstance()->addBreadCrumb([
             "link"  => INFUSIONS."articles/articles.php",

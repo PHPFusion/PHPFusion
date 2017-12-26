@@ -21,8 +21,12 @@ if (!defined("IN_FUSION")) {
 
 $locale = fusion_get_locale();
 openside($locale['global_010']);
-$user_online_query = "SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id";
-$result = dbquery($user_online_query);
+
+$result = dbquery("SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status
+    FROM ".DB_ONLINE." ton
+    LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id
+");
+
 $guests = 0;
 $members = [];
 while ($data = dbarray($result)) {
@@ -38,7 +42,7 @@ echo "<strong>".$locale['global_012'].":</strong> ".count($members)."<br />\n";
 
 if (count($members)) {
     $i = 1;
-    while (list($key, $member) = each($members)) {
+    foreach ($members as $key => $member) {
         echo "<span class='side'>".profile_link($member[0], $member[1], $member[2])."</span>";
         if ($i != count($members)) {
             echo ",\n";

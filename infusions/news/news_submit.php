@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news_submit.php
 | Author: PHP-Fusion Development Team
-| Version: 1.12
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

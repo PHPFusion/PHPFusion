@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/admin/controllers/news_admin_model.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -83,7 +82,7 @@ class NewsAdminModel extends NewsServer {
      * @return int
      */
     protected function calculate_byte($total_bit) {
-        $calc_opts = [1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)'];
+        $calc_opts = fusion_get_locale('1020');
         foreach ($calc_opts as $byte => $val) {
             if ($total_bit / $byte <= 999) {
                 return (int)$byte;

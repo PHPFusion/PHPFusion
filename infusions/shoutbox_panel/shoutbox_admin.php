@@ -20,6 +20,6 @@ require_once THEMES."templates/admin_header.php";
 include INFUSIONS."shoutbox_panel/shoutbox.inc";
 pageAccess("S");
 
-Shoutbox::getInstance(TRUE)->display_admin();
+Shoutbox::getInstance()->display_admin();
 
 require_once THEMES."templates/footer.php";

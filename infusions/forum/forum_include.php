@@ -90,7 +90,7 @@ function set_forumVotes($info, $points = 0) {
                     $vote_result = dbquery("SELECT SUM('vote_points'), thread_id FROM ".DB_FORUM_VOTES." WHERE post_id='".$data['post_id']."'");
                     $v_data = dbarray($vote_result);
                     if ($info['forum_answer_threshold'] != 0 && $v_data['vote_points'] >= $info['forum_answer_threshold']) {
-                        $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET 'thread_locked'='1' WHERE thread_id='".$v_data['thread_id']."'");
+                        dbquery("UPDATE ".DB_FORUM_THREADS." SET 'thread_locked'='1' WHERE thread_id='".$v_data['thread_id']."'");
                     }
                 }
                 redirect(FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']);

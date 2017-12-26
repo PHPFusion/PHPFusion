@@ -87,20 +87,26 @@ $inf_adminpanel[] = [
 ];
 
 // Insert settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_ratio', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_link', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_w', '400', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_h', '300', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_w', '100', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_h', '100', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_w', '1800', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_h', '1600', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_b', '150000', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_pagination', '12', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_allow_submission_files', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_extended_required', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_file_types', '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', '".$inf_folder."')";
+$settings = [
+    'blog_thumb_ratio'            => 0,
+    'blog_image_link'             => 1,
+    'blog_photo_w'                => 400,
+    'blog_photo_h'                => 300,
+    'blog_thumb_w'                => 100,
+    'blog_thumb_h'                => 100,
+    'blog_photo_max_w'            => 1800,
+    'blog_photo_max_h'            => 1600,
+    'blog_photo_max_b'            => 153600,
+    'blog_pagination'             => 12,
+    'blog_allow_submission'       => 1,
+    'blog_allow_submission_files' => 1,
+    'blog_extended_required'      => 0,
+    'blog_file_types'             => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z'
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 // always find and loop ALL languages
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

@@ -433,8 +433,8 @@ class Admin extends ForumServer {
         if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
             // fetches the id of the last forum.
             $data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
-            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
-            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
             addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
             redirect(FUSION_SELF.$aidlink.$this->ext);
         }
@@ -659,6 +659,7 @@ class Admin extends ForumServer {
         // check if there is a sub for this node.
 
         if (isset($branch_data[$index])) {
+            $data = [];
 
             foreach ($branch_data[$index] as $forum_id) {
 
@@ -673,7 +674,7 @@ class Admin extends ForumServer {
                 dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
 
                 if (isset($branch_data[$data['forum_id']])) {
-                    self::prune_forums($branch_data, $data['forum_id'], $time);
+                    self::prune_forums($branch_data, $time);
                 }
                 // end foreach
             }

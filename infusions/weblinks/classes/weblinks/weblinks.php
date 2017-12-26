@@ -272,6 +272,8 @@ abstract class Weblinks extends WeblinksServer {
         $info = array_merge($info, self::get_WeblinkFilters());
         $info = array_merge($info, self::get_WeblinkCategories());
 
+        $max_weblink_rows = '';
+
         // Filtered by Category ID.
         $result = dbquery("
             SELECT *
@@ -350,7 +352,7 @@ abstract class Weblinks extends WeblinksServer {
 
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$id."' AND weblink_cat_status='1' AND ".groupaccess("weblink_cat_visibility").(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "").""));
                 $crumb = [

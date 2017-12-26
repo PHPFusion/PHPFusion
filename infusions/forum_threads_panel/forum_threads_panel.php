@@ -25,15 +25,14 @@ include_once INFUSIONS."forum_threads_panel/templates.php";
 $inf_settings = get_settings('forum');
 $locale = fusion_get_locale("", FORUM_LOCALE);
 
-$latest_result = "SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject
+$result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject
     FROM ".DB_FORUMS." f
     LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
     ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
     GROUP BY t.thread_id
     ORDER BY t.thread_lastpost DESC
     LIMIT 0,".$inf_settings['numofthreads']."
-";
-$result = dbquery($latest_result);
+");
 
 $info = [];
 
@@ -59,14 +58,13 @@ $timeframe = ($inf_settings['popular_threads_timeframe'] != 0 ? "thread_lastpost
 list($min_posts) = dbarraynum(dbquery("SELECT thread_postcount FROM ".DB_FORUM_THREADS.($timeframe ? " WHERE ".$timeframe : "")." ORDER BY thread_postcount DESC LIMIT 4,1"));
 $timeframe = ($timeframe ? " AND t.".$timeframe : "");
 
-$hottest_result = "SELECT tf.forum_id, t.thread_id, t.thread_subject, t.thread_postcount
+$result = dbquery("SELECT tf.forum_id, t.thread_id, t.thread_subject, t.thread_postcount
     FROM ".DB_FORUMS." tf
     INNER JOIN ".DB_FORUM_THREADS." t USING(forum_id)
     ".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('tf.forum_access')." AND tf.forum_type!='1' AND tf.forum_type!='3' AND t.thread_hidden='0' AND t.thread_postcount >= '".$min_posts."'".$timeframe."
     ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC
     LIMIT 0,".$inf_settings['numofthreads']."
-";
-$result = dbquery($hottest_result);
+");
 
 if (dbrows($result)) {
     while ($data = dbarray($result)) {

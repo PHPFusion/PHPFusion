@@ -32,13 +32,13 @@ if (!function_exists('render_poll')) {
                         echo "</div>\n";
 
                         echo "<div class='panel-body'>\n";
-                            foreach ($inf['poll_option'] as $key => $inf_opt) {
+                            foreach ($inf['poll_option'] as $inf_opt) {
                                 echo $inf_opt;
                             }
                         echo "</div>\n";
 
                         echo "<div class='panel-footer text-center'>\n";
-                            foreach ($inf['poll_foot'] as $key => $inf_opt) {
+                            foreach ($inf['poll_foot'] as $inf_opt) {
                                echo "<p class='text-center m-b-0'>".$inf_opt."</p>\n";
                             }
                         echo "</div>\n";

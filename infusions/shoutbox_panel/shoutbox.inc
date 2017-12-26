@@ -73,7 +73,7 @@ class Shoutbox {
         }
     }
 
-    public static function getInstance($key = TRUE) {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
             self::$instance->setEmptyDay();
@@ -112,7 +112,7 @@ class Shoutbox {
         }
 
         if (isset($_POST[$shout_group_n]) or isset($_POST['shout_box'])) {
-            !empty($_POST['shout_box']) ? $shout_group = (isset($_POST['shout_hidden']) ? form_sanitizer($_POST['shout_hidden'], 0, "shout_hidden") : 0) : $shout_group;
+            $shout_group = !empty($_POST['shout_box']) ? (isset($_POST['shout_hidden']) ? form_sanitizer($_POST['shout_hidden'], 0, "shout_hidden") : 0) : $shout_group;
 
             if (iGUEST && self::$sb_settings['guest_shouts']) {
                 // Process Captchas
@@ -181,7 +181,7 @@ class Shoutbox {
         if (isset($_POST['sb_delete_old']) && isset($_POST['num_days']) && isnum($_POST['num_days'])) {
             $deletetime = time() - (intval($_POST['num_days']) * 86400);
             $numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_datestamp < '".$deletetime."'");
-            $result = dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
+            dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
             addNotice("warning", number_format(intval($numrows))." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
             defined('ADMIN_PANEL') ?
                 redirect(clean_request("section=shoutbox", ["", "aid"], TRUE)) :
@@ -355,7 +355,8 @@ class Shoutbox {
     }
 
     public function sbForm() {
-        defined('ADMIN_PANEL') ? fusion_confirm_exit() : "";
+        if (defined('ADMIN_PANEL')) fusion_confirm_exit();
+
         openside(self::$locale['SB_title']);
         if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";

@@ -592,13 +592,13 @@ class ForumAdminView extends ForumAdminInterface {
                             $delattach++;
                             $attach = dbarray($result2);
                             @unlink(FORUM."attachments/".$attach['attach_name']);
-                            $result3 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
+                            dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
                         }
                     }
                 }
 
                 // delete posts.
-                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
                 echo self::$locale['609'].mysql_affected_rows()."<br />";
                 echo self::$locale['610'].$delattach."<br />";
 
@@ -606,19 +606,19 @@ class ForumAdminView extends ForumAdminInterface {
                 $result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_FORUM_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
-                        $result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
+                        dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
                     }
                 }
                 // delete threads
-                $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
+                dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
 
                 // update last post on forum
                 $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
                 if (dbrows($result)) {
                     $data = dbarray($result);
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
+                     dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
                 } else {
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
+                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
                 }
                 echo self::$locale['611'].mysql_affected_rows()."\n</div>";
 
@@ -982,7 +982,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         $_access = getusergroups();
         $access_opts['0'] = self::$locale['531'];
-        while (list($key, $option) = each($_access)) {
+        foreach ($_access as $key => $option) {
             $access_opts[$option['0']] = $option['1'];
         }
         $public_access_opts = $access_opts;

@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 include_once INFUSIONS."latest_articles_panel/templates.php";
 
-$article_result = "SELECT a.article_id, a.article_subject, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar
+$result = dbquery("SELECT a.article_id, a.article_subject, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar
     FROM ".DB_ARTICLES." AS a
     INNER JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
     LEFT JOIN ".DB_USERS." tu ON tu.user_id = a.article_name
@@ -29,8 +29,7 @@ $article_result = "SELECT a.article_id, a.article_subject, tu.user_id, tu.user_n
     ".(multilang_table("AR") ? "AND a.article_language='".LANGUAGE."' AND ac.article_cat_language='".LANGUAGE."'" : "")."
     ORDER BY a.article_datestamp DESC
     LIMIT 0,5
-";
-$result = dbquery($article_result);
+");
 
 $info = [];
 

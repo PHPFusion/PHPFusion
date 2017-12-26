@@ -21,15 +21,13 @@ if (!defined("IN_FUSION")) {
 
 include_once INFUSIONS."latest_downloads_panel/templates.php";
 
-$download_result = "SELECT td.download_id, td.download_title, tu.user_id, tu.user_name, tu.user_status
+$result = dbquery("SELECT td.download_id, td.download_title, tu.user_id, tu.user_name, tu.user_status
     FROM ".DB_DOWNLOADS." td
     INNER JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
     LEFT JOIN ".DB_USERS." tu ON tu.user_id = td.download_user
     ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')."
     ORDER BY download_datestamp DESC LIMIT 0,5
-";
-
-$result = dbquery($download_result);
+");
 
 $info = [];
 

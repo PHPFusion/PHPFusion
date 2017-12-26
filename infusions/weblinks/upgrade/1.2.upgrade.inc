@@ -5,7 +5,6 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: weblinks/upgrade/1.2.upgrade.inc
-| Update weblinks to Version 9.02 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the

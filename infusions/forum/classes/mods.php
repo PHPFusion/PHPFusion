@@ -428,7 +428,7 @@ class Moderator {
                             ORDER BY p.post_datestamp DESC LIMIT 1");
                 if (dbrows($result) > 0) {
                     $pdata = dbarray($result); // yielded LAST post
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET
+                    dbquery("UPDATE ".DB_FORUMS." SET
                             forum_lastpostid = '".$pdata['post_id']."',
                             forum_lastpost = '".$pdata['post_datestamp']."',
                             forum_postcount = '".$pdata['post_count']."',
@@ -488,7 +488,7 @@ class Moderator {
      */
     protected function mod_sticky_thread() {
         if (iMOD) {
-            $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
+            dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
             ob_start();
             echo openmodal('lockthread', $this->locale['forum_0204'], ['class' => 'modal-center']);
             echo "<div style='text-align:center'><br />\n";
@@ -709,7 +709,7 @@ class Moderator {
                         $thread_count = TRUE;
                     }
                     $delete_thread = $thread_count ? FALSE : TRUE;
-                    self::refresh_forum($this->forum_id, $delete_thread);
+                    self::refresh_forum($delete_thread);
                     addNotice('success', $this->locale['success-DP001']);
                     if ($thread_count === FALSE) { // no remaining thread
                         addNotice('success', $this->locale['success-DP002']);

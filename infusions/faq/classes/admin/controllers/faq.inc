@@ -571,6 +571,7 @@ class FaqAdmin extends FaqAdminModel {
         echo "<div class='display-block'>\n";
 
         // Category Management
+        $cat_options = [];
         $cat_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '')."ORDER BY faq_cat_name ASC");
         if (dbrows($cat_result)) {
             echo "<div class='well'>\n";

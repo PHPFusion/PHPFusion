@@ -25,7 +25,7 @@ if (!function_exists("display_main_weblinks")) {
      * @param $info
      */
     function display_main_weblinks($info) {
-        $weblink_settings = \PHPFusion\Weblinks\WeblinksServer::get_weblink_settings();
+        //$weblink_settings = \PHPFusion\Weblinks\WeblinksServer::get_weblink_settings();
         $locale = fusion_get_locale("", WEBLINK_LOCALE);
 
         opentable($locale['web_0000']);

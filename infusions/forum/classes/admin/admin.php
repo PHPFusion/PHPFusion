@@ -250,6 +250,7 @@ abstract class ForumAdminInterface extends ForumServer {
         // check if there is a sub for this node.
 
         if (isset($branch_data[$index])) {
+            $data = [];
 
             foreach ($branch_data[$index] as $forum_id) {
                 $data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."'"));
@@ -263,7 +264,7 @@ abstract class ForumAdminInterface extends ForumServer {
                 dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
 
                 if (isset($branch_data[$data['forum_id']])) {
-                    self::prune_forums($branch_data, $data['forum_id'], $time);
+                    self::prune_forums($branch_data, $time);
                 }
                 // end foreach
             }
@@ -293,6 +294,4 @@ abstract class ForumAdminInterface extends ForumServer {
     protected static function get_forum_index() {
         return dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
     }
-
-
 }

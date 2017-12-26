@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/classes/news/news.php
 | Author: PHP-Fusion Development Team
-| Version: 1.12
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -458,10 +457,9 @@ abstract class News extends NewsServer {
         $info = array_merge_recursive($info, self::get_NewsCategory());
 
         // Filtered by Category ID.
-        $nc_select = "SELECT * FROM ".DB_NEWS_CATS." WHERE ".(multilang_table("NS") ? "news_cat_language='".LANGUAGE."' AND " : '')." news_cat_id=:cat_id";
-        $bind = [':cat_id' => $news_cat_id];
+        $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." WHERE ".(multilang_table("NS") ? "news_cat_language='".LANGUAGE."' AND " : '')." news_cat_id=:cat_id", [':cat_id' => $news_cat_id]);
 
-        $result = dbquery($nc_select, $bind);
+        $max_news_rows = '';
 
         if (dbrows($result)) {
             $data = dbarray($result);
@@ -556,7 +554,7 @@ abstract class News extends NewsServer {
 
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
                 $crumb = [
@@ -602,8 +600,8 @@ abstract class News extends NewsServer {
      * @return array
      */
     public function set_NewsItemInfo($news_id) {
-
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
+        $info = [];
 
         set_title(self::$locale['news_0004']);
 
@@ -624,7 +622,6 @@ abstract class News extends NewsServer {
         );
 
         if (dbrows($result)) {
-
             $data = dbarray($result);
 
             if ($data['news_keywords'] !== "") {

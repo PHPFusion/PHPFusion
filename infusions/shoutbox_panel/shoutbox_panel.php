@@ -20,4 +20,4 @@ if (!defined("IN_FUSION")) {
 }
 
 include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
-Shoutbox::getInstance(TRUE)->get_shout();
+Shoutbox::getInstance()->get_shout();

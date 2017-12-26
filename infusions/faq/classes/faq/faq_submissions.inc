@@ -107,6 +107,7 @@ class FaqSubmissions extends FaqServer {
                 );
                 echo form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'], $textArea_opts);
                 $options = [];
+                $faq_data = [];
                 $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];

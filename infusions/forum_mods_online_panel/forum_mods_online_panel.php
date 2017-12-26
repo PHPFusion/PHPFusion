@@ -50,13 +50,14 @@ if (!infusion_exists('forum')) {
         $mod_group = array_flip($moderator_groups);
     }
 
-    $user_column_select = "u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_level, u.user_groups";
 
-    $site_admins_query = "SELECT $user_column_select FROM ".DB_USERS." u
-    INNER JOIN ".DB_ONLINE." online ON online.online_user = u.user_id
-    WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.") GROUP BY user_id ASC";
+    $site_admin_result = dbquery("SELECT u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_level, u.user_groups
+        FROM ".DB_USERS." u
+        INNER JOIN ".DB_ONLINE." online ON online.online_user = u.user_id
+        WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.")
+        GROUP BY user_id ASC
+    ");
 
-    $site_admin_result = dbquery($site_admins_query);
     $output = [];
 
     if (dbrows($site_admin_result) > 0) {

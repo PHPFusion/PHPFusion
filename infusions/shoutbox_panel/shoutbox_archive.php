@@ -23,6 +23,6 @@ require_once THEMES."templates/header.php";
 
 include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
 
-Shoutbox::getInstance(TRUE)->get_archiveshout();
+Shoutbox::getInstance()->get_archiveshout();
 
 require_once THEMES."templates/footer.php";

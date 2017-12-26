@@ -22,7 +22,6 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("display_main_articles")) {
     /**
      * Articles Page Template
-     *
      * @param $info
      */
     function display_main_articles($info) {
@@ -44,47 +43,47 @@ if (!function_exists("display_main_articles")) {
             ?>
             <div class="panel panel-default panel-articles-header">
 
-            <!-- Display Informations -->
-            <div class="panel-body">
-                <div class="pull-right">
-                    <a class="btn btn-sm btn-default" href="<?php echo INFUSIONS."articles/articles.php"; ?>"
-                       title="<?php echo $locale['article_0001']; ?>"><i
-                                class="fa fa-fw fa-desktop"></i> <?php echo $locale['article_0001']; ?></a>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse"
-                            data-target="#articlescat" aria-expanded="true" aria-controls="articlescat"
-                            title="<?php echo $locale['article_0002']; ?>">
-                        <i class="fa fa-fw fa-folder"></i> <?php echo $locale['article_0002']; ?>
-                    </button>
+                <!-- Display Informations -->
+                <div class="panel-body">
+                    <div class="pull-right">
+                        <a class="btn btn-sm btn-default" href="<?php echo INFUSIONS."articles/articles.php"; ?>"
+                           title="<?php echo $locale['article_0001']; ?>"><i
+                                    class="fa fa-fw fa-desktop"></i> <?php echo $locale['article_0001']; ?></a>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse"
+                                data-target="#articlescat" aria-expanded="true" aria-controls="articlescat"
+                                title="<?php echo $locale['article_0002']; ?>">
+                            <i class="fa fa-fw fa-folder"></i> <?php echo $locale['article_0002']; ?>
+                        </button>
+                    </div>
+                    <div class="overflow-hide">
+                        <h3 class="display-inline text-dark"><?php echo $info['article_cat_name']; ?></h3><br/>
+                        <?php if ($info['article_cat_description']) { ?>
+                            <div class="article-cat-description"><?php echo $info['article_cat_description']; ?></div>
+                            <br/>
+                        <?php } ?>
+                        <span class="strong text-smaller"><?php echo $locale['article_0004']; ?></span>
+                        <span class="text-dark text-smaller"><?php echo($info['article_last_updated'] > 0 ? showdate("newsdate", $info['article_last_updated']) : $locale['na']); ?></span>
+                    </div>
                 </div>
-                <div class="overflow-hide">
-                    <h3 class="display-inline text-dark"><?php echo $info['article_cat_name']; ?></h3><br/>
-                    <?php if ($info['article_cat_description']) { ?>
-                        <div class="article-cat-description"><?php echo $info['article_cat_description']; ?></div>
-                        <br/>
-                    <?php } ?>
-                    <span class="strong text-smaller"><?php echo $locale['article_0004']; ?></span>
-                    <span class="text-dark text-smaller"><?php echo($info['article_last_updated'] > 0 ? showdate("newsdate", $info['article_last_updated']) : $locale['na']); ?></span>
-                </div>
-            </div>
 
-            <!-- Diplay Categories -->
-            <div id="articlescat" class="panel-collapse collapse m-b-10">
-                <!--pre_articles_cat_idx-->
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <hr class="m-t-0 m-b-5">
-                        <span class="display-inline-block m-b-10 strong text-smaller text-uppercase"><?php echo $locale['article_0003']; ?></span><br/>
-                        <?php
-                        foreach ($info['article_categories'] as $cat_id => $cat_data) {
-                            if (!isset($_GET['cat_id']) || $_GET['cat_id'] != $cat_id) {
-                                echo "<a href='".INFUSIONS."articles/articles.php?cat_id=".$cat_id."' class='btn btn-sm btn-default m-5'>".$cat_data['name']."</a>";
+                <!-- Diplay Categories -->
+                <div id="articlescat" class="panel-collapse collapse m-b-10">
+                    <!--pre_articles_cat_idx-->
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <hr class="m-t-0 m-b-5">
+                            <span class="display-inline-block m-b-10 strong text-smaller text-uppercase"><?php echo $locale['article_0003']; ?></span><br/>
+                            <?php
+                            foreach ($info['article_categories'] as $cat_id => $cat_data) {
+                                if (!isset($_GET['cat_id']) || $_GET['cat_id'] != $cat_id) {
+                                    echo "<a href='".INFUSIONS."articles/articles.php?cat_id=".$cat_id."' class='btn btn-sm btn-default m-5'>".$cat_data['name']."</a>";
+                                }
                             }
-                        }
-                        ?>
-                    </li>
-                </ul>
-                <!--sub_articles_cat_idx-->
-            </div>
+                            ?>
+                        </li>
+                    </ul>
+                    <!--sub_articles_cat_idx-->
+                </div>
             </div>
 
             <!-- Display Sorting Options -->
@@ -150,7 +149,6 @@ if (!function_exists("display_main_articles")) {
 if (!function_exists("render_article")) {
     /**
      * Articles Item Container
-     *
      * @param      $subject
      * @param      $article
      * @param      $info
@@ -261,7 +259,6 @@ if (!function_exists("render_article")) {
 if (!function_exists("render_article_item")) {
     /**
      * Articles Item Page Template
-     *
      * @param $info
      */
     function render_article_item($info) {

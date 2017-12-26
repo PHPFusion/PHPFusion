@@ -15,11 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Articles;
 
 class ArticlesAdmin extends ArticlesAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
     private $form_action = FUSION_REQUEST;
@@ -39,6 +37,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
+
         $this->locale = self::get_articleAdminLocale();
         $this->articleSettings = self::get_article_settings();
 
@@ -53,7 +52,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
      * Displays Articles Form
      */
     private function display_article_form() {
-
         // Delete Article
         self::execute_ArticlesDelete();
 
@@ -82,7 +80,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
      * Create or Update a Article
      */
     private function execute_ArticlesUpdate() {
-
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
 
             // Check posted Informations
@@ -108,7 +105,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 "article_draft"          => isset($_POST['article_draft']) ? "1" : "0",
                 "article_allow_comments" => isset($_POST['article_allow_comments']) ? "1" : "0",
                 "article_allow_ratings"  => isset($_POST['article_allow_ratings']) ? "1" : "0",
-                "article_language"       => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
+                "article_language"       => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language")
             ];
 
             // Line Breaks
@@ -146,7 +143,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
      * Display Form for Article
      */
     private function articleContent_form() {
-
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = [
@@ -190,11 +186,11 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
             );
             echo form_select("article_visibility", $this->locale['article_0106'], $this->article_data['article_visibility'], [
-                "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                "options" => fusion_get_groups(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE
             ]);
             if (multilang_table("AR")) {
                 echo form_select("article_language", $this->locale['language'], $this->article_data['article_language'], [
-                    "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE,
+                    "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%", "inline" => TRUE
                 ]);
             } else {
                 echo form_hidden("article_language", "", $this->article_data['article_language']);
@@ -238,7 +234,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
     /**
      * Generate sets of push buttons for article Content form
-     *
      * @param      $unique_id
      * @param bool $breaker
      */
@@ -357,12 +352,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Query
-        $article_query = "
-            SELECT
-                a.*, ac.*,
-                count(c.comment_id) 'comments_count',
-                count(r.rating_id) 'ratings_count',
-                u.user_id, u.user_name, u.user_status, u.user_avatar
+        $result2 = dbquery("
+            SELECT a.*, ac.*, count(c.comment_id) 'comments_count', count(r.rating_id) 'ratings_count', u.user_id, u.user_name, u.user_status, u.user_avatar
             FROM ".DB_ARTICLES." a
             LEFT JOIN ".DB_ARTICLE_CATS." ac ON ac.article_cat_id=a.article_cat
             LEFT JOIN ".DB_COMMENTS." c ON c.comment_item_id=a.article_id AND c.comment_type='A'
@@ -372,8 +363,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
             GROUP BY a.article_id
             ORDER BY article_draft DESC, article_datestamp DESC
             LIMIT $rowstart, $limit
-        ";
-        $result2 = dbquery($article_query);
+        ");
+
         $article_rows = dbrows($result2);
         $article_cats = dbcount("(article_cat_id)", DB_ARTICLE_CATS, "");
 
@@ -384,7 +375,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             "article_category"   => !empty($_POST['article_category']) ? form_sanitizer($_POST['article_category'], "", "article_category") : "",
             "article_visibility" => !empty($_POST['article_visibility']) ? form_sanitizer($_POST['article_visibility'], "", "article_visibility") : "",
             "article_language"   => !empty($_POST['article_language']) ? form_sanitizer($_POST['article_language'], "", "article_language") : "",
-            "article_author"     => !empty($_POST['article_author']) ? form_sanitizer($_POST['article_author'], "", "article_author") : "",
+            "article_author"     => !empty($_POST['article_author']) ? form_sanitizer($_POST['article_author'], "", "article_author") : ""
         ];
 
         $filter_empty = TRUE;
@@ -616,7 +607,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
     // Articles Delete Function
     private function execute_ArticlesDelete() {
-
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
             $article_id = intval($_GET['article_id']);
 

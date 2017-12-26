@@ -22,19 +22,14 @@ if (!defined("IN_FUSION")) {
 $locale = fusion_get_locale('', BLOG_LOCALE);
 
 openside($locale['blog_1004']);
-$bind = [
-    ':draft'    => '0',
-    ':language' => LANGUAGE,
-];
 
-$blogQuery = "SELECT blog_id, blog_subject, blog_datestamp
+$result = dbquery("SELECT blog_id, blog_subject, blog_datestamp
     FROM ".DB_BLOG."
     WHERE blog_draft =:draft
     AND ".groupaccess('blog_visibility').(multilang_table("BL") ? " AND blog_language=:language" : "")."
     ORDER BY blog_datestamp DESC
-";
+", [':draft' => '0', ':language' => LANGUAGE]);
 
-$result = dbquery($blogQuery, $bind);
 if (dbrows($result)) {
     echo "<ul class='blog_archive_inner list-style-none' id='blog_archive'>\n";
     $data = [];

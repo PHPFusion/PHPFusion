@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/admin/controllers/news_submissions.php
 | Author: PHP-Fusion Development Team
-| Version: 1.12
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -42,13 +41,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
             // Publish the Submissions
             if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) || isset($_POST['preview'])) {
-
-                $select = "SELECT ts.*, tu.user_id FROM ".DB_SUBMISSIONS." ts INNER JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id WHERE submit_id=:submit_id";
-                $bind = [
-                    ':submit_id' => $_GET['submit_id']
-                ];
-
-                $result = dbquery($select, $bind);
+                $result = dbquery("SELECT ts.*, tu.user_id FROM ".DB_SUBMISSIONS." ts INNER JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id WHERE submit_id=:submit_id", [':submit_id' => $_GET['submit_id']]);
 
                 if (dbrows($result)) {
 

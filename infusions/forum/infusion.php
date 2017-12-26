@@ -54,7 +54,7 @@ $inf_newtable[] = DB_FORUM_ATTACHMENTS." (
     attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
     attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (attach_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_VOTES." (
     vote_id MEDIUMINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -65,7 +65,7 @@ $inf_newtable[] = DB_FORUM_VOTES." (
     vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
     vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (vote_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_RANKS." (
     rank_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -76,7 +76,7 @@ $inf_newtable[] = DB_FORUM_RANKS." (
     rank_apply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
     rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (rank_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
     thread_id MEDIUMINT(8) unsigned NOT NULL,
@@ -84,7 +84,7 @@ $inf_newtable[] = DB_FORUM_POLL_OPTIONS." (
     forum_poll_option_text VARCHAR(150) NOT NULL,
     forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
     KEY thread_id (thread_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
     thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
@@ -92,7 +92,7 @@ $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
     forum_vote_user_ip VARCHAR(45) NOT NULL,
     forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
     KEY thread_id (thread_id,forum_vote_user_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POLLS." (
     thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
@@ -101,7 +101,7 @@ $inf_newtable[] = DB_FORUM_POLLS." (
     forum_poll_length iNT(10) UNSIGNED NOT NULL,
     forum_poll_votes SMALLINT(5) unsigned NOT NULL,
     KEY thread_id (thread_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUMS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -142,7 +142,7 @@ $inf_newtable[] = DB_FORUMS." (
     KEY forum_lastpostid (forum_lastpostid),
     KEY forum_postcount (forum_postcount),
     KEY forum_threadcount (forum_threadcount)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_POSTS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -165,7 +165,7 @@ $inf_newtable[] = DB_FORUM_POSTS." (
     PRIMARY KEY (post_id),
     KEY thread_id (thread_id),
     KEY post_datestamp (post_datestamp)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_THREADS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -193,7 +193,7 @@ $inf_newtable[] = DB_FORUM_THREADS." (
     KEY thread_postcount (thread_postcount),
     KEY thread_lastpost (thread_lastpost),
     KEY thread_views (thread_views)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
     thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -201,7 +201,7 @@ $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
     notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
     KEY notify_datestamp (notify_datestamp)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_TAGS." (
     tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -211,7 +211,7 @@ $inf_newtable[] = DB_FORUM_TAGS." (
     tag_status SMALLINT(1) NOT NULL DEFAULT '0',
     tag_language VARCHAR(100) NOT NULL DEFAULT '',
     PRIMARY KEY (tag_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_USER_REP." (
     rep_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -225,7 +225,7 @@ $inf_newtable[] = DB_FORUM_USER_REP." (
     datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (rep_id),
     KEY post_id (post_id, user_id, voter_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_FORUM_MOODS." (
     mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -236,7 +236,7 @@ $inf_newtable[] = DB_FORUM_MOODS." (
     mood_access SMALLINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     mood_status SMALLINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (mood_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_POST_NOTIFY." (
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -246,7 +246,7 @@ $inf_newtable[] = DB_POST_NOTIFY." (
     notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
     KEY notify_datestamp (notify_datestamp)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 if (!column_exists('users', 'user_reputation')) {
     $inf_altertable[] = $db_prefix."users ADD user_reputation INT(10) UNSIGNED NOT NULL AFTER user_status";
@@ -261,27 +261,33 @@ $inf_adminpanel[] = [
 ];
 
 // Insert Forum Settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '".USER_LEVEL_SUPER_ADMIN."', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ranks', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_lock', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_timelimit', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '604800', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_posts_reply', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_editpost_to_lastpost', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('threads_per_page', '20', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_rank_style', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('upvote_points', '2', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('downvote_points', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('answering_points', '15', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_upvote', '100', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('points_to_downvote', '100', '".$inf_folder."')";
+$settings = [
+    'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
+    'forum_attachmax'            => 1048576,
+    'forum_attachmax_count'      => 5,
+    'forum_attachtypes'          => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
+    'thread_notify'              => 1,
+    'forum_ranks'                => 1,
+    'forum_edit_lock'            => 0,
+    'forum_edit_timelimit'       => 0,
+    'popular_threads_timeframe'  => 604800,
+    'forum_last_posts_reply'     => 1,
+    'forum_last_post_avatar'     => 1,
+    'forum_editpost_to_lastpost' => 1,
+    'threads_per_page'           => 20,
+    'posts_per_page'             => 20,
+    'numofthreads'               => 16,
+    'forum_rank_style'           => 0,
+    'upvote_points'              => 2,
+    'downvote_points'            => 1,
+    'answering_points'           => 15,
+    'points_to_upvote'           => 100,
+    'points_to_downvote'         => 100
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 // Insert Panels
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";

@@ -115,46 +115,6 @@ abstract class Faq extends FaqServer {
         return (array)$info;
     }
 
-    /**
-     *  Display Ratings
-     *
-     * @param $data
-     *
-     * @return string
-     */
-    private static function get_FaqRatings($data) {
-        $html = "";
-        if (fusion_get_settings('ratings_enabled') && $data['faq_ratings'] == TRUE) {
-            ob_start();
-            require_once INCLUDES."ratings_include.php";
-            showratings("FQ", $data['faq_id'], INFUSIONS."faq/faq.php?faq_id=".$data['faq_id']);
-            $html = ob_get_contents();
-            ob_end_clean();
-        }
-
-        return (string)$html;
-    }
-
-    /**
-     * Display Comments
-     *
-     * @param $data
-     *
-     * @return string
-     */
-    private static function get_FaqComments($data) {
-        $html = "";
-        if (fusion_get_settings('comments_enabled') && $data['faq_comments'] == TRUE) {
-            ob_start();
-            require_once INCLUDES."comments_include.php";
-            showcomments("FQ", DB_FAQS, "faq_id", $data['faq_id'], INFUSIONS."faq/faq.php?faq=".$data['faq_id'], $data['faq_ratings']);
-            $html = ob_get_contents();
-            ob_end_clean();
-        }
-
-        return (string)$html;
-    }
-
     protected function __clone() {
     }
 }

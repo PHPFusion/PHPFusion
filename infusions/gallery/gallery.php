@@ -381,7 +381,7 @@ function photo_thumbnail($data) {
     echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
     echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
     $thumb_img = ($data['photo_thumb1'] && file_exists(IMAGES_G.$data['photo_thumb1'])) ? IMAGES_G.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
-    $title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['402'];
+    $title = ($data['album_thumb1'] && file_exists(IMAGES_G.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['402'];
     echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
     echo "</a>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";

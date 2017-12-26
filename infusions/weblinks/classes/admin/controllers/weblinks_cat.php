@@ -15,11 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Weblinks;
 
 class WeblinksCategoryAdmin extends WeblinksAdminModel {
-
     private static $instance = NULL;
     private $locale = array();
 
@@ -419,6 +417,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
      *
      * @param     $data
      * @param int $id
+     * @param int $level
      */
     private function display_weblink_category($data, $id = 0, $level = 0) {
 

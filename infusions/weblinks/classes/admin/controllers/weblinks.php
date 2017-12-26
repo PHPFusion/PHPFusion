@@ -18,7 +18,6 @@
 namespace PHPFusion\Weblinks;
 
 class WeblinksAdmin extends WeblinksAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
     private $form_action = FUSION_REQUEST;
@@ -608,7 +607,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 }
             }
             addNotice("success", sprintf($this->locale['WLS_0115'], $i));
-            $i > 0 ? addNotice("success", $this->locale['WLS_0116']) : "";
+            if ($i > 0) addNotice("success", $this->locale['WLS_0116']);
         }
     }
 

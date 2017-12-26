@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /news/templates/submissions.php
+| Filename: news/templates/submissions.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -42,7 +42,7 @@ if (!function_exists('display_news_submissions_preview')) {
 }
 
 if (!function_exists('display_news_submissions_form')) {
-    function display_news_submissions_form(array $info = array()) {
+    function display_news_submissions_form(array $info = []) {
         return fusion_get_function('opentable', '{%title%}')."<div class='well spacer-xs'>{%guidelines%}</div>
         {%news_subject_field%}
         {%news_language_field%}

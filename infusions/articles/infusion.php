@@ -72,13 +72,19 @@ $inf_adminpanel[] = [
     "page"   => 1,
     "rights" => "A",
     "title"  => $locale['setup_3002'],
-    "panel"  => "articles_admin.php",
+    "panel"  => "articles_admin.php"
 ];
 
 // Insert Settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '1', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', '".$inf_folder."')";
+$settings = [
+    'article_pagination'        => 15,
+    'article_allow_submission'  => 1,
+    'article_extended_required' => 0
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 // Insert Panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".$locale['setup_3325']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
@@ -86,7 +92,7 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 // Insert Multilanguage
 $inf_mlt[] = [
     "title"  => $locale['articles']['title'],
-    "rights" => "AR",
+    "rights" => "AR"
 ];
 
 // Multilanguage Sitelinks

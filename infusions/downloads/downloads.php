@@ -455,6 +455,6 @@ function parseInfo($data) {
         'download_user_link'         => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
         'download_post_time'         => showdate('shortdate', $data['download_datestamp']),
         'download_post_time2'        => $locale['global_049']." ".timer($data['download_datestamp']),
-        'download_file_link'         => file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
+        'download_file_link'         => file_exists(DOWNLOADS.'files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
     ];
 }
