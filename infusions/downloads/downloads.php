@@ -209,15 +209,15 @@ if (isset($_GET['download_id'])) {
     if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
         set_title($locale['download_1000']);
         set_meta("name", $locale['download_1000']);
-        downloadCats_breadcrumbs(get_downloadCatsIndex());
 
         $res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")."download_cat_id='".intval($_GET['cat_id'])."'"));
         if (!empty($res)) {
             $info += $res;
         } else {
-            redirect(FUSION_SELF);
+            redirect(clean_request('', ['cat_id'], FALSE));
         }
 
+        downloadCats_breadcrumbs(get_downloadCatsIndex());
         $info['download_title'] = $info['download_cat_name'];
         $info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."' AND ".groupaccess('download_visibility'));
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['download_max_rows']) ? $_GET['rowstart'] : 0;
