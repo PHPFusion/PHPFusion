@@ -298,9 +298,9 @@ if (isset($_GET['download_id'])) {
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !isset($_GET['download_id'])) {
 
-    $page_nav_link = "";
+    $page_nav_link = (!empty($_GET['type']) ? "?type=".$_GET['type']."&amp;" : '');
     if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-        $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id']."&amp;";
+        $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'].(!empty($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;";
     } else if (!empty($_GET['author']) && isnum($_GET['author'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?author=".$_GET['author']."&amp;";
     }
