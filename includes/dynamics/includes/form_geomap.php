@@ -321,16 +321,17 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         $flag_plugin = '';
         if ($options['flag']) {
             $flag_function = "
-        function show_flag(item) {
-        if(!item.id) {return item.text;}
-        var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
-        return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
-        }";
+            function show_flag(item) {
+                if(!item.id) {return item.text;}
+                var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
+                return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
+            }
+            ";
             $flag_plugin = "
-         formatResult: show_flag,
-         formatSelection: show_flag,
-         escapeMarkup: function(m) { return m; },
-        ";
+            formatResult: show_flag,
+            formatSelection: show_flag,
+            escapeMarkup: function(m) { return m; },
+            ";
         }
 
         add_to_jquery("

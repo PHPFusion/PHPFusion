@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Feedback;
 
 use PHPFusion\OutputHandler;
@@ -136,6 +137,7 @@ class Comments {
             self::$params = $params + self::$params;
             self::setInstance($key);
         }
+
         return self::$instances[$key];
     }
 
@@ -147,7 +149,6 @@ class Comments {
         $obj->execute_CommentUpdate();
         $obj->get_Comments();
     }
-
 
     /**
      * Displays Comments

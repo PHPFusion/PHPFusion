@@ -20,7 +20,7 @@ require_once __DIR__.'/../../maincore.php';
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
 
-use \PHPFusion\BreadCrumbs;
+use PHPFusion\BreadCrumbs;
 
 $downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
 $settings_locale = file_exists(LOCALE.LOCALESET."admin/settings.php") ? LOCALE.LOCALESET."admin/settings.php" : LOCALE."English/admin/settings.php";
