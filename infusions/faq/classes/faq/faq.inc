@@ -55,7 +55,7 @@ abstract class Faq extends FaqServer {
 
         $info = array_merge($info, self::get_FaqData($category));
 
-        if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+        if (!empty($_GET['cat_id']) && isnum($_GET['cat_id']) && isset($info['faq_categories'][$_GET['cat_id']])) {
             set_title(SiteLinks::get_current_SiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
             add_to_title(self::$locale['global_201'].$info['faq_categories'][$_GET['cat_id']]['faq_cat_name']);
             BreadCrumbs::getInstance()->addBreadCrumb([
@@ -87,7 +87,10 @@ abstract class Faq extends FaqServer {
                 ]
             ],
         ];
-        $c_result = dbquery("SELECT * FROM ".DB_FAQ_CATS.(multilang_table('FQ') ? " WHERE faq_cat_language='".LANGUAGE."' " : '').($cat ? "AND faq_cat_id='".$cat."'" : '')."ORDER BY faq_cat_id ASC");
+        $c_result = dbquery("SELECT *
+            FROM ".DB_FAQ_CATS."
+            ".(multilang_table('FQ') ? "WHERE faq_cat_language='".LANGUAGE."' ".($cat ? "AND faq_cat_id='".$cat."' " : '') : ($cat ? "WHERE faq_cat_id='".$cat."' " : ''))."
+            ORDER BY faq_cat_id ASC");
         if (dbrows($c_result)) {
             while ($c_data = dbarray($c_result)) {
                 $info['faq_categories'][$c_data['faq_cat_id']] = $c_data;
