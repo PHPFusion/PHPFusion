@@ -43,7 +43,7 @@ $Security_settings = [
     'maintenance'         => fusion_get_settings('maintenance'),
     'maintenance_message' => fusion_get_settings('maintenance_message'),
     'bad_words_enabled'   => fusion_get_settings('bad_words_enabled'),
-    'bad_words'           => fusion_get_settings('bad_words'),
+    'bad_words'           => stripinput($_POST['bad_words']),
     'bad_word_replace'    => fusion_get_settings('bad_word_replace'),
     'user_name_ban'       => fusion_get_settings('user_name_ban')
 ];
