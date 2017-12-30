@@ -21,6 +21,6 @@ if (!infusion_exists('weblinks')) {
 }
 require_once THEMES."templates/header.php";
 require_once WEBLINKS_CLASS."autoloader.php";
-require_once INFUSIONS."weblinks/templates/weblinks.php";
+require_once INFUSIONS."weblinks/templates.php";
 PHPFusion\Weblinks\WeblinksServer::Weblinks()->display_weblink();
 require_once THEMES."templates/footer.php";

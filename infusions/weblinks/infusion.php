@@ -110,9 +110,7 @@ if (!empty($enabled_languages)) {
 $inf_droptable[] = DB_WEBLINKS;
 $inf_droptable[] = DB_WEBLINK_CATS;
 
-$inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='W'";
-$inf_deldbrow[] = DB_RATINGS." WHERE rating_type='W'";
-$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='W'";
+$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='l'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='W'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='WC'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";

@@ -84,8 +84,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     private function unserializeData() {
 
         $result = dbquery("
-            SELECT
-                s.*
+            SELECT s.*
             FROM ".DB_SUBMISSIONS." AS s
             WHERE s.submit_id='".intval($_GET['submit_id'])."'
             LIMIT 0,1
@@ -93,7 +92,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = \defender::decode($data['submit_criteria']);
             $returnInformations = [
                 "weblink_user_name"   => $data['submit_user'],
                 "weblink_name"        => $submit_criteria['weblink_name'],
@@ -234,8 +233,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     private function displaySubmissionList() {
 
         $result = dbquery("
-            SELECT
-                s.submit_id, s.submit_criteria, s.submit_datestamp, u.user_id, u.user_name, u.user_status, u.user_avatar
+            SELECT s.submit_id, s.submit_criteria, s.submit_datestamp, u.user_id, u.user_name, u.user_status, u.user_avatar
             FROM ".DB_SUBMISSIONS." AS s
             LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user
             WHERE s.submit_type='l'
@@ -259,7 +257,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 <?php if (dbrows($result) > 0) :
                     while ($data = dbarray($result)) : ?>
                         <?php
-                        $submitData = unserialize($data['submit_criteria']);
+                        $submitData = \defender::decode($data['submit_criteria']);
 
                         $submitUser = $this->locale['user_na'];
                         if ($data['user_name']) {

@@ -21,6 +21,10 @@ class WeblinksSubmissions extends WeblinksServer {
     public $info = [];
     private static $instance = NULL;
     private $locale = [];
+    private static $weblink_settings = [];
+
+    protected function __construct() {
+    }
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -32,12 +36,13 @@ class WeblinksSubmissions extends WeblinksServer {
 
     public function displayWeblinks() {
         $this->locale = fusion_get_locale("", WEBLINK_ADMIN_LOCALE);
-        $weblink_settings = self::get_weblink_settings();
+        self::$weblink_settings = self::get_weblink_settings();
+
         add_to_title($this->locale['WLS_0900']);
 
         opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['WLS_0900']);
 
-        if (iMEMBER && $weblink_settings['links_allow_submission']) {
+        if (iMEMBER && self::$weblink_settings['links_allow_submission']) {
             $this->display_submission_form();
         } else {
             echo "<div class='well text-center'>".$this->locale['WLS_0922']."</div>\n";
@@ -47,8 +52,6 @@ class WeblinksSubmissions extends WeblinksServer {
     }
 
     private function display_submission_form() {
-
-        $weblink_settings = self::get_weblink_settings();
 
         $criteriaArray = [
             "weblink_name"        => "",
@@ -81,8 +84,10 @@ class WeblinksSubmissions extends WeblinksServer {
                 // Save
                 if (\defender::safe() && isset($_POST['submit_link'])) {
                     $inputArray = [
-                        "submit_type"     => "l", "submit_user" => fusion_get_userdata('user_id'), "submit_datestamp" => time(),
-                        "submit_criteria" => addslashes(serialize($criteriaArray))
+                        "submit_type"      => "l",
+                        "submit_user"      => fusion_get_userdata('user_id'),
+                        "submit_datestamp" => time(),
+                        "submit_criteria"  => \defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
                     addNotice("success", $this->locale['WLS_0910']);
@@ -133,7 +138,7 @@ class WeblinksSubmissions extends WeblinksServer {
                 }
 
                 $textArea_opts = [
-                    "required"  => $weblink_settings['links_extended_required'] ? TRUE : FALSE,
+                    "required"  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
                     "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
                     "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
                     "autosize"  => TRUE,

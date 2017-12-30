@@ -1,0 +1,46 @@
+{%opentable%}
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<nav class='navbar navbar-inverse forum-navbar' style='margin-top:-15px; border-radius: 10;'>
+    <div class="container-fluid">
+        <ul class='nav navbar-nav'>
+            {filter_item.{
+            <li {%active%}><a href='{%link%}'>{%title%}</a></li>
+            }}
+            {navbar_item.{            	<li>{%links%}{%titles%}</a></li>
+            }}
+        </ul>
+    </div>
+</nav>
+<div class='row m-t-15'>
+{pagenav.{
+    <div class='text-right'>{%pagenav%}</div>
+}}
+{weblink.{
+    <div id='weblink-{%weblink_id%}' class='col-xs-12 col-sm-{%weblinks_span%} col-md-{%weblinks_span%} col-lg-{%weblinks_span%}'>
+        <div class='panel panel-default'>
+            <div class='panel-body'>
+                <h4 class='weblink_title panel-title'>
+                    <i class='fa fa-fw fa-link'></i><a target='_blank' href='{%weblink_link%}' class='strong'>{%weblink_name%}</a>
+                </h4>
+                <div class='weblink_text m-t-5'>{%weblink_description%}</div>
+                <div class='weblink-category m-t-5'>
+                    <i class="fa fa-fw fa-folder"></i><a href='{%weblink_cat_link%}'>{%weblink_cat_name%}</a>
+                </div>
+            </div>
+            <div class='panel-footer'>
+                <i class='fa fa-fw fa-eye'></i>{%weblink_count%}
+                <i class='fa fa-fw fa-upload m-l-10'></i>{%weblink_datestamp%}
+                {%admin_edit_link%}
+                {%admin_delete_link%}
+            </div>
+        </div>
+    </div>
+}}
+</div>
+{pagenav2.{
+    <div class='text-right'>{%pagenav%}</div>
+}}
+{no_item.{
+    <div class='well text-center m-t-15'>{%message%}</div>
+}}
+{%closetable%}

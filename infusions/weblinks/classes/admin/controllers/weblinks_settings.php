@@ -59,27 +59,27 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
             }
         }
 
-        echo openform("settingsform", "post", FUSION_REQUEST);
+        echo openform('settingsform', 'post', FUSION_REQUEST);
         echo "<div class='well spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
 
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12'>\n";
 
-        echo form_text("links_per_page", $this->locale['WLS_0132'], $weblink_settings['links_per_page'], [
-            "max_length" => 4, "inner_width" => "250px", "type" => "number", 'inline' => TRUE
+        echo form_text('links_per_page', $this->locale['WLS_0132'], $weblink_settings['links_per_page'], [
+            'max_length' => 4, 'inner_width' => '250px', 'type' => 'number', 'inline' => TRUE
         ]);
 
-        echo form_select("links_allow_submission", $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
-            "options" => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
+        echo form_select('links_allow_submission', $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
+            'options' => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
         ]);
 
-        echo form_select("links_extended_required", $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], [
-            "options" => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
+        echo form_select('links_extended_required', $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], [
+            'options' => [$this->locale['disable'], $this->locale['enable']], 'inline' => TRUE
         ]);
         echo "</div>\n";
         echo "</div>\n";
 
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], ["class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"]);
+        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }
