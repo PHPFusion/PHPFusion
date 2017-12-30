@@ -516,9 +516,9 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     endwhile;
                     ?>
                     <th colspan='7'><?php
-                    echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
+                        echo form_checkbox('check_all', $this->locale['WLS_0206'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
-                    add_to_jquery("
+                        add_to_jquery("
                     $('#check_all').bind('click', function() {
                         if ($(this).is(':checked')) {
                             $('input[name^=weblink_id]:checkbox').prop('checked', true);
@@ -529,7 +529,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         }
                     });
                 ");
-                    ?></th>
+                        ?></th>
                 <?php else: ?>
                     <tr>
                         <td colspan="7"
@@ -607,7 +607,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 }
             }
             addNotice("success", sprintf($this->locale['WLS_0115'], $i));
-            if ($i > 0) addNotice("success", $this->locale['WLS_0116']);
+            if ($i > 0)
+                addNotice("success", $this->locale['WLS_0116']);
         }
     }
 

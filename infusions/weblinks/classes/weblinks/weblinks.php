@@ -21,7 +21,6 @@ use \PHPFusion\BreadCrumbs;
 
 /**
  * Class Weblinks
- *
  * @package PHPFusion\Weblinks
  */
 abstract class Weblinks extends WeblinksServer {
@@ -70,6 +69,8 @@ abstract class Weblinks extends WeblinksServer {
      * @return array
      */
     private function get_WeblinkFilters() {
+        $array = [];
+
         $allowed_filters = [
             'latest' => self::$locale['web_0030'],
             'oldest' => self::$locale['web_0032'],
@@ -117,11 +118,14 @@ abstract class Weblinks extends WeblinksServer {
     }
     /**
      * @param array $filters array('condition', 'order', 'limit')
+     *
      * @return string
      */
     /**
      * Executes category information - $_GET['cat_id']
+     *
      * @param $weblink_cat_id
+     *
      * @return array
      */
     public function set_WeblinkCatInfo($weblink_cat_id) {
@@ -260,7 +264,9 @@ abstract class Weblinks extends WeblinksServer {
 
     /**
      * Parse MVC Data output
+     *
      * @param array $data - dbarray of articleQuery()
+     *
      * @return array
      */
     private static function get_WeblinksData(array $data) {
@@ -349,6 +355,7 @@ abstract class Weblinks extends WeblinksServer {
 
     /**
      * Executes single article item information - $_GET['readmore']
+     *
      * @param $weblink_id
      */
     public function set_WeblinkCount($weblink_id) {
@@ -362,10 +369,12 @@ abstract class Weblinks extends WeblinksServer {
         }
     }
 
-    private function weblink_cat_navbar() {        $cookie_expiry = time() + 7 * 24 * 3600;
+    private function weblink_cat_navbar() {
+        $cookie_expiry = time() + 7 * 24 * 3600;
         if (empty($_COOKIE['fusion_weblinks_view'])) {
             setcookie("fusion_weblinks_view", 1, $cookie_expiry);
-        } else if (isset($_GET['switchview']) && isnum($_GET['switchview'])) {            setcookie("fusion_weblinks_view", intval($_GET['switchview']), $cookie_expiry);
+        } else if (isset($_GET['switchview']) && isnum($_GET['switchview'])) {
+            setcookie("fusion_weblinks_view", intval($_GET['switchview']), $cookie_expiry);
             redirect(INFUSIONS.'weblinks/weblinks.php?cat_id='.$_GET['cat_id'].(isset($_GET['type']) ? "&amp;type=".$_GET['type'] : ""));
         }
 
@@ -374,12 +383,12 @@ abstract class Weblinks extends WeblinksServer {
         $inf['span'] = $active == 2 ? 12 : 4;
         $titles = ['', self::$locale['web_0040'], self::$locale['web_0041']];
 
-        for ($i=1; $i<3; $i++) {        	$inf['navbar'][$i] = [
-                'links'   => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa fa-th-large m-r-10'></i>",
-                'titles'  => $titles[$i]
-        	];
-
+        for ($i = 1; $i < 3; $i++) {
+            $inf['navbar'][$i] = [
+                'links'  => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa fa-th-large m-r-10'></i>".$titles[$i]."</a>"
+            ];
         }
+
         return $inf;
     }
 }

@@ -29,12 +29,13 @@ if (!function_exists('render_downloads')) {
 
         $locale = fusion_get_locale();
 
+        opentable($locale['download_1000']);
+
         echo render_breadcrumbs();
 
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
 
-            opentable('');
             echo "<div class='clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-15'>";
             if ($data['admin_link']) {
@@ -114,9 +115,7 @@ if (!function_exists('render_downloads')) {
 
             echo $data['download_show_comments'];
             echo $data['download_allow_ratings'] ? "<a id='rate'>\n</a>\n".$data['download_show_ratings'] : '';
-            closetable();
         } else {
-            echo "<h3>".$info['download_title']."</h3>\n";
             if (!empty($info['download_cat_description'])) {
                 echo "<div class='display-block'>\n";
                 echo $info['download_cat_description'];
@@ -162,6 +161,8 @@ if (!function_exists('render_downloads')) {
             echo "</div>\n";
             echo "<!--sub_download_cat-->";
         }
+
+        closetable();
 
         \PHPFusion\Panels::addPanel('download_menu_panel', display_download_menu($info), \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
     }

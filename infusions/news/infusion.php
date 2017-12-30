@@ -171,4 +171,4 @@ $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
-$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='N'";
+$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='n'";

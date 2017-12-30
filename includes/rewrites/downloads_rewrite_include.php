@@ -29,8 +29,9 @@ $regex = [
     "%download_cat_id%"   => "([0-9]+)",
     "%author_name%"       => "([0-9a-zA-Z._\W]+)",
     "%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
-    "%stype%"             => "(d)",
-    "%filter_type%"       => "([0-9a-zA-Z]+)"
+    "%rowstart%"          => "([0-9]+)",
+    "%filter_type%"       => "([0-9a-zA-Z]+)",
+    "%stype%"             => "(d)"
 ];
 
 $pattern = [
@@ -44,6 +45,7 @@ $pattern = [
     "downloads/category/%download_cat_id%/%download_id%/%download_title%"      => "infusions/downloads/downloads.php?cat_id=%download_cat_id%&amp;download_id=%download_id%",
     "downloads/file/%download_id%/%download_title%"                            => "infusions/downloads/downloads.php?file_id=%download_id%",
     "downloads/%download_id%/%download_title%"                                 => "infusions/downloads/downloads.php?download_id=%download_id%",
+    "downloads/rowstart/%rowstart%"                                            => "infusions/downloads/downloads.php?rowstart=%rowstart%",
     "downloads"                                                                => "infusions/downloads/downloads.php"
 ];
 

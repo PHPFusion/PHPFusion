@@ -134,7 +134,7 @@ $inf_droptable[] = DB_PHOTOS;
 
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='P'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='P'";
-$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='P'";
+$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='p'";
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='PH'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/gallery.php'";
@@ -142,5 +142,5 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 
-//$inf_delfiles[] = IMAGES_G_T;
 //$inf_delfiles[] = IMAGES_G;
+//$inf_delfiles[] = IMAGES_G_T;

@@ -28,16 +28,17 @@ $regex = [
     "%comment_id%"    => "([0-9]+)",
     "%comment_cat%"   => "([0-9]+)",
     "%c_start%"       => "([0-9]+)",
-    "%type%"          => "(B)",
+    "%rowstart%"      => "([0-9]+)",
     "%news_cat_id%"   => "([1-9]{1}[0-9]*)",
     "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
+    "%type%"          => "(N)",
     "%stype%"         => "(n)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
     "%hash_stop%"     => "\#(?=\s*|)"
 ];
 
 $pattern = [
-    "print/%stype%/%news_id%/%news_title%"                                   => "print.php?type=%stype%&amp;item_id=%news_id%",
+    "print/%type%/%news_id%/%news_title%"                                    => "print.php?type=%type%&amp;item_id=%news_id%",
     "submit-%stype%/news"                                                    => "submit.php?stype=%stype%",
     "submit-%stype%/news/submitted-and-thank-you"                            => "submit.php?stype=%stype%&amp;submitted=n",
     "news/%news_id%/%news_title%"                                            => "infusions/news/news.php?readmore=%news_id%",
@@ -52,6 +53,7 @@ $pattern = [
     "news/category/filter/uncategorized"                                     => "infusions/news/news.php?cat_id=0&amp;filter=false",
     "news/category/%news_cat_id%/%news_cat_name%"                            => "infusions/news/news.php?cat_id=%news_cat_id%",
     "news/category/%news_cat_id%/filter/%filter_type%"                       => "infusions/news/news.php?cat_id=%news_cat_id%&amp;type=%filter_type%",
+    "news/rowstart/%rowstart%"                                               => "infusions/news/news.php?rowstart=%rowstart%",
     "news"                                                                   => "infusions/news/news.php"
 ];
 

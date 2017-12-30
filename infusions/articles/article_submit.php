@@ -73,7 +73,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 ];
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
                 addNotice("success", $locale['article_0910']);
-                redirect(clean_request("submitted=A", ["stype"], TRUE));
+                redirect(clean_request("submitted=a", ["stype"], TRUE));
             }
 
             // Display
@@ -90,7 +90,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
         }
 
         // Display Success Message
-        if (isset($_GET['submitted']) && $_GET['submitted'] == "A") {
+        if (isset($_GET['submitted']) && $_GET['submitted'] == "a") {
             echo '<div class="well text-center text-strong">';
             echo '<p>'.$locale['article_0911'].'</p>';
             echo '<p><a href="'.BASEDIR.'submit.php?stype=a" title="'.$locale['article_0912'].'">'.$locale['article_0912'].'</a></p>';

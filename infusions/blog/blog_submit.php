@@ -81,7 +81,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             addNotice("success", $locale['blog_0701']);
             redirect(clean_request("submitted=b", ["stype"], TRUE));
         }
-    } elseif (isset($_POST['preview_blog'])) {
+    } else if (isset($_POST['preview_blog'])) {
         /* lost data after preview */
         $blog_blog = "";
         if ($_POST['blog_blog']) {
@@ -106,7 +106,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             "blog_language" => form_sanitizer($_POST['blog_language'], "", "blog_language"),
         ];
     }
-    $criteriaArray['submitted'] = false;
+    $criteriaArray['submitted'] = FALSE;
     if (\defender::safe() && isset($_POST['preview_blog'])) {
         $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
         $footer .= nl2br(parse_textarea($criteriaArray['blog_blog']));

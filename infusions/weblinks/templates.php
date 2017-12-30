@@ -28,14 +28,16 @@ if (!function_exists('display_main_weblinks')) {
         $html->set_tag('closetable', fusion_get_function('closetable'));
 
         if (!empty($info['weblink_categories'])) {
-            foreach ($info['weblink_categories'] as $cat_id => $cat_data) {                $html->set_block('categories', [
-                    'cat_id' => $cat_data['cat_id'],
-                    'cat_link'   => $cat_data['link'],
-                    'cat_name'  => $cat_data['name'],
-                    'cat_count'  => $cat_data['count'],
-                    'cat_description'  => $cat_data['description']
+            foreach ($info['weblink_categories'] as $cat_id => $cat_data) {
+                $html->set_block('categories', [
+                    'cat_id'          => $cat_data['cat_id'],
+                    'cat_link'        => $cat_data['link'],
+                    'cat_name'        => $cat_data['name'],
+                    'cat_count'       => $cat_data['count'],
+                    'cat_description' => $cat_data['description']
                 ]);
-            }
+
+            }
         } else {
             $html->set_block('no_item', ['message' => fusion_get_locale('web_0062')]);
         }
@@ -64,9 +66,9 @@ if (!function_exists('display_weblinks_item')) {
             $i++;
         }
 
-        foreach ($info['navbar'] as $view_keys => $navbar_link) {            $html->set_block('navbar_item', [
-                'links'   => $navbar_link['links'],
-                'titles'  => $navbar_link['titles']
+        foreach ($info['navbar'] as $view_keys => $navbar_link) {
+            $html->set_block('navbar_item', [
+                'links' => $navbar_link['links']
             ]);
 
         }
@@ -95,4 +97,3 @@ if (!function_exists('display_weblinks_item')) {
         echo $html->get_output();
     }
 }
-

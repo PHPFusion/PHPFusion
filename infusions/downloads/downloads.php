@@ -147,7 +147,7 @@ if (isset($_GET['download_id'])) {
             $data['download_description'] = nl2br(parse_textarea($data['download_description'], FALSE, FALSE, TRUE, FALSE));
             $data['download_file_link'] = INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'];
             $data['download_post_author'] = display_avatar($data, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
-            $data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";
+            $data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."'>".$data['download_cat_name']."</a>";
             $data['download_post_time'] = showdate('shortdate', $data['download_datestamp']);
             $data['download_post_time2'] = $locale['global_049']." ".timer($data['download_datestamp']);
             $data['download_count'] = format_word($data['download_count'], $locale['fmt_download']);
@@ -252,7 +252,7 @@ if (isset($_GET['download_id'])) {
                 LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
                 ".(!empty($filter_join) ? $filter_join : '')."
                 ".(multilang_table("DL") ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." ".groupaccess('download_visibility')."
-                AND download_cat = '".intval($_GET['cat_id'])."'
+                AND d.download_cat = '".intval($_GET['cat_id'])."'
                 GROUP BY d.download_id
                 ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
                 LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']);
