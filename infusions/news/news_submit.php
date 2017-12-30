@@ -24,7 +24,6 @@ $news_settings = get_settings('news');
 $locale = fusion_get_locale('', [NEWS_ADMIN_LOCALE]);
 
 if (iMEMBER && $news_settings['news_allow_submission']) {
-
     $criteriaArray = [
         'news_subject'            => '',
         'news_cat'                => 0,
@@ -38,7 +37,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
     ];
 
     if (isset($_POST['submit_news'])) {
-
         $criteriaArray = [
             'news_subject'  => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
             'news_cat'      => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
@@ -49,7 +47,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         ];
 
         if (!empty($_FILES['news_image']) && $news_settings['news_allow_submission_files']) {
-
             $upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
             if (!empty($upload)) {
                 if (!$upload['error']) {
@@ -72,7 +69,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         }
 
         if (\defender::safe()) {
-
             $inputArray = [
                 'submit_type'      => 'n',
                 'submit_user'      => fusion_get_userdata('user_id'),
@@ -109,7 +105,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
     }
 
     if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
-
         add_to_title($locale['global_200'].$locale['news_0400']);
         echo strtr(display_news_confirm_submissions(), [
             '{%title%}'       => $locale['news_0400'],
@@ -119,7 +114,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         ]);
 
     } else {
-
         add_to_title($locale['global_200'].$locale['news_0400']);
 
         $info = [

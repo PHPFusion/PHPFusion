@@ -26,7 +26,6 @@ use PHPFusion\OpenGraphArticles;
  */
 class ArticlesView extends Articles {
     public function display_articles() {
-
         // Display Article
         if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
             $info = $this->set_ArticlesItemInfo($_GET['article_id']);
@@ -38,9 +37,8 @@ class ArticlesView extends Articles {
             $info = $this->set_ArticlesCatInfo($_GET['cat_id']);
             display_main_articles($info);
             OpenGraphArticles::ogArticleCat($_GET['cat_id']);
-
-            // Display Overview
         } else {
+            // Display Overview
             $info = $this->set_ArticlesInfo();
             display_main_articles($info);
         }

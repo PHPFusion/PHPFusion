@@ -18,7 +18,6 @@
 namespace PHPFusion\News;
 
 class NewsServer {
-
     protected static $news_settings = [];
     private static $news_instance = NULL;
     private static $news_admin_instance = NULL;

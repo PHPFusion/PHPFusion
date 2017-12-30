@@ -27,7 +27,6 @@ if (!defined("IN_FUSION")) {
  * @package PHPFusion\News
  */
 class News_Preview extends News {
-
     private $news_data = [];
 
     public function set_PreviewData($data) {

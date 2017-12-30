@@ -108,16 +108,16 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             redirect(clean_request("", ["section", "aid"], TRUE));
         }
     }
-    $tab_title['title'][] = $locale['download_0023'];
-    $tab_title['id'][] = "dlcats_form";
-    $tab_title['icon'][] = "";
-    $tab_title['title'][] = $locale['download_0020'];
-    $tab_title['id'][] = "dlcats";
-    $tab_title['icon'][] = "";
-    $tab_active = tab_active($tab_title, isset($_GET['cat_view']) ? 1 : 0);
+    $tab['title'][] = $locale['download_0023'];
+    $tab['id'][] = "dlcats_form";
+    $tab['icon'][] = "";
+    $tab['title'][] = $locale['download_0020'];
+    $tab['id'][] = "dlcats";
+    $tab['icon'][] = "";
+    $tab_active = tab_active($tab, isset($_GET['cat_view']) ? 1 : 0);
 
-    echo opentab($tab_title, $tab_active, 'dcategory', FALSE, "nav-tabs m-t-10");
-    echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
+    echo opentab($tab, $tab_active, 'dcategory', FALSE, "nav-tabs m-t-10");
+    echo opentabbody($tab['title'][0], $tab['id'][0], $tab_active);
     echo openform('addcat', 'post', FUSION_REQUEST, ['class' => 'm-t-20']);
     echo "<div class='row'>\n";
     echo "<div class='col-xs-12 col-sm-8'>\n";
@@ -177,7 +177,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo form_button('save_cat', $locale['download_0309'], $locale['download_0309'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
     echo closeform();
     echo closetabbody();
-    echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
+    echo opentabbody($tab['title'][1], $tab['id'][1], $tab_active);
     $row_num = 0;
     showcatlist();
     if ($row_num == 0) {

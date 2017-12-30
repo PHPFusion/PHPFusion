@@ -21,7 +21,6 @@ use PHPFusion\BreadCrumbs;
 use PHPFusion\Feedback\Comments;
 
 abstract class News extends NewsServer {
-
     protected static $locale = [];
     public $info = [];
 
@@ -303,9 +302,7 @@ abstract class News extends NewsServer {
      * @return array
      */
     protected static function get_NewsData(array $data) {
-
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
-
         $news_settings = self::get_news_settings();
 
         if (!empty($data)) {
@@ -439,7 +436,6 @@ abstract class News extends NewsServer {
      * @return array
      */
     public function set_NewsCatInfo($news_cat_id) {
-
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         $info = [
@@ -549,7 +545,6 @@ abstract class News extends NewsServer {
      * @param $news_cat_index - hierarchy array
      */
     private function news_cat_breadcrumbs($news_cat_index) {
-
         $locale = fusion_get_locale('', NEWS_LOCALE);
 
         /* Make an infinity traverse */

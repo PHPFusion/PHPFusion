@@ -80,24 +80,24 @@ $allowed_pages = [
 ];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "blog";
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? TRUE : FALSE;
-$master_title['title'][] = $locale['blog_0400'];
-$master_title['id'][] = 'blog';
-$master_title['icon'][] = 'fa fa-graduation-cap';
-$master_title['title'][] = $edit ? $locale['blog_0402'] : $locale['blog_0401'];
-$master_title['id'][] = 'blog_form';
-$master_title['icon'][] = 'fa fa-plus';
-$master_title['title'][] = $locale['blog_0502'];
-$master_title['id'][] = 'blog_category';
-$master_title['icon'][] = 'fa fa-folder';
-$master_title['title'][] = $locale['blog_0600']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'")."</span>";
-$master_title['id'][] = 'submissions';
-$master_title['icon'][] = 'fa fa-fw fa-inbox';
-$master_title['title'][] = $locale['blog_0406'];
-$master_title['id'][] = 'settings';
-$master_title['icon'][] = 'fa fa-cogs';
+$tab['title'][] = $locale['blog_0400'];
+$tab['id'][] = 'blog';
+$tab['icon'][] = 'fa fa-graduation-cap';
+$tab['title'][] = $edit ? $locale['blog_0402'] : $locale['blog_0401'];
+$tab['id'][] = 'blog_form';
+$tab['icon'][] = 'fa fa-plus';
+$tab['title'][] = $locale['blog_0502'];
+$tab['id'][] = 'blog_category';
+$tab['icon'][] = 'fa fa-folder';
+$tab['title'][] = $locale['blog_0600']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'")."</span>";
+$tab['id'][] = 'submissions';
+$tab['icon'][] = 'fa fa-fw fa-inbox';
+$tab['title'][] = $locale['blog_0406'];
+$tab['id'][] = 'settings';
+$tab['icon'][] = 'fa fa-cogs';
 $tab_active = $_GET['section'];
 opentable($locale['blog_0405']);
-echo opentab($master_title, $tab_active, "blog", TRUE, "", "section", ['rowstart', 'filter_cid']);
+echo opentab($tab, $tab_active, "blog", TRUE, "", "section", ['rowstart', 'filter_cid']);
 switch ($_GET['section']) {
     case "blog_form":
         include "admin/blog.php";
@@ -117,6 +117,7 @@ switch ($_GET['section']) {
 echo closetab();
 closetable();
 require_once THEMES."templates/footer.php";
+
 /**
  * Blog Listing HTML
  */
@@ -135,8 +136,7 @@ function blog_listing() {
         "all" => $locale['blog_0460'],
         "0"   => $locale['blog_0424']
     ];
-    $categories = dbquery("select blog_cat_id, blog_cat_name
-				from ".DB_BLOG_CATS." ".(multilang_table("BL") ? "where blog_cat_language='".LANGUAGE."'" : "")."");
+    $categories = dbquery("select blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "where blog_cat_language='".LANGUAGE."'" : "")."");
     if (dbrows($categories) > 0) {
         while ($cat_data = dbarray($categories)) {
             $catOpts[$cat_data['blog_cat_id']] = $cat_data['blog_cat_name'];
@@ -155,11 +155,11 @@ function blog_listing() {
     $filter = $catFilter.$langFilter;
 
     $result = dbquery("
-	SELECT blog_id, blog_cat, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft
-	FROM ".DB_BLOG."
-	".($filter ? "WHERE ".$filter : "")."
-	ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC LIMIT $rowstart, $limit
-	");
+    SELECT blog_id, blog_cat, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft
+    FROM ".DB_BLOG."
+    ".($filter ? "WHERE ".$filter : "")."
+    ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC LIMIT $rowstart, $limit
+    ");
 
     $rows = dbrows($result);
     echo "<div class='clearfix m-t-10'>\n";
@@ -188,7 +188,7 @@ function blog_listing() {
         echo "</div>\n";
     }
     if ($total_rows > $rows) {
-    	$filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
+        $filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
         echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["section"], FALSE).$filter);
     }
     echo "</div>\n";
@@ -242,7 +242,7 @@ function blog_listing() {
     echo "</ul>\n";
 
     if ($total_rows > $rows) {
-    	$filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
+        $filter = isset($_GET['filter_cid']) ? "&amp;filter_cid=".$_GET['filter_cid']."&amp;" : '&amp;';
         echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["section"], FALSE).$filter);
     }
 

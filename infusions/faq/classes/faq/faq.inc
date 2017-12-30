@@ -26,7 +26,6 @@ use PHPFusion\SiteLinks;
  * @package PHPFusion\FAQ
  */
 abstract class Faq extends FaqServer {
-
     private static $locale = array();
     public $info = array();
 

@@ -36,20 +36,11 @@ if (!defined("ARTICLE_ADMIN_LOCALE")) {
 }
 
 // Paths
-if (!defined("ARTICLE_CLASS")) {
-    define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
-}
-if (!defined("IMAGES_A")) {
-    define("IMAGES_A", INFUSIONS."articles/images/");
-}
-
+if (!defined("ARTICLE_CLASS")) define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
+if (!defined("IMAGES_A")) define("IMAGES_A", INFUSIONS."articles/images/");
 // Database
-if (!defined("DB_ARTICLE_CATS")) {
-    define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
-}
-if (!defined("DB_ARTICLES")) {
-    define("DB_ARTICLES", DB_PREFIX."articles");
-}
+if (!defined("DB_ARTICLE_CATS")) define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
+if (!defined("DB_ARTICLES")) define("DB_ARTICLES", DB_PREFIX."articles");
 
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");

@@ -18,7 +18,6 @@
 namespace PHPFusion\Articles;
 
 class ArticlesServer {
-
     protected static $article_settings = [];
     private static $article_instance = NULL;
     private static $article_admin_instance = NULL;
@@ -43,6 +42,7 @@ class ArticlesServer {
         if (empty(self::$article_settings)) {
             self::$article_settings = get_settings("article");
         }
+
         return self::$article_settings;
     }
 }

@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: downloads.php
 | Author: PHP-Fusion Development Team
-| Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -40,28 +39,28 @@ $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['downl
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['download_id']) ? TRUE : FALSE;
 $catEdit = isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) ? TRUE : FALSE;
 // master template
-$master_tab_title['title'][] = $locale['download_0000'];
-$master_tab_title['id'][] = "downloads";
-$master_tab_title['icon'][] = "fa fa-cloud-download";
+$tab['title'][] = $locale['download_0000'];
+$tab['id'][] = "downloads";
+$tab['icon'][] = "fa fa-cloud-download";
 
-$master_tab_title['title'][] = $edit ? $locale['download_0003'] : $locale['download_0002'];
-$master_tab_title['id'][] = "download_form";
-$master_tab_title['icon'][] = $edit ? "fa fa-pencil" : "fa fa-plus";
+$tab['title'][] = $edit ? $locale['download_0003'] : $locale['download_0002'];
+$tab['id'][] = "download_form";
+$tab['icon'][] = $edit ? "fa fa-pencil" : "fa fa-plus";
 
-$master_tab_title['title'][] = $catEdit ? $locale['download_0021'] : $locale['download_0022'];
-$master_tab_title['id'][] = "download_category";
-$master_tab_title['icon'][] = $catEdit ? "fa fa-pencil" : "fa fa-folder";
+$tab['title'][] = $catEdit ? $locale['download_0021'] : $locale['download_0022'];
+$tab['id'][] = "download_category";
+$tab['icon'][] = $catEdit ? "fa fa-pencil" : "fa fa-folder";
 
-$master_tab_title['title'][] = $locale['download_0049']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'")."</span>";
-$master_tab_title['id'][] = "submissions";
-$master_tab_title['icon'][] = "fa fa-inbox";
+$tab['title'][] = $locale['download_0049']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'")."</span>";
+$tab['id'][] = "submissions";
+$tab['icon'][] = "fa fa-inbox";
 
-$master_tab_title['title'][] = $locale['download_0006'];
-$master_tab_title['id'][] = "download_settings";
-$master_tab_title['icon'][] = "fa fa-cogs";
+$tab['title'][] = $locale['download_0006'];
+$tab['id'][] = "download_settings";
+$tab['icon'][] = "fa fa-cogs";
 
 opentable($locale['download_0001']);
-echo opentab($master_tab_title, $_GET['section'], "download_admin", TRUE);
+echo opentab($tab, $_GET['section'], "download_admin", TRUE);
 
 switch ($_GET['section']) {
     case "download_form":

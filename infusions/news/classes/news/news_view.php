@@ -25,7 +25,6 @@ use PHPFusion\OpenGraphNews;
  * @package PHPFusion\News
  */
 class NewsView extends News {
-
     public function display_news() {
         if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             // Item Result

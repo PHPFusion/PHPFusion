@@ -18,7 +18,6 @@
 namespace PHPFusion\FAQ;
 
 class FaqSubmissionsAdmin extends FaqAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
     private $inputArray = [];
@@ -36,9 +35,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     }
 
     private function handlePostSubmission() {
-
         if (isset($_POST['publish_submission']) || isset($_POST['preview_submission'])) {
-
             // Check posted Informations
             $faq_answer = "";
             if ($_POST['faq_answer']) {
@@ -91,8 +88,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
      * Display Form
      */
     private function displayForm() {
-
-
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = [
@@ -241,7 +236,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
      * Display List with Submissions
      */
     private function displaySubmissionList() {
-
         $criteria = [
             'criteria'  => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
             'join'      => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
@@ -266,7 +260,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         echo "<tbody>\n";
 
         if (!empty($data)) {
-
             foreach ($data as $key => $info) {
                 $submitData = unserialize($info['submit_criteria']);
                 $submitUser = $this->locale['user_na'];
@@ -342,5 +335,4 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             redirect(clean_request("", ["submit_id"], FALSE));
         }
     }
-
 }

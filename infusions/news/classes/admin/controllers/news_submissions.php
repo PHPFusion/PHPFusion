@@ -18,7 +18,6 @@
 namespace PHPFusion\News;
 
 class NewsSubmissionsAdmin extends NewsAdminModel {
-
     private static $instance = NULL;
     private static $locale = [];
     private $news_data = [];

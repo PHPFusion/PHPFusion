@@ -20,7 +20,6 @@ namespace PHPFusion\News;
 use \PHPFusion\BreadCrumbs;
 
 class NewsSettingsAdmin extends NewsAdminModel {
-
     private static $instance = NULL;
 
     public static function getInstance() {
@@ -32,7 +31,6 @@ class NewsSettingsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-
         pageAccess("S8");
         $locale = self::get_newsAdminLocale();
         $news_settings = self::get_news_settings();

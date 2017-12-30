@@ -45,7 +45,7 @@ if (isset($_POST['save_album'])) {
     ];
     if (empty($data['album_order'])) {
         $data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS."
-				".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0) + 1;
+                ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0) + 1;
     }
     // do delete image
     if (defender::safe()) {

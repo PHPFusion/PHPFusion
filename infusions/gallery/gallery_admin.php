@@ -25,25 +25,6 @@ require_once INCLUDES."infusions_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
-if (!empty($_GET['section'])) {
-    switch ($_GET['section']) {
-        case "photo_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
-            break;
-        case "album_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
-            break;
-        case "actions":
-            break;
-        case "settings":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
-            break;
-        case "submissions":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
-            break;
-        default:
-    }
-}
 
 add_to_head("
 <style>
@@ -84,21 +65,21 @@ add_to_head("
 ");
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
-$gallery_tab['title'][] = $locale['gallery_0001'];
-$gallery_tab['id'][] = "gallery";
-$gallery_tab['icon'][] = "fa fa-camera-retro";
-$gallery_tab['title'][] = $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002'];
-$gallery_tab['id'][] = "photo_form";
-$gallery_tab['icon'][] = "fa fa-picture-o";
-$gallery_tab['title'][] = $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004'];
-$gallery_tab['id'][] = "album_form";
-$gallery_tab['icon'][] = "fa fa-plus";
-$gallery_tab['title'][] = $locale['gallery_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'")."</span>";
-$gallery_tab['id'][] = "submissions";
-$gallery_tab['icon'][] = "fa fa-inbox";
-$gallery_tab['title'][] = $locale['gallery_0006'];
-$gallery_tab['id'][] = "settings";
-$gallery_tab['icon'][] = "fa fa-cogs";
+$tab['title'][] = $locale['gallery_0001'];
+$tab['id'][] = "gallery";
+$tab['icon'][] = "fa fa-camera-retro";
+$tab['title'][] = $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002'];
+$tab['id'][] = "photo_form";
+$tab['icon'][] = "fa fa-picture-o";
+$tab['title'][] = $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004'];
+$tab['id'][] = "album_form";
+$tab['icon'][] = "fa fa-plus";
+$tab['title'][] = $locale['gallery_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'")."</span>";
+$tab['id'][] = "submissions";
+$tab['icon'][] = "fa fa-inbox";
+$tab['title'][] = $locale['gallery_0006'];
+$tab['id'][] = "settings";
+$tab['icon'][] = "fa fa-cogs";
 $allowed_pages = ["album_form", "photo_form", "settings", "submissions", "actions"];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
 $_GET['album'] = 0;
@@ -116,22 +97,26 @@ if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 }
 
 opentable($locale['gallery_0001']);
-echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20", 'section', ['album_id']);
+echo opentab($tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20", 'section', ['album_id']);
 switch ($_GET['section']) {
     case "photo_form":
         include "admin/photos.php";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0002']]);
         break;
     case "album_form":
         include "admin/gallery_cat.php";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0004']]);
         break;
     case "actions":
         include "admin/gallery_actions.php";
         break;
     case "settings":
         include "admin/gallery_settings.php";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0006']]);
         break;
     case "submissions":
         include "admin/photo_submissions.php";
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['gallery_0007']]);
         break;
     default:
         if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
@@ -168,7 +153,6 @@ function rating_count($id, $type) {
 }
 
 function gallery_photo_listing() {
-
     $locale = fusion_get_locale();
     $gll_settings = get_settings('gallery');
     $aidlink = fusion_get_aidlink();
@@ -262,7 +246,6 @@ function gallery_photo_listing() {
  * Gallery Album Listing UI
  */
 function gallery_album_listing() {
-
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $gll_settings = get_settings('gallery');

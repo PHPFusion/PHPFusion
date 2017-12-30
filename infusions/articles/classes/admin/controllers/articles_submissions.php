@@ -148,7 +148,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * Display Form
      */
     private function displayForm() {
-
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $articleSnippetSettings = [

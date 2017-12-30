@@ -18,7 +18,6 @@
 namespace PHPFusion\News;
 
 class NewsAdminModel extends NewsServer {
-
     private static $admin_locale = [];
 
     /**

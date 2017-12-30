@@ -30,7 +30,6 @@ class FaqSettingsAdmin extends FaqAdminModel {
     }
 
     public function displayFaqAdmin() {
-
         pageAccess("FQ");
         $this->locale = self::get_faqAdminLocale();
 

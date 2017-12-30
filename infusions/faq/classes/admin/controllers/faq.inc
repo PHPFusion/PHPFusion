@@ -18,7 +18,6 @@
 namespace PHPFusion\FAQ;
 
 class FaqAdmin extends FaqAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
     private $faq_data = [];
@@ -59,7 +58,6 @@ class FaqAdmin extends FaqAdminModel {
      * Displays Faq Form
      */
     private function display_faq_form() {
-
         // Delete
         self::execute_Delete();
 
@@ -70,7 +68,6 @@ class FaqAdmin extends FaqAdminModel {
          * Global vars
          */
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['faq_id']) && isnum($_POST['faq_id'])) || (isset($_GET['faq_id']) && isnum($_GET['faq_id']))) {
-
             $id = (!empty($_POST['faq_id']) ? $_POST['faq_id'] : $_GET['faq_id']);
             $criteria = [
                 'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
@@ -95,7 +92,7 @@ class FaqAdmin extends FaqAdminModel {
 
         $result = dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
             FROM ".DB_FAQS." ac
-			".(!empty($filters['join']) ? $filters['join'] : "")."
+            ".(!empty($filters['join']) ? $filters['join'] : "")."
             WHERE ".(!empty($filters['where']) ? $filters['where'] : "").
             (!empty($filters['sql_condition']) ? $filters['sql_condition'] : "")."
             GROUP BY ac.faq_id
@@ -110,7 +107,6 @@ class FaqAdmin extends FaqAdminModel {
      * Create or Update
      */
     private function execute_Update() {
-
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
 
             // Check posted Informations
@@ -166,7 +162,6 @@ class FaqAdmin extends FaqAdminModel {
      * Display Form
      */
     private function faqContent_form() {
-
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = [
@@ -276,7 +271,6 @@ class FaqAdmin extends FaqAdminModel {
     ];
 
     private function display_faq_category_form() {
-
         if (isset($_POST['save_cat'])) {
             $this->cat_data = [
                 'faq_cat_id'          => form_sanitizer($_POST['faq_cat_id'], '', 'faq_cat_id'),

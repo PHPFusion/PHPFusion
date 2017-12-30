@@ -18,7 +18,6 @@
 namespace PHPFusion\FAQ;
 
 class FaqSubmissions extends FaqServer {
-
     public $info = array();
     private $locale = array();
     private static $instance = NULL;
@@ -32,7 +31,6 @@ class FaqSubmissions extends FaqServer {
     }
 
     public function displayFaq() {
-
         $this->locale = fusion_get_locale("", FAQ_LOCALE);
         add_to_title($this->locale['faq_0900']);
         opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['faq_0900']);

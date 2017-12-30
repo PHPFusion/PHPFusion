@@ -18,9 +18,7 @@
 namespace PHPFusion\FAQ;
 
 class FaqAdminModel extends FaqServer {
-
     private static $admin_locale = [];
-
     protected $default_data = [
         'faq_id'         => 0,
         'faq_cat_id'     => 0,

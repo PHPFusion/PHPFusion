@@ -20,7 +20,6 @@ namespace PHPFusion\FAQ;
 use PHPFusion\BreadCrumbs;
 
 class FaqAdminView extends FaqAdminModel {
-
     private $allowed_pages = ['faq', 'faq_cat', 'faq_cat_form', 'faq_form', 'submissions', 'settings'];
     private $locale = [];
 
@@ -69,26 +68,26 @@ class FaqAdminView extends FaqAdminModel {
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
-            $master_title['title'][] = $this->locale['back'];
-            $master_title['id'][] = 'back';
-            $master_title['icon'][] = 'fa fa-fw fa-arrow-left';
+            $tab['title'][] = $this->locale['back'];
+            $tab['id'][] = 'back';
+            $tab['icon'][] = 'fa fa-fw fa-arrow-left';
         }
 
-        $master_title['title'][] = $faqTitle;
-        $master_title['id'][] = 'faq';
-        $master_title['icon'][] = 'fa fa-question-circle';
+        $tab['title'][] = $faqTitle;
+        $tab['id'][] = 'faq';
+        $tab['icon'][] = 'fa fa-question-circle';
 
-        $master_title['title'][] = $this->locale['faq_0005'].'&nbsp;<span class=\'badge\'>'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'").'</span>';
-        $master_title['id'][] = 'submissions';
-        $master_title['icon'][] = 'fa fa-inbox';
+        $tab['title'][] = $this->locale['faq_0005'].'&nbsp;<span class=\'badge\'>'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'").'</span>';
+        $tab['id'][] = 'submissions';
+        $tab['icon'][] = 'fa fa-inbox';
 
-        $master_title['title'][] = $this->locale['faq_0006'];
-        $master_title['id'][] = 'settings';
-        $master_title['icon'][] = 'fa fa-cogs';
+        $tab['title'][] = $this->locale['faq_0006'];
+        $tab['id'][] = 'settings';
+        $tab['icon'][] = 'fa fa-cogs';
 
         // Display Content
         opentable($this->locale['faq_0000']);
-        echo opentab($master_title, $_GET['section'], 'faq_admin', TRUE, '', 'section');
+        echo opentab($tab, $_GET['section'], 'faq_admin', TRUE, '', 'section');
         switch ($_GET['section']) {
             case 'submissions':
                 FaqSubmissionsAdmin::getInstance()->displayFaqAdmin();

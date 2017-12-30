@@ -20,7 +20,6 @@ namespace PHPFusion\News;
 use PHPFusion\BreadCrumbs;
 
 class NewsAdminView extends NewsAdminModel {
-
     private $allowed_pages = ["news", "news_category", "news_form", "submissions", "settings"];
 
     public function display_admin() {
@@ -36,9 +35,9 @@ class NewsAdminView extends NewsAdminModel {
         add_to_title($locale['news_0001']);
 
         if (!empty($_GET['ref'])) {
-            $master_title['title'][] = $locale['back'];
-            $master_title['id'][] = 'back';
-            $master_title['icon'][] = 'fa fa-arrow-left';
+            $tab['title'][] = $locale['back'];
+            $tab['id'][] = 'back';
+            $tab['icon'][] = 'fa fa-arrow-left';
         }
 
         $news_title = $locale['news_0001'];
@@ -52,9 +51,9 @@ class NewsAdminView extends NewsAdminModel {
             }
         }
 
-        $master_title['title'][] = $news_title;
-        $master_title['id'][] = 'news';
-        $master_title['icon'][] = $news_icon;
+        $tab['title'][] = $news_title;
+        $tab['id'][] = 'news';
+        $tab['icon'][] = $news_icon;
 
         $news_cat_title = $locale['news_0020'];
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
@@ -78,19 +77,19 @@ class NewsAdminView extends NewsAdminModel {
             }
         }
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
-        $master_title['title'][] = $news_cat_title;
-        $master_title['id'][] = 'news_category';
-        $master_title['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-folder';
-        $master_title['title'][] = $locale['news_0023']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")."</span>";
-        $master_title['id'][] = 'submissions';
-        $master_title['icon'][] = 'fa fa-inbox';
-        $master_title['title'][] = $locale['news_0004'];
-        $master_title['id'][] = 'settings';
-        $master_title['icon'][] = 'fa fa-cogs';
+        $tab['title'][] = $news_cat_title;
+        $tab['id'][] = 'news_category';
+        $tab['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-folder';
+        $tab['title'][] = $locale['news_0023']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")."</span>";
+        $tab['id'][] = 'submissions';
+        $tab['icon'][] = 'fa fa-inbox';
+        $tab['title'][] = $locale['news_0004'];
+        $tab['id'][] = 'settings';
+        $tab['icon'][] = 'fa fa-cogs';
 
         opentable($locale['news_0001']);
 
-        echo opentab($master_title, $_GET['section'], "news_admin", TRUE, '', 'section');
+        echo opentab($tab, $_GET['section'], "news_admin", TRUE, '', 'section');
         switch ($_GET['section']) {
             case "news_category":
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();

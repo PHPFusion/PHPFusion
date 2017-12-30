@@ -18,7 +18,6 @@
 namespace PHPFusion\Articles;
 
 class ArticlesCategoryAdmin extends ArticlesAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
 

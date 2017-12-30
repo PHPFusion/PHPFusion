@@ -40,12 +40,7 @@ abstract class Articles extends ArticlesServer {
 
         set_title(self::$locale['article_0000']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(
-            [
-                "link"  => INFUSIONS."articles/articles.php",
-                "title" => self::$locale['article_0000']
-            ]
-        );
+        BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."articles/articles.php", "title" => self::$locale['article_0000']]);
 
         $info = [
             "article_cat_id"          => intval(0),
@@ -120,7 +115,6 @@ abstract class Articles extends ArticlesServer {
      * @return array
      */
     public function get_ArticleItems($filter = []) {
-
         $info['article_total_rows'] = dbcount("(article_id)", DB_ARTICLES, groupaccess("article_visibility")." AND article_draft='0'");
 
         if ($info['article_total_rows']) {
@@ -186,7 +180,6 @@ abstract class Articles extends ArticlesServer {
      * most rated
      */
     private static function check_ArticlesFilter() {
-
         /* Filter Construct */
         $filter = ["recent", "comment", "rating"];
 
@@ -219,7 +212,6 @@ abstract class Articles extends ArticlesServer {
      * @return array
      */
     private static function get_ArticlesData(array $data) {
-
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         if (!empty($data)) {

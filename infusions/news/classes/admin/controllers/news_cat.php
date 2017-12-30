@@ -20,7 +20,6 @@ namespace PHPFusion\News;
 use PHPFusion\BreadCrumbs;
 
 class NewsCategoryAdmin extends NewsAdminModel {
-
     private static $instance = NULL;
     private static $locale = [];
 
@@ -46,7 +45,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
      * Displays News Category Form
      */
     private function display_news_cat_form() {
-
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=news_category");
         }
@@ -219,7 +217,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
      * Displays News Category Listing
      */
     private function display_news_cat_listing() {
-
         $_GET['rowstart'] = isset(
             $_GET['rowstart']) && isnum($_GET['rowstart']) &&
         $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS, ""

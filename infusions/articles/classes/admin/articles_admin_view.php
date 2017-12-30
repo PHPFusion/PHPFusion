@@ -20,7 +20,6 @@ namespace PHPFusion\Articles;
 use \PHPFusion\BreadCrumbs;
 
 class ArticlesAdminView extends ArticlesAdminModel {
-
     private $allowed_pages = ["article", "article_category", "article_form", "submissions", "settings"];
     private static $locale = [];
 
@@ -92,27 +91,27 @@ class ArticlesAdminView extends ArticlesAdminModel {
 
         // Handle Tabs
         if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
-            $master_title['title'][] = self::$locale['back'];
-            $master_title['id'][] = "back";
-            $master_title['icon'][] = "fa fa-fw fa-arrow-left";
+            $tab['title'][] = self::$locale['back'];
+            $tab['id'][] = "back";
+            $tab['icon'][] = "fa fa-fw fa-arrow-left";
         }
-        $master_title['title'][] = $articleTitle;
-        $master_title['id'][] = "article";
-        $master_title['icon'][] = "fa fa-fw fa-file-text";
-        $master_title['title'][] = $articleCatTitle;
-        $master_title['id'][] = "article_category";
-        $master_title['icon'][] = "fa fa-fw fa-folder";
-        $master_title['title'][] = self::$locale['article_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'")."</span>";
-        $master_title['id'][] = "submissions";
-        $master_title['icon'][] = "fa fa-fw fa-inbox";
-        $master_title['title'][] = self::$locale['article_0008'];
-        $master_title['id'][] = "settings";
-        $master_title['icon'][] = "fa fa-fw fa-cogs";
+        $tab['title'][] = $articleTitle;
+        $tab['id'][] = "article";
+        $tab['icon'][] = "fa fa-fw fa-file-text";
+        $tab['title'][] = $articleCatTitle;
+        $tab['id'][] = "article_category";
+        $tab['icon'][] = "fa fa-fw fa-folder";
+        $tab['title'][] = self::$locale['article_0007']."&nbsp;<span class='badge'>".dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'")."</span>";
+        $tab['id'][] = "submissions";
+        $tab['icon'][] = "fa fa-fw fa-inbox";
+        $tab['title'][] = self::$locale['article_0008'];
+        $tab['id'][] = "settings";
+        $tab['icon'][] = "fa fa-fw fa-cogs";
 
         // Display Content
         opentable(self::$locale['article_0000']);
 
-        echo opentab($master_title, $_GET['section'], "articles_admin", TRUE, "", "section", ['article_display', 'rowstart']);
+        echo opentab($tab, $_GET['section'], "articles_admin", TRUE, "", "section", ['article_display', 'rowstart']);
         switch ($_GET['section']) {
             case "article_category":
                 ArticlesCategoryAdmin::getInstance()->displayArticlesAdmin();

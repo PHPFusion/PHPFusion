@@ -169,8 +169,7 @@ if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id'
     $result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
     if (dbrows($result) > 0) { // album verified
         $albumData = dbarray($result);
-        $photoResult = dbquery("select photo_id, photo_filename, photo_thumb1, photo_thumb2
-        from ".DB_PHOTOS." where album_id='".intval($_GET['cat_id'])."'");
+        $photoResult = dbquery("select photo_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." where album_id='".intval($_GET['cat_id'])."'");
         if (dbrows($photoResult) > 0) {
             if (!isset($_POST['purge_confirm'])) {
                 echo str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['photo_0026'])."<br/><br/>\n";

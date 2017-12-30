@@ -18,7 +18,6 @@
 namespace PHPFusion\Articles;
 
 class ArticlesAdminModel extends ArticlesServer {
-
     private static $admin_locale = [];
 
     /**
@@ -30,7 +29,7 @@ class ArticlesAdminModel extends ArticlesServer {
         "article_draft"          => 0,
         "article_snippet"        => "",
         "article_article"        => "",
-        "article_datestamp"      => TIME, //time(),
+        "article_datestamp"      => TIME,
         "article_keywords"       => "",
         "article_breaks"         => "n",
         "article_allow_comments" => 1,

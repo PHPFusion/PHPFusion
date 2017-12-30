@@ -18,7 +18,6 @@
 namespace PHPFusion\Articles;
 
 class ArticlesSettingsAdmin extends ArticlesAdminModel {
-
     private static $instance = NULL;
     private $locale = [];
 
@@ -31,7 +30,6 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-
         pageAccess("A");
         $this->locale = self::get_articleAdminLocale();
         $article_settings = self::get_article_settings();

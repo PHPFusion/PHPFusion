@@ -21,7 +21,6 @@ class FaqServer {
     private static $faq_instance = NULL;
     private static $faq_submit_instance = NULL;
     private static $faq_admin_instance = NULL;
-
     protected static $faq_settings = [
         "faq_pagination"       => 1,
         "faq_allow_submission" => 0
