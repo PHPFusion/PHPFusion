@@ -59,7 +59,7 @@ if (!function_exists('display_weblinks_item')) {
         $i = 0;
         foreach ($info['weblink_filter'] as $view_keys => $page_link) {
             $html->set_block('filter_item', [
-                'active' => ((!isset($_GET['type']) && (!$i)) || (isset($_GET['type']) && $_GET['type'] === $view_keys) ? " class='active'" : ''),
+                'active' => ((!isset($_GET['type']) && (!$i)) || (isset($_GET['type']) && $_GET['type'] === $view_keys) ? "text-dark strong" : ''),
                 'link'   => $page_link['link'],
                 'title'  => $page_link['name']
             ]);
