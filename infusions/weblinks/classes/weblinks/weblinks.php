@@ -381,11 +381,20 @@ abstract class Weblinks extends WeblinksServer {
         $active = isset($_COOKIE['fusion_weblinks_view']) && isnum($_COOKIE['fusion_weblinks_view']) && $_COOKIE['fusion_weblinks_view'] == 2 ? 2 : 1;
 
         $inf['span'] = $active == 2 ? 12 : 4;
-        $titles = ['', self::$locale['web_0040'], self::$locale['web_0041']];
+        $titles = [
+            1 => [
+                'locale' => self::$locale['web_0040'],
+                'buton'  => 'fa-th-large'
+            ],
+            2 => [
+                'locale' => self::$locale['web_0041'],
+                'buton'  => 'fa-bars'
+            ]
+        ];
 
         for ($i = 1; $i < 3; $i++) {
             $inf['navbar'][$i] = [
-                'links'  => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa fa-th-large m-r-10'></i>".$titles[$i]."</a>"
+                'links'  => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa ".$titles[$i]['buton']." m-r-10'></i>".$titles[$i]['locale']."</a>"
             ];
         }
 
