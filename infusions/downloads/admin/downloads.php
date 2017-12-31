@@ -38,7 +38,7 @@ $data = [
     'download_visibility'        => 0,
     'download_allow_comments'    => 0,
     'download_allow_ratings'     => 0,
-    'download_datestamp'         => TIME
+    'download_datestamp'         => ''
 ];
 
 /* Delete Screenshot, Delete Files */
@@ -99,7 +99,7 @@ if (isset($_POST['save_download'])) {
         'download_visibility'        => form_sanitizer($_POST['download_visibility'], '0', 'download_visibility'),
         'download_allow_comments'    => isset($_POST['download_allow_comments']) ? 1 : 0,
         'download_allow_ratings'     => isset($_POST['download_allow_ratings']) ? 1 : 0,
-        'download_datestamp'         => isset($_POST['update_datestamp']) ? time() : $data['download_datestamp']
+        'download_datestamp'         => isset($_POST['update_datestamp']) ? TIME : $data['download_datestamp']
     ];
 
     /** Bugs with having Link and File together -- File will take precedence **/
@@ -141,6 +141,7 @@ if (isset($_POST['save_download'])) {
             $data['download_image_thumb'] = $upload['thumb1_name'];
         }
     }
+
     if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
         dbquery_insert(DB_DOWNLOADS, $data, 'update');
         if (\defender::safe()) {
@@ -333,8 +334,8 @@ closeside();
 openside('');
 echo form_checkbox('download_allow_comments', $locale['download_0223'], $data['download_allow_comments'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 echo form_checkbox('download_allow_ratings', $locale['download_0224'], $data['download_allow_ratings'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
-if (isset($_GET['action']) && $_GET['action'] == "edit") {
-    echo form_checkbox('update_datestamp', $locale['download_0213'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
+if (isset($_GET['action']) && $_GET['action'] === "edit") {
+    echo form_checkbox('update_datestamp', $locale['download_0213'], 0, ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 }
 closeside();
 openside();
