@@ -86,10 +86,19 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'stacked'          => '',
         'onchange'         => '',
         "select2_disabled" => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
+        'parent_value'     => $locale['root'],
+        'add_parent_opts'  => FALSE,
+        'disable_opts'     => '',
+        'hide_disabled'    => FALSE,
+        'no_root'          => FALSE,
+        'show_current'     => FALSE,
     ];
 
     $options += $default_options;
-
+    $disable_opts = '';
+    if ($options['disable_opts']) {
+        $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
+    }
     $list = [];
 
     static $select_db = [];
@@ -207,6 +216,11 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     if (!function_exists('form_select_build_optgroup')) {
         function form_select_build_optgroup($array, $input_value, $options) {
             $html = &$html;
+            $disable_opts = '';
+            if ($options['disable_opts']) {
+                $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
+            }
+
             foreach ($array as $arr => $value) {
                 $select = "";
                 $chain = (isset($options['chain_index'][$arr]) ? " class='".$options['chain_index'][$arr]."' " : "");
@@ -216,13 +230,21 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         if ($input_value !== '') {
                             $select = ($input_value == $text_value) ? " selected" : "";
                         }
-                        $item = "<option value='$text_value'".$chain.$select.">$text_value</option>\n";
+
+                        $disabled = $disable_opts && in_array($text_value, $disable_opts) ? TRUE : FALSE;
+                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $item = (!$hide ? "<option value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">$text_value ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+
                     } else {
                         if ($input_value !== '') {
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
+                        $disabled = $disable_opts && in_array($text_value, $disable_opts) ? TRUE : FALSE;
+                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $item = (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">$text_value ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+
+                        //$item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                     }
                     if (isset($value['children'])) {
                         $html .= "<optgroup label='".$value['text']."'>\n";
@@ -280,6 +302,16 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         // normal mode
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
+        // add parent value
+        if ($options['no_root'] == FALSE && !empty($options['cat_col']) || $options['add_parent_opts'] === TRUE) { // api options to remove root from selector. used in items creation.
+            $this_select = '';
+            if ($input_value !== NULL) {
+                if ($input_value !== '') {
+                    $this_select = 'selected';
+                }
+            }
+            $html .= "<option value='0' ".$this_select." >".$options['parent_value']."</option>\n";
+        }
 
         /**
          * Supported Formatting
@@ -308,23 +340,32 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                     if (isset($options['chain_index'][$arr])) {
                         $chain = " class='".$options['chain_index'][$arr]."' ";
                     }
+
+                    // do a disable for filter_opts item.
                     if ($options['keyflip']) { // flip mode = store array values
                         if ($input_value !== '') {
                             $select = ($input_value == $v) ? " selected" : "";
                         }
-                        $html .= "<option value='$v'".$chain.$select.">".$v."</option>\n";
+                        $disabled = $disable_opts && in_array($v, $disable_opts) ? TRUE : FALSE;
+                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $html .= (!$hide ? "<option value='$v'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     } else {
                         if ($input_value !== '') {
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $html .= "<option value='$arr'".$chain.$select.">$v</option>\n";
+                        $disabled = $disable_opts && in_array($v, $disable_opts) ? TRUE : FALSE;
+                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        if (isset($index[$v]) && (!$hide)) {
+                            $html .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
+                        }
                     }
                 }
             }
         }
         $html .= "</select>\n";
     }
+
     $html .= $options['stacked'];
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
     $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
