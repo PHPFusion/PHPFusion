@@ -300,6 +300,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
+
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         // add parent value
@@ -355,10 +356,11 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
                         $disabled = $disable_opts && in_array($v, $disable_opts) ? TRUE : FALSE;
+
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        if (isset($index[$v]) && (!$hide)) {
+                        //if (isset($index[$v]) && (!$hide)) {
                             $html .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
-                        }
+                        //}
                     }
                 }
             }
