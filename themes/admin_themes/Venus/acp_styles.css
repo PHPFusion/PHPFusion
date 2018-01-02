@@ -1032,3 +1032,104 @@ footer {
     position: absolute;
     right: 30px;
 }
+
+html[dir="rtl"] .pf-logo {
+    margin-left: inherit;
+    margin-right: -65px;
+}
+html[dir="rtl"] .block-content h6 {
+    left: inherit;
+    right: 15px;
+    padding: 10px 80px 10px 25px;
+}
+html[dir="rtl"] .breadcrumb > li:after {
+    right: inherit;
+    left: -5px;
+    border-right: inherit;
+    border-left: 1px solid #dddddd;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+html[dir="rtl"] legend {
+    margin-left: inherit !important;
+    margin-right: 20px !important;
+}
+html[dir="rtl"] .search-align {
+    float: right;
+}
+html[dir="rtl"] .nav-tabs > li {
+    margin-right: inherit;
+    margin-left: 5px;
+}
+html[dir="rtl"] nav ul > li {
+    float: right;
+}
+html[dir="rtl"] #acp-header {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] #acp-content {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] .in #acp-content {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] #acp-left {
+    border-right: inherit;
+    border-left: 1px solid #ccc;
+    margin-left: inherit;
+    margin-right: -250px;
+}
+html[dir="rtl"] .in #acp-left {
+    margin-left: inherit !important;
+    margin-right: 0 !important;
+}
+html[dir="rtl"] .admin-horizontal-link > li {
+    float: right;
+}
+@media (min-width: 900px) {
+    html[dir="rtl"] #acp-header {
+        margin-left: inherit;
+        margin-right: 250px;
+    }
+    html[dir="rtl"] #acp-left {
+        margin-left: inherit;
+        margin-right: 0px;
+    }
+    html[dir="rtl"] #acp-content {
+        margin-left: inherit;
+        margin-right: 250px;
+    }
+}
+html[dir="rtl"] .admin-vertical-link .admin-submenu > li > a {
+    padding: 11px 30px 9px 15px;
+}
+html[dir="rtl"] .admin-vertical-link .fa {
+    margin-right: inherit;
+    margin-left: 10px;
+}
+html[dir="rtl"] .brand {
+    background: #ffffff url("../../../images/php-fusion-icon.png") no-repeat scroll 155px -24px;
+    float: right;
+    border-right: inherit;
+    border-left: 1px solid #ccc;
+}
+html[dir="rtl"] .brand-text {
+    padding-left: inherit;
+    padding-right: 80px;
+}
+html[dir="rtl"] .admin-image {
+    margin-right: inherit;
+    margin-left: 10px;
+}
+html[dir="rtl"] footer {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] #overview .dashboard-icon {
+    right: inherit;
+    left: 30px;
+}
