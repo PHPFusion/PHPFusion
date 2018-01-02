@@ -1330,3 +1330,44 @@ Cellphones
 #navigation-user {
     margin: 35px 0;
 }
+
+html[dir="rtl"] header .fa.fa-angle-down {
+    margin-left: inherit;
+    margin-right: 5px;
+}
+html[dir="rtl"] header .navbar-default .navbar-nav > li > a:before {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+html[dir="rtl"] header .headerContent {
+    text-align: right;
+}
+html[dir="rtl"] header .navbar.affix {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] .nebulaCanvas {
+    border-right: inherit;
+    border-left: 1px solid #ccc;
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] .canvas-toggle {
+    margin-left: inherit;
+    margin-right: 100%;
+}
+html[dir="rtl"] .nebulaCanvas.off {
+    left: inherit;
+    right: -300px;
+}
+html[dir="rtl"] .nebulaCanvas > .canvas-toggle {
+    border-left: inherit;
+    border-right: none;
+}
+html[dir="rtl"] .control-label > img {
+    margin-right: inherit;
+    margin-left: 5px;
+}
