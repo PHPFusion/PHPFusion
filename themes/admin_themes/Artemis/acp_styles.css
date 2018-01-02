@@ -2375,3 +2375,248 @@ input[type=text] {
 .label.label-info {
     background-color: #f1f8ff;
 }
+
+html[dir="rtl"] #devlpr label:not(.label-success and .label-default) {
+    text-align: right;
+}
+html[dir="rtl"] #devlpr .left_menu {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] #devlpr .left_menu h2 {
+    margin-left: inherit;
+    margin-right: 27px;
+}
+html[dir="rtl"] #devlpr .left_menu li {
+    border-left: inherit;
+    border-right: 3px solid transparent;
+}
+html[dir="rtl"] #devlpr .left_menu li.active {
+    border-left-color: inherit;
+    border-right-color: #00a9ff;
+}
+html[dir="rtl"] #devlpr .left_menu li a {
+    padding-left: inherit;
+    padding-right: 10px;
+}
+html[dir="rtl"] #devlpr .left_menu.collapsed li a {
+    padding-left: inherit;
+    padding-right: 25px;
+}
+html[dir="rtl"] #devlpr .left_menu .fa.fa-caret-right {
+    float: left;
+}
+html[dir="rtl"] #devlpr .apps {
+    float: right;
+}
+html[dir="rtl"] #devlpr .app_menu {
+    left: inherit;
+    right: 185px;
+    -webkit-box-shadow: inset -1px 0 0 #222933;
+    box-shadow: inset -1px 0 0 #222933;
+}
+html[dir="rtl"] #devlpr .app_menu header h3 {
+    float: right;
+    margin-left: inherit;
+    margin-right: 1.2rem;
+}
+html[dir="rtl"] #devlpr .app_menu header .form-group {
+    float: left;
+    margin-right: inherit;
+    margin-left: 1.2rem;
+}
+html[dir="rtl"] #devlpr .app_menu.collapsed {
+    left: inherit;
+    right: 75px;
+}
+html[dir="rtl"] #devlpr .app_menu .app_list li {
+    padding: 10px 73px 10px 30px;
+}
+html[dir="rtl"] #devlpr .app_menu .app_list li a div.app_icon {
+    left: inherit;
+    right: 30px;
+}
+html[dir="rtl"] #devlpr #main_content.content {
+    margin-left: inherit;
+    margin-right: 185px;
+}
+html[dir="rtl"] #devlpr #main_content.content.collapsed {
+    margin-left: inherit;
+    margin-right: 75px;
+}
+html[dir="rtl"] #devlpr #main_content.open {
+    -webkit-transform: translateX(-550px);
+    -ms-transform: translateX(-550px);
+    transform: translateX(-550px);
+    -webkit-transform-origin: 100% 50%;
+    -ms-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+}
+html[dir="rtl"] #devlpr #main_content > .main_content_overlay {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] #devlpr #main_content.open > header {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] #devlpr #main_content > header {
+    -webkit-transition: right .0001s .48s;
+    -o-transition: right .0001s .48s;
+    transition: right .0001s .48s;
+}
+html[dir="rtl"] #devlpr #main_content > aside.header {
+    padding-left: inherit;
+    padding-right: 30px;
+}
+@media (min-width: 250px) and (max-width: 1024px) {
+    html[dir="rtl"] #devlpr #devlpr .app_menu {
+        left: inherit;
+        right: 80px;
+    }
+    html[dir="rtl"] #devlpr #devlpr #main_content.content {
+        margin-left: inherit !important;
+        margin-right: 80px !important;
+    }
+}
+html[dir="rtl"] #devlpr #main_content > header h2 {
+    float: right;
+}
+html[dir="rtl"] #devlpr #main_content > header .app_icon {
+    float: right;
+}
+html[dir="rtl"] #devlpr #main_content > header ul.nav {
+    float: left;
+    margin-right: inherit;
+    margin-left: 15px;
+}
+html[dir="rtl"] #devlpr #main_content > header img {
+    margin-right: inherit;
+    margin-left: 10px;
+}
+html[dir="rtl"] #devlpr #main_content > header ul.dropdown-menu {
+    text-align: right;
+}
+html[dir="rtl"] #devlpr #main_content .content header > h2 {
+    float: right;
+}
+html[dir="rtl"] #devlpr .breadcrumb {
+    text-align: right;
+}
+html[dir="rtl"] #devlpr .breadcrumb > li:after {
+    border-right: inherit;
+    border-left: 1px solid #dddddd;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    right: inherit;
+    left: -5px;
+}
+html[dir="rtl"] .btn:first-child {
+    *margin-left: inherit;
+    *margin-right: 0;
+}
+html[dir="rtl"] .btn-group {
+    margin-left: inherit;
+    margin-right: .3em;
+}
+html[dir="rtl"] .btn-group + .btn-group {
+    margin-right: inherit;
+    margin-left: 10px;
+}
+html[dir="rtl"] .btn-toolbar > .btn + .btn,
+html[dir="rtl"] .btn-toolbar > .btn-group + .btn,
+html[dir="rtl"] .btn-toolbar > .btn + .btn-group {
+    margin-left: inherit;
+    margin-right: 5px;
+}
+html[dir="rtl"] .btn-group > .btn + .btn {
+    margin-left: inherit;
+    margin-right: -1px;
+}
+html[dir="rtl"] .btn-group > .btn:first-child {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] .btn .caret {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] .btn-group-vertical > .btn + .btn {
+    margin-left: inherit;
+    margin-right: 0;
+}
+html[dir="rtl"] .admin-message {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] table thead > tr:first-child > td:first-child {
+    border-radius: 0 6px 0 0;
+}
+html[dir="rtl"] table thead > tr:first-child > td:last-child {
+    border-radius: 6px 0 0 0;
+}
+html[dir="rtl"] footer {
+    left: inherit;
+    right: 0;
+}
+html[dir="rtl"] footer ul li {
+    padding-left: inherit;
+    padding-right: 15px;
+}
+html[dir="rtl"] #admin-panel.in footer,
+html[dir="rtl"] .error-message {
+    margin-left: inherit;
+    margin-right: 250px;
+}
+html[dir="rtl"] .panel-txtarea .bbcode_input input[type=image] {
+    margin-right: inherit;
+    margin-left: 5px;
+}
+html[dir="rtl"] .nav-tabs > li {
+    margin-right: inherit;
+    margin-left: 5px;
+}
+html[dir="rtl"] .tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs {
+    margin-right: -15px;
+    margin-left: -15px;
+    padding-left: inherit;
+    padding-right: 15px;
+}
+html[dir="rtl"] .nav-wrapper.editor-wrapper .panel-heading > .btn-group {
+    margin-right: 0;
+    margin-left: 15px;
+}
+html[dir="rtl"] nav ul > li {
+    float: right;
+}
+html[dir="rtl"] #devlpr.login_page .login_wrapper {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translate(50%, -50%);
+    -ms-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
+}
+html[dir="rtl"] .select2-container-multi .select2-search-choice-close {
+    right: inherit !important;
+    left: 2px !important;
+}
+html[dir="rtl"] input[type=radio],
+html[dir="rtl"] input[type=checkbox] {
+    margin: -4px 0 0 4px;
+}
+html[dir="rtl"] input[type=radio]:checked:before,
+html[dir="rtl"] input[type=checkbox]:checked:before {
+    float: right;
+}
+html[dir="rtl"] input[type=radio]:checked:before {
+    margin: 1px -1px 0 0;
+}
+html[dir="rtl"] .copyright {
+    text-align: left;
+    padding-right: inherit;
+    padding-left: 90px;
+}
+html[dir="rtl"] .label {
+    margin: 0 0 0.5em 0.5em;
+}
