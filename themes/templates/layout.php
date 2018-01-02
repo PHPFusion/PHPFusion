@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".fusion_get_locale('xml_lang')."'".(fusion_get_settings('create_og_tags') ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
+echo "<html lang='".fusion_get_locale('xml_lang')."' dir='".fusion_get_locale('text-direction')."'".(fusion_get_settings('create_og_tags') ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings('sitename')."</title>\n";
 echo "<meta charset='".fusion_get_locale('charset')."' />\n";
@@ -34,6 +34,11 @@ if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+
+    if (fusion_get_locale('text-direction') == 'rtl') {
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+    }
+
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));

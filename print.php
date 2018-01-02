@@ -34,7 +34,7 @@ if (iMEMBER) {
 }
 
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".$locale['xml_lang']."'>\n";
+echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
 echo "<meta charset=".$locale['charset']."' />\n";
 echo "<meta name='description' content='".$settings['description']."' />\n";

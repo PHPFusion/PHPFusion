@@ -1529,6 +1529,6 @@ tr:hover > td .tbl_actions {
     width: 100%;
 }
 
-.remove_tag {
-
+html[dir="rtl"] body {
+    direction: rtl;
 }

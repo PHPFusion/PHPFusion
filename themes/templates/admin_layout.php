@@ -20,20 +20,26 @@ $settings = fusion_get_settings();
 \PHPFusion\Admins::getInstance()->setAdmin();
 header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>";
-echo "<html lang='".fusion_get_locale('xml_lang')."'>";
+echo "<html lang='".fusion_get_locale('xml_lang')."' dir='".fusion_get_locale('text-direction')."'>";
 echo "<head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
 echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
 echo "<meta name='robots' content='none' />";
 echo "<meta name='googlebot' content='noarchive' />";
+
 if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+    echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />";
+    if (fusion_get_locale('text-direction') == 'rtl') {
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+    }
+
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>");
 }
-if ($bootstrap_theme_css_src) {
-    echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />";
-}
+
 if ($settings['entypo'] || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";

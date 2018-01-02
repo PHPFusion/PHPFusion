@@ -9,6 +9,7 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
+$locale['setup_0012a'] = "ltr";
 $locale['setup_0020'] = "PHP-Fusion Upgrade";
 $locale['setup_0022'] = "Welcome to PHP-Fusion Upgrading Service";
 $locale['setup_0023'] = "The upgrade service will guide you through the steps required to upgrade PHP-Fusion CMS on your server. Please follow these steps through and verify each information required.";

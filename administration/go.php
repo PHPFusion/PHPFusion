@@ -42,13 +42,13 @@ if (isset($_GET['id']) && isnum($_GET['id'])) {
 }
 
 echo '<!DOCTYPE html>';
-echo '<html>';
+echo '<html dir="'.fusion_get_locale('text-direction').'">';
     echo '<head>';
         echo '<meta charset="'.fusion_get_locale('charset').'"/>';
         echo '<title>'.fusion_get_settings('sitename').'</title>';
         echo '<link rel="stylesheet" type="text/css" href="'.THEME.'styles.css"/>';
         if (!defined('NO_DEFAULT_CSS')) {
-            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.css"/>';
+            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.min.css"/>';
         }
         echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
         echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');

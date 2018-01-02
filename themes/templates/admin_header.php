@@ -50,14 +50,6 @@ if (iMEMBER) {
     );
 }
 
-$bootstrap_theme_css_src = '';
-// Load bootstrap
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
-    $bootstrap_theme_css_src = INCLUDES."bootstrap/bootstrap.min.css";
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>");
-}
-
 ob_start();
 
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link=:base_url", [':base_url' => FUSION_SELF]));
