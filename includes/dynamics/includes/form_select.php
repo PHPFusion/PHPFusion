@@ -51,47 +51,48 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $default_options = [
-        'options'          => [],
-        'required'         => FALSE,
-        'regex'            => '',
-        'input_id'         => $input_name,
-        'placeholder'      => $locale['choose'],
-        'deactivate'       => FALSE,
-        'safemode'         => FALSE,
-        'allowclear'       => FALSE,
-        'multiple'         => FALSE,
-        'width'            => '',
-        'inner_width'      => '250px',
-        'keyflip'          => FALSE,
-        'tags'             => FALSE,
-        'jsonmode'         => FALSE,
-        'chainable'        => FALSE,      // Set to True to Enable Chaining
-        'chain_to_id'      => '',         // Set which select it has to be chained to.
-        'db'               => '',         // Specify which DB to map
-        'id_col'           => '',         // Chain Primary Key Column Name
-        'cat_col'          => '',         // Chain Category Column Name
-        'title_col'        => '',        // Chain Title Column Name
-        'custom_query'     => '',     // If any replacement statement for the query
-        'value_filter'     => ['col' => '', 'value' => NULL], // Specify if building opts has to specifically match these conditions
-        'optgroup'         => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
-        'option_pattern'   => "&#8212;",
-        'max_select'       => FALSE,
-        'error_text'       => $locale['error_input_default'],
-        'class'            => '',
-        'inline'           => FALSE,
-        'tip'              => '',
-        'ext_tip'          => '',
-        'delimiter'        => ',',
-        'callback_check'   => '',
-        'stacked'          => '',
-        'onchange'         => '',
-        "select2_disabled" => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
-        'parent_value'     => $locale['root'],
-        'add_parent_opts'  => FALSE,
-        'disable_opts'     => '',
-        'hide_disabled'    => FALSE,
-        'no_root'          => FALSE,
-        'show_current'     => FALSE,
+        'options'              => [],
+        'required'             => FALSE,
+        'regex'                => '',
+        'input_id'             => $input_name,
+        'placeholder'          => $locale['choose'],
+        'deactivate'           => FALSE,
+        'safemode'             => FALSE,
+        'allowclear'           => FALSE,
+        'multiple'             => FALSE,
+        'width'                => '',
+        'inner_width'          => '250px',
+        'keyflip'              => FALSE,
+        'tags'                 => FALSE,
+        'jsonmode'             => FALSE,
+        'chainable'            => FALSE,      // Set to True to Enable Chaining
+        'chain_to_id'          => '',         // Set which select it has to be chained to.
+        'db'                   => '',         // Specify which DB to map
+        'id_col'               => '',         // Chain Primary Key Column Name
+        'cat_col'              => '',         // Chain Category Column Name
+        'title_col'            => '',        // Chain Title Column Name
+        'custom_query'         => '',     // If any replacement statement for the query
+        'value_filter'         => ['col' => '', 'value' => NULL], // Specify if building opts has to specifically match these conditions
+        'optgroup'             => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
+        'option_pattern'       => "&#8212;",
+        'display_search_count' => 5,
+        'max_select'           => FALSE,
+        'error_text'           => $locale['error_input_default'],
+        'class'                => '',
+        'inline'               => FALSE,
+        'tip'                  => '',
+        'ext_tip'              => '',
+        'delimiter'            => ',',
+        'callback_check'       => '',
+        'stacked'              => '',
+        'onchange'             => '',
+        "select2_disabled"     => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
+        'parent_value'         => $locale['root'],
+        'add_parent_opts'      => FALSE,
+        'disable_opts'         => '',
+        'hide_disabled'        => FALSE,
+        'no_root'              => FALSE,
+        'show_current'         => FALSE,
     ];
 
     $options += $default_options;
@@ -112,7 +113,13 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             if (!empty($options['cat_col'])) {
                 $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
             } else {
-                $select_result = dbquery("SELECT * FROM ".$options['db']." ".($options['custom_query'] ? "WHERE ".$options['custom_query'] : '')." ORDER BY ".$options['id_col']." ASC, ".$options['title_col']." ASC");
+                // if there is a custom query
+                if ($options['custom_query']) {
+                    $select_result = dbquery($options['custom_query']);
+                } else {
+                    $select_result = dbquery("SELECT * FROM ".$options['db']." ORDER BY ".$options['id_col']." ASC, ".$options['title_col']." ASC");
+                }
+
                 // then make into hierarchy
                 if (dbrows($select_result)) {
                     while ($data = dbarray($select_result)) {
@@ -443,6 +450,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                 if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
                 $('#".$options['input_id']."').select2({
                     ".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
+                    minimumResultsForSearch: ".$options['display_search_count'].",
                     ".$max_js."
                     ".$allowclear."
                     ".$tag_js."
@@ -452,6 +460,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                 \PHPFusion\OutputHandler::addToJQuery("
                 $('#".$options['input_id']."').select2({
                     ".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
+                    minimumResultsForSearch: ".$options['display_search_count'].",
                     ".$max_js."
                     ".$allowclear."
                     ".$tag_js."
