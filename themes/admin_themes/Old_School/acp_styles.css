@@ -4,7 +4,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Old_School/acp_styles.css
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +16,6 @@
 +--------------------------------------------------------*/
 
 /* Globals */
-
 #wrapper {
     font: 14px/16px Arial;
     overflow-x: hidden;
@@ -505,8 +504,8 @@ legend {
 
 #site-links li {
     display: block;
-    margin: 30;
-    padding: 10;
+    margin: 30px;
+    padding: 10px;
 }
 
 #site-links li img.handle {
@@ -733,4 +732,96 @@ div.mce-edit-area {
 
 #members .dashboard-icon {
     position: absolute;
+}
+
+html[dir="rtl"] .pf-logo {
+    margin-left: inherit !important;
+    margin-right: -65px;
+}
+html[dir="rtl"] .block-content {
+    background: none repeat scroll 100% 0% white;
+}
+html[dir="rtl"] .block-content h6 {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(0%, #a7cfdf), color-stop(100%, #23538a));
+    background: -webkit-gradient(linear, right top, right bottom, from(#a7cfdf), to(#23538a));
+    padding: 10px 80px 10px 25px;
+}
+html[dir="rtl"] .breadcrumb > li:after {
+    right: inherit !important;
+    left: -5px;
+    border-right: inherit !important;
+    border-left: 1px solid #dddddd;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+html[dir="rtl"] .btn-primary {
+    background-image: -webkit-gradient(linear, right top, right bottom, from(#0088cc), to(#0044cc));
+}
+html[dir="rtl"] .btn-warning {
+    background-image: -webkit-gradient(linear, right top, right bottom, from(#fbb450), to(#f89406));
+}
+html[dir="rtl"] .btn-danger {
+    background-image: -webkit-gradient(linear, right top, right bottom, from(#ee5f5b), to(#bd362f));
+}
+html[dir="rtl"] .btn-success {
+    background-image: -webkit-gradient(linear, right top, right bottom, from(#62c462), to(#51a351));
+}
+html[dir="rtl"] .btn-info {
+    background-image: -webkit-gradient(linear, right top, right bottom, from(#5bc0de), to(#2f96b4));
+}
+html[dir="rtl"] .btn-default {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(0%, #f9fafa), color-stop(100%, #e1e2e5));
+    background: -webkit-gradient(linear, right top, right bottom, from(#f9fafa), to(#e1e2e5));
+}
+html[dir="rtl"] .btn-default:hover,
+html[dir="rtl"] .btn-default:focus {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(0%, #f3f3f4), color-stop(100%, #cecece));
+    background: -webkit-gradient(linear, right top, right bottom, from(#f3f3f4), to(#cecece));
+}
+html[dir="rtl"] .btn-default:active {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(0%, #dddfe1), color-stop(100%, #d4d6d9));
+    background: -webkit-gradient(linear, right top, right bottom, from(#dddfe1), to(#d4d6d9));
+}
+html[dir="rtl"] .box-shadow {
+    -webkit-box-shadow: -1px 1px 3px #9cbedf;
+    -moz-box-shadow: -1px 1px 3px #9cbedf;
+    box-shadow: -1px 1px 3px #9cbedf;
+}
+html[dir="rtl"] legend {
+    margin-left: inherit !important;
+    margin-right: 20px !important;
+}
+html[dir="rtl"] .nav-tabs > li {
+    margin-right: inherit !important;
+    margin-left: 5px;
+}
+html[dir="rtl"] .nav-tabs > li > a {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(54%, #ffffff), color-stop(100%, #e6e6e6));
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(54%, #ffffff), to(#e6e6e6));
+}
+html[dir="rtl"] .nav-tabs > li > a:hover,
+html[dir="rtl"] .nav-tabs > li > a:focus {
+    background: -webkit-gradient(linear, right top, right bottom, color-stop(0%, #efefef), color-stop(56%, #e6e6e6), color-stop(56%, #e6e6e6));
+    background: -webkit-gradient(linear, right top, right bottom, from(#efefef), color-stop(56%, #e6e6e6), color-stop(56%, #e6e6e6));
+}
+html[dir="rtl"] nav ul > li {
+    float: right;
+}
+html[dir="rtl"] .admin-image {
+    margin-right: inherit !important;
+    margin-left: 10px;
+}
+html[dir="rtl"] footer {
+    left: inherit !important;
+    right: 0;
+}
+html[dir="rtl"] .select2-search-hidden {
+    display: none;
+}
+html[dir="rtl"] .pull-left {
+    float: right !important;
+}
+html[dir="rtl"] .pull-right {
+    float: left !important;
 }

@@ -597,7 +597,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             "append_button"     => TRUE,
             "append_value"      => "<i class='fa fa-search'></i>",
             "append_form_value" => "search_link",
-            "inner_width"       => "250px"
+            "inner_width"       => "250px",
+            "group_size"        => "sm"
         ]);
         echo "</div>\n";
 
