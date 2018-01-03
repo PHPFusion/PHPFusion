@@ -66,7 +66,7 @@ include THEMES."templates/global/maintenance.php";
 
 header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".$locale['xml_lang']."'>\n";
+echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings('sitename')."</title>\n";
 echo "<meta charset='".$locale['charset']."' />\n";
@@ -81,6 +81,9 @@ if (fusion_get_settings('bootstrap') == TRUE) {
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+    if (fusion_get_locale('text-direction') == 'rtl') {
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+    }
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -101,7 +104,7 @@ if (fusion_get_settings('fontawesome')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
+    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
 echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 

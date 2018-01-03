@@ -90,7 +90,7 @@ class Console_Core extends Install_Core {
      */
     public static function getLayout() {
         $html = "<!DOCTYPE html>\n";
-        $html .= "<html lang='".self::$locale['setup_0011']."'>\n";
+        $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
         $html .= "<title>".self::$locale['setup_0000']."</title>\n";
         $html .= "<meta charset='".self::$locale['setup_0012']."' />";
@@ -108,13 +108,16 @@ class Console_Core extends Install_Core {
         $html .= "<meta name='msapplication-TileImage' content='".IMAGES."favicons/mstile-144x144.png'/>\n";
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-        $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+        $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
         $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
-        $html .= "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
-        $html .= "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
+        $html .= "<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />\n";
+        $html .= "<link href='".THEMES."templates/default.min.css' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
+        if (self::$locale['setup_0012a'] == 'rtl') {
+            $html .= "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+        }
         $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
-        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.css' rel='stylesheet' />";
+        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' rel='stylesheet' />";
         $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body".(!isset($_GET['upgrade']) ? " class='install'" : '').">\n";
         $html .= "{%content%}";
