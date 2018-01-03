@@ -61,6 +61,13 @@
  * Token used for $options['date_format_php'] is the <a href="http://php.net/manual/en/function.date.php">PHP token equivalent.</a>
  * Token used for $options['date_format_js'] must be formatted with <a href="http://momentjs.com/docs/#/displaying/">moment.js.</a>
  * Both token must match each other to parse the callback properly.
+ * Example 1:
+ *  "date_format_php" => "d-m-Y",
+ * "date_format_js"  => "DD-MM-YYYY",
+ *
+ * Example 2:
+ *  'date_format_js'  => 'YYYY-M-DD',
+ * 'date_format_php' => 'Y-m-d',
  *
  * Currently, only user birthdate in `entire project` uses date format.
  *
@@ -103,7 +110,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'placeholder'            => '',
         'deactivate'             => FALSE,
         'width'                  => '',
-        'inner_width'            => '250px',
+        'inner_width'            => '', // in px i.e. 250px
         'class'                  => '',
         'inline'                 => FALSE,
         'error_text'             => $locale['error_input_default'],
