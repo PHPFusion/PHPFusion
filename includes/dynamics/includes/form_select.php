@@ -157,6 +157,38 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                                 }
                             }
                         }
+                    } else {
+
+                        // the list does not start with a root
+                        foreach (array_keys($data) as $id) {
+                            foreach ($data[$id] as $key => $value) {
+                                // Displays defined pattern
+                                $pattern = "";
+                                if ($options['option_pattern']) {
+                                    $pattern = str_repeat($options['option_pattern'], $level)." ";
+                                }
+                                // Build List
+                                if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
+                                    if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
+                                        $list[$key] = $pattern.$value[$options['title_col']];
+                                    }
+                                } else {
+                                    $list[$key] = $pattern.$value[$options['title_col']];
+                                }
+                                // Build Child
+                                if (isset($data[$key])) {
+                                    $child = get_form_select_opts($data, $options, $key, $level + 1);
+                                    if ($options['optgroup']) {
+                                        $list[$key] = [
+                                            'text'     => $list[$key],
+                                            'children' => $child,
+                                        ];
+                                    } else {
+                                        $list = (!empty($list)) ? $list + $child : $child;
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     return (array)$list;
@@ -186,7 +218,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             $options['chain_index'] = get_form_select_chain_index($select_db[$options['db']], $options);
         }
 
-        if (!empty($select_db[$options['db']][0])) {
+        if (!empty($select_db[$options['db']])) {
             // Build options and override declared options
             $options['options'] = get_form_select_opts($select_db[$options['db']], $options);
         } else {
