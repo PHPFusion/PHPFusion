@@ -302,7 +302,6 @@ class Minifier {
      *
      * @param  int $startIndex The index point where "getReal" function started
      * @return bool|string       False if there's no character
-     * @throws \RuntimeException Unclosed comments will throw an error
      */
     protected function processMultiLineComments($startIndex) {
         $this->getChar(); // current C
@@ -343,7 +342,7 @@ class Minifier {
         }
 
         if ($char === FALSE) {
-            throw new \RuntimeException('Unclosed multiline comment at position: '.($this->index - 2));
+            setError(2, 'Unclosed multiline comment at position: '.($this->index - 2), debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
         }
 
         // if we're here c is part of the comment and therefore tossed
@@ -432,8 +431,6 @@ class Minifier {
     /**
      * When a javascript string is detected this function crawls for the end of
      * it and saves the whole string.
-     *
-     * @throws \RuntimeException Unclosed strings will throw an error
      */
     protected function saveString() {
         $startpos = $this->index;
@@ -472,7 +469,7 @@ class Minifier {
                 // character, so those will be treated just fine using the switch
                 // block below.
                 case "\n":
-                    throw new \RuntimeException('Unclosed string at position: '.$startpos);
+                    setError(2, 'Unclosed string at position: '.$startpos, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
                     break;
 
                 // Escaped characters get picked up here. If it's an escaped new line it's not really needed
@@ -514,8 +511,6 @@ class Minifier {
     /**
      * When a regular expression is detected this function crawls for the end of
      * it and saves the whole regex.
-     *
-     * @throws \RuntimeException Unclosed regex will throw an error
      */
     protected function saveRegex() {
         echo $this->a.$this->b;
@@ -531,7 +526,7 @@ class Minifier {
             }
 
             if ($this->a === "\n") {
-                throw new \RuntimeException('Unclosed regex pattern at position: '.$this->index);
+                setError(2, 'Unclosed regex pattern at position: '.$this->index, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
             }
 
             echo $this->a;
