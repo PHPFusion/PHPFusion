@@ -158,7 +158,6 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             }
                         }
                     } else {
-
                         // the list does not start with a root
                         foreach (array_keys($data) as $id) {
                             foreach ($data[$id] as $key => $value) {
