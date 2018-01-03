@@ -26,7 +26,7 @@ class defender {
 	public $ref = array();
 
 	/* Sanitize Fields Automatically */
-	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
+	public function defenderx($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
 			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
@@ -52,7 +52,14 @@ class defender {
 			return $return_value;
 		}
 	}
-
+	
+	// For backwards compatibility
+//	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
+//
+//        self::__construct($type, $value, $default, $name, $id, $path, $safemode, $error_text, $thumbnail);
+ //   }
+	
+	
 	/* Jquery Error Class Injector */
 	public function addError($id) {
 		// add class to id.
@@ -491,7 +498,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				$defender->addNotice($data['error_text']);
 			} else {
 				//$type, $value, $default, $name, $id, $opts;
-				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['safemode'], $data['error_text'], $data['thumbnail']);
+				$val = $defender->defenderx($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['safemode'], $data['error_text'], $data['thumbnail']);
 				return $val;
 			}
 		} elseif (array_key_exists("single-multi", $_POST['def']) && isset($_POST['def']['single-multi'][$input_name])) {
