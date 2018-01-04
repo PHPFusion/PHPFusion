@@ -100,7 +100,7 @@ foreach ($info['allowed_filters'] as $type => $filter_name) {
 
 switch ($_GET['type']) {
     case 'recent':
-        $filter_condition = 'download_datestamp DESC';
+        $filter_condition = 'd.download_datestamp DESC';
         break;
     case 'comments':
         $filter_condition = 'count_comment DESC';
@@ -113,7 +113,7 @@ switch ($_GET['type']) {
         $filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
         break;
     case 'download':
-        $filter_condition = 'download_count DESC';
+        $filter_condition = 'd.download_count DESC';
         break;
     default:
         $filter_condition = '';
@@ -122,20 +122,20 @@ switch ($_GET['type']) {
 if (isset($_GET['download_id'])) {
     if (validate_download($_GET['download_id'])) {
 
-        $download_query = "SELECT d.*, dc.*,
-                    tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-                    SUM(tr.rating_vote) AS sum_rating,
-                    COUNT(tr.rating_item_id) AS count_votes,
-                    d.download_datestamp as last_updated
-                    FROM ".DB_DOWNLOADS." d
-                    INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
-                    LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
-                    LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
-                    ".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
-                    download_id='".intval($_GET['download_id'])."'
-                    GROUP BY download_id";
+        $result = dbquery("SELECT d.*, dc.*,
+            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_level, tu.user_joined,
+            SUM(tr.rating_vote) AS sum_rating,
+            COUNT(tr.rating_item_id) AS count_votes,
+            d.download_datestamp as last_updated
+            FROM ".DB_DOWNLOADS." d
+            INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+            LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+            LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
+            ".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('d.download_visibility')." AND
+            d.download_id='".intval($_GET['download_id'])."'
+            GROUP BY d.download_id
+        ");
 
-        $result = dbquery($download_query);
         $info['download_rows'] = dbrows($result);
 
         if ($info['download_rows'] > 0) {
