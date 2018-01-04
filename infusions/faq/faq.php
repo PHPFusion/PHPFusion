@@ -20,8 +20,7 @@ if (!infusion_exists('faq')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";
-require_once INCLUDES."infusions_include.php";
 require_once FAQ_CLASS."autoloader.php";
-require_once INFUSIONS."faq/templates/faq.php";
+require_once INFUSIONS."faq/templates.php";
 \PHPFusion\FAQ\FaqServer::Faq()->display_faq();
 require_once THEMES."templates/footer.php";

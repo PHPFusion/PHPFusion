@@ -26,8 +26,8 @@ use PHPFusion\SiteLinks;
  * @package PHPFusion\FAQ
  */
 abstract class Faq extends FaqServer {
-    private static $locale = array();
-    public $info = array();
+    private static $locale = [];
+    public $info = [];
 
     /**
      * Executes main page information
@@ -46,11 +46,12 @@ abstract class Faq extends FaqServer {
             'title' => SiteLinks::get_current_SiteLinks('', 'link_name')
         ]);
 
-        $info = array(
-            'faq_categories' => array(),
-            'faq_items'      => array(),
-            'faq_get'        => 0,
-        );
+        $info = [
+            'faq_categories' => [],
+            'faq_items'      => [],
+            "faq_tablename"  => self::$locale['faq_0000'],
+            'faq_get'        => 0
+        ];
 
         $info = array_merge($info, self::get_FaqData($category));
 
@@ -78,10 +79,14 @@ abstract class Faq extends FaqServer {
     protected static function get_FaqData($cat = 0) {
         $info = [
             'faq_items'      => [],
+            'cat_locale'     => self::$locale['faq_0001'],
+            'cat_top'        => self::$locale['faq_0002'],
+            'faq_get_name'   => self::$locale['faq_0001'],
             'faq_categories' => [
                 0 => [
                     'faq_cat_id'          => 0,
                     'faq_cat_name'        => self::$locale['faq_0010'],
+                    'faq_cat_link'        => INFUSIONS."faq/faq.php?cat_id=0",
                     'faq_cat_description' => ''
                 ]
             ],
@@ -93,26 +98,34 @@ abstract class Faq extends FaqServer {
         if (dbrows($c_result)) {
             while ($c_data = dbarray($c_result)) {
                 $info['faq_categories'][$c_data['faq_cat_id']] = $c_data;
+                $info['faq_categories'][$c_data['faq_cat_id']]['faq_cat_link'] = INFUSIONS."faq/faq.php?cat_id=".$c_data['faq_cat_id'];
             }
         }
 
         // Get Items
-        $result = dbquery("SELECT ac.*,
-            au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined
-            FROM ".DB_FAQS." ac
-            LEFT JOIN ".DB_USERS." AS au ON ac.faq_name=au.user_id
-            WHERE ac.faq_status='1' AND ".groupaccess("ac.faq_visibility").
-            (multilang_table('FQ') ? " AND ac.faq_language='".LANGUAGE."'" : '').($cat ? " AND faq_cat_id='$cat'" : ' AND faq_cat_id=0')."
-            GROUP BY ac.faq_id ORDER BY ac.faq_cat_id ASC, ac.faq_id ASC
+        $result = dbquery("SELECT fq.*,
+            fu.user_id, fu.user_name, fu.user_status, fu.user_avatar, fu.user_level, fu.user_joined
+            FROM ".DB_FAQS." fq
+            LEFT JOIN ".DB_USERS." AS fu ON fq.faq_name=fu.user_id
+            WHERE fq.faq_status='1' AND ".groupaccess("fq.faq_visibility").
+            (multilang_table('FQ') ? " AND fq.faq_language='".LANGUAGE."'" : '').($cat ? " AND fq.faq_cat_id='$cat'" : ' AND fq.faq_cat_id=0')."
+            GROUP BY fq.faq_id ORDER BY fq.faq_cat_id ASC, fq.faq_id ASC
         ");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $data['faq_answer'] = parse_textarea($data['faq_answer'], FALSE, FALSE, TRUE, FALSE, $data['faq_breaks'] == 'y' ? TRUE : FALSE);
                 $info['faq_items'][$data['faq_id']] = $data;
+                $info['faq_items'][$data['faq_id']]['print']['title'] = self::$locale['print'];
+                $info['faq_items'][$data['faq_id']]['print']['link'] = BASEDIR."print.php?type=FQ&amp;item_id=".$data['faq_id'];
+                $info['faq_items'][$data['faq_id']]['edit']['title'] = (iADMIN && checkrights("FQ")) ? self::$locale['edit'] : '';
+                $info['faq_items'][$data['faq_id']]['edit']['link'] = (iADMIN && checkrights("FQ")) ? INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=edit&amp;cat_id=".$data['faq_cat_id']."&amp;faq_id=".$data['faq_id'] : '';
+                $info['faq_items'][$data['faq_id']]['delete']['title'] = (iADMIN && checkrights("FQ")) ? self::$locale['delete'] : '';
+                $info['faq_items'][$data['faq_id']]['delete']['link'] = (iADMIN && checkrights("FQ")) ? INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$data['faq_id'] : '';
             }
         }
         // Get Categories
         $info['faq_get'] = $cat;
+        $info['faq_get_name'] = $info['faq_categories'][$info['faq_get']]['faq_cat_name'];
 
         return (array)$info;
     }
