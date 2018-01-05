@@ -39,8 +39,8 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         if (isset($_POST['savesettings'])) {
             $inputArray = [
                 "links_per_page"          => form_sanitizer($_POST['links_per_page'], 15, "links_per_page"),
-                "links_allow_submission"  => form_sanitizer($_POST['links_allow_submission'], 0, "links_allow_submission"),
-                "links_extended_required" => form_sanitizer($_POST['links_extended_required'], 0, "links_extended_required")
+                "links_allow_submission"  => form_sanitizer($_POST['links_allow_submission'], 1, "links_allow_submission"),
+                "links_extended_required" => form_sanitizer($_POST['links_extended_required'], 1, "links_extended_required")
             ];
 
             // Update

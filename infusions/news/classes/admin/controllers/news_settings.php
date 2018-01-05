@@ -38,24 +38,22 @@ class NewsSettingsAdmin extends NewsAdminModel {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 0, "news_allow_submission"),
-                "news_allow_submission_files" => form_sanitizer($_POST['news_allow_submission_files'], 0,
-                    "news_allow_submission_files"),
+                "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 1, "news_allow_submission"),
+                "news_allow_submission_files" => form_sanitizer($_POST['news_allow_submission_files'], 1, "news_allow_submission_files"),
                 "news_extended_required"      => isset($_POST['news_extended_required']) ? 1 : 0,
-                "news_pagination"             => form_sanitizer($_POST['news_pagination'], 0, "news_pagination"),
-                "news_image_link"             => form_sanitizer($_POST['news_image_link'], 0, 'news_image_link'),
+                "news_pagination"             => form_sanitizer($_POST['news_pagination'], 12, "news_pagination"),
+                "news_image_link"             => form_sanitizer($_POST['news_image_link'], 1, 'news_image_link'),
                 "news_image_frontpage"        => form_sanitizer($_POST['news_image_frontpage'], 0, 'news_image_frontpage'),
-                "news_image_readmore"         => form_sanitizer($_POST['news_image_readmore'], 0, 'news_image_readmore'),
+                "news_image_readmore"         => form_sanitizer($_POST['news_image_readmore'], 1, 'news_image_readmore'),
                 "news_thumb_ratio"            => form_sanitizer($_POST['news_thumb_ratio'], 0, 'news_thumb_ratio'),
-                "news_thumb_w"                => form_sanitizer($_POST['news_thumb_w'], 300, 'news_thumb_w'),
-                "news_thumb_h"                => form_sanitizer($_POST['news_thumb_h'], 150, 'news_thumb_h'),
-                "news_photo_w"                => form_sanitizer($_POST['news_photo_w'], 400, 'news_photo_w'),
-                "news_photo_h"                => form_sanitizer($_POST['news_photo_h'], 300, 'news_photo_h'),
-                "news_photo_max_w"            => form_sanitizer($_POST['news_photo_max_w'], 1800, 'news_photo_max_w'),
-                "news_photo_max_h"            => form_sanitizer($_POST['news_photo_max_h'], 1600, 'news_photo_max_h'),
-                "news_photo_max_b"            => form_sanitizer($_POST['calc_b'], 150, 'calc_b') * form_sanitizer($_POST['calc_c'], 100000,
-                        'calc_c'),
-                "news_file_types"             => form_sanitizer($_POST['news_file_types'], "", "news_file_types"),
+                "news_thumb_w"                => form_sanitizer($_POST['news_thumb_w'], 800, 'news_thumb_w'),
+                "news_thumb_h"                => form_sanitizer($_POST['news_thumb_h'], 640, 'news_thumb_h'),
+                "news_photo_w"                => form_sanitizer($_POST['news_photo_w'], 1920, 'news_photo_w'),
+                "news_photo_h"                => form_sanitizer($_POST['news_photo_h'], 1080, 'news_photo_h'),
+                "news_photo_max_w"            => form_sanitizer($_POST['news_photo_max_w'], 2048, 'news_photo_max_w'),
+                "news_photo_max_h"            => form_sanitizer($_POST['news_photo_max_h'], 1365, 'news_photo_max_h'),
+                "news_photo_max_b"            => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
+                "news_file_types"             => form_sanitizer($_POST['news_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "news_file_types"),
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {

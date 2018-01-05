@@ -56,18 +56,18 @@ if (isset($_POST['delete_watermarks'])) {
             "photo_h"                     => form_sanitizer($_POST['photo_h'], 800, "photo_h"),
             "photo_max_w"                 => form_sanitizer($_POST['photo_max_w'], 2400, "photo_max_w"),
             "photo_max_h"                 => form_sanitizer($_POST['photo_max_h'], 1800, "photo_max_h"),
-            "photo_max_b"                 => form_sanitizer($_POST['calc_b'] * $_POST['calc_c'], 2000000, ""),
+            "photo_max_b"                 => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
             "gallery_pagination"          => form_sanitizer($_POST['gallery_pagination'], 24, "gallery_pagination"),
             "photo_watermark"             => form_sanitizer($_POST['photo_watermark'], 0, "photo_watermark"),
             "photo_watermark_save"        => isset($_POST['photo_watermark_save']) ? 1 : 0,
             "photo_watermark_image"       => isset($_POST['photo_watermark_image']) ? form_sanitizer($_POST['photo_watermark_image'], "", "photo_watermark_image") : IMAGES_G."watermark.png",
             "photo_watermark_text"        => isset($_POST['photo_watermark_text']) ? 1 : 0,
-            "photo_watermark_text_color1" => isset($_POST['photo_watermark_text_color1']) ? form_sanitizer($_POST['photo_watermark_text_color1'], "#000000", "photo_watermark_text_color1") : "#000000",
-            "photo_watermark_text_color2" => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], "#000000", "photo_watermark_text_color2") : "#000000",
-            "photo_watermark_text_color3" => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], "#000000", "photo_watermark_text_color3") : "#000000",
+            "photo_watermark_text_color1" => isset($_POST['photo_watermark_text_color1']) ? form_sanitizer($_POST['photo_watermark_text_color1'], "FF6600", "photo_watermark_text_color1") : "FF6600",
+            "photo_watermark_text_color2" => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], "FFFF00", "photo_watermark_text_color2") : "FFFF00",
+            "photo_watermark_text_color3" => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], "FFFFFF", "photo_watermark_text_color3") : "FFFFFF",
             "gallery_allow_submission"    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
             "gallery_extended_required"   => isset($_POST['gallery_extended_required']) ? 1 : 0,
-            "gallery_file_types"          => form_sanitizer($_POST['gallery_file_types'], "", "gallery_file_types"),
+            "gallery_file_types"          => form_sanitizer($_POST['gallery_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "gallery_file_types"),
         ];
         if (defender::safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {

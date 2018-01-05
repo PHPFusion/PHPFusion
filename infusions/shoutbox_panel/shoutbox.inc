@@ -161,7 +161,7 @@ class Shoutbox {
 
         if (isset($_POST['sb_settings'])) {
             $inputArray = [
-                'visible_shouts' => form_sanitizer($_POST['visible_shouts'], 0, "visible_shouts"),
+                'visible_shouts' => form_sanitizer($_POST['visible_shouts'], 5, "visible_shouts"),
                 'guest_shouts'   => form_sanitizer($_POST['guest_shouts'], 0, "guest_shouts"),
                 'hidden_shouts'  => form_sanitizer($_POST['hidden_shouts'], 0, "hidden_shouts"),
             ];

@@ -36,7 +36,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
         // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "faq_allow_submission" => form_sanitizer($_POST['faq_allow_submission'], 0, "faq_allow_submission"),
+                "faq_allow_submission" => form_sanitizer($_POST['faq_allow_submission'], 1, "faq_allow_submission"),
             ];
             // Update
             if (\defender::safe()) {

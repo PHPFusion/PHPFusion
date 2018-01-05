@@ -19,20 +19,20 @@ pageAccess('BLOG');
 if (isset($_POST['savesettings'])) {
     $error = 0;
     $inputArray = [
-        "blog_allow_submission"       => form_sanitizer($_POST['blog_allow_submission'], 0, "blog_allow_submission"),
-        "blog_allow_submission_files" => form_sanitizer($_POST['blog_allow_submission_files'], 0, "blog_allow_submission_files"),
+        "blog_allow_submission"       => form_sanitizer($_POST['blog_allow_submission'], 1, "blog_allow_submission"),
+        "blog_allow_submission_files" => form_sanitizer($_POST['blog_allow_submission_files'], 1, "blog_allow_submission_files"),
         "blog_extended_required"      => isset($_POST['blog_extended_required']) ? 1 : 0,
         "blog_pagination"             => form_sanitizer($_POST['blog_pagination'], 0, "blog_pagination"),
-        "blog_image_link"             => form_sanitizer($_POST['blog_image_link'], 0, 'blog_image_link'),
+        "blog_image_link"             => form_sanitizer($_POST['blog_image_link'], 1, 'blog_image_link'),
         "blog_thumb_ratio"            => form_sanitizer($_POST['blog_thumb_ratio'], 0, 'blog_thumb_ratio'),
-        "blog_thumb_w"                => form_sanitizer($_POST['blog_thumb_w'], 300, 'blog_thumb_w'),
-        "blog_thumb_h"                => form_sanitizer($_POST['blog_thumb_h'], 150, 'blog_thumb_h'),
+        "blog_thumb_w"                => form_sanitizer($_POST['blog_thumb_w'], 100, 'blog_thumb_w'),
+        "blog_thumb_h"                => form_sanitizer($_POST['blog_thumb_h'], 100, 'blog_thumb_h'),
         "blog_photo_w"                => form_sanitizer($_POST['blog_photo_w'], 400, 'blog_photo_w'),
         "blog_photo_h"                => form_sanitizer($_POST['blog_photo_h'], 300, 'blog_photo_h'),
         "blog_photo_max_w"            => form_sanitizer($_POST['blog_photo_max_w'], 1800, 'blog_photo_max_w'),
         "blog_photo_max_h"            => form_sanitizer($_POST['blog_photo_max_h'], 1600, 'blog_photo_max_h'),
-        "blog_photo_max_b"            => form_sanitizer($_POST['calc_b'], 150, 'calc_b') * form_sanitizer($_POST['calc_c'], 100000, 'calc_c'),
-        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], "", "blog_file_types"),
+        "blog_photo_max_b"            => form_sanitizer($_POST['calc_b'], 153600, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
+        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "blog_file_types"),
     ];
     if (defender::safe()) {
         foreach ($inputArray as $settings_name => $settings_value) {
