@@ -78,7 +78,7 @@ if ($pdo_enabled == "1") {
 }
 
 // Establish mySQL database connection
-$link = dbconnect($db_host, $db_user, $db_pass, $db_name);
+$link = dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port="3306");
 unset($db_host, $db_user, $db_pass);
 
 // Fetch the settings from the database
