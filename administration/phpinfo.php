@@ -25,6 +25,7 @@ require_once LOCALE.LOCALESET."admin/phpinfo.php";
 if (!isset ($_GET['page']) || !isnum($_GET['page'])) {
 	$_GET['page'] = 1;
 }
+
 //Generating navigation
 $navigation = "<table cellpadding='0' cellspacing='1' class='tbl-border' style='text-align:center;width:100%;margin-bottom:1em;'>\n<tr>\n";
 $navigation .= "<td class='".($_GET['page'] == 1 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 1 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=1'>".$locale['401']."</a>".($_GET['page'] == 1 ? "</strong>" : "")."</td>\n";
@@ -32,6 +33,7 @@ $navigation .= "<td class='".($_GET['page'] == 2 ? "tbl1" : "tbl2")."' style='wi
 $navigation .= "<td class='".($_GET['page'] == 3 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 3 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=3'>".$locale['440']."</a>".($_GET['page'] == 3 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 4 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 4 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=4'>".$locale['450']."</a>".($_GET['page'] == 4 ? "</strong>" : "")."</td>\n";
 $navigation .= "</tr></table>\n";
+
 //General info
 if ($_GET['page'] == 1) {
 	$phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
@@ -42,7 +44,7 @@ if ($_GET['page'] == 1) {
 	if ($pdo_enabled == "1") {
 		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".$pdo->getAttribute(constant("PDO::ATTR_SERVER_VERSION"))."</td></tr>\n";
 	} else {
-		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".mysql_get_server_info()."</td></tr>\n";
+		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".mysqli_get_server_info()."</td></tr>\n";
 	}
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['407']."</td><td class='tbl1' style='text-align:right'>".$settings['version']."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['408']."</td><td class='tbl2' style='text-align:right'>".DB_PREFIX."</td></tr>\n";
