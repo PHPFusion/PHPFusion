@@ -99,7 +99,7 @@ if (isset($_POST['save_download'])) {
         'download_visibility'        => form_sanitizer($_POST['download_visibility'], '0', 'download_visibility'),
         'download_allow_comments'    => isset($_POST['download_allow_comments']) ? 1 : 0,
         'download_allow_ratings'     => isset($_POST['download_allow_ratings']) ? 1 : 0,
-        'download_datestamp'         => isset($_POST['update_datestamp']) ? TIME : $data['download_datestamp']
+        'download_datestamp'         => isset($_POST['update_datestamp']) || empty($data['download_datestamp']) ? TIME : $data['download_datestamp'],
     ];
 
     /** Bugs with having Link and File together -- File will take precedence **/

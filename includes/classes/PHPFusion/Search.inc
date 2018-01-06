@@ -119,7 +119,6 @@ class Search extends Search_Engine {
             <div class='clearfix'>
                 <div class='pull-left m-r-10'>{%item_image%}</div>
                 <div class='overflow-hide'>
-                    <span class='va' style='height:30px;'></span>
                     <a ".($new_window ? "target='_blank' " : ' ')." href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>{%item_description%}
                 </div>
             </div>
@@ -127,7 +126,6 @@ class Search extends Search_Engine {
         <!---//results-->
         ";
     }
-
 
     /*
      * Template for search Full Listing Item Type
@@ -148,7 +146,7 @@ class Search extends Search_Engine {
                 {%item_search_context%}
                 {%item_search_criteria%}
                 </div>
-            </div>            
+            </div>
         </li>
         ";
     }

@@ -59,7 +59,7 @@ if (db_exists(DB_BLOG)) {
 
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT blog_id FROM ".DB_BLOG."
-            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." 
+            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
             AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search;
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
@@ -89,7 +89,7 @@ if (db_exists(DB_BLOG)) {
                 $text_c = Search_Engine::search_stringscount($data['blog_blog']);
                 $text_c2 = Search_Engine::search_stringscount($data['blog_extended']);
 
-                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".parse_textarea($text_frag)."</div><br />";
+                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 
                 $meta = "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
                 $meta .= $locale['global_071'].showdate("longdate", $data['blog_datestamp'])."</span><br />\n";
@@ -120,6 +120,7 @@ if (db_exists(DB_BLOG)) {
                 '{%search_content%}' => $search_result
             ]);
         }
+
         Search_Engine::search_navigation($rows);
         Search_Engine::search_globalarray($formatted_result);
         Search_Engine::append_item_count($item_count);

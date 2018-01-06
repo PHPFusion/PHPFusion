@@ -108,8 +108,6 @@ if (db_exists(DB_ARTICLES)) {
                 );
             }
 
-            $search_result .= "</ul>\n";
-
             // Pass strings for theme developers
             $formatted_result = strtr(Search::render_search_item_wrapper(), [
                 '{%image%}'          => "<img src='".ImageRepo::getimage('ac_A')."' alt='".$locale['a400']."' style='width:32px;'/>",
