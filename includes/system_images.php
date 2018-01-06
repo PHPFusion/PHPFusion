@@ -69,6 +69,13 @@ $fusion_images = array(
 	//A
 	"arrow" => IMAGES."arrow.png",
 	"attach" => FORUM."images/attach.png",
+	"ac_Members" => ADMIN."images/members.gif",
+	"ac_Forums" => ADMIN."images/forums.gif",
+	"ac_Downloads" => ADMIN."images/dl.gif",
+	"ac_News" => ADMIN."images/news.gif",
+	"ac_Articles" => ADMIN."images/articles.gif",
+	"ac_Web Links" => ADMIN."images/wl.gif",
+	"ac_Photo Albums" => ADMIN."images/photoalbums.gif",
 	//B
 	"blank" => THEME."images/blank.gif",
 	//C
