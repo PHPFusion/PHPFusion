@@ -97,6 +97,7 @@ function bbcode_form() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
     $aidlink = fusion_get_aidlink();
     $available_bbcodes = [];
+    $enabled_bbcodes = [];
     $textarea_name = "";
     $inputform_name = "";
     $__BBCODE__ = [];
@@ -121,7 +122,7 @@ function bbcode_form() {
         if (substr($_GET['enable'], 0, 1) != '!') {
             $data2 = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
             $order = ($data2['xorder'] == 0 ? 1 : ($data2['xorder'] + 1));
-            $result = dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".$_GET['enable']."', '".$order."')");
+            dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".$_GET['enable']."', '".$order."')");
         } else {
             $result2 = dbcount("(bbcode_id)", DB_BBCODES);
             if (!empty($result2)) {
@@ -133,11 +134,11 @@ function bbcode_form() {
         redirect(clean_request('', ['section', 'enable'], FALSE));
 
     } else if (isset($_GET['disable']) && isnum($_GET['disable'])) {
-        $result = dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id='".$_GET['disable']."'");
+        dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id='".$_GET['disable']."'");
         $result = dbquery("SELECT bbcode_order FROM ".DB_BBCODES." ORDER BY bbcode_order");
         $order = 1;
         while ($data = dbarray($result)) {
-            $result2 = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order='".$order."' WHERE bbcode_order='".$data['bbcode_order']."'");
+            dbquery("UPDATE ".DB_BBCODES." SET bbcode_order='".$order."' WHERE bbcode_order='".$data['bbcode_order']."'");
             $order++;
         }
         addNotice('warning', $locale['BBCA_433']);
@@ -232,8 +233,6 @@ function bbcode_form() {
         echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
-
-        $enabled_bbcodes = [];
 
         foreach ($available_bbcodes as $available_bbcode) {
             $__BBCODE__ = [];

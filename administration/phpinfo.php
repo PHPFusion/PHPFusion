@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: phpinfo.php
 | Author: PHP-Fusion Development Team
-| Co-Author: Tomasz Jankowski (jantom)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -103,30 +102,23 @@ function phpsettings() {
 function folderpermission() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
     $status = '';
-    $folders = [ //path => have to be writeable or not
-                 'administration/db_backups/'              => TRUE,
-                 'images/'                                 => TRUE,
-                 'images/imagelist.js'                     => TRUE,
-                 'images/avatars/'                         => TRUE,
-                 'images/smiley/'                          => TRUE,
-                 'infusions/articles/images/'              => infusion_exists('articles'),
-                 'infusions/blog/images/'                  => infusion_exists('blog'),
-                 'infusions/blog/images/thumbs/'           => infusion_exists('blog'),
-                 'infusions/downloads/files/'              => infusion_exists('downloads'),
-                 'infusions/downloads/images/'             => infusion_exists('downloads'),
-                 'infusions/downloads/submissions/'        => infusion_exists('downloads'),
-                 'infusions/downloads/submissions/images/' => infusion_exists('downloads'),
-                 'infusions/forum/attachments/'            => infusion_exists('forum'),
-                 'infusions/forum/images/'                 => infusion_exists('forum'),
-                 'infusions/gallery/photos/'               => infusion_exists('gallery'),
-                 'infusions/gallery/photos/thumbs/'        => infusion_exists('gallery'),
-                 'infusions/gallery/submissions/'          => infusion_exists('gallery'),
-                 'infusions/gallery/submissions/thumbs/'   => infusion_exists('gallery'),
-                 'infusions/news/images/'                  => infusion_exists('news'),
-                 'infusions/news/images/thumbs/'           => infusion_exists('news'),
-                 'robots.txt'                              => TRUE,
-                 'config.php'                              => FALSE
+    $folders = [
+        //path => have to be writeable or not
+        'administration/db_backups/' => TRUE,
+        'images/'                    => TRUE,
+        'images/imagelist.js'        => TRUE,
+        'images/avatars/'            => TRUE,
+        'images/smiley/'             => TRUE,
+        'robots.txt'                 => TRUE,
+        'config.php'                 => FALSE
     ];
+
+    $infusions = \PHPFusion\Admins::getInstance()->getFolderPermissions();
+    foreach ($infusions as $key => $value) {
+        $key = $value;
+        $folders += $key;
+    }
+
     add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
     //Check file/folder writeable
     $i = 0;

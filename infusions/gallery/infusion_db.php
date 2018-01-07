@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 //  Define Paths
 define("IMAGES_G", INFUSIONS."gallery/photos/");
 define("IMAGES_G_T", INFUSIONS."gallery/photos/thumbs/");
@@ -53,4 +54,10 @@ if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
     'submit_locale' => fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"),
     'title'         => fusion_get_locale('submit_0003', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/gallery/photos/'             => TRUE,
+    'infusions/gallery/photos/thumbs/'      => TRUE,
+    'infusions/gallery/submissions/'        => TRUE,
+    'infusions/gallery/submissions/thumbs/' => TRUE
 ]);

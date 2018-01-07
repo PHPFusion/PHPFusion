@@ -122,7 +122,7 @@ if (isset($_POST['savesettings'])) {
 
                     $language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
                     if (is_null($language_exist['template_language'])) {
-                        include LOCALE.$language."/setup.php";
+                        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
@@ -170,8 +170,7 @@ if (isset($_POST['savesettings'])) {
                     if (!empty($added_language)) {
                         $last_id = 0;
                         foreach ($added_language as $language) {
-
-                            include LOCALE.$language."/setup.php";
+                            $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
 
                             if (isset($mlt_insertdbrow[$language])) {
                                 $last_id = 0;
@@ -190,9 +189,7 @@ if (isset($_POST['savesettings'])) {
 
                     if (!empty($removed_language)) {
                         foreach ($removed_language as $language) {
-
-                            include LOCALE.$language."/setup.php";
-
+                            $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                             $lang_cmd['delete'][] = DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'";
 
                             if (isset($mlt_deldbrow[$language])) {
@@ -205,11 +202,9 @@ if (isset($_POST['savesettings'])) {
                     }
                 } // endwhile infusions loop
 
-
                 if (!empty($removed_language)) {
-
                     foreach ($removed_language as $language) {
-                        include LOCALE.$language."/setup.php";
+                        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                         dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language='".$language."'");
                     }
 

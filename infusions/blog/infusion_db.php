@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 if (!defined("BLOG_LOCALE")) {
     if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
         define("BLOG_LOCALE", INFUSIONS."blog/locale/".LOCALESET."blog.php");
@@ -50,4 +51,8 @@ define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
     'submit_locale' => fusion_get_locale('BLOG', LOCALE.LOCALESET."admin/main.php"),
     'title'         => fusion_get_locale('submit_0005', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/blog/images/'        => TRUE,
+    'infusions/blog/images/thumbs/' => TRUE
 ]);

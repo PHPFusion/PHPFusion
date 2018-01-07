@@ -23,7 +23,6 @@ namespace PHPFusion;
  * Determine how to we set variables on 3rd party script
  */
 class Admins {
-
     private static $instance = NULL;
     /**
      * @var array - default section icons
@@ -98,6 +97,7 @@ class Admins {
     private $submit_link = [];
     private $link_type = [];
     private $submit_data = [];
+    private $folder_permissions = [];
 
     private function __construct() {
     }
@@ -278,7 +278,6 @@ class Admins {
     }
 
     public function getSubmitData($type = NULL) {
-
         return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
     }
 
@@ -309,6 +308,20 @@ class Admins {
     /**
      * @return array
      */
+    public function getFolderPermissions() {
+        return $this->folder_permissions;
+    }
+
+    /**
+     * @param array $folder_permissions
+     */
+    public function setFolderPermissions($folder_permissions = []) {
+        $this->folder_permissions[] = $folder_permissions;
+    }
+
+    /**
+     * @return array
+     */
     public function getAdminPageLink() {
         return $this->admin_page_link;
     }
@@ -327,7 +340,6 @@ class Admins {
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
-
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();

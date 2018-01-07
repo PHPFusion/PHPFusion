@@ -195,10 +195,10 @@ class db_backup {
                             if (in_array($tbl, $_POST['list_tbl'])) {
                                 $result = preg_replace("/^CREATE TABLE `$inf_tblpre(.*?)`/im", "CREATE TABLE `$restore_tblpre\\1`", $result);
                                 if ($pdo_enabled == "1") {
-                                    $rct2 = dbquery($result);
-                                } else {
+                                    dbquery($result);
+                                }/* else {
                                     mysql_unbuffered_query($result);
-                                }
+                                }*/
                             }
                         }
                     }
@@ -210,10 +210,10 @@ class db_backup {
                             if (in_array($ins, $_POST['list_ins'])) {
                                 $result = preg_replace("/INSERT INTO `$inf_tblpre(.*?)`/i", "INSERT INTO `$restore_tblpre\\1`", $result);
                                 if ($pdo_enabled == "1") {
-                                    $rct3 = dbquery($result);
-                                } else {
+                                    dbquery($result);
+                                }/* else {
                                     mysql_unbuffered_query($result);
-                                }
+                                }*/
                             }
                         }
                     }
@@ -311,12 +311,12 @@ class db_backup {
             echo "<td valign='top' class='tbl'><strong>".$this->locale['433']."</strong><br />\n";
             echo "<select name='list_tbl[]' id='list_tbl' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$table_opt_list."</select>\n";
             echo "<div class='btn-group m-t-10' style='text-align:center'>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectAll()\">".$this->locale['436']."</a>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectNone()\">".$this->locale['437']."</a></div></td>\n";
+            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"tableSelectAll()\">".$this->locale['436']."</a>\n";
+            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"tableSelectNone()\">".$this->locale['437']."</a></div></td>\n";
             echo "<td valign='top' class='tbl'><strong>".$this->locale['434']."</strong><br />\n";
             echo "<select name='list_ins[]' id='list_ins' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$insert_opt_list."</select>\n";
-            echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectAll()\">".$this->locale['436']."</a>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$this->locale['437']."</a></div></td>\n";
+            echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"populateSelectAll()\">".$this->locale['436']."</a>\n";
+            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"populateSelectNone()\">".$this->locale['437']."</a></div></td>\n";
             echo "</tr>\n<tr>\n";
             echo "<td colspan='2' class='tbl text-center'>\n";
             echo "</tr>\n</tbody>\n</table>\n</div>";
@@ -358,10 +358,10 @@ class db_backup {
         }
 
         echo "<script type='text/javascript'>\n<!--\n";
-        echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}\n";
-        echo "function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}\n";
-        echo "function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}\n";
-        echo "//-->\n</script>\n";
+            echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}\n";
+            echo "function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}\n";
+            echo "function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}\n";
+            echo "//-->\n</script>\n";
 
         echo openform('backupform', 'post', FUSION_REQUEST);
         echo "<div class='row'>";
@@ -412,9 +412,9 @@ class db_backup {
         echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='textbox' multiple='multiple'>".$table_opt_list."</select>\n";
         echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$this->locale['435']."</strong>\n";
         echo "<div class='btn-group'>\n";
-        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectCore()\">".$this->locale['458']."</a>\n";
-        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectAll()\">".$this->locale['436']."</a>\n";
-        echo "<a class='btn btn-default' a href=\"javascript:void(0)\" onclick=\"javascript:backupSelectNone()\">".$this->locale['437']."</a>\n";
+        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectCore()\">".$this->locale['458']."</a>\n";
+        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectAll()\">".$this->locale['436']."</a>\n";
+        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectNone()\">".$this->locale['437']."</a>\n";
         echo "</div>\n";
         echo "</div>\n";
         echo "</td>\n</tr>\n</tbody>\n</table>\n</div>";

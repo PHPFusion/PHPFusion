@@ -36,11 +36,19 @@ if (!defined("ARTICLE_ADMIN_LOCALE")) {
 }
 
 // Paths
-if (!defined("ARTICLE_CLASS")) define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
-if (!defined("IMAGES_A")) define("IMAGES_A", INFUSIONS."articles/images/");
+if (!defined("ARTICLE_CLASS")) {
+    define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
+}
+if (!defined("IMAGES_A")) {
+    define("IMAGES_A", INFUSIONS."articles/images/");
+}
 // Database
-if (!defined("DB_ARTICLE_CATS")) define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
-if (!defined("DB_ARTICLES")) define("DB_ARTICLES", DB_PREFIX."articles");
+if (!defined("DB_ARTICLE_CATS")) {
+    define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
+}
+if (!defined("DB_ARTICLES")) {
+    define("DB_ARTICLES", DB_PREFIX."articles");
+}
 
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
@@ -54,4 +62,7 @@ if (!defined("DB_ARTICLES")) define("DB_ARTICLES", DB_PREFIX."articles");
     'submit_locale' => fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"),
     'title'         => fusion_get_locale('submit_0001', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/articles/images/' => TRUE
 ]);

@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 if (!defined("DOWNLOAD_ADMIN_LOCALE")) {
     if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
         define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
@@ -42,4 +43,10 @@ define("DB_DOWNLOADS", DB_PREFIX."downloads");
     'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
     'title'         => fusion_get_locale('submit_0002', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/downloads/files/'              => TRUE,
+    'infusions/downloads/images/'             => TRUE,
+    'infusions/downloads/submissions/'        => TRUE,
+    'infusions/downloads/submissions/images/' => TRUE
 ]);

@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!defined("LASTVISITED")) {
-define('LASTVISITED', Authenticate::setLastVisitCookie());
+    define('LASTVISITED', Authenticate::setLastVisitCookie());
 }
 
 define("FORUM", INFUSIONS."forum/");
@@ -40,6 +40,10 @@ define("DB_FORUMS", DB_PREFIX."forums");
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/forum/attachments/' => TRUE,
+    'infusions/forum/images/'      => TRUE
+]);
 
 if (!defined("FORUM_LOCALE")) {
     if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {

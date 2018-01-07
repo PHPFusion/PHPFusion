@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: permalink.php
-| Author: Ankur Thakur
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -308,6 +308,7 @@ echo "</div>\n";
 //  echo "<div class='alert alert-warning'><i class='fa fa-warning fa-fw m-r-10'></i>".$locale['rewrite_disabled']."</div>\n";
 //}
 
+$permalink_name = '';
 $permalink_desc = '';
 
 echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-b-15");

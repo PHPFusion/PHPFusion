@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 define("IMAGES_N", INFUSIONS."news/images/");
 define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
 define("IMAGES_NC", INFUSIONS."news/news_cats/");
@@ -37,6 +38,10 @@ define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
     'submit_locale' => fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"),
     'title'         => fusion_get_locale('submit_0000', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+]);
+\PHPFusion\Admins::getInstance()->setFolderPermissions([
+    'infusions/news/images/'        => TRUE,
+    'infusions/news/images/thumbs/' => TRUE
 ]);
 
 if (!defined("NEWS_LOCALE")) {

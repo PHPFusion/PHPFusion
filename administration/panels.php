@@ -6,9 +6,6 @@
 +--------------------------------------------------------+
 | Filename: panels.php
 | Author: PHP-Fusion Development Team
-| Author: Robert Gaudyn (Wooya)
-| Author: Joakim Falk (Falk)
-| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
