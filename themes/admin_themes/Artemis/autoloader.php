@@ -14,6 +14,7 @@
 +--------------------------------------------------------+
 | Released under PHP-Fusion EPAL
 +--------------------------------------------------------*/
+require_once INCLUDES.'theme_functions_include.php';
 spl_autoload_register(function ($className) {
     $autoload_register_paths = [
         "Artemis\\Viewer\\adminPanel"      => THEMES."admin_themes/Artemis/Drivers/Viewer/adminPanel.php",
