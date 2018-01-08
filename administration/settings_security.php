@@ -43,7 +43,7 @@ $Security_settings = [
     'maintenance'         => fusion_get_settings('maintenance'),
     'maintenance_message' => fusion_get_settings('maintenance_message'),
     'bad_words_enabled'   => fusion_get_settings('bad_words_enabled'),
-    'bad_words'           => stripinput($_POST['bad_words']),
+    'bad_words'           => fusion_get_settings('bad_words'),
     'bad_word_replace'    => fusion_get_settings('bad_word_replace'),
     'user_name_ban'       => fusion_get_settings('user_name_ban')
 ];
@@ -62,7 +62,7 @@ if (isset($_POST['savesettings'])) {
         'maintenance'         => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
         'maintenance_message' => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
         'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
-        'bad_words'           => form_sanitizer($_POST['bad_words'], '', 'bad_words'),
+        'bad_words'           => stripinput($_POST['bad_words']),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban')
     ];
