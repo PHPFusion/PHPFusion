@@ -102,10 +102,12 @@ class RSS {
 
         $this->writer->writeElement('link', $link);
 
-        $this->writer->startElement('description');
-        $description = htmlentities(stripslashes($description));
-        $this->writer->writeCData(html_entity_decode($description));
-        $this->writer->endElement(); // close description
+        if (!empty($description)) {
+            $this->writer->startElement('description');
+            $description = htmlentities(stripslashes($description));
+            $this->writer->writeCData(html_entity_decode($description));
+            $this->writer->endElement(); // close description
+        }
 
         $this->writer->endElement(); // close item
 
