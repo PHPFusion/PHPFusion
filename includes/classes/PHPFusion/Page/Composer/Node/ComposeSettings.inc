@@ -70,7 +70,7 @@ class ComposeSettings extends PageAdmin {
                         ];
 
                         if ($has_link) {
-                            $data = SiteLinks::get_SiteLinks(self::$data['page_link_cat']);
+                            $data = SiteLinks::get_current_SiteLinks("viewpage.php?page_id=" . self::$data['page_id']);
                         }
 
 
