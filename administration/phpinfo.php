@@ -17,10 +17,11 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('PI');
+use PHPFusion\BreadCrumbs;
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
 $aidlink = fusion_get_aidlink();
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 $allowed_section = ['general', 'phpsettings', 'folderpermission', 'details'];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'general';
@@ -37,6 +38,22 @@ $master_tab_title['icon'][] = "";
 $master_tab_title['title'][] = $locale['450'];
 $master_tab_title['id'][] = 'details';
 $master_tab_title['icon'][] = "";
+
+if (isset($_GET['section'])) {
+    switch ($_GET['section']) {
+        case "phpsettings":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['420']]);
+            break;
+        case "folderpermission":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['440']]);
+            break;
+        case "details":
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['450']]);
+            break;
+        default:
+            break;
+    }
+}
 
 opentable($locale['400']);
 echo opentab($master_tab_title, $_GET['section'], 'general', TRUE, 'nav-tabs m-b-15');
