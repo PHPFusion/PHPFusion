@@ -21,9 +21,7 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
 $aidlink = fusion_get_aidlink();
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
-if (!isset ($_GET['page']) || !isnum($_GET['page'])) {
-    $_GET['page'] = 1;
-}
+
 $allowed_section = ['general', 'phpsettings', 'folderpermission', 'details'];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'general';
 
@@ -115,8 +113,7 @@ function folderpermission() {
 
     $infusions = \PHPFusion\Admins::getInstance()->getFolderPermissions();
     foreach ($infusions as $key => $value) {
-        $key = $value;
-        $folders += $key;
+        $folders += $value;
     }
 
     add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
