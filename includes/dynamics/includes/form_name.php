@@ -15,21 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
+function form_name($input_name, $label = "", array $input_value = array(), array $options) {
 
     $locale = fusion_get_locale();
 
     $title = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    $html = '';
+
     // NOTE (remember to parse readback value as of '|' seperator)
     if (isset($input_value) && (!empty($input_value))) {
         if (!is_array($input_value)) {
             $input_value = construct_array($input_value, "", "|");
         }
     } else {
-        $input_value['0'] = "";
-        $input_value['1'] = "";
-        $input_value['2'] = "";
+        $input_value['0'] = '';
+        $input_value['1'] = '';
+        $input_value['2'] = '';
     }
 
     $options += [
@@ -44,17 +44,28 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         'error_text_2' => !empty($options['error_text']) ? $options['error_text_2'] : $locale['lastname_error'],
         'tip'          => '',
         'safemode'     => FALSE,
+        'stacked'      => '',
     ];
+
     $error_class = \defender::inputHasError($input_name.'-firstname') || \defender::inputHasError($input_name.'-lastname') ? "has-error " : "";
-    $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
-	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-	</label>\n" : '';
+    $html = "<div id='".$options['input_id']."-field' class='form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
+
+    if ($label) {
+        $html .= "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
+	    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+	    </label>\n";
+    }
+
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";
+
     $html .= "<div class='row p-l-15'>\n";
+
     $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10 p-l-0'>\n";
+
     $html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-firstname' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name[0])) || \defender::inputHasError($input_name[0]) ? "<div id='".$options['input_id']."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
@@ -62,9 +73,14 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name[1])) || \defender::inputHasError($input_name[1]) ? "<div id='".$options['input_id']."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
     $html .= "</div>\n";
 
+    $html .= $options['stacked'];
+
     $html .= "</div>\n"; // close inner row
+
     $html .= ($options['inline']) ? "</div>\n" : "";
+
     $html .= "</div>\n";
+
     \defender::getInstance()->add_field_session([
         'input_name'   => $input_name,
         'type'         => 'name',
