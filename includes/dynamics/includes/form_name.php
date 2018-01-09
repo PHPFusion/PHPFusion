@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_name($input_name, $label = "", array $input_value = array(), array $options) {
+
+function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
 
     $locale = fusion_get_locale();
 

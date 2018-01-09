@@ -23,6 +23,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $countries = [];
     require(INCLUDES.'geomap/geomap.inc.php');
+
     // NOTE (remember to parse readback value as of '|' seperator)
     if (isset($input_value) && (!empty($input_value))) {
         if (!is_array($input_value)) {
@@ -55,6 +56,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : $locale['postcode_error'],
         'safemode'     => FALSE,
         'flag'         => '',
+        'stacked'      => '',
     ];
 
     $input_id = $options['input_id'];
@@ -126,8 +128,13 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[5])) || \defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
     $html .= "</div>\n";
     $html .= "</div>\n"; // close inner row
+
+    $html .= $options['stacked'];
+
     $html .= ($options['inline']) ? "</div>\n" : "";
+
     $html .= "</div>\n";
+
     \defender::getInstance()->add_field_session([
         'input_name'   => $input_name,
         'type'         => 'address',

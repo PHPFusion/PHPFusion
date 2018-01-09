@@ -81,7 +81,7 @@
 
 
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = []) {
-    // there was no sanitization?
+
     $locale = fusion_get_locale();
 
     if (!defined('DATEPICKER')) {
@@ -120,15 +120,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'fieldicon_off'          => FALSE,
         'filtered_dates'         => [], // must be an array
         'include_filtered_dates' => (boolean)FALSE, // if TRUE, then only days filtered are selectable
-        'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
-        'disable_weekend'        => (boolean)FALSE, // if true, all weekend will be non-selectable
-        'type'                   => 'timestamp',
-        'tip'                    => '',
-        'showTime'               => (boolean)FALSE,
-        'week_start'             => fusion_get_settings('week_start'),
-        'join_to_id'             => '',
-        'join_from_id'           => '',
-        'debug'                  => '',
+        'weekend'         => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
+        'disable_weekend' => (boolean)FALSE, // if true, all weekend will be non-selectable
+        'type'            => 'timestamp',
+        'tip'             => '',
+        'showTime'        => (boolean)FALSE,
+        'week_start'      => fusion_get_settings('week_start'),
+        'join_to_id'      => '',
+        'join_from_id'    => '',
+        'debug'           => '',
+        'stacked'         => '',
     ];
 
     $options += $default_options;
@@ -207,6 +208,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= $options['stacked'];
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
 
