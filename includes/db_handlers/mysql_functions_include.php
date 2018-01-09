@@ -225,7 +225,13 @@ if(!function_exists("mysql_data_seek")) {
 }
 
 
-
+if(!function_exists("mysql_close")) {
+	function mysql_close($db_connect) 
+	{
+		global $db_connect;
+		return mysqli_close($db_connect);
+	}
+}
 
 
 /*
