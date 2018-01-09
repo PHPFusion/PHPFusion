@@ -1308,12 +1308,6 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     display: inline-flex;
 }
 
-.comments-reply {
-    width: 65px;
-    display: block;
-    margin-top: 10px;
-}
-
 .comments_reply_form {
     margin-bottom: 30px;
 }

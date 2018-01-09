@@ -74,14 +74,11 @@ class Search_Engine extends Search_Model {
      */
     public static function getInstance() {
         if (self::$search_instance === NULL) {
-            self::$search_instance = new Static();
+            self::$search_instance = new static();
             self::$search_instance->init();
         }
 
         return self::$search_instance;
-    }
-
-    private function __sleep() {
     }
 
     protected function __construct() {

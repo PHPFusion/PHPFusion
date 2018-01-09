@@ -1134,7 +1134,7 @@ class Comments {
                 "comment_id"        => $row['comment_id'],
                 "comment_cat"       => $row['comment_cat'],
                 "i"                 => $i,
-                "user_avatar"       => isnum($row['comment_name']) ? display_avatar($row, '50px', '', FALSE, '') : display_avatar([], '50px', '', FALSE, ''),
+                "user_avatar"       => isnum($row['comment_name']) ? display_avatar($row, '50px', '', FALSE, 'm-t-5') : display_avatar([], '50px', '', FALSE, 'm-t-5'),
                 "user"              => [
                     "user_id"     => $row['user_id'],
                     "user_name"   => $row['user_name'],

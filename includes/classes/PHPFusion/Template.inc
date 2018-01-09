@@ -39,7 +39,7 @@ class Template {
      */
     public static function getInstance($key = 'Default') {
         if (empty(self::$instance[$key])) {
-            self::$instance[$key] = new Static();
+            self::$instance[$key] = new static();
             self::$key = $key;
         }
 

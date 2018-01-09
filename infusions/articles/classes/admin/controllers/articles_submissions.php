@@ -141,6 +141,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             return $returnInformations;
         } else {
             redirect(clean_request("", [], FALSE));
+            return NULL;
         }
     }
 
@@ -167,9 +168,9 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         echo openform("submissionform", "post", FUSION_REQUEST);
         echo form_hidden("article_name", "", $this->inputArray['article_name']);
         ?>
-        <div class="well clearfix">
+        <div class="well clearfix m-t-15">
             <div class="pull-left">
-                <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-r-5"); ?>
+                <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
             </div>
             <div class="overflow-hide">
                 <?php

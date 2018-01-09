@@ -50,6 +50,7 @@ class PageController extends PageModel {
                 }
             } catch (\Exception $e) {
                 echo $locale['page_401'].' ', $locale['page_404'], "\n";
+                return NULL;
             }
         }
     }

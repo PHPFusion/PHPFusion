@@ -51,11 +51,11 @@ class PageAdmin extends PageModel {
 
     /**
      * Return page composer object
-     * @return null|static
+     * @return object
      */
     public static function getComposerAdminInstance() {
         if (empty(self::$page_instance)) {
-            self::$page_instance = new Static;
+            self::$page_instance = new static;
             self::set_PageAdminConfig();
         }
 

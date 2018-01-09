@@ -34,6 +34,10 @@ add_to_head("
     min-width: 100%;
     overflow: hidden;
 }
+.panel-default > .panel-image-wrapper img {
+    margin-top: inherit !important;
+    margin-left: inherit !important;
+}
 .panel-default .album_title {
     width: 100%;
     margin-bottom: 5px;

@@ -239,9 +239,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo form_button('delete', self::$locale['news_0135'], self::$locale['news_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
                 echo "</div>\n";
 
-                echo "<div class='well clearfix'>\n";
-                echo "<div class='pull-left m-r-10'>\n";
-                echo display_avatar($data, '40px', '', TRUE, '');
+                echo "<div class='well clearfix m-t-15'>\n";
+                echo "<div class='pull-left'>\n";
+                echo display_avatar($data, '30px', '', TRUE, 'img-rounded m-t-5 m-r-5');
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo self::$locale['news_0132'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
@@ -482,7 +482,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
             ");
             $rows = dbrows($result);
             if ($rows > 0) {
-                echo "<div class='well'>".sprintf(self::$locale['news_0137'], format_word($rows, self::$locale['fmt_submission']))."</div>\n";
+                echo "<div class='well m-t-15'>".sprintf(self::$locale['news_0137'], format_word($rows, self::$locale['fmt_submission']))."</div>\n";
                 echo "<div class='table-responsive'><table class='table table-striped'>\n";
                 echo "<thead>\n";
                 echo "<tr>\n";

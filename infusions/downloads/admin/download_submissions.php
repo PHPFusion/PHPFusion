@@ -145,9 +145,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 
                 add_to_title($locale['global_200'].$locale['global_201'].$callback_data['download_title']."?");
                 echo openform("publish_download", "post", FUSION_REQUEST);
-                echo "<div class='well clearfix'>\n";
+                echo "<div class='well clearfix m-t-15'>\n";
                 echo "<div class='pull-left'>\n";
-                echo display_avatar($callback_data, "30px", "", FALSE, "img-rounded m-r-5");
+                echo display_avatar($callback_data, "30px", "", FALSE, "img-rounded m-t-5 m-r-5");
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo $locale['download_0056'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
@@ -275,7 +275,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     ");
     $rows = dbrows($result);
     if ($rows > 0) {
-        echo "<div class='well'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
+        echo "<div class='well m-t-15'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<tr>\n";
         echo "<th>".$locale['download_0055']."</th>\n";

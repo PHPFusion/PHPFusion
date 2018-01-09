@@ -259,6 +259,8 @@ abstract class Search_Model {
             return "(".implode(' || ', array_map(function ($field_var) {
                     return implode('', $field_var);
                 }, self::$conditions[$field_module])).")";
+        } else {
+            return NULL;
         }
     }
 

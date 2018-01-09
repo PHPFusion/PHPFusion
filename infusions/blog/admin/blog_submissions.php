@@ -198,7 +198,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo openform("publish_blog", "post", FUSION_REQUEST);
             echo "<div class='well clearfix'>\n";
             echo "<div class='pull-left'>\n";
-            echo display_avatar($data, "30px", "", TRUE, "img-rounded m-r-5");
+            echo display_avatar($data, "30px", "", TRUE, "img-rounded m-t-5 m-r-5");
             echo "</div>\n";
             echo "<div class='overflow-hide'>\n";
             echo $locale['blog_0132'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";

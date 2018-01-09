@@ -130,7 +130,7 @@ class SiteLinks {
      *
      * @param $link_id
      *
-     * @return bool|mixed|null|PDOStatement|resource
+     * @return bool|mixed|null|resource
      */
     public static function delete_sitelinks($link_id) {
         $result = NULL;
@@ -537,7 +537,7 @@ class SiteLinks {
     }
 
     private function get_SubLinks_URL($data, $link_id) {
-        $linkRef = &$linkRef;
+        $linkRef = [];
         if (isset($data[$link_id])) {
             foreach ($data[$link_id] as $link) {
                 $linkRef[$link['link_id']] = $link['link_url'];
@@ -567,8 +567,8 @@ class SiteLinks {
      * Recursion loop of data
      */
     private function showMenuLinks($id, $data) {
+        $res = '';
 
-        $res = &$res;
         if (!empty($data[$id])) {
             $i = 0;
 

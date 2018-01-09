@@ -708,7 +708,11 @@ class Atom {
                 }
 
                 return implode(', ', $_parsedFonts);
+            } else {
+                return NULL;
             }
+        } else {
+            return NULL;
         }
     }
 

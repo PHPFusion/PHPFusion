@@ -197,8 +197,9 @@ class UserFieldsInput {
                 'user_reputation' => 0
             ];
 
+        } else {
+            return NULL;
         }
-
     }
 
     /**
@@ -788,8 +789,8 @@ class UserFieldsInput {
                     } else {
                         $this->_completeMessage = $locale['u169'];
                     }
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_email='".$data['user_email']."' WHERE user_id='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$data['user_id']."'");
+                    dbquery("UPDATE ".DB_USERS." SET user_email='".$data['user_email']."' WHERE user_id='".$data['user_id']."'");
+                    dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$data['user_id']."'");
                 }
             } else {
                 redirect("index.php");

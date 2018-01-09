@@ -68,7 +68,7 @@ class Authenticate {
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
                     $user['user_password'] = $passAuth->getNewHash();
-                    $result = dbquery("UPDATE ".DB_USERS."
+                    dbquery("UPDATE ".DB_USERS."
                         SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
                         WHERE user_id='".$user['user_id']."'");
                 }
@@ -80,7 +80,7 @@ class Authenticate {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
                     if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
-                        $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
+                        dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
                         if ($user['user_status'] == 3) {
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
                             $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
@@ -181,8 +181,12 @@ class Authenticate {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
         }
+
         if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < USER_LEVEL_ADMIN && $user['user_theme'] != "Default") {
             $user['user_theme'] = "Default";
+            return NULL;
+        } else {
+            return NULL;
         }
     }
 
@@ -366,11 +370,13 @@ class Authenticate {
                     // Cookie expired
                     Authenticate::logOut();
                     redirect(Authenticate::getRedirectUrl(2));
+                    return NULL;
                 }
             } else {
                 // Missing arguments in cookie
                 Authenticate::logOut();
                 redirect(Authenticate::getRedirectUrl(2));
+                return NULL;
             }
         } else {
             return Authenticate::getEmptyUserData();
@@ -379,7 +385,7 @@ class Authenticate {
 
     // Get Loging Redirect Url
     public static function logOut() {
-        $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
+        dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
         Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
         Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, false, true);

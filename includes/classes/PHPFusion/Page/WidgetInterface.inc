@@ -26,7 +26,7 @@ interface WidgetInterface {
      *
      * @param $columnData - the data input for the driver for your consideration
      *
-     * @return HTML string
+     * @return string
      */
     public function display_widget($columnData);
 }
