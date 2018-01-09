@@ -24,11 +24,7 @@ if (!infusion_exists('downloads')) {
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 
-if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
-    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads.php");
-} else {
-    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads.php");
-}
+$locale = fusion_get_locale("", DOWNLOAD_LOCALE);
 
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";

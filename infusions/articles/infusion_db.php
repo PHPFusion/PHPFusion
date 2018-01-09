@@ -63,6 +63,6 @@ if (!defined("DB_ARTICLES")) {
     'title'         => fusion_get_locale('submit_0001', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
 ]);
-\PHPFusion\Admins::getInstance()->setFolderPermissions([
+\PHPFusion\Admins::getInstance()->setFolderPermissions('articles', [
     'infusions/articles/images/' => TRUE
 ]);

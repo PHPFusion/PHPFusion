@@ -19,12 +19,24 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-define("IMAGES_N", INFUSIONS."news/images/");
-define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
-define("IMAGES_NC", INFUSIONS."news/news_cats/");
-define("DB_NEWS", DB_PREFIX."news");
-define("DB_NEWS_CATS", DB_PREFIX."news_cats");
-define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
+if (!defined("IMAGES_N")) {
+    define("IMAGES_N", INFUSIONS."news/images/");
+}
+if (!defined("IMAGES_N_T")) {
+    define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
+}
+if (!defined("IMAGES_NC")) {
+    define("IMAGES_NC", INFUSIONS."news/news_cats/");
+}
+if (!defined("DB_NEWS")) {
+    define("DB_NEWS", DB_PREFIX."news");
+}
+if (!defined("DB_NEWS_CATS")) {
+    define("DB_NEWS_CATS", DB_PREFIX."news_cats");
+}
+if (!defined("DB_NEWS_IMAGES")) {
+    define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
+}
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
@@ -39,7 +51,7 @@ define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
     'title'         => fusion_get_locale('submit_0000', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
 ]);
-\PHPFusion\Admins::getInstance()->setFolderPermissions([
+\PHPFusion\Admins::getInstance()->setFolderPermissions('news', [
     'infusions/news/images/'        => TRUE,
     'infusions/news/images/thumbs/' => TRUE
 ]);

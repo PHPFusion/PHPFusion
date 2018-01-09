@@ -34,11 +34,21 @@ if (!defined("BLOG_ADMIN_LOCALE")) {
     }
 }
 
-define("IMAGES_B", INFUSIONS."blog/images/");
-define("IMAGES_B_T", INFUSIONS."blog/images/thumbs/");
-define("IMAGES_BC", INFUSIONS."blog/blog_cats/");
-define("DB_BLOG", DB_PREFIX."blog");
-define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
+if (!defined("IMAGES_B")) {
+    define("IMAGES_B", INFUSIONS."blog/images/");
+}
+if (!defined("IMAGES_B_T")) {
+    define("IMAGES_B_T", INFUSIONS."blog/images/thumbs/");
+}
+if (!defined("IMAGES_BC")) {
+    define("IMAGES_BC", INFUSIONS."blog/blog_cats/");
+}
+if (!defined("DB_BLOG")) {
+    define("DB_BLOG", DB_PREFIX."blog");
+}
+if (!defined("DB_BLOG_CATS")) {
+    define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
+}
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
@@ -52,7 +62,7 @@ define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
     'title'         => fusion_get_locale('submit_0005', LOCALE.LOCALESET."submissions.php"),
     'admin_link'    => INFUSIONS."blog/blog_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
 ]);
-\PHPFusion\Admins::getInstance()->setFolderPermissions([
+\PHPFusion\Admins::getInstance()->setFolderPermissions('blog', [
     'infusions/blog/images/'        => TRUE,
     'infusions/blog/images/thumbs/' => TRUE
 ]);
