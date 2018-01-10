@@ -44,7 +44,7 @@ if ($_GET['page'] == 1) {
 	if ($pdo_enabled == "1") {
 		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".$pdo->getAttribute(constant("PDO::ATTR_SERVER_VERSION"))."</td></tr>\n";
 	} else {
-		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".mysqli_get_server_info()."</td></tr>\n";
+		$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['406']."</td><td class='tbl2' style='text-align:right'>".mysqli_get_server_info($db_connect)."</td></tr>\n";
 	}
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['407']."</td><td class='tbl1' style='text-align:right'>".$settings['version']."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['408']."</td><td class='tbl2' style='text-align:right'>".DB_PREFIX."</td></tr>\n";
