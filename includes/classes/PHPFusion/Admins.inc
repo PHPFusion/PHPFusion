@@ -100,6 +100,7 @@ class Admins {
     private $folder_permissions = [];
 
     private function __construct() {
+        self::$locale = self::getAdminLocale();
     }
 
     /**
@@ -108,7 +109,6 @@ class Admins {
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
 
         return (object)self::$instance;
@@ -179,10 +179,11 @@ class Admins {
         self::$admin_pages[$page] = [];
     }
 
-    public function getAdminLocale() {
+    public static function getAdminLocale() {
         if (empty(self::$locale)) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
+        return self::$locale;
     }
 
     public function setAdminBreadcrumbs() {
