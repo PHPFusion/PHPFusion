@@ -76,7 +76,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "setstatus") && (isset($_GET['
 opentable($locale['600']);
 echo "<div id='info'></div>\n";
 function panels_list($panel_id = NULL) {
-	$panel_list = "";
+	$panel_list = array();
 	$result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
 	while ($data = dbarray($result)) {
 		$panels[] = $data['panel_filename'];
