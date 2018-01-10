@@ -200,10 +200,12 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 	redirect(FUSION_SELF.$aidlink);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
-	$infusion = form_sanitizer($_POST['infusion'], '');
-	$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder='".$infusion."'");
+	$error = "";
+	$infusion = stripinput($_POST['infusion']);
+	if (file_exists(INFUSIONS.$infusion."/infusion.php")) {
+		include INFUSIONS.$infusion."/infusion.php";
+	$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
 	$data = dbarray($result);
-	include INFUSIONS.$data['inf_folder']."/infusion.php";
 	if (isset($inf_adminpanel) && is_array($inf_adminpanel) && count($inf_adminpanel)) {
 		for ($i = 1; $i < (count($inf_adminpanel)+1); $i++) {
 			$result = dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($inf_adminpanel[$i]['rights'] ? $inf_adminpanel[$i]['rights'] : "IP")."' AND admin_link='".INFUSIONS.$inf_folder."/".$inf_adminpanel[$i]['panel']."' AND admin_page='5'");
@@ -243,13 +245,15 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			$result = dbquery("DELETE FROM ".$inf_deldbrow[$i]);
 		}
 	}
-	$result = dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
+	$result = dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
 	redirect(FUSION_SELF.$aidlink);
+	}
 }
-
+	
 add_to_jquery("
-    $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
-    ");
+	$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
+	");
+	
 
 
 require_once THEMES."templates/footer.php";
