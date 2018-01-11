@@ -177,8 +177,8 @@ class UserFields {
 			$Output .= ($this->showAdminOptions && iADMIN && checkrights("M") && $this->userData['user_id'] != $userdata['user_id'] && $this->userData['user_level'] < 102) ? $this->renderAdminOptions() : '';
 		}
 		$this->html .= ($this->showPages) ? "<ul id='profile-li'>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : BASEDIR."profile.php?lookup=".$this->userData['user_id'])."'><i class='entypo cog m-r-10'></i>General</a></li>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : BASEDIR."profile.php?")."profiles=biography&amp;lookup=".$this->userData['user_id']."")." '><i class='entypo lock m-r-10'></i>User Information</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : BASEDIR."profile.php?lookup=".$this->userData['user_id'])."'><i class='entypo cog m-r-10'></i>".$locale['uf_103']."</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : BASEDIR."profile.php?")."profiles=biography&amp;lookup=".$this->userData['user_id']."")." '><i class='entypo lock m-r-10'></i>".$locale['uf_104']."</a></li>\n" : '';
 		$this->html .= ($this->showPages) ? $this->renderPageLink() : '';
 		$this->html .= ($this->showPages) ? "</div>\n" : '';
 		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
@@ -504,7 +504,7 @@ class UserFields {
 			ob_end_clean();
 		}
 		$i = 1;
-		$c_html = '';
+		$c_html = "";
 		foreach ($cats as $cat) {
 			$c_html="";
 			if (array_key_exists($cat['field_cat'], $fields) && $fields[$cat['field_cat']]) {
@@ -525,7 +525,7 @@ class UserFields {
 				}
 			}
 		}
-		if (strlen(trim($c_html))<=0) {
+		if (strlen(trim($html))<=0) {
 			$html .= "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n";
 		}
 		if (count($fields > 0)) {
