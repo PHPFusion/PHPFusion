@@ -38,13 +38,13 @@ class NewsSettingsAdmin extends NewsAdminModel {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 1, "news_allow_submission"),
-                "news_allow_submission_files" => form_sanitizer($_POST['news_allow_submission_files'], 1, "news_allow_submission_files"),
+                "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 0, "news_allow_submission"),
+                "news_allow_submission_files" => form_sanitizer($_POST['news_allow_submission_files'], 0, "news_allow_submission_files"),
                 "news_extended_required"      => isset($_POST['news_extended_required']) ? 1 : 0,
                 "news_pagination"             => form_sanitizer($_POST['news_pagination'], 12, "news_pagination"),
-                "news_image_link"             => form_sanitizer($_POST['news_image_link'], 1, 'news_image_link'),
+                "news_image_link"             => form_sanitizer($_POST['news_image_link'], 0, 'news_image_link'),
                 "news_image_frontpage"        => form_sanitizer($_POST['news_image_frontpage'], 0, 'news_image_frontpage'),
-                "news_image_readmore"         => form_sanitizer($_POST['news_image_readmore'], 1, 'news_image_readmore'),
+                "news_image_readmore"         => form_sanitizer($_POST['news_image_readmore'], 0, 'news_image_readmore'),
                 "news_thumb_ratio"            => form_sanitizer($_POST['news_thumb_ratio'], 0, 'news_thumb_ratio'),
                 "news_thumb_w"                => form_sanitizer($_POST['news_thumb_w'], 800, 'news_thumb_w'),
                 "news_thumb_h"                => form_sanitizer($_POST['news_thumb_h'], 640, 'news_thumb_h'),
