@@ -23,6 +23,6 @@ add_to_title($locale['home']);
 
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['title' => $locale['home'], 'link' => BASEDIR.'home.php']);
 
-require_once INFUSIONS.'home_panel/home_panel.php';
+require_once INFUSIONS.'homepage/homepage.php';
 
 require_once THEMES."templates/footer.php";
