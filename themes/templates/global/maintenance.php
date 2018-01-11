@@ -29,7 +29,7 @@ if (!function_exists("display_maintenance")) {
         }
 
         echo "<div class='m-t-20 jumbotron text-center'>\n";
-        echo "<img src='".fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>\n";
+        echo "<img class='img-responsive center-x' src='".fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>\n";
         echo "<h1><strong>".fusion_get_settings("sitename")."</strong></h1>\n";
         $message = fusion_get_settings("maintenance_message");
         if (!empty($message)) {
