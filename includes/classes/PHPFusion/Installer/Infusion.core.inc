@@ -499,12 +499,14 @@ class Infusion_Core {
                 $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0) + 1;
 
                 $sitelink += [
-                    "title"      => "",
                     "cat"        => 0,
+                    "title"      => "",
                     "url"        => "",
                     "icon"       => "",
                     "visibility" => 0,
+                    "status"     => 1,
                     "position"   => 3,
+                    "language"   => LANGUAGE
                 ];
 
                 $link_url_path = "".str_replace("../", "", INFUSIONS).$inf['folder']."/";
@@ -514,14 +516,14 @@ class Infusion_Core {
                     $sitelink['cat'] = $last_id;
 
                     $result = dbquery("INSERT INTO ".DB_SITE_LINKS."
-                    (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order)
-                    VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".$link_url_path.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                    (link_cat, link_name, link_url, link_icon, link_visibility, link_position, link_status, link_window, link_order, link_language)
+                    VALUES ('".$sitelink['cat']."', '".$sitelink['title']."', '".$link_url_path.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '".$sitelink['status']."', '0', '".$link_order."', '".$sitelink['language']."')");
 
                 } else {
 
                     $result = dbquery("INSERT INTO ".DB_SITE_LINKS."
-                    (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order)
-                    VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".$link_url_path.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                    (link_cat, link_name, link_url, link_icon, link_visibility, link_position, link_status, link_window, link_order, link_language)
+                    VALUES ('".$sitelink['cat']."', '".$sitelink['title']."', '".$link_url_path.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '".$sitelink['status']."', '0', '".$link_order."', '".$sitelink['language']."')");
 
                     $last_id = dblastid();
                 }
