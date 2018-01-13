@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: templates/homepage.php
+| Filename: templates/home_panel.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -28,10 +28,10 @@ if (!function_exists('display_home')) {
                     figure {margin: 0;padding: 0;border: 0;font: inherit;vertical-align: baseline;display: block;}
                     .item {padding: 0;height: inherit;}
                     .item .thumb {float: left;height: 120px;overflow: hidden;margin-right: 10px;}
-                    .item .thumb img {vertical-align: middle;object-fit: contain;width: 100%;max-width: 140px;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);margin-top: -10px;}
+                    .item .thumb img {vertical-align: middle;object-fit: contain;width: 100%;max-width: 140px;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);}
                     @media (min-width: 900px) {
                         .item .thumb {float: inherit;height: 150px;margin-right: inherit;}
-                        .item .thumb img {max-width: 100%;max-height: 100%;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);margin-top: -10px;}
+                        .item .thumb img {max-width: 100%;max-height: 100%;-webkit-transform: scale(1.5);-ms-transform: scale(1.5);-o-transform: scale(1.5);transform: scale(1.5);margin-top: 15px;}
                         .item .post .meta {margin: 0;padding: 3px 0 10px;font-size: 12px;}
                     }
                 </style>');

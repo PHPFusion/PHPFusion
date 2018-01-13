@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: homepage.php
+| Filename: home_panel.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,9 +19,16 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INFUSIONS."homepage/templates/homepage.php";
+require_once INFUSIONS."home_panel/templates/home_panel.php";
 require_once INCLUDES."infusions_include.php";
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
+
+if (file_exists(INFUSIONS.'home_panel/locale/'.LANGUAGE.'.php')) {
+    $locale_path = INFUSIONS.'home_panel/locale/'.LANGUAGE.'.php';
+} else {
+    $locale_path = INFUSIONS.'home_panel/locale/English.php';
+}
+$locale = fusion_get_locale('', $locale_path);
+
 $configs = [];
 
 $configs[DB_NEWS] = [
