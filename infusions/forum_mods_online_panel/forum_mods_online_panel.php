@@ -26,15 +26,15 @@ if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
 }
 $locale = fusion_get_locale("", $locale_path);
 
-if (!infusion_exists('forum')) {
-    $info['no_forum'] = $locale['fmp_0103'];
-} else {
-    include_once INFUSIONS."forum_mods_online_panel/templates.php";
+include_once INFUSIONS."forum_mods_online_panel/templates.php";
+
+if (infusion_exists('forum')) {
     $moderator_groups = [];
     $mod_group = [];
     $group_sql = "";
     $forum_mods_query = "SELECT forum_id, forum_mods FROM ".DB_FORUMS." WHERE forum_type=2 OR forum_type=3";
     $forum_mods_result = dbquery($forum_mods_query);
+
     if (dbrows($forum_mods_result) > 0) {
         while ($mods = dbarray($forum_mods_result)) {
             if (!empty($mods['forum_mods'])) {
@@ -46,6 +46,7 @@ if (!infusion_exists('forum')) {
                 }
             }
         }
+
         $group_sql = "(user_level <= ".iMEMBER." AND user_groups !='') OR ";
         $mod_group = array_flip($moderator_groups);
     }
@@ -77,6 +78,7 @@ if (!infusion_exists('forum')) {
                 $info['member']['item'][] = $output;
             }
         }
+
         render_forum_mods($info);
     }
 }

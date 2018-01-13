@@ -19,33 +19,42 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include_once INFUSIONS."latest_downloads_panel/templates.php";
+if (infusion_exists('downloads')) {
+    include_once INFUSIONS."latest_downloads_panel/templates.php";
 
-$result = dbquery("SELECT td.download_id, td.download_title, tu.user_id, tu.user_name, tu.user_status
-    FROM ".DB_DOWNLOADS." td
-    INNER JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-    LEFT JOIN ".DB_USERS." tu ON tu.user_id = td.download_user
-    ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')."
-    ORDER BY download_datestamp DESC LIMIT 0,5
-");
+    $result = dbquery("SELECT d.download_id, d.download_title, u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_DOWNLOADS." d
+        INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+        LEFT JOIN ".DB_USERS." u ON u.user_id = d.download_user
+        ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')."
+        ORDER BY download_datestamp DESC
+        LIMIT 5
+    ");
 
-$info = [];
+    $info = [];
 
-$info['title'] = $locale['global_032'];
-$info['theme_bullet'] = THEME_BULLET;
+    $info['title'] = $locale['global_032'];
+    $info['theme_bullet'] = THEME_BULLET;
 
-if (dbrows($result)) {
-    while ($data = dbarray($result)) {
-        $item = [
-            'download_url'   => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
-            'download_title' => $data['download_title'],
-            'profile_link'   => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
-        ];
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $item = [
+                'download_url'   => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
+                'download_title' => $data['download_title'],
+                'userdata'       => [
+                    'user_id'     => $data['user_id'],
+                    'user_name'   => $data['user_name'],
+                    'user_status' => $data['user_status'],
+                    'user_avatar' => $data['user_avatar']
+                ],
+                'profile_link'   => profile_link($data['user_id'], $data['user_name'], $data['user_status'])
+            ];
 
-        $info['item'][] = $item;
+            $info['item'][] = $item;
+        }
+    } else {
+        $info['no_item'] = $locale['global_033'];
     }
-} else {
-    $info['no_item'] = $locale['global_033'];
-}
 
-render_latest_downloads($info);
+    render_latest_downloads($info);
+}

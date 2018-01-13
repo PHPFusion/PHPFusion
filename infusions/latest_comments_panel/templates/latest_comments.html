@@ -1,11 +1,16 @@
 {%openside%}
-{normal_comments.{
-	<div class="pull-left m-r-5">{%comments_bullet%}</div>{%comments_subject%}
-	<a href="{%comments_link_url%}">{%comments_link_title%}</a>
-	<div class="text-left">{%comments_user%}</div>
-	<hr>
-}}
-{no_item.{
-	<div class="text-center">{%message%}</div>
-}}
+    <ul class="list-style-none">
+        {comment.{
+            <li>
+                <div class="pull-left">{%comment_user_avatar%}</div>
+                <div class="overflow-hide">
+                    <strong><a href="{%comment_subject_url%}">{%comment_subject%}</a></strong>
+                    <div class="clearfix"><a href="{%comment_url%}">{%comment_message%}</a></div>
+                </div>
+            </li>
+        }}
+    </ul>
+    {no_item.{
+        <div>{%message%}</div>
+    }}
 {%closeside%}

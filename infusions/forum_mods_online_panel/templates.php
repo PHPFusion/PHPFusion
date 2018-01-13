@@ -21,16 +21,13 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_forum_mods')) {
     function render_forum_mods($info) {
-
         $html = \PHPFusion\Template::getInstance('render_forum_mods');
         $html->set_template(INFUSIONS."forum_mods_online_panel/templates/forum_mods.html");
-        if (!empty($info['no_forum'])) {
-            $html->set_block('no_forum', ['message' => $info['no_forum']]);
-        }
 
         if (!empty($info['admin']['item'])) {
             $html->set_tag('adm_openside', fusion_get_function('openside', $info['admin']['openside']));
             $html->set_tag('adm_closeside', fusion_get_function('closeside'));
+
             foreach ($info['admin']['item'] as $cdatm) {
                 $html->set_block('forum_admin', [
                     'user_title'  => $cdatm['user_title'],
@@ -42,6 +39,7 @@ if (!function_exists('render_forum_mods')) {
         if (!empty($info['member']['item'])) {
             $html->set_tag('memb_openside', fusion_get_function('openside', $info['member']['openside']));
             $html->set_tag('memb_closeside', fusion_get_function('closeside'));
+
             foreach ($info['member']['item'] as $cdatm) {
                 $html->set_block('forum_member', [
                     'user_title'  => $cdatm['user_title'],

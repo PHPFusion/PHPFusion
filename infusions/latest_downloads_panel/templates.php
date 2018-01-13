@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: latest_articles_panel/templates.php
+| Filename: latest_downloads_panel/templates.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -33,9 +33,9 @@ if (!function_exists('render_latest_downloads')) {
 
         if (!empty($info['item'])) {
             foreach ($info['item'] as $data) {
-                $html->set_block('downloads', [
+                $html->set_block('download', [
                     'download_url'   => $data['download_url'],
-                    'download_title' => '<div data-trim-text="35">'.$data['download_title'].'</div>',
+                    'download_title' => $data['download_title'],
                     'author'         => $locale['global_070'].$data['profile_link'],
                     'bullet'         => $info['theme_bullet']
                 ]);
@@ -43,6 +43,7 @@ if (!function_exists('render_latest_downloads')) {
         } else {
             $html->set_block('no_item', ['message' => $info['no_item']]);
         }
+
         echo $html->get_output();
     }
 }
