@@ -2711,12 +2711,3 @@ html[dir="rtl"] .copyright {
 html[dir="rtl"] .label {
     margin: 0 0 0.5em 0.5em;
 }
-html[dir="rtl"] .select2-search-hidden {
-    display: none;
-}
-html[dir="rtl"] .pull-left {
-    float: right !important;
-}
-html[dir="rtl"] .pull-right {
-    float: left !important;
-}

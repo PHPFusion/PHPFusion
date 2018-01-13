@@ -1526,3 +1526,26 @@ tr:hover > td .tbl_actions {
 html[dir="rtl"] body {
     direction: rtl;
 }
+html[dir="rtl"] .select2-search-hidden {
+    display: none;
+}
+html[dir="rtl"] .pull-left {
+    float: right !important;
+}
+html[dir="rtl"] .pull-right {
+    float: left !important;
+}
+html[dir="rtl"] .center-x {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+html[dir="rtl"] .center-xy {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translate(50%, -50%);
+    -ms-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
+}

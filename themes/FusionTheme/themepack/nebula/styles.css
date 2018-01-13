@@ -1458,19 +1458,6 @@ html[dir="rtl"] .sub_comments {
     border-right: 1px solid #ccc;
     padding-right: 15px;
 }
-html[dir="rtl"] .login-panel {
-    margin-right: 250px;
-}
-@media (min-width: 768px) {
-    html[dir="rtl"] .login-panel {
-        margin-right: 0;
-    }
-}
-@media (min-width: 900px) {
-    html[dir="rtl"] .login-panel {
-        margin-right: 200px;
-    }
-}
 @media only screen and (max-width: 767px) {
     html[dir="rtl"] header .navbar-default {
         margin: 0;
@@ -1484,13 +1471,4 @@ html[dir="rtl"] .login-panel {
         margin-right: inherit !important;
         margin-left: 30px;
     }
-}
-html[dir="rtl"] .select2-search-hidden {
-    display: none;
-}
-html[dir="rtl"] .pull-left {
-    float: right !important;
-}
-html[dir="rtl"] .pull-right {
-    float: left !important;
 }
