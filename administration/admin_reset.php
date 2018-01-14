@@ -19,7 +19,7 @@ require_once __DIR__.'/../maincore.php';
 pageAccess('APWR');
 require_once THEMES."templates/admin_header.php";
 
-class admin_reset_admin {
+class AdminPasswordResetAdministration {
     private static $locale = [];
 
     private $data = [
@@ -376,6 +376,6 @@ class admin_reset_admin {
     }
 }
 
-$admres = new admin_reset_admin();
+$admres = new AdminPasswordResetAdministration();
 $admres->display_admin();
 require_once THEMES."templates/footer.php";

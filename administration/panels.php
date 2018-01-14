@@ -19,10 +19,7 @@ require_once __DIR__.'/../maincore.php';
 pageAccess("P");
 require_once THEMES."templates/admin_header.php";
 
-/**
- * Class fusion_panels
- */
-class PanelsAdmin {
+class PanelsAdministration {
     /**
      * @var array|bool
      */
@@ -732,7 +729,7 @@ class PanelsAdmin {
 
 }
 
-$panel = new PanelsAdmin();
+$panel = new PanelsAdministration();
 $panel->display_admin();
 
 require_once THEMES."templates/footer.php";

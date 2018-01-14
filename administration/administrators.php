@@ -15,15 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-use PHPFusion\BreadCrumbs;
-
 require_once __DIR__.'/../maincore.php';
 pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
-BreadCrumbs::getInstance()->addBreadCrumb([
+PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
     'link'  => ADMIN.'administrators.php'.fusion_get_aidlink(),
     'title' => $locale['ADM_420'],
 ]);

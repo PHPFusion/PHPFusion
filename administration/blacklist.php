@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 
 use \PHPFusion\BreadCrumbs;
 
-class Blaclist {
+class BlacklistAdministration {
     private static $instance = NULL;
     private static $locale = [];
     private static $limit = 20;
@@ -46,7 +46,7 @@ class Blaclist {
                 self::delete_blacklist($_GET['blacklist_id']);
                 break;
             case 'edit':
-                $this->data = self::_selectBlaclist($_GET['blacklist_id']);
+                $this->data = self::_selectBlacklist($_GET['blacklist_id']);
                 break;
             default:
                 break;
@@ -115,7 +115,7 @@ class Blaclist {
         }
     }
 
-    public function _selectBlaclist($ids) {
+    public function _selectBlacklist($ids) {
         if (self::verify_blacklist($ids)) {
             $result = dbquery("SELECT blacklist_id, blacklist_user_id, blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason, blacklist_datestamp
                 FROM ".DB_BLACKLIST."
@@ -305,5 +305,5 @@ class Blaclist {
     }
 }
 
-Blaclist::getInstance()->display_admin();
+BlacklistAdministration::getInstance()->display_admin();
 require_once THEMES."templates/footer.php";
