@@ -106,10 +106,10 @@ if (isset($_POST['savesettings'])) {
 		// create .htaccess
 			if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+			//	@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
 			} else {
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
+			//	$handle = fopen(BASEDIR.".htaccess", "w");
+			//	fclose($handle);
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
@@ -126,19 +126,19 @@ if (isset($_POST['savesettings'])) {
 		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\r\n";
 		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\r\n";
 		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
+	//	$temp = fopen(BASEDIR.".htaccess", "w");
+	//	if (fwrite($temp, $htc)) {
+	//		fclose($temp);
+	//	}
 	} else {
 		// enable default error handler in .htaccess
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+		//		@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
 			} else {
 				// create a file.
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
+			//	$handle = fopen(BASEDIR.".htaccess", "w");
+			//	fclose($handle);
 			}
 		}
 		//  Wipe out all .htaccess rewrite rules and add error handler only
@@ -147,10 +147,10 @@ if (isset($_POST['savesettings'])) {
 		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
 		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
 		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
+	 //$temp = fopen(BASEDIR.".htaccess", "w");
+	//	if (fwrite($temp, $htc)) {
+	//		fclose($temp);
+	//	}
 	}
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'") : '';
 	$exclude_left = form_sanitizer($_POST['exclude_left'], '', 'exclude_left');
