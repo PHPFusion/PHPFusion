@@ -176,6 +176,7 @@ class SiteLinks {
         $default_options = [
             'id'                   => self::MenuDefaultID,
             'container'            => FALSE,
+            'container_fluid'      => FALSE,
             'responsive'           => TRUE,
             'navbar_class'         => 'navbar-default',
             'nav_class'            => '',
@@ -415,6 +416,7 @@ class SiteLinks {
             self::setLinks();
             $res = "<div id='".self::getMenuParam('id')."' class='navbar ".self::getMenuParam('navbar_class')."' role='navigation'>\n";
             $res .= self::getMenuParam('container') ? "<div class='container'>\n" : "";
+            $res .= self::getMenuParam('container_fluid') ? "<div class='container-fluid'>\n" : "";
             if (self::getMenuParam('show_header')) {
                 $res .= "<div class='navbar-header'>\n";
                 $res .= "<!--Menu Header Start-->\n";
@@ -514,6 +516,7 @@ class SiteLinks {
             }
             $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
+            $res .= self::getMenuParam('container_fluid') ? "</div>\n" : "";
             $res .= "</div>\n";
         }
 
