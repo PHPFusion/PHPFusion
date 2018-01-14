@@ -515,8 +515,8 @@ class SiteLinks {
                 $res .= "</ul>\n";
             }
             $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
-            $res .= self::getMenuParam('container') ? "</div>\n" : "";
             $res .= self::getMenuParam('container_fluid') ? "</div>\n" : "";
+            $res .= self::getMenuParam('container') ? "</div>\n" : "";
             $res .= "</div>\n";
         }
 
