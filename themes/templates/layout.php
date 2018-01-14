@@ -39,7 +39,7 @@ if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
         echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
     }
 }
-if (fusion_get_settings('entypo')) {
+if (fusion_get_settings('entypo') || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-embedded.css' type='text/css' />\n";
@@ -47,7 +47,7 @@ if (fusion_get_settings('entypo')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-if (fusion_get_settings('fontawesome')) {
+if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
 if (!defined('NO_DEFAULT_CSS')) {
