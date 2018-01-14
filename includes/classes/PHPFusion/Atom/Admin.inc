@@ -88,12 +88,13 @@ class Admin {
                     if (empty($_GET['theme'])) {
                         redirect(FUSION_SELF.$aidlink);
                     }
+
                     $theme_name = stripinput($_GET['theme']);
-                    $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."'
-                    and theme_id='".intval($_GET['delete_preset'])."'"));
-                    if (file_exists(THEMES.$theme_name."/".$file['theme_file'])) {
-                        unlink(THEMES.$theme_name."/".$file['theme_file']);
+                    $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_id='".intval($_GET['delete_preset'])."'"));
+                    if (file_exists(THEMES.$file['theme_file'])) {
+                        unlink(THEMES.$file['theme_file']);
                     }
+
                     dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
                     addNotice('success', $locale['theme_success_002']);
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));

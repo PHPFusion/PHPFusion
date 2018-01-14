@@ -495,7 +495,7 @@ class Atom {
             foreach ($fieldArrays as $fieldNames => $fieldDefaults) {
                 $this->data[$fieldNames] = isset($_POST[$fieldNames]) ? form_sanitizer($_POST[$fieldNames], $fieldDefaults, $fieldNames) : "";
             }
-            $old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
+            $old_file = !empty($this->data['theme_file']) ? $this->data['theme_file'] : '';
             if (isset($this->data['theme_config'])) {
                 unset($this->data['theme_config']);
             } // will need to rebuild. unset it.
