@@ -121,10 +121,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
                 $checkbox .= form_hidden($input_name, '', $key);
             }
-            $checkbox .= "<div class='m-b-0".($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-            $checkbox .= "<input id='".$options['input_id']."-$key' style='margin: 0;vertical-align: middle;' name='$input_name' value='$key' type='".$options['type']."'
+            $checkbox .= "<div class='".($options['type'] == 'radio' ? 'radio' : 'checkbox').($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
+            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">";
+            $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."'
             ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
-            $checkbox .= "<label class='control-label m-r-10' style='vertical-align:middle' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">".$value."</label>\n";
+            $checkbox .= $value;
+            $checkbox .= "</label>\n";
             $checkbox .= "</div>\n";
         }
     } else {
