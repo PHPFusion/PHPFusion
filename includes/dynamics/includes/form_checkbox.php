@@ -93,16 +93,16 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
         if (!empty($label)) {
             add_to_jquery("
-			$('#".$options['input_id']."-field > .control-label').bind('click', function() {
-				var checked_status = $(this).data('checked');
-				$('#".$options['input_id']."-field input:checkbox').prop('checked', $(this).data('checked'));
-				if ($(this).data('checked') == '1') {
-					$(this).data('checked', 0);
-				} else {
-					$(this).data('checked', 1);
-				}
-			});
-			");
+            $('#".$options['input_id']."-field > .control-label').bind('click', function() {
+                var checked_status = $(this).data('checked');
+                $('#".$options['input_id']."-field input:checkbox').prop('checked', $(this).data('checked'));
+                if ($(this).data('checked') == '1') {
+                    $(this).data('checked', 0);
+                } else {
+                    $(this).data('checked', 1);
+                }
+            });
+            ");
         }
     } else {
         $switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
@@ -122,7 +122,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
                 $checkbox .= form_hidden($input_name, '', $key);
             }
             $checkbox .= "<div class='m-b-0".($options['inline_options'] ? ' display-inline-block m-r-5' : '')."'>\n";
-            $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
+            $checkbox .= "<input id='".$options['input_id']."-$key' style='margin: 0;vertical-align: middle;' name='$input_name' value='$key' type='".$options['type']."'
             ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' style='vertical-align:middle' for='".$options['input_id']."-$key' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">".$value."</label>\n";
             $checkbox .= "</div>\n";
