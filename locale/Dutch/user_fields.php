@@ -144,7 +144,7 @@ $locale['u200'] = "Een controle e-mail is verzonden naar uw nieuwe e-mailadres (
 $locale['u201'] = "Uw E-mail adres zal worden gewijzigd wanneer u op de link in de mail klikt.";
 $locale['u202'] = "E-mail adres verifiëren - ".$settings['sitename'];
 $locale['u203'] = "Hallo [USER_NAME],\n
-Iemand gebruikt dit E-mail adres al in op onze site.\n
+Iemand heeft dit dit E-mail adres op zijn account ingesteld op onze site.\n
 Als U echt wilt dat uw E-mail adres word gewijzigd in deze, klikt u dan op de volgende link:\n
 [EMAIL_VERIFY_LINK]\n
 Opmerking: Je moet ingelogd zijn om door te gaan.\n
