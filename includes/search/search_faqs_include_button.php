@@ -38,7 +38,8 @@ if (db_exists(DB_FAQS)) {
                 'value'         => 'faqs',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'faqs'
+                'input_id'      => 'faqs',
+                'class'         => 'm-b-0'
             ]
         )
     ];

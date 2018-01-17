@@ -161,6 +161,7 @@ class Search_Engine extends Search_Model {
                 'value'         => '2',
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields1',
+                'class'         => 'm-b-0',
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
@@ -170,6 +171,7 @@ class Search_Engine extends Search_Model {
                 'value'         => '1',
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields2',
+                'class'         => 'm-b-0',
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
@@ -179,6 +181,7 @@ class Search_Engine extends Search_Model {
                 'value'         => '0',
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields3',
+                'class'         => 'm-b-0',
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3",
                     $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
@@ -192,7 +195,9 @@ class Search_Engine extends Search_Model {
             'subject'   => $locale['442'],
             'author'    => $locale['443']
         ];
-        $sort = "<table class='table'><td>".$locale['440']."&nbsp;</td>\n";
+
+        $sort = "<table style='width:100%'>\n<tr>\n";
+        $sort .= "<td>".$locale['440']."</td>\n";
         $sort .= "<td>\n";
         $sort .= form_select('sort', '', self::get_param('sort'), [
             'inner_width' => '150px',
@@ -200,12 +205,17 @@ class Search_Engine extends Search_Model {
             'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort",
                 $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
         ]);
+        $sort .= "</td>\n";
+        $sort .= "</tr>\n<tr>\n";
+        $sort .= "<td>&nbsp;</td>\n";
+        $sort .= "<td>";
         $sort .= form_checkbox('order', $locale['450'], self::get_param('order'),
             [
                 'type'          => 'radio',
                 'value'         => '0',
                 'reverse_label' => TRUE,
                 'input_id'      => 'order1',
+                'class'         => 'm-b-0',
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1",
                     $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
@@ -216,6 +226,7 @@ class Search_Engine extends Search_Model {
                 'value'         => '1',
                 'reverse_label' => TRUE,
                 'input_id'      => 'order2',
+                'class'         => 'm-b-0',
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
@@ -229,7 +240,9 @@ class Search_Engine extends Search_Model {
             '150' => '150',
             '200' => '200'
         ];
-        $char_areas = "<table class='table'><tr><td>".$locale['460']."</td>\n";
+
+        $char_areas = "<table style='width:100%'>\n<tr>\n";
+        $char_areas .= "<td>".$locale['460']."</td>\n";
         $char_areas .= "<td>\n";
         $char_areas .= form_select('chars', '', self::get_param('chars'), [
                 'inner_width' => '150px',

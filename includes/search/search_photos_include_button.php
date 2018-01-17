@@ -41,7 +41,8 @@ if (db_exists(DB_PHOTOS)) {
                 'value'         => 'photos',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'photos'
+                'input_id'      => 'photos',
+                'class'         => 'm-b-0'
             ]
         )
     ];

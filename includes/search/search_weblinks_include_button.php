@@ -42,7 +42,8 @@ if (db_exists(DB_WEBLINKS)) {
                 'value'         => 'weblinks',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'weblinks'
+                'input_id'      => 'weblinks',
+                'class'         => 'm-b-0'
             ]
         )
     ];

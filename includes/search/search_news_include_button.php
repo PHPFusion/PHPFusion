@@ -42,7 +42,8 @@ if (db_exists(DB_NEWS)) {
                 'value'         => 'news',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'news'
+                'input_id'      => 'news',
+                'class'         => 'm-b-0'
             ]
         )
     ];

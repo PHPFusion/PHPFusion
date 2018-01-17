@@ -63,7 +63,8 @@ if (db_exists(DB_FORUMS)) {
                     'value'         => 'forums',
                     'reverse_label' => TRUE,
                     'onclick'       => 'display(this.value)',
-                    'input_id'      => 'forums'
+                    'input_id'      => 'forums',
+                    'class'         => 'm-b-0'
                 ]
             ).form_select('forum_id', '', Search_Engine::get_param('forum_id'),
                 [

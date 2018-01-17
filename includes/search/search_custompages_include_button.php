@@ -38,7 +38,8 @@ $radio_button += [
             'value'         => 'custompages',
             'reverse_label' => TRUE,
             'onclick'       => 'display(this.value)',
-            'input_id'      => 'custompages'
+            'input_id'      => 'custompages',
+            'class'         => 'm-b-0'
         ]
     )
 ];
