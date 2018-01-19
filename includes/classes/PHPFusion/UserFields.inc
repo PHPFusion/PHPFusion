@@ -798,6 +798,8 @@ class UserFields extends QuantumFields {
                     '{%user_fields%}' => $user_fields
                 ]);
             }
+        } else {
+            $this->info['no_fields'] = $locale['uf_108'];
         }
 
         // Tabs
@@ -815,7 +817,7 @@ class UserFields extends QuantumFields {
         ob_start();
         display_user_profile($this->info);
         echo strtr(ob_get_clean(), [
-                '{%tab_header%}'    => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, FALSE, 'section', ['lookup', 'section']) : '',
+                '{%tab_header%}'    => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, FALSE, 'section') : '',
                 '{%user_avatar%}'   => $user_avatar,
                 '{%user_name%}'     => $user_name,
                 '{%user_level%}'    => $user_level,
@@ -823,7 +825,8 @@ class UserFields extends QuantumFields {
                 '{%buttons%}'       => !empty($this->info['buttons']) ? implode(" ", array_values($this->info['buttons'])) : '',
                 '{%basic_info%}'    => $basic_info,
                 '{%extended_info%}' => $extended_info,
-                '{%tab_footer%}'    => isset($tab_title) ? closetab() : ''
+                '{%tab_footer%}'    => isset($tab_title) ? closetab() : '',
+                '{%no_fields%}'     => !empty($this->info['no_fields']) ? $this->info['no_fields'] : ''
             ]
         );
 
@@ -850,13 +853,14 @@ class UserFields extends QuantumFields {
         $aidlink = fusion_get_aidlink();
         $locale = fusion_get_locale();
         $groups_cache = cache_groups();
-        $user_groups_opts = "";
+        $user_groups_opts = [];
+
         if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] != $userdata['user_id']) {
             if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
                 if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)",
                     $this->userData['user_groups'])
                 ) {
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
+                    dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
                 }
 
                 if (isset($_GET['step']) && $_GET['step'] == "view") {
@@ -880,22 +884,23 @@ class UserFields extends QuantumFields {
         $html .= "</div>\n";
         if (count($groups_cache) > 0) {
             foreach ($groups_cache as $group) {
-                if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)",
-                    $this->userData['user_groups'])
-                ) {
-                    $user_groups_opts[$group['group_id']] = $group['group_name']; //"<option value='".$group['group_id']."'>".$group['group_name']."</option>\n";
+                if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
+                    $user_groups_opts[$group['group_id']] = $group['group_name'];
                 }
             }
+
             if (iADMIN && checkrights("UG") && $user_groups_opts) {
                 $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
                 if (isset($_GET['step']) && $_GET['step'] == "view") {
                     $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
                 }
 
-                $html .= openform("admin_form", "post", $submit_link, ["class" => "p-l-10"]);
-                $html .= form_select("user_group", $locale['u061'], "",
-                    ["options" => $user_groups_opts, "inline" => TRUE, "class" => "m-b-10"]);
+                $html .= openform("admin_form", "post", $submit_link, ['class' => 'm-t-15']);
+                $html .= '<div class="row"><div class="col-xs-12 col-sm-10">';
+                $html .= form_select("user_group", $locale['u061'], "", ["options" => $user_groups_opts, "inline" => TRUE, "class" => "m-b-10"]);
+                $html .= '</div><div class="col-xs-12 col-sm-2">';
                 $html .= form_button("add_to_group", $locale['u059'], $locale['u059']);
+                $html .= '</div></div>';
                 $html .= closeform();
             }
         }
