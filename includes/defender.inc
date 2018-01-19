@@ -456,6 +456,72 @@ class defender {
         self::$input_errors[$input_name] = TRUE;
     }
 
+    /**
+     * Generate a key
+     *
+     * @param $private_key
+     *
+     * @return string
+     */
+    public static function get_encrypt_key($private_key) {
+        return $encryption_key = openssl_random_pseudo_bytes(32, $private_key); // 256 bits
+    }
+
+    private static function pkcs7_pad($data, $size) {
+        $length = $size - strlen($data) % $size;
+
+        return $data.str_repeat(chr($length), $length);
+    }
+
+    private static function pkcs7_unpad($data) {
+        return substr($data, 0, -ord($data[strlen($data) - 1]));
+    }
+
+    /**
+     * Encrypts a string securely with a private key
+     *
+     * @param        $string        The text to encrypt
+     * @param string $private_key   For better security use \defender::get_encrypt_key to generate your private key
+     *
+     * Does not support array encrypt.
+     *
+     * @return string
+     */
+    public static function encrypt_string($string, $private_key = 'php-fusion') {
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
+        $string = self::pkcs7_pad($string, 16);
+        $ciphertext_raw = openssl_encrypt($string, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = true);
+
+        return base64_encode($iv.$hmac.$ciphertext_raw);
+    }
+
+    /**
+     * Decrypts a string securely with a private key
+     *
+     * @param $string      - The string to decrypt
+     * @param $private_key - For better security use \defender::get_encrypt_key to generate your private key
+     *
+     * @return null|string
+     */
+    public static function decrypt_string($string, $private_key = 'php-fusion') {
+        $c = base64_decode($string);
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len = 32);
+        $ciphertext_raw = substr($c, $ivlen + $sha2len);
+        $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
+        $string = self::pkcs7_unpad($string);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = true);
+        if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+        {
+            return $string;
+        }
+
+        return NULL;
+    }
+
 }
 
 /**
