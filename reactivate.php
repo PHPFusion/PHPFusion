@@ -25,18 +25,20 @@ if (iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
+$settings = fusion_get_settings();
+
 if (isset($_GET['error']) && isnum($_GET['error'])) {
     $text = "";
     switch ($_GET['error']) {
         case 1:
-            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['501']);
+            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".$settings['siteemail']."'>".$settings['siteemail']."</a>", $locale['501']);
             break;
         case 2:
-            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>", $locale['502']);
+            $text = str_replace('[SITEEMAIL]', "<a href='mailto:".$settings['siteemail']."'>".$settings['siteemail']."</a>", $locale['502']);
             break;
         case 3:
             $text = str_replace(['[LINK]', '[/LINK]', '[SITEEMAIL]'],
-                ["<a href='".fusion_get_settings('siteurl')."login.php'>", "</a>", "<a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>"],
+                ["<a href='".$settings['siteurl']."login.php'>", "</a>", "<a href='mailto:".$settings['siteemail']."'>".$settings['siteemail']."</a>"],
                 $locale['503']
             );
             break;
@@ -49,24 +51,25 @@ if (isset($_GET['error']) && isnum($_GET['error'])) {
 }
 
 if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) && preg_check("/^[0-9a-z]{32}$/", $_GET['code'])) {
+    $user_id = filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT);
     $result = dbquery("SELECT user_name, user_email, user_actiontime, user_password
-                      FROM ".DB_USERS."
-                      WHERE user_id='".$_GET['user_id']."' AND user_actiontime>'0' AND user_status='7'"
+        FROM ".DB_USERS."
+        WHERE user_id=:userid AND user_actiontime>:actiontime AND user_status=:status", [':userid' => $user_id, ':actiontime' => '0', ':status' => '7']
     );
     if (dbrows($result)) {
         $data = dbarray($result);
         $code = md5($data['user_actiontime'].$data['user_password']);
         if ($_GET['code'] == $code) {
             if ($data['user_actiontime'] > TIME) {
-                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit='".TIME."' WHERE user_id='".$_GET['user_id']."'");
-                unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
+                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit='".TIME."' WHERE user_id='".$user_id."'");
+                unsuspend_log($user_id, 7, $locale['506'], TRUE);
                 $message = str_replace(
                     ["[USER_NAME]", '[SITENAME]', '[SITEUSERNAME]'],
-                    [$data['user_name'], fusion_get_settings('sitename'), fusion_get_settings('siteusername')],
+                    [$data['user_name'], $settings['sitename'], $settings['siteusername']],
                     $locale['505']
                 );
                 require_once INCLUDES."sendmail_include.php";
-                sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['504']), $message);
+                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['504']), $message);
                 redirect(BASEDIR."login.php");
             } else {
                 redirect(FUSION_SELF."?error=1");

@@ -39,11 +39,9 @@ if (!defined("THEME_BULLET")) {
 
 /**
  * Legacy Render Page Function
- *
- * @param bool|FALSE $license
  */
-function render_page($license = FALSE) {
-    \PHPFusion\SeptenaryTheme::Factory()->render_page($license);
+function render_page() {
+    \PHPFusion\SeptenaryTheme::Factory()->render_page();
 }
 
 /**

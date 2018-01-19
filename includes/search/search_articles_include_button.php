@@ -43,7 +43,8 @@ if (db_exists(DB_ARTICLES)) {
                 'value'         => 'articles',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'articles'
+                'input_id'      => 'articles',
+                'class'         => 'm-b-0'
             ]
         )
     ];

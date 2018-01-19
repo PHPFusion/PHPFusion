@@ -37,7 +37,8 @@ $radio_button += [
             'value'         => 'members',
             'reverse_label' => TRUE,
             'onclick'       => 'display(this.value)',
-            'input_id'      => 'members'
+            'input_id'      => 'members',
+            'class'         => 'm-b-0'
         ]
     )
 ];

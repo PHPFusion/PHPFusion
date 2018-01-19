@@ -41,7 +41,8 @@ if (db_exists(DB_DOWNLOADS)) {
                 'value'         => 'downloads',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'downloads'
+                'input_id'      => 'downloads',
+                'class'         => 'm-b-0'
             ]
         )
     ];

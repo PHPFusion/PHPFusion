@@ -27,12 +27,12 @@ if (isset($_POST['savesettings'])) {
         "download_screen_max_b"        => form_sanitizer($_POST['calc_bb'], 153600, "calc_bb") * form_sanitizer($_POST['calc_cc'], 1, "calc_cc"),
         "download_thumb_max_h"         => form_sanitizer($_POST['download_thumb_max_h'], 100, 'download_thumb_max_h'),
         "download_thumb_max_w"         => form_sanitizer($_POST['download_thumb_max_w'], 100, 'download_thumb_max_w'),
-        "download_screenshot"          => form_sanitizer($_POST['download_screenshot'], 1, 'download_screenshot'),
-        "download_stats"               => form_sanitizer($_POST['download_stats'], 1, 'download_stats'),
+        "download_screenshot"          => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
+        "download_stats"               => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
         "download_pagination"          => form_sanitizer($_POST['download_pagination'], 15, 'download_pagination'),
         "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 1, "download_allow_submission"),
-        "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? TRUE : FALSE,
-        "download_extended_required"   => isset($_POST['download_extended_required']) ? TRUE : FALSE,
+        "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
+        "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
     ];
     if (\defender::safe()) {
         foreach ($StoreArray as $key => $value) {

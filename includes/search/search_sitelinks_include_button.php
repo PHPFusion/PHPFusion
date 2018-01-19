@@ -38,7 +38,8 @@ $radio_button += [
             'value'         => 'sitelinks',
             'reverse_label' => TRUE,
             'onclick'       => 'display(this.value)',
-            'input_id'      => 'sitelinks'
+            'input_id'      => 'sitelinks',
+            'class'         => 'm-b-0'
         ]
     )
 ];

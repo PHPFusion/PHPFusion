@@ -21,10 +21,7 @@ require_once THEMES."templates/admin_header.php";
 
 use PHPFusion\Database\DatabaseFactory;
 
-/**
- * Class db_backup
- */
-class db_backup {
+class DbBackupAdministration {
     private $locale = [];
 
     private function execute_backup() {
@@ -513,7 +510,7 @@ class db_backup {
     }
 }
 
-$backup_admin = new db_backup();
+$backup_admin = new DbBackupAdministration();
 $backup_admin->__display();
 
 require_once THEMES."templates/footer.php";

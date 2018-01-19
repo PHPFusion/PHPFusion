@@ -102,9 +102,9 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         echo openform("submissionform", "post", FUSION_REQUEST);
         echo form_hidden("faq_name", "", $this->inputArray['user_id']);
         ?>
-        <div class="well clearfix">
+        <div class="well clearfix m-t-15">
             <div class="pull-left">
-                <?php echo display_avatar($this->inputArray, "30px", "", FALSE, "img-rounded m-r-5"); ?>
+                <?php echo display_avatar($this->inputArray, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
             </div>
             <div class="overflow-hide">
                 <?php

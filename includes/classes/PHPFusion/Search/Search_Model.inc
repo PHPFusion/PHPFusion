@@ -143,7 +143,7 @@ abstract class Search_Model {
         self::$memory_limit = $memory_limit - ceil($memory_limit / 4);
     }
 
-    protected function load_search_modules() {
+    public function load_search_modules() {
         $radio_button = [];
         $form_elements = [];
         if (!empty(self::$available_modules)) {
@@ -259,6 +259,8 @@ abstract class Search_Model {
             return "(".implode(' || ', array_map(function ($field_var) {
                     return implode('', $field_var);
                 }, self::$conditions[$field_module])).")";
+        } else {
+            return NULL;
         }
     }
 

@@ -130,7 +130,7 @@ class SiteLinks {
      *
      * @param $link_id
      *
-     * @return bool|mixed|null|PDOStatement|resource
+     * @return bool|mixed|null|resource
      */
     public static function delete_sitelinks($link_id) {
         $result = NULL;
@@ -176,6 +176,7 @@ class SiteLinks {
         $default_options = [
             'id'                   => self::MenuDefaultID,
             'container'            => FALSE,
+            'container_fluid'      => FALSE,
             'responsive'           => TRUE,
             'navbar_class'         => 'navbar-default',
             'nav_class'            => '',
@@ -415,6 +416,7 @@ class SiteLinks {
             self::setLinks();
             $res = "<div id='".self::getMenuParam('id')."' class='navbar ".self::getMenuParam('navbar_class')."' role='navigation'>\n";
             $res .= self::getMenuParam('container') ? "<div class='container'>\n" : "";
+            $res .= self::getMenuParam('container_fluid') ? "<div class='container-fluid'>\n" : "";
             if (self::getMenuParam('show_header')) {
                 $res .= "<div class='navbar-header'>\n";
                 $res .= "<!--Menu Header Start-->\n";
@@ -513,6 +515,7 @@ class SiteLinks {
                 $res .= "</ul>\n";
             }
             $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
+            $res .= self::getMenuParam('container_fluid') ? "</div>\n" : "";
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
             $res .= "</div>\n";
         }
@@ -537,7 +540,7 @@ class SiteLinks {
     }
 
     private function get_SubLinks_URL($data, $link_id) {
-        $linkRef = &$linkRef;
+        $linkRef = [];
         if (isset($data[$link_id])) {
             foreach ($data[$link_id] as $link) {
                 $linkRef[$link['link_id']] = $link['link_url'];
@@ -567,8 +570,8 @@ class SiteLinks {
      * Recursion loop of data
      */
     private function showMenuLinks($id, $data) {
+        $res = '';
 
-        $res = &$res;
         if (!empty($data[$id])) {
             $i = 0;
 

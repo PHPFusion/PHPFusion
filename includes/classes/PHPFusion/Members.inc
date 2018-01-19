@@ -213,6 +213,7 @@ class Members {
 
         } else {
             redirect(BASEDIR."index.php");
+            return NULL;
         }
 
     }
@@ -260,7 +261,6 @@ class Members {
      *                  'order', - order
      *                  'limit', - limitations
      *                  'join' - join statements
-     * @return string
      */
     public function setFilters(array $filters = []) {
         self::$filters = $filters;

@@ -128,6 +128,8 @@ class QuantumFields extends \SqlHandler {
 
                     return $value;
                 }
+            } else {
+                return NULL;
             }
         }
     }
@@ -806,16 +808,16 @@ class QuantumFields extends \SqlHandler {
                 if (in_array($data['field_name'], $field_list)) {
                     // drop database
                     if (!$this->debug && !empty($target_database)) {
-                        $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+                        dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
                         // reorder the rest of the same cat minus 1
-                        $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
-                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
+                        dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
                     }
 
                 } else {
                     // just delete the field
                     if (!$this->debug) {
-                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                        dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
                     } else {
                         print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
                     }

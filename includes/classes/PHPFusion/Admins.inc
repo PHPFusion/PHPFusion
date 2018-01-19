@@ -100,6 +100,7 @@ class Admins {
     private $folder_permissions = [];
 
     private function __construct() {
+        self::$locale = self::getAdminLocale();
     }
 
     /**
@@ -108,7 +109,6 @@ class Admins {
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
 
         return (object)self::$instance;
@@ -179,10 +179,11 @@ class Admins {
         self::$admin_pages[$page] = [];
     }
 
-    public function getAdminLocale() {
+    public static function getAdminLocale() {
         if (empty(self::$locale)) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
+        return self::$locale;
     }
 
     public function setAdminBreadcrumbs() {
@@ -306,17 +307,18 @@ class Admins {
     }
 
     /**
-     * @return array
+     * @param $type - infusion_name
      */
-    public function getFolderPermissions() {
-        return $this->folder_permissions;
+    public function getFolderPermissions($type = NULL) {
+        return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param array $folder_permissions
+     * @param $type - infusion_name
+     * @param $options - array(image_folder => TRUE or FALSE)
      */
-    public function setFolderPermissions($folder_permissions = []) {
-        $this->folder_permissions[] = $folder_permissions;
+    public function setFolderPermissions($type, array $options = []) {
+        infusion_exists($type) ? $this->folder_permissions[$type] = $options : NULL;
     }
 
     /**

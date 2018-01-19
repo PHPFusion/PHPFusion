@@ -42,7 +42,8 @@ if (db_exists(DB_BLOG)) {
                 'value'         => 'blog',
                 'reverse_label' => TRUE,
                 'onclick'       => 'display(this.value)',
-                'input_id'      => 'blog'
+                'input_id'      => 'blog',
+                'class'         => 'm-b-0'
             ]
         )
     ];

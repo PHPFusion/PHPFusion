@@ -36,7 +36,11 @@ class InstallerAdminSetup extends Install_Core {
                 case self::STEP_PRIMARY_ADMIN_FORM:
                     return $this->_setup();
                     break;
+                default:
+                    return NULL;
             }
+        } else {
+            return NULL;
         }
     }
 

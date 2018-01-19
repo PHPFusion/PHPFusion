@@ -131,9 +131,9 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         echo form_hidden("weblink_status", "", 1);
         echo form_hidden("weblink_user_name", "", $this->inputArray['weblink_user_name']);
         ?>
-        <div class="well clearfix">
+        <div class="well clearfix m-t-15">
             <div class="pull-left">
-                <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded"); ?>
+                <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
             </div>
             <div class="overflow-hide">
                 <?php

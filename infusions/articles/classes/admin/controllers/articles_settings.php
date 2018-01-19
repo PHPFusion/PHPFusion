@@ -38,7 +38,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         if (isset($_POST['savesettings'])) {
             $inputArray = [
                 "article_pagination"        => form_sanitizer($_POST['article_pagination'], 15, "article_pagination"),
-                "article_allow_submission"  => form_sanitizer($_POST['article_allow_submission'], 1, "article_allow_submission"),
+                "article_allow_submission"  => form_sanitizer($_POST['article_allow_submission'], 0, "article_allow_submission"),
                 "article_extended_required" => form_sanitizer($_POST['article_extended_required'], 0, "article_extended_required")
             ];
 

@@ -163,11 +163,11 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'numofthreads'              => form_sanitizer($_POST['numofthreads'], 16, 'numofthreads'),
                 'threads_per_page'          => form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page'),
                 'posts_per_page'            => form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page'),
-                'thread_notify'             => form_sanitizer($_POST['thread_notify'], 1, 'thread_notify'),
+                'thread_notify'             => form_sanitizer($_POST['thread_notify'], 0, 'thread_notify'),
                 'forum_ranks'               => form_sanitizer($_POST['forum_ranks'], 1, 'forum_ranks'),
                 'forum_rank_style'          => form_sanitizer($_POST['forum_rank_style'], 0, 'forum_rank_style'),
                 'popular_threads_timeframe' => form_sanitizer($_POST['popular_threads_timeframe'], 604800, 'popular_threads_timeframe'),
-                'forum_last_posts_reply'    => form_sanitizer($_POST['forum_last_posts_reply'], 1, 'forum_last_posts_reply'),
+                'forum_last_posts_reply'    => form_sanitizer($_POST['forum_last_posts_reply'], 0, 'forum_last_posts_reply'),
                 'upvote_points'             => form_sanitizer($_POST['upvote_points'], 2, 'upvote_points'),
                 'downvote_points'           => form_sanitizer($_POST['downvote_points'], 1, 'downvote_points'),
                 'answering_points'          => form_sanitizer($_POST['answering_points'], 15, 'answering_points'),
@@ -315,10 +315,10 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_attachmax'            => form_sanitizer($_POST['calc_b'], 1048576, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
                 'forum_attachmax_count'      => form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count'),
                 'forum_attachtypes'          => form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes'),
-                'forum_edit_lock'            => form_sanitizer($_POST['forum_edit_lock'], 1, 'forum_edit_lock'),
+                'forum_edit_lock'            => form_sanitizer($_POST['forum_edit_lock'], 0, 'forum_edit_lock'),
                 'forum_edit_timelimit'       => form_sanitizer($_POST['forum_edit_timelimit'], 0, 'forum_edit_timelimit'),
-                'forum_last_post_avatar'     => form_sanitizer($_POST['forum_last_post_avatar'], 1, 'forum_last_post_avatar'),
-                'forum_editpost_to_lastpost' => form_sanitizer($_POST['forum_editpost_to_lastpost'], 1, 'forum_editpost_to_lastpost'),
+                'forum_last_post_avatar'     => form_sanitizer($_POST['forum_last_post_avatar'], 0, 'forum_last_post_avatar'),
+                'forum_editpost_to_lastpost' => form_sanitizer($_POST['forum_editpost_to_lastpost'], 0, 'forum_editpost_to_lastpost'),
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {

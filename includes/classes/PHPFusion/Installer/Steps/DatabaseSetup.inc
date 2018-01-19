@@ -30,6 +30,8 @@ class InstallerDbSetup extends Install_Core {
                 break;
             case self::STEP_DB_SETTINGS_SAVE:
                 return $this->dispatch_tables();
+            default:
+                return NULL;
         }
     }
 
@@ -343,6 +345,7 @@ class InstallerDbSetup extends Install_Core {
         } else {
             $this->installer_step(self::STEP_DB_SETTINGS_FORM);
             redirect(FUSION_REQUEST);
+            return NULL;
         }
     }
 }

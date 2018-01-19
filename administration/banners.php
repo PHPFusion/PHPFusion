@@ -19,7 +19,7 @@ require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
 pageAccess('SB');
 
-class Banners {
+class BannersAdministration {
     protected static $banner_settings = [];
     private static $instance = NULL;
     private static $locale = [];
@@ -174,6 +174,6 @@ class Banners {
     }
 }
 
-Banners::getInstance()->display_admin();
+BannersAdministration::getInstance()->display_admin();
 
 require_once THEMES."templates/footer.php";

@@ -4724,12 +4724,3 @@ html[dir="rtl"] .overlay {
     left: inherit !important;
     right: 0;
 }
-html[dir="rtl"] .select2-search-hidden {
-    display: none;
-}
-html[dir="rtl"] .pull-left {
-    float: right !important;
-}
-html[dir="rtl"] .pull-right {
-    float: left !important;
-}

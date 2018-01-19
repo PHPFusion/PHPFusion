@@ -20,7 +20,7 @@ require_once THEMES."templates/admin_header.php";
 
 use \PHPFusion\BreadCrumbs;
 
-class Comments_Admin {
+class CommentsAdministration {
     private static $instance = NULL;
     private static $rows = 0;
     private $aidlink = '';
@@ -59,9 +59,9 @@ class Comments_Admin {
 
     }
 
-    public static function Administration() {
+    public static function getInstance() {
         if (empty(self::$instance)) {
-            self::$instance = new Comments_Admin();
+            self::$instance = new CommentsAdministration();
         }
 
         self::$rows = dbcount("(comment_id)", DB_COMMENTS, (!empty($_GET['ctype']) ? "comment_type='".$_GET['ctype']."'" : '').(!empty($_GET['comment_item_id']) ? " AND comment_item_id=".$_GET['comment_item_id']."" : ''));
@@ -299,6 +299,6 @@ class Comments_Admin {
 
 }
 
-Comments_Admin::Administration()->display_administration_form();
+CommentsAdministration::getInstance()->display_administration_form();
 
 require_once THEMES."templates/footer.php";

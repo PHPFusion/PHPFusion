@@ -16,18 +16,18 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-$tab['title'][] = $locale['gallery_0009'];
-$tab['id'][] = "single_photo";
-$tab['icon'][] = "";
-$tab['title'][] = $locale['gallery_0010'];
-$tab['id'][] = "mass_photo";
-$tab['icon'][] = "";
-$tab_active = tab_active($tab, 0);
-echo opentab($tab, $tab_active, "phototabs", FALSE, "nav-tabs m-t-20");
-echo opentabbody($tab['title'][0], $tab['id'][0], $tab_active);
+$tab_photo['title'][] = $locale['gallery_0009'];
+$tab_photo['id'][] = "single_photo";
+$tab_photo['icon'][] = "";
+$tab_photo['title'][] = $locale['gallery_0010'];
+$tab_photo['id'][] = "mass_photo";
+$tab_photo['icon'][] = "";
+$tab_photo_active = tab_active($tab_photo, 0);
+echo opentab($tab_photo, $tab_photo_active, "phototabs", FALSE, "nav-tabs m-t-20");
+echo opentabbody($tab_photo['title'][0], $tab_photo['id'][0], $tab_photo_active);
 photo_form();
 echo closetabbody();
-echo opentabbody($tab['title'][1], $tab['id'][1], $tab_active);
+echo opentabbody($tab_photo['title'][1], $tab_photo['id'][1], $tab_photo_active);
 mass_photo_form();
 echo closetabbody();
 echo closetab();

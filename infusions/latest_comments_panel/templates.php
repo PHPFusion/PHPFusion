@@ -21,8 +21,6 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('render_latest_comments')) {
     function render_latest_comments($info) {
-        $locale = fusion_get_locale();
-
         $html = \PHPFusion\Template::getInstance('latest_comments');
         $html->set_template(INFUSIONS."latest_comments_panel/templates/latest_comments.html");
 
@@ -32,18 +30,21 @@ if (!function_exists('render_latest_comments')) {
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
         if (!empty($info['item'])) {
-            foreach ($info['item'] as $data) {
-                $html->set_block('normal_comments', [
-                    'comments_subject'    => '<div data-trim-text="23">'.$data['subject'].'</div>',
-                    'comments_link_url'   => $data['link_url'],
-                    'comments_link_title' => '<div data-trim-text="23">'.$data['link_title'].'</div>',
-                    'comments_user'       => $locale['global_070'].$data['profile_link'],
-                    'comments_bullet'     => $info['theme_bullet']
+            foreach ($info['item'] as $id => $data) {
+                $link = !empty($data['data']['user_id']) ? TRUE : FALSE;
+                $html->set_block('comment', [
+                    'comment_user_avatar' => display_avatar($data['data'], '35px', '', $link, 'img-circle m-r-10 m-t-5'),
+                    'comment_subject'     => trim_text($data['title'], 40),
+                    'comment_subject_url' => $data['url'],
+                    'comment_url'         => $data['c_url'],
+                    'comment_message'     => trim_text($data['data']['comment_message'], 35),
+                    'comment_bullet'      => $info['theme_bullet']
                 ]);
             }
         } else {
             $html->set_block('no_item', ['message' => $info['no_rows']]);
         }
+
         echo $html->get_output();
     }
 }

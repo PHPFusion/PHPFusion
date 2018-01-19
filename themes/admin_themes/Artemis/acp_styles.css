@@ -2163,7 +2163,7 @@ input[type=checkbox] {
     display: inline-block;
     line-height: 0;
     height: 16px;
-    margin: -4px 4px 0 0;
+    margin: 2px 0;
     outline: none !important;
     padding: 0 !important;
     text-align: center;
@@ -2196,6 +2196,10 @@ input[type=checkbox]:checked:before {
     margin: -1px 0 0 0;
     color: #1e8cbe;
     outline: none;
+}
+
+input[type=checkbox] {
+    margin: -2px 4px 0;
 }
 
 input[type=radio] {
@@ -2710,13 +2714,4 @@ html[dir="rtl"] .copyright {
 }
 html[dir="rtl"] .label {
     margin: 0 0 0.5em 0.5em;
-}
-html[dir="rtl"] .select2-search-hidden {
-    display: none;
-}
-html[dir="rtl"] .pull-left {
-    float: right !important;
-}
-html[dir="rtl"] .pull-right {
-    float: left !important;
 }

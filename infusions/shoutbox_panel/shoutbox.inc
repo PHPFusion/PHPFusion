@@ -268,18 +268,6 @@ class Shoutbox {
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'shoutbox';
         $edit = (isset($_GET['s_action']) && $_GET['s_action'] == 'edit') && isset($_GET['shout_id']) ? TRUE : FALSE;
         $_GET['shout_id'] = isset($_GET['shout_id']) && isnum($_GET['shout_id']) ? $_GET['shout_id'] : 0;
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'shoutbox_panel/shoutbox_admin.php'.fusion_get_aidlink(), "title" => self::$locale['SB_title']]);
-        switch ($_GET['section']) {
-            case "shoutbox_form":
-                add_to_title(self::$locale['edit']);
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $edit ? self::$locale['edit'] : self::$locale['SB_add']]);
-                break;
-            case "shoutbox_settings":
-                add_to_title(self::$locale['SB_settings']);
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => self::$locale['SB_settings']]);
-                break;
-            default:
-        }
 
         opentable(self::$locale['SB_admin1']);
         $master_tab_title['title'][] = self::$locale['SB_admin1'];
@@ -297,16 +285,19 @@ class Shoutbox {
         echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE, 'nav-tabs m-b-10');
         switch ($_GET['section']) {
             case "shoutbox_form":
-                add_to_title(self::$locale['edit']);
+                add_to_title($edit ? self::$locale['edit'] : self::$locale['SB_add']);
                 $this->sb_AdminForm();
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => $edit ? self::$locale['edit'] : self::$locale['SB_add']]);
                 break;
             case "shoutbox_settings":
                 add_to_title(self::$locale['SB_settings']);
                 $this->settings_Form();
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, "title" => self::$locale['SB_settings']]);
                 break;
             default:
                 add_to_title(self::$locale['SB_title']);
                 $this->sb_listing();
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'shoutbox_panel/shoutbox_admin.php'.fusion_get_aidlink(), "title" => self::$locale['SB_title']]);
                 break;
         }
         echo closetab();

@@ -42,7 +42,7 @@ class Locale {
     public static function __getInstance($key) {
 
         if (self::$instance[$key] === NULL) {
-            self::$instance[$key] = new Static();
+            self::$instance[$key] = new static();
         }
 
         return self::$instance[$key];

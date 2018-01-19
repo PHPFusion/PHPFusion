@@ -35,7 +35,7 @@ if (!function_exists('render_latest_articles')) {
             foreach ($info['item'] as $data) {
                 $html->set_block('article', [
                     'article_url'   => $data['article_url'],
-                    'article_title' => '<div data-trim-text="35">'.$data['article_title'].'</div>',
+                    'article_title' => $data['article_title'],
                     'author'        => $locale['global_070'].' '.$data['profile_link'],
                     'bullet'        => $info['theme_bullet']
                 ]);
@@ -43,6 +43,7 @@ if (!function_exists('render_latest_articles')) {
         } else {
             $html->set_block('no_item', ['message' => $info['no_item']]);
         }
+
         echo $html->get_output();
     }
 }

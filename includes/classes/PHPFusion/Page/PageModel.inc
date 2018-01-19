@@ -87,7 +87,7 @@ class PageModel {
      */
     public static function getInstance($set_info = FALSE) {
         if (empty(self::$page_instance)) {
-            self::$page_instance = new Static;
+            self::$page_instance = new static;
         }
 
         return self::$page_instance;
@@ -285,7 +285,7 @@ class PageModel {
         if (isnum($page_id) && self::verify_customPage($page_id)) {
             $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
             if ($result) {
-                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+                dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
             }
         }
     }

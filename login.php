@@ -43,22 +43,25 @@ if (!iMEMBER) {
                 break;
             case 4:
                 if (isset($_GET['status']) && isnum($_GET['status'])) {
-                    $id = ((isset($_GET['id']) && isnum($_GET['id'])) ? $_GET['id'] : "0");
+                    $id = (filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: "0");
+
                     switch ($_GET['status']) {
                         case 1:
-                            $data = dbarray(dbquery("SELECT suspend_reason FROM ".DB_SUSPENDS."
-                                WHERE suspended_user='".$id."'
-                                ORDER BY suspend_date DESC  LIMIT 1"));
+                            $data = dbarray(dbquery("SELECT suspend_reason
+                                FROM ".DB_SUSPENDS."
+                                WHERE suspended_user=:suser
+                                ORDER BY suspend_date DESC  LIMIT 1", [':suser' => $id]));
                             addNotice("danger", $locale['global_406']." ".$data['suspend_reason']);
                             break;
                         case 2:
                             addNotice("danger", $locale['global_195']);
                             break;
                         case 3:
-                            $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason FROM ".DB_SUSPENDS." s
+                            $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason
+                                FROM ".DB_SUSPENDS." s
                                 LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
-                                WHERE s.suspended_user='".$id."'
-                                ORDER BY s.suspend_date DESC LIMIT 1"));
+                                WHERE s.suspended_user=:suser
+                                ORDER BY s.suspend_date DESC LIMIT 1", [':suser' => $id]));
                             addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
                             break;
                         case 4:

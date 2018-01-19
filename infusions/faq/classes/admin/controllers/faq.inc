@@ -452,7 +452,7 @@ class FaqAdmin extends FaqAdminModel {
 
         $criteria = [
             'criteria' => "ac.*, IF(a.faq_cat_name != '', a.faq_cat_name, '".$this->locale['faq_0010']."') 'faq_cat_name', u.user_id, u.user_name, u.user_status, u.user_avatar",
-            'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name 
+            'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name
             LEFT JOIN ".DB_FAQ_CATS." a ON a.faq_cat_id=ac.faq_cat_id",
             'where'    => (multilang_table("FQ") ? "ac.faq_language='".LANGUAGE."'" : "").$sql_condition,
             //'sql_condition' => ,
@@ -600,7 +600,7 @@ class FaqAdmin extends FaqAdminModel {
             while ($cdata = dbarray($result)) {
 
                 $edit_link = clean_request("section=faq&ref=faq_form&action=edit&faq_id=".$cdata['faq_id'], $_trash, FALSE);
-                $delete_link = clean_request("section=faq&amp;ref=faq_form&amp;action=delete&amp;faq_id=".$cdata['faq_id'], $_trash, FALSE);
+                $delete_link = clean_request("section=faq&ref=faq_form&action=delete&faq_id=".$cdata['faq_id'], $_trash, FALSE);
                 $cat_edit_link = clean_request('section=faq&ref=faq_cat_form&action=edit&cat_id='.$cdata['faq_cat_id'], $_trash, FALSE);
                 echo "<tr data-id='".$cdata['faq_cat_id']."'>
                         <td>".form_checkbox("faq_id[]", "", "", ["value" => $cdata['faq_id'], "class" => "m-0"])."</td>

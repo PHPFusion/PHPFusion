@@ -19,10 +19,7 @@ require_once __DIR__.'/../maincore.php';
 pageAccess("P");
 require_once THEMES."templates/admin_header.php";
 
-/**
- * Class fusion_panels
- */
-class PanelsAdmin {
+class PanelsAdministration {
     /**
      * @var array|bool
      */
@@ -488,19 +485,17 @@ class PanelsAdmin {
         while ($data = dbarray($result)) {
             $panels[] = $data['panel_filename'];
         }
-        $temp = opendir(INFUSIONS);
+
         if (!empty($panels)) {
-            while ($folder = readdir($temp)) {
-                if (!in_array($folder, [".", ".."]) && strstr($folder, "_panel")) {
-                    if (is_dir(INFUSIONS.$folder)) {
-                        if (!in_array($folder, $panels)) {
-                            $panel_list[] = ucwords(str_replace('_', ' ', $folder));
-                        }
+        $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
+            foreach ($temp as $folder) {
+                if (strstr($folder, "_panel")) {
+                    if (!in_array($folder, $panels)) {
+                        $panel_list[] = ucwords(str_replace('_', ' ', $folder));
                     }
                 }
             }
         }
-        closedir($temp);
         if ($panel_id != NULL) {
             return $panel_list[$panel_id];
         }
@@ -734,7 +729,7 @@ class PanelsAdmin {
 
 }
 
-$panel = new PanelsAdmin();
+$panel = new PanelsAdministration();
 $panel->display_admin();
 
 require_once THEMES."templates/footer.php";

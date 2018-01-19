@@ -139,13 +139,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $submissions_dir = INFUSIONS."gallery/submissions/";
                 $submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
                 echo openform("publish_article", "post", FUSION_REQUEST);
-                echo "<div class='well clearfix'>\n";
+                echo "<div class='well clearfix m-t-15'>\n";
                 echo "<div class='pull-left'>\n";
-                echo display_avatar($data, "30px", "", "", "");
+                echo display_avatar($data, "30px", "", "", "img-rounded m-t-5 m-r-5");
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
-                echo $locale['gallery_0156'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
-                echo $locale['gallery_0157'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
+                echo $locale['gallery_0156'].' '.profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>\n";
+                echo $locale['gallery_0157'].' '.timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "<div class='row'>\n";
@@ -227,10 +227,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ");
     $rows = dbrows($result);
     if ($rows > 0) {
-        echo "<div class='well'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
+        echo "<div class='well m-t-15'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<tr>\n";
-        echo "<th>".$locale['gallery_0152']."</th>\n<th>".$locale['gallery_0153']."</th><th>".$locale['gallery_0154']."</th><th>".$locale['gallery_0155']."</th>";
+            echo "<th>".$locale['gallery_0152']."</th>\n";
+            echo "<th>".$locale['gallery_0153']."</th>\n";
+            echo "<th>".$locale['gallery_0154']."</th>\n";
+            echo "<th>".$locale['gallery_0155']."</th>";
         echo "</tr>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {

@@ -51,8 +51,6 @@ if (!defined("DB_WEBLINKS")) {
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-link'></i>");
-//\PHPFusion\Admins::getInstance()->setSubmitType('l', fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"));
-//\PHPFusion\Admins::getInstance()->setSubmitLink('l', INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setSubmitData('l', [
     'infusion_name' => 'weblinks',
     'link'          => INFUSIONS."weblinks/weblink_submit.php",
