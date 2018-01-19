@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -156,6 +157,7 @@ class defender {
                 $hash = $encrypt ? md5($file) : $file;
             }
         }
+
         return (string)$hash;
     }
 
@@ -344,12 +346,14 @@ class defender {
                         if (self::$debug) {
                             addNotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
+
                         // Return user's input for correction
                         return $this->field_value;
                     } else {
                         if (self::$debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
+
                         return $secured;
                     }
                 } else {
@@ -514,6 +518,21 @@ class defender {
         $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
         $string = self::pkcs7_unpad($string);
         $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = true);
+        if (!function_exists('hash_equals')) {
+            function hash_equals($str1, $str2) {
+                if (strlen($str1) != strlen($str2)) {
+                    return false;
+                } else {
+                    $res = $str1 ^ $str2;
+                    $ret = 0;
+                    for ($i = strlen($res) - 1; $i >= 0; $i--) {
+                        $ret |= ord($res[$i]);
+                    }
+
+                    return !$ret;
+                }
+            }
+        }
         if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
         {
             return $string;
