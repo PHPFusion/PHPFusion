@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale();
+
 /**
  * Cron Job (6 minutes)
  */
