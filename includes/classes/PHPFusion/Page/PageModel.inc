@@ -104,11 +104,12 @@ class PageModel {
      */
     public static function load_customPage($id) {
         $array = [];
-        if (isnum($id)) {
+        $page_id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($page_id) {
             $array = dbarray(
                 dbquery("
-                    SELECT cp.* FROM ".DB_CUSTOM_PAGES." cp WHERE page_id= '".intval($id)."'
-                    ")
+                    SELECT cp.* FROM ".DB_CUSTOM_PAGES." cp WHERE page_id=:pageid", [':pageid' => $page_id]
+                    )
             );
         }
 
@@ -281,11 +282,12 @@ class PageModel {
      *
      * @param $page_id
      */
-    protected function delete_customPage($page_id) {
-        if (isnum($page_id) && self::verify_customPage($page_id)) {
-            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
+    protected function delete_customPage($pageid) {
+        $page_id = filter_var($pageid, FILTER_VALIDATE_INT);
+        if ($page_id && self::verify_customPage($page_id)) {
+            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
             if ($result) {
-                dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+                dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=:pageid", [':pageid' => $page_id]);
             }
         }
     }
@@ -298,8 +300,9 @@ class PageModel {
      * @return bool|string
      */
     protected static function verify_customPage($id) {
-        if (isnum($id)) {
-            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
+        $page_id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($page_id) {
+            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => $page_id]);
         }
 
         return FALSE;
