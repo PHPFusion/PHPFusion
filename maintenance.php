@@ -18,7 +18,7 @@
 require_once dirname(__FILE__).'/maincore.php';
 
 if (!fusion_get_settings("maintenance")) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 
 if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {

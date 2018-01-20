@@ -18,14 +18,13 @@
 require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
-//require_once THEMES."templates/global/register.php";
 require_once THEMES."templates/global/profile.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
 
 if (iMEMBER or fusion_get_settings('enable_registration') == 0) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 
 $errors = [];

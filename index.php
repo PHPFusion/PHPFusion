@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 $settings = fusion_get_settings();
+
 if ($settings['site_seo'] && !isset($_GET['aid'])) {
     define("IN_PERMALINK", TRUE);
     $router = PHPFusion\Rewrite\Router::getRouterInstance();

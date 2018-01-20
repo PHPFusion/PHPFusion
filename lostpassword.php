@@ -20,7 +20,7 @@ require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."lostpassword.php");
 require_once INCLUDES."sendmail_include.php";
 if (iMEMBER) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);

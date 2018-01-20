@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__).'/maincore.php';
 if (!iMEMBER) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 require_once THEMES."templates/header.php";
 $modules = \PHPFusion\Admins::getInstance()->getSubmitData();
