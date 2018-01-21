@@ -199,22 +199,16 @@ class Admin {
         krsort($data);
         foreach ($data as $status => $themes) {
             foreach ($themes as $theme_name => $theme_data) {
-                echo "<div class='panel panel-default'>\n";
-                echo "<div class='panel-body'>\n";
-                // Links
+                echo "<div class='panel panel-default'>\n<div class='panel-body'>\n<div class='row'>\n";
+
+                echo '<div class="col-xs-12 col-sm-10">';
                 echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-                echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
-                if ($status == TRUE) {
-                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
-                } else {
-                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
-                }
-                echo "</div>\n";
+
                 echo "<div class='overflow-hide'>\n";
                 echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
                 echo "<div>\n";
                 if (!empty($theme_data['description'])) {
-                    echo "<div class='display-block spacer-sm'>".$theme_data['description']."</div>";
+                    echo "<div class='display-block m-t-10 m-b-10'>".$theme_data['description']."</div>";
                 }
                 if (!empty($theme_data['license'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
@@ -241,7 +235,19 @@ class Admin {
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "</div>\n";
-                echo "</div>\n</div>\n";
+                echo '</div>';
+
+                echo '<div class="col-xs-12 col-sm-2">';
+                echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
+                if ($status == TRUE) {
+                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+                } else {
+                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
+                }
+                echo "</div>\n";
+                echo '</div>';
+
+                echo "</div>\n</div>\n</div>\n";
                 unset($theme_data);
             }
         }
