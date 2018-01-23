@@ -120,7 +120,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
 
         $image2 = FALSE;
-        if (file_exists($cop) && strtolower(pathinfo($cop, PATHINFO_EXTENSION)) === 'png' && $gallery_settings['photo_watermark']) {
+        if (file_exists($cop) && strtolower(pathinfo($cop, PATHINFO_EXTENSION)) === 'png' && !empty($gallery_settings['photo_watermark'])) {
             $image_dim_x = ImagesX($image);
             $image_dim_y = ImagesY($image);
             $copyright = ImageCreateFromPNG($cop);
