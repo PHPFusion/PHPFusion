@@ -226,17 +226,13 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
             if (isset($item['user_icq']) && $item['user_icq']) {
                 $user_contact .= "<strong>ICQ:</strong> ".$item['user_icq'];
             }
-            $item['blog_author_info'] = "<h4 class='blog_author_info'>".$locale['about']." ".profile_link($item['user_id'], $item['user_name'],
-                    $item['user_status'])."</h4>";
+            $item['blog_author_info'] = "<h4 class='blog_author_info'>".$locale['about']." ".profile_link($item['user_id'], $item['user_name'], $item['user_status'])."</h4>";
             $item['blog_author_info'] .= sprintf($locale['testimonial_rank'], getgroupname($item['user_level']));
-            $item['blog_author_info'] .= (isset($item['user_location']) && $item['user_location'] !== '') ? sprintf($locale['testimonial_location'],
-                $item['user_location']) : '. ';
-            $item['blog_author_info'] .= (isset($item['user_web']) && $item['user_web']) ? sprintf($locale['testimonial_web'],
-                    $item['user_web']).". " : '';
-            $item['blog_author_info'] .= (isset($item['user_contact']) && $item['user_contact'] !== '') ? sprintf($locale['testimonial_contact'],
-                    $user_contact).". " : '';
-            $item['blog_author_info'] .= ($item['user_email'] && $item['user_hide_email'] == 0) ? sprintf($locale['testimonial_email'],
-                "<a href='mailto:".$item['user_email']."'>".$item['user_email']."</a>") : '';
+            $item['blog_author_info'] .= (isset($item['user_joined']) && $item['user_joined'] !== '') ? sprintf($locale['testimonial_join'], showdate('shortdate', $item['user_joined'])).". " : '';
+            $item['blog_author_info'] .= (isset($item['user_location']) && $item['user_location'] !== '') ? sprintf($locale['testimonial_location'], $item['user_location']) : '. ';
+            $item['blog_author_info'] .= (isset($item['user_web']) && $item['user_web']) ? sprintf($locale['testimonial_web'], $item['user_web']).". " : '';
+            $item['blog_author_info'] .= (isset($item['user_contact']) && $item['user_contact'] !== '') ? sprintf($locale['testimonial_contact'], $user_contact).". " : '';
+            $item['blog_author_info'] .= ($item['user_email'] && $item['user_hide_email'] == 0) ? sprintf($locale['testimonial_email'], "<a href='mailto:".$item['user_email']."'>".$item['user_email']."</a>") : '';
 
             // Edit and Delete link
             $item['admin_link'] = '';
