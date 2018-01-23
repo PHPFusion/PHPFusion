@@ -866,8 +866,8 @@ class UserFields extends QuantumFields {
         $html .= "<div class='well text-center'>\n";
         $html .= "<div class='btn-group'>\n<!--profile_admin_options-->\n";
         $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id']."'>".$locale['u069']."</a>\n";
-        // $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;lookup=".$this->userData['user_id']."'>".$locale['u070']."</a>\n";
-        // $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->userData['user_id']."'>".$locale['u071']."</a>\n";
+        $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;user_id=".$this->userData['user_id']."'>".$locale['u070']."</a>\n";
+        $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;user_id=".$this->userData['user_id']."'>".$locale['u071']."</a>\n";
         $html .= "<a class='btn btn-danger' href='".ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id']."' onclick=\"return confirm('".$locale['u073']."');\">".$locale['u072']."</a>\n";
         $html .= "</div>\n";
         if (count($groups_cache) > 0) {
