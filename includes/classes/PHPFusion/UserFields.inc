@@ -525,6 +525,7 @@ class UserFields extends QuantumFields {
 
         switch ($this->method) {
             case 'input':
+
                 $this->info['user_field'][0]['fields']['user_id'] = form_hidden('user_id', '', $this->callback_data['user_id']);
                 if ($this->registration == FALSE) {
                     if (isset($this->info['user_field'][0]['fields']['user_name'])) {
@@ -541,7 +542,6 @@ class UserFields extends QuantumFields {
         $registration_cond = ($this->registration == TRUE ? ' AND field.field_registration=:field_register' : '');
         $registration_bind = ($this->registration == TRUE ? [':field_register' => 1] : []);
 
-        // removed -- ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
         $query = "SELECT field.*, cat.field_cat_id, cat.field_cat_name, cat.field_parent, root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
                   FROM ".DB_USER_FIELDS." field
                   INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
@@ -558,30 +558,13 @@ class UserFields extends QuantumFields {
         $rows = dbrows($result);
         if ($rows != '0') {
             while ($data = dbarray($result)) {
-
                 if ($data['field_cat_id']) {
                     $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
                 }
-
                 if ($data['field_cat']) {
                     $item[$data['field_cat']][] = $data;
                 }
-
-                //if ($data['field_cat_db'] && $data['field_cat_index']) { // 2nd tab might want to be users as well
-                // extend userData
-                //if (!empty($this->callback_data) || ($this->registration && $this->method = 'input')) {
-                // Fix a bug where new db has no insertions rows yet.
-                //$cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
-                //if (dbrows($cresult)) {
-                //  $cdata = dbarray($cresult);
-                //$this->callback_data = array_merge_recursive($this->callback_data, $cdata);
-                // this causes anomaly in callback data with multiple nested query
-                //}
-                //}
-                //}
-
             }
-
             if (isset($category[$index_page_id])) {
                 foreach ($category[$index_page_id] as $cat_id => $cat) {
                     if ($this->registration || $this->method == 'input') {
@@ -611,8 +594,12 @@ class UserFields extends QuantumFields {
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 // Outputs array
                                 $field_output = $this->display_fields($field, $this->callback_data, $this->method);
-                                $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
+                                //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
+                                if (!empty($field_output)) {
+                                    $fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $field_output);
+                                }
+                                //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge($field, $fields['user_field'][$cat_id]['fields'][$field['field_id']]);
                             }
                         }
                     }
@@ -719,6 +706,7 @@ class UserFields extends QuantumFields {
         }
 
         $this->info = $this->info + $this->get_user_fields();
+
         if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
             $this->info['buttons'][] = "<a class='btn btn-default' href='".BASEDIR."messages.php?msg_send=".$this->userData['user_id']."'>".$locale['u043']."</a>\n";
