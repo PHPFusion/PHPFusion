@@ -17,10 +17,9 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__).'/maincore.php';
 if (!iMEMBER) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 require_once THEMES."templates/header.php";
-//include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
 $message = new \PHPFusion\PrivateMessages();
 $message->locale = fusion_get_locale('', LOCALE.LOCALESET.'messages.php');

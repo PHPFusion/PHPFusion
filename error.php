@@ -36,7 +36,7 @@ function replaceDir($output = "") {
 
 add_handler("replaceDir");
 
-$locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'error.php');
 
 $default = [
     'title'     => $locale['errunk'],

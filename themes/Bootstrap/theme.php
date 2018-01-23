@@ -172,6 +172,7 @@ function render_page() {
         }
         echo showrendertime();
     }
+    echo showFooterErrors();
     echo "</span>\n";
     echo "</div>\n</div>\n";
     echo "</div>\n";

@@ -25,7 +25,8 @@ if (!function_exists('render_user_group')) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
         opentable($locale['u057']);
         echo "<div class='text-center well'>";
-        echo "<h4>".(!empty($info['group_icon']) ? "<i class='".$info['group_icon']."'></i> " : "").(!empty($info['group_name']) ? $info['group_name'] : '')." ".format_word($info['total_rows'], $locale['fmt_member'])."</h4>\n";
+        echo "<h4>".(!empty($info['group_icon']) ? "<i class='".$info['group_icon']."'></i> " : "").(!empty($info['group_name']) ? $info['group_name'] : '')." (".format_word($info['total_rows'], $locale['fmt_user']).")</h4>\n";
+        echo '<p>'.$info['group_description'].'</p>';
         echo "</div>\n";
         $sort_plugin = fusion_sort_table('groupTbl');
         echo "<div class='table-responsive'><table id='groupTbl' class='table table-hover $sort_plugin'>\n";

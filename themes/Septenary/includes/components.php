@@ -439,7 +439,9 @@ class SeptenaryComponents {
         }
         $footer_errors = showFooterErrors();
         if (!empty($footer_errors)) {
-            echo "<div>\n".showFooterErrors()."</div>\n";
+            echo "<div>\n";
+            echo showFooterErrors();
+            echo "</div>\n";
         }
 
         echo "</p>\n";

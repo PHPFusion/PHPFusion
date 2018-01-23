@@ -57,6 +57,10 @@ a:hover {
     outline: 0;
 }
 
+abbr {
+    text-decoration: none;
+}
+
 abbr[title] {
     border-bottom: 1px dotted;
 }

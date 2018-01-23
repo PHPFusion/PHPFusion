@@ -36,7 +36,7 @@ if (isset($_POST['update_profile'])) {
     $userInput->verifyNewEmail = TRUE;
     $userInput->userData = fusion_get_userdata();
     $userInput->saveUpdate();
-    if (defender::safe()) {
+    if (\defender::safe()) {
         redirect(FUSION_REQUEST);
     }
 } else if (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {

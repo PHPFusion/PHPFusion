@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: submissions.php
-| Author: Frederick MC Chan
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +21,7 @@ add_to_title(str_replace('...', '', fusion_get_locale('UM089', LOCALE.LOCALESET.
 
 $modules = \PHPFusion\Admins::getInstance()->getSubmitData();
 if (empty($modules)) {
-    redirect("index.php");
+    redirect(BASEDIR.'index.php');
 }
 foreach ($modules as $db => $submit) {
     opentable(sprintf($submit['title'], ''));

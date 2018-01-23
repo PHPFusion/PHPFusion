@@ -681,10 +681,11 @@ if (!function_exists('tablebreak')) {
  * @param string $class Classes for the link
  * @param bool   $link FALSE if you want to display the avatar without link. TRUE by default.
  * @param string $img_class Classes for the image
+ * @param string $custom_avatar Custom default avatar
  * @return string
  */
 if (!function_exists('display_avatar')) {
-    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
+    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail', $custom_avatar = '') {
         if (empty($userdata)) {
             $userdata = [];
         }
@@ -701,12 +702,8 @@ if (!function_exists('display_avatar')) {
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $class = ($class) ? "class='$class'" : '';
         // Need a full path - or else Jquery script cannot use this function.
-        //$default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
-        $default_avatar = fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
-        //$default_avatar = IMAGES.'avatars/no-avatar.jpg';
+        $default_avatar = !empty($custom_avatar) ? $custom_avatar : fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
         $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
-        //$user_avatar = IMAGES.'avatars/'.$userdata['user_avatar'];
-        //$user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
         $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
         $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
