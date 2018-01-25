@@ -93,8 +93,8 @@ class OutputHandler {
         $settings = \fusion_get_settings();
         if (empty(self::$pageMeta)) {
             self::$pageMeta = [
-                "description" => $settings['description'],
-                "keywords"    => $settings['keywords']
+                'description' => $settings['description'],
+                'keywords'    => $settings['keywords']
             ];
         }
         if (isset(self::$pageMeta[$name])) {
@@ -178,7 +178,7 @@ class OutputHandler {
      */
     public static function handleOutput($output) {
 
-        $settings = \fusion_get_settings();
+        $settings = fusion_get_settings();
 
         if (!empty(self::$pageHeadTags)) {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);

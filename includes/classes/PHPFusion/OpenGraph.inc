@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: OpenGraph.inc
-| Author: Chubatyj Vitalij (Rizado)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -34,7 +34,7 @@ class OpenGraph {
         $settings = fusion_get_settings();
 
         $info = [];
-        $result = dbquery("SELECT `page_content`, `page_keywords`, `page_title` FROM `".DB_CUSTOM_PAGES."` WHERE `page_id` = '".intval($pageid)."' LIMIT 1");
+        $result = dbquery("SELECT page_content, page_keywords, page_title FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid LIMIT 1", [':pageid' => $pageid]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'viewpage.php?page_id='.$pageid;
@@ -52,7 +52,7 @@ class OpenGraph {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 
         $info = [];
-        $result = dbquery("SELECT * FROM `".DB_USERS."` WHERE `user_id` = '".intval($userid)."' LIMIT 1");
+        $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:userid LIMIT 1", [':userid' => $userid]);
         // I know that is not good idea, but some user fields may be disabled... See next code
         if (dbrows($result)) {
             $data = dbarray($result);

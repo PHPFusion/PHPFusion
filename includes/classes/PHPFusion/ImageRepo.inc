@@ -235,9 +235,9 @@ class ImageRepo {
             $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
             while ($data = dbarray($result)) {
                 self::$smiley_cache[] = [
-                    "smiley_code"  => $data['smiley_code'],
-                    "smiley_image" => $data['smiley_image'],
-                    "smiley_text"  => $data['smiley_text']
+                    'smiley_code'  => $data['smiley_code'],
+                    'smiley_image' => $data['smiley_image'],
+                    'smiley_text'  => $data['smiley_text']
                 ];
             }
         }

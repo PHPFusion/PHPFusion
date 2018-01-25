@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: CustomPage.inc
-| Author: Frederick MC Chan (Chan)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -52,7 +52,7 @@ class CustomPage {
      * List custom page administration table
      */
     public static function listPage() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
@@ -126,7 +126,7 @@ class CustomPage {
      * @param $data
      */
     public static function customPage_form($data) {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
@@ -174,8 +174,8 @@ class CustomPage {
         echo form_select('page_keywords', $locale['432'], $data['page_keywords'], [
             'max_length' => 320,
             'width'      => '100%',
-            'tags'       => 1,
-            'multiple'   => 1,
+            'tags'       => TRUE,
+            'multiple'   => TRUE,
         ]);
 
         $textArea_config = [
@@ -301,9 +301,9 @@ class CustomPage {
         closeside();
         openside();
         echo form_select('page_access', $locale['423'], $data['page_access'], [
-            "options" => fusion_get_groups(),
-            "width"   => '100%',
-            "inline"  => true,
+            'options' => fusion_get_groups(),
+            'width'   => '100%',
+            'inline'  => true,
         ]);
         closeside();
         echo "</div></div>\n";
@@ -332,7 +332,7 @@ class CustomPage {
     }
 
     public function display_custom_page_admin() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
@@ -400,14 +400,16 @@ class CustomPage {
      * @param $page_id
      */
     protected function delete_customPage($page_id) {
-        global $aidlink, $locale;
+    	$aidlink = fusion_get_aidlink();
+    	$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
         if (isnum($page_id) && self::verify_customPage($page_id)) {
-            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
+            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
             if ($result) {
-                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=:pageid", [':pageid' => $page_id]);
             }
             if ($result) {
-                addNotice("success", $locale['413']);
+                addNotice('success', $locale['413']);
                 redirect(FUSION_SELF.$aidlink);
             }
         }
@@ -431,7 +433,7 @@ class CustomPage {
      * Displays Custom Page Selector
      */
     public static function display_customPage_selector() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
@@ -472,7 +474,7 @@ class CustomPage {
      * @return array
      */
     protected function set_customPage($data) {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
@@ -492,7 +494,7 @@ class CustomPage {
 
             if ($data['page_id'] == 0) {
                 $data += [
-                    "add_link" => isset($_POST['add_link']) ? 1 : 0,
+                    'add_link' => isset($_POST['add_link']) ? 1 : 0,
                     'link_id'  => form_sanitizer($_POST['link_id'], 0, 'link_id'),
                 ];
             }
@@ -537,7 +539,7 @@ class CustomPage {
 
         foreach ($page_language as $language) {
 
-            $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['page_link_cat']."'"),
+            $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat=:linkcat", [':linkcat' => $data['page_link_cat']]),
                     0) + 1;
 
             $link_data = [

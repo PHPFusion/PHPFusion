@@ -228,8 +228,8 @@ class Panels {
             self::cachePanels();
         }
 
-        $settings = \fusion_get_settings();
-        $locale = \fusion_get_locale();
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
 
         $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
@@ -407,7 +407,7 @@ class Panels {
             if (fusion_get_settings('site_seo')) {
                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
                 $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
-                $script_url = explode("/", $file_path);
+                $script_url = !empty($params) ? explode("/", $file_path) : explode("/", $_SERVER['PHP_SELF']);
             } else {
                 $script_url = explode("/", $_SERVER['PHP_SELF']);
             }

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: PrivateMessages.inc
-| Author: Frederick MC Chan (Chan)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -110,19 +110,19 @@ class PrivateMessages {
             // Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
             ob_start();
             if (isset($_GET['msg_read'])) {
-                echo openform("actionform", "post", FUSION_REQUEST, ["class" => "display-inline-block m-l-10"]);
-                echo form_hidden("selectedPM", "", $_GET['msg_read']);
+                echo openform('actionform', 'post', FUSION_REQUEST, ['class' => 'display-inline-block m-l-10']);
+                echo form_hidden('selectedPM', '', $_GET['msg_read']);
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == "archive") {
-                    echo form_button("unarchive_pm", "", "archive_pm", ["icon" => "fa fa-unlock"]);
+                    echo form_button('unarchive_pm', '', 'archive_pm', ['icon' => 'fa fa-unlock']);
                 } else if ($_GET['folder'] == "inbox") {
-                    echo form_button("archive_pm", "", "archive_pm", ["icon" => "fa fa-lock"]);
+                    echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock']);
                 }
-                echo form_button("delete_pm", "", "delete_pm", ["icon" => "fa fa-trash-o"]);
+                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o']);
                 echo "</div>\n";
                 echo closeform();
             } else {
-                echo openform("actionform", "post", FUSION_REQUEST);
+                echo openform('actionform', 'post', FUSION_REQUEST);
                 ?>
                 <!-- pm_idx -->
                 <div class="dropdown display-inline-block m-r-10">
@@ -142,16 +142,16 @@ class PrivateMessages {
                     </ul>
                 </div>
                 <?php
-                echo form_hidden("selectedPM", "", "");
+                echo form_hidden('selectedPM', '', '');
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == 'archive') {
-                    echo form_button("unarchive_pm", "", "unarchive_pm", ["icon" => "fa fa-unlock", "icon_class" => ""]);
+                    echo form_button('unarchive_pm', '', 'unarchive_pm', ['icon' => 'fa fa-unlock', 'icon_class' => '']);
                 } else {
                     if ($_GET['folder'] !== 'outbox') {
-                        echo form_button("archive_pm", "", "archive_pm", ["icon" => "fa fa-lock", "icon_class" => ""]);
+                        echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock', 'icon_class' => '']);
                     }
                 }
-                echo form_button("delete_pm", "", "delete_pm", ["icon" => "fa fa-trash-o", "icon_class" => ""]);
+                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o', 'icon_class' => '']);
                 echo "</div>\n";
                 ?>
                 <div class="dropdown display-inline-block m-r-10">
@@ -159,10 +159,10 @@ class PrivateMessages {
                        class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span
                                 class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><?php echo form_button("mark", $this->locale['493'], "mark_all", ["input_id" => "mark_all", "class" => "btn-link"]) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['494'], "mark_read", ["input_id" => "mark_read", "class" => "btn-link"]) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['495'], "mark_unread", ["input_id" => "mark_unread", "class" => "btn-link"]) ?></li>
-                        <li><?php echo form_button("mark", $this->locale['496'], "unmark_all", ["input_id" => "unmark_all", "class" => "btn-link"]) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['495'], 'mark_unread', ['input_id' => 'mark_unread', 'class' => 'btn-link']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['496'], 'unmark_all', ['input_id' => 'unmark_all', 'class' => 'btn-link']) ?></li>
                     </ul>
                 </div>
                 <?php
@@ -274,7 +274,7 @@ class PrivateMessages {
         }
         function validate_user($user_id) {
             if (isnum($user_id) && dbcount("(user_id)", DB_USERS,
-                    "user_id='".intval($user_id)."' AND user_status ='0'")
+                    "user_id=:userid AND user_status =:status", [':userid' => $user_id, ':status' => '0'])
             ) {
                 return TRUE;
             }
@@ -291,9 +291,9 @@ class PrivateMessages {
         if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
-        $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
-        $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
-        $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
+        $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_read=:mread AND message_folder=:folder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mread' => '0', ':folder' => '0']);
+        $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:folder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':folder' => '1']);
+        $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:folder AND message_read=:mread", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mread' => '0', ':folder' => '2']);
         $this->info = [
             'folders'       => [
                 'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402']],
@@ -301,9 +301,9 @@ class PrivateMessages {
                 'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404']],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425']],
             ],
-            'inbox_total'   => dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' AND message_to='".$userdata['user_id']."' AND message_folder='0'")."/".$in_read,
-            'outbox_total'  => dbcount("(message_id)", DB_MESSAGES, "message_from='".$userdata['user_id']."' AND message_folder='0'")."/".$out_read,
-            'archive_total' => dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' AND message_to='".$userdata['user_id']."' AND message_folder='2'")."/".$arc_read,
+            'inbox_total'   => dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:mfolder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mfolder' => '0'])."/".$in_read,
+            'outbox_total'  => dbcount("(message_id)", DB_MESSAGES, "message_from=:mfrom AND message_folder=:mfolder", [':mfrom' => $userdata['user_id'], ':mfolder' => '0'])."/".$out_read,
+            'archive_total' => dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:mfolder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mfolder' => '2'])."/".$arc_read,
             'button'        => [
                 'new'     => [
                     'link' => BASEDIR."messages.php?msg_send=new",
@@ -331,8 +331,9 @@ class PrivateMessages {
             if ($user_id !== $userdata) {
                 $result = dbquery("
                     SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-                    FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
-                ");
+                    FROM ".DB_USERS."
+                    WHERE user_id=:userid AND user_status=:status", [':userid' => $user_id, ':status' => '0']
+                );
                 if (dbrows($result)) {
                     $data = dbarray($result);
                     // What this does is that if any of the params is 0, we use default system values.
@@ -377,8 +378,8 @@ class PrivateMessages {
                 'user_pm_email_notify' => form_sanitizer($_POST['pm_email_notify'], 0, 'pm_email_notify'),
                 'user_pm_save_sent'    => form_sanitizer($_POST['pm_save_sent'], 0, 'pm_save_sent'),
             ];
-            dbquery_insert(DB_USERS, $data, "update");
-            addNotice("success", $this->locale['445']);
+            dbquery_insert(DB_USERS, $data, 'update');
+            addNotice('success', $this->locale['445']);
             redirect(BASEDIR."messages.php?folder=options");
         }
         ob_start();
@@ -423,8 +424,8 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice("success", $this->locale['489']);
-            redirect(clean_request("", ["folder"], TRUE));
+            addNotice('success', $this->locale['489']);
+            redirect(clean_request('', ['folder'], TRUE));
         }
     }
 
@@ -438,7 +439,7 @@ class PrivateMessages {
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                    "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                    "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                 $within_limit = self::get_pm_settings($userdata['user_id'], "user_inbox") == "0" || (self::get_pm_settings($userdata['user_id'],
                         "user_inbox") > 0 && self::get_pm_settings($userdata['user_id'],
                         "user_inbox") - 1 > $this->info['inbox_total']) ? TRUE : FALSE;
@@ -448,8 +449,8 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice("success", $this->locale['489b']);
-            redirect(clean_request("", ["folder"], TRUE));
+            addNotice('success', $this->locale['489b']);
+            redirect(clean_request('', ['folder'], TRUE));
         }
     }
 
@@ -466,14 +467,14 @@ class PrivateMessages {
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                    "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                    "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                 if ($ownership && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
-                    dbquery_insert(DB_MESSAGES, $moveData, "delete");
+                    dbquery_insert(DB_MESSAGES, $moveData, 'delete');
                 }
             }
-            addNotice("success", $this->locale['490']);
-            redirect(clean_request("", ["folder"], TRUE));
+            addNotice('success', $this->locale['490']);
+            redirect(clean_request('', ['folder'], TRUE));
         }
     }
 
@@ -491,24 +492,24 @@ class PrivateMessages {
                 if (!empty($this->info['items'])) {
                     foreach ($this->info['items'] as $message_id => $array) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
                         }
                     }
-                    redirect(clean_request("", ["folder"], TRUE));
+                    redirect(clean_request('', ['folder'], TRUE));
                 }
                 break;
             case "unmark_all": // mark all as unread
                 if (!empty($this->info['items'])) {
                     foreach ($this->info['items'] as $message_id => $pmData) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
                         }
                     }
-                    redirect(clean_request("", ["folder"], TRUE));
+                    redirect(clean_request('', ['folder'], TRUE));
                 }
                 break;
             case "mark_read":
@@ -516,26 +517,26 @@ class PrivateMessages {
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
                         }
                     }
                 }
-                redirect(clean_request("", ["folder"], TRUE));
+                redirect(clean_request('', ['folder'], TRUE));
                 break;
             case "mark_unread":
                 $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
                         }
                     }
                 }
-                redirect(clean_request("", ["folder"], TRUE));
+                redirect(clean_request('', ['folder'], TRUE));
         }
     }
 
@@ -575,7 +576,7 @@ class PrivateMessages {
             }
 
             if (\defender::safe()) {
-                addNotice("success", $this->locale['491']);
+                addNotice('success', $this->locale['491']);
                 redirect(BASEDIR."messages.php");
             }
         }
@@ -585,7 +586,7 @@ class PrivateMessages {
         require_once INCLUDES."sendmail_include.php";
         require_once INCLUDES."flood_include.php";
 
-        $locale = fusion_get_locale("", LOCALE.LOCALESET."messages.php");
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'messages.php');
 
         $strict = FALSE;
         $group_name = getgroupname($to);
@@ -607,13 +608,13 @@ class PrivateMessages {
                 // find receipient
                 $result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level, COUNT(m.message_id) 'message_count'
                     FROM ".DB_USERS." u
-                    LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id and message_folder='0'
-                    WHERE u.user_id='".intval($to)."' GROUP BY u.user_id
-                ");
+                    LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id AND message_folder='0'
+                    WHERE u.user_id=:userid GROUP BY u.user_id", [':userid' => $to]
+                );
 
                 if (dbrows($result) > 0) {
                     $data = dbarray($result);
-                    $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".intval($from)."'");
+                    $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $from]);
                     if (dbrows($result2)) {
                         $userdata = dbarray($result2);
                         if ($to != $from) {
@@ -634,22 +635,23 @@ class PrivateMessages {
                                     'message_datestamp' => TIME,
                                     'message_folder'    => 0,
                                 ];
-                                dbquery_insert(DB_MESSAGES, $inputData, "save");
+                                dbquery_insert(DB_MESSAGES, $inputData, 'save');
 
                                 // this will flood the inbox when message is sent to group. -- fixed
                                 if ($myStatus['user_pm_save_sent'] == '2' && $save_sent == TRUE) {
                                     // user_outbox.
                                     $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
-                                    ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
+                                    ".DB_MESSAGES." WHERE message_to=:mto AND message_user=:muser AND message_folder=:mfolder GROUP BY message_to",
+                                    [':mto' => $userdata['user_id'], ':muser' => $userdata['user_id'], ':mfolder' => '1']));
                                     // check my outbox limit and if surpass, remove oldest message
                                     if ($myStatus['user_outbox'] != "0" && ($cdata['outbox_count'] + 1) > $myStatus['user_outbox']) {
-                                        dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
+                                        dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id=:mid AND message_to=:mto", [':mid' => $cdata['last_message'], ':mto' => $userdata['user_id']]);
                                     }
                                     $inputData['message_user'] = $userdata['user_id'];
                                     $inputData['message_folder'] = 1;
                                     $inputData['message_from'] = $to;
                                     $inputData['message_to'] = $userdata['user_id'];
-                                    dbquery_insert(DB_MESSAGES, $inputData, "save");
+                                    dbquery_insert(DB_MESSAGES, $inputData, 'save');
                                 }
 
                                 $send_email = $pmStatus['user_pm_email_notify'];
@@ -682,7 +684,7 @@ class PrivateMessages {
                                     die($locale['700']);
                                 }
                                 \defender::stop();
-                                addNotice("danger", $locale['628']);
+                                addNotice('danger', $locale['628']);
                             }
                         }
 
@@ -692,7 +694,7 @@ class PrivateMessages {
                             die($locale['701']);
                         }
                         \defender::stop();
-                        addNotice("danger", $locale['482']);
+                        addNotice('danger', $locale['482']);
                     }
 
                 } else {
@@ -700,7 +702,7 @@ class PrivateMessages {
                     if ($strict) {
                         die($locale['702']);
                     }
-                    addNotice("danger", $locale['482']);
+                    addNotice('danger', $locale['482']);
                 }
 
             } else {
@@ -708,13 +710,13 @@ class PrivateMessages {
                     die($locale['703']);
                 }
                 \defender::stop();
-                addNotice("danger", sprintf($locale['487'], fusion_get_settings("flood_interval")));
+                addNotice('danger', sprintf($locale['487'], fusion_get_settings('flood_interval')));
             }
 
         } else {
             $result = NULL;
             if ($to <= USER_LEVEL_MEMBER && $to >= USER_LEVEL_SUPER_ADMIN) { // -101, -102, -103 only
-                $result = dbquery("SELECT user_id from ".DB_USERS." WHERE user_level <='".intval($to)."' AND user_status='0'");
+                $result = dbquery("SELECT user_id from ".DB_USERS." WHERE user_level <=:level AND user_status=:status", [':level' => $to, ':status' => '0']);
             } else {
                 $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)." AND user_status='0'");
             }
@@ -726,7 +728,7 @@ class PrivateMessages {
 
             } else {
                 \defender::stop();
-                addNotice("danger", $locale['492']);
+                addNotice('danger', $locale['492']);
             }
         }
     }

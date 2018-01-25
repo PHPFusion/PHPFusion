@@ -172,17 +172,17 @@ class Errors {
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
-        $tab_title['title'][0] = $locale['ERROR_460'];
-        $tab_title['id'][0] = 'errors-list';
-        $tab_title['icon'][0] = 'fa fa-bug m-r-10';
+        $tab_title['title'][] = $locale['ERROR_460'];
+        $tab_title['id'][] = 'errors-list';
+        $tab_title['icon'][] = 'fa fa-bug m-r-10';
 
         if ($this->error_id) {
-            $tab_title['title'][1] = $locale['ERROR_461'];
-            $tab_title['id'][1] = 'error-file';
-            $tab_title['icon'][1] = 'fa fa-medkit m-r-10';
-            $tab_title['title'][2] = $locale['ERROR_465'];
-            $tab_title['id'][2] = 'src-file';
-            $tab_title['icon'][2] = 'fa fa-stethoscope m-r-10';
+            $tab_title['title'][] = $locale['ERROR_461'];
+            $tab_title['id'][] = 'error-file';
+            $tab_title['icon'][] = 'fa fa-medkit m-r-10';
+            $tab_title['title'][] = $locale['ERROR_465'];
+            $tab_title['id'][] = 'src-file';
+            $tab_title['icon'][] = 'fa fa-stethoscope m-r-10';
         }
         $tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
@@ -201,7 +201,7 @@ class Errors {
             // dump 1 and 2
             add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
             define('no_debugger', 1);
-            $data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id='".$this->error_id."' LIMIT 1"));
+            $data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id=:errorid LIMIT 1", [':errorid' => $this->error_id]));
             if (!$data) {
                 redirect(FUSION_SELF.$aidlink);
             }
@@ -257,8 +257,8 @@ class Errors {
                     echo openform('logform', 'post', ADMIN.'errors.php'.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
                     echo form_hidden('error_id', '', $data['error_id']);
                     echo form_select('error_status', $locale['mark_as'], $data['error_status'], [
-                        "inline"  => true,
-                        "options" => self::get_logTypes()
+                        'inline'  => true,
+                        'options' => self::get_logTypes()
                     ]);
                     echo closeform();
                     ?>
@@ -324,10 +324,10 @@ class Errors {
         $locale = self::$locale;
 
         // Use clean request for absolute escape from SEO converging form path
-        $html = openform('error_logform', 'post', clean_request('', [], false), ["class" => "text-center well m-t-5 m-b-5"]);
+        $html = openform('error_logform', 'post', clean_request('', [], false), ['class' => 'text-center well m-t-5 m-b-5']);
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', "", "", ["allowclear" => true, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => true]);
+        $html .= form_select('delete_status', '', '', ['allowclear' => true, 'options' => self::get_logTypes(), 'class' => 'm-b-10', 'inline' => true]);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary']);
         $html .= "</div>\n";
         $html .= closeform();
@@ -438,9 +438,11 @@ class Errors {
 
     private function getSources($file, $line_number, $error_id) {
         $aidlink = fusion_get_aidlink();
+        $settings = fusion_get_settings();
         $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        $version = 9.03;
+        //$version = 9.03;
+        $version = $settings['version'];
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
         return "
