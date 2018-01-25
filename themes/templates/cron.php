@@ -54,8 +54,8 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
         ]);
 
         while ($data = dbarray($result)) {
-            dbquery("UPDATE ".DB_USERS." SET user_status=:status, user_actiontime=:status WHERE user_id=:user_id",
-                [':status' => 0, ':user_id' => $data['user_id']]
+            dbquery("UPDATE ".DB_USERS." SET user_status=:status, user_actiontime=:actiontime WHERE user_id=:user_id",
+                [':status' => 0, ':actiontime' => 0, ':user_id' => $data['user_id']]
             );
 
             $subject = $locale['global_451'];
