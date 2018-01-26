@@ -19,7 +19,7 @@ namespace Defender;
 
 abstract class Validation {
     protected static $inputName = '';
-    protected static $inputValue = [];
+    protected static $inputValue;
     protected static $inputDefault = '';
     protected static $isMultiLang = '';
     protected static $inputConfig = [];
