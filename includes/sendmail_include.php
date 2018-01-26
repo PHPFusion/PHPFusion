@@ -36,6 +36,8 @@ function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message,
 		$mail->SMTPAuth = $settings['smtp_auth'] ? TRUE : FALSE;
 		$mail->Username = $settings['smtp_username'];
 		$mail->Password = $settings['smtp_password'];
+		$mail->Mailer="smtp";
+		$mail->SMTPSecure= "tls";
 	}
 	$mail->CharSet = $locale['charset'];
 	$mail->From = $fromemail;
