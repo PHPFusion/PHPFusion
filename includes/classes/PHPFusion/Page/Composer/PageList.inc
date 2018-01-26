@@ -67,7 +67,9 @@ class PageList extends PageAdmin {
         if (!empty($_POST['page_language'])) {
             $language = form_sanitizer($_POST['page_language'], '', 'page_language');
             $search_string['cp.page_language'] = [
-                "input" => in_group('page_language', $language), "operator" => ""
+                "input"    => '',
+                "operator" => '',
+                'concat'   => in_group('cp.page_language', $language),
             ];
         }
 
@@ -91,19 +93,31 @@ class PageList extends PageAdmin {
                 if ($i > 0) {
                     $sql_condition .= " AND ";
                 }
-                $sql_condition .= " $key ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if (isset($values['concat'])) {
+                    $sql_condition .= $values['concat'];
+                } else {
+                    $sql_condition .= " $key ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                }
                 $i++;
             }
         }
 
-        $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
+        $max_search_query = "SELECT COUNT(cp.page_id) 'max_page'
+        FROM ".DB_CUSTOM_PAGES." cp 
+        LEFT JOIN ".DB_CUSTOM_PAGES." cp2 ON cp.page_cat=cp2.page_id
+        ".($sql_condition ? "WHERE $sql_condition" : '');
+
+        $max_pages = dbresult(dbquery($max_search_query), 0);
+
+        $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_pages ? $_GET['rowstart'] : 0;
+
         $page_per_query = 20;
 
         $page_query = "SELECT cp.*, cp2.page_title 'page_cat_title', count(cp2.page_id) 'page_sub_count', u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_CUSTOM_PAGES." cp
         LEFT JOIN ".DB_USERS." u ON u.user_id=cp.page_user
         LEFT JOIN ".DB_CUSTOM_PAGES." cp2 ON cp.page_cat=cp2.page_id
-        ".($sql_condition ? "WHERE " : "")." $sql_condition
+        ".($sql_condition ? "WHERE " : '')." $sql_condition
         GROUP BY cp.page_id
         ORDER BY cp.page_status DESC, cp.page_datestamp DESC LIMIT $rowstart, $page_per_query
         ";
@@ -123,7 +137,6 @@ class PageList extends PageAdmin {
             echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
             echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
             echo "</div>\n";
-
             ?>
             <script>
                 function run_admin(action) {
@@ -223,10 +236,10 @@ class PageList extends PageAdmin {
             $author_opts = [0 => self::$locale['page_0115']];
 
             $result = dbquery("SELECT u.user_id, u.user_name, u.user_status
-          FROM ".DB_CUSTOM_PAGES." cp
-          LEFT JOIN ".DB_USERS." u on cp.page_user = u.user_id
-          GROUP BY u.user_id
-          ORDER BY user_name ASC");
+            FROM ".DB_CUSTOM_PAGES." cp
+            LEFT JOIN ".DB_USERS." u on cp.page_user = u.user_id
+            GROUP BY u.user_id
+            ORDER BY user_name ASC");
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     $author_opts[$data['user_id']] = $data['user_name'];
@@ -243,14 +256,23 @@ class PageList extends PageAdmin {
             ?>
         </div>
         <?php
-
-        if (dbrows($page_result) > 0) {
+        $rowCount = dbrows($page_result);
+        if ($rowCount > 0) {
             add_to_jquery("
                 $('.qform').hide();
                 $('#delete').bind('click', function() { confirm('".self::$locale['page_0413']."'); });
             ");
 
-            echo "<div class='m-t-20 table-responsive'><table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
+            echo "<div class='m-t-20 table-responsive'>\n";
+
+            if ($max_pages > $rowCount) {
+                $page_uri = clean_request('', ['aid'], TRUE);
+                echo "<div class='pull-right'>\n";
+                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;', 'rowstart');
+                echo "</div>\n";
+            }
+
+            echo "<table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
             echo "<th></th>\n";
@@ -297,7 +319,16 @@ class PageList extends PageAdmin {
             }
 
             echo "</tbody>\n";
-            echo "</table>\n</div>";
+            echo "</table>\n";
+
+            if ($max_pages > $rowCount) {
+                $page_uri = clean_request('', ['aid'], TRUE);
+                echo "<div class='pull-right'>\n";
+                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;', 'rowstart');
+                echo "</div>\n";
+            }
+
+            echo "</div>";
         } else {
             echo "<div class='well text-center m-t-20'>\n".$locale['page_0440']."</div>";
         }
