@@ -496,8 +496,8 @@ class UserFields {
 					include INCLUDES."user_fields/".$data['field_name']."_include.php";
 				}
 			}
-		} else {
-			echo "<div class='alert alert-danger text-center'>".$locale['108']."</div>\n";
+	//	} else {
+	//		echo "<div class='alert alert-danger text-center'>".$locale['uf_108']."</div>\n";
 		}
 		if ($obActiva) {
 			$fields[$i] = ob_get_contents();
@@ -525,7 +525,7 @@ class UserFields {
 				}
 			}
 		}
-		if (strlen(trim($html))<=0) {
+		if ((strlen(trim($html))<=0) and ($this->method == "display")) {
 			$html .= "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n";
 		}
 		if (count($fields > 0)) {
