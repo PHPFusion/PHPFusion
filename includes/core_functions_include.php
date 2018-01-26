@@ -1048,7 +1048,9 @@ function fusion_get_groups() {
 /**
  * Getting the real users_group access.
  * Return true or false. (BOOLEAN)
+ *
  * @param $field
+ *
  * @return bool
  */
 function users_groupaccess($field) {
@@ -1087,7 +1089,7 @@ function groupaccess($field) {
 /**
  * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
  *
- * @param string     $field The name of the field
+ * @param string $field The name of the field
  *
  * @return string It can return an empty condition!
  */
@@ -1302,7 +1304,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 }
 
 /**
- * @param string $scroll_url    The ajax script that loads the content
+ * @param string $scroll_url The ajax script that loads the content
  * @param int    $rowstart Current rowstart - $_GET['rowstart']
  * @param int    $total_count The total rows - dbrows($result);
  * @param string $getname Default is 'rowstart'
@@ -1311,35 +1313,36 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @return string
  */
 function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
-    $script = "<script>
-    var count = $rowstart+1;
-    $(window).scroll(function(){
-      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
-        if (count <= '$total_count') {
-            loadInfinityContent(count);
-            count++;
+    $locale = fusion_get_locale();
+
+    add_to_jquery("
+        var count = $rowstart+1;
+        $(window).scroll(function(){
+          if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+            if (count <= '$total_count') {
+                loadInfinityContent(count);
+                count++;
+            }
+          }
+        });
+       function loadInfinityContent(pageNumber){
+           $('.infiniteLoader').show('fast');
+           $.ajax({
+                  url: '$scroll_url',
+                  type:'GET',
+                  data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
+                  success: function(html){
+                      $('.infiniteLoader').hide();
+                      $('#scroll_target').append(html);  // This will be the div where our content will be loaded
+                  }
+              });
+          return false;
         }
-      }
-    });
-   function loadInfinityContent(pageNumber){
-       $('.infiniteLoader').show('fast');
-       $.ajax({
-              url: '$scroll_url',
-              type:'GET',
-              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
-              success: function(html){
-                  $('.infiniteLoader').hide();
-                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded
-              }
-          });
-      return false;
-    }
-    </script>";
-    add_to_jquery(str_replace(['<script>', '</script>'], '', $script));
+    ");
 
     return "
     <div id='scroll_target'></div>
-    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>Loading...</div></div>
+    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>".$locale['loading']."</div></div>
     ";
 }
 
@@ -1362,7 +1365,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     // Recursive fatal protection
     if (!function_exists('breadcrumb_page_arrays')) {
         function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($tree_index[get_parent($tree_index, $id)])) {
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
@@ -1387,11 +1390,11 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     // then we make a infinity recursive function to loop/break it out.
     $crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
     // then we sort in reverse.
-    if (count($crumb['title']) > 1) {
+    if (!empty($crumb['title']) && count($crumb['title']) > 1) {
         krsort($crumb['title']);
         krsort($crumb['link']);
     }
-    if (count($crumb['title']) > 1) {
+    if (!empty($crumb['title']) && count($crumb['title']) > 1) {
         foreach ($crumb['title'] as $i => $value) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
@@ -1412,8 +1415,8 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @global string[] $settings
  * @global string[] $userdata
  *
- * @param string    $format     shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param int       $val        unix timestamp
+ * @param string    $format shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
+ * @param int       $val unix timestamp
  * @param array     $options
  *
  * @return string
@@ -1497,11 +1500,12 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 /**
  * User profile link
  *
- * @param int       $user_id
- * @param string    $user_name
- * @param int       $user_status
- * @param string    $class html class of link
- * @param bool      $display_link
+ * @param int    $user_id
+ * @param string $user_name
+ * @param int    $user_status
+ * @param string $class html class of link
+ * @param bool   $display_link
+ *
  * @return string
  */
 function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
@@ -1580,7 +1584,6 @@ function fusion_get_settings($key = NULL) {
 
 /**
  * Get Locale
- *
  * Fetch a given locale key
  *
  * @param string $key - The key of one setting
@@ -1916,7 +1919,9 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
 
 /**
  * Minify JS Code
+ *
  * @param $code
+ *
  * @return bool|string
  * @throws Exception
  */
@@ -1928,10 +1933,8 @@ function jsminify($code) {
 
 /**
  * A wrapper function for file_put_contents with cache invalidation
- *
  * If opcache is enabled on the server, this function will write the file
  * as the original file_put_contents and invalidate the cache of the file.
- *
  * It is needed when you create a file dynamically and want to include it
  * before the cache is invalidated. Redirection does not matter.
  *
