@@ -48,6 +48,10 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_port'])."' WHERE settings_name='smtp_port'");
 	if (!$result) {
 		$error = 1;
+	}	
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['smtp_auth']) ? $_POST['smtp_auth'] : "0")."' WHERE settings_name='smtp_auth'");
+	if (!$result) {
+		$error = 1;	
 	}
 	$smtp_auth = isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0;
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$smtp_auth."' WHERE settings_name='smtp_auth'");
@@ -114,7 +118,7 @@ echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 echo form_text($locale['664']."<br/>", 'smtp_host', 'smtp_host', $settings['smtp_host'], array('max_length' => 200));
 echo form_text($locale['674'], 'smtp_port', 'smtp_port', $settings['smtp_port'], array('max_length' => 10));
 echo "<div class='pull-right'><span class='small2'>".$locale['665']."</span></div>\n";
-echo form_toggle($locale['698'], 'smtp-auth', 'smtp-auth', $choice_arr, $settings['smtp_auth'], array('value'=>'yes'));
+echo form_toggle($locale['698'], 'smtp_auth', 'smtp_auth', $choice_arr, $settings['smtp_auth'], array('value'=>'yes'));
 echo form_text($locale['666'], 'smtp_username', 'smtp_username', $settings['smtp_username'], array('max_length' => 100));
 echo form_text($locale['667'], 'smtp_password', 'smtp_password', $settings['smtp_password'], array('max_length' => 100,'password' => 1));
 echo "</div>\n</div>\n";
