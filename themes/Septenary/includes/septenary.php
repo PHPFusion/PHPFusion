@@ -71,22 +71,26 @@ class SeptenaryTheme extends SeptenaryComponents {
         $this->setHeader();
 
         $this->open_grid('section-3', 1);
-        echo (!empty(AU_CENTER) || $this->top_html) ? "<div class='au-content'>".$this->top_html.AU_CENTER."</div>\n" : '';
+        echo (defined('AU_CENTER') && AU_CENTER || $this->top_html) ? "<div class='au-content'>".$this->top_html.(defined('AU_CENTER') && AU_CENTER ? AU_CENTER : '')."</div>\n" : '';
         echo "<div class='row'>\n";
-        if (!empty(LEFT) || !empty(RIGHT) || !empty($this->left_html)) {
+        if (defined('LEFT') && LEFT || defined('RIGHT') && RIGHT || !empty($this->left_html)) {
             echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
-            echo RIGHT.LEFT.$this->left_html;
+            echo defined('RIGHT') && RIGHT ? RIGHT : '';
+            echo defined('LEFT') && LEFT ? LEFT : '';
+            echo $this->left_html;
             echo "</div>\n";
         }
         echo "<div class='".self::col_span()." main-content'>\n";
         echo showbanners(1);
         // Get all notices, we also include notices that are meant to be displayed on all pages
         echo renderNotices(getNotices(['all', FUSION_SELF]));
-        echo $this->upper_html.U_CENTER;
+        echo $this->upper_html;
+        echo defined('U_CENTER') && U_CENTER ? U_CENTER : '';
         echo CONTENT;
-        echo $this->lower_html.L_CENTER;
+        echo $this->lower_html;
+        echo defined('L_CENTER') && L_CENTER ? L_CENTER : '';
         echo "</div>\n";
-        echo (!empty(BL_CENTER) || $this->bottom_html) ? "<div class='bl-content'>".$this->bottom_html.BL_CENTER."</div>\n" : '';
+        echo (defined('BL_CENTER') && BL_CENTER || $this->bottom_html) ? "<div class='bl-content'>".$this->bottom_html.(defined('BL_CENTER') && BL_CENTER ? BL_CENTER : '')."</div>\n" : '';
         echo showbanners(2);
         echo "</div>\n";
         $this->close_grid(1);
@@ -101,18 +105,18 @@ class SeptenaryTheme extends SeptenaryComponents {
 
             add_to_head("<script src='".THEME."includes/search.js'></script>");
             add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1'>
-			<!--[if lt IE 8]>
-			<div style=' clear: both; text-align:center; position: relative;'>
-			<a href='http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode'>
-			<img src='http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg' border='0' height='42' width='820' alt='You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today.' />
-			</a>
-			</div>
-			<![endif]-->
-			<!--[if lt IE 9]>
-			<script src='".THEME."js/html5.js'></script>
-			<script src='".THEME."js/css3-mediaqueries.js'></script>
-			<![endif]-->
-			");
+            <!--[if lt IE 8]>
+            <div style=' clear: both; text-align:center; position: relative;'>
+            <a href='http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode'>
+            <img src='http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg' border='0' height='42' width='820' alt='You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today.' />
+            </a>
+            </div>
+            <![endif]-->
+            <!--[if lt IE 9]>
+            <script src='".THEME."js/html5.js'></script>
+            <script src='".THEME."js/css3-mediaqueries.js'></script>
+            <![endif]-->
+            ");
         }
     }
 
