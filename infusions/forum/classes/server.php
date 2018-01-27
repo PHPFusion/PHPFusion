@@ -524,14 +524,15 @@ abstract class ForumServer {
      * @param int   $forum_id
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
-
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
             $forum_id = isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
         }
         /* Make an infinity traverse */
-        function forum_breadcrumb_arrays($index, $id, &$crumb = FALSE) {
+        function forum_breadcrumb_arrays($index, $id) {
+            $crumb = [];
+
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
                 $crumb = [
@@ -555,11 +556,11 @@ abstract class ForumServer {
         // then we make a infinity recursive function to loop/break it out.
         $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
         // then we sort in reverse.
-        if (count($crumb['title']) > 1) {
+        if (!empty($crumb['title']) && count($crumb['title']) > 1) {
             krsort($crumb['title']);
             krsort($crumb['link']);
         }
-        if (count($crumb['title']) > 1) {
+        if (!empty($crumb['title']) && count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
                 BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
