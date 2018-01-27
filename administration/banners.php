@@ -20,12 +20,13 @@ require_once THEMES."templates/admin_header.php";
 pageAccess('SB');
 
 class BannersAdministration {
-    protected static $banner_settings = [];
+    private static $banner_settings = [];
     private static $instance = NULL;
     private static $locale = [];
 
     public function __construct() {
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/banners.php");
+        self::$banner_settings = fusion_get_settings();
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
         switch ($_GET['action']) {
@@ -50,14 +51,6 @@ class BannersAdministration {
         }
 
         return self::$instance;
-    }
-
-    public static function get_banner_settings() {
-        if (empty(self::$banner_settings)) {
-            self::$banner_settings = fusion_get_settings();
-        }
-
-        return self::$banner_settings;
     }
 
     private function set_bannerdb() {
