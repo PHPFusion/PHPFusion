@@ -189,7 +189,6 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-        echo showbanners(1);
         $side_span = 3;
         $main_span = 12;
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
@@ -221,6 +220,7 @@ class MainFrame extends Core {
         endif;
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
+        echo showbanners(1);
         // U_CENTER
         if (defined('U_CENTER') && U_CENTER && $this->getParam('u_center')) :
             echo U_CENTER;
@@ -319,8 +319,8 @@ class MainFrame extends Core {
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
-        echo "</div>\n";
         echo showbanners(2);
+        echo "</div>\n";
         echo "</section>\n";
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
