@@ -41,12 +41,12 @@ class PageList extends PageAdmin {
         }
 
         if (!empty($_POST['page_status']) && isnum($_POST['page_status'])) {
-            switch ($_POST['cp.page_status']) {
+            switch ($_POST['page_status']) {
                 case 1: // is a draft
-                    $search_string['page_status'] = ["input" => 1, "operator" => "="];
+                    $search_string['cp.page_status'] = ["input" => 1, "operator" => "="];
                     break;
                 case 2: // is a sticky
-                    $search_string['page_status'] = ["input" => 2, "operator" => "="];
+                    $search_string['cp.page_status'] = ["input" => 2, "operator" => "="];
                     break;
             }
         }
@@ -103,7 +103,7 @@ class PageList extends PageAdmin {
         }
 
         $max_search_query = "SELECT COUNT(cp.page_id) 'max_page'
-        FROM ".DB_CUSTOM_PAGES." cp 
+        FROM ".DB_CUSTOM_PAGES." cp
         LEFT JOIN ".DB_CUSTOM_PAGES." cp2 ON cp.page_cat=cp2.page_id
         ".($sql_condition ? "WHERE $sql_condition" : '');
 
