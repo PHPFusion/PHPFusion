@@ -182,7 +182,7 @@ class Forum extends ForumServer {
                      */
 
                     // Generate forum breadcrumbs
-                    $this->forum_breadcrumbs($this->forum_info['forum_index']);
+                    $this->forum_breadcrumbs($this->forum_info['forum_index'], $this->forum_info['forum_id']);
 
                     // Generate New thread link
                     if ($this->getForumPermission("can_post") && $this->forum_info['forum_type'] > 1) {
