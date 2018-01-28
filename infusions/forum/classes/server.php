@@ -555,7 +555,7 @@ abstract class ForumServer {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
-        $title = !empty($crumb['title']) ? 0 : count($crumb['title']);
+        $title = is_array($crumb['title']) ? count($crumb['title']) > 1 :  0;
         // then we sort in reverse.
         if ($title) {
             krsort($crumb['title']);
