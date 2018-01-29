@@ -40,7 +40,7 @@ class ArticlesServer {
 
     public static function get_article_settings() {
         if (empty(self::$article_settings)) {
-            self::$article_settings = get_settings("article");
+            self::$article_settings = get_settings("articles");
         }
 
         return self::$article_settings;
