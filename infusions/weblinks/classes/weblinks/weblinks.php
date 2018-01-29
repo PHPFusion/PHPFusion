@@ -335,12 +335,13 @@ abstract class Weblinks extends WeblinksServer {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($weblink_cat_index, $_GET['cat_id']);
+        $title = is_array($crumb['title']) ? count($crumb['title']) > 1 :  0;
         // then we sort in reverse.
-        if (!empty($crumb['title']) && count($crumb['title']) > 1) {
+        if ($title) {
             krsort($crumb['title']);
             krsort($crumb['link']);
         }
-        if (!empty($crumb['title']) && count($crumb['title']) > 1) {
+        if ($title) {
             foreach ($crumb['title'] as $i => $value) {
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'][$i], "title" => $value]);
                 if ($i == count($crumb['title']) - 1) {
