@@ -1496,10 +1496,12 @@ table > tr:not(:last-child) > thead th {
 #devlpr #main_content .content table > thead th,
 #devlpr #main_content .content table > tfoot td,
 #devlpr #main_content .content table > tfoot th {
-    padding: 15px 15px 12px 15px;
     color: #32373c;
     border-bottom: 1px solid #e1e1e1;
     font-weight: 400;
+    padding: 13px 8px !important;
+    word-break: keep-all;
+    white-space: nowrap;
 }
 
 table tbody td {
@@ -1864,7 +1866,7 @@ textarea.form-control {
 }
 
 /* Secondary nav tabs */
-.tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs {
+.tab-content > .nav-wrapper:not(.editor-wrapper) > .nav-tabs {
     position: relative;
     margin-top: 0;
     margin-left: -15px;
@@ -1873,7 +1875,8 @@ textarea.form-control {
     background: rgb(255, 255, 255);
 }
 
-.tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li a, .tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li.active a {
+.tab-content > .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li a,
+.tab-content > .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li.active a {
     border: 0;
     background: transparent;
     line-height: 30px;
@@ -1881,7 +1884,7 @@ textarea.form-control {
     padding: 10px 15px 15px !important;
 }
 
-.tab-content .nav-wrapper:not(.editor-wrapper) > .tab-content {
+.tab-content > .nav-wrapper:not(.editor-wrapper) > .tab-content {
     border: 0;
 }
 
