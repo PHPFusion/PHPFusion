@@ -73,8 +73,7 @@ class PageAdmin extends PageModel {
         self::$current_action = isset($_GET['action']) ? $_GET['action'] : self::$current_action;
         self::$current_pageId = isset($_GET['cpid']) && isnum($_GET['cpid']) ? intval($_GET['cpid']) : self::$current_pageId;
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
-        self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/sitelinks.php');
-        self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
+        self::$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/sitelinks.php', LOCALE.LOCALESET.'admin/custom_pages.php']);
         $request = clean_request('', ['aid', 'section', 'action', 'cpid'], TRUE);
         $request = str_replace('&amp;', '&', $request);
         add_to_jquery("
