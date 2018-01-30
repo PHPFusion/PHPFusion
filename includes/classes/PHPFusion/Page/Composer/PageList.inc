@@ -46,7 +46,7 @@ class PageList extends PageAdmin {
                     $search_string['cp.page_status'] = ["input" => 1, "operator" => "="];
                     break;
                 case 2: // is a sticky
-                    $search_string['cp.page_status'] = ["input" => 2, "operator" => "="];
+                    $search_string['cp.page_status'] = ["input" => 0, "operator" => "="];
                     break;
             }
         }
