@@ -730,8 +730,8 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
 
     $sqlPatterns = [
         'save'   => 'INSERT INTO `{table}` SET {values}',
-        'update' => 'UPDATE `{table}` SET {values} WHERE {where}',
-        'delete' => 'DELETE FROM `{table}` WHERE {where}'
+        'update' => 'UPDATE `{table}` SET {values} {where}',
+        'delete' => 'DELETE FROM `{table}` {where}'
     ];
 
     foreach ($data as $name => $value) {
@@ -754,7 +754,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
     $sql = strtr($sqlPatterns[$mode], [
         '{table}'  => $table,
         '{values}' => implode(', ', $sanitized_input),
-        '{where}'  => $where
+        '{where}'  => $where ? "WHERE ".$where : ''
     ]);
     $result = NULL;
     if ($options['debug']) {

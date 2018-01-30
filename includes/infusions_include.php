@@ -271,32 +271,43 @@ if (!function_exists('upload_image')) {
                 $image_name = stripfilename(substr($image['name'], 0, strrpos($image['name'], ".")));
             }
             $image_ext = strtolower(strrchr($image['name'], "."));
+            switch ($image_ext) {
+                case '.gif':
+                    $filetype = 1;
+                    break;
+                case '.jpg':
+                    $filetype = 2;
+                    break;
+                case '.png':
+                    $filetype = 3;
+                    break;
+                default:
+                    $filetype = FALSE;
+            }
+
             // need to run file_exist. @ supress will not work anymore.
             if ($image['size']) {
+
                 $image_res = @getimagesize($image['tmp_name']);
+
                 $image_info = [
-                    'image'        => FALSE,
-                    'image_name'   => $image_name.$image_ext,
-                    'image_ext'    => $image_ext,
-                    'image_size'   => $image['size'],
-                    'image_width'  => $image_res[0],
-                    'image_height' => $image_res[1],
-                    'thumb1'       => FALSE,
-                    'thumb1_name'  => '',
-                    'thumb2'       => FALSE,
-                    'thumb2_name'  => '',
-                    'error'        => 0,
-                    'query'        => $query
+                    'image'         => FALSE,
+                    "target_folder" => $target_folder,
+                    "valid_ext"     => $allowed_extensions,
+                    "max_size"      => $max_size,
+                    'image_name'    => $image_name.$image_ext,
+                    'image_ext'     => $image_ext,
+                    'image_size'    => $image['size'],
+                    'image_width'   => $image_res[0],
+                    'image_height'  => $image_res[1],
+                    'thumb1'        => FALSE,
+                    'thumb1_name'   => '',
+                    'thumb2'        => FALSE,
+                    'thumb2_name'   => '',
+                    'error'         => 0,
+                    'query'         => $query,
                 ];
-                if ($image_ext == ".gif") {
-                    $filetype = 1;
-                } else if ($image_ext == ".jpg") {
-                    $filetype = 2;
-                } else if ($image_ext == ".png") {
-                    $filetype = 3;
-                } else {
-                    $filetype = FALSE;
-                }
+
                 if ($image['size'] > $max_size) {
                     // Invalid file size
                     $image_info['error'] = 1;
