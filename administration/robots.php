@@ -24,14 +24,14 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
 
 function write_Default() {
-
     $robots_content = "User-agent: *\n";
     $robots_content .= "Disallow: /config.php\n";
     $robots_content .= "Disallow: /administration/\n";
+    $robots_content .= "Disallow: /includes/\n";
     $robots_content .= "Disallow: /locale/\n";
     $robots_content .= "Disallow: /themes/\n";
     $robots_content .= "Disallow: /print.php\n";
-    $robots_content .= "Disallow: /infusions/latest_comments_panel/\n";
+
     return $robots_content;
 }
 

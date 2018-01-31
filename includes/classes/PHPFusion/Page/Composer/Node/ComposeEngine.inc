@@ -559,22 +559,13 @@ class ComposeEngine extends PageAdmin {
                 <div class='list-group-item m-t-5 m-b-5' style='border:1px solid #ddd; background: #fff;'>
                     <?php if (!empty($colData['page_widget'])) : ?>
                         <div class='pull-left m-r-10' style='width:40px;'>
-                            <img class='img-responsive' src='<?php echo $widget_img_path ?>'/>
+                            <img class='img-responsive' alt='widget' src='<?php echo $widget_img_path ?>'/>
                         </div>
                         <div class='pull-right m-l-10'>
                             <div class='btn-group btn-group-sm'>
-                                <a class='btn btn-default' href='<?php echo $edit_link ?>'
-                                   title='<?php echo self::$locale['page_0356'] ?>'>
-                                    <i class='fa fa-cog'></i>
-                                </a>
-                                <a class='btn btn-default' href='<?php echo $copy_link ?>'
-                                   title='<?php echo self::$locale['page_0357'] ?>'>
-                                    <i class='fa fa-copy'></i>
-                                </a>
-                                <a class='btn btn-default' href='<?php echo $delete_link ?>'
-                                   title='<?php echo self::$locale['page_0358'] ?>'>
-                                    <i class='fa fa-minus-circle'></i>
-                                </a>
+                                <a class='btn btn-default' href='<?php echo $edit_link ?>' title='<?php echo self::$locale['page_0356'] ?>'><i class='fa fa-cog'></i></a>
+                                <a class='btn btn-default' href='<?php echo $copy_link ?>' title='<?php echo self::$locale['page_0357'] ?>'><i class='fa fa-copy'></i></a>
+                                <a class='btn btn-default' href='<?php echo $delete_link ?>' title='<?php echo self::$locale['page_0358'] ?>'><i class='fa fa-minus-circle'></i></a>
                             </div>
                         </div>
                         <div class='overflow-hide'>

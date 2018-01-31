@@ -45,19 +45,12 @@ if (!function_exists("display_maintenance")) {
             echo "</div>\n";
             echo $info['close_form'];
         } else {
+            echo '<div><a href="'.BASEDIR.'index.php?logout=yes" class="btn btn-primary"><i class="fa fa-sign-out"></i> '.fusion_get_locale('global_124').'</a></div>';
             if (iADMIN) {
                 $siteurl = fusion_get_settings('siteurl').fusion_get_settings('opening_page');
-                echo '<a class="display-inline-block pull-left m-r-10" href="'.$siteurl.'">';
-                echo '<i class="fa fa-home fa-fw"></i> '.fusion_get_locale('home');
-                echo '</a>';
-                echo '<a class="display-inline-block pull-left" href="'.ADMIN.'index.php'.fusion_get_aidlink().'">';
-                echo '<i class="fa fa-dashboard fa-fw"></i> '.fusion_get_locale('global_123');
-                echo '</a>';
+                echo '<a class="m-r-10" href="'.$siteurl.'"><i class="fa fa-home fa-fw"></i> '.fusion_get_locale('home').'</a>';
+                echo '<a href="'.ADMIN.'index.php'.fusion_get_aidlink().'"><i class="fa fa-dashboard fa-fw"></i> '.fusion_get_locale('global_123').'</a>';
             }
-
-            echo '<a href="'.BASEDIR.'index.php?logout=yes" class="btn btn-primary">';
-            echo '<i class="fa fa-sign-out"></i> '.fusion_get_locale('global_124');
-            echo '</a>';
         }
         echo "</div>\n";
         echo "<div class='text-center'>\n";

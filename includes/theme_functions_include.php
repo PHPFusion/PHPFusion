@@ -705,7 +705,7 @@ if (!function_exists('display_avatar')) {
         $default_avatar = !empty($custom_avatar) ? $custom_avatar : fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
         $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-        $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
+        $imgTpl = "<img class='avatar img-responsive $img_class' alt='".(!empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest')."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
         $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
         return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }

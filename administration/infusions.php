@@ -34,6 +34,8 @@ opentable($locale['400']);
 echo "<div class='text-right'>\n";
 echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 echo "</div>\n";
+
+$infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
     $inf = PHPFusion\Installer\Infusion_Core::load_infusion($folders);
@@ -52,7 +54,6 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
         $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'><strong>".$locale['420']."</strong></div>\n";
         $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0 col-lg-2'><strong>".$locale['421']."</strong></div>\n";
         $content .= "</div>\n</div>\n";
-
 
         foreach ($infs as $i => $inf) {
 

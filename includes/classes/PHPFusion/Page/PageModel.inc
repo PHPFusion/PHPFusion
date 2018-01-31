@@ -280,7 +280,7 @@ class PageModel {
     /**
      * SQL delete page
      *
-     * @param $page_id
+     * @param $pageid
      */
     protected function delete_customPage($pageid) {
         $page_id = filter_var($pageid, FILTER_VALIDATE_INT);

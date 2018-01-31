@@ -1833,7 +1833,7 @@ function lang_switcher($icon = TRUE) {
         echo closeform();
         add_to_jquery("
             function showflag(item){
-                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\" alt=\"'+item.text + '\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
             }
             $('#lang_menu').select2({
             placeholder: '".$locale['global_ML103']."',

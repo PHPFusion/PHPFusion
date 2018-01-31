@@ -322,7 +322,7 @@ class SmileysAdministration {
         echo closeform();
         add_to_jquery("
         function showMeSmileys(item) {
-            return '<aside class=\"pull-left\" style=\"width:35px;\"><img style=\"height:15px;\" class=\"img-rounded\" src=\"".IMAGES."smiley/'+item.id+'\"/></aside> : ' + item.text;
+            return '<aside class=\"pull-left\" style=\"width:35px;\"><img style=\"height:15px;\" class=\"img-rounded\" alt=\"'+item.text+'\" src=\"".IMAGES."smiley/'+item.id+'\"/></aside> : ' + item.text;
             }
             $('#smiley_image').select2({
             formatSelection: function(m) { return showMeSmileys(m); },

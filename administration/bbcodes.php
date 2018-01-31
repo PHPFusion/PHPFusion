@@ -195,7 +195,7 @@ function bbcode_form() {
             $bbcode_image = '-';
             foreach ($bbcode_attr as $attr) {
                 if (file_exists($check_path.$data['bbcode_name'].$attr)) {
-                    $bbcode_image = "<img src='".$img_path.$data['bbcode_name'].$attr."' title='".$data['bbcode_name']."' style='border:1px solid black; ".($attr == '.svg' ? 'width: 24px; height: 24px;' : '')."' />\n";
+                    $bbcode_image = "<img src='".$img_path.$data['bbcode_name'].$attr."' alt='".$data['bbcode_name']."' title='".$data['bbcode_name']."' style='border:1px solid black; ".($attr == '.svg' ? 'width: 24px; height: 24px;' : '')."' />\n";
                     break;
                 }
             }

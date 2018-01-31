@@ -75,8 +75,7 @@ echo "<meta name='url' content='".fusion_get_settings('siteurl')."' />\n";
 echo "<meta name='keywords' content='".fusion_get_settings('keywords')."' />\n";
 echo "<meta name='image' content='".fusion_get_settings('siteurl').fusion_get_settings('sitebanner')."' />\n";
 // Load bootstrap stylesheets
-if (fusion_get_settings('bootstrap') == TRUE) {
-    define('BOOTSTRAPPED', TRUE);
+if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
@@ -88,11 +87,10 @@ if (fusion_get_settings('bootstrap') == TRUE) {
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
     if (!empty($theme_data)) {
-        $theme_css = THEMES.$theme_data['theme_file'];
-        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n";
+        echo "<link href='".THEMES.$theme_data['theme_file']."' rel='stylesheet' type='text/css' />\n";
     }
 }
-if (fusion_get_settings('entypo')) {
+if (fusion_get_settings('entypo') || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-embedded.css' type='text/css' />\n";
@@ -100,7 +98,7 @@ if (fusion_get_settings('entypo')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-if (fusion_get_settings('fontawesome')) {
+if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
 if (!defined('NO_DEFAULT_CSS')) {
@@ -110,13 +108,20 @@ echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='s
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
-if (function_exists("get_head_tags")) {
-    echo get_head_tags();
-}
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo \PHPFusion\OutputHandler::$pageHeadTags;
 echo "</head>\n";
 
 display_maintenance($info);
 
+echo \PHPFusion\OutputHandler::$pageFooterTags;
+$jquery_tags = \PHPFusion\Minifier::minify(\PHPFusion\OutputHandler::$jqueryTags, ['flaggedComments' => FALSE]);
+if (!empty($jquery_tags)) {
+    echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
+}
+
+if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+}
 echo "</body>\n";
 echo "</html>";
