@@ -23,6 +23,9 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
 // Load Septenary Parts
 include THEME."theme_autoloader.php";
 

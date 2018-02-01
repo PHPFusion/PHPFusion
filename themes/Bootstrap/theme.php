@@ -22,6 +22,9 @@ if (!defined("IN_FUSION")) {
 define("THEME_BULLET", "&middot;");
 include "functions.php";
 
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
 function render_page() {
     $locale = fusion_get_locale();
     $userdata = fusion_get_userdata();
