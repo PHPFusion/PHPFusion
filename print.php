@@ -21,7 +21,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."print.php");
 
 if ($settings['maintenance'] == "1") {
     if ($settings['maintenance_level'] < fusion_get_userdata('user_level') or empty(fusion_get_userdata('user_level'))) {
-        if ($settings['site_seo')) {
+        if ($settings['site_seo']) {
             redirect(FUSION_ROOT.BASEDIR."maintenance.php");
         } else {
             redirect(BASEDIR."maintenance.php");
