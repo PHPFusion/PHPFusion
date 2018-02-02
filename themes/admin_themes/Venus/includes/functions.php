@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Venus/includes/functions.php
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -223,7 +223,7 @@ function render_dashboard() {
                     echo "<div class='clearfix m-t-10'>\n";
                         echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_PH")."'/>\n";
                         echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['272']."</span>\n<br/>\n";
+                            echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
                             echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
                         echo "</div>\n";
                         echo "<div class='pull-left display-inline-block m-r-10'>\n";

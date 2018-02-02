@@ -192,7 +192,7 @@ class Dashboard {
                         echo '<div class="clearfix m-t-10">';
                             echo '<img class="img-responsive pull-right dashboard-icon" src="'.get_image("ac_PH").'" alt="'.$locale['272'].'"/>';
                             echo '<div class="pull-left display-inline-block m-r-15">';
-                                echo '<span class="text-smaller">'.$locale['272'].'</span><br/>';
+                                echo '<span class="text-smaller">'.$locale['261'].'</span><br/>';
                                 echo '<h4 class="m-t-0">'.number_format($photos['photo']).'</h4>';
                             echo '</div>';
                             echo '<div class="pull-left display-inline-block m-r-15">';
