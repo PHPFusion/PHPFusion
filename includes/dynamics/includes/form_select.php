@@ -70,8 +70,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'db'                   => '',         // Specify which DB to map
         'id_col'               => '',         // Chain Primary Key Column Name
         'cat_col'              => '',         // Chain Category Column Name
-        'title_col'            => '',        // Chain Title Column Name
-        'custom_query'         => '',     // If any replacement statement for the query
+        'title_col'            => '',         // Chain Title Column Name
+        'custom_query'         => '',         // SQL query replacements
         'value_filter'         => ['col' => '', 'value' => NULL], // Specify if building opts has to specifically match these conditions
         'optgroup'             => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
         'option_pattern'       => "&#8212;",
@@ -93,6 +93,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'hide_disabled'        => FALSE,
         'no_root'              => FALSE,
         'show_current'         => FALSE,
+        'db_cache'             => TRUE,
     ];
 
     $options += $default_options;
@@ -109,7 +110,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         // Cache result
         $cache = ($options['custom_query'] ? FALSE : TRUE);
 
-        if (empty($select_db[$options['db']]) || !$cache) {
+        if (empty($select_db[$options['db']]) || (!$cache or $options['db_cache'] === FALSE)) {
             if (!empty($options['cat_col'])) {
                 $select_db[$options['db']] = dbquery_tree_full($options['db'], $options['id_col'], $options['cat_col'], "ORDER BY ".$options['cat_col']." ASC, ".$options['id_col']." ASC, ".$options['title_col']." ASC", ($options['custom_query'] ?: ""));
             } else {
@@ -216,6 +217,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                     }
 
                     return (array)$list;
+
                 }
             }
         }
