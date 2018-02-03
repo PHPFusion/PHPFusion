@@ -97,7 +97,7 @@ class Functions {
      * @return bool|string
      */
     public static function validate_blog($id) {
-        if (isnum($id)) {
+        if (!empty($id) && isnum($id)) {
             return (int)dbcount("('blog_id')", DB_BLOG, "blog_id='".intval($id)."'");
         }
 

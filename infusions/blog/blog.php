@@ -16,18 +16,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
+
 if (!db_exists(DB_BLOG)) {
     redirect(BASEDIR."error.php?code=404");
 }
+$settings = fusion_get_settings();
+$locale = fusion_get_locale('', BLOG_LOCALE);
+
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
-
-$settings = fusion_get_settings();
-$locale = fusion_get_locale('', BLOG_LOCALE);
 
 if ($settings['tinymce_enabled'] == 1) {
     $tinymce_list = [];
@@ -83,33 +84,33 @@ $info['blog_categories'][0][0] = [
 
 // controller: make filter types
 $filter = array_keys($info['allowed_filters']);
-$_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
-foreach ($info['allowed_filters'] as $type => $filter_name) {
+$_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? stripinput($_GET['type']) : '';
 
-    /**
-     * Dynamic array filtration
-     */
-    $preserved_keys = [];
-    if (!empty($_GET['cat_id'])) {
-        $preserved_keys[] = "cat_id";
+if (!empty($info['allowed_filters'])) {
+    foreach ($info['allowed_filters'] as $type => $filter_name) {
+        /**
+         * Dynamic array filtration
+         */
+        $preserved_keys = [];
+        if (!empty($_GET['cat_id'])) {
+            $preserved_keys[] = "cat_id";
+        }
+        if (!empty($_GET['archive'])) {
+            $preserved_keys[] = "archive";
+        }
+        if (!empty($_GET['month'])) {
+            $preserved_keys[] = "month";
+        }
+        if (!empty($_GET['author'])) {
+            $preserved_keys[] = "author";
+        }
+
+        $filter_link = clean_request("type=".$type, $preserved_keys, TRUE);
+        $active = isset($_GET['type']) && $_GET['type'] === $type ? 1 : 0;
+        $info['blog_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
+
+        unset($filter_link);
     }
-    if (!empty($_GET['archive'])) {
-        $preserved_keys[] = "archive";
-    }
-    if (!empty($_GET['month'])) {
-        $preserved_keys[] = "month";
-    }
-    if (!empty($_GET['author'])) {
-        $preserved_keys[] = "author";
-    }
-
-    $filter_link = clean_request("type=".$type, $preserved_keys, TRUE);
-
-    $active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
-
-    $info['blog_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
-
-    unset($filter_link);
 }
 
 //  controller: make $filter_condition string
@@ -134,16 +135,18 @@ switch ($_GET['type']) {
 if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
     if (validate_blog($_GET['readmore'])) {
-        $result = dbquery("SELECT tn.*, tu.*,
-            ".(!empty($filter_count) ? $filter_count : '')."
-                    tn.blog_datestamp as last_updated
-                    FROM ".DB_BLOG." tn
-                    LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-            ".(!empty($filter_join) ? $filter_join : '')."
-                    ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND
-                    blog_id='".$_GET['readmore']."' AND blog_draft='0'
-                    GROUP BY blog_id
-                    ");
+
+        $sql = "SELECT tn.*, tu.*, ".(!empty($filter_count) ? $filter_count : '')." tn.blog_datestamp as last_updated
+        FROM ".DB_BLOG." tn
+        LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+        ".(!empty($filter_join) ? $filter_join : '')."
+        ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND
+        blog_id=:blog_id AND blog_draft=0
+        GROUP BY blog_id
+        ";
+
+        $param = [':blog_id' => intval($_GET['readmore'])];
+        $result = dbquery($sql, $param);
         $info['blog_rows'] = dbrows($result);
         if ($info['blog_rows'] > 0) {
             include INCLUDES."comments_include.php";
@@ -279,6 +282,7 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
     }
 
 } else {
+
     set_title($locale['blog_1000']);
     if (isset($_GET['author']) && isnum($_GET['author'])) {
         $info['blog_max_rows'] = dbcount("(blog_id)", DB_BLOG,
@@ -289,11 +293,14 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
         if ($info['blog_max_rows'] > 0) {
-            $author_res = dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($_GET['author'])."'"), 0);
+
+            $author = fusion_get_user(intval($_GET['author']));
+            $author_username = $author['user_name'];
+            unset($author);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS."blog/blog.php?author=".$_GET['author'],
-                'title' => $locale['global_070'].$author_res
+                'title' => $locale['global_070'].$author_username
             ]);
 
             if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
@@ -303,17 +310,20 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
                 ]);
             }
 
-            $result = dbquery("SELECT tn.*,
-            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-            ".(!empty($filter_count) ? $filter_count : '')."
-            max(tn.blog_datestamp) AS last_updated
+            $sql = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined, ".(!empty($filter_count) ? $filter_count : '')." MAX(tn.blog_datestamp) AS last_updated
             FROM ".DB_BLOG." tn
             inner join ".DB_USERS." tu ON tn.blog_name=tu.user_id
             ".(!empty($filter_join) ? $filter_join : '')."
-            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
-            AND (blog_start='0' || blog_start<='".time()."') AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'
+            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')."
+            AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
             GROUP BY blog_id
-            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$blog_settings['blog_pagination']);
+            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit";
+            $param = [
+                ':author_id' => intval($_GET['author']),
+                ':rowstart'  => intval($_GET['rowstart']),
+                ':limit'     => intval($blog_settings['blog_pagination'])
+            ];
+            $result = dbquery($sql, $param);
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
@@ -322,36 +332,35 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
 
-            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? "blog_cat_language='".LANGUAGE."' AND " : "")." blog_cat_id='".intval($_GET['cat_id'])."'"));
+            $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_column('BL') ? "blog_cat_language='".LANGUAGE."' AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]));
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
+                'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
                 'title' => $res['blog_cat_name']
             ]);
+
             add_to_title($locale['global_201'].$res['blog_cat_name']);
             $info['blog_title'] = $res['blog_cat_name'];
             $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
 
         } else {
+
             // Uncategorized blog
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
+                'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
                 'title' => $locale['global_080']
             ]);
             add_to_title($locale['global_201'].$locale['global_080']);
             $info['blog_title'] = $locale['global_080'];
         }
+
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                "link"  => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id']."&amp;type=".$_GET['type'],
+                "link"  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id'])."&amp;type=".$_GET['type'],
                 "title" => $info['allowed_filters'][$_GET['type']]
             ]);
         }
 
-        $max_rows_sql = "SELECT blog_id from ".DB_BLOG."
-        ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE")." ".groupaccess("blog_visibility")."
-        AND (blog_start='0' || blog_start<='".TIME."') AND (blog_end='0' || blog_end>='".TIME."') AND blog_draft='0'
-        $catFilter";
-
+        $max_rows_sql = "SELECT blog_id from ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess("blog_visibility")." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft='0' $catFilter";
         $info['blog_max_rows'] = dbrows(dbquery($max_rows_sql));
 
         //xss
@@ -383,9 +392,10 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
         // Archives
         $archiveSql = "";
         if (isset($_GET['archive']) && isnum($_GET['archive']) && isset($_GET['month']) && isnum($_GET['month'])) {
-            $start_time = mktime('0', '0', '0', $_GET['month'], 1, $_GET['archive']);
-            $end_time = mktime('0', '0', '0', $_GET['month'] + 1, 1, $_GET['archive']) - (3600 * 24);
-            $archiveSql = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
+
+            $start_time = mktime('0', '0', '0', intval($_GET['month']), 1, intval($_GET['archive']));
+            $end_time = mktime('0', '0', '0', intval($_GET['month']) + 1, 1, intval($_GET['archive'])) - (3600 * 24);
+            $archiveSql = "AND blog_datestamp >=".intval($start_time)." AND blog_datestamp <= ".intval($end_time);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => clean_request("", ["archive", "month"], TRUE),
@@ -394,19 +404,10 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
         }
 
-        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG,
-            (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")."
-                                         ".groupaccess('blog_visibility')."
-                                         AND (blog_start='0' || blog_start<='".time()."')
-                                         AND (blog_end='0' || blog_end>='".time()."')
-                                         AND blog_draft='0'
-                                         ".$archiveSql."
-                                         ");
-
-        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
+        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, (multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : '').groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 ".$archiveSql);
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? intval($_GET['rowstart']) : 0;
 
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
-
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 "link"  => clean_request("", ["archive", "month"], TRUE),
                 "title" => $info['allowed_filters'][$_GET['type']]
@@ -415,26 +416,29 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 
         if ($info['blog_max_rows'] > 0) {
             // remove blog category from join.
-            $result = dbquery("
-            SELECT tn.*,
-            tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-            ".(!empty($filter_count) ? $filter_count : '')."
-            max(tn.blog_datestamp) AS last_updated
+            $sql = "
+            SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined, ".(!empty($filter_count) ? $filter_count : '')." max(tn.blog_datestamp) AS last_updated
             FROM ".DB_BLOG." tn
             LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
             ".(!empty($filter_join) ? $filter_join : '')."
-            ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
-            AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
+            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE.".' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0
             ".$archiveSql."
             GROUP BY tn.blog_id
-            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
+            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit";
+            $param = [
+                ':rowstart' => intval($_GET['rowstart']),
+                ':limit'    => intval($blog_settings['blog_pagination'])
+            ];
+            $result = dbquery($sql, $param);
             $info['blog_rows'] = dbrows($result);
         }
     }
+
     // End Queries Type : $result and $info['blog_rows']
     if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
         $info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
     }
+
     if (!empty($info['blog_rows'])) {
         while ($data = dbarray($result)) {
             // remove category image binding on item. each item is capable of housing hundreds of category.
@@ -492,13 +496,10 @@ if (!empty($_GET['readmore']) && isnum($_GET['readmore'])) {
 }
 
 // Archive Menu -- fix active selector
-$archive_result = dbquery("
-            SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
-            FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")."
-            ".groupaccess('blog_visibility')." AND (blog_start='0' || blog_start<='".time()."')
-            AND (blog_end='0' || blog_end>='".time()."') AND blog_draft='0'
-            GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC
-            ");
+$sql = "SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
+        FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC";
+$archive_result = dbquery($sql);
+
 if (dbrows($archive_result)) {
     while ($a_data = dbarray($archive_result)) {
         $active = isset($_GET['archive']) && isnum($_GET['archive']) && ($_GET['archive'] == $a_data['blog_year']) &&
@@ -514,11 +515,9 @@ if (dbrows($archive_result)) {
 }
 
 // Author Menu
-$author_result = dbquery("SELECT b.blog_name, count(b.blog_id) AS blog_count, u.user_id, u.user_name, u.user_status
-            FROM ".DB_BLOG." b
-            INNER JOIN ".DB_USERS." u ON (b.blog_name = u.user_id)
-            GROUP BY blog_name ORDER BY blog_name ASC
-            ");
+$sql = "SELECT b.blog_name, count(b.blog_id) AS blog_count, u.user_id, u.user_name, u.user_status FROM ".DB_BLOG." b INNER JOIN ".DB_USERS." u ON (b.blog_name = u.user_id) GROUP BY blog_name ORDER BY blog_name ASC";
+$author_result = dbquery($sql);
+
 if (dbrows($author_result)) {
     while ($at_data = dbarray($author_result)) {
         $active = isset($_GET['author']) && $_GET['author'] == $at_data['blog_name'] ? 1 : 0;
@@ -537,6 +536,7 @@ function rating_db($id, $type) {
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
+
     return $count_db['sum_rating'];
 }
 
@@ -546,6 +546,7 @@ function sum_db($id, $type) {
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
+
     return $count_db['count_votes'];
 }
 
@@ -555,6 +556,7 @@ function count_comments($id, $type) {
                 FROM ".DB_COMMENTS."
                 WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
              "));
+
     return $count_db['count_comment'];
 }
 
