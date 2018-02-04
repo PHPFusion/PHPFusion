@@ -97,7 +97,7 @@ abstract class News extends NewsServer {
             'link' => INFUSIONS."news/news.php?cat_id=0",
             'name' => fusion_get_locale('news_0006', NEWS_LOCALE)
         ];
-        $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility 
+        $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility
         FROM ".DB_NEWS_CATS."
         ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
         if (dbrows($result) > 0) {
@@ -273,10 +273,10 @@ abstract class News extends NewsServer {
                 $imageOptimized = IMAGES_N.$data['news_image'];
                 $imageRaw = $imageOptimized;
             }
-            if ($data['news_image_t2'] && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+            if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
                 $imageOptimized = IMAGES_N_T.$data['news_image_t2'];
             }
-            if ($data['news_image_t1'] && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+            if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
                 $imageOptimized = IMAGES_N_T.$data['news_image_t1'];
             }
         }
