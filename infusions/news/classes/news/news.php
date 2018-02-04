@@ -549,6 +549,7 @@ abstract class News extends NewsServer {
 
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $id) {
+
             $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
@@ -570,20 +571,20 @@ abstract class News extends NewsServer {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($news_cat_index, $_GET['cat_id']);
-        $title = is_array($crumb['title']) ? count($crumb['title']) > 1 :  0;
+        $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
-        if ($title) {
+        if ($title_count) {
             krsort($crumb['title']);
             krsort($crumb['link']);
         }
-        if ($title) {
+        if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
                 BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } else if (isset($crumb['title'])) {
+        } elseif (isset($crumb['title'])) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
