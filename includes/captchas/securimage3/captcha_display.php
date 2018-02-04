@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "securimage.php";
+require_once 'securimage.php';
+
 // Display Capthca
 ?>
-<div class='clearfix m-b-15'>
-    <?php echo Securimage::getCaptchaHtml(['show_text_input' => FALSE]); ?>
+<div class="clearfix m-b-15">
+    <?php echo Securimage::getCaptchaHtml(['show_text_input' => FALSE, 'input_name' => 'captcha_code']); ?>
 </div>
