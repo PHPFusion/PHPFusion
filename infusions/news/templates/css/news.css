@@ -52,7 +52,9 @@
     max-width: inherit;
     margin: 0 auto;
     position: relative;
+    max-height: 220px;
 }
+
 .comments-item {
     text-decoration: none !important;
 }
