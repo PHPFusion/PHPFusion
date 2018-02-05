@@ -1089,7 +1089,7 @@ class Securimage {
                 if (!is_null($this->session_name) && trim($this->session_name) != '') {
                     session_name(trim($this->session_name)); // set session name if provided
                 }
-                //session_start();
+                session_start();
             }
         }
     }
@@ -1381,7 +1381,7 @@ class Securimage {
 
             // check for existence and executability of LAME binary
             // prefer mp3 over wav by sourcing it first, if available
-            if (is_executable(Securimage::$lame_binary_path)) {
+            if (file_exists(Securimage::$lame_binary_path) && is_executable(Securimage::$lame_binary_path)) {
                 $html .= sprintf('<source id="%s_source_mp3" src="%sid=%s&amp;format=mp3" type="audio/mpeg">', $image_id, $play_path, uniqid())."\n";
             }
 
