@@ -109,7 +109,7 @@ function phpsettings() {
     $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['421'] : $locale['422'])."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['421']." (".ini_get('upload_max_filesize')."B)" : $locale['422'])."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['421'] : $locale['422'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? ini_get('disable_functions') : $locale['430'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430'])."</td></tr>\n";
     $phpinfo .= "</table>\n</div>";
     echo $phpinfo;
 }
