@@ -19,8 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INFUSIONS."home_panel/templates/home_panel.php";
-require_once INCLUDES."infusions_include.php";
+require_once INFUSIONS.'home_panel/templates/home_panel.php';
+require_once INCLUDES.'infusions_include.php';
 
 if (file_exists(INFUSIONS.'home_panel/locale/'.LANGUAGE.'.php')) {
     $locale_path = INFUSIONS.'home_panel/locale/'.LANGUAGE.'.php';
@@ -31,8 +31,9 @@ $locale = fusion_get_locale('', $locale_path);
 
 $configs = [];
 
-$configs[DB_NEWS] = [
-    'select'              => "SELECT
+if (defined('DB_NEWS')) {
+    $configs[DB_NEWS] = [
+        'select'              => "SELECT
         ns.news_id as id, ns.news_subject as title, ns.news_news as content,
         ns.news_datestamp as datestamp, us.user_id, us.user_name,
         us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
@@ -52,17 +53,19 @@ $configs[DB_NEWS] = [
         AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
         group by ns.news_id
         ORDER BY ns.news_datestamp DESC LIMIT 3",
-    'locale'              => [
-        'norecord'   => $locale['home_0050'],
-        'blockTitle' => $locale['home_0000'],
-    ],
-    'infSettings'         => get_settings("news"),
-    'categoryLinkPattern' => INFUSIONS."news/news.php?cat_id={cat_id}",
-    'contentLinkPattern'  => INFUSIONS."news/news.php?readmore={id}",
-];
+        'locale'              => [
+            'norecord'   => $locale['home_0050'],
+            'blockTitle' => $locale['home_0000'],
+        ],
+        'infSettings'         => get_settings("news"),
+        'categoryLinkPattern' => INFUSIONS."news/news.php?cat_id={cat_id}",
+        'contentLinkPattern'  => INFUSIONS."news/news.php?readmore={id}",
+    ];
+}
 
-$configs[DB_ARTICLES] = [
-    'select'              => "SELECT
+if (defined('DB_ARTICLES')) {
+    $configs[DB_ARTICLES] = [
+        'select'              => "SELECT
         ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
         ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
         us.user_id, us.user_name, us.user_status
@@ -72,17 +75,19 @@ $configs[DB_ARTICLES] = [
         WHERE ar.article_draft = 0
         AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
         ORDER BY ar.article_datestamp DESC LIMIT 3",
-    'locale'              => [
-        'norecord'   => $locale['home_0051'],
-        'blockTitle' => $locale['home_0001'],
-    ],
-    'infSettings'         => get_settings("article"),
-    'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
-    'contentLinkPattern'  => INFUSIONS."articles/articles.php?article_id={id}",
-];
+        'locale'              => [
+            'norecord'   => $locale['home_0051'],
+            'blockTitle' => $locale['home_0001'],
+        ],
+        'infSettings'         => get_settings("article"),
+        'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
+        'contentLinkPattern'  => INFUSIONS."articles/articles.php?article_id={id}",
+    ];
+}
 
-$configs[DB_BLOG] = [
-    'select'              => "SELECT
+if (defined('DB_BLOG')) {
+    $configs[DB_BLOG] = [
+        'select'              => "SELECT
         bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
         bl.blog_datestamp as datestamp, us.user_id, us.user_name,
         us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
@@ -101,17 +106,19 @@ $configs[DB_BLOG] = [
         AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
         group by bl.blog_id
         ORDER BY bl.blog_datestamp DESC LIMIT 3",
-    'locale'              => [
-        'norecord'   => $locale['home_0052'],
-        'blockTitle' => $locale['home_0002']
-    ],
-    'infSettings'         => get_settings("blog"),
-    'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
-    'contentLinkPattern'  => INFUSIONS."blog/blog.php?readmore={id}",
-];
+        'locale'              => [
+            'norecord'   => $locale['home_0052'],
+            'blockTitle' => $locale['home_0002']
+        ],
+        'infSettings'         => get_settings("blog"),
+        'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
+        'contentLinkPattern'  => INFUSIONS."blog/blog.php?readmore={id}",
+    ];
+}
 
-$configs[DB_DOWNLOADS] = [
-    'select'              => "SELECT
+if (defined('DB_DOWNLOADS')) {
+    $configs[DB_DOWNLOADS] = [
+        'select'              => "SELECT
         dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
         dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
         us.user_id, us.user_name, us.user_status,
@@ -126,14 +133,15 @@ $configs[DB_DOWNLOADS] = [
         WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
         group by dl.download_id
         ORDER BY dl.download_datestamp DESC LIMIT 3",
-    'locale'              => [
-        'norecord'   => $locale['home_0053'],
-        'blockTitle' => $locale['home_0003']
-    ],
-    'infSettings'         => get_settings("downloads"),
-    'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
-    'contentLinkPattern'  => DOWNLOADS."downloads.php?download_id={id}",
-];
+        'locale'              => [
+            'norecord'   => $locale['home_0053'],
+            'blockTitle' => $locale['home_0003']
+        ],
+        'infSettings'         => get_settings("downloads"),
+        'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
+        'contentLinkPattern'  => DOWNLOADS."downloads.php?download_id={id}",
+    ];
+}
 
 $contents = [];
 

@@ -327,8 +327,8 @@ class Errors {
         $html = openform('error_logform', 'post', clean_request('', [], false), ['class' => 'text-center well m-t-5 m-b-5']);
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', '', '', ['allowclear' => true, 'options' => self::get_logTypes(), 'class' => 'm-b-10', 'inline' => true]);
-        $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary']);
+        $html .= form_select('delete_status', '', '', ['allowclear' => true, 'options' => self::get_logTypes(), 'inline' => true]);
+        $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
         $html .= "</div>\n";
         $html .= closeform();
 
