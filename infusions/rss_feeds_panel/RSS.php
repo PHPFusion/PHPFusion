@@ -98,7 +98,6 @@ class RSS {
         $this->writer->startElement('item');
 
         $this->writer->startElement('title');
-        $title = htmlentities(stripslashes($title));
         $this->writer->writeCData(html_entity_decode($title));
         $this->writer->endElement(); // close title
 
@@ -106,7 +105,6 @@ class RSS {
 
         if (!empty($description)) {
             $this->writer->startElement('description');
-            $description = htmlentities(stripslashes($description));
             $this->writer->writeCData(html_entity_decode($description));
             $this->writer->endElement(); // close description
         }
