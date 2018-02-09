@@ -22,7 +22,7 @@ if (!db_exists(DB_SHOUTBOX)) {
 }
 
 require_once THEMES.'templates/header.php';
-require_once INFUSIONS.'shoutbox_panel/ShoutBox.inc';
+require_once INFUSIONS.'shoutbox_panel/shoutbox.inc';
 
 ShoutBox::getInstance()->ArchiveListing();
 
