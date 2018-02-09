@@ -17,12 +17,12 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 if (!db_exists(DB_POLLS) && !db_exists(DB_POLL_VOTES)) {
-    redirect(BASEDIR."error.php?code=404");
+    redirect(BASEDIR.'error.php?code=404');
 }
 
-require_once THEMES."templates/header.php";
-require_once INFUSIONS."member_poll_panel/poll_classes.inc";
+require_once THEMES.'templates/header.php';
+require_once INFUSIONS.'member_poll_panel/poll_classes.inc';
 
-MemberPoll::getInstance(TRUE)->archive_poll();
+MemberPoll::getInstance()->PollArchive();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

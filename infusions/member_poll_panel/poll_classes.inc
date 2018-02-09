@@ -131,6 +131,8 @@ class MemberPoll {
             }
 
             return $pdata;
+        } else {
+            return NULL;
         }
     }
 
@@ -207,153 +209,9 @@ class MemberPoll {
         return $poll_votes;
     }
 
-    public function _countPoll($opt) {
-        $poll = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility').$opt);
-
-        return $poll;
-    }
-
-    public function _renderpollOption() {
-        if ($this->_selectPoll()) {
-            $data = [];
-            foreach ($this->_selectPoll() as $id => $dat) {
-                $poll_opt = unserialize($dat['poll_opt']);
-                $data[$id] = [
-                    'poll_id'         => $dat['poll_id'],
-                    'poll_started'    => $dat['poll_started'],
-                    'poll_ended'      => $dat['poll_ended'],
-                    'poll_visibility' => $dat['poll_visibility'],
-                ];
-                for ($i = 0; $i < count($poll_opt); $i++) {
-                    $data[$id]['poll_title'] = unserialize($dat['poll_title']);
-                    $data[$id]['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
-                }
-            }
-            return $data;
-        } else {
-            return FALSE;
-        }
-    }
-
-    /**
-     * Display the Polls Content
-     */
-    public function _selectUserVote() {
-        $data = $this->_renderpollOption();
-        $info['vote'] = $this->_countPoll("");
-        $info_f = [];
-        $info_t = [];
-        $render = [];
-
-        if (!empty($data)) {
-            $i = 0;
-            $ii = 0;
-            foreach ($data as $key => $dat) {
-                $data_user = checkgroup($dat['poll_visibility']) && !empty($dat['poll_title'][LANGUAGE]) ?
-                    $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $dat['poll_id']) : TRUE;
-
-                if ($data_user == FALSE) {
-                    if ($i == 0) {
-                        $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
-                        $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
-
-                        $form_action = clean_request();
-
-                        $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, ['enctype' => TRUE]);
-                        $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
-
-                        foreach ($dat['poll_option'] as $im1 => $data1) {
-                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1]);
-                        }
-
-                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
-                        $info_f['poll_table'][$key]['poll_foot'][] = closeform();
-                        $i++;
-                    }
-                } else {
-                    if ($ii == 0) {
-                        if (!empty($dat['poll_title'][LANGUAGE]) && $dat['poll_started'] < time()) {
-                            $info_t['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
-                            $info_t['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
-
-                            foreach ($dat['poll_option'] as $im1 => $data1) {
-                                $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
-                                $opt_votes = ($num_votes ? number_format(($num_votes / $info_t['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
-                                $info_t['poll_table'][$key]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
-                                $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
-                            }
-
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_060']." ".$info_t['poll_table'][$key]['max_vote'];
-                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".showdate("shortdate", $dat['poll_started']);
-
-                            if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
-                                $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].": ".showdate("shortdate", $dat['poll_ended']);
-                            }
-
-                            $ii++;
-                        }
-                    }
-                }
-
-                $render = empty($info_f) ? $info_t : $info_f;
-                $render['poll_tablename'] = self::$locale['POLL_001'];
-
-                if ($info['vote'] > 1) {
-                    $render['poll_arch'] = "<a class='btn btn-default btn-sm' href='".INFUSIONS."member_poll_panel/polls_archive.php'>".self::$locale['POLL_063']."</a>";
-                }
-            }
-            render_poll($render);
-        }
-    }
-
-    public function display_poll() {
-        $this->_selectUserVote();
-    }
-
-    public function archive_poll() {
-        $this->_archive_poll();
-    }
-
-    public function display_admin() {
-
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_001']]);
-
-        if (isset($_POST['cancel'])) {
-            redirect(clean_request('section=poll', ['aid'], TRUE));
-        }
-
-        $allowed_section = ["poll", "poll_vote"];
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
-        $_GET['poll_id'] = isset($_GET['poll_id']) && isnum($_GET['poll_id']) ? $_GET['poll_id'] : 0;
-        if (isset($_GET['section']) && $_GET['section'] == 'poll_vote') {
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043']]);
-        }
-
-        opentable(self::$locale['POLL_001']);
-        $master_tab_title['title'][] = self::$locale['POLL_001'];
-        $master_tab_title['id'][] = "poll";
-        $master_tab_title['icon'][] = "fa fa-bar-chart";
-        $master_tab_title['title'][] = $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043'];
-        $master_tab_title['id'][] = "poll_vote";
-        $master_tab_title['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-plus';
-
-        echo opentab($master_tab_title, $_GET['section'], "poll", TRUE);
-        switch ($_GET['section']) {
-            case "poll_vote":
-                $this->poll_form();
-                break;
-            default:
-                $this->poll_listing();
-                break;
-        }
-        echo closetab();
-        closetable();
-    }
-
     public function poll_listing() {
         $aidlink = fusion_get_aidlink();
-        $total_rows = $this->_countPoll("");
+        $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
         $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart);
         $rows = dbrows($result);
@@ -425,62 +283,6 @@ class MemberPoll {
         } else {
             echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";
         }
-    }
-
-    public function _archive_poll() {
-        opentable(self::$locale['POLL_002']);
-        $total_rows = $this->_countPoll("");
-        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
-        $result = $this->_selectDB($rowstart);
-        $rows = dbrows($result);
-
-        if ($rows > 0) {
-            echo "<div class='row m-t-20'>\n";
-            while ($data = dbarray($result)) {
-                $title = unserialize($data['poll_title']);
-                $poll_opt = unserialize($data['poll_opt']);
-
-                echo "<div class='col-xs-12 col-sm-3'>\n";
-                echo "<div class='panel panel-default'>\n";
-                echo "<div class='panel-heading text-left'>\n";
-                foreach ($title as $key => $info) {
-                    echo "<p class='m-b-0'>".(!empty($info) ? translate_lang_names($key).": ".$info : $info)."</p>\n";
-                }
-                echo "</div>\n";
-
-                echo "<div class='panel-body'>\n";
-                $db_info = dbcount("(vote_opt)", DB_POLL_VOTES, "poll_id='".$data['poll_id']."'");
-
-                foreach ($poll_opt as $keys => $data1) {
-                    $text = "";
-                    foreach ($data1 as $key => $inf) {
-                        $text .= (!empty($inf) ? translate_lang_names($key).": ".$inf : $inf);
-                    }
-                    $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
-                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
-                    echo progress_bar($opt_votes, $text, FALSE, FALSE, FALSE, TRUE, FALSE);
-                    echo "<p><strong>".$opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]</strong></p>\n";
-                }
-                echo "</div>\n";
-
-                echo "<div class='panel-footer'>\n";
-                echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].' '.$db_info."</strong></p>\n";
-                echo "<p class='m-b-0'>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
-                echo "<p class='display-inline-block badge m-b-0'>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
-
-                if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-                    echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
-                }
-                echo "</div>\n";
-                echo "</div>\n";
-                echo "</div>\n"; // .col-xs-12
-            }
-            echo "</div>\n";
-            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, INFUSIONS."member_poll_panel/polls_archive.php?").'</div>' : "";
-        } else {
-            echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";
-        }
-        closetable();
     }
 
     private function set_polldb() {
@@ -614,4 +416,183 @@ class MemberPoll {
         echo closeform();
     }
 
+    public function display_admin() {
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_001']]);
+
+        if (isset($_POST['cancel'])) {
+            redirect(clean_request('section=poll', ['aid'], TRUE));
+        }
+
+        $allowed_section = ["poll", "poll_vote"];
+        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
+        $_GET['poll_id'] = isset($_GET['poll_id']) && isnum($_GET['poll_id']) ? $_GET['poll_id'] : 0;
+        if (isset($_GET['section']) && $_GET['section'] == 'poll_vote') {
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043']]);
+        }
+
+        opentable(self::$locale['POLL_001']);
+        $master_tab_title['title'][] = self::$locale['POLL_001'];
+        $master_tab_title['id'][] = "poll";
+        $master_tab_title['icon'][] = "fa fa-bar-chart";
+        $master_tab_title['title'][] = $edit ? self::$locale['POLL_042'] : self::$locale['POLL_043'];
+        $master_tab_title['id'][] = "poll_vote";
+        $master_tab_title['icon'][] = $edit ? 'fa fa-pencil' : 'fa fa-plus';
+
+        echo opentab($master_tab_title, $_GET['section'], "poll", TRUE);
+        switch ($_GET['section']) {
+            case "poll_vote":
+                $this->poll_form();
+                break;
+            default:
+                $this->poll_listing();
+                break;
+        }
+        echo closetab();
+        closetable();
+    }
+
+    public function DisplayPoll() {
+        $data = [];
+
+        if ($this->_selectPoll()) {
+            foreach ($this->_selectPoll() as $id => $dat) {
+                $poll_opt = unserialize($dat['poll_opt']);
+                $data[$id] = [
+                    'poll_id'         => $dat['poll_id'],
+                    'poll_started'    => $dat['poll_started'],
+                    'poll_ended'      => $dat['poll_ended'],
+                    'poll_visibility' => $dat['poll_visibility'],
+                ];
+
+                for ($i = 0; $i < count($poll_opt); $i++) {
+                    $data[$id]['poll_title'] = unserialize($dat['poll_title']);
+                    $data[$id]['poll_option'][$i] = !empty($poll_opt[$i][LANGUAGE]) ? $poll_opt[$i][LANGUAGE] : "";
+                }
+            }
+        }
+
+        $info['vote'] = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
+        $info_f = [];
+        $info_t = [];
+        $render = [];
+
+        if (!empty($data)) {
+            $i = 0;
+            $ii = 0;
+            foreach ($data as $key => $dat) {
+                $data_user = checkgroup($dat['poll_visibility']) && !empty($dat['poll_title'][LANGUAGE]) ? $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $dat['poll_id']) : TRUE;
+
+                if ($data_user == FALSE) {
+                    if ($i == 0) {
+                        $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
+                        $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
+
+                        $form_action = clean_request();
+
+                        $info_f['poll_table'][$key]['poll_option'][] = openform('voteform', 'post', $form_action, ['enctype' => TRUE]);
+                        $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
+
+                        foreach ($dat['poll_option'] as $im1 => $data1) {
+                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1]);
+                        }
+
+                        $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
+                        $info_f['poll_table'][$key]['poll_foot'][] = closeform();
+                        $i++;
+                    }
+                } else {
+                    if ($ii == 0) {
+                        if (!empty($dat['poll_title'][LANGUAGE]) && $dat['poll_started'] < time()) {
+                            $info_t['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
+                            $info_t['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
+
+                            foreach ($dat['poll_option'] as $im1 => $data1) {
+                                $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$dat['poll_id']."'");
+                                $opt_votes = ($num_votes ? number_format(($num_votes / $info_t['poll_table'][$key]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
+                                $info_t['poll_table'][$key]['poll_option'][] = progress_bar($opt_votes, $data1, FALSE, FALSE, FALSE, TRUE, FALSE);
+                                $info_t['poll_table'][$key]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
+                            }
+
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_060']." ".$info_t['poll_table'][$key]['max_vote'];
+                            $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_048']." ".showdate("shortdate", $dat['poll_started']);
+
+                            if ($dat['poll_started'] < time() && (!empty($dat['poll_ended']) && ($dat['poll_ended'] < time()))) {
+                                $info_t['poll_table'][$key]['poll_foot'][] = self::$locale['POLL_049'].": ".showdate("shortdate", $dat['poll_ended']);
+                            }
+
+                            $ii++;
+                        }
+                    }
+                }
+
+                $render = empty($info_f) ? $info_t : $info_f;
+                $render['poll_tablename'] = self::$locale['POLL_001'];
+
+                if ($info['vote'] > 1) {
+                    $render['poll_arch'] = "<a class='btn btn-default btn-sm' href='".INFUSIONS."member_poll_panel/polls_archive.php'>".self::$locale['POLL_063']."</a>";
+                }
+            }
+
+            render_poll($render);
+        }
+    }
+
+    public function PollArchive() {
+        opentable(self::$locale['POLL_002']);
+
+        $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
+        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+        $result = $this->_selectDB($rowstart);
+        $rows = dbrows($result);
+
+        if ($rows > 0) {
+            echo "<div class='row m-t-20'>\n";
+            while ($data = dbarray($result)) {
+                $title = unserialize($data['poll_title']);
+                $poll_opt = unserialize($data['poll_opt']);
+
+                echo "<div class='col-xs-12 col-sm-3'>\n";
+                echo "<div class='panel panel-default'>\n";
+                echo "<div class='panel-heading text-left'>\n";
+                foreach ($title as $key => $info) {
+                    echo "<p class='m-b-0'>".(!empty($info) ? translate_lang_names($key).": ".$info : $info)."</p>\n";
+                }
+                echo "</div>\n";
+
+                echo "<div class='panel-body'>\n";
+                $db_info = dbcount("(vote_opt)", DB_POLL_VOTES, "poll_id='".$data['poll_id']."'");
+
+                foreach ($poll_opt as $keys => $data1) {
+                    $text = "";
+                    foreach ($data1 as $key => $inf) {
+                        $text .= (!empty($inf) ? translate_lang_names($key).": ".$inf : $inf);
+                    }
+                    $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
+                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
+                    echo progress_bar($opt_votes, $text, FALSE, FALSE, FALSE, TRUE, FALSE);
+                    echo "<p><strong>".$opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]</strong></p>\n";
+                }
+                echo "</div>\n";
+
+                echo "<div class='panel-footer'>\n";
+                echo "<p class='m-b-0'><strong>".self::$locale['POLL_060'].' '.$db_info."</strong></p>\n";
+                echo "<p class='m-b-0'>".self::$locale['POLL_048']." ".showdate("shortdate", $data['poll_started'])."</p>\n";
+                echo "<p class='display-inline-block badge m-b-0'>".self::$locale['POLL_064'].' '.($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_024'] : self::$locale['POLL_067']))."</p>\n";
+
+                if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
+                    echo "<p>".self::$locale['POLL_024'].": ".showdate("shortdate", $data['poll_ended'])."</p>\n";
+                }
+
+                echo "</div>\n";
+                echo "</div>\n";
+                echo "</div>\n"; // .col-xs-12
+            }
+            echo "</div>\n";
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, INFUSIONS."member_poll_panel/polls_archive.php?").'</div>' : "";
+        } else {
+            echo "<div class='well text-center'>".self::$locale['POLL_012']."</div>\n";
+        }
+        closetable();
+    }
 }

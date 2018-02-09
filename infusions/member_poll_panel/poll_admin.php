@@ -18,9 +18,9 @@
 require_once __DIR__.'/../../maincore.php';
 pageAccess('PO');
 
-require_once THEMES."templates/admin_header.php";
-require_once INFUSIONS."member_poll_panel/poll_classes.inc";
+require_once THEMES.'templates/admin_header.php';
+require_once INFUSIONS.'member_poll_panel/poll_classes.inc';
 
-MemberPoll::getInstance(TRUE)->display_admin();
+MemberPoll::getInstance()->display_admin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

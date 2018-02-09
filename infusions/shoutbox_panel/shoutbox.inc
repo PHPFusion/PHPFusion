@@ -35,7 +35,7 @@ class ShoutBox {
         'shout_language'  => LANGUAGE,
     ];
     private static $default_params = [
-        'sbform_name' => '',
+        'sbform_name' => 'sbform',
         'sb_db'       => '',
         'sb_limit'    => ''
     ];
