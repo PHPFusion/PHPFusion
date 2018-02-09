@@ -1509,7 +1509,7 @@ table tbody td {
     color: #000;
 }
 
-.select2-drop td {
+.select2-result.select2-result-selectable.select2-highlighted td {
     color: #fff;
 }
 
