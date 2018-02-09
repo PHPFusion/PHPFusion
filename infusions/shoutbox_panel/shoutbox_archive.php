@@ -16,13 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
+
 if (!db_exists(DB_SHOUTBOX)) {
-    redirect(BASEDIR."error.php?code=404");
+    redirect(BASEDIR.'error.php?code=404');
 }
-require_once THEMES."templates/header.php";
 
-include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
+require_once THEMES.'templates/header.php';
+require_once INFUSIONS.'shoutbox_panel/ShoutBox.inc';
 
-Shoutbox::getInstance()->get_archiveshout();
+ShoutBox::getInstance()->ArchiveListing();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

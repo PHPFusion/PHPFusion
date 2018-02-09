@@ -16,10 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-require_once THEMES."templates/admin_header.php";
-include INFUSIONS."shoutbox_panel/shoutbox.inc";
-pageAccess("S");
+require_once THEMES.'templates/admin_header.php';
+require_once INFUSIONS.'shoutbox_panel/ShoutBox.inc';
+pageAccess('S');
 
-Shoutbox::getInstance()->display_admin();
+ShoutBox::getInstance()->DisplayAdmin();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';
