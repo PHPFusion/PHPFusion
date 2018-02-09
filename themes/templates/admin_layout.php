@@ -35,9 +35,7 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     if (fusion_get_locale('text-direction') == 'rtl') {
         echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
     }
-
     add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>");
 }
 
 if ($settings['entypo'] || defined('ENTYPO')) {
@@ -51,6 +49,7 @@ if ($settings['entypo'] || defined('ENTYPO')) {
 if ($settings['fontawesome'] || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
+
 // Default CSS styling which applies to all themes but can be overriden
 echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // Admin Panel Theme CSS
@@ -93,7 +92,7 @@ if (!check_admin_pass('')) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
-
+echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 

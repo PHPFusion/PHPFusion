@@ -127,11 +127,11 @@ echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n"
 if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>\n";
 }
 
 // Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 echo "</body>\n";
 echo "</html>";
 
