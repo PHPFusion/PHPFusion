@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 $update_settings_tbl = [
+    'entypo'  => 0,
     'version' => '9.1',
 ];
 
@@ -34,4 +35,20 @@ foreach ($insert_settings_tbl as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
     }
+}
+
+if (db_exists(DB_PREFIX.'faqs')) {
+    $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
+}
+
+if (db_exists(DB_PREFIX.'polls')) {
+    $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.svg'];
+}
+
+if (db_exists(DB_PREFIX.'shoutbox')) {
+    $new_icon_array = ['S' => '../infusions/shoutbox/shouts.svg'];
+}
+
+foreach ($new_icon_array as $admin_rights => $icon_file) {
+    $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
 }

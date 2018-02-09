@@ -31,6 +31,7 @@ while ($row = dbarray($result)) {
     foreach ($row as $key => $table) {
         $inf_altertable[] = $table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci";
         $result2 = dbquery("SHOW COLUMNS FROM ".$table);
+
         // We must change all data like find/replace in columns of broken chars, this may differ for each locales.
         // Please help to complete this list if you know what´s missing with your locale set
         /*while ($column = dbarray($result2)) {
@@ -215,104 +216,6 @@ include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
 $del_table = [];
-/*
-if (db_exists(DB_PREFIX.'articles')) {
-    if (empty(dbcount("(article_id)", DB_ARTICLES))) {
-        $result = dbquery("DROP TABLE ".DB_ARTICLES);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'article_cats');
-        $del_table[] = 'articles.php';
-        $del_table[] = 'article_cats.php';
-        $del_array[] = 'articles.php';
-        $del_array[] = 'submit.php?stype=a';
-    }
-}
-
-if (db_exists(DB_PREFIX.'downloads')) {
-    if (empty(dbcount("(download_id)", DB_DOWNLOADS))) {
-        $result = dbquery("DROP TABLE ".DB_DOWNLOADS);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'download_cats');
-        $del_table[] = 'downloads.php';
-        $del_table[] = 'download_cats';
-        $del_table[] = 'settings_dl.php';
-        $del_array[] = 'downloads.php';
-        $del_array[] = 'submit.php?stype=d';
-    }
-}
-
-if (db_exists(DB_PREFIX.'faqs')) {
-    if (empty(dbcount("(faq_id)", DB_FAQS))) {
-        $result = dbquery("DROP TABLE ".DB_FAQS);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'faq_cats');
-        $del_table[] = 'faq.php';
-        $del_table[] = 'faq_cats.php';
-        $del_array[] = 'faq.php';
-    }
-}
-
-if (db_exists(DB_PREFIX.'forums')) {
-    if (empty(dbcount("(forum_id)", DB_FORUMS))) {
-        $result = dbquery("DROP TABLE ".DB_FORUMS);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_attachments');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_polls');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_options');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_poll_voters');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'forum_ranks');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'posts');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'threads');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'thread_notify');
-        $del_table[] = 'forums.php';
-        $del_table[] = 'forum_ranks.php';
-        $del_table[] = 'forum/index.php';
-        $del_array[] = 'forum/index.php';
-    }
-}
-
-if (db_exists(DB_PREFIX.'photos')) {
-    if (empty(dbcount("(photo_id)", DB_PHOTOS))) {
-        $result = dbquery("DROP TABLE ".DB_PHOTOS);
-    }
-}
-
-if (db_exists(DB_PREFIX.'photo_albums')) {
-    if (empty(dbcount("(album_id)", DB_PHOTO_ALBUMS))) {
-        $result = dbquery("DROP TABLE ".DB_PHOTO_ALBUMS);
-        $del_table[] = 'photoalbums.php';
-        $del_table[] = 'photogallery.php';
-        $del_array[] = 'photogallery.php';
-        $del_array[] = 'submit.php?stype=p';
-    }
-}
-
-if (db_exists(DB_PREFIX.'news')) {
-    if (empty(dbcount("(news_id)", DB_NEWS))) {
-        $result = dbquery("DROP TABLE ".DB_NEWS);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'news_cats');
-        $del_table[] = 'news.php';
-        $del_table[] = 'news_cats.php';
-        $del_table[] = 'settings_news.php';
-        $del_array[] = 'submit.php?stype=n';
-    }
-}
-
-if (db_exists(DB_WEBLINKS)) {
-    if (empty(dbcount("(weblink_id)", DB_WEBLINKS))) {
-        $result = dbquery("DROP TABLE ".DB_WEBLINKS);
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'weblink_cats');
-        $del_table[] = 'weblinks.php';
-        $del_table[] = 'weblink_cats.php';
-        $del_array[] = 'weblinks.php';
-        $del_array[] = 'submit.php?stype=l';
-    }
-}
-
-if (db_exists(DB_PREFIX.'polls')) {
-    if (empty(dbcount("(poll_id)", DB_PREFIX.'polls'))) {
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'polls');
-        $result = dbquery("DROP TABLE ".DB_PREFIX.'poll_votes');
-        $del_table[] = 'polls.php';
-    }
-}
-*/
 
 if (db_exists(DB_PREFIX.'users')) {
     // Modify All Users Level > 0
@@ -532,7 +435,7 @@ if (db_exists(DB_ADMIN)) {
     }
 
     if (db_exists(DB_FAQS)) {
-        $new_icon_array = ['FQ' => '../infusions/faq/faq.png'];
+        $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
     }
 
     if (db_exists(DB_FORUMS)) {
@@ -552,11 +455,11 @@ if (db_exists(DB_ADMIN)) {
     }
 
     if (db_exists(DB_POLLS)) {
-        $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.png'];
+        $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.svg'];
     }
 
     if (db_exists(DB_SHOUTBOX)) {
-        $new_icon_array = ['S' => '../infusions/shoutbox/shout.png'];
+        $new_icon_array = ['S' => '../infusions/shoutbox/shouts.svg'];
     }
 
     // Update new administration icons
