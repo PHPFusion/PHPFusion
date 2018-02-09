@@ -421,7 +421,7 @@ if (!empty($_GET['readmore'])) {
 
             $condition = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_level, tu.user_joined, {FILTER_COUNT} max(tn.blog_datestamp) 'last_updated'
             FROM ".DB_BLOG." tn
-            LEFT JOIN ".DB_USERS." tu ON Tn.blog_name=tu.user_id
+            LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
             {FILTER_JOIN}
             WHERE {MULTILANG_CONDITION} {VISIBILITY} AND (blog_start=0 || blog_start<=:start_time) AND (blog_end=0 || blog_end>=:end_time) AND blog_draft=0
             {ARCHIVE_CONDITION} GROUP BY tn.blog_id 
