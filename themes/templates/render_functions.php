@@ -61,7 +61,7 @@ function fusion_get_function($function) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-    function render_breadcrumbs($key = '') {
+    function render_breadcrumbs($key = 'default') {
         $breadcrumbs = BreadCrumbs::getInstance($key);
         $html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
         foreach ($breadcrumbs->toArray() as $crumb) {
