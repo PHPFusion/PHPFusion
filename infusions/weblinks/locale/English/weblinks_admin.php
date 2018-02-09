@@ -4,6 +4,7 @@ $locale['WLS_0002'] = "Add Web Link";
 $locale['WLS_0003'] = "Edit Web Link";
 $locale['WLS_0004'] = "Categories";
 $locale['WLS_0005'] = "Add Category";
+$locale['WLS_0006'] = "Edit Category";
 $locale['WLS_0007'] = "Submissions";
 $locale['WLS_0008'] = "Settings";
 $locale['WLS_0030'] = "Web Link successfully created";
