@@ -114,6 +114,9 @@ if (!empty($info['allowed_filters'])) {
 }
 
 //  controller: make $filter_condition string
+$filter_count = '';
+$filter_condition = '';
+$filter_join = '';
 switch ($_GET['type']) {
     case 'recent':
         $filter_condition = 'blog_datestamp DESC';
@@ -415,19 +418,30 @@ if (!empty($_GET['readmore'])) {
         }
 
         if ($info['blog_max_rows'] > 0) {
-            // remove blog category from join.
-            $sql = "
-            SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined, ".(!empty($filter_count) ? $filter_count : '')." max(tn.blog_datestamp) AS last_updated
+
+            $condition = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_level, tu.user_joined, {FILTER_COUNT} max(tn.blog_datestamp) 'last_updated'
             FROM ".DB_BLOG." tn
-            LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-            ".(!empty($filter_join) ? $filter_join : '')."
-            ".(multilang_table('BL') ? "WHERE blog_language='".LANGUAGE.".' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0
-            ".$archiveSql."
-            GROUP BY tn.blog_id
-            ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit";
+            LEFT JOIN ".DB_USERS." tu ON Tn.blog_name=tu.user_id
+            {FILTER_JOIN}
+            WHERE {MULTILANG_CONDITION} {VISIBILITY} AND (blog_start=0 || blog_start<=:start_time) AND (blog_end=0 || blog_end>=:end_time) AND blog_draft=0
+            {ARCHIVE_CONDITION} GROUP BY tn.blog_id 
+            ORDER BY blog_sticky DESC, {FILTER_CONDITION} LIMIT :rowstart, :limit
+            ";
+
+            $sql = strtr($condition, [
+                '{FILTER_COUNT}'        => $filter_count,
+                '{FILTER_JOIN}'         => $filter_join,
+                '{MULTILANG_CONDITION}' => (multilang_table('BL') ? "blog_language='".LANGUAGE."' AND " : "WHERE "),
+                '{VISIBILITY}'          => groupaccess('blog_visibility'),
+                '{ARCHIVE_CONDITION}'   => $archiveSql,
+                '{FILTER_CONDITION}'    => $filter_condition,
+            ]);
+
             $param = [
-                ':rowstart' => intval($_GET['rowstart']),
-                ':limit'    => intval($blog_settings['blog_pagination'])
+                ':start_time' => TIME,
+                ':end_time'   => TIME,
+                ':rowstart'   => intval($_GET['rowstart']),
+                ':limit'      => intval($blog_settings['blog_pagination'])
             ];
             $result = dbquery($sql, $param);
             $info['blog_rows'] = dbrows($result);
