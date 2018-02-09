@@ -158,6 +158,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 browser_spellcheck: ".$options['tinymce_spellcheck'].",
                 entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
+                directionality : '".$locale['text-direction']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 width: '100%',
                 height: 300,
@@ -220,6 +221,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 image_advtab: true,
                 toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
                 language: '".$locale['tinymce']."',
+                directionality : '".$locale['text-direction']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 object_resizing: ".($options['autosize'] ? "false" : "true").",
                 resize: ".($options['autosize'] ? "false" : "true").",
@@ -256,6 +258,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 browser_spellcheck: ".$options['tinymce_spellcheck'].",
                 entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
+                directionality : '".$locale['text-direction']."',
                 ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 setup: function(ed) {
                     // add tabkey listener
