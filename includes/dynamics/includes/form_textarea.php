@@ -153,11 +153,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: '".$options['tinymce_theme']."',
-                skin: '".$options['tinymce_skin']."',
+                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
                 browser_spellcheck: ".$options['tinymce_spellcheck'].",
                 entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
+                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 width: '100%',
                 height: 300,
                 plugins: [
@@ -201,7 +202,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: '".$options['tinymce_theme']."',
-                skin: '".$options['tinymce_skin']."',
+                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
                 browser_spellcheck: ".$options['tinymce_spellcheck'].",
                 entity_encoding: 'raw',
                 menubar: false,
@@ -218,7 +220,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 image_advtab: true,
                 toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
                 language: '".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
+                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 object_resizing: ".($options['autosize'] ? "false" : "true").",
                 resize: ".($options['autosize'] ? "false" : "true").",
                 relative_urls: false,
@@ -249,11 +251,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 content_css: '".$options['tinymce_css']."',
                 theme: '".$options['tinymce_theme']."',
-                skin: '".$options['tinymce_skin']."',
+                skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
                 browser_spellcheck: ".$options['tinymce_spellcheck'].",
                 entity_encoding: 'raw',
                 language:'".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
+                ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                 setup: function(ed) {
                     // add tabkey listener
                     ed.on('keydown', function(event) {
