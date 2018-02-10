@@ -292,11 +292,11 @@
         </div>
         <hr/>
         <p>
-            Features such as User, Administrators, User Groups managing and so forth are all available. <br/>
+            Features such as User, Administrators, User Groups managing and so forth are all available.<br/>
             Some key features such as Private Messages and Custom Pages are automatically installed.<br/>
             The rest of the above are only installed by your choice, we have however made it available with Core.<br/>
             For more detailed Documentation please visit
-            <a href="https://www.php-fusion.co.uk/" target="_blank">PHP-Fusion Main</a>
+            <a href="https://www.php-fusion.co.uk/" target="_blank">PHP-Fusion Main</a>.
         </p>
     </div>
 
@@ -321,8 +321,7 @@
         <p>
             You have to create a MySQL database. You can do this via your web-hosting control panel or phpMyAdmin.
             Make sure you have your MySQL access details at hand including the hostname, user name, password and
-            database
-            name as you will need to specify these during setup.
+            database name as you will need to specify these during setup.
         </p>
         <hr/>
         <p>
@@ -344,7 +343,7 @@
         <p><strong>Infusions shipped with the Core requires the following folders to be CHMODed to 777</strong></p>
 
         <ul style="list-style-type: disc;">
-            <li> infusions/articles/images/</li>
+            <li>infusions/articles/images/</li>
             <li>infusions/blog/images/</li>
             <li>infusions/blog/images/thumbs/</li>
             <li>infusions/downloads/files/</li>
@@ -390,8 +389,8 @@
     <div class="tbl2">UPGRADE FROM V7.02.07</div>
     <div class="tbl1">
         <p>
-            Before anything we strongly recommend that you backup your
-            files and your database.<br/>PHP-Fusion 9 is a major update from PHP-Fusion 7.02.07.
+            Before anything we strongly recommend that you backup your files and your database.<br/>
+            PHP-Fusion 9 is a major update from PHP-Fusion 7.02.07.
         </p>
         <hr/>
         <p>
@@ -404,15 +403,15 @@
             This upgrade procedure can be very demanding depending on how much content your have.<br/>
             Please note that all User Fields will not be upgraded. A new set of standard fields will be installed.<br/>
             The same goes for your Site links. A new set of default Site Links will be inserted.<br/>
-            Panels have two new positions and new settings. All existing Panels will be updated. Per default all Panels
-            will be activated in all site areas.<br/>
-            If you have custom PHP codes in Panels or Custom Pages, you must enable PHP Code Execution. Admin > Settings
-            > Security Settings > Allow PHP Execution.
+            Panels have six new positions and new settings. All existing Panels will be updated.
+            Per default all Panels will be activated in all site areas.<br/>
+            If you have custom PHP codes in Panels or Custom Pages, you must enable PHP Code Execution.
+            Admin > Settings > Security Settings > Allow PHP Execution.
         </p>
         <hr/>
         <p>
-            PHP-Fusion 9.0 is in many parts compatible with version 7.02.07,<br/>however be ready for issues and
-            re-populate your site with older Addon content slowly.<br/>
+            PHP-Fusion 9.0 is in many parts compatible with version 7.02.07,<br/>
+            however be ready for issues and re-populate your site with older Addon content slowly.<br/>
             There have been a massive amount of changes to all Core systems, meaning that some Addons Mods, Infusions,
             Panels and Themes may not work as intended.
         </p>
@@ -426,7 +425,7 @@
         <ul style="list-style-type: none;">
             <li><strong>1</strong> &middot; You must first upload all PHP-Fusion 9 files. Replace all files when requested.</li>
             <li><strong>2</strong> &middot;
-                Navigate to your site's www.site.com and add /install.php like, www.site.com/install.php <br/>
+                Navigate to your site's www.site.com and add /install.php like, www.site.com/install.php<br/>
                 The installer will now start and auto-detect your PHP-Fusion 7 version.<br/>
                 Do your base upgrade in English.
             </li>
@@ -434,24 +433,18 @@
         <p><strong>Step 2</strong></p>
         <ul style="list-style-type: none;">
             <li><strong>1</strong> &middot; Approve our License Agreements</li>
-            <li><strong>2</strong> &middot; Folder Diagnostics, make sure all the listed folders have the correct rights
-            </li>
-            <li><strong>3</strong> &middot; Database Settings, all should be pre-filled. We recommend PDO as driver if it exists.
-            </li>
-            <li><strong>4</strong> &middot; Admin and Site Details, complete all the fields and create a new Superadmin account.
-            </li>
-            <li><strong>5</strong> &middot; Configure Core Systems, Click on the upgrade button for each Infusion you have.
-            </li>
-            <li><strong>6</strong> &middot; Assuming that you followed the above procedure you can now remove all old
-                PHP-Fusion files except images, infusions folders, config.php and the new .htaccess file.
-            </li>
+            <li><strong>2</strong> &middot; Folder Diagnostics, make sure all the listed folders have the correct rights</li>
+            <li><strong>3</strong> &middot; Database Settings, all should be pre-filled. We recommend PDO as driver if it exists.</li>
+            <li><strong>4</strong> &middot; Admin and Site Details, complete all the fields and create a new Superadmin account.</li>
+            <li><strong>5</strong> &middot; Configure Core Systems, Click on the upgrade button for each Infusion you have.</li>
+            <li><strong>6</strong> &middot; Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except images, infusions folders, config.php and the new .htaccess file.</li>
         </ul>
         <p class="text-center">Your site should now be fully upgraded and ready to run PHP-Fusion 9.</p>
         <hr/>
         <p>Here is a complete list of old files that can and should be removed from your previous system.</p>
         <hr/>
 
-        <div style="height: 100px;padding: 20px;overflow: auto;">
+        <div style="height: 100px;padding: 0 20px;overflow: auto;">
             articles.php<br/>
             downloads.php<br/>
             faq.php<br/>
@@ -715,25 +708,25 @@
     <div class="tbl2">SECURITY TIPS</div>
     <div class="tbl1">
         <ul style="list-style-type: disc;">
-            <li>Set Allow PHP Execution set to No and store your custom codes in files instead of database.</li>
+            <li>Set Allow PHP Execution to No and store your custom codes in files instead of database.</li>
             <li>Ensure config.php is not writable (should be CHMODed to 644).</li>
             <li>Always ensure your FTP and MySQL passwords are different.</li>
-            <li>Never allow forum,download attachments such as php, html, exe, or any type of text file.</li>
+            <li>Never allow forum,download attachments such as .php, .html, .exe, or any type of text file.</li>
             <li>Only use Addons that have been tested and approved as safe.</li>
         </ul>
     </div>
 
     <div class="tbl2">SUPPORT</div>
     <div class="tbl1">
-        If you have any questions or problems regarding PHP-Fusion, please visit
-        the Main Development site at <a href="https://www.php-fusion.co.uk" target="_blank">www.php-fusion.co.uk</a>
+        If you have any questions or problems regarding PHP-Fusion, please visit the Main Development site at
+        <a href="https://www.php-fusion.co.uk" target="_blank">www.php-fusion.co.uk</a>
         and post a message on our support forums. We have a helpful community.<br/>
         <hr/>
         Addons: PHP-Fusion's features can be expanded by adding Infusions, these are plugins which are extremely easy to install.
         You can find a variety of useful Infusions in our
         <a href="https://www.php-fusion.co.uk/infusions/addondb/" target="_blank">AddonDB</a>.<br/>
         <hr/>
-        If you are not satisfied with PHP-Fusion's bundled themes or if you simply want a more uniqe look
+        If you are not satisfied with PHP-Fusion's bundled themes or if you simply want a more unique look
         to your site you can find a large variety of high quality themes also in our
         <a href="https://www.php-fusion.co.uk/infusions/addondb/directory.php?category=249" target="_blank">Themes category</a>.<br/>
         <hr/>
