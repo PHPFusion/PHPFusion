@@ -1,6 +1,15 @@
-*.php text eol=lf
-*.inc text eol=lf
-*.css text eol=lf
-*.js text eol=lf
-*.html text eol=lf
-*.txt text eol=lf
+# Autodetect text files
+* text=auto
+
+# Force LF for all text files
+*.* text eol=lf
+
+# Force images/fonts to be handled as binaries
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.png binary
+*.ttf binary
+*.eof binary
+*.eot binary
+*.swf binary
