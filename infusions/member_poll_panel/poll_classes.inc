@@ -494,7 +494,7 @@ class MemberPoll {
                         $info_f['poll_table'][$key]['poll_option'][] = form_hidden('poll_id', '', $dat['poll_id']);
 
                         foreach ($dat['poll_option'] as $im1 => $data1) {
-                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1]);
+                            $info_f['poll_table'][$key]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1, 'input_id' => 'check-'.$im1]);
                         }
 
                         $info_f['poll_table'][$key]['poll_foot'][] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
