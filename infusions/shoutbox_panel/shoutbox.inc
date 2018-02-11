@@ -100,7 +100,7 @@ class ShoutBox {
                 $_CAPTCHA_IS_VALID = FALSE;
                 include INCLUDES."captchas/".fusion_get_settings('captcha')."/captcha_check.php";
                 $sb_name = form_sanitizer($_POST['shout_name'], '', 'shout_name');
-                if (!isset($_POST['captcha_code']) || $_CAPTCHA_IS_VALID == TRUE) {
+                if (!$_CAPTCHA_IS_VALID) {
                     \defender::stop();
                     addNotice("danger", self::$locale['SB_shout_captha']);
                     redirect(clean_request("section=shoutbox", ["", "aid"], TRUE));
@@ -359,7 +359,7 @@ class ShoutBox {
         if ($rows > 0) {
             echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
             echo "<div class='list-group'>\n";
-            add_to_jquery("$('.shoutbox-delete-btn').on('click', function() {return confirm('".self::$locale['SB_warning_shout']."');});");
+            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { confirm('".self::$locale['SB_warning_shout']."'); });");
 
             while ($data = dbarray($result)) {
                 $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
@@ -417,7 +417,7 @@ class ShoutBox {
                 echo "</div>\n";
             }
 
-            add_to_jquery("$('.shoutbox-delete-btn').on('click', function() {return confirm('".self::$locale['SB_warning_shout']."');});");
+            add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { confirm('".self::$locale['SB_warning_shout']."'); });");
 
             while ($data = dbarray($result)) {
                 echo "<div class='display-block shoutboxwrapper clearfix'>\n";

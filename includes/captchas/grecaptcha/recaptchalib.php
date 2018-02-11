@@ -39,35 +39,53 @@ class ReCaptchaResponse {
 }
 
 class ReCaptcha {
-
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
     private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
-    private static $_version = "php_1.0";
-    private static $instance = NULL;
     private $_secret;
+    private static $_version = "php_1.0";
 
     /**
+     * Constructor.
+     *
      * @param string $secret shared secret between site and ReCAPTCHA server.
-     * @return object
      */
-    public static function getInstance($secret) {
-        if (self::$instance === NULL) {
-            if ($secret == NULL || $secret == "") {
-                die("To use reCAPTCHA you must get an API key from <a href='".self::$_signupUrl."'>".self::$_signupUrl."</a>");
-            }
-            self::$instance = new static();
-            self::$instance->setSecret($secret);
+    function __construct($secret) {
+        if ($secret == NULL || $secret == "") {
+            die("To use reCAPTCHA you must get an API key from <a href='".self::$_signupUrl."'>".self::$_signupUrl."</a>");
         }
-
-        return (object)self::$instance;
+        $this->_secret = $secret;
     }
 
     /**
-     * Set secret key
-     * @param $secret
+     * Encodes the given data into a query string format.
+     *
+     * @param array $data array of string elements to be encoded.
+     *
+     * @return string - encoded request.
      */
-    private function setSecret($secret) {
-        $this->_secret = $secret;
+    private function _encodeQS($data) {
+        $req = "";
+        foreach ($data as $key => $value) {
+            $req .= $key.'='.urlencode(stripslashes($value)).'&';
+        }
+
+        // Cut the last '&'
+        $req = substr($req, 0, strlen($req) - 1);
+        return $req;
+    }
+
+    /**
+     * Submits an HTTP GET to a reCAPTCHA server.
+     *
+     * @param string $path url path to recaptcha server.
+     * @param array  $data array of parameters to be sent.
+     *
+     * @return bool|string
+     */
+    private function _submitHTTPGet($path, $data) {
+        $req = $this->_encodeQS($data);
+        $response = file_get_contents($path.$req);
+        return $response;
     }
 
     /**
@@ -85,9 +103,9 @@ class ReCaptcha {
             $recaptchaResponse = new ReCaptchaResponse();
             $recaptchaResponse->success = FALSE;
             $recaptchaResponse->errorCodes = 'missing-input';
-
             return $recaptchaResponse;
         }
+
         $getResponse = $this->_submitHttpGet(
             self::$_siteVerifyUrl,
             [
@@ -99,46 +117,14 @@ class ReCaptcha {
         );
         $answers = json_decode($getResponse, TRUE);
         $recaptchaResponse = new ReCaptchaResponse();
+
         if (trim($answers ['success']) == TRUE) {
             $recaptchaResponse->success = TRUE;
         } else {
             $recaptchaResponse->success = FALSE;
-            $recaptchaResponse->errorCodes = $answers [error - codes];
+            $recaptchaResponse->errorCodes = $answers[error-codes];
         }
 
         return $recaptchaResponse;
-    }
-
-    /**
-     * Submits an HTTP GET to a reCAPTCHA server.
-     *
-     * @param string $path url path to recaptcha server.
-     * @param array  $data array of parameters to be sent.
-     *
-     * @return array response
-     */
-    private function _submitHTTPGet($path, $data) {
-        $req = $this->_encodeQS($data);
-        $response = file_get_contents($path.$req);
-
-        return (array)$response;
-    }
-
-    /**
-     * Encodes the given data into a query string format.
-     *
-     * @param array $data array of string elements to be encoded.
-     *
-     * @return string - encoded request.
-     */
-    private function _encodeQS($data) {
-        $req = "";
-        foreach ($data as $key => $value) {
-            $req .= $key.'='.urlencode(stripslashes($value)).'&';
-        }
-        // Cut the last '&'
-        $req = substr($req, 0, strlen($req) - 1);
-
-        return $req;
     }
 }
