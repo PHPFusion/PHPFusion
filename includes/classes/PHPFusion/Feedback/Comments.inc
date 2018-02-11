@@ -239,18 +239,22 @@ class Comments {
                     // Captcha for Guest
                     if (!iMEMBER && fusion_get_settings('guestposts') == TRUE && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
-                        $_CAPTCHA_INPUT .= "<div class='m-t-10 m-b-10'>";
-                        $_CAPTCHA_INPUT .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
+
+                        $_CAPTCHA_INPUT .= '<div class="row">';
+                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-8 col-md-6">';
+
                         ob_start();
-                        include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+                        include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
                         $_CAPTCHA_INPUT .= ob_get_contents();
                         ob_end_clean();
+
+                        $_CAPTCHA_INPUT .= '</div>';
+                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-4 col-md-6">';
                         if (!$_CAPTCHA_HIDE_INPUT) {
-                            $_CAPTCHA_INPUT .= "<br />\n<label for='captcha_code'>".$this->locale['global_151']."</label>";
-                            $_CAPTCHA_INPUT .= "<br />\n<input type='text' id='".$this->getParams('comment_key')."-captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
+                            $_CAPTCHA_INPUT .= form_text('captcha_code', $this->locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => $this->getParams('comment_key').'-captcha_code']);
                         }
-                        $_CAPTCHA_INPUT .= "</div>\n";
-                        $_CAPTCHA_INPUT .= "</div>\n";
+                        $_CAPTCHA_INPUT .= '</div>';
+                        $_CAPTCHA_INPUT .= '</div>';
                     }
 
                     $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, '');

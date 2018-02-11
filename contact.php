@@ -99,15 +99,22 @@ echo form_text('mailname', $locale['CT_402'], $input['mailname'], ['required' =>
 echo form_text('email', $locale['CT_403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['CT_421'], 'type' => 'email', 'max_length' => 64]);
 echo form_text('subject', $locale['CT_404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['CT_422'], 'max_length' => 64]);
 echo form_textarea('message', $locale['CT_405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['CT_423'], 'max_length' => 128]);
+
 if (iGUEST) {
-    echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
-    include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
-    echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n";
+    echo '<div class="row">';
+    echo '<div class="col-xs-12 col-sm-8 col-md-6">';
+    include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
+    echo '</div>';
+    echo '<div class="col-xs-12 col-sm-4 col-md-6">';
+
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        echo form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
+        echo form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'contact-captcha_code']);
     }
-    echo "</div>\n</div>\n";
+
+    echo '</div>';
+    echo '</div>';
 }
+
 echo form_button('sendmessage', $locale['CT_406'], $locale['CT_406'], ['class' => 'btn-primary', 'icon' => 'fa fa-send-o']);
 echo closeform();
 echo "<!--contact_sub_idx-->";

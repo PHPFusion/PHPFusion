@@ -102,7 +102,7 @@ class ShoutBox {
                 $sb_name = form_sanitizer($_POST['shout_name'], '', 'shout_name');
                 if (!$_CAPTCHA_IS_VALID) {
                     \defender::stop();
-                    addNotice("danger", self::$locale['SB_shout_captha']);
+                    addNotice("danger", self::$locale['SB_warning_validation_code']);
                     redirect(clean_request("section=shoutbox", ["", "aid"], TRUE));
                 }
             }
@@ -298,17 +298,14 @@ class ShoutBox {
 
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
-                echo form_text('shout_name', self::$locale['SB_name'], '',
-                    ["inline" => TRUE, "required" => TRUE, 'max_length' => 30]);
-                echo "<div class='m-t-10 m-b-10'>";
-                echo "<label class='col-xs-12 col-sm-12'>".self::$locale['global_150']."</label>
-                <div class='panel-heading'>\n";
-                include INCLUDES."captchas/".fusion_get_settings('captcha')."/captcha_display.php";
+
+                echo form_text('shout_name', self::$locale['SB_name'], '', ["required" => TRUE, 'max_length' => 30]);
+
+                include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+
                 if (!$_CAPTCHA_HIDE_INPUT) {
                     echo form_text('captcha_code', self::$locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code-'.$this->data['shout_id']]);
                 }
-                echo "</div>\n";
-                echo "</div>\n";
             }
 
             if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
