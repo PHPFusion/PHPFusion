@@ -619,7 +619,7 @@ class Comments {
                 // Process Captchas
                 $_CAPTCHA_IS_VALID = FALSE;
                 include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
-                if (!isset($_POST['captcha_code']) && $_CAPTCHA_IS_VALID == FALSE) {
+                if (!$_CAPTCHA_IS_VALID) {
                     \defender::stop();
                     addNotice("danger", $this->locale['u194']);
                 }
