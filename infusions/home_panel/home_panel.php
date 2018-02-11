@@ -31,6 +31,8 @@ $locale = fusion_get_locale('', $locale_path);
 
 $configs = [];
 
+$limit = 3;
+
 if (defined('DB_NEWS')) {
     $configs[DB_NEWS] = [
         'select'              => "SELECT
@@ -52,7 +54,7 @@ if (defined('DB_NEWS')) {
         AND (".time()." < ns.news_end OR ns.news_end = 0)
         AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
         group by ns.news_id
-        ORDER BY ns.news_datestamp DESC LIMIT 3",
+        ORDER BY ns.news_datestamp DESC LIMIT ".$limit,
         'locale'              => [
             'norecord'   => $locale['home_0050'],
             'blockTitle' => $locale['home_0000'],
@@ -74,7 +76,7 @@ if (defined('DB_ARTICLES')) {
         INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
         WHERE ar.article_draft = 0
         AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
-        ORDER BY ar.article_datestamp DESC LIMIT 3",
+        ORDER BY ar.article_datestamp DESC LIMIT ".$limit,
         'locale'              => [
             'norecord'   => $locale['home_0051'],
             'blockTitle' => $locale['home_0001'],
@@ -105,7 +107,7 @@ if (defined('DB_BLOG')) {
         AND (".time()." < bl.blog_end OR bl.blog_end = 0)
         AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
         group by bl.blog_id
-        ORDER BY bl.blog_datestamp DESC LIMIT 3",
+        ORDER BY bl.blog_datestamp DESC LIMIT ".$limit,
         'locale'              => [
             'norecord'   => $locale['home_0052'],
             'blockTitle' => $locale['home_0002']
@@ -132,7 +134,7 @@ if (defined('DB_DOWNLOADS')) {
         LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = dl.download_id AND r1.rating_type = 'D')
         WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
         group by dl.download_id
-        ORDER BY dl.download_datestamp DESC LIMIT 3",
+        ORDER BY dl.download_datestamp DESC LIMIT ".$limit,
         'locale'              => [
             'norecord'   => $locale['home_0053'],
             'blockTitle' => $locale['home_0003']
