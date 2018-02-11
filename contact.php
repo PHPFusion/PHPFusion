@@ -101,8 +101,9 @@ echo form_text('subject', $locale['CT_404'], $input['subject'], ['required' => T
 echo form_textarea('message', $locale['CT_405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['CT_423'], 'max_length' => 128]);
 
 if (iGUEST) {
+    add_to_jquery('$("#captcha-contact").find(".g-recaptcha").attr("id", "g-recaptcha-contact");');
     echo '<div class="row">';
-    echo '<div class="col-xs-12 col-sm-8 col-md-6">';
+    echo '<div class="col-xs-12 col-sm-8 col-md-6" id="captcha-contact">';
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
     echo '</div>';
     echo '<div class="col-xs-12 col-sm-4 col-md-6">';

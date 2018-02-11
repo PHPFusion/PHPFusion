@@ -241,7 +241,9 @@ class Comments {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
 
                         $_CAPTCHA_INPUT .= '<div class="row">';
-                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-8 col-md-6">';
+                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-8 col-md-6" id="captcha-'.$this->getParams('comment_key').'">';
+
+                        add_to_jquery('$("#captcha-'.$this->getParams('comment_key').'").find(".g-recaptcha").attr("id", "g-recaptcha-'.$this->getParams('comment_key').'");');
 
                         ob_start();
                         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';

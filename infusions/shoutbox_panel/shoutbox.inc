@@ -299,9 +299,13 @@ class ShoutBox {
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
 
+                add_to_jquery('$("#captcha-shoutbox").find(".g-recaptcha").attr("id", "g-recaptcha-shoutbox");');
+
                 echo form_text('shout_name', self::$locale['SB_name'], '', ["required" => TRUE, 'max_length' => 30]);
 
+                echo '<div id="captcha-shoutbox">';
                 include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+                echo '</div>';
 
                 if (!$_CAPTCHA_HIDE_INPUT) {
                     echo form_text('captcha_code', self::$locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code-'.$this->data['shout_id']]);
