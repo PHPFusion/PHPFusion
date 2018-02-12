@@ -28,7 +28,6 @@ $result = dbquery("SELECT c.comment_id, c.comment_item_id, c.comment_type, c.com
     LEFT JOIN ".DB_USERS." u ON u.user_id = c.comment_name
     WHERE c.comment_hidden='0'
     ORDER BY c.comment_datestamp DESC
-    LIMIT 5
 ");
 
 $info = [];
