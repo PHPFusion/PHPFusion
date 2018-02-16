@@ -53,7 +53,6 @@ abstract class News extends NewsServer {
             'news_cat_language' => LANGUAGE,
             'news_categories'   => [],
             'news_image'        => '',
-            'news_last_updated' => '',
             'news_item_rows'    => 0,
             'news_items'        => []
         ];
@@ -446,7 +445,6 @@ abstract class News extends NewsServer {
             'news_cat_language' => LANGUAGE,
             'news_categories'   => [],
             'news_image'        => '',
-            'news_last_updated' => '',
             'news_item_rows'    => 0,
             'news_items'        => []
         ];
