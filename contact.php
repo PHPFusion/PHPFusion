@@ -101,15 +101,21 @@ echo form_text('subject', $locale['CT_404'], $input['subject'], ['required' => T
 echo form_textarea('message', $locale['CT_405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['CT_423'], 'max_length' => 128]);
 
 if (iGUEST) {
-    add_to_jquery('$("#captcha-contact").find(".g-recaptcha").attr("id", "g-recaptcha-contact");');
     echo '<div class="row">';
-    echo '<div class="col-xs-12 col-sm-8 col-md-6" id="captcha-contact">';
+    echo '<div class="col-xs-12 col-sm-8 col-md-6">';
+
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
+
+    echo display_captcha([
+        'captcha_id' => 'captcha_contact',
+        'input_id'   => 'captcha_code_contact',
+        'image_id'   => 'captcha_image_contact'
+    ]);
     echo '</div>';
     echo '<div class="col-xs-12 col-sm-4 col-md-6">';
 
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        echo form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'contact-captcha_code']);
+        echo form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
     }
 
     echo '</div>';

@@ -241,19 +241,20 @@ class Comments {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
 
                         $_CAPTCHA_INPUT .= '<div class="row">';
-                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-8 col-md-6" id="captcha-'.$this->getParams('comment_key').'">';
+                        $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-8 col-md-6">';
 
-                        add_to_jquery('$("#captcha-'.$this->getParams('comment_key').'").find(".g-recaptcha").attr("id", "g-recaptcha-'.$this->getParams('comment_key').'");');
-
-                        ob_start();
                         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
-                        $_CAPTCHA_INPUT .= ob_get_contents();
-                        ob_end_clean();
+
+                        $_CAPTCHA_INPUT .= display_captcha([
+                            'captcha_id' => 'captcha_'.$this->getParams('comment_key'),
+                            'input_id'   => 'captcha_code_'.$this->getParams('comment_key'),
+                            'image_id'   => 'captcha_image_'.$this->getParams('comment_key')
+                        ]);
 
                         $_CAPTCHA_INPUT .= '</div>';
                         $_CAPTCHA_INPUT .= '<div class="col-xs-12 col-sm-4 col-md-6">';
                         if (!$_CAPTCHA_HIDE_INPUT) {
-                            $_CAPTCHA_INPUT .= form_text('captcha_code', $this->locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => $this->getParams('comment_key').'-captcha_code']);
+                            $_CAPTCHA_INPUT .= form_text('captcha_code', $this->locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_'.$this->getParams('comment_key')]);
                         }
                         $_CAPTCHA_INPUT .= '</div>';
                         $_CAPTCHA_INPUT .= '</div>';

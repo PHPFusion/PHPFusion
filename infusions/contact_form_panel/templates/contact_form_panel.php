@@ -30,6 +30,12 @@ if (!function_exists('render_contact_panel')) {
             echo '{%message_field%}';
             if (!iADMIN) {
                 include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+
+                echo display_captcha([
+                    'captcha_id' => 'captcha_contact_panel',
+                    'input_id'   => 'captcha_code_contact_panel',
+                    'image_id'   => 'captcha_image_contact_panel'
+                ]);
             }
             echo '{%captcha%}';
             echo '{%send_button%}';

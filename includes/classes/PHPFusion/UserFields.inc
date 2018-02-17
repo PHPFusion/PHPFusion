@@ -431,10 +431,13 @@ class UserFields extends QuantumFields {
         $html .= "<div class='form-group m-t-20'>\n";
         $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
         $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 p-l-0'>";
-        ob_start();
+
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
-        $html .= ob_get_contents();
-        ob_end_clean();
+        $html .= display_captcha([
+            'captcha_id' => 'captcha_userfields',
+            'input_id'   => 'captcha_code_userfields',
+            'image_id'   => 'captcha_image_userfields'
+        ]);
         if (!$_CAPTCHA_HIDE_INPUT) {
             $html .= form_text('captcha_code', '', '', [
                 'inline'           => 1,
