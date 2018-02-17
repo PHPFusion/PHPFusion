@@ -103,7 +103,7 @@ function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
     $res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
-    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
+    $res .= "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 
     return $res;
 }
