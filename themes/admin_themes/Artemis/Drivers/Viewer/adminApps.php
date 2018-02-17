@@ -26,6 +26,7 @@ class adminApps {
         if (($this->result['status'] == 200 && !empty($this->result['data'])) && isset($_GET['mode'])) {
 
             if ($_GET['mode'] == "json") {
+                header('Content-Type: application/json');
 
                 echo json_encode($this->result);
 
@@ -91,9 +92,9 @@ class adminApps {
                     echo "<li class=\"app_search_error\"><span>".$this->result['message']."</span></li>\n";
 
                 } else if ($_GET['mode'] == "json") {
+                    header('Content-Type: application/json');
 
                     echo json_encode($this->result);
-
                 }
             }
         }

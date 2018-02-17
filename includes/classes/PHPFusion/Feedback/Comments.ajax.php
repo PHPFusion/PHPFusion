@@ -34,6 +34,7 @@ if (isset($_GET['action']) && iMEMBER) {
             if ((iADMIN && checkrights("C"))
                 || ($edata['comment_name'] == fusion_get_userdata('user_id') && isset($edata['user_name']))
             ) {
+                header('Content-Type: application/json');
                 echo json_encode($edata);
             }
             exit;

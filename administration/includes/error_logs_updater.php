@@ -55,4 +55,6 @@ if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()
     $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid Token or Insufficient Rights'];
 }
 
+header('Content-Type: application/json');
+
 echo json_encode($this_response);

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: geomap.inc.php
-| Author : Frederick MC Chan
+| Author: Frederick MC Chan
 +--------------------------------------------------------+
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+

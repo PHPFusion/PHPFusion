@@ -39,25 +39,31 @@ function root_level() {
     return $folder_level;
 }
 
+$states = [];
+
 $level = root_level();
-//echo $level;
+
 require_once $level."maincore.php";
 require_once INCLUDES."geomap/geomap.inc.php";
+
 $id = (isset($_GET['id']) && ($_GET['id'])) ? form_sanitizer($_GET['id'], "") : '';
-//$id = "Malaysia";
+
 $states_array[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
+
 foreach ($states as $key => $value) {
     if ($id == $key) {
         if (!empty($value)) {
             $array = [];
             $rows = count($value);
             $i = 0;
+
             foreach ($value as $name => $region) {
                 $states_array[] = ['id' => "".$region."", 'text' => "".$region.""];
             }
         }
     }
 }
+
+header('Content-Type: application/json');
+
 echo json_encode($states_array);
-//echo json_encode(array('id'=>"1", 'text'=>"2"));
-//echo json_encode(array('id'=>'1', 'text'=>$_POST['id']));

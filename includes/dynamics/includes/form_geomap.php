@@ -414,15 +414,15 @@ function location_search($q) {
     foreach (array_keys($states) as $k) { // type the country then output full states
         if (preg_match('/^'.$q.'/', $k, $matches)) {
             $found = 1;
+            header('Content-Type: application/json');
             $states_list = map_country($states, $k);
-
             return json_encode($states_list);
         }
     }
     if (!$found) { // a longer version
         $region_list = map_region($states);
         if (array_key_exists($q, $region_list)) {
-            //print_p($region_list[$q]);
+            header('Content-Type: application/json');
             return json_encode($region_list[$q]);
         }
     }

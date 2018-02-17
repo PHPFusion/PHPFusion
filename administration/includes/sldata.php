@@ -35,6 +35,9 @@ if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
             $data['link_position_id'] = $data['link_position'];
             $data['link_position'] = 4;
         }
+
+        header('Content-Type: application/json');
+
         echo json_encode($data);
     }
 }
