@@ -114,11 +114,11 @@ class PrivateMessages {
                 echo form_hidden('selectedPM', '', $_GET['msg_read']);
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == "archive") {
-                    echo form_button('unarchive_pm', '', 'archive_pm', ['icon' => 'fa fa-unlock']);
+                    echo form_button('unarchive_pm', '', 'unarchive_pm', ['icon' => 'fa fa-unlock', 'icon_class' => '']);
                 } else if ($_GET['folder'] == "inbox") {
-                    echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock']);
+                    echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock', 'icon_class' => '']);
                 }
-                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o']);
+                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o', 'icon_class' => '']);
                 echo "</div>\n";
                 echo closeform();
             } else {
@@ -126,19 +126,11 @@ class PrivateMessages {
                 ?>
                 <!-- pm_idx -->
                 <div class="dropdown display-inline-block m-r-10">
-                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv"
-                                                                                                  class="fa fa-square-o"></i>
-                        <span class="caret"></span></a>
+                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a id="check_all_pm" data-action="check"
-                               class="pointer"><?php echo $this->locale['418'] ?></a>
-                        </li>
-                        <li><a id="check_unread_pm" data-action="check"
-                               class="pointer"><?php echo $this->locale['415'] ?></a>
-                        </li>
-                        <li><a id="check_read_pm" data-action="check"
-                               class="pointer"><?php echo $this->locale['414'] ?></a>
-                        </li>
+                        <li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $this->locale['418'] ?></a></li>
+                        <li><a id="check_unread_pm" data-action="check" class="pointer"><?php echo $this->locale['415'] ?></a></li>
+                        <li><a id="check_read_pm" data-action="check" class="pointer"><?php echo $this->locale['414'] ?></a></li>
                     </ul>
                 </div>
                 <?php
@@ -155,14 +147,12 @@ class PrivateMessages {
                 echo "</div>\n";
                 ?>
                 <div class="dropdown display-inline-block m-r-10">
-                    <a href="#" data-toggle="dropdown"
-                       class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span
-                                class="caret"></span></a>
+                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><?php echo form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link']) ?></li>
-                        <li><?php echo form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link']) ?></li>
-                        <li><?php echo form_button('mark', $this->locale['495'], 'mark_unread', ['input_id' => 'mark_unread', 'class' => 'btn-link']) ?></li>
-                        <li><?php echo form_button('mark', $this->locale['496'], 'unmark_all', ['input_id' => 'unmark_all', 'class' => 'btn-link']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link btn-block align-left']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link btn-block align-left']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['495'], 'mark_unread', ['input_id' => 'mark_unread', 'class' => 'btn-link btn-block align-left']) ?></li>
+                        <li><?php echo form_button('mark', $this->locale['496'], 'unmark_all', ['input_id' => 'unmark_all', 'class' => 'btn-link btn-block align-left']) ?></li>
                     </ul>
                 </div>
                 <?php
@@ -296,10 +286,10 @@ class PrivateMessages {
         $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:folder AND message_read=:mread", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mread' => '0', ':folder' => '2']);
         $this->info = [
             'folders'       => [
-                'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402']],
-                'outbox'  => ['link' => BASEDIR."messages.php?folder=outbox", 'title' => $this->locale['403']],
-                'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404']],
-                'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425']],
+                'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402'], 'icon' => 'fa fa-inbox'],
+                'outbox'  => ['link' => BASEDIR."messages.php?folder=outbox", 'title' => $this->locale['403'], 'icon' => 'fa fa-envelope-o'],
+                'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404'], 'icon' => 'fa fa-archive'],
+                'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425'], 'icon' => 'fa fa-cog'],
             ],
             'inbox_total'   => dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:mfolder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mfolder' => '0'])."/".$in_read,
             'outbox_total'  => dbcount("(message_id)", DB_MESSAGES, "message_from=:mfrom AND message_folder=:mfolder", [':mfrom' => $userdata['user_id'], ':mfolder' => '0'])."/".$out_read,
@@ -642,7 +632,7 @@ class PrivateMessages {
                                     // user_outbox.
                                     $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
                                     ".DB_MESSAGES." WHERE message_to=:mto AND message_user=:muser AND message_folder=:mfolder GROUP BY message_to",
-                                    [':mto' => $userdata['user_id'], ':muser' => $userdata['user_id'], ':mfolder' => '1']));
+                                        [':mto' => $userdata['user_id'], ':muser' => $userdata['user_id'], ':mfolder' => '1']));
                                     // check my outbox limit and if surpass, remove oldest message
                                     if ($myStatus['user_outbox'] != "0" && ($cdata['outbox_count'] + 1) > $myStatus['user_outbox']) {
                                         dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id=:mid AND message_to=:mto", [':mid' => $cdata['last_message'], ':mto' => $userdata['user_id']]);

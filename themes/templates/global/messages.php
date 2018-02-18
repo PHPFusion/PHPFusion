@@ -109,6 +109,8 @@ if (!function_exists('display_inbox')) {
                                 echo "</tr>\n";
                             }
                             echo '</table></div>';
+                        } else {
+                            echo '<div class="text-center well">'.$locale['471'].'</div>';
                         }
                         echo '</div>';
 
