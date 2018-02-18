@@ -123,17 +123,21 @@ if ($infusions_count > 0) {
 }
 
 // Latest Comments
+$global_comments = [];
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
 $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_COMMENTS." c
     LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
-    ORDER BY comment_datestamp DESC LIMIT 5
+    ORDER BY comment_datestamp DESC LIMIT ".$_GET['c_rowstart'].", 5
 ");
-if ($global_comments['rows'] > $settings['comments_per_page']) {
-    $global_comments['nav'] = makepagenav($_GET['c_rowstart'], $settings['comments_per_page'], $global_comments['rows'], 2);
+
+if ($global_comments['rows'] > 10) {
+    $global_comments['comments_nav'] = makepagenav($_GET['c_rowstart'], 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 'c_rowstart');
 }
+
 $global_comments['data'] = [];
+
 if (dbrows($comments_result)) {
     while ($_comdata = dbarray($comments_result)) {
         $global_comments['data'][] = $_comdata;
@@ -141,14 +145,17 @@ if (dbrows($comments_result)) {
 } else {
     $global_comments['nodata'] = $locale['254c'];
 }
+
 // Latest Ratings
+$global_ratings = [];
 $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
 $_GET['r_rowstart'] = isset($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? $_GET['r_rowstart'] : 0;
 $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_RATINGS." r
     LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
-    ORDER BY rating_datestamp DESC LIMIT 5
+    ORDER BY rating_datestamp DESC LIMIT ".$_GET['r_rowstart'].", 5
 ");
+
 $global_ratings['data'] = [];
 if (dbrows($result) > 0) {
     while ($_ratdata = dbarray($result)) {
@@ -157,18 +164,23 @@ if (dbrows($result) > 0) {
 } else {
     $global_ratings['nodata'] = $locale['254b'];
 }
-if ($global_ratings['rows'] > $settings['comments_per_page']) {
-    $global_ratings['ratings_nav'] = makepagenav($_GET['r_rowstart'], $settings['comments_per_page'], $global_ratings['rows'], 2);
+
+if ($global_ratings['rows'] > 10) {
+    $global_ratings['ratings_nav'] = makepagenav($_GET['r_rowstart'], 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 'r_rowstart');
 }
+
 // Latest Submissions
+$global_submissions = [];
 $global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
 $_GET['s_rowstart'] = isset($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? $_GET['s_rowstart'] : 0;
 $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_SUBMISSIONS." s
     LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
-    ORDER BY submit_datestamp DESC LIMIT 5
+    ORDER BY submit_datestamp DESC LIMIT ".$_GET['s_rowstart'].", 5
 ");
+
 $global_submissions['data'] = [];
+
 if (dbrows($result) > 0 && checkrights('SU')) {
     while ($_subdata = dbarray($result)) {
         $global_submissions['data'][] = $_subdata;
@@ -176,10 +188,11 @@ if (dbrows($result) > 0 && checkrights('SU')) {
 } else {
     $global_submissions['nodata'] = $locale['254a'];
 }
-if ($global_submissions['rows'] > $settings['comments_per_page']) {
-    $global_submissions['submissions_nav'] = "<span class='pull-right text-smaller'>".makepagenav($_GET['s_rowstart'], $settings['comments_per_page'],
-            $global_submissions['rows'], 2)."</span>\n";
+
+if ($global_submissions['rows'] > 10) {
+    $global_submissions['submissions_nav'] = makepagenav($_GET['s_rowstart'], 10, $global_submissions['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 's_rowstart');
 }
+
 // Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
     $result = dbquery("SELECT *
