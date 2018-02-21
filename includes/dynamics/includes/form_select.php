@@ -86,7 +86,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'callback_check'       => '',
         'stacked'              => '',
         'onchange'             => '',
-        "select2_disabled"     => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
+        'select2_disabled'     => FALSE, // if select2_disabled is set to true, then we will not use the select2 plugin
         'parent_value'         => $locale['root'],
         'add_parent_opts'      => FALSE,
         'disable_opts'         => '',

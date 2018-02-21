@@ -1351,15 +1351,14 @@ function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'r
  * Hierarchy Page Breadcrumbs
  * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
  *
- * @param $tree_index - dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
- *                    / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
- * @param $tree_full - dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent");
- * @param $id_col - "news_cat_id",
- * @param $title_col - "news_cat_name",
- * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
+ * @param        $tree_index    dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent") / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param        $tree_full     dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ * @param        $id_col        "news_cat_id",
+ * @param        $title_col     "news_cat_name",
+ * @param string $getname       cat_id for $_GET['cat_id']
+ * @param string $key           key for breadcrumb instance
  */
-
-function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
+function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav", $key = 'default') {
 
     $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
 
@@ -1397,7 +1396,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     }
     if (!empty($crumb['title']) && count($crumb['title']) > 1) {
         foreach ($crumb['title'] as $i => $value) {
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+            \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
                 OutputHandler::addToMeta($value);
@@ -1406,7 +1405,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     } else if (isset($crumb['title'])) {
         OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
         OutputHandler::addToMeta($crumb['title']);
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+        \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }
 
