@@ -9,7 +9,10 @@
 *.jpeg binary
 *.gif binary
 *.png binary
-*.ttf binary
+*.otf binary
 *.eof binary
 *.eot binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
 *.swf binary

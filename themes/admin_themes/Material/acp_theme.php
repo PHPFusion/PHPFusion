@@ -24,6 +24,7 @@ require_once MATERIAL.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
+define('FONTAWESOME-V4', TRUE);
 
 $toggled = (isset($_COOKIE['sidebar-toggled']) && $_COOKIE['sidebar-toggled'] == 1) ?' sidebar-toggled' : '';
 $sm = (isset($_COOKIE['sidebar-sm']) && $_COOKIE['sidebar-sm'] == 1) ? ' sidebar-sm' : '';

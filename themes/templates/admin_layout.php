@@ -46,20 +46,18 @@ if ($settings['entypo'] || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-/* Font Awesome 4 (uncomment and comment out Line 97-99)
-if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+
+if (defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+    }
 }
-*/
+
 // Default CSS styling which applies to all themes but can be overriden
 echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // Admin Panel Theme CSS
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-}
-// jQuery related includes
-if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
-    echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
@@ -94,9 +92,14 @@ if (!check_admin_pass('')) {
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
-if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
-    echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.js'></script>\n";
+
+if (!defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.min.js'></script>\n";
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fa-v4-shims.min.js'></script>\n";
+    }
 }
+
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 

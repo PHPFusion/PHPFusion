@@ -47,11 +47,12 @@ if (fusion_get_settings('entypo') || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-/* Font Awesome 4 (uncomment and comment out Line 134-136)
-if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+
+if (defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+    }
 }
-*/
 
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
@@ -73,9 +74,7 @@ echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
-    echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
-}
+
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo "</head>\n";
@@ -131,9 +130,14 @@ if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
 }
-if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
-    echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.js'></script>\n";
+
+if (!defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.min.js'></script>\n";
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fa-v4-shims.min.js'></script>\n";
+    }
 }
+
 // Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
