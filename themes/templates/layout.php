@@ -47,9 +47,12 @@ if (fusion_get_settings('entypo') || defined('ENTYPO')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
+/* Font Awesome 4 (uncomment and comment out Line 134-136)
 if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
+*/
+
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
@@ -128,7 +131,9 @@ if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
 }
-
+if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+    echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.js'></script>\n";
+}
 // Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
