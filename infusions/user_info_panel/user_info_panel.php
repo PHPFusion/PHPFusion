@@ -40,6 +40,7 @@ if (iMEMBER) {
     $archive_count = (int)$messages_count['archive_count'];
     $msg_count = (int)$messages_count['unread_count'];
     $forum_exists = infusion_exists('forum');
+    $forum_settings = get_settings('forum');
 
     $pm_progress = '';
     if (!iSUPERADMIN) {
@@ -96,6 +97,7 @@ if (iMEMBER) {
 
     $info = [
             'forum_exists'         => $forum_exists,
+            'show_reputation'      => $forum_settings['forum_show_reputation'] ? 1 : 0,
             'user_avatar'          => display_avatar($userdata, '90px', '', FALSE, ''),
             'user_name'            => profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status']),
             'user_level'           => $userdata['user_level'],

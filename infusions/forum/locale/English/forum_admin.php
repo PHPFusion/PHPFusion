@@ -11,6 +11,7 @@ $locale['509'] = "Maximum file size";
 $locale['510'] = "Allowed file types:";
 $locale['511'] = "Hit enter for each new keyword";
 $locale['512'] = "Thread notification";
+$locale['513'] = "Show reputation";
 $locale['518'] = "Yes";
 $locale['519'] = "No";
 $locale['520'] = "Enable forum ranks";

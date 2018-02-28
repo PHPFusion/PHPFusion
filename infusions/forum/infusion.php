@@ -284,7 +284,8 @@ $settings = [
     'points_to_upvote'           => 100,
     'points_to_downvote'         => 100,
     'forum_show_lastpost'        => 1,
-    'forum_enabled_userfields'   => 0
+    'forum_enabled_userfields'   => 0,
+    'forum_show_reputation'      => 1
 ];
 
 foreach ($settings as $name => $value) {

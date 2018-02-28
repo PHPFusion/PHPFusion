@@ -35,7 +35,7 @@ if (!function_exists('display_user_info_panel')) {
                 </div>
                 <h4 class='uip_username'><strong>{%user_name%}</strong></h4>
                 <span>{%user_level%}</span><br/>
-                <span>{%user_reputation_icon%}{%user_reputation%}</span>
+                <?php if ($info['show_reputation'] == 1) : ?><span>{%user_reputation_icon%}{%user_reputation%}</span><?php endif; ?>
             </div>
             <div class='user_pm_notice'>{%user_pm_notice%}</div>
             <div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>

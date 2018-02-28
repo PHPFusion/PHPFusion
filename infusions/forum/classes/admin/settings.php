@@ -173,6 +173,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'answering_points'          => form_sanitizer($_POST['answering_points'], 15, 'answering_points'),
                 'points_to_upvote'          => form_sanitizer($_POST['points_to_upvote'], 100, 'points_to_upvote'),
                 'points_to_downvote'        => form_sanitizer($_POST['points_to_downvote'], 100, 'points_to_downvote'),
+                'forum_show_reputation'     => form_sanitizer($_POST['forum_show_reputation'], 0, 'forum_show_reputation'),
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -264,6 +265,12 @@ class ForumAdminSettings extends ForumAdminInterface {
                         'inline'     => TRUE,
                     ]);
                 echo "</div>\n";
+
+                echo form_select('forum_show_reputation', self::$locale['513'], $forum_settings['forum_show_reputation'], [
+                    'options'    => $yes_no_array,
+                    'error_text' => self::$locale['error_value'],
+                    'inline'     => TRUE
+                ]);
 
                 closeside();
                 openside(self::$locale['forum_141']);
