@@ -1,14 +1,16 @@
 {%opentable%}
 <div class='spacer-sm'>{%breadcrumb%}</div>
-{categories.{
-    <div id='{%cat_id%}' class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+<div class="row">
+    {categories.{
+    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
         <div class='spacer-xs'>
             <a class='display-block' href='{%cat_link%}'>{%cat_name%} ({%cat_count%})</a>
             {%cat_description%}
         </div>
     </div>
-}}
+    }}
+</div>
 {no_item.{
-    <div class='well text-center m-t-15'>{%message%}</div>
+<div class='well text-center m-t-15'>{%message%}</div>
 }}
 {%closetable%}

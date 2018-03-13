@@ -130,7 +130,7 @@ class MainFrame extends Core {
             'navbar_class'      => ($this->getParam('navbar_class') ?: 'navbar-default'),
             'language_switcher' => ($this->getParam('navbar_language_switch') ?: FALSE),
             'searchbar'         => ($this->getParam('navbar_searchbar') ?: FALSE),
-            'caret_icon'        => 'fa fa-angle-down',
+            'caret_icon'        => 'fa fa-angle-down m-l-5',
             'show_banner'       => FALSE,
             'grouping'          => fusion_get_settings('links_grouping'),
             'links_per_page'    => fusion_get_settings('links_per_page'),

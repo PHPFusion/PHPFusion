@@ -1182,7 +1182,7 @@ if (!function_exists("display_ratings")) {
         if ($total_votes > 0) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
         } else {
-            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
+            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-o high-opacity m-l-0'></i> ".$str.$end_link;
         }
 
         return $answer;

@@ -154,7 +154,7 @@ if (!function_exists('display_blog_index')) {
                 echo (isset($_GET['cat_id'])) ? "<!--sub_blog_cat_idx-->" : "<!--sub_blog_idx-->\n";
             }
 
-            echo !empty($info['blog_nav']) ? '<div class="m-t-5">'.$info['blog_nav'].'</div>' : '';
+            echo !empty($info['blog_nav']) ? '<div class="text-center m-t-5">'.$info['blog_nav'].'</div>' : '';
         } else {
             echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
         }
