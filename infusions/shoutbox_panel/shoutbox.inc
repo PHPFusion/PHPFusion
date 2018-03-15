@@ -341,7 +341,7 @@ class ShoutBox {
                 echo "</ul>\n";
                 echo "</div>\n";
             } else {
-                echo form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary btn-block']);
+                echo form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['send_message'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary btn-block']);
             }
 
             echo closeform();
@@ -425,7 +425,7 @@ class ShoutBox {
             while ($data = dbarray($result)) {
                 echo "<div class='display-block shoutboxwrapper clearfix'>\n";
                 echo "<div class='shoutboxavatar pull-left m-r-10 m-t-5'>\n";
-                echo display_avatar($data, '50px', '', TRUE, 'img-rounded');
+                echo display_avatar($data, '25px', '', TRUE, 'img-rounded');
                 echo "</div>\n";
 
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
@@ -435,15 +435,15 @@ class ShoutBox {
                     echo "</div>\n";
                 }
 
-                $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'><i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
+                $online = !empty($data['user_lastvisit']) ? "<span style='color: #5CB85C; font-size: 10px;'><i class='m-l-5 m-r-5 fa fa-".($data['user_lastvisit'] >= time() - 300 ? "circle" : "circle-thin")."'></i></span>" : '';
 
-                echo "<div class='shoutboxname'>\n";
-                echo ($data['user_name']) ? "<span class='side'>".profile_link($data['shout_name'], $data['user_name'],
-                        $data['user_status'])."</span>\n".$online : $data['shout_name']."\n";
+                echo "<div class='clearfix'>";
+                echo '<b>'.($data['user_name'] ? profile_link($data['shout_name'], $data['user_name'], $data['user_status']).$online : '<span class="m-r-5">'.$data['shout_name'].'</span>').'</b>';
+                echo timer($data['shout_datestamp']);
                 echo "</div>\n";
-                echo "<div class='shoutboxdate'>".timer($data['shout_datestamp'])."</div>\n";
+
                 $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
-                echo "<div class='shoutbox'>".$shout_message."</div>\n";
+                echo "<div class='shoutbox overflow-hide'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }
             echo($info['sbform_name'] == 'sarchive' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (
