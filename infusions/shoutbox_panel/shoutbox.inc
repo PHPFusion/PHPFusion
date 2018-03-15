@@ -409,17 +409,12 @@ class ShoutBox {
     public function ShoutsListing($info) {
         self::sbForm();
         $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? "shout_language='".LANGUAGE."' AND " : "").groupaccess('shout_hidden'));
-        $rows = isset($_GET['rows']) && ($_GET['rows'] <= $total_rows) ? $_GET['rows'] : 0;
+        $_GET['rows'] = isset($_GET['rows']) && $_GET['rows'] <= $total_rows ? $_GET['rows'] : 0;
+        $rows = $_GET['rows'];
         $result = $this->_selectDB($rows, $info['sb_limit']);
         $rows = dbrows($result);
 
         if ($rows > 0) {
-            if ($info['sbform_name'] == 'sarchive') {
-                echo "<div class='clearfix'>\n";
-                echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span>\n";
-                echo "</div>\n";
-            }
-
             add_to_jquery("$('.shoutbox-delete-btn').bind('click', function() { confirm('".self::$locale['SB_warning_shout']."'); });");
 
             while ($data = dbarray($result)) {
@@ -446,8 +441,12 @@ class ShoutBox {
                 echo "<div class='shoutbox overflow-hide'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }
-            echo($info['sbform_name'] == 'sarchive' ? ($total_rows > $rows ? makepagenav($rows, $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE) : "") : (
-            ($total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center m-t-20'><a class='btn btn-default btn-xs side' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php'>".self::$locale['SB_archive']."</a>\n</div>\n" : "")));
+
+            if ($info['sbform_name'] == 'sarchive') {
+                echo $total_rows > $rows ? '<div class="text-center m-t-10">'.makepagenav($_GET['rows'], $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE).'</div>' : '';
+            } else {
+                echo $total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center m-t-20'><a class='btn btn-default btn-xs side' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php'>".self::$locale['SB_archive']."</a>\n</div>\n" : "";
+            }
         } else {
             echo "<div class='text-center'>".self::$locale['SB_no_msgs']."</div>\n";
         }
