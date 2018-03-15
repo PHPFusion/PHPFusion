@@ -1035,11 +1035,11 @@ Comments
 }
 
 .comments-header:before {
-    content: '\f036';
+    content: "\e111";
 }
 
 .comments-header:before, .comments-form-header i {
-    font-family: 'FontAwesome';
+    font-family: "Glyphicons Halflings";
     left: -15px;
     top: 0;
     font-weight: normal;

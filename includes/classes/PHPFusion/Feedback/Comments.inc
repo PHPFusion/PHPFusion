@@ -343,7 +343,7 @@ class Comments {
                 // Display comments
                 ob_start();
                 display_no_comments();
-                $no_comments_text = strtr(ob_get_clean(), ['{%comments_undefined_text%}' => $this->locale['c101']]);
+                $no_comments_text = strtr(ob_get_clean(), ['{%comments_undefined_text%}' => '<p class="text-center">'.$this->locale['c101'].'</p>']);
                 ob_start();
                 display_comments_listing();
                 $comments = strtr(ob_get_clean(), [
