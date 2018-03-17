@@ -890,8 +890,8 @@ class ForumThreads extends ForumServer {
                      */
                     if (!empty($enabled_uf_fields)) {
                         foreach ($module as $field_name => $fieldAttr) {
-                            $field_value = $user[$field_name];
-                            if (!empty($field_value)) {
+                            if (!empty($user[$field_name])) {
+                                $field_value = $user[$field_name];
                                 if ($fieldAttr['field_type'] == 'file') {
                                     $module_file_path = INCLUDES.'user_fields/'.$fieldAttr['field_name'].'_include.php';
                                     $module_locale_file_path = LOCALE.LOCALESET.'user_fields/'.$fieldAttr['field_name'].'.php';

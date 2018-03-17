@@ -23,7 +23,9 @@ if ($profile_method == "input") {
     //Nothing here
     $user_fields = '';
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
-        $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
+        if (infusion_exists('forum')) {
+            $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
+        }
     }
 } else if ($profile_method == "display") {
     if (infusion_exists('forum')) {
