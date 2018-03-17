@@ -865,7 +865,8 @@ class ForumThreads extends ForumServer {
                     'user_groups'    => '',
                     'user_joined'    => '',
                     'user_lastvisit' => 0,
-                    'user_ip'        => '0.0.0.0'
+                    'user_ip'        => '0.0.0.0',
+                    'user_sig'       => ''
                 ];
 
                 if (!empty($user)) {
@@ -879,7 +880,8 @@ class ForumThreads extends ForumServer {
                         'user_groups'    => $user['user_groups'],
                         'user_joined'    => $user['user_joined'],
                         'user_lastvisit' => $user['user_lastvisit'],
-                        'user_ip'        => $user['user_ip']
+                        'user_ip'        => $user['user_ip'],
+                        'user_sig'       => $user['user_sig']
                     ];
 
                     if (!$pdata['post_showsig']) {
