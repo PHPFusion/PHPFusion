@@ -48,7 +48,7 @@ class adminPanel extends resource {
                     <?php $this->left_nav(); ?>
                 </div>
             </div>
-            <div class="app_menu<?php echo $collapsed; ?>">
+            <div class="app_menu<?php echo $collapsed; ?>" style="display:none;">
                 <header class="affix">
                     <h3><?php echo $locale['spotlight'] ?></h3>
                     <?php echo form_text("search_app", "", "", ["placeholder" => $locale['spotlight_search']]); ?>
@@ -100,11 +100,11 @@ class adminPanel extends resource {
         add_to_jquery("
         menuToggle('".self::$locale['admin_collapse']."');
         $('.menu-action').bind('click', function (e) {
+            e.preventDefault();
             menu_wrap.toggleClass('collapsed');
             body_wrap.toggleClass('collapsed');
             app_wrap.toggleClass('collapsed');
-            menuToggle('".self::$locale['admin_collapse']."');
-            e.preventDefault();
+            menuToggle('".self::$locale['admin_collapse']."');            
         });
         $('#search_app').bind('keyup', function(e) {
             var data = {

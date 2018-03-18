@@ -46,6 +46,7 @@ $('a[data-load]').bind('click', function (e) {
     if (ca != cl) {
         if (!body.hasClass('open')) {
             body.addClass('open');
+            $('.app_menu').show();
         }
     } else {
         body.toggleClass('open');
@@ -55,6 +56,7 @@ $('a[data-load]').bind('click', function (e) {
     $(this).closest('li').addClass('active');
     $('.app_page_list').hide();
     $('#ap-' + ca).show();
+
     e.preventDefault();
 });
 
