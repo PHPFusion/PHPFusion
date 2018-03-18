@@ -109,9 +109,9 @@ $locale['fields_0491'] = "KB (Kilobytes)";
 $locale['fields_0492'] = "MB (Megabytes)";
 
 $locale['fields_0500'] = "Module";
-$locale['fields_0501'] = "Textbox";
-$locale['fields_0502'] = "Dropdown";
-$locale['fields_0503'] = "Textarea";
+$locale['fields_0501'] = "Text-box";
+$locale['fields_0502'] = "Drop-down";
+$locale['fields_0503'] = "Text-area";
 $locale['fields_0504'] = "Checkbox";
 $locale['fields_0505'] = "Switch";
 $locale['fields_0506'] = "Date";

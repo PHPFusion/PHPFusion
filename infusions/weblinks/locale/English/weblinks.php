@@ -3,7 +3,7 @@
 $locale['web_0000'] = "Web Links";
 $locale['web_0001'] = "All Web Links";
 $locale['fmt_open'] = "open|open";
-// Sortings
+// Sorting
 $locale['web_0030'] = "Most Recent";
 $locale['web_0031'] = "Top Opened";
 $locale['web_0032'] = "Oldest";

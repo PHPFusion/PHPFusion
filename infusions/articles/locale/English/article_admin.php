@@ -35,7 +35,7 @@ $locale['article_0106'] = "Visibility";
 $locale['article_0107'] = "Actions";
 $locale['article_0111'] = "Delete this Article?";
 $locale['article_0112'] = "There are no Articles created.";
-$locale['article_0113'] = "There are no Articles, which match with the Searchoptions.";
+$locale['article_0113'] = "There are no Articles, which match with the Search options.";
 $locale['article_0114'] = "Before you can create a Article, you must create a Category.";
 $locale['article_0121'] = "Search";
 $locale['article_0122'] = "Clear";
@@ -63,7 +63,7 @@ $locale['article_0252'] = "Article";
 $locale['article_0253'] = "The Article self.";
 $locale['article_0254'] = "A Snippet from the Article.";
 $locale['article_0256'] = "Save as Draft";
-$locale['article_0257'] = "Enable automatic Linebreaks";
+$locale['article_0257'] = "Enable automatic Line breaks";
 $locale['article_0258'] = "Enable Comments";
 $locale['article_0259'] = "Enable Ratings";
 $locale['article_0260'] = "Keywords";
@@ -90,7 +90,7 @@ $locale['article_0900'] = "Submit Article";
 $locale['article_0910'] = "Article is successfully submitted.";
 $locale['article_0911'] = "Thank you for the Submission.";
 $locale['article_0912'] = "Submit other Article";
-$locale['article_0913'] = "Back to Startsite";
+$locale['article_0913'] = "Back to Start site";
 $locale['article_0920'] = "Use the following form to submit an Article. Your submission will be reviewed by an
 Administrator. [SITENAME] reserves the right to amend or edit any submission. Articles
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";

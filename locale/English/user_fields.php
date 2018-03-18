@@ -155,7 +155,7 @@ $locale['u201'] = "Your email address will be changed when you click the link in
 $locale['u202'] = "E-mail address verify - [SITENAME]";
 $locale['u203'] = "Hello [USER_NAME],<br/>
 Someone set this email address in his account on our site.<br/>
-If you realy want to change your email address to this one please click the following link:<br/>
+If you really want to change your email address to this one please click the following link:<br/>
 [EMAIL_VERIFY_LINK]<br/>
 Note: you have to be logged in to proceed.<br/>
 Regards,

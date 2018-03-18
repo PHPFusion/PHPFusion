@@ -137,5 +137,5 @@ $locale['632'] = "No";
 
 $locale['700'] = "User inbox is full. Try delete it or upgrade it to 102 or 103 status";
 $locale['701'] = "Sender User ID does not exist in DB. Sequence Aborted.";
-$locale['702'] = "Message Recepient User ID is invalid";
+$locale['702'] = "Message Recipient User ID is invalid";
 $locale['703'] = "You are flooding, send_pm halted";
