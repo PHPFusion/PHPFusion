@@ -270,7 +270,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             $select = ($input_value == $text_value) ? " selected" : "";
                         }
 
-                        $disabled = $disable_opts && in_array($text_value, $disable_opts) ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
                         $item = (!$hide ? "<option value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">$text_value ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
@@ -279,7 +279,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $disabled = $disable_opts && in_array($text_value, $disable_opts) ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
                         $item = (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">$text_value ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
@@ -385,7 +385,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         if ($input_value !== '') {
                             $select = ($input_value == $v) ? " selected" : "";
                         }
-                        $disabled = $disable_opts && in_array($v, $disable_opts) ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
                         $html .= (!$hide ? "<option value='$v'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     } else {
@@ -393,12 +393,10 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $disabled = $disable_opts && in_array($v, $disable_opts) ? TRUE : FALSE;
-
+                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
                         $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
-                        //if (isset($index[$v]) && (!$hide)) {
                         $html .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">$v ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
-                        //}
+
                     }
                 }
             }

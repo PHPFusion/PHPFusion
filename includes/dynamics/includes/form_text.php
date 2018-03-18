@@ -29,6 +29,7 @@
  * @param string $input_value The value to be displayed
  * in the input, usually a value from DB prev. saved
  * @param array  $options Various options
+ *
  * @return string
  *
  * To add an inline button (set prepend or append - respectively)
@@ -39,6 +40,7 @@
  * $options['append_class'] = your pick of .btn classes (bootstrap .btn-success, .btn-info, etc)
  * $options['append_value'] = the label
  * $options['append_button_name'] = your button name , default: p-submit-".$options['input_id']."
+ * $options['append_button_id'] = your button name , default: ".$input_name."-append-btn
  *
  * To add a decorative labels (set prepend or append - respectively)
  * $options['append_value'] = "your-value" - You can also insert HTML <i class='fa fa-something'></i> for glyphs
@@ -112,6 +114,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
+        'append_button_id'    => !empty($options['append_button_id']) ? $options['append_button_id'] : $options['input_id'].'-append-btn',
+        'prepend_button_id'   => !empty($options['prepend_button_id']) ? $options['prepend_button_id'] : $options['input_id'].'-prepend-btn',
     ];
 
     if (!empty($options['data'])) {
@@ -182,7 +186,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
         $html .= "<span class='input-group-btn'>\n";
-        $html .= "<button id='".$options['input_id']."-prepend-btn' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
+        $html .= "<button id='".$options['prepend_button_id']."' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
     } else if ($options['prepend_value']) {
         $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
@@ -215,7 +219,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
         $html .= "<span class='input-group-btn'>\n";
-        $html .= "<button id='".$options['input_id']."-append-btn' name='".$options['append_button_name']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button>\n";
+        $html .= "<button id='".$options['append_button_id']."' name='".$options['append_button_name']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button>\n";
         $html .= "</span>\n";
 
     } else if ($options['append_value']) {
