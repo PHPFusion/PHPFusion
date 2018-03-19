@@ -1171,7 +1171,7 @@ if (!function_exists('render_post_item')) {
                 $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li class='row'>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".$attr['value']."\n</div>\n";
                 $user_profiles .= "</li>\n";
                 $temp_name = $attr['field_cat_name'];
             }
