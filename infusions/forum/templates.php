@@ -25,7 +25,6 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_forum')) {
     function render_forum($info) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
@@ -48,9 +47,9 @@ if (!function_exists('render_forum')) {
 if (!function_exists('render_forum_main')) {
     function render_forum_main(array $info = [], $id = 0) {
         $locale = fusion_get_locale();
-
-        $html = \PHPFusion\Template::getInstance('forum_index');
-        $html->set_template(FORUM.'templates/index/forum_index.html');
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum');
+        $html = \PHPFusion\Template::getInstance('forum');
+        $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('forum_bg_src', fusion_get_settings('siteurl').'infusions/forum/images/bg/default_forum_bg.jpg');
         $html->set_tag('title', $locale['forum_0013']);
@@ -154,10 +153,15 @@ if (!function_exists('render_forum_main')) {
 if (!function_exists('render_forum_item')) {
     function render_forum_item($data) {
         $locale = fusion_get_locale();
-        $html = \PHPFusion\Template::getInstance('forum_item');
-        $html->set_template(FORUM.'templates/index/forum_item.html');
-        $l_html = \PHPFusion\Template::getInstance('forum_item_lastpost');
-        $l_html->set_template(FORUM.'templates/index/forum_item_lastpost.html'); // we have already cached it earlier?
+
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forums');
+        $html = \PHPFusion\Template::getInstance('forums');
+        $html->set_template($file_path);
+
+        $l_file_path = \PHPFusion\Forums\ForumServer::get_template('forum_lastpost');
+        $l_html = \PHPFusion\Template::getInstance('forum_lastpost');
+        $l_html->set_template($l_file_path);
+
         if (empty($data['forum_lastpost'])) {
             $l_html->set_block('forum_no_lastpost', [
                 'message' => $locale['forum_0005']
@@ -200,8 +204,9 @@ if (!function_exists('render_forum_item')) {
 if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
         $locale = fusion_get_locale();
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('viewforum');
         $tpl = \PHPFusion\Template::getInstance('viewforum');
-        $tpl->set_template(FORUM.'templates/forum_viewforum.html');
+        $tpl->set_template($file_path);
         // Make it so it can get arrays and values
         $tpl->set_tag('background_src', fusion_get_settings('siteurl').'infusions/forum/images/bg/default_forum_bg.jpg');
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
@@ -330,8 +335,9 @@ if (!function_exists('render_forum_threads')) {
     function render_forum_threads($info) {
         $locale = fusion_get_locale();
         // Ok, since this is a subpage and also require replacement, we need a new html file.
-        $tpl = \PHPFusion\Template::getInstance('thread_items');
-        $tpl->set_template(FORUM.'templates/viewforum/forum_thread_item.html');
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_thread');
+        $tpl = \PHPFusion\Template::getInstance('forum_thread');
+        $tpl->set_template($file_path);
         if (!empty($info['filters']['type'])) {
             foreach ($info['filters']['type'] as $key => $tabs) {
                 $tpl->set_block('tab_filter', [
@@ -519,8 +525,9 @@ if (!function_exists('forum_filter')) {
 if (!function_exists("render_section")) {
     function render_section($info) {
         $locale = fusion_get_locale();
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_section');
         $html = \PHPFusion\Template::getInstance('forum_section');
-        $html->set_template(FORUM.'templates/forum_section.html');
+        $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('filter_dropdown', $info['threads_time_filter']);
         $html->set_tag('title1', $locale['forum_0228']);
@@ -627,8 +634,9 @@ if (!function_exists('forum_newtopic')) {
  */
 if (!function_exists('render_postify')) {
     function render_postify($info) {
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_postify');
         $html = \PHPFusion\Template::getInstance('forum_postify');
-        $html->set_template(FORUM.'templates/forum_postify.html');
+        $html->set_template($file_path);
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('alert_class', ($info['error'] ? "alert alert-danger" : "well"));
@@ -649,8 +657,9 @@ if (!function_exists('render_postify')) {
 if (!function_exists("display_forum_postform")) {
     function display_forum_postform($info) {
         $locale = fusion_get_locale();
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_postform');
         $html = \PHPFusion\Template::getInstance('forum_postform');
-        $html->set_template(FORUM.'templates/forms/post.html');
+        $html->set_template($file_path);
         $tab_title['title'][0] = $locale['forum_0602'];
         $tab_title['id'][0] = 'postopts';
         $tab_title['icon'][0] = '';
@@ -703,8 +712,9 @@ if (!function_exists("display_forum_postform")) {
  */
 if (!function_exists("display_forum_pollform")) {
     function display_forum_pollform($info) {
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_pollform');
         $html = \PHPFusion\Template::getInstance('forum_pollform');
-        $html->set_template(FORUM.'templates/forms/poll.html');
+        $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -722,8 +732,9 @@ if (!function_exists("display_forum_pollform")) {
  */
 if (!function_exists('display_form_bountyform')) {
     function display_forum_bountyform($info) {
-        $html = \PHPFusion\Template::getInstance('forum_bntyform');
-        $html->set_template(FORUM.'templates/forms/bounty.html');
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_bountyform');
+        $html = \PHPFusion\Template::getInstance('forum_bountyform');
+        $html->set_template($file_path);
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -741,8 +752,9 @@ if (!function_exists('display_form_bountyform')) {
  */
 if (!function_exists("display_quick_reply")) {
     function display_quick_reply($info) {
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_qrform');
         $html = \PHPFusion\Template::getInstance('forum_qrform');
-        $html->set_template(FORUM.'templates/forms/quick_reply.html');
+        $html->set_template($file_path);
         $html->set_tag('description', $info['description']);
         $html->set_tag('message_field', $info['field']['message']);
         $html->set_tag('options_field', $info['field']['options']);
@@ -761,8 +773,9 @@ if (!function_exists("display_forum_tags")) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
         if (isset($_GET['tag_id'])) {
-            $html = \PHPFusion\Template::getInstance('tags');
-            $html->set_template(FORUM.'templates/tags/tag_threads.html');
+            $file_path = \PHPFusion\Forums\ForumServer::get_template('tags_thread');
+            $html = \PHPFusion\Template::getInstance('tags_thread');
+            $html->set_template($file_path);
             $html->set_tag('title', $locale['forum_0002']);
             $html->set_tag('filter', fusion_get_function('forum_filter', $info));
             $html->set_tag('breadcrumb', render_breadcrumbs());
@@ -792,8 +805,11 @@ if (!function_exists("display_forum_tags")) {
             echo $html->get_output();
 
         } else {
+
+            $file_path = \PHPFusion\Forums\ForumServer::get_template('tags');
             $html = \PHPFusion\Template::getInstance('tags');
-            $html->set_template(FORUM.'templates/tags/tag.html');
+            $html->set_template($file_path);
+
             $html->set_tag('breadcrumb', render_breadcrumbs());
             if (!empty($info['tags'])) {
                 unset($info['tags'][0]);
@@ -867,8 +883,10 @@ if (!function_exists('render_thread_item')) {
 if (!function_exists('render_thread')) {
     function render_thread($info) {
         add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('viewthreads');
         $html = \PHPFusion\Template::getInstance('viewthreads');
-        $html->set_template(FORUM.'templates/forum_threads.html');
+        $html->set_template($file_path);
 
         $locale = fusion_get_locale();
         // Shorts in core
@@ -1032,11 +1050,13 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
     function render_post_item($data, $item_id = 0) {
-        $html = \PHPFusion\Template::getInstance('forum_post');
-        $html->set_template(FORUM.'templates/forum_post_item.html');
-        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
+        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
+
+        $file_path = \PHPFusion\Forums\ForumServer::get_template('forum_post');
+        $html = \PHPFusion\Template::getInstance('forum_post');
+        $html->set_template($file_path);
         $html->set_tag('post_html_comment', "<!--forum_thread_prepost_".$data['post_id']."-->");
         $html->set_tag('post_date', $data['post_shortdate']);
         $html->set_tag('item_marker_id', $data['marker']['id']);
@@ -1171,7 +1191,7 @@ if (!function_exists('render_post_item')) {
                 $user_profiles .= $open_user_profiles;
                 $user_profiles .= "<li class='row'>\n";
                 $user_profiles .= "<div class='col-xs-12 col-sm-4 strong'>\n".$attr['title'].":\n</div>\n";
-                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".$attr['value']."\n</div>\n";
+                $user_profiles .= "<div class='col-xs-12 col-sm-8'>\n".strip_tags($attr['value'])."\n</div>\n";
                 $user_profiles .= "</li>\n";
                 $temp_name = $attr['field_cat_name'];
             }
