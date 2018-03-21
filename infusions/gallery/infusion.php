@@ -33,7 +33,7 @@ $inf_image = "gallery.svg";
 // Multilanguage table for Administration
 $inf_mlt[] = [
     "title"  => $locale['setup_3308'],
-    "rights" => "PG",
+    "rights" => "PG"
 ];
 
 // Create tables

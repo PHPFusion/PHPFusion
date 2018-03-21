@@ -26,7 +26,7 @@ $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
 $inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
 $inf_image = "shouts.svg";
@@ -70,7 +70,7 @@ if (!empty($enabled_languages)) {
 }
 
 //Infuse insertations
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', '".$inf_folder."', '', '4', '3', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
 $settings = [
     'visible_shouts' => 5,

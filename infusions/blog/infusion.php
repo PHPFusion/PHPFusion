@@ -34,7 +34,7 @@ $inf_image = "blog.svg";
 // Multilanguage table for Administration
 $inf_mlt[] = [
     "title"  => $locale['blog']['title'],
-    "rights" => "BL",
+    "rights" => "BL"
 ];
 // Create tables
 $inf_newtable[] = DB_BLOG." (

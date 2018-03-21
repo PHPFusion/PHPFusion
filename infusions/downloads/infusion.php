@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
-$inf_description = $locale['downloads']['description'];;
+$inf_description = $locale['downloads']['description'];
 $inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
@@ -34,7 +34,7 @@ $inf_image = "download.svg";
 // Multilanguage table for Administration
 $inf_mlt[] = [
     "title"  => $locale['downloads']['title'],
-    "rights" => "DL",
+    "rights" => "DL"
 ];
 
 // Create tables

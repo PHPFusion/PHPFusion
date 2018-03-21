@@ -34,7 +34,7 @@ $inf_image = "faq.svg";
 // Multilanguage table for Administration
 $inf_mlt[] = [
     "title"  => $locale['setup_3011'],
-    "rights" => "FQ",
+    "rights" => "FQ"
 ];
 
 // Create tables
