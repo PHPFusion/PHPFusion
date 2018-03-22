@@ -431,7 +431,6 @@ class UserFields extends QuantumFields {
         $html .= "<div class='form-group m-t-20'>\n";
         $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
         $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
-
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
         $html .= display_captcha([
             'captcha_id' => 'captcha_userfields',
@@ -528,7 +527,6 @@ class UserFields extends QuantumFields {
 
         switch ($this->method) {
             case 'input':
-
                 $this->info['user_field'][0]['fields']['user_id'] = form_hidden('user_id', '', $this->callback_data['user_id']);
                 if ($this->registration == FALSE) {
                     if (isset($this->info['user_field'][0]['fields']['user_name'])) {
@@ -915,4 +913,5 @@ class UserFields extends QuantumFields {
 
         return $key === NULL ? $userData : (isset($userData[$key]) ? $userData[$key] : NULL);
     }
+
 }
