@@ -37,11 +37,11 @@ $inf_image = 'forums.svg';
 // Multilanguage table for Administration
 $inf_mlt[] = [
     'title'  => $locale['forums']['title'],
-    'rights' => 'FO',
+    'rights' => 'FO'
 ];
 $inf_mlt[] = [
     'title'  => $locale['setup_3038'],
-    'rights' => 'FR',
+    'rights' => 'FR'
 ];
 
 // Create tables

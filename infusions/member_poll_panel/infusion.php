@@ -26,7 +26,7 @@ $inf_title = $locale['polls']['title'];
 $inf_description = $locale['polls']['description'];
 $inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "member_poll_panel";
 $inf_image = "polls.svg";
@@ -34,7 +34,7 @@ $inf_image = "polls.svg";
 // Multilanguage table for Administration
 $inf_mlt[] = [
     "title"  => $locale['setup_3207'],
-    "rights" => "PO",
+    "rights" => "PO"
 ];
 
 // Create tables
@@ -67,7 +67,7 @@ $inf_adminpanel[] = [
     "image"  => $inf_image,
     "rights" => "PO",
     "panel"  => "poll_admin.php",
-    "page"   => 1,
+    "page"   => 1
 ];
 
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
