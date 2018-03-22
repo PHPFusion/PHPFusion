@@ -56,7 +56,7 @@ $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
 $userFields->postValue = $locale['u105'];
 $userFields->userData = fusion_get_userdata();
-$userFields->plugin_folder = INCLUDES."user_fields/";
+$userFields->plugin_folder = array(INCLUDES."user_fields/", INFUSIONS);
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
