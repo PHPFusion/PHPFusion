@@ -63,6 +63,22 @@ spl_autoload_register(function ($className) {
     }
 });
 
+// Load infusions autoloader.
+// @todo 9.04 --
+// @todo: Rename all infusions namespace with "PHPFusion\Infusions\{Infusion_name};
+// @todo: then remove all infusions autoloader and complete check the file structure.
+spl_autoload_register(function ($className) {
+    if (stristr($className, 'PHPFusion\\Infusions')) {
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $className = str_replace('PHPFusion\\Infusions\\', '', $className);
+        $className = strtolower($className);
+        $fullPath = dirname(__FILE__).'/../infusions/'.$className.'.php';
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
+    }
+});
+
 
 /**
  * Get path of config.php
