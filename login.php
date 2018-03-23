@@ -91,6 +91,13 @@ if (!iMEMBER) {
         default:
             $placeholder = $locale['global_101a'];
     }
+
+    // new include
+    $login = NULL;
+    if (file_exists(INFUSIONS.'login/login.php')) {
+        $login = new \PHPFusion\Infusions\Login\Login();
+    }
+    $login_methods = (method_exists($login, 'get_login_methods') ? $login->get_login_methods() : ''); // go for an array.
     $info = [
         'open_form'            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
         'user_name'            => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]),
@@ -100,7 +107,8 @@ if (!iMEMBER) {
         'signup_button'        => "<a class='btn btn-default btn-register' href='".BASEDIR."register.php'>".$locale['global_109']."</a>\n",
         'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
         'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
-        'close_form'           => closeform()
+        'close_form'           => closeform(),
+        'login_methods'        => $login_methods
     ];
 }
 display_loginform($info);

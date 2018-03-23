@@ -1,0 +1,78 @@
+<h4>Enable Two-Step Authentication</h4>
+Your PHP Fusion account been protected with Google Authenticator. Google Authenticator is a secure, easy to use,
+two-factor authentcation application for your mobile device
+that is immune from replay-attacks, man-in-the-middle attacks, and a host of other thread vectors.
+<br/><br/>
+
+{current_block.{
+<h4>Your account have been secured with the Two-Step Authentication.</h4>
+<div class="alert alert-warning">
+    <div class="pull-left m-r-10">
+        <i class="fas fa-exclamation-triangle fa-lg"></i>
+    </div>
+    <div class="overflow-hide">
+        Please make sure you do not remove the pairing on your app before deactivating on your user account. You will
+        need it to deactivate the Two-Step Authentication on this user account.
+    </div>
+</div>
+<div class="well">
+    <p>Deactivate the Two-Step Authentication by entering the passcode below:</p>
+    {%text_input%}
+    {%button%}
+</div>
+}}
+
+{new_block.{
+{%radio%}
+<div id="gauth_setup_form" class="list-group-item no-shadow spacer-sm p-15" style="display:none;">
+    <h3>Activating Two-Step Authentication</h3>
+    <div class="alert alert-warning">
+        <div class="pull-left m-r-10">
+            <i class="fas fa-exclamation-triangle fa-lg"></i>
+        </div>
+        <div class="overflow-hide">
+            Once you complete this process, you will never be shown the setup information again. If you wish, you can
+            print this information and keep it in a secure location.
+        </div>
+    </div>
+    <p class="strong">Two-Step Authentication requires the Google Authenticator App.</p>
+    <div class="row m-0">
+        <div class="col-xs-12 col-sm-8">
+            <p>Scan the barcode or enter this information:</p>
+            <div class="well">
+                <p class="strong">Account Name</p>
+                <p>{%account_name%}</p>
+                <p class="strong">Your Secret Key:</p>
+                <h2 class="m-t-0"><code>{%key%}</code></h2>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-4 p-r-20">
+            <img src="{%image_src%}"/><br/>
+            Use your Google Authenticator app to scan this QR code and enter the one time password below.
+        </div>
+    </div>
+    <div class="clearfix">
+        <p>Verify that the pairing was successful by entering the passcode below:</p>
+        {%text_input%}
+        {%button%}
+    </div>
+</div>
+<div class="well">
+    <p>Install the Google Authenticator app on your mobile device:</p>
+    <ul class="spacer-sm">
+        <li>
+            Iphone, Ipad, or Ipod Touch:<br/>
+            Visit the App Store and search for Google Authenticator.
+        </li>
+        <li>
+            Android:
+            Visit Google Play and search for Google Autneticator.
+        </li>
+        <li>
+            Blackberry:
+            Visit www.m.google.com/authenticator on your web browser.
+        </li>
+    </ul>
+</div>
+}}

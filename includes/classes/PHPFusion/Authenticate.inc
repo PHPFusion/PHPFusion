@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
+
+use PHPFusion\Infusions\Login\Login;
 
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
@@ -29,7 +32,12 @@ define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 class Authenticate {
 
     private static $authenticate_url = "";
-    private $_userData = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => "Default"];
+    private $_userData = [
+        "user_level"  => 0,
+        "user_rights" => "",
+        "user_groups" => "",
+        "user_theme"  => "Default"
+    ];
 
     public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = false) {
 
@@ -73,9 +81,17 @@ class Authenticate {
                         WHERE user_id='".$user['user_id']."'");
                 }
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
-                    Authenticate::_setUserTheme($user);
-                    $this->_userData = $user;
+                    // Implement new login class
+                    $login = NULL;
+                    if (file_exists(INFUSIONS.'login/login.php')) {
+                        $login = new Login();
+                    }
+                    $authenticate_methods = (method_exists($login, 'authenticate') ? $login->authenticate($user) : '');
+                    if (empty($authenticate_methods)) {
+                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
+                        Authenticate::_setUserTheme($user);
+                        $this->_userData = $user;
+                    }
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
@@ -147,9 +163,11 @@ class Authenticate {
      * If there is a new authentication url, error request will not valid
      *
      * @todo: use addNotice('') instead of going for errorId
+     *
      * @param        $errorId
      * @param string $userStatus
      * @param string $userId
+     *
      * @return string
      */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
@@ -177,13 +195,14 @@ class Authenticate {
 
     // Validate authenticated user
 
-    private static function _setUserTheme($user) {
+    public static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
         }
 
         if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < USER_LEVEL_ADMIN && $user['user_theme'] != "Default") {
             $user['user_theme'] = "Default";
+
             return NULL;
         } else {
             return NULL;
@@ -370,12 +389,14 @@ class Authenticate {
                     // Cookie expired
                     Authenticate::logOut();
                     redirect(Authenticate::getRedirectUrl(2));
+
                     return NULL;
                 }
             } else {
                 // Missing arguments in cookie
                 Authenticate::logOut();
                 redirect(Authenticate::getRedirectUrl(2));
+
                 return NULL;
             }
         } else {
