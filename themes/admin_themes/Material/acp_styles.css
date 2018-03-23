@@ -4064,7 +4064,6 @@ label {
 }
 #error_logform {
     margin-bottom: 20px !important;
-    padding-bottom: 10px;
 }
 #error_logform #delete_entries {
     padding: 5px 10px;
