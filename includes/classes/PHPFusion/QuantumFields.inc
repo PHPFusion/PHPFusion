@@ -741,6 +741,7 @@ class QuantumFields extends \SqlHandler {
                                 'no_root'      => 1,
                                 'disable_opts' => $exclude_list
                             ], $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+
                             echo form_checkbox('delete_field', $this->locale['fields_0317'], '');
                             echo "</div></div>";
                         }
@@ -1637,13 +1638,11 @@ class QuantumFields extends \SqlHandler {
 
         if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
             $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
-            if (dbrows($result) > 0) {
+            if (dbrows($result)) {
                 $this->field_cat_data = dbarray($result);
             } else {
-                if (!$this->debug) {
-                    addNotice('warning', $this->locale['field_0206']);
-                    redirect(FUSION_SELF.$aidlink);
-                }
+                addNotice('danger', $this->locale['field_0206']);
+                redirect(FUSION_SELF.$aidlink);
             }
         }
 
@@ -1654,6 +1653,9 @@ class QuantumFields extends \SqlHandler {
                 'field_cat_name'  => form_sanitizer($_POST['field_cat_name'], '', 'field_cat_name', TRUE),
                 'field_parent'    => form_sanitizer($_POST['field_parent'], '', 'field_parent'),
                 'field_cat_order' => form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order'),
+                'field_cat_db'    => '',
+                'field_cat_index' => '',
+                'field_cat_class' => '',
             ];
             // only if root then need to sanitize
             $old_data = [
@@ -1691,44 +1693,37 @@ class QuantumFields extends \SqlHandler {
             // shuffle between save and update
             if (self::validate_fieldCat($this->field_cat_data['field_cat_id'])) {
 
-                dbquery_order($this->category_db, $this->field_cat_data['field_cat_order'], 'field_cat_order',
+                dbquery_order(
+                    $this->category_db, $this->field_cat_data['field_cat_order'],
+                    'field_cat_order',
                     $this->field_cat_data['field_cat_id'], 'field_cat_id',
-                    $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update');
+                    $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update'
+                );
 
                 if (!$this->debug) {
-
                     if (\defender::safe()) {
-
                         if (!empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
 
                             if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
                                 // CONDITION: HAVE A PREVIOUS TABLE SET
-                                if ($this->field_cat_data['field_cat_db']) {
+                                if (!empty($this->field_cat_data['field_cat_db'])) {
                                     // new demands a table insertion, checks if same or not.. if different.
                                     if ($this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db']) {
                                         // But the current table is different than the previous one
                                         // - build the new one, move the column, drop the old one.
-                                        self::build_table($this->field_cat_data['field_cat_db'],
-                                            $this->field_cat_data['field_cat_index']);
-                                        self::transfer_table($old_data['field_cat_db'],
-                                            $this->field_cat_data['field_cat_db']);
+                                        self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
+                                        self::transfer_table($old_data['field_cat_db'], $this->field_cat_data['field_cat_db']);
                                         self::drop_table($old_data['field_cat_db']);
 
                                     } else {
-
                                         if ($old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index']) {
-                                            self::rename_column($this->field_cat_data['field_cat_db'],
-                                                $old_data['field_cat_index'],
-                                                $this->field_cat_data['field_cat_index'],
-                                                "MEDIUMINT(8) NOT NULL DEFAULT '0'");
+                                            self::rename_column($this->field_cat_data['field_cat_db'], $old_data['field_cat_index'], $this->field_cat_data['field_cat_index'], "MEDIUMINT(8) NOT NULL DEFAULT '0'");
                                         }
 
                                     }
 
                                 } else if (empty($this->field_cat_data['field_cat_db'])) {
-
                                     self::drop_table($this->field_cat_data['field_cat_db']);
-
                                 }
 
                             } else if (!empty($this->field_cat_data['field_cat_index']) && !empty($this->field_cat_data['field_cat_db'])) {
@@ -1744,6 +1739,7 @@ class QuantumFields extends \SqlHandler {
                         }
                         redirect(FUSION_SELF.$aidlink);
                     }
+
                 } else {
                     print_p($this->locale['fields_0661']);
                     print_p($this->field_cat_data);
@@ -1751,9 +1747,18 @@ class QuantumFields extends \SqlHandler {
 
             } else {
 
-                dbquery_order($this->category_db, $this->field_cat_data['field_cat_order'], 'field_cat_order',
-                    $this->field_cat_data['field_cat_id'], 'field_cat_id',
-                    $this->field_cat_data['field_parent'], 'field_parent', TRUE, 'field_cat_name', 'save');
+                dbquery_order(
+                    $this->category_db,
+                    $this->field_cat_data['field_cat_order'],
+                    'field_cat_order',
+                    $this->field_cat_data['field_cat_id'],
+                    'field_cat_id',
+                    $this->field_cat_data['field_parent'],
+                    'field_parent',
+                    TRUE,
+                    'field_cat_name',
+                    'save'
+                );
 
                 if (!$this->debug && \defender::safe()) {
 
@@ -1782,25 +1787,29 @@ class QuantumFields extends \SqlHandler {
         }
 
         // exclusion list - unselectable
-        $cat_list = [];
-        if (!empty($this->cat_list)) {
-            foreach ($this->cat_list as $id => $value) {
-                $cat_list[] = $id;
-            }
-        }
         $html = openform('cat_form', 'post', FUSION_REQUEST);
         $html .= form_button('save_cat', $this->locale['fields_0318'], 'save_cat', [
             'input_id' => 'save_cat2',
             'class'    => 'm-b-20 btn-primary'
         ]);
 
-        $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'],
-            $this->field_cat_data['field_cat_name'], ['required' => 1]);
-        $html .= form_select_tree('field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
-            [
-                'parent_value' => $this->locale['fields_0432'],
-                'disable_opts' => $cat_list
-            ], $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+        $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], ['required' => 1]);
+        // cannot move if there are siblings
+        if (isset($this->field_cat_index[$_GET['cat_id']])) {
+            $html .= form_hidden('field_parent', '', $this->field_cat_data['field_parent']);
+        } else {
+            $cat_list[] = $_GET['cat_id'];
+            if (!empty($this->cat_list)) {
+                foreach ($this->cat_list as $id => $value) {
+                    $cat_list[] = $id;
+                }
+            }
+            $html .= form_select_tree('field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
+                [
+                    'parent_value' => $this->locale['fields_0432'],
+                    'disable_opts' => $cat_list
+                ], $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+        }
         $html .= form_text('field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'],
             ['number' => 1]);
         $html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], ['number' => 1]);
@@ -1818,6 +1827,7 @@ class QuantumFields extends \SqlHandler {
                 $tableList[$table_name] = $table_name;
             }
         }
+
         $html .= form_select('field_cat_db', sprintf($this->locale['fields_0434'], " db_prefix_ "),
             $this->field_cat_data['field_cat_db'], [
                 'placeholder' => $this->locale['fields_0663'],
@@ -1880,9 +1890,9 @@ class QuantumFields extends \SqlHandler {
             'input_id'    => !empty($options['input_id']) ? $options['input_id'] : $input_name,
         ];
         $required = $options['required'];
-        $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix m-t-10".($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'>\n";
+        $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix".($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'>\n";
         $html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-        $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-10 p-b-10'>";
+        $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-5 p-b-0'>\n";
         $main_html = '';
         $sub_html = '';
         foreach ($language_opts as $lang => $langNames) {
