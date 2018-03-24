@@ -46,12 +46,13 @@ $inf_adminpanel[] = [
  */
 
 // i dont think this is necessary. once we have the driver, auto read. check if tableless system works or not.
-$inf_newtable[] = DB_LOGIN." (    
+$inf_newtable[] = DB_LOGIN." (
     login_name VARCHAR(100) NOT NULL DEFAULT '0',
-    login_type VARCHAR(10) NOT NULL DEFAULT '0',    
-    login_status TINYINT(1) NOT NULL DEFAULT '0',        
+    login_type VARCHAR(10) NOT NULL DEFAULT '0',
+    login_status TINYINT(1) NOT NULL DEFAULT '0',
     login_settings TEXT NOT NULL,
     PRIMARY KEY (login_name)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_droptable[] = DB_LOGIN;
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='L1'";
