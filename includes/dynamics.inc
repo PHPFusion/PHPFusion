@@ -20,6 +20,7 @@
 
 /**
  * Class Dynamics
+ *
  * @package PHPFusion
  */
 class Dynamics {

@@ -127,7 +127,10 @@ function render_page() {
     } // column left
     echo "<div class='".html_prefix(center_grid_settings($side_grid_settings))."'>\n";
     echo renderNotices(getNotices(['all', FUSION_SELF]));
-    echo U_CENTER.CONTENT.L_CENTER."</div>\n"; // column center
+    echo defined("U_CENTER") && U_CENTER ? U_CENTER : '';
+    echo CONTENT; // column center
+    echo defined("L_CENTER") && L_CENTER ? L_CENTER : '';
+    echo "</div>\n";
     if (defined('RIGHT') && RIGHT) {
         echo "<div class='".html_prefix($side_grid_settings)."'>\n".RIGHT."</div>\n";
     } // column right

@@ -13,14 +13,14 @@ abstract class Less_Configurable {
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Array of default options
      *
      * @var array
      */
-    protected $defaultOptions = array();
+    protected $defaultOptions = [];
 
 
     /**
@@ -30,6 +30,7 @@ abstract class Less_Configurable {
      * it's toArray method.
      *
      * @throws Exception
+     *
      * @param array|object $options
      *
      */
@@ -46,6 +47,7 @@ abstract class Less_Configurable {
      *
      * @param string $name
      * @param mixed  $default Default value if confiuration of $name is not present
+     *
      * @return mixed
      */
     public function getOption($name, $default = NULL) {

@@ -163,6 +163,7 @@ class ImageRepo {
      * @param string $style "style" attribute of the image
      * @param string $title "title" attribute of the image
      * @param string $atts Custom attributes of the image
+     *
      * @return string The path of the image if the first argument is given,
      * but others not. Otherwise the html "img" tag
      */
@@ -208,6 +209,7 @@ class ImageRepo {
      * Given a path, returns an array of all files
      *
      * @param $path
+     *
      * @return array
      */
     public static function getFileList($path) {

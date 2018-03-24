@@ -26,9 +26,9 @@ namespace PHPFusion\Rewrite;
  */
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = true;
+    public $debug_regex = TRUE;
 
-    private static $permalink_instance = null;
+    private static $permalink_instance = NULL;
 
     /**
      * Get the instance of the class
@@ -36,7 +36,7 @@ class Permalinks extends RewriteDriver {
      * @return static
      */
     public static function getPermalinkInstance() {
-        if (self::$permalink_instance === null) {
+        if (self::$permalink_instance === NULL) {
             self::$permalink_instance = new static();
         }
 
@@ -50,6 +50,7 @@ class Permalinks extends RewriteDriver {
      * modified Output for SEO.
      *
      * @param $output - output
+     *
      * @return string
      */
     public function getOutput($output) {
@@ -280,6 +281,7 @@ class Permalinks extends RewriteDriver {
      * @param $url
      * @param $php_url
      * @param $type
+     *
      * @return array
      */
     private function getAliasURL($url, $php_url, $type) {

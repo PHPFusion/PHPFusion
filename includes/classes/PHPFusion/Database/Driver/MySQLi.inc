@@ -50,9 +50,10 @@ class MySQLi extends AbstractDatabaseDriver {
      * @param string $table Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
+     *
      * @return int
      */
-    public function count($field, $table, $conditions = "", array $parameters = array()) {
+    public function count($field, $table, $conditions = "", array $parameters = []) {
         $cond = ($conditions ? " WHERE ".$conditions : "");
         $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
         $result = $this->query($sql, $parameters);
@@ -65,6 +66,7 @@ class MySQLi extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      * @param int   $row
+     *
      * @return mixed
      */
     public function fetchFirstColumn($result, $row = 0) {
@@ -83,6 +85,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * Count the number of selected rows by the given query
      *
      * @param mixed $result The result of a query
+     *
      * @return int
      */
     public function countRows($result) {
@@ -97,6 +100,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * Count the number of selected columns by the given query
      *
      * @param mixed $result The result of a query
+     *
      * @return int
      */
     public function countColumns($result) {
@@ -111,6 +115,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * Fetch one row as an associative array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Associative array
      */
     public function fetchAssoc($result) {
@@ -123,6 +128,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * Fetch one row as a numeric array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Numeric array
      */
     public function fetchRow($result) {
@@ -157,15 +163,16 @@ class MySQLi extends AbstractDatabaseDriver {
      * @param string $pass Password
      * @param string $db The name of the database
      * @param array  $options Currently only one option exists: charset
+     *
      * @throws SelectionException When the selection of the database was unsuccessful
      * @throws ConnectionException When the connection could not be established
      */
-    protected function connect($host, $user, $pass, $db, array $options = array()) {
+    protected function connect($host, $user, $pass, $db, array $options = []) {
         if ($this->connection === NULL) {
-            $options += array(
+            $options += [
                 'charset' => 'utf8',
-                'port' => 3306
-            );
+                'port'    => 3306
+            ];
             $this->connection = mysqli_connect($host, $user, $pass, $db, $options['port']);
             if (!$this->connection) {
                 throw new ConnectionException(mysqli_error(), mysqli_errno());
@@ -187,9 +194,10 @@ class MySQLi extends AbstractDatabaseDriver {
      *
      * @param string $query SQL
      * @param array  $parameters
+     *
      * @return mixed The result of the query or FALSE on error
      */
-    protected function _query($query, array $parameters = array()) {
+    protected function _query($query, array $parameters = []) {
         if ($parameters) {
             foreach ($parameters as $k => $parameter) {
                 $parameters[$k] = $this->quote($parameter);
@@ -210,6 +218,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * @see http://php.net/manual/en/pdo.quote.php
      *
      * @param $value
+     *
      * @return string
      */
     public function quote($value) {
@@ -217,9 +226,9 @@ class MySQLi extends AbstractDatabaseDriver {
 
         if (self::PARAM_NULL === $type) {
             return 'NULL';
-        } elseif (self::PARAM_BOOL === $type) {
+        } else if (self::PARAM_BOOL === $type) {
             return $value ? 'TRUE' : 'FALSE';
-        } elseif (self::PARAM_INT === $type) {
+        } else if (self::PARAM_INT === $type) {
             return $value;
         }
 

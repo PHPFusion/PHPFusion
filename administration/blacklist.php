@@ -207,7 +207,7 @@ class BlacklistAdministration {
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>";
         echo "<a class='btn btn-success btn-sm m-r-10' href=".clean_request('section=blacklist_form', ['section', 'rowstart'], FALSE)."><i class='fa fa-fw fa-plus'></i>".self::$locale['BLS_022']."</a>";
-        echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-fw fa-trash-o'></i>".self::$locale['delete']."</a>";
+        echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action','#blacklist_table');\"><i class='fa fa-fw fa-trash-o'></i>".self::$locale['delete']."</a>";
         echo "</div>";
         echo "<div class='pull-left'>";
         echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['BLS_023'], $rows, $total_rows)."</span>\n";
@@ -274,14 +274,6 @@ class BlacklistAdministration {
             echo "<div class='text-center'>".self::$locale['BLS_015']."</div>\n";
         }
         closeside();
-        add_to_footer("
-            <script type='text/javascript'>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#blacklist_table').submit();
-                }
-            </script>
-        ");
     }
 
     public function blacklistForm() {

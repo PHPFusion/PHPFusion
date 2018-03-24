@@ -38,7 +38,7 @@ abstract class AbstractDatabaseDriver {
      *
      * @var array
      */
-    private static $queries = array();
+    private static $queries = [];
 
     /**
      * @var bool
@@ -58,14 +58,15 @@ abstract class AbstractDatabaseDriver {
      * @param string $pass Password
      * @param string $db The name of the database
      * @param array  $options Currently only one option exists: charset
+     *
      * @throws SelectionException When the selection of the database was unsuccessful
      * @throws ConnectionException When the connection could not be established
      */
-    public function __construct($host, $user, $pass, $db, array $options = array()) {
-        $options += array(
-            'charset' => 'utf8',
+    public function __construct($host, $user, $pass, $db, array $options = []) {
+        $options += [
+            'charset'      => 'utf8',
             'connectionid' => ''
-        );
+        ];
         $this->connectionid = $options['connectionid'];
         $this->connect($host, $user, $pass, $db, $options);
     }
@@ -78,10 +79,11 @@ abstract class AbstractDatabaseDriver {
      * @param string $pass Password
      * @param string $db The name of the database
      * @param array  $options Currently only one option exists: charset
+     *
      * @throws SelectionException When the selection of the database was unsuccessful
      * @throws ConnectionException When the connection could not be established
      */
-    abstract protected function connect($host, $user, $pass, $db, array $options = array());
+    abstract protected function connect($host, $user, $pass, $db, array $options = []);
 
     /**
      * Get the number of queries of all connections
@@ -135,6 +137,7 @@ abstract class AbstractDatabaseDriver {
      * Returns the type of the given parameter
      *
      * @param string $parameter
+     *
      * @return string
      *    Possible values:
      *    <ul>
@@ -147,9 +150,9 @@ abstract class AbstractDatabaseDriver {
     public static function getParameterType($parameter) {
         if ($parameter === NULL) {
             return self::PARAM_NULL;
-        } elseif (is_bool($parameter)) {
+        } else if (is_bool($parameter)) {
             return self::PARAM_BOOL;
-        } elseif (is_int($parameter) or is_float($parameter)) {
+        } else if (is_int($parameter) or is_float($parameter)) {
             return self::PARAM_INT;
         }
 
@@ -229,10 +232,11 @@ abstract class AbstractDatabaseDriver {
      * Fetch all rows as associative arrays
      *
      * @param $result
+     *
      * @return array
      */
     public function fetchAllAssoc($result) {
-        $rows = array();
+        $rows = [];
         while ($row = $this->fetchAssoc($result)) {
             $rows[] = $row;
         }
@@ -244,6 +248,7 @@ abstract class AbstractDatabaseDriver {
      * Fetch one row as an associative array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Associative array
      */
     abstract public function fetchAssoc($result);
@@ -252,10 +257,11 @@ abstract class AbstractDatabaseDriver {
      * Fetch all rows as numeric arrays
      *
      * @param $result
+     *
      * @return array
      */
     public function fetchAllRows($result) {
-        $rows = array();
+        $rows = [];
         while ($row = $this->fetchRow($result)) {
             $rows[] = $row;
         }
@@ -267,6 +273,7 @@ abstract class AbstractDatabaseDriver {
      * Fetch one row as a numeric array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Numeric array
      */
     abstract public function fetchRow($result);
@@ -279,13 +286,14 @@ abstract class AbstractDatabaseDriver {
      * get just a potential id.
      *
      * @param string $table
+     *
      * @return int|false
      */
     public function getNextId($table) {
         $status = $this->fetchAssoc($this->query(
             'SELECT auto_increment FROM information_schema.tables WHERE
                 table_schema = database() AND
-                table_name = :table', array(':table' => $table)));
+                table_name = :table', [':table' => $table]));
 
         return empty($status) ? FALSE : (int)$status['auto_increment'];
     }
@@ -295,10 +303,11 @@ abstract class AbstractDatabaseDriver {
      *
      * @param string $query SQL
      * @param array  $parameters
+     *
      * @return mixed The result of the query or FALSE on error
      */
-    public function query($query, array $parameters = array()) {
-        self::$queries[$this->connectionid][] = array(0, $query, $parameters, debug_backtrace());
+    public function query($query, array $parameters = []) {
+        self::$queries[$this->connectionid][] = [0, $query, $parameters, debug_backtrace()];
         $query_time = microtime(TRUE);
         $result = $this->_query($query, $parameters);
         $query_time = round((microtime(TRUE) - $query_time), 7);
@@ -315,9 +324,10 @@ abstract class AbstractDatabaseDriver {
      *
      * @param string $query SQL
      * @param array  $parameters
+     *
      * @return mixed The result of the query or FALSE on error
      */
-    abstract protected function _query($query, array $parameters = array());
+    abstract protected function _query($query, array $parameters = []);
 
     /**
      * Count the number of rows in a table filtered by conditions
@@ -326,15 +336,17 @@ abstract class AbstractDatabaseDriver {
      * @param string $table Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
+     *
      * @return int
      */
-    abstract public function count($field, $table, $conditions = "", array $parameters = array());
+    abstract public function count($field, $table, $conditions = "", array $parameters = []);
 
     /**
      * Fetch the first column of a specific row
      *
      * @param mixed $result The result of a query
      * @param int   $row
+     *
      * @return mixed
      */
     abstract public function fetchFirstColumn($result, $row = 0);
@@ -343,6 +355,7 @@ abstract class AbstractDatabaseDriver {
      * Count the number of selected rows by the given query
      *
      * @param mixed $result The result of a query
+     *
      * @return int
      */
     abstract public function countRows($result);
@@ -351,6 +364,7 @@ abstract class AbstractDatabaseDriver {
      * Count the number of selected columns by the given query
      *
      * @param mixed $result The result of a query
+     *
      * @return int
      */
     abstract public function countColumns($result);
@@ -368,6 +382,7 @@ abstract class AbstractDatabaseDriver {
      * @see http://php.net/manual/en/pdo.quote.php
      *
      * @param $value
+     *
      * @return string
      */
     abstract public function quote($value);

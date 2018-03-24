@@ -39,19 +39,19 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
     $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY link_name".$order_by[Search_Engine::get_param('order')] : '';
     $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
 
-        switch (Search_Engine::get_param('fields')) {
-            case 2:
-                Search_Engine::search_column('link_name', 'sitelinks');
-                Search_Engine::search_column('link_url', 'sitelinks');
-                Search_Engine::search_column('link_id', 'sitelinks');
-                break;
-            case 1:
-                Search_Engine::search_column('link_name', 'sitelinks');
-                Search_Engine::search_column('link_id', 'sitelinks');
-                break;
-            default:
-                Search_Engine::search_column('link_name', 'sitelinks');
-        }
+    switch (Search_Engine::get_param('fields')) {
+        case 2:
+            Search_Engine::search_column('link_name', 'sitelinks');
+            Search_Engine::search_column('link_url', 'sitelinks');
+            Search_Engine::search_column('link_id', 'sitelinks');
+            break;
+        case 1:
+            Search_Engine::search_column('link_name', 'sitelinks');
+            Search_Engine::search_column('link_id', 'sitelinks');
+            break;
+        default:
+            Search_Engine::search_column('link_name', 'sitelinks');
+    }
 
     if (!empty(Search_Engine::get_param('search_param'))) {
 

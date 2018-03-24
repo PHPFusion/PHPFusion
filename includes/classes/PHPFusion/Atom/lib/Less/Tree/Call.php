@@ -39,7 +39,7 @@ class Less_Tree_Call extends Less_Tree {
     // The function should receive the value, not the variable.
     //
     public function compile($env = NULL) {
-        $args = array();
+        $args = [];
         foreach ($this->args as $a) {
             $args[] = $a->compile($env);
         }
@@ -73,12 +73,12 @@ class Less_Tree_Call extends Less_Tree {
                 try {
 
                     $func = new Less_Functions($env, $this->currentFileInfo);
-                    $result = call_user_func_array(array($func, $nameLC), $args);
+                    $result = call_user_func_array([$func, $nameLC], $args);
 
                 } catch (Exception $e) {
                     throw new Less_Exception_Compiler('error evaluating function `'.$this->name.'` '.$e->getMessage().' index: '.$this->index);
                 }
-            } elseif (isset($env->functions[$nameLC]) && is_callable($env->functions[$nameLC])) {
+            } else if (isset($env->functions[$nameLC]) && is_callable($env->functions[$nameLC])) {
                 try {
                     $result = call_user_func_array($env->functions[$nameLC], $args);
                 } catch (Exception $e) {

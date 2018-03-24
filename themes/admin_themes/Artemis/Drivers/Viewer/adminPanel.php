@@ -408,17 +408,14 @@ class adminPanel extends resource {
             echo render_breadcrumbs();
             self::$breadcrumb_shown = TRUE;
         endif;
-        ?>
-        <div class="app_table">
-        <?php
+        echo '<div class="app_table '.$class.'">';
     }
 
     public static function closetable($title = FALSE, $class = NULL) {
-        ?>
-        </div>
-        <?php
+        echo '</div>';
+
         if (!empty($title)) {
-            echo "<footer><h3>$title</h3></footer>";
+            echo "<footer".($class ? " class=\"$class\"": '')."><h3>$title</h3></footer>";
         }
     }
 

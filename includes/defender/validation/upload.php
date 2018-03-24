@@ -193,6 +193,7 @@ class Upload extends \Defender\Validation {
 
     /**
      * Verify Image Upload
+     *
      * @return array
      */
     protected function verify_image_upload() {
@@ -247,9 +248,9 @@ class Upload extends \Defender\Validation {
                             "image_height"  => !empty($image_res[1]) ? $image_res[1] : '',
                             "thumb1"        => FALSE,
                             "thumb1_name"   => "",
-                            "thumb2"       => FALSE,
-                            "thumb2_name"  => "",
-                            "error"        => 0,
+                            "thumb2"        => FALSE,
+                            "thumb2_name"   => "",
+                            "error"         => 0,
                         ];
                         if ($image_ext == ".gif") {
                             $filetype = 1;

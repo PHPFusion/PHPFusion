@@ -66,11 +66,11 @@ $pattern = [
 ];
 
 $alias_pattern = [
-    "blog"                                     => "infusions/blog/blog.php",
-    "blog/%alias%"                             => "%alias_target%",
-    "blog/%alias%#comments"                    => "%alias_target%%hash_stop%#comments",
-    "blog/%alias%/%blog_step%/%rowstart%"      => "%alias_target%&amp;step=%blog_step%&amp;rowstart=%rowstart%",
-    "blog/%alias%/%blog_step%"                 => "%alias_target%&amp;step=%blog_step%"
+    "blog"                                => "infusions/blog/blog.php",
+    "blog/%alias%"                        => "%alias_target%",
+    "blog/%alias%#comments"               => "%alias_target%%hash_stop%#comments",
+    "blog/%alias%/%blog_step%/%rowstart%" => "%alias_target%&amp;step=%blog_step%&amp;rowstart=%rowstart%",
+    "blog/%alias%/%blog_step%"            => "%alias_target%&amp;step=%blog_step%"
 ];
 
 $pattern_tables["%blog_id%"] = [

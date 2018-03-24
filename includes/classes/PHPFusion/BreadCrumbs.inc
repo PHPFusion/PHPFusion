@@ -71,14 +71,14 @@ class BreadCrumbs {
      *
      * @var bool
      */
-    private $showHome = true;
+    private $showHome = TRUE;
 
     /**
      * Whether to make last breadcrumb a link
      *
      * @var bool
      */
-    private $isLastClickable = false;
+    private $isLastClickable = FALSE;
 
     /**
      * The class wrapping the breacrumbs
@@ -99,6 +99,7 @@ class BreadCrumbs {
      * Add a link to the breadcrumb
      *
      * @param array $link Keys: link, title
+     *
      * @return static
      */
     public function addBreadCrumb(array $link) {
@@ -119,6 +120,7 @@ class BreadCrumbs {
      * Get an instance by key
      *
      * @param string $key
+     *
      * @return static
      */
     public static function getInstance($key = 'default') {
@@ -131,6 +133,7 @@ class BreadCrumbs {
 
     /**
      * @param string $classes
+     *
      * @return static
      */
     public function addCssClasses($classes) {
@@ -148,6 +151,7 @@ class BreadCrumbs {
 
     /**
      * @param string $classes
+     *
      * @return static
      */
     public function setCssClasses($classes) {
@@ -162,16 +166,17 @@ class BreadCrumbs {
      * @return static
      */
     public function hideHome() {
-        return $this->showHome(false);
+        return $this->showHome(FALSE);
     }
 
     /**
      * Show or hide the link to home page
      *
      * @param bool $state
+     *
      * @return static
      */
-    public function showHome($state = true) {
+    public function showHome($state = TRUE) {
         $this->showHome = (bool)$state;
 
         return $this;
@@ -179,9 +184,10 @@ class BreadCrumbs {
 
     /**
      * @param bool $clickable
+     *
      * @return static
      */
-    public function setLastClickable($clickable = true) {
+    public function setLastClickable($clickable = TRUE) {
         $this->isLastClickable = (bool)$clickable;
 
         return $this;

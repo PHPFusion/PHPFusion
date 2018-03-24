@@ -52,15 +52,20 @@ echo '<html dir="'.fusion_get_locale('text-direction').'">';
         }
         echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
         echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
-        if (function_exists("get_head_tags")) {
-            echo get_head_tags();
-        }
+        echo \PHPFusion\OutputHandler::$pageHeadTags;
     echo '</head>';
     echo '<body>';
         echo '<div class="align-center" style="margin-top: 15%;">';
             echo '<img src="'.BASEDIR.fusion_get_settings('sitebanner').'" alt="'.fusion_get_settings('sitename').'"/><br/>';
             echo '<a href="'.$urlprefix.$url.'" rel="nofollow">'.sprintf($locale['global_500'], $urlprefix.$url).'</a>';
         echo '</div>';
+
+        $fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
+        if (!empty($fusion_jquery_tags)) {
+            $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
+            echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
+        }
+        echo \PHPFusion\OutputHandler::$pageFooterTags;
     echo '</body>';
 echo '</html>';
 

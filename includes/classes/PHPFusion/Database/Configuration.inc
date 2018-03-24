@@ -28,21 +28,21 @@ use BadMethodCallException;
  * @method string getDriver()
  */
 class Configuration {
-    private $configuration = array();
+    private $configuration = [];
 
     /**
      * @param array $configuration
      */
-    public function __construct(array $configuration = array()) {
-        $this->configuration = $configuration + array(
-                'host' => '',
+    public function __construct(array $configuration = []) {
+        $this->configuration = $configuration + [
+                'host'     => '',
                 'database' => '',
-                'user' => '',
+                'user'     => '',
                 'password' => '',
-                'charset' => 'utf8',
-                'driver' => DatabaseFactory::getDefaultDriver(),
-                'debug' => FALSE
-            );
+                'charset'  => 'utf8',
+                'driver'   => DatabaseFactory::getDefaultDriver(),
+                'debug'    => FALSE
+            ];
         $this->configuration['driver'] = strtolower($this->configuration['driver']);
     }
 

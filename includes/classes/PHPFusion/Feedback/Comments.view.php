@@ -22,7 +22,7 @@ if (!function_exists('display_comments_ui')) {
         <div id='comments'>
             <div id='{%comment_form_container_id%}' class='comments-header'>{%comment_count%}</div>
             {%comments_form%}
-            <div id='{%comment_container_id%}' name='comments'>
+            <div id='{%comment_container_id%}'>
                 {%comments_listing%}
             </div>
         </div>
@@ -39,10 +39,8 @@ if (!function_exists("display_comments_section")) {
      * @param       $c_data
      * @param       $c_info
      * @param array $options
-     *
-     * @return string
      */
-    function display_comments_section($c_data, $c_info, array $options = array()) {
+    function display_comments_section($c_data, $c_info, array $options = []) {
         ?>
         <!---comments-->
         <div class='comments-panel'>
@@ -100,14 +98,15 @@ if (!function_exists('display_comments_list')) {
                 </div>
                 <?php if ($info['comment_ratings']) : ?>{%comment_ratings%}<?php endif; ?>
                 <?php if ($info['comment_subject']) : ?>
-                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}<!--//comment_subject--></div><?php endif; ?>
+                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}
+                        <!--//comment_subject--></div><?php endif; ?>
                 <div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
                 <div>
                     <small><?php
-                     echo !empty($info['reply_link']) ? '{%comment_reply_link%}' : '';
-                     echo !empty($info['edit_link']) ? ' &middot; {%comment_edit_link%}' : '';
-                     echo !empty($info['delete_link']) ? ' &middot; {%comment_delete_link%}' : ''; ?>
-                     - <span class='comment_date'>{%comment_date%}</span></small>
+                        echo !empty($info['reply_link']) ? '{%comment_reply_link%}' : '';
+                        echo !empty($info['edit_link']) ? ' &middot; {%comment_edit_link%}' : '';
+                        echo !empty($info['delete_link']) ? ' &middot; {%comment_delete_link%}' : ''; ?>
+                        - <span class='comment_date'>{%comment_date%}</span></small>
                 </div>
                 {%comment_reply_form%}
                 <ul class='sub_comments list-style-none'>
@@ -144,10 +143,8 @@ if (!function_exists("display_comments_form")) {
      * @param       $comment_item_id
      * @param       $_CAPTCHA_HIDE_INPUT
      * @param array $options
-     *
-     * @return string
      */
-    function display_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = array()) {
+    function display_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = []) {
         ?>
         <div class='comments-form-panel'>
             <div class='comments-form-header'><h4>{%comment_form_title%}</h4></div>

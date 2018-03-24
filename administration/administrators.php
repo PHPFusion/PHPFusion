@@ -152,43 +152,41 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</div>\n";
 
         add_to_jquery("
-            $(function () {
-                var linksTable = $('#links-table');
-                var checkboxes = linksTable.find(':checkbox');
-                var secureBoxes = linksTable.find('.secure :checkbox');
-                var insecureBoxes = linksTable.find('.insecure :checkbox');
-                var checkAll = $('#check_all');
-                var checkSecure = $('#check_secure');
+            var linksTable = $('#links-table');
+            var checkboxes = linksTable.find(':checkbox');
+            var secureBoxes = linksTable.find('.secure :checkbox');
+            var insecureBoxes = linksTable.find('.insecure :checkbox');
+            var checkAll = $('#check_all');
+            var checkSecure = $('#check_secure');
 
-                var updateCheckAll = function () {
-                    checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
-                };
-                var updateCheckSecure = function () {
-                   var secureNotChecked = secureBoxes.filter(':not(:checked)').length;
-                   var insecureChecked = insecureBoxes.filter(':checked').length;
-                   var checked = (secureNotChecked === 0 && insecureChecked === 0);
-                   checkSecure.prop('checked', checked);
-                };
-                var updateStatus = function () {
-                    var field = $(this).closest('[id$=\"-field\"]');
-                    var td = field.closest('td');
-                    td.toggleClass('active', $(this).is(':checked'));
-                };
-                updateCheckAll();
-                updateCheckSecure();
-                checkboxes.each(updateStatus);
-                checkboxes.on('change', updateCheckAll);
-                checkboxes.on('change', updateCheckSecure);
-                checkboxes.on('change', updateStatus);
-                checkAll.on('click', function () {
-                    var checked = $(this).is(':checked');
-                    checkboxes.prop('checked', checked).change();
-                });
-                checkSecure.on('click', function () {
-                    var checked = $(this).is(':checked');
-                    insecureBoxes.prop('checked', !checked).change();
-                    secureBoxes.prop('checked', checked).change();
-                });
+            var updateCheckAll = function () {
+                checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
+            };
+            var updateCheckSecure = function () {
+               var secureNotChecked = secureBoxes.filter(':not(:checked)').length;
+               var insecureChecked = insecureBoxes.filter(':checked').length;
+               var checked = (secureNotChecked === 0 && insecureChecked === 0);
+               checkSecure.prop('checked', checked);
+            };
+            var updateStatus = function () {
+                var field = $(this).closest('[id$=\"-field\"]');
+                var td = field.closest('td');
+                td.toggleClass('active', $(this).is(':checked'));
+            };
+            updateCheckAll();
+            updateCheckSecure();
+            checkboxes.each(updateStatus);
+            checkboxes.on('change', updateCheckAll);
+            checkboxes.on('change', updateCheckSecure);
+            checkboxes.on('change', updateStatus);
+            checkAll.on('click', function () {
+                var checked = $(this).is(':checked');
+                checkboxes.prop('checked', checked).change();
+            });
+            checkSecure.on('click', function () {
+                var checked = $(this).is(':checked');
+                insecureBoxes.prop('checked', !checked).change();
+                secureBoxes.prop('checked', checked).change();
             });
         ");
 

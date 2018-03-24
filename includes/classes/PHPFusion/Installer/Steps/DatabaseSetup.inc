@@ -112,6 +112,7 @@ class InstallerDbSetup extends Install_Core {
 
     /**
      * Handle insertions of core settings table
+     *
      * @return string
      * @throws \Exception
      */
@@ -191,10 +192,10 @@ class InstallerDbSetup extends Install_Core {
                         if (!$debug_process) {
                             foreach ($to_create as $table_name => $table_process) {
                                 $current_count = $current_count + 1;
-                                $microtime = microtime(TRUE);
+                                /*$microtime = microtime(TRUE);
                                 if ($result = dbquery($table_process)) {
                                     $microtime = microtime(TRUE) - $microtime;
-                                }
+                                }*/
                                 $message .= $table_name." created<br/>\n";
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                             }
@@ -213,10 +214,10 @@ class InstallerDbSetup extends Install_Core {
                                 $current_count = $current_count + 1;
                                 if (!empty($table_processes)) {
                                     foreach ($table_processes as $table_alter) {
-                                        $microtime = microtime(TRUE);
+                                        /*$microtime = microtime(TRUE);
                                         if ($result = dbquery($table_alter)) {
                                             $microtime = microtime(TRUE) - $microtime;
-                                        }
+                                        }*/
                                         $message .= $table_name." altered<br/>\n";
                                     }
                                 }
@@ -235,9 +236,9 @@ class InstallerDbSetup extends Install_Core {
                                 $current_count = $current_count + 1;
                                 if (!empty($table_processes)) {
                                     foreach ($table_processes as $table_add) {
-                                        $microtime = microtime(TRUE);
+                                        //$microtime = microtime(TRUE);
                                         if ($result = dbquery($table_add)) {
-                                            $microtime = microtime(TRUE) - $microtime;
+                                            //$microtime = microtime(TRUE) - $microtime;
                                             $message .= $table_name." altered<br/>\n";
                                         }
                                         //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
@@ -256,9 +257,9 @@ class InstallerDbSetup extends Install_Core {
                         if (!$debug_process) {
                             foreach ($to_insert_rows as $table_name => $row_inserts) {
                                 $current_count = $current_count + 1;
-                                $microtime = microtime(TRUE);
+                               // $microtime = microtime(TRUE);
                                 if ($result = dbquery($row_inserts)) {
-                                    $microtime = microtime(TRUE) - $microtime;
+                                    //$microtime = microtime(TRUE) - $microtime;
                                     $message .= $table_name." inserted<br/>\n";
                                     //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                                 }
@@ -279,7 +280,7 @@ class InstallerDbSetup extends Install_Core {
 
                             foreach ($to_upgrade as $filename => $file_upgrades) {
                                 $current_count = $current_count + 1;
-                                $microtime = microtime(TRUE);
+                                //$microtime = microtime(TRUE);
                                 if (!empty($file_upgrades)) {
                                     foreach ($file_upgrades as $callback_method => $upgrades) {
                                         if (!empty($upgrades)) {
@@ -295,7 +296,7 @@ class InstallerDbSetup extends Install_Core {
                                         }
                                     }
                                 }
-                                $microtime = microtime(TRUE) - $microtime;
+                                //$microtime = microtime(TRUE) - $microtime;
                                 //$message .= "Building version upgrades -".$filename;
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                             }

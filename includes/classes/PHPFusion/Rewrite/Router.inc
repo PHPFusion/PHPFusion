@@ -34,7 +34,7 @@ class Router extends RewriteDriver {
      *
      * @var bool
      */
-    public $routing = true;
+    public $routing = TRUE;
     /**
      * Name of the php file which will be loaded
      * for the permalink.
@@ -67,7 +67,7 @@ class Router extends RewriteDriver {
         return $this->get_parameters;
     }
 
-    private static $router_instance = null;
+    private static $router_instance = NULL;
 
     public function __construct() {
         // Pretty URL
@@ -75,7 +75,7 @@ class Router extends RewriteDriver {
     }
 
     public static function getRouterInstance() {
-        if (self::$router_instance === null) {
+        if (self::$router_instance === NULL) {
             self::$router_instance = new static();
         }
 
@@ -192,13 +192,12 @@ class Router extends RewriteDriver {
 
                 $this->setWarning(7, $this->requesturi); // Alias Found
 
-                return true;
+                return TRUE;
             }
         } else {
-
             $this->setWarning(1, $this->requesturi); // Alias not found
 
-            return false;
+            return FALSE;
         }
     }
 
@@ -211,6 +210,7 @@ class Router extends RewriteDriver {
      * @param string $url The Permalink URL (incomplete)
      * @param string $php_url The PHP URL (incomplete)
      * @param string $type Type of Alias
+     *
      * @access private
      * @return mixed|string
      */
@@ -241,6 +241,7 @@ class Router extends RewriteDriver {
      *
      * @param string $url The URL
      * @param string $param_delimiter The Parameters to explode by
+     *
      * @access private
      * @return array
      */
@@ -344,7 +345,7 @@ class Router extends RewriteDriver {
      */
     private function checkAliasPatterns() {
         if (is_array($this->alias_pattern)) {
-            $match_found = false;
+            $match_found = FALSE;
             $alias = "";
             foreach ($this->alias_pattern as $type => $alias_patterns) {
                 foreach ($alias_patterns as $search => $replace) {
@@ -377,25 +378,25 @@ class Router extends RewriteDriver {
                                 }
                                 // Call the function to set server variables
                                 $this->setVariables();
-                                $match_found = true;
+                                $match_found = TRUE;
                                 break;
                             }
                         }
                     }
                 }
             }
-            if ($match_found == true) {
+            if ($match_found == TRUE) {
                 $this->setWarning(8, $alias); // Alias Pattern Found
 
-                return true;
+                return TRUE;
             } else {
                 $this->setWarning(2, $this->requesturi); // Alias Pattern Not Found
 
-                return false;
+                return FALSE;
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -405,6 +406,7 @@ class Router extends RewriteDriver {
      *
      * @param string $pattern
      * @param string $type
+     *
      * @return mixed|string
      */
     protected function makeSearchRegex($pattern, $type) {
@@ -429,7 +431,7 @@ class Router extends RewriteDriver {
      */
     private function checkPattern() {
 
-        $match_found = false;
+        $match_found = FALSE;
 
         if (is_array($this->pattern_search)) {
 
@@ -439,7 +441,7 @@ class Router extends RewriteDriver {
 
                     foreach ($RawSearchPatterns as $key => $search) {
 
-                        if ($match_found == false) {
+                        if ($match_found == FALSE) {
 
                             if (isset($this->pattern_replace[$type][$key]) && isset($this->pattern_search[$type][$key])) {
 
@@ -494,7 +496,7 @@ class Router extends RewriteDriver {
                                             foreach ($url_info[1] as $paramKey => $paramVal) {
 
                                                 if (!$paramVal) {
-                                                    $paramVal = true;
+                                                    $paramVal = TRUE;
                                                 }
 
                                                 $value = (isset($tag_values[$paramKey])) ? $tag_values[$paramKey] : $paramVal;

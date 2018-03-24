@@ -484,7 +484,7 @@ class defender {
      * Encrypts a string securely with a private key
      *
      * @param        $string        The text to encrypt
-     * @param string $private_key   For better security use \defender::get_encrypt_key to generate your private key
+     * @param string $private_key For better security use \defender::get_encrypt_key to generate your private key
      *
      * Does not support array encrypt.
      *
@@ -495,7 +495,7 @@ class defender {
         $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
         $string = self::pkcs7_pad($string, 16);
         $ciphertext_raw = openssl_encrypt($string, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = true);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
 
         return base64_encode($iv.$hmac.$ciphertext_raw);
     }
@@ -503,7 +503,7 @@ class defender {
     /**
      * Decrypts a string securely with a private key
      *
-     * @param $string      - The string to decrypt
+     * @param $string - The string to decrypt
      * @param $private_key - For better security use \defender::get_encrypt_key to generate your private key
      *
      * @return null|string
@@ -516,11 +516,11 @@ class defender {
         $ciphertext_raw = substr($c, $ivlen + $sha2len);
         $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
         $string = self::pkcs7_unpad($string);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = true);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
         if (!function_exists('hash_equals')) {
             function hash_equals($str1, $str2) {
                 if (strlen($str1) != strlen($str2)) {
-                    return false;
+                    return FALSE;
                 } else {
                     $res = $str1 ^ $str2;
                     $ret = 0;

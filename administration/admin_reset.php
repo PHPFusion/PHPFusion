@@ -74,10 +74,10 @@ class AdminPasswordResetAdministration {
             if (\defender::safe()) {
                 $user_sql = (isnum($reset_admin) ? "user_id='".$reset_admin."'" :
                     ($reset_admin == "all" ? "user_level=".USER_LEVEL_ADMIN." OR user_level=".USER_LEVEL_SUPER_ADMIN :
-                    ($reset_admin == "sa" ? "user_level=".USER_LEVEL_SUPER_ADMIN :
-                    ($reset_admin == "a" ? "user_level=".USER_LEVEL_ADMIN :
-                    ""
-                ))));
+                        ($reset_admin == "sa" ? "user_level=".USER_LEVEL_SUPER_ADMIN :
+                            ($reset_admin == "a" ? "user_level=".USER_LEVEL_ADMIN :
+                                ""
+                            ))));
 
                 $result = dbquery("SELECT user_id, user_password, user_admin_password, user_name, user_email, user_language
                     FROM ".DB_USERS."
@@ -146,7 +146,9 @@ class AdminPasswordResetAdministration {
                         $loginPassIsReset = TRUE;
                     }
 
-                    if ($loginPassIsReset) dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'");
+                    if ($loginPassIsReset) {
+                        dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'");
+                    }
 
                     if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], self::$locale['apw_407'].fusion_get_settings('sitename'), $message)) {
                         $reset_success[] = ['user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email']];
@@ -288,7 +290,7 @@ class AdminPasswordResetAdministration {
         echo "<div class='m-t-15'>";
         echo "<div class='well'>".self::$locale['apw_415']."</div>";
         if (!empty($all_admin_reset)) {
-        echo openform('reset_table', 'post', FUSION_REQUEST);
+            echo openform('reset_table', 'post', FUSION_REQUEST);
             echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
             echo "<thead><tr>\n";
             echo "<th>&nbsp;</th>\n";
@@ -346,14 +348,6 @@ class AdminPasswordResetAdministration {
             echo "<div class='well text-center'>".self::$locale['apw_426']."</div>\n";
         }
         echo '</div>';
-        add_to_footer("
-            <script type='text/javascript'>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#reset_table').submit();
-                }
-            </script>
-        ");
     }
 
     public function admin_reset_form() {

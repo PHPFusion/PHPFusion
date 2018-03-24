@@ -19,6 +19,7 @@ namespace PHPFusion;
 
 /**
  * Class UserGroups
+ *
  * @package PHPFusion
  */
 class UserGroups {
@@ -35,6 +36,7 @@ class UserGroups {
 
     /**
      * Get the UserGroups Instance
+     *
      * @return null|static
      */
     public static function getInstance() {
@@ -46,7 +48,9 @@ class UserGroups {
 
     /**
      * Fetch group information
+     *
      * @param $group_id
+     *
      * @return array|bool
      */
     protected function setGroupInfo($group_id) {
@@ -95,8 +99,10 @@ class UserGroups {
 
     /**
      * Set the group id and trigger setGroupInfo
+     *
      * @param           $group_id
      * @param bool|TRUE $set_info
+     *
      * @return null|UserGroups|static
      */
     public function setGroup($group_id, $set_info = TRUE) {

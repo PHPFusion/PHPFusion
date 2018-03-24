@@ -122,7 +122,7 @@ class ReCaptcha {
             $recaptchaResponse->success = TRUE;
         } else {
             $recaptchaResponse->success = FALSE;
-            $recaptchaResponse->errorCodes = $answers[error-codes];
+            $recaptchaResponse->errorCodes = $answers[error - codes];
         }
 
         return $recaptchaResponse;

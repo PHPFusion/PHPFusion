@@ -99,6 +99,7 @@ function add_handler($callback) {
  * Execute the output handlers
  *
  * @param string $output
+ *
  * @return string
  */
 function handle_output($output) {

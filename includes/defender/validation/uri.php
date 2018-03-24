@@ -58,7 +58,9 @@ class Uri extends \Defender\Validation {
 
     /**
      * Validate URL
+     *
      * @param $url
+     *
      * @return bool
      */
     protected static function validateURL($url) {
@@ -88,6 +90,7 @@ class Uri extends \Defender\Validation {
 
     /**
      * Verify Paths within CMS
+     *
      * @return bool|string
      */
     public function verify_path() {

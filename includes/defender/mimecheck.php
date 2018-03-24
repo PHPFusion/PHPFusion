@@ -96,9 +96,11 @@ class ImageValidation {
     /**
      * Check for alteration of file extensions to prevent unwanted payload executions
      * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
+     *
      * @param $file_src - the tmp src file
      * @param $file_ext - the current tmp src file extensions
      * @param $valid_ext - all accepted file extensions
+     *
      * @return bool
      */
     public static function mime_check($file_src, $file_ext, $valid_ext) {

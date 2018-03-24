@@ -49,7 +49,8 @@ class InstallerInfusions extends Install_Core {
             $settings = fusion_get_settings();
             // User level, Admin Rights & User Group definitions
             define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
-            if (!defined('iMEMBER')) define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
+            if (!defined('iMEMBER'))
+                define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
             define("iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0);
             define("iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0);
             define("iUSER", $userdata['user_level']);

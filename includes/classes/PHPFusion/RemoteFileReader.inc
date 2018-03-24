@@ -26,6 +26,7 @@ class RemoteFileReader {
 
     /**
      * Constructor method for the RemoteFileReader Class
+     *
      * @param string remoteURL - the URL to the remote file.
      */
     public function __construct($remoteURL) {

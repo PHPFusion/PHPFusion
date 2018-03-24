@@ -25,12 +25,12 @@ if (!function_exists('replace_url')) {
 
         // Get input url if any, if not get the content as a url but check if has a schema, if not add one
         $this_url = (!empty($m['url']) ? (preg_match("#^((f|ht)tp(s)?://)#i",
-                                                     $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i",
-                                                                                                                 $m['content']) ? $m['content'] : "http://".$m['content']));
+            $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i",
+            $m['content']) ? $m['content'] : "http://".$m['content']));
 
         // Trim only the default url
         $content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content']) - 10,
-                                                                                                        strlen($m['content'])) : '') : $m['content']);
+                strlen($m['content'])) : '') : $m['content']);
 
         return ($index_url_bbcode ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($index_url_bbcode ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($index_url_bbcode ? "" : "<!--/noindex-->");
     }

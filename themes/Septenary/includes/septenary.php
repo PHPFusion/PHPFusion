@@ -26,6 +26,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Object Theme Factory
+     *
      * @return $this
      */
     public static $septenary_instance = NULL;
@@ -38,6 +39,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Make Instance
+     *
      * @return null|static
      */
     public static function Factory() {
@@ -122,6 +124,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Injection of left bar html
+     *
      * @param $html
      */
     public function set_left_html($html) {
@@ -130,6 +133,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Injection of AU_CENTER
+     *
      * @param $html
      */
     public function set_top_html($html) {
@@ -138,6 +142,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Injection of U_CENTER
+     *
      * @param $html
      */
     public function set_upper_html($html) {
@@ -146,6 +151,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Injection of L_CENTER
+     *
      * @param $html
      */
     public function set_lower_html($html) {
@@ -154,6 +160,7 @@ class SeptenaryTheme extends SeptenaryComponents {
 
     /**
      * Injection of BL_CENTER
+     *
      * @param $html
      */
     public function set_bottom_html($html) {

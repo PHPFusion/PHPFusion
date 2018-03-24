@@ -41,10 +41,10 @@ echo "<meta name='description' content='".$settings['description']."' />\n";
 echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
 echo "<style type='text/css'>
     * { background: transparent !important; color: #444 !important; text-shadow: none; }
-    body { font-family:Verdana,Tahoma,Arial,Sans-Serif;font-size:14px; }
+    body { font-family:Verdana,Tahoma,Arial,sans-serif;font-size:14px; }
     hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 0; padding:0; }
-    .small { font-family:Verdana,Tahoma,Arial,Sans-Serif;font-size:12px; }
-    .small2 { font-family:Verdana,Tahoma,Arial,Sans-Serif;font-size:12px;color:#666; }
+    .small { font-family:Verdana,Tahoma,Arial,sans-serif;font-size:12px; }
+    .small2 { font-family:Verdana,Tahoma,Arial,sans-serif;font-size:12px;color:#666; }
     a, a:visited { color: #444 !important; text-decoration: underline; }
     a:after { content: ' (' attr(href) ')'; }
     abbr:after { content: ' (' attr(title) ')'; }

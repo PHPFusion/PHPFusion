@@ -26,12 +26,12 @@ use PHPFusion\Database\Exception\SelectionException;
 
 class PDOMySQL extends AbstractDatabaseDriver {
 
-    private static $paramTypeMap = array(
-        self::PARAM_INT => PDO::PARAM_INT,
+    private static $paramTypeMap = [
+        self::PARAM_INT  => PDO::PARAM_INT,
         self::PARAM_BOOL => PDO::PARAM_BOOL,
-        self::PARAM_STR => PDO::PARAM_STR,
+        self::PARAM_STR  => PDO::PARAM_STR,
         self::PARAM_NULL => PDO::PARAM_NULL
-    );
+    ];
     /**
      * @var \PDO
      */
@@ -56,9 +56,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
      *
      * @param string $query SQL
      * @param array  $parameters
+     *
      * @return PDOStatement or FALSE on error
      */
-    public function _query($query, array $parameters = array()) {
+    public function _query($query, array $parameters = []) {
         try {
             $result = $this->connection->prepare($query);
             foreach ($parameters as $key => $parameter) {
@@ -80,9 +81,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @param string $table Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
+     *
      * @return int
      */
-    public function count($field, $table, $conditions = "", array $parameters = array()) {
+    public function count($field, $table, $conditions = "", array $parameters = []) {
         $cond = ($conditions ? " WHERE ".$conditions : "");
         $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
         $statement = $this->query($sql, $parameters);
@@ -95,11 +97,12 @@ class PDOMySQL extends AbstractDatabaseDriver {
      *
      * @param \PDOStatement $statement
      * @param int           $row
+     *
      * @return mixed
      */
     public function fetchFirstColumn($statement, $row = 0) {
         //seek
-        if ($statement !==FALSE) {
+        if ($statement !== FALSE) {
             for ($i = 0; $i < $row; $i++) {
                 $statement->fetchColumn();
             }
@@ -112,6 +115,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * Count the number of affected rows by the given query
      *
      * @param \PDOStatement $statement
+     *
      * @return int
      */
     public function countRows($statement) {
@@ -124,6 +128,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * Count the number of affected columns by the given query
      *
      * @param \PDOStatement $statement
+     *
      * @return int
      */
     public function countColumns($statement) {
@@ -136,6 +141,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * Fetch one row as an associative array
      *
      * @param \PDOStatement $statement
+     *
      * @return array Associative array
      */
     public function fetchAssoc($statement) {
@@ -149,6 +155,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * Fetch one row as a numeric array
      *
      * @param \PDOStatement $statement
+     *
      * @return array Numeric array
      */
     public function fetchRow($statement) {
@@ -174,6 +181,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @see http://php.net/manual/en/pdo.quote.php
      *
      * @param $value
+     *
      * @return string
      */
     public function quote($value) {
@@ -195,25 +203,25 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @param string $host Server domain or IP followed by an optional port definition
      * @param string $user
      * @param string $pass Password
-     * @param string $db   The name of the database
+     * @param string $db The name of the database
      * @param array  $options
      *
      * @throws \ErrorException  When the connection could not be established
      */
-    protected function connect($host, $user, $pass, $db, array $options = array()) {
+    protected function connect($host, $user, $pass, $db, array $options = []) {
         if ($this->connection === NULL) {
-            $options += array(
+            $options += [
                 'charset' => 'utf8',
-            );
+            ];
             try {
                 $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass,
-                    array(
+                    [
                         /*
                          * Inserted to solve the issue of the ignored charset in the connection string.
                          * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
                          */
                         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
-                    )
+                    ]
                 );
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);

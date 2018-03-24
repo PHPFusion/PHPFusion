@@ -60,4 +60,5 @@ class Members_View extends Members_Admin {
     }
 
 }
+
 require_once(THEMES.'templates/global/profile.php');

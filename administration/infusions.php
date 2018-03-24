@@ -39,7 +39,9 @@ $infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
     $inf = PHPFusion\Installer\Infusion_Core::load_infusion($folders);
-    if (!empty($inf)) $infs[$folders] = $inf;
+    if (!empty($inf)) {
+        $infs[$folders] = $inf;
+    }
 }
 
 if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {

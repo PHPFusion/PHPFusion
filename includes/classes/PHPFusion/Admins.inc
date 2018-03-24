@@ -99,7 +99,7 @@ class Admins {
     private $submit_data = [];
     private $folder_permissions = [];
 
-    private function __construct() {
+    public function __construct() {
         self::$locale = self::getAdminLocale();
     }
 
@@ -256,6 +256,7 @@ class Admins {
      * Get Submit Type
      *
      * @param null $type submit stype prefix
+     *
      * @return array|mixed|null
      */
     public function getSubmitType($type = NULL) {
@@ -339,6 +340,7 @@ class Admins {
      * Displays vertical collapsible administration navigation
      *
      * @param bool|FALSE $image_icon
+     *
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
@@ -397,6 +399,7 @@ class Admins {
 
     /**
      * @param $page_number
+     *
      * @return string
      */
     public function get_admin_section_icons($page_number) {
@@ -423,6 +426,7 @@ class Admins {
      * Get the administration page icons
      *
      * @param $admin_rights
+     *
      * @return bool
      */
     public function get_admin_icons($admin_rights) {
@@ -438,6 +442,7 @@ class Admins {
      * Displays horizontal administration navigation
      *
      * @param bool $icon_only
+     *
      * @return string
      */
     public function horizontal_admin_nav($icon_only = FALSE) {

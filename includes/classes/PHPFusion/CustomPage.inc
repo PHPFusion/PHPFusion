@@ -35,14 +35,14 @@ class CustomPage {
         'page_allow_ratings'  => 0,
     ];
 
-    public static function query_customPage($id = null) {
+    public static function query_customPage($id = NULL) {
 
         $result = dbquery("
                     SELECT cp.*, link.link_id, link.link_order
                     FROM ".DB_CUSTOM_PAGES." cp
                     LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND ".in_group("link.link_url", "viewpage.php?page_id=")."
                      AND ".in_group("link.link_url", "cp.page_id").")
-                    ".($id !== null && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
+                    ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
                     ");
 
         return $result;
@@ -270,8 +270,8 @@ class CustomPage {
 
         openside("");
 
-        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], ['class' => 'm-b-0', 'reverse_label' => true]);
-        echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], ['class' => 'm-b-0', 'reverse_label' => true]);
+        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
+        echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);
 
         echo form_hidden('link_id', '', $data['link_id']);
         echo form_hidden('link_order', '', $data['link_order']);
@@ -285,13 +285,13 @@ class CustomPage {
 
             foreach (fusion_get_enabled_languages() as $language => $language_name) {
 
-                echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang) ? true : false, [
+                echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang) ? TRUE : FALSE, [
                     'class'         => 'm-b-0',
                     'value'         => $language,
                     'input_id'      => 'page_lang-'.$language,
                     "delimiter"     => ".",
-                    'reverse_label' => true,
-                    'required'      => true
+                    'reverse_label' => TRUE,
+                    'required'      => TRUE
                 ]);
 
             }
@@ -303,7 +303,7 @@ class CustomPage {
         echo form_select('page_access', $locale['423'], $data['page_access'], [
             'options' => fusion_get_groups(),
             'width'   => '100%',
-            'inline'  => true,
+            'inline'  => TRUE,
         ]);
         closeside();
         echo "</div></div>\n";
@@ -376,6 +376,7 @@ class CustomPage {
      * Displays a single custom page data
      *
      * @param $id - page_id
+     *
      * @return array;
      */
     public static function load_customPage($id) {
@@ -400,8 +401,8 @@ class CustomPage {
      * @param $page_id
      */
     protected function delete_customPage($page_id) {
-    	$aidlink = fusion_get_aidlink();
-    	$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+        $aidlink = fusion_get_aidlink();
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
         if (isnum($page_id) && self::verify_customPage($page_id)) {
             $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
@@ -419,6 +420,7 @@ class CustomPage {
      * Authenticate the page ID is valid
      *
      * @param $id
+     *
      * @return bool|string
      */
     protected function verify_customPage($id) {
@@ -426,7 +428,7 @@ class CustomPage {
             return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -453,7 +455,7 @@ class CustomPage {
             [
                 "options"  => $edit_opts,
                 "class"    => 'm-b-0',
-                "required" => true,
+                "required" => TRUE,
             ]);
         echo form_hidden('section', '', 'cp2');
         echo form_hidden('aid', '', iAUTH);
@@ -471,6 +473,7 @@ class CustomPage {
      * SQL update or save data
      *
      * @param $data
+     *
      * @return array
      */
     protected function set_customPage($data) {

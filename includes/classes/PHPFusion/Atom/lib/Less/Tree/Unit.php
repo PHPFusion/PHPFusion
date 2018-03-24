@@ -8,12 +8,12 @@
  */
 class Less_Tree_Unit extends Less_Tree {
 
-    var $numerator = array();
-    var $denominator = array();
+    var $numerator = [];
+    var $denominator = [];
     public $backupUnit;
     public $type = 'Unit';
 
-    public function __construct($numerator = array(), $denominator = array(), $backupUnit = NULL) {
+    public function __construct($numerator = [], $denominator = [], $backupUnit = NULL) {
         $this->numerator = $numerator;
         $this->denominator = $denominator;
         $this->backupUnit = $backupUnit;
@@ -29,9 +29,9 @@ class Less_Tree_Unit extends Less_Tree {
 
         if ($this->numerator) {
             $output->add($this->numerator[0]);
-        } elseif ($this->denominator) {
+        } else if ($this->denominator) {
             $output->add($this->denominator[0]);
-        } elseif (!Less_Parser::$options['strictUnits'] && $this->backupUnit) {
+        } else if (!Less_Parser::$options['strictUnits'] && $this->backupUnit) {
             $output->add($this->backupUnit);
 
             return;
@@ -82,7 +82,7 @@ class Less_Tree_Unit extends Less_Tree {
 
 
     public function usedUnits() {
-        $result = array();
+        $result = [];
 
         foreach (Less_Tree_UnitConversions::$groups as $groupName) {
             $group = Less_Tree_UnitConversions::${$groupName};
@@ -104,7 +104,7 @@ class Less_Tree_Unit extends Less_Tree {
     }
 
     public function cancel() {
-        $counter = array();
+        $counter = [];
         $backup = NULL;
 
         foreach ($this->numerator as $atomicUnit) {
@@ -121,15 +121,15 @@ class Less_Tree_Unit extends Less_Tree {
             $counter[$atomicUnit] = (isset($counter[$atomicUnit]) ? $counter[$atomicUnit] : 0) - 1;
         }
 
-        $this->numerator = array();
-        $this->denominator = array();
+        $this->numerator = [];
+        $this->denominator = [];
 
         foreach ($counter as $atomicUnit => $count) {
             if ($count > 0) {
                 for ($i = 0; $i < $count; $i++) {
                     $this->numerator[] = $atomicUnit;
                 }
-            } elseif ($count < 0) {
+            } else if ($count < 0) {
                 for ($i = 0; $i < -$count; $i++) {
                     $this->denominator[] = $atomicUnit;
                 }

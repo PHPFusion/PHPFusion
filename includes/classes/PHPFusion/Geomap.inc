@@ -22,7 +22,7 @@ class Geomap {
     public static $country_list = [];
     public static $currency_list = [];
 
-    static function get_Currency($currency_code = null) {
+    static function get_Currency($currency_code = NULL) {
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET.'currency.php');
 
@@ -39,7 +39,7 @@ class Geomap {
             }
         }
 
-        if ($currency_code !== null) {
+        if ($currency_code !== NULL) {
             return isset(self::$currency_list[$currency_code]) ? self::$currency_list[$currency_code] : $locale['na'];
         } else {
             return array_filter(self::$currency_list);
@@ -59,9 +59,10 @@ class Geomap {
      * Returns countries
      *
      * @param null $country_code - ISO cca2 code / returns array if NULL
+     *
      * @return array|null
      */
-    static function get_Country($country_code = null) {
+    static function get_Country($country_code = NULL) {
 
         if (empty(self::$country_list)) {
             $resource = json_decode(file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json"));
@@ -70,8 +71,8 @@ class Geomap {
                 self::$country_list[$object->cca2] = $country_name;
             }
         }
-        if ($country_code !== null) {
-            return (isset(self::$country_list[$country_code])) ? self::$country_list[$country_code] : null;
+        if ($country_code !== NULL) {
+            return (isset(self::$country_list[$country_code])) ? self::$country_list[$country_code] : NULL;
         } else {
             return array_filter(self::$country_list);
         }
@@ -80,7 +81,7 @@ class Geomap {
     /**
      * /* Returns a locale from a country code that is provided.
      * /* I have not think of an implementation benefits out of this yet.
-     * /* @param string $country_code  ISO 3166-2-alpha 2 country code
+     * /* @param string $country_code ISO 3166-2-alpha 2 country code
      * /* @param string $language_code ISO 639-1-alpha 2 language code
      * /* @returns string  a locale, formatted like en_US, or null if not found
      * /*

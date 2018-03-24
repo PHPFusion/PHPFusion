@@ -36,6 +36,7 @@ if (!function_exists('filename_exists')) {
      * @param        $directory
      * @param string $file path of file if basename is empty. Otherwise path of parent directory
      * @param bool   $options
+     *
      * @return string  New unique filepath
      * @options array -
      *                           $options['dateformat'] d,m,y, php date format constant
@@ -132,6 +133,7 @@ if (!function_exists('set_setting')) {
 
 /**
  * Check whether an infusion is installed or not from the infusions table
+ *
  * @param $infusion_folder
  *
  * @return bool
@@ -152,6 +154,7 @@ if (!function_exists('infusion_exists')) {
 
 /**
  * Get the settings for the infusion from the settings_inf table
+ *
  * @param      $settings_inf
  * @param null $key
  *

@@ -26,6 +26,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 /**
  * Get the default search options
  * with file exists validation of the PHP-Fusion Search SDK files.
+ *
  * @return array
  */
 function get_default_search_opts() {
@@ -58,7 +59,9 @@ function get_default_search_opts() {
 
 /**
  * Default Search file validation rules
+ *
  * @param $value
+ *
  * @return bool
  */
 function validate_default_search($value) {
@@ -69,7 +72,9 @@ function validate_default_search($value) {
 
 /**
  * Site Port validation rules
+ *
  * @param $value
+ *
  * @return bool
  */
 function validate_site_port($value) {

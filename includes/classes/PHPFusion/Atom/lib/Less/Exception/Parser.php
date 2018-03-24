@@ -24,7 +24,7 @@ class Less_Exception_Parser extends Exception {
 
     protected $input;
 
-    protected $details = array();
+    protected $details = [];
 
 
     /**

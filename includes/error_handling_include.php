@@ -27,6 +27,7 @@ set_error_handler("setError");
 
 /**
  * Custom Error Handler
+ *
  * @param $error_level
  * @param $error_message
  * @param $error_file
@@ -42,6 +43,7 @@ function setError($error_level, $error_message, $error_file, $error_line, $error
 
 /**
  * Return footer error notice
+ *
  * @return null
  */
 function showFooterErrors() {

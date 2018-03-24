@@ -120,16 +120,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'fieldicon_off'          => FALSE,
         'filtered_dates'         => [], // must be an array
         'include_filtered_dates' => (boolean)FALSE, // if TRUE, then only days filtered are selectable
-        'weekend'         => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
-        'disable_weekend' => (boolean)FALSE, // if true, all weekend will be non-selectable
-        'type'            => 'timestamp',
-        'tip'             => '',
-        'showTime'        => (boolean)FALSE,
-        'week_start'      => fusion_get_settings('week_start'),
-        'join_to_id'      => '',
-        'join_from_id'    => '',
-        'debug'           => '',
-        'stacked'         => '',
+        'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
+        'disable_weekend'        => (boolean)FALSE, // if true, all weekend will be non-selectable
+        'type'                   => 'timestamp',
+        'tip'                    => '',
+        'showTime'               => (boolean)FALSE,
+        'week_start'             => fusion_get_settings('week_start'),
+        'join_to_id'             => '',
+        'join_from_id'           => '',
+        'debug'                  => '',
+        'stacked'                => '',
     ];
 
     $options += $default_options;

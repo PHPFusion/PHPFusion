@@ -255,6 +255,7 @@ class Members {
 
     /**
      * Set custom filters
+     *
      * @param array $filters
      *      Indexes:    'select' - query selection,
      *                  'condition', - query condition

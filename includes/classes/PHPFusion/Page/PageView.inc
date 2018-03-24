@@ -23,12 +23,13 @@ class PageView extends PageController {
      * Return page composer object
      *
      * @param bool|FALSE $set_info
+     *
      * @return null|static
      */
-    protected static $page_instance = null;
+    protected static $page_instance = NULL;
 
-    public static function getInstance($set_info = false, $page_id = 0) {
-        if (self::$page_instance === null) {
+    public static function getInstance($set_info = FALSE, $page_id = 0) {
+        if (self::$page_instance === NULL) {
             self::$page_instance = new static();
             if ($set_info) {
                 self::set_PageInfo($page_id);

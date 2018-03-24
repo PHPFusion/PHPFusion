@@ -20,6 +20,7 @@ class SqlHandler {
 
     /**
      * Add column to a specific table
+     *
      * @param $table_name
      * @param $new_column_name
      * @param $field_attributes
@@ -36,6 +37,7 @@ class SqlHandler {
 
     /**
      * Drop column of a table
+     *
      * @param $table_name
      * @param $old_column_name
      */
@@ -49,8 +51,10 @@ class SqlHandler {
 
     /**
      * Function to build a new table
+     *
      * @param $new_table
      * @param $primary_column
+     *
      * @return bool|mixed|null|PDOStatement|resource
      */
     protected static function build_table($new_table, $primary_column) {
@@ -70,6 +74,7 @@ class SqlHandler {
 
     /**
      * Move old table to new table.
+     *
      * @param $old_table
      * @param $new_table
      */
@@ -97,6 +102,7 @@ class SqlHandler {
 
     /**
      * Drop table
+     *
      * @param $old_table
      */
     protected static function drop_table($old_table) {
@@ -115,10 +121,12 @@ class SqlHandler {
 
     /**
      * Function to rename column name
+     *
      * @param $table_name
      * @param $old_column_name
      * @param $new_column_name
      * @param $field_attributes
+     *
      * @return bool|mixed|PDOStatement|resource
      */
     protected static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
@@ -131,6 +139,7 @@ class SqlHandler {
 
     /**
      * Move a single column from one table to another
+     *
      * @param $old_table
      * @param $new_table
      * @param $column_name
@@ -198,11 +207,13 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = 
 /**
  * Hierarchy Full Data Output
  * Returns cat-id relationships with full data
+ *
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
  * @param bool $filter - replace conditional structure
  * @param      $query_replace - replace the entire query structure
+ *
  * @return array
  */
 function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
@@ -225,7 +236,9 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_repla
 
 /**
  * Get index information from dbquery_tree_full.
+ *
  * @param $data - array generated from dbquery_tree_full();
+ *
  * @return array
  */
 function tree_index($data) {
@@ -241,8 +254,10 @@ function tree_index($data) {
 
 /**
  * Get Tree Root ID of a Child from dbquery_tree() result
+ *
  * @param array $index
  * @param       $child_id
+ *
  * @return int
  */
 function get_root(array $index, $child_id) {
@@ -260,10 +275,12 @@ function get_root(array $index, $child_id) {
 /**
  * Get Tree Root ID of a child via SQL
  * Alternative function to get a root of a specific item when dbtree is not available
+ *
  * @param $db
  * @param $id_col
  * @param $cat_col
  * @param $parent_id
+ *
  * @return int
  */
 function get_hkey($db, $id_col, $cat_col, $parent_id) {
@@ -288,8 +305,10 @@ function get_hkey($db, $id_col, $cat_col, $parent_id) {
 
 /**
  * Get immediate Parent ID from dbquery_tree() result
+ *
  * @param array $index
  * @param       $child_id
+ *
  * @return int
  */
 function get_parent(array $index, $child_id) {
@@ -302,8 +321,10 @@ function get_parent(array $index, $child_id) {
 
 /**
  * Get immediate Parent Array from dbquery_tree_full() result
+ *
  * @param array $data
  * @param       $child_id
+ *
  * @return array
  */
 function get_parent_array(array $data, $child_id) {
@@ -316,9 +337,11 @@ function get_parent_array(array $data, $child_id) {
 
 /**
  * Get all parent ID from dbquery_tree()
+ *
  * @param array $index
  * @param       $child_id
  * @param array $list
+ *
  * @return array
  */
 function get_all_parent(array $index, $child_id, array &$list = []) {
@@ -347,9 +370,11 @@ function get_all_parent(array $index, $child_id, array &$list = []) {
 
 /**
  * Get Child IDs from dbquery_tree() result
+ *
  * @param       $index
  * @param       $parent_id
  * @param array $children
+ *
  * @return array
  */
 function get_child($index, $parent_id, array &$children = []) {
@@ -366,9 +391,11 @@ function get_child($index, $parent_id, array &$children = []) {
 
 /**
  * Get current depth from dbquery_tree() result
+ *
  * @param      $index
  * @param      $child_id
  * @param bool $depth
+ *
  * @return bool|int
  */
 function get_depth($index, $child_id, $depth = FALSE) {
@@ -388,7 +415,9 @@ function get_depth($index, $child_id, $depth = FALSE) {
 
 /**
  * Get maximum depth of a hierarchy tree
+ *
  * @param $array
+ *
  * @return int
  */
 function array_depth($array) {
@@ -410,11 +439,13 @@ function array_depth($array) {
 /**
  * Get Hierarchy Array with injected child key
  * This is a slower model to fetch hierarchy data than dbquery_tree_full
+ *
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
  * @param bool $cat_value
  * @param bool $filter
+ *
  * @return array
  */
 function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
@@ -441,10 +472,12 @@ function dbtree($db, $id_col, $cat_col, $cat_value = FALSE, $filter = FALSE) {
 
 /**
  * Lighter version of dbtree() with only id and child key
+ *
  * @param bool $db
  * @param      $id_col
  * @param      $cat_col
  * @param bool $cat_value
+ *
  * @return array
  */
 function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
@@ -473,8 +506,10 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 
 /**
  * To sort key on dbtree_index results
+ *
  * @param $result
  * @param $key
+ *
  * @return array
  */
 function sort_tree(&$result, $key) {
@@ -497,9 +532,11 @@ function sort_tree(&$result, $key) {
 
 /**
  * Sort tree associative array
+ *
  * @param        $array
  * @param        $key
  * @param string $sort
+ *
  * @return array
  */
 function sorter(&$array, $key, $sort = 'ASC') {
@@ -524,10 +561,12 @@ function sorter(&$array, $key, $sort = 'ASC') {
 
 /**
  * Get the total max depths of dbtree()
+ *
  * @param        $data
  * @param        $field
  * @param        $match
  * @param string $depth
+ *
  * @return int
  */
 function tree_depth($data, $field, $match, $depth = '1') {
@@ -558,6 +597,7 @@ function tree_depth($data, $field, $match, $depth = '1') {
  * @param      $data - $data = dbquery_tree(...);
  * @param bool $column_name
  * @param bool $value_to_match
+ *
  * @return int
  */
 function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
@@ -586,6 +626,7 @@ function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
 
 /**
  * This model will create a up to "HUNDREDS" of self joins to get a relational hierarchy
+ *
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
@@ -593,6 +634,7 @@ function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
  * @param bool $filter_order
  * @param bool $filter_show
  * @param bool $depth
+ *
  * @return bool|mixed|PDOStatement|resource
  */
 function tree_join_method_sql_deprecated($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE, $depth = FALSE) {
@@ -638,7 +680,9 @@ function display_parent_nodes($data, $id_col, $cat_col, $id) {
 /**
  * MYSQL Show Columns Shorthand
  * Returns available columns in a table
+ *
  * @param $db
+ *
  * @return array
  */
 function fieldgenerator($db) {
@@ -674,6 +718,7 @@ function fieldgenerator($db) {
  *        <li><strong>keep_session (boolean)</strong>:
  *            If TRUE, defender will not unset field sessions.</li>
  *    </ul>
+ *
  * @return int|FALSE
  *    If an error happens, it returns FALSE.
  *    Otherwise, if $mode is save and the primary key column is
@@ -778,8 +823,11 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
 
 /**
  * check multilang tables
+ *
  * @staticvar boolean[] $tables
+ *
  * @param string $table Table name
+ *
  * @return boolean
  */
 function multilang_table($table) {
@@ -797,9 +845,11 @@ function multilang_table($table) {
 
 /**
  * SQL statement helper to find values in between dots
+ *
  * @param        $column_name
  * @param        $value
  * @param string $delim
+ *
  * @return string
  * Example: language column contains '.BL.NS.NC.NG'
  *            SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
@@ -810,7 +860,9 @@ function in_group($column_name, $value, $delim = '.') {
 
 /**
  * SQL Language Value
+ *
  * @param $table_col - target
+ *
  * @return string - calculated conditions
  * Usage: $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".multilocale_col_select('news_subject')." = '".$data['news_subject']."'");
  * Usage: $tree_data = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "order by ".language_column("news_cat_name"));
@@ -857,8 +909,10 @@ function getcategory($cat) {
  * this function only check the prefixed tables of the PHPFusion
  *
  * @staticvar boolean[] $tables
+ *
  * @param string $table The name of the table with or without prefix
  *    Pass TRUE if you want to update the cached state of the table.
+ *
  * @return boolean
  */
 function db_exists($table) {
@@ -872,9 +926,11 @@ function db_exists($table) {
 
 /**
  * Determine whether column exists in a table
+ *
  * @param           $table
  * @param           $column
  * @param bool|TRUE $add_prefix
+ *
  * @return bool
  */
 function column_exists($table, $column, $add_prefix = TRUE) {
@@ -896,6 +952,7 @@ function column_exists($table, $column, $add_prefix = TRUE) {
 
 /**
  * ID is required only for update mode.
+ *
  * @param        $dbname
  * @param int    $current_order
  * @param        $order_col
@@ -906,6 +963,7 @@ function column_exists($table, $column, $add_prefix = TRUE) {
  * @param bool   $multilang
  * @param string $multilang_col
  * @param string $mode
+ *
  * @return bool|mixed|PDOStatement|resource
  */
 function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = FALSE, $current_category = 0, $cat_col = FALSE, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
@@ -990,7 +1048,9 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 /**
  * To flatten ANY multidimensional array
  * Best used to flatten any hierarchy array data
+ *
  * @param $result
+ *
  * @return mixed
  */
 function flatten_array($result) {
@@ -1005,6 +1065,7 @@ function flatten_array($result) {
  * @param      $string
  * @param bool $string2
  * @param bool $delimiter (symbol of delimiter)
+ *
  * @return array
  */
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
@@ -1032,8 +1093,10 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 /**
  * To implode an array to string
  * Opposite of construct_array()
+ *
  * @param $string
  * @param $delimiter
+ *
  * @return string
  */
 function deconstruct_array($string, $delimiter) {

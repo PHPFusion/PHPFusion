@@ -81,11 +81,9 @@ class PageModel {
     /**
      * Return page composer object
      *
-     * @param bool|FALSE $set_info
-     *
      * @return null|static
      */
-    public static function getInstance($set_info = FALSE) {
+    public static function getInstance() {
         if (empty(self::$page_instance)) {
             self::$page_instance = new static;
         }
@@ -109,7 +107,7 @@ class PageModel {
             $array = dbarray(
                 dbquery("
                     SELECT cp.* FROM ".DB_CUSTOM_PAGES." cp WHERE page_id=:pageid", [':pageid' => $page_id]
-                    )
+                )
             );
         }
 

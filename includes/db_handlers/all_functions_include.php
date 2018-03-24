@@ -105,6 +105,7 @@ register_shutdown_function(function () {
  *
  * @param string $query SQL
  * @param array  $parameters
+ *
  * @return mixed The result of query or FALSE on error
  */
 function dbquery($query, array $parameters = []) {
@@ -119,6 +120,7 @@ function dbquery($query, array $parameters = []) {
  * @param string $table Table name
  * @param string $conditions conditions after "where"
  * @param array  $parameters
+ *
  * @return boolean
  */
 function dbcount($field, $table, $conditions = "", array $parameters = []) {
@@ -130,6 +132,7 @@ function dbcount($field, $table, $conditions = "", array $parameters = []) {
  *
  * @param mixed $result
  * @param int   $row
+ *
  * @return mixed
  */
 function dbresult($result, $row) {
@@ -140,6 +143,7 @@ function dbresult($result, $row) {
  * Count the number of affected rows by the given query
  *
  * @param mixed $result
+ *
  * @return int
  */
 function dbrows($result) {
@@ -150,6 +154,7 @@ function dbrows($result) {
  * Fetch one row as an associative array
  *
  * @param mixed $result
+ *
  * @return array Associative array
  */
 function dbarray($result) {
@@ -160,6 +165,7 @@ function dbarray($result) {
  * Fetch one row as a numeric array
  *
  * @param mixed $result
+ *
  * @return array Numeric array
  */
 function dbarraynum($result) {
@@ -174,6 +180,7 @@ function dbarraynum($result) {
  * @param string  $db_pass
  * @param string  $db_name
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
+ *
  * @return array
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = FALSE) {
@@ -208,6 +215,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = FALS
  * get just a potential id.
  *
  * @param string $table
+ *
  * @return int|false
  */
 function dbnextid($table) {

@@ -17,7 +17,9 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 pageAccess('PI');
+
 use PHPFusion\BreadCrumbs;
+
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
 $aidlink = fusion_get_aidlink();

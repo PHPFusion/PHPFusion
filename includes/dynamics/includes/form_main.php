@@ -24,6 +24,7 @@
  *                          class = default empty
  *                          enctype = true or false , set true to allow file upload
  *                          max_tokens = store into session number of tokens , default as 1.
+ *
  * @return string
  */
 function openform($form_name, $method, $action_url, array $options = []) {

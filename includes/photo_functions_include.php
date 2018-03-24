@@ -116,7 +116,9 @@ function image_exists($dir, $image) {
 
 /**
  * Retrieve Information about a specific Image
+ *
  * @param $imagePath
+ *
  * @return array|bool
  * Courtesy of : drpain.webster.org.za @ php.net
  */
@@ -188,8 +190,10 @@ function exif($imagePath) {
 
 /**
  * Copy a file from any source to any destination
+ *
  * @param $source -- copy file from URL
  * @param $destination -- copy file to folder
+ *
  * @return mixed
  */
 function copy_file($source, $destination) {

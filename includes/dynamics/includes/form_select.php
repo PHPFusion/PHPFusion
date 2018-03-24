@@ -413,7 +413,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     if ($options['required']) {
         $html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck
     }
-// Generate Defender Tag
+    // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
     \defender::getInstance()->add_field_session([
         'input_name'     => $input_name,
@@ -427,7 +427,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
         'callback_check' => $options['callback_check'],
         'delimiter'      => $options['delimiter'],
     ]);
-// Initialize Select2
+    // Initialize Select2
     if ($options['select2_disabled'] === FALSE) {
         // Select 2 Multiple requires hidden DOM.
         if ($options['jsonmode'] === FALSE) {
@@ -645,16 +645,16 @@ function user_search($user_id) {
  * @param string $label
  * @param bool   $input_value
  * @param array  $options
- * @param        $db       - your db
+ * @param        $db - your db
  * @param        $name_col - the option text to show
- * @param        $id_col   - unique id
- * @param        $cat_col  - parent id
+ * @param        $id_col - unique id
+ * @param        $cat_col - parent id
  *                         ## The rest of the Params are used by the function itself -- no need to handle ##
- * @param bool   $self_id  - not required
- * @param bool   $id       - not required
- * @param bool   $level    - not required
- * @param bool   $index    - not required
- * @param bool   $data     - not required
+ * @param bool   $self_id - not required
+ * @param bool   $id - not required
+ * @param bool   $level - not required
+ * @param bool   $index - not required
+ * @param bool   $data - not required
  *
  * @return string
  */

@@ -166,6 +166,7 @@ abstract class RewriteDriver {
      * This will Add new rewrite include file to be included.
      *
      * @param string $include_prefix Prefix of the file to be included.
+     *
      * @access protected
      */
     private function AddRewrite($include_prefix) {
@@ -211,6 +212,7 @@ abstract class RewriteDriver {
      *
      * @param array  $regex Array of Tags to be added.
      * @param string $driver Type or Handler name
+     *
      * @access protected
      */
     protected function addRegexTag($regex, $driver) {
@@ -227,6 +229,7 @@ abstract class RewriteDriver {
      *
      * @param integer $code The Code Number of the Warning
      * @param string  $info Any other Info to Show along with Warning
+     *
      * @access protected
      */
     protected function setWarning($code, $info = "") {
@@ -341,6 +344,7 @@ abstract class RewriteDriver {
      * Permalinks are ON.
      *
      * @param string $str The String
+     *
      * @return string
      * @access protected
      */
@@ -365,6 +369,7 @@ abstract class RewriteDriver {
      * This function will escape some characters in the Regex expression
      *
      * @param string $regex The expression String
+     *
      * @return string
      */
     protected static function cleanRegex($regex) {
@@ -605,6 +610,7 @@ abstract class RewriteDriver {
      * Example: mystring will become 'mystring'
      *
      * @param string $str The String
+     *
      * @access protected
      * @return string
      */
@@ -619,6 +625,7 @@ abstract class RewriteDriver {
      * Add compatibalities with double quotes HTML codes for Permalink
      *
      * @param $str
+     *
      * @return string
      */
     protected static function wrapDoubleQuotes($str) {
@@ -636,6 +643,7 @@ abstract class RewriteDriver {
      *
      * @param string $string The URL String
      * @param string $delimiter
+     *
      * @return string
      * @access protected
      */
@@ -667,7 +675,9 @@ abstract class RewriteDriver {
      * Useful for friendly URLs.
      *
      * @access public
+     *
      * @param string
+     *
      * @return string
      */
     protected static function normalize($string) {
@@ -900,15 +910,16 @@ abstract class RewriteDriver {
      * Let search engine mark as 301 permanently
      *
      * @param string $target The target URL
-     * @param bool $debug
+     * @param bool   $debug
+     *
      * @access protected
      */
-    protected static function redirect_301($target, $debug = false) {
+    protected static function redirect_301($target, $debug = FALSE) {
         if ($debug) {
             debug_print_backtrace();
         } else {
             ob_get_contents();
-            if (ob_get_length() !== false) {
+            if (ob_get_length() !== FALSE) {
                 ob_end_clean();
             }
             $url = fusion_get_settings('siteurl').$target;
@@ -929,6 +940,7 @@ abstract class RewriteDriver {
      * @param string $replace specific Replace Pattern
      * @param array  $matches Array of the Matches found for a specific pattern
      * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     *
      * @return string
      */
     protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
@@ -962,6 +974,7 @@ abstract class RewriteDriver {
      *
      * @param string $pattern The Pattern string in which particular Tag will be searched.
      * @param string $search The Tag which will be searched.
+     *
      * @access protected
      * @return int
      */
@@ -983,6 +996,7 @@ abstract class RewriteDriver {
      * So it will return %news_id% because of array("%%news_id" => "news_id")
      *
      * @param string $type Type or Handler name
+     *
      * @access       protected
      * @return string
      * @todo   : Roadmap 9.1 to have this read seperately
@@ -1005,6 +1019,7 @@ abstract class RewriteDriver {
      *
      * @param array  $pattern Array of Tags to be added.
      * @param string $type Type or Handler name
+     *
      * @access protected
      * @return string
      */
@@ -1040,6 +1055,7 @@ abstract class RewriteDriver {
      * This function will Clean the string and removes any unwanted characters from it.
      *
      * @param $mystr - string
+     *
      * @access protected
      * @return string
      */

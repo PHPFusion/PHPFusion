@@ -22,6 +22,7 @@ use PHPFusion\BreadCrumbs;
 /**
  * Administration Page for Theme Settings
  * Class Admin
+ *
  * @package PHPFusion\Atom
  */
 class Admin {
@@ -38,7 +39,9 @@ class Admin {
 
     /**
      * Check if a theme widget file exist
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     static function theme_widget_exists($theme_name) {
@@ -138,7 +141,9 @@ class Admin {
 
     /**
      * Verify theme exist
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     public static function verify_theme($theme_name) {
@@ -255,7 +260,9 @@ class Admin {
 
     /**
      * Verify that theme exist and not active
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     static function theme_installable($theme_name) {

@@ -116,6 +116,8 @@ class Switcher {
 
             return $value;
         }
+
+        return FALSE;
     }
 
     private function writeSelected() {
@@ -144,6 +146,8 @@ class Switcher {
 
             return $form;
         }
+
+        return FALSE;
     }
 
     private function getButtons() {
@@ -157,6 +161,6 @@ class Switcher {
     }
 
     public function makeHeadTag() {
-        return add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->dir.'/'.$this->selected.'.css"/>');
+        add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->dir.'/'.$this->selected.'.css"/>');
     }
 }

@@ -308,7 +308,9 @@ require_once THEMES."templates/footer.php";
 
 /**
  * Create Language Selector Checkboxes.
+ *
  * @param string[] $language_list
+ *
  * @return string
  */
 function form_lang_checkbox(array $language_list) {

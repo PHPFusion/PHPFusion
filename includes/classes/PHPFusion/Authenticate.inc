@@ -22,7 +22,7 @@ use PHPFusion\Infusions\Login\Login;
 
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
-define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : false);
+define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
 define("COOKIE_PATH", $settings['site_path']);
 define("COOKIE_USER", COOKIE_PREFIX."user");
 define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
@@ -39,7 +39,7 @@ class Authenticate {
         "user_theme"  => "Default"
     ];
 
-    public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = false) {
+    public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = FALSE) {
 
         if ($authentication_url) {
             self::$authenticate_url = $authentication_url;
@@ -71,7 +71,7 @@ class Authenticate {
             $passAuth->currentPasswordHash = $user["user_password"];
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
-            if ($passAuth->isValidCurrentPassword(true)) {
+            if ($passAuth->isValidCurrentPassword(TRUE)) {
                 if ($settings['multiple_logins'] != 1) {
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
@@ -88,7 +88,7 @@ class Authenticate {
                     }
                     $authenticate_methods = (method_exists($login, 'authenticate') ? $login->authenticate($user) : '');
                     if (empty($authenticate_methods)) {
-                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
+                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                         Authenticate::_setUserTheme($user);
                         $this->_userData = $user;
                     }
@@ -101,7 +101,7 @@ class Authenticate {
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
                             $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
                             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                            unsuspend_log($user['user_id'], 3, $locale['global_450'], true);
+                            unsuspend_log($user['user_id'], 3, $locale['global_450'], TRUE);
                         } else {
                             $subject = $locale['global_454'];
                             $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_452']);
@@ -123,7 +123,7 @@ class Authenticate {
 
     // Get user data when authenticating in user
 
-    public static function setUserCookie($userID, $salt, $algo, $remember = false, $userCookie = true) {
+    public static function setUserCookie($userID, $salt, $algo, $remember = FALSE, $userCookie = TRUE) {
         global $_COOKIE;
         $cookiePath = COOKIE_PATH;
         $cookieName = COOKIE_USER;
@@ -141,7 +141,7 @@ class Authenticate {
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
         $cookieContent = $userID.".".$cookieExpiration.".".$hash;
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        Authenticate::_setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, false, true);
+        Authenticate::_setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, FALSE, TRUE);
         // Unable to set cookies properly
         if (!isset($_COOKIE[COOKIE_VISITED])) {
             redirect(Authenticate::getRedirectUrl(3));
@@ -150,7 +150,7 @@ class Authenticate {
 
     /* Admin Login Authentication */
     // Set user Cookie
-    public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = false, $httpOnly = false) {
+    public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
         if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
             setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
         } else {
@@ -240,7 +240,7 @@ class Authenticate {
     // Log out authenticated user
 
     public static function expireAdminCookie() {
-        Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
+        Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
     }
 
     // Checks or sets the lastvisit cookie
@@ -263,13 +263,13 @@ class Authenticate {
                             $key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
                             $hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
                             if ($cookieHash == $hash) {
-                                $error = false;
+                                $error = FALSE;
 
                                 /**
                                  * New 2nd factor session authentication
                                  */
                                 if (empty($_SESSION['aid'])) {
-                                    return false;
+                                    return FALSE;
                                 } else {
                                     $password_algo = fusion_get_settings("password_algorithm");
 
@@ -297,15 +297,15 @@ class Authenticate {
                                         $error = $locale['token_error_8'];
                                     }
                                     // Check if any error was set
-                                    if ($error !== false) {
+                                    if ($error !== FALSE) {
                                         \defender::stop();
                                         addNotice("warning", $error);
 
-                                        return false;
+                                        return FALSE;
                                     }
                                 }
 
-                                return true;
+                                return TRUE;
                             }
                         }
                     }
@@ -323,13 +323,13 @@ class Authenticate {
                         $inputHash = md5(md5($pass));
                     }
                     if ($inputHash == $user['user_admin_password']) {
-                        return true;
+                        return TRUE;
                     }
                 }
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     public static function setAdminCookie($inputPassword) {
@@ -342,7 +342,7 @@ class Authenticate {
             $passAuth->currentPasswordHash = $userdata['user_admin_password'];
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
-            if ($passAuth->isValidCurrentPassword(true)) {
+            if ($passAuth->isValidCurrentPassword(TRUE)) {
                 if (fusion_get_settings('multiple_logins') != 1) {
                     $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
                     $userdata['user_admin_salt'] = $passAuth->getNewSalt();
@@ -351,17 +351,17 @@ class Authenticate {
                     SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
                     WHERE user_id='".$userdata['user_id']."'");
                 }
-                Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], false, false);
+                Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
 
-                return true;
+                return TRUE;
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     // Checks and sets the admin last visit cookie
-    public static function validateAuthUser($userCookie = true) {
+    public static function validateAuthUser() {
         if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
@@ -408,8 +408,8 @@ class Authenticate {
     public static function logOut() {
         dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
-        Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
+        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         session_destroy();
 
         return Authenticate::getEmptyUserData();
@@ -428,20 +428,20 @@ class Authenticate {
     public static function setLastVisitCookie() {
         global $userdata;
         $guest_lastvisit = time() - 3600;
-        $update_threads = false;
-        $set_cookie = true;
-        $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]) ? true : false;
+        $update_threads = FALSE;
+        $set_cookie = TRUE;
+        $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]) ? TRUE : FALSE;
         if (iMEMBER) {
             if ($cookie_exists) {
                 if ($_COOKIE[COOKIE_LASTVISIT] > $userdata['user_lastvisit']) {
-                    $update_threads = true;
+                    $update_threads = TRUE;
                     $lastvisit = $userdata['user_lastvisit'];
                 } else {
-                    $set_cookie = false;
+                    $set_cookie = FALSE;
                     $lastvisit = $_COOKIE[COOKIE_LASTVISIT];
                 }
             } else {
-                $update_threads = true;
+                $update_threads = TRUE;
                 $lastvisit = $userdata['user_lastvisit'];
             }
             if ($update_threads) {
@@ -452,7 +452,7 @@ class Authenticate {
                 if ($_COOKIE[COOKIE_LASTVISIT] > $guest_lastvisit) {
                     $lastvisit = $guest_lastvisit;
                 } else {
-                    $set_cookie = false;
+                    $set_cookie = FALSE;
                     $lastvisit = $_COOKIE[COOKIE_LASTVISIT];
                 }
             } else {
@@ -460,7 +460,7 @@ class Authenticate {
             }
         }
         if ($set_cookie) {
-            Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, false, true);
+            Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         }
 
         return $lastvisit;

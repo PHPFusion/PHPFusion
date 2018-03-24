@@ -25,6 +25,7 @@ use PHPFusion\Page\PageAdmin;
 /**
  * Class PageComposer - Framework
  * Binds Network files
+ *
  * @package PHPFusion\Page\Composer
  */
 class PageComposer extends PageAdmin {

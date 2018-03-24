@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\OutputHandler;
 
@@ -24,7 +25,9 @@ if (!defined("IN_FUSION")) {
 
 /**
  * Show PHP-Fusion Performance
+ *
  * @param bool $queries
+ *
  * @return string
  */
 function showrendertime($queries = TRUE) {
@@ -133,9 +136,11 @@ function showprivacypolicy() {
 
 /**
  * Creates an alert bar
+ *
  * @param        $title
  * @param string $text
  * @param array  $options
+ *
  * @return string
  */
 if (!function_exists("alert")) {
@@ -174,7 +179,9 @@ if (!function_exists('get_theme_settings')) {
 
 /**
  * Java script that transform html table sortable
+ *
  * @param $table_id - table ID
+ *
  * @return string
  */
 function fusion_sort_table($table_id) {
@@ -217,9 +224,11 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Generate modal
+     *
      * @param       $id - unique CSS id
      * @param       $title - modal title
      * @param array $options
+     *
      * @return string
      */
     function openmodal($id, $title, $options = []) {
@@ -265,8 +274,10 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Adds a modal footer in between openmodal and closemodal.
+     *
      * @param            $content
      * @param bool|FALSE $dismiss
+     *
      * @return string
      */
     function modalfooter($content, $dismiss = FALSE) {
@@ -281,6 +292,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Close the modal
+     *
      * @return string
      */
     function closemodal() {
@@ -291,6 +303,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 if (!function_exists("progress_bar")) {
     /**
      * Render a progress bar
+     *
      * @param        $num - str or array
      * @param bool   $title - str or array
      * @param bool   $class
@@ -300,6 +313,7 @@ if (!function_exists("progress_bar")) {
      * @param bool   $disabled
      * @param bool   $hide_info
      * @param string $class_
+     *
      * @return string
      */
     function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
@@ -488,6 +502,7 @@ if (!function_exists("showsublinks")) {
 
     /**
      * Displays Site Links Navigation Bar
+     *
      * @param string $sep - Custom seperator text
      * @param string $class - Class
      * @param array  $options
@@ -495,6 +510,7 @@ if (!function_exists("showsublinks")) {
      * Notice: There is a more powerful method now that offers more powerful manipulation methods
      * that non oo approach cannot ever achieve using cache and the new mutator method
      * SiteLinks::setSubLinks($sep, $class, $options)->showsublinks(); for normal usage
+     *
      * @return string
      */
     function showsublinks($sep = "", $class = "navbar-default", array $options = []) {
@@ -682,6 +698,7 @@ if (!function_exists('tablebreak')) {
  * @param bool   $link FALSE if you want to display the avatar without link. TRUE by default.
  * @param string $img_class Classes for the image
  * @param string $custom_avatar Custom default avatar
+ *
  * @return string
  */
 if (!function_exists('display_avatar')) {
@@ -733,11 +750,13 @@ if (!function_exists('colorbox')) {
 
 /**
  * Thumbnail function
+ *
  * @param      $src
  * @param      $size
  * @param bool $url
  * @param bool $colorbox
  * @param bool $responsive
+ *
  * @return string
  */
 if (!function_exists("thumbnail")) {
@@ -891,7 +910,9 @@ if (!function_exists("opencollapse")
 ) {
     /**
      * Accordion template
+     *
      * @param $id - unique accordion id name
+     *
      * @return string
      */
     function opencollapse($id) {
@@ -1109,14 +1130,14 @@ if (!function_exists("tab_active")
     /**
      * Render Tab Links
      *
-     * @param array         $tab_title          entire array consisting of ['title'], ['id'], ['icon']
-     * @param string        $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param string        $id                 unique ID
-     * @param bool|FALSE    $link default false for jquery, true for php (will reload page)
-     * @param bool|FALSE    $class the class for the nav
-     * @param string        $getname the get request
-     * @param array         $cleanup_GET the request key that needs to be deleted
-     * @param bool|FALSE    $remember set to true to automatically remember tab using cookie.
+     * @param array      $tab_title entire array consisting of ['title'], ['id'], ['icon']
+     * @param string     $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param string     $id unique ID
+     * @param bool|FALSE $link default false for jquery, true for php (will reload page)
+     * @param bool|FALSE $class the class for the nav
+     * @param string     $getname the get request
+     * @param array      $cleanup_GET the request key that needs to be deleted
+     * @param bool|FALSE $remember set to true to automatically remember tab using cookie.
      *                                          Example:
      *                                          $tab_title['title'][] = "Tab 1";
      *                                          $tab_title['id'][] = "tab1";
@@ -1137,18 +1158,18 @@ if (!function_exists("tab_active")
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
         $fusion_tabs = new FusionTabs();
         if ($remember) {
-            $fusion_tabs->set_remember(true);
+            $fusion_tabs->set_remember(TRUE);
         }
 
         return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
     }
 
     /**
-     * @param string $tab_title               deprecated, however this function is replaceable, and the params are accessible.
-     * @param      $tab_id
-     * @param bool $link_active_arrkey
-     * @param bool $link deprecated, however this function is replaceable, and the params are accessible.
-     * @param bool $key
+     * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
+     * @param        $tab_id
+     * @param bool   $link_active_arrkey
+     * @param bool   $link deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool   $key
      *
      * @return mixed
      */

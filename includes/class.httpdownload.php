@@ -53,11 +53,13 @@ class httpdownload {
     var $seek_end = -1;
     /**
      * Total bandwidth has been used for this download
+     *
      * @var int
      */
     var $bandwidth = 0;
     /**
      * Speed limit
+     *
      * @var float
      */
     var $speed = 0;
@@ -87,6 +89,7 @@ class httpdownload {
 
     /**
      * Check authentication and get seek position
+     *
      * @return bool
      **/
     function initialize() {
@@ -142,6 +145,7 @@ class httpdownload {
 
     /**
      * Check authentication
+     *
      * @return bool
      **/
     function _auth() {
@@ -157,6 +161,7 @@ class httpdownload {
 
     /**
      * Send download information header
+     *
      * @param      $size
      * @param null $seek_start
      * @param null $seek_end
@@ -178,6 +183,7 @@ class httpdownload {
 
     /**
      * Start download
+     *
      * @return bool
      **/
     function download() {

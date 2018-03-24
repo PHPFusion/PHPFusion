@@ -20,6 +20,7 @@
  * @param string $label
  * @param string $input_value
  * @param array  $options
+ *
  * @return string
  */
 function form_hidden($input_name, $label = "", $input_value = "", array $options = []) {

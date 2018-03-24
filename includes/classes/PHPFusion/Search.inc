@@ -22,6 +22,7 @@ use PHPFusion\Search\Search_Engine;
 /**
  * Class Search
  * Template
+ *
  * @package PHPFusion
  */
 class Search extends Search_Engine {
@@ -40,6 +41,7 @@ class Search extends Search_Engine {
 
     /**
      * Template for search form
+     *
      * @return string
      */
     public static function render_search() {
@@ -79,6 +81,7 @@ class Search extends Search_Engine {
 
     /**
      * Template for search no results when stext is less than 3
+     *
      * @return string
      */
     public static function render_search_no_result() {
@@ -94,6 +97,7 @@ class Search extends Search_Engine {
 
     /**
      * Template for search result item counting
+     *
      * @return string
      */
     public static function render_search_count() {
@@ -153,6 +157,7 @@ class Search extends Search_Engine {
 
     /**
      * Template for search Image Listing Item Type
+     *
      * @return string
      */
     public static function render_search_item_image() {
@@ -169,13 +174,14 @@ class Search extends Search_Engine {
 
     /**
      * Template for each search module results
+     *
      * @return string
      */
     public static function render_search_item_wrapper() {
         if (self::$search_item_wrapper) {
             return self::$search_item_wrapper;
         }
-        if (function_exists('render_search_item')) {
+        if (function_exists('render_search_item_wrapper')) {
             return (string)render_search_item_wrapper();
         }
 

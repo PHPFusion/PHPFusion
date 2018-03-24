@@ -147,7 +147,9 @@ class Batch_Core extends Install_Core {
 
     /**
      * Get the runtime results
+     *
      * @param null $key
+     *
      * @return null
      */
     public function batch_runtime($key = NULL) {
@@ -236,7 +238,9 @@ class Batch_Core extends Install_Core {
 
     /**
      * Fetches Existing Database Table Schema for comparisons
+     *
      * @param $table_name
+     *
      * @return null
      */
     private function get_table_schema($table_name) {
@@ -301,8 +305,10 @@ class Batch_Core extends Install_Core {
 
     /**
      * Get table column data-type attributes
+     *
      * @param $col_name
      * @param $col_attr
+     *
      * @return string
      */
     private function get_table_attr($col_name, $col_attr) {
@@ -356,6 +362,7 @@ class Batch_Core extends Install_Core {
 
     /**
      * Create codes generation
+     *
      * @return string
      */
     private function batch_create_table() {
@@ -420,8 +427,10 @@ class Batch_Core extends Install_Core {
 
     /**
      * Add default row records
+     *
      * @param $table_name
      * @param $localeset
+     *
      * @return null|string
      */
     public static function batch_insert_rows($table_name, $localeset) {

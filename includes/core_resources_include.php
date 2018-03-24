@@ -33,6 +33,7 @@ require_once __DIR__.'/multisite_include.php';
  * To debug sql statements (showing sql queries) insert either of the following line before "require_once footer.php"
  * $log = PHPFusion\Database\Driver\MySQL::getGlobalQueryLog();
  * $log = PHPFusion\Database\Driver\PDOMySQL::getGlobalQueryLog();
+ *
  * @todo: missing doc - usage to set true false otherwise.. ?
  * @todo: add a form_select("debug_sql", "Debug SQL?", fusion_get_settings("debug_sql"), array(
  *      "options" => array($locale['disable'], $locale['enable']),

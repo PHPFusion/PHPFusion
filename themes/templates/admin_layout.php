@@ -90,7 +90,7 @@ if (!check_admin_pass('')) {
     render_admin_panel();
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 
 if (!defined('FONTAWESOME-V4')) {

@@ -39,7 +39,7 @@ class Less_Tree_Element extends Less_Tree {
 
         if (Less_Environment::$mixin_stack) {
             return new Less_Tree_Element($this->combinator, ($this->value_is_object ? $this->value->compile($env) : $this->value), $this->index,
-                                         $this->currentFileInfo);
+                $this->currentFileInfo);
         }
 
         if ($this->value_is_object) {

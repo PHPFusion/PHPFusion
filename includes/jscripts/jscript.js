@@ -48,14 +48,15 @@ function flipBox(b) {
         document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
     }
 }
+
 /**
  * Tool to trim text
  * Usage:
  *     data-trim-text='30' - 30 is text length
  *     $('[data-trim-text]').trim_text(); - function initialization
  */
-$.fn.trim_text = function() {
-    return this.each(function() {
+$.fn.trim_text = function () {
+    return this.each(function () {
         var length = $(this).data("trim-text"), newtext, dots;
 
         dots = "";
@@ -77,6 +78,7 @@ function scrollTo(hash) {
         $(document.body).animate({'scrollTop': scrollNav - hashDOM.outerHeight(true)}, 600);
     }
 }
+
 /**
  * Tool to copy source element's width to target element.
  * @param source - # or .class element to copy from
@@ -86,6 +88,7 @@ function copyWidth(source, target) {
     var width = $(source).width();
     $(target).width(width);
 }
+
 /**
  * Jquery html_entities_decode
  * @param encodedString
@@ -136,6 +139,7 @@ function addText(f, i, a, e) {
         }
     }
 }
+
 /**
  * Need documentation
  * @param f
@@ -168,6 +172,7 @@ function insertText(f, h, e) {
         }
     }
 }
+
 /**
  * Need documentation
  * @param a
@@ -175,10 +180,13 @@ function insertText(f, h, e) {
 function show_hide(a) {
     document.getElementById(a).style.display = document.getElementById(a).style.display == "none" ? "block" : "none"
 }
+
 /*
 Variations to show_hide, in the form of a sliding action
  */
-function slide_hide(a) { $('#'+a).slideToggle(); }
+function slide_hide(a) {
+    $('#' + a).slideToggle();
+}
 
 /**
  * Need documentation
@@ -201,6 +209,7 @@ function getStyle(c, b) {
     }
     return d
 }
+
 /***********************************************
  * Drop Down/ Overlapping Content- � Dynamic Drive (www.dynamicdrive.com)
  * This notice must stay intact for legal use.
@@ -217,6 +226,7 @@ function getposOffset(a, d) {
     }
     return c
 }
+
 /**
  * Need documentation
  * @param e
@@ -237,6 +247,7 @@ function overlay(e, d, a) {
         return true
     }
 }
+
 /**
  * Need documentation
  * @param a
@@ -244,7 +255,9 @@ function overlay(e, d, a) {
 function overlayclose(a) {
     document.getElementById(a).style.display = "none"
 }
+
 NewWindowPopUp = null;
+
 /**
  * Need documentation
  * @param d
@@ -268,6 +281,7 @@ function OpenWindow(d, c, a, b) {
     NewWindowPopUp = window.open(d, "", "toolbar=no,menubar=no,location=no,personalbar=no,scrollbars=yes,status=no,directories=no,resizable=yes,height=" + a + ",width=" + c + ",top=" + wtop + ",left=" + wleft + "");
     NewWindowPopUp.focus()
 }
+
 /**
  * Need documentation of usage and examples
  * @returns {boolean}
@@ -351,12 +365,12 @@ function resize_forum_imgs() {
     });
  *
  */
-function setChecked(frmName,chkName,val) {
-    dml=document.forms[frmName];
-    len=dml.elements.length;
-    for(i=0;i<len;i++){
-        if(dml.elements[i].name==chkName){
-            dml.elements[i].checked=val;
+function setChecked(frmName, chkName, val) {
+    dml = document.forms[frmName];
+    len = dml.elements.length;
+    for (i = 0; i < len; i++) {
+        if (dml.elements[i].name == chkName) {
+            dml.elements[i].checked = val;
         }
     }
 }
@@ -367,4 +381,5 @@ function setChecked(frmName,chkName,val) {
 function onload_events() {
     resize_forum_imgs()
 }
+
 window.onload = onload_events;

@@ -154,7 +154,7 @@ class MainFrame extends Core {
                 echo "<div class='container'>\n";
             }
             echo($this->getParam('upper_content') ?: "");
-            echo AU_CENTER;
+            echo defined('AU_CENTER') && AU_CENTER ? AU_CENTER : '';
             if ($this->getParam('upper_container')) {
                 echo "</div>\n";
             }
@@ -189,11 +189,11 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-        $side_span = 3;
+        /*$side_span = 3;
         $main_span = 12;
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
             $main_span = $main_span - $side_span;
-        }
+        }*/
         if (defined('LEFT') && LEFT) :
             echo "<div class='nebulaCanvas off'>\n";
             echo "<a class='canvas-toggle' href='#' data-target='nebulaCanvas'><i class='fa fa-bars fa-lg'></i></a>\n";
@@ -233,7 +233,7 @@ class MainFrame extends Core {
         echo "</div>\n";
         if (defined('RIGHT') && $this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
             echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
-            echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
+            echo $this->getParam('right_pre_content').(defined('RIGHT') && RIGHT ? RIGHT : '').$this->getParam('right_post_content');
             echo "</div>\n";
         endif;
 

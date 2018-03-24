@@ -137,14 +137,18 @@ class BannersAdministration {
         $banner1 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner1' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner1 .= "</div>\n";
         openside(self::$locale['sitebanner1'].$banner1);
-        if (!empty(self::$banner_settings['sitebanner1'])) eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."<?php ");
+        if (!empty(self::$banner_settings['sitebanner1'])) {
+            eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."<?php ");
+        }
         closeside();
         $banner2 = "<div class='pull-right btn-group'>";
         $banner2 .= "<a class='btn btn-default btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_form&amp;action=edit&amp;banner_id=sitebanner2'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>";
         $banner2 .= "<a class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=banners_list&amp;action=delete&amp;banner_id=sitebanner2' onclick=\"return confirm('".self::$locale['BN_015']."');\"><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a>";
         $banner2 .= "</div>\n";
         openside(self::$locale['sitebanner2'].$banner2);
-        if (!empty(self::$banner_settings['sitebanner2'])) eval("?>".stripslashes(fusion_get_settings("sitebanner2"))."<?php ");
+        if (!empty(self::$banner_settings['sitebanner2'])) {
+            eval("?>".stripslashes(fusion_get_settings("sitebanner2"))."<?php ");
+        }
         closeside();
         echo closeform();
     }

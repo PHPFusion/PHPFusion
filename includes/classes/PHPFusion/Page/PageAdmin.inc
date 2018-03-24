@@ -23,6 +23,7 @@ use PHPFusion\BreadCrumbs;
 
 /**
  * Class PageAdmin
+ *
  * @package PHPFusion\Page
  */
 class PageAdmin extends PageModel {
@@ -43,6 +44,7 @@ class PageAdmin extends PageModel {
 
     /**
      * Returns list of administration mode
+     *
      * @return array
      */
     public static function getAllowedComposerMode() {
@@ -51,6 +53,7 @@ class PageAdmin extends PageModel {
 
     /**
      * Return page composer object
+     *
      * @return object
      */
     public static function getComposerAdminInstance() {
@@ -181,6 +184,7 @@ class PageAdmin extends PageModel {
 
     /**
      * Get page administration mode
+     *
      * @return string
      */
     public static function getComposerMode() {

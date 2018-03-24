@@ -35,7 +35,7 @@ class Less_Autoloader {
 
         self::$libDir = dirname(__FILE__);
 
-        if (FALSE === spl_autoload_register(array('Less_Autoloader', 'loadClass'))) {
+        if (FALSE === spl_autoload_register(['Less_Autoloader', 'loadClass'])) {
             throw new Exception('Unable to register Less_Autoloader::loadClass as an autoloading method.');
         }
 
@@ -48,7 +48,7 @@ class Less_Autoloader {
      * @return void
      */
     public static function unregister() {
-        spl_autoload_unregister(array('Less_Autoloader', 'loadClass'));
+        spl_autoload_unregister(['Less_Autoloader', 'loadClass']);
         self::$registered = FALSE;
     }
 

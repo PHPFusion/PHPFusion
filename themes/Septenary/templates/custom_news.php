@@ -19,6 +19,7 @@
 if (!function_exists('render_main_news')) {
     /**
      * News Page Template
+     *
      * @param $info
      */
     function display_main_news($info) {
@@ -44,6 +45,7 @@ if (!function_exists('render_main_news')) {
                     $item_count = 1;
                     $small_items = [];
                     $small_items_image = [];
+                    $big_item_image = [];
 
                     $carousel_active = $carousel_count == 0 ? 'active' : '';
 
@@ -102,7 +104,6 @@ if (!function_exists('render_main_news')) {
                             $item_count = 1;
                         }
                     }
-
 
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
                     $carousel_item .= "<div class='col-xs-12 col-sm-6 item-lg' style='height: ".$carousel_height."px; background-image: url($big_item_image); background-size: cover;'>";
@@ -192,6 +193,7 @@ if (!function_exists('render_main_news')) {
 
         // Build filters
         $i = 0;
+        $tab_title = [];
         foreach ($info['news_filter'] as $link => $title) {
             $tab_title['title'][] = $title;
             $tab_title['id'][] = $i;
@@ -207,7 +209,7 @@ if (!function_exists('render_main_news')) {
                 foreach ($info['news_items'] as $i => $news_info) {
                     echo "<div class='col-xs-12 col-sm-6'>\n";
                     echo (isset($_GET['cat_id'])) ? "<!--pre_news_cat_idx-->\n" : "<!--news_prepost_".$i."-->\n";
-                    render_news($news_info['news_subject'], $news_info['news_news'], $news_info, FALSE);
+                    render_news($news_info);
                     echo (isset($_GET['cat_id'])) ? "<!--sub_news_cat_idx-->" : "<!--sub_news_idx-->\n";
                     echo "</div>\n";
                 }
@@ -233,9 +235,10 @@ if (!function_exists('render_main_news')) {
 if (!function_exists('render_news')) {
     /**
      * News Item Container
-     * @param      $info
+     *
+     * @param $info
      */
-    function render_news($subject, $news, $info) {
+    function render_news($info) {
         $locale = fusion_get_locale();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         add_to_jquery("
@@ -260,7 +263,7 @@ if (!function_exists('render_news')) {
 
             <h4 class="news-title-info">
                 <a class="strong text-dark" href="<?php echo $info['news_url'] ?>">
-                    <?php ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '' ?>
+                    <?php echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '' ?>
                     <?php echo $info['news_subject'] ?>
                 </a>
             </h4>

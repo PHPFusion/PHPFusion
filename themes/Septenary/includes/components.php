@@ -27,6 +27,7 @@ use PHPFusion\Rewrite\Router;
 /**
  * Class SeptenaryComponents
  * Collections of 'functions_include.php'
+ *
  * @package Septenary
  */
 class SeptenaryComponents {
@@ -35,6 +36,7 @@ class SeptenaryComponents {
 
     /**
      * Legacy opentable function
+     *
      * @param $title
      */
     public static function opentable($title) {
@@ -50,6 +52,7 @@ class SeptenaryComponents {
 
     /**
      * Legacy Openside Function
+     *
      * @param            $title
      * @param bool|FALSE $collapse
      * @param string     $state
@@ -84,6 +87,7 @@ class SeptenaryComponents {
 
     /**
      * Set current theme locale
+     *
      * @return array
      */
     public static function set_locale() {
@@ -102,6 +106,7 @@ class SeptenaryComponents {
 
     /**
      * Sets custom header html
+     *
      * @param $html
      */
     public static function set_header_html($html) {
@@ -110,9 +115,11 @@ class SeptenaryComponents {
 
     /**
      * Calculation of Bootstrap Grid Span
+     *
      * @param int $sm_default
      * @param int $md_default
      * @param int $lg_default
+     *
      * @return string
      */
     public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
@@ -151,7 +158,9 @@ class SeptenaryComponents {
 
     /**
      * Theme Output Replacement
+     *
      * @param $output
+     *
      * @return array
      */
     public static function theme_output($output) {
@@ -267,6 +276,7 @@ class SeptenaryComponents {
 
     /**
      * Open Section
+     *
      * @param            $class
      * @param bool|FALSE $box
      */
@@ -277,6 +287,7 @@ class SeptenaryComponents {
 
     /**
      * Close Section
+     *
      * @param bool|FALSE $box
      */
     public static function close_grid($box = FALSE) {

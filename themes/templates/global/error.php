@@ -29,9 +29,9 @@ if (!function_exists("display_error_page")) {
             </div>
             <div class='col-xs-12 col-sm-9'>
                 <span class='va' style='height:160px'></span>
-                <span class='va'>
+                <div class='va'>
                     <h4>{%error_code%}</h4>
-                </span>
+                </div>
                 <div>{%message%}</div>
                 <div class='spacer-sm'><a class='button' href='{%back_link%}'>{%back_title%}</a></div>
 

@@ -111,7 +111,7 @@ class Errors {
      */
     public function setError($error_level, $error_message, $error_file, $error_line) {
         $userdata = fusion_get_userdata();
-        $showLiveError = true; // directly show error - push to another instance
+        $showLiveError = TRUE; // directly show error - push to another instance
         $db = DatabaseFactory::getConnection();
         $result = $db->query(
             "SELECT error_id, error_status FROM ".DB_ERRORS."
@@ -142,7 +142,7 @@ class Errors {
             $data = $db->fetchAssoc($result);
             $errorId = $data['error_id'];
             if ($data['error_status'] == 2) {
-                $showLiveError = false;
+                $showLiveError = FALSE;
             }
         }
 
@@ -168,7 +168,7 @@ class Errors {
         $locale = self::$locale;
 
 
-        define("NO_DEBUGGER", true);
+        define("NO_DEBUGGER", TRUE);
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
@@ -257,7 +257,7 @@ class Errors {
                     echo openform('logform', 'post', ADMIN.'errors.php'.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
                     echo form_hidden('error_id', '', $data['error_id']);
                     echo form_select('error_status', $locale['mark_as'], $data['error_status'], [
-                        'inline'  => true,
+                        'inline'  => TRUE,
                         'options' => self::get_logTypes()
                     ]);
                     echo closeform();
@@ -324,10 +324,10 @@ class Errors {
         $locale = self::$locale;
 
         // Use clean request for absolute escape from SEO converging form path
-        $html = openform('error_logform', 'post', clean_request('', [], false), ['class' => 'text-center well m-t-5 m-b-5']);
+        $html = openform('error_logform', 'post', clean_request('', [], FALSE), ['class' => 'text-center well m-t-5 m-b-5']);
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', '', '', ['allowclear' => true, 'options' => self::get_logTypes(), 'inline' => true]);
+        $html .= form_select('delete_status', '', '', ['allowclear' => TRUE, 'options' => self::get_logTypes(), 'inline' => TRUE]);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
         $html .= "</div>\n";
         $html .= closeform();
@@ -473,7 +473,7 @@ class Errors {
             return $error_types[$type][1];
         }
 
-        return false;
+        return FALSE;
     }
 
     private static function errorjs() {
@@ -529,7 +529,7 @@ class Errors {
         $locale = fusion_get_locale();
 
         if (is_array($source_code)) {
-            return false;
+            return FALSE;
         }
 
         $error_message = [
@@ -547,14 +547,14 @@ class Errors {
                 $formatted_code .= "<td class='".$line_class."'>".str_replace([
                         '<code>',
                         '</code>'
-                    ], '', highlight_string($code_line, true))."</td>\n</tr>\n";
+                    ], '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
             } else {
                 $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace([
                         '<code>',
                         '</code>'
                     ], '',
                         highlight_string('<?php '.$code_line,
-                            true)))."
+                            TRUE)))."
                 </td>\n</tr>\n";
                 if ($line_count == $error_line) {
                     $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
@@ -571,7 +571,7 @@ class Errors {
         $count = count($lines);
         for ($i = 0; $i < $count; ++$i) {
             preg_match('`^\s*`', $code, $matches);
-            $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", true);
+            $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
         }
 
         return implode("\n", $lines);

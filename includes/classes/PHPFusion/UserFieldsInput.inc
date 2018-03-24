@@ -355,7 +355,7 @@ class UserFieldsInput {
                                 $this->data['user_salt'] = $this->_newUserPasswordSalt;
                                 $this->data['user_password'] = $this->_newUserPasswordHash;
                                 //if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
-                                    //Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
+                                //Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                                 //}
                                 break;
                             case '1':

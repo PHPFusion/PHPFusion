@@ -45,6 +45,7 @@ class Search_Engine extends Search_Model {
      * Returns params
      *
      * @param null $key
+     *
      * @return array|string
      */
     public static function get_param($key = NULL) {

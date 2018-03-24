@@ -71,7 +71,7 @@ foreach ($timezones as $zone) {
 
 $weekdayslist = explode("|", $locale['weekdays']);
 
-$date_opts = array();
+$date_opts = [];
 foreach ($locale['dateformats'] as $dateformat) {
     $date_opts[$dateformat] = showdate($dateformat, TIME);
 }

@@ -23,6 +23,7 @@ use PHPFusion\Panels;
 /**
  * Got html construct. So need to use PageView.
  * Class PageController
+ *
  * @package PHPFusion\Page
  */
 class PageController extends PageModel {
@@ -57,7 +58,9 @@ class PageController extends PageModel {
 
     /**
      * Core page content display driver
+     *
      * @param $colData
+     *
      * @return string
      */
     public static function displayContentHTML($colData) {
@@ -88,6 +91,7 @@ class PageController extends PageModel {
 
     /**
      * Set Page Variables
+     *
      * @param $page_id
      */
     protected static function set_PageInfo($page_id) {

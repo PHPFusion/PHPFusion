@@ -1166,7 +1166,7 @@ class QuantumFields extends \SqlHandler {
     /**
      * Display fields for each fieldDB record entry
      *
-     * @param array  $data   The array of the user field.
+     * @param array  $data The array of the user field.
      * @param        $callback_data
      * @param string $method input or display. In case of any other value
      *                       the method return FALSE. See the description of return for more details.
@@ -1588,12 +1588,12 @@ class QuantumFields extends \SqlHandler {
             echo "</div>\n";
             echo $tabs->closetabbody();
 
-        } elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
+        } else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
             echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
             echo $this->quantum_dynamics_form();
             echo $tabs->closetabbody();
 
-        } elseif (isset($_POST['add_module']) && in_array($_POST['add_module'], array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))) {
+        } else if (isset($_POST['add_module']) && in_array($_POST['add_module'], array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))) {
             echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
             echo $this->display_module_form();
             echo $tabs->closetabbody();
@@ -2573,6 +2573,8 @@ class QuantumFields extends \SqlHandler {
          * Loads the relevant plugin files
          */
         $plugin_file_found = FALSE;
+        $plugin_folder = '';
+        $folder = '';
         if (is_array($this->plugin_folder) && !empty($this->plugin_folder)) {
             $p_folder = $this->plugin_folder;
             foreach ($p_folder as $plugin_folder) {

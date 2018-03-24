@@ -23,7 +23,7 @@ class Less_Tree_Rule extends Less_Tree {
      */
     public function __construct($name, $value = NULL, $important = NULL, $merge = NULL, $index = NULL, $currentFileInfo = NULL, $inline = FALSE) {
         $this->name = $name;
-        $this->value = ($value instanceof Less_Tree_Value || $value instanceof Less_Tree_Ruleset) ? $value : new Less_Tree_Value(array($value));
+        $this->value = ($value instanceof Less_Tree_Value || $value instanceof Less_Tree_Ruleset) ? $value : new Less_Tree_Value([$value]);
         $this->important = $important ? ' '.trim($important) : '';
         $this->merge = $merge;
         $this->index = $index;
@@ -51,7 +51,7 @@ class Less_Tree_Rule extends Less_Tree {
             throw $e;
         }
         $output->add($this->important.(($this->inline || (Less_Environment::$lastRule && Less_Parser::$options['compress'])) ? "" : ";"),
-                     $this->currentFileInfo, $this->index);
+            $this->currentFileInfo, $this->index);
     }
 
     public function compile($env) {

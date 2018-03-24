@@ -31,6 +31,7 @@ spl_autoload_register(function ($className) {
         require_once $fullPath;
     }
 });
+
 /*
  * Autoloader for compatibility reason
  *
@@ -79,10 +80,11 @@ spl_autoload_register(function ($className) {
     }
 });
 
-
 /**
  * Get path of config.php
+ *
  * @param int $max_level
+ *
  * @return string|null The relative path of the base directory
  * or NULL if config.php was not found
  */

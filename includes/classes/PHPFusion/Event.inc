@@ -119,7 +119,7 @@ class Event {
         if (isset(self::$event_required[$this->event_name]) AND self::$event_required[$this->event_name] === TRUE) { // this will be true if my last event already expired. but the last state of the triggered actions already in.
             return TRUE;
             // now i check for the tables and fetch again the unique ones. i need to compare and see if that is already fetched.
-        } elseif (!dbcount('(notice_id)', DB_USER_NOTIFY, 'notice_event=:event_name AND notice_to=:my_id AND notice_datestamp > :expiry_time',
+        } else if (!dbcount('(notice_id)', DB_USER_NOTIFY, 'notice_event=:event_name AND notice_to=:my_id AND notice_datestamp > :expiry_time',
             [
                 ':expiry_time' => TIME - (60 * self::$threshold_minute),
                 ':my_id'       => self::get_UserID(),

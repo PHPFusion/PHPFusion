@@ -487,7 +487,7 @@ class PanelsAdministration {
         }
 
         if (!empty($panels)) {
-        $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
+            $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
             foreach ($temp as $folder) {
                 if (strstr($folder, "_panel")) {
                     if (!in_array($folder, $panels)) {

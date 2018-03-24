@@ -23,9 +23,10 @@ class Less_Cache {
      * @param array $less_files Array of .less files to compile
      * @param array $parser_options Array of compiler options
      * @param array $modify_vars Array of variables
+     *
      * @return string Name of the css file
      */
-    public static function Regen($less_files, $parser_options = array(), $modify_vars = array()) {
+    public static function Regen($less_files, $parser_options = [], $modify_vars = []) {
         $parser_options['use_cache'] = FALSE;
 
         return self::Get($less_files, $parser_options, $modify_vars);
@@ -39,9 +40,10 @@ class Less_Cache {
      * @param array $less_files Array of .less files to compile
      * @param array $parser_options Array of compiler options
      * @param array $modify_vars Array of variables
+     *
      * @return string Name of the css file
      */
-    public static function Get($less_files, $parser_options = array(), $modify_vars = array()) {
+    public static function Get($less_files, $parser_options = [], $modify_vars = []) {
 
 
         //check $cache_dir
@@ -66,7 +68,7 @@ class Less_Cache {
                 file_put_contents($vars_file, $lessvars);
             }
 
-            $less_files += array($vars_file => '/');
+            $less_files += [$vars_file => '/'];
         }
 
 
@@ -132,10 +134,10 @@ class Less_Cache {
                 throw new Less_Exception_Parser('Less.php cache directory couldn\'t be created: '.Less_Cache::$cache_dir);
             }
 
-        } elseif (!is_dir(Less_Cache::$cache_dir)) {
+        } else if (!is_dir(Less_Cache::$cache_dir)) {
             throw new Less_Exception_Parser('Less.php cache directory doesn\'t exist: '.Less_Cache::$cache_dir);
 
-        } elseif (!is_writable(Less_Cache::$cache_dir)) {
+        } else if (!is_writable(Less_Cache::$cache_dir)) {
             throw new Less_Exception_Parser('Less.php cache directory isn\'t writable: '.Less_Cache::$cache_dir);
 
         }
@@ -163,7 +165,7 @@ class Less_Cache {
     private static function CompiledName($files) {
 
         //save the file list
-        $temp = array(Less_Version::cache_version);
+        $temp = [Less_Version::cache_version];
         foreach ($files as $file) {
             $temp[] = filemtime($file)."\t".filesize($file)."\t".$file;
         }
@@ -187,7 +189,7 @@ class Less_Cache {
         return Less_Cache::$cache_dir.$compiled_name;
     }
 
-    public static function Cache(&$less_files, $parser_options = array()) {
+    public static function Cache(&$less_files, $parser_options = []) {
 
 
         // get less.php if it exists

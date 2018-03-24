@@ -18,6 +18,7 @@
 namespace ThemePack\Nebula\Templates;
 
 use ThemeFactory\Core;
+use \PHPFusion\News\NewsServer;
 
 /**
  * Class News
@@ -31,7 +32,7 @@ class News extends Core {
      * @param $info
      */
     public static function display_news($info) {
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
+        $news_settings = NewsServer::get_news_settings();
 
         /*
          * FusionTheme Controller

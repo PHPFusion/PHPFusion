@@ -462,10 +462,10 @@ class UserGroups {
         $html .= "</div>\n";
 
         add_to_footer("<script type='text/javascript'>\n
-        function setChecked(frmName,chkName,val) {"."\n
-        dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n
-        if (dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
-        }}}\n
+        function setChecked(frmName, chkName, val) {"."\n
+            dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n
+            if (dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
+        }}}
         </script>\n");
 
         return $html;

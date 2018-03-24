@@ -173,7 +173,9 @@ class OutputHandler {
      * Execute the output handlers
      *
      * @global array $locale
+     *
      * @param string $output
+     *
      * @return string
      */
     public static function handleOutput($output) {

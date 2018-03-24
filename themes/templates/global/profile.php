@@ -26,8 +26,6 @@ if (!function_exists('display_register_form')) {
      * echo output design in compatible with Version 7.xx theme set.
      *
      * @param $info - the array output that is accessible for your custom requirements
-     *
-     * @return string
      */
     function display_register_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
@@ -66,8 +64,6 @@ if (!function_exists('display_profile_form')) {
      * echo output design in compatible with Version 7.xx theme set.
      *
      * @param $info - the array output that is accessible for your custom requirements
-     *
-     * @return string
      */
     function display_profile_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");

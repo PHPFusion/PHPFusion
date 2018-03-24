@@ -114,10 +114,10 @@ class Members_Profile extends Members_Admin {
 
         if (isset($_POST['delete_user'])) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
-                array(
+                [
                     ':user_id'    => self::$user_id,
                     ':user_level' => USER_LEVEL_SUPER_ADMIN
-                )
+                ]
             );
             $rows = dbrows($result);
             if ($rows != '0') {
@@ -229,7 +229,7 @@ class Members_Profile extends Members_Admin {
         echo "<p>".nl2br(sprintf(self::$locale['ME_455'], "<strong>".self::$user_data['user_name']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;ref=delete&amp;lookup=".self::$user_id."");
         echo "<div class='spacer-sm'>\n";
-        echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], array('class' => 'btn-danger m-r-10'));
+        echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
         echo "</div>\n";
         echo closeform();
@@ -238,8 +238,8 @@ class Members_Profile extends Members_Admin {
 
     public static function delete_unactivated_user() {
         if (isset($_POST['delete_newuser'])) {
-        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
-        redirect(clean_request('', array('ref', 'lookup', 'newuser'), FALSE));
+            dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
+            redirect(clean_request('', ['ref', 'lookup', 'newuser'], FALSE));
 
         }
 
@@ -248,7 +248,7 @@ class Members_Profile extends Members_Admin {
         echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_REQUEST);
         echo "<div class='spacer-sm'>\n";
-        echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], array('class' => 'btn-danger m-r-10'));
+        echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
         echo "</div>\n";
         echo closeform();

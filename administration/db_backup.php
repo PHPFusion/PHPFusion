@@ -284,12 +284,17 @@ class DbBackupAdministration {
 
             echo "<h4>".$this->locale['400']."</h4>";
 
-            echo "<script type='text/javascript'>\n<!--\n";
-            echo "function tableSelectAll(){for(i=0;i<document.restoreform.elements['list_tbl[]'].length;i++){document.restoreform.elements['list_tbl[]'].options[i].selected=true;}}\n";
-            echo "function tableSelectNone(){for(i=0;i<document.restoreform.elements['list_tbl[]'].length;i++){document.restoreform.elements['list_tbl[]'].options[i].selected=false;}}\n";
-            echo "function populateSelectAll(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=true;}}\n";
-            echo "function populateSelectNone(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=false;}}\n";
-            echo "//-->\n</script>\n";
+            add_to_jquery("
+                function tableSelectAll(){for(i=0;i<document.restoreform.elements['list_tbl[]'].length;i++){document.restoreform.elements['list_tbl[]'].options[i].selected=true;}}
+                function tableSelectNone(){for(i=0;i<document.restoreform.elements['list_tbl[]'].length;i++){document.restoreform.elements['list_tbl[]'].options[i].selected=false;}}
+                function populateSelectAll(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=true;}}
+                function populateSelectNone(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=false;}}
+            
+                $('#tableSelectAll').on('click', function () {tableSelectAll()});
+                $('#tableSelectNone').on('click', function () {tableSelectNone()});
+                $('#populateSelectAll').on('click', function () {populateSelectAll()});
+                $('#populateSelectNone').on('click', function () {populateSelectNone()});
+            ");
 
             echo openform('confirm_restore_frm', 'post', FUSION_REQUEST, ['max_tokens' => 30]);
             echo "<div class='table-responsive'><table class='table'>\n<tbody>\n<tr>\n";
@@ -308,12 +313,12 @@ class DbBackupAdministration {
             echo "<td valign='top' class='tbl'><strong>".$this->locale['433']."</strong><br />\n";
             echo "<select name='list_tbl[]' id='list_tbl' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$table_opt_list."</select>\n";
             echo "<div class='btn-group m-t-10' style='text-align:center'>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"tableSelectAll()\">".$this->locale['436']."</a>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"tableSelectNone()\">".$this->locale['437']."</a></div></td>\n";
+            echo "<a class='btn btn-default' href='#' id='tableSelectAll'>".$this->locale['436']."</a>";
+            echo "<a class='btn btn-default' href='#' id='tableSelectNone'>".$this->locale['437']."</a></div></td>";
             echo "<td valign='top' class='tbl'><strong>".$this->locale['434']."</strong><br />\n";
             echo "<select name='list_ins[]' id='list_ins' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$insert_opt_list."</select>\n";
-            echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"populateSelectAll()\">".$this->locale['436']."</a>\n";
-            echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"populateSelectNone()\">".$this->locale['437']."</a></div></td>\n";
+            echo "<div class='btn-group m-t-10' style='text-align:center;'><a class='btn btn-default' href='#' id='populateSelectAll'>".$this->locale['436']."</a>\n";
+            echo "<a class='btn btn-default' href='#' id='populateSelectNone'>".$this->locale['437']."</a></div></td>\n";
             echo "</tr>\n<tr>\n";
             echo "<td colspan='2' class='tbl text-center'>\n";
             echo "</tr>\n</tbody>\n</table>\n</div>";
@@ -336,9 +341,7 @@ class DbBackupAdministration {
             echo "</div>\n";
             echo form_button('restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary spacer-sm',]);
             echo closeform();
-
         }
-
     }
 
     private function backup_form() {
@@ -354,11 +357,15 @@ class DbBackupAdministration {
             $table_opt_list .= ">".$row[0]."</option>\n";
         }
 
-        echo "<script type='text/javascript'>\n<!--\n";
-            echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}\n";
-            echo "function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}\n";
-            echo "function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}\n";
-            echo "//-->\n</script>\n";
+        add_to_jquery("
+            function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}
+            function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}
+            function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}
+
+            $('#backupSelectCore').on('click', function (e) {e.preventDefault();backupSelectCore()});
+            $('#backupSelectAll').on('click', function (e) {e.preventDefault();backupSelectAll()});
+            $('#backupSelectNone').on('click', function (e) {e.preventDefault();backupSelectNone()});
+        ");
 
         echo openform('backupform', 'post', FUSION_REQUEST);
         echo "<div class='row'>";
@@ -409,9 +416,9 @@ class DbBackupAdministration {
         echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='textbox' multiple='multiple'>".$table_opt_list."</select>\n";
         echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$this->locale['435']."</strong>\n";
         echo "<div class='btn-group'>\n";
-        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectCore()\">".$this->locale['458']."</a>\n";
-        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectAll()\">".$this->locale['436']."</a>\n";
-        echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"backupSelectNone()\">".$this->locale['437']."</a>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectCore'>".$this->locale['458']."</a>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectAll'>".$this->locale['436']."</a>\n";
+        echo "<a class='btn btn-default' href='#' id='backupSelectNone'>".$this->locale['437']."</a>\n";
         echo "</div>\n";
         echo "</div>\n";
         echo "</td>\n</tr>\n</tbody>\n</table>\n</div>";

@@ -22,7 +22,9 @@ if (!defined("IN_FUSION")) {
 
 /**
  * Get the color name
+ *
  * @param $id - color locale ID
+ *
  * @return string
  */
 function getcolorname($id) {
@@ -41,6 +43,7 @@ function getcolorname($id) {
  * @param bool   $colors
  * @param bool   $images
  * @param string $folder
+ *
  * @return string
  */
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {

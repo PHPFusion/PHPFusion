@@ -27,6 +27,7 @@ interface WidgetAdminInterface {
 
     /**
      * Returns the exclude key of a clean_request of your widget when save or update redirects
+     *
      * @return array
      */
     public function exclude_return();
@@ -35,6 +36,7 @@ interface WidgetAdminInterface {
      * Validate all $_POST of your form and returns a page content serialized string from your form inputs
      * The post button value that reads this function is 'widget'
      * Return is saved into 'page_content' column of DB_PAGES_CONTENT table (i.e. $self::$colData)
+     *
      * @return string - serialized array
      */
     public function validate_input();
@@ -43,6 +45,7 @@ interface WidgetAdminInterface {
      * Validate all $_POST of your form and returns a page settings serialized string from your form inputs
      * The post button value that reads this function is 'settings'
      * Return is saved into 'page_options' column of DB_PAGES_CONTENT table (i.e. $self::$colData)
+     *
      * @return string - serialized array
      */
     public function validate_settings();
@@ -50,6 +53,7 @@ interface WidgetAdminInterface {
     /**
      * The execution of codes extra when delete column button is pressed
      * Use this to delete and prune tables if needed, if not leave body blank
+     *
      * @return mixed
      */
     public function validate_delete();
@@ -70,6 +74,7 @@ interface WidgetAdminInterface {
      * There are 2 acceptable button values - widget and settings
      * 'widget' will pair with validate_input() function to return against 'page_content' column
      * 'settings' will pair with validate_settings() function to return against 'page_options' column
+     *
      * @return mixed
      */
     public function display_form_button();

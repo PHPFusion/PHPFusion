@@ -29,6 +29,7 @@ class Requirements extends Install_Core {
 
     /**
      * Get System Requirements for PHP-Fusion 9
+     *
      * @return array
      */
     public static function get_system_requirements() {
@@ -258,6 +259,7 @@ class Requirements extends Install_Core {
 
     /**
      * Validates the system for consistency
+     *
      * @return array
      */
     public static function get_system_validation() {
@@ -408,6 +410,7 @@ function check_table($db_prefix) {
 
 /**
  * Write htaccess file based on the configuration
+ *
  * @param array $system
  *
  * @return bool

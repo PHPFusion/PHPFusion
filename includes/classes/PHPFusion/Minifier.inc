@@ -88,6 +88,7 @@ class Minifier {
      *
      * @param  string $js The raw javascript to be minified
      * @param  array  $options Various runtime options in an associative array
+     *
      * @throws \Exception
      * @return bool|string
      */
@@ -125,6 +126,7 @@ class Minifier {
      * Replace patterns in the given string and store the replacement
      *
      * @param  string $js The string to lock
+     *
      * @return bool
      */
     protected function lock($js) {
@@ -251,6 +253,7 @@ class Minifier {
      * conditional comments.
      *
      * @param  int $startIndex The index point where "getReal" function started
+     *
      * @return string
      */
     protected function processOneLineComments($startIndex) {
@@ -278,6 +281,7 @@ class Minifier {
      * to it's position.
      *
      * @param  string $string
+     *
      * @return string|false Returns the first character of the string or false.
      */
     protected function getNext($string) {
@@ -301,6 +305,7 @@ class Minifier {
      * Conditional comments and "license" style blocks are preserved.
      *
      * @param  int $startIndex The index point where "getReal" function started
+     *
      * @return bool|string       False if there's no character
      */
     protected function processMultiLineComments($startIndex) {
@@ -502,6 +507,7 @@ class Minifier {
      * Checks to see if a character is alphanumeric.
      *
      * @param  string $char Just one character
+     *
      * @return bool
      */
     protected static function isAlphaNumeric($char) {
@@ -551,6 +557,7 @@ class Minifier {
      * Replace "locks" with the original characters
      *
      * @param  string $js The string to unlock
+     *
      * @return bool
      */
     protected function unlock($js) {

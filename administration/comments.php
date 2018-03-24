@@ -273,7 +273,8 @@ class CommentsAdministration {
 
     private function ban_comments($comment_id) {
         $result = NULL;
-        if (isnum($comment_id)) {$resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
+        if (isnum($comment_id)) {
+            $resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
 
             $data = dbarray($resultquery);
 
