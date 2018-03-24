@@ -130,8 +130,9 @@ class Search_Engine extends Search_Model {
             '1209600'  => $locale['424'],
             '2419200'  => $locale['425'],
             '7257600'  => $locale['426'],
-            '14515200' => $locale['427'],
+            '14515200' => $locale['427']
         ];
+
         $disabled_status = FALSE;
         if (isset($form_elements[self::get_param('stype')]['disabled'])) {
             $disabled_status = !empty($form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
@@ -139,23 +140,20 @@ class Search_Engine extends Search_Model {
                 $disabled_status = in_array("datelimit", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
             }
         }
+
         if (self::get_param('stype') == "all") {
             $disabled_status = TRUE;
         }
-        //$search_areas = "<p><strong>".$locale['406']."</strong></p>\n";
-        $search_areas = "<table style='width:100%'>\n<tr>\n";
-        $search_areas .= "<td>".$locale['420']."</td>\n";
-        $search_areas .= "<td>\n";
+
+        $search_areas = "<div class='row'>";
+        $search_areas .= "<div class='col-xs-12 col-sm-3'>".$locale['420']."</div>";
+        $search_areas .= "<div class='col-xs-12 col-sm-9'>";
         $search_areas .= form_select('datelimit', '', self::get_param('datelimit'),
             [
                 'inner_width' => '150px',
                 'options'     => $date_opts,
                 'deactivate'  => $disabled_status
             ]);
-        $search_areas .= "</td>\n";
-        $search_areas .= "</tr>\n<tr>\n";
-        $search_areas .= "<td>&nbsp;</td>\n";
-        $search_areas .= "<td>";
         $search_areas .= form_checkbox('fields', $locale['430'], self::get_param('fields'),
             [
                 'type'          => 'radio',
@@ -187,7 +185,8 @@ class Search_Engine extends Search_Model {
                     $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
-        $search_areas .= "</td>\n</tr>\n</table>\n";
+        $search_areas .= "</div></div>";
+
         /*
          * Sort
          */
@@ -197,19 +196,15 @@ class Search_Engine extends Search_Model {
             'author'    => $locale['443']
         ];
 
-        $sort = "<table style='width:100%'>\n<tr>\n";
-        $sort .= "<td>".$locale['440']."</td>\n";
-        $sort .= "<td>\n";
+        $sort = "<div class='row'>";
+        $sort .= "<div class='col-xs-12 col-sm-3'>".$locale['440']."</div>";
+        $sort .= "<div class='col-xs-12 col-sm-9'>";
         $sort .= form_select('sort', '', self::get_param('sort'), [
             'inner_width' => '150px',
             'options'     => $sort_opts,
             'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort",
                 $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
         ]);
-        $sort .= "</td>\n";
-        $sort .= "</tr>\n<tr>\n";
-        $sort .= "<td>&nbsp;</td>\n";
-        $sort .= "<td>";
         $sort .= form_checkbox('order', $locale['450'], self::get_param('order'),
             [
                 'type'          => 'radio',
@@ -231,7 +226,8 @@ class Search_Engine extends Search_Model {
                 'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
-        $sort .= "</td>\n</tr>\n</table>\n";
+        $sort .= "</div></div>";
+
         /*
          * Char list
          */
@@ -242,9 +238,9 @@ class Search_Engine extends Search_Model {
             '200' => '200'
         ];
 
-        $char_areas = "<table style='width:100%'>\n<tr>\n";
-        $char_areas .= "<td>".$locale['460']."</td>\n";
-        $char_areas .= "<td>\n";
+        $char_areas = "<div class='row'>";
+        $char_areas .= "<div class='col-xs-12 col-sm-3'>".$locale['460']."</div>";
+        $char_areas .= "<div class='col-xs-12 col-sm-9'>";
         $char_areas .= form_select('chars', '', self::get_param('chars'), [
                 'inner_width' => '150px',
                 'options'     => $char_opts,
@@ -252,7 +248,7 @@ class Search_Engine extends Search_Model {
                     $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
             ]
         );
-        $char_areas .= "</td>\n</tr>\n</table>\n";
+        $char_areas .= "</div></div>";
 
         /*
          * Bind
