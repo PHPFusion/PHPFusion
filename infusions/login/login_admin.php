@@ -24,6 +24,8 @@ opentable($locale['login_002']);
 $login = new \PHPFusion\Infusions\Login\Login();
 $files = $login->cache_files();
 $driver_type = [];
+$user_field_name = '';
+$user_field_desc = '';
 echo "<table class='table'>\n";
 echo "<thead>\n";
 echo "<tr>\n";
