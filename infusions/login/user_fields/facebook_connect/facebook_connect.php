@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: login/user_fields/facebook_connect/facebook_connect.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 /**
  * Class Facebook_Authenticate
@@ -50,7 +66,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         }
 
         echo "<div class='well'>".$locale['uf_fb_connect_200']."</div>\n";
-        echo openside("<h4><i class='fab fa-facebook-square fa-lg m-r-10'></i>".$locale['uf_fb_connect_201']."</h4>");
+        openside("<h4><i class='fa fa-facebook-square fa-lg m-r-10'></i>".$locale['uf_fb_connect_201']."</h4>");
         echo openform('facebook_settings_frm', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6'>\n";
@@ -82,7 +98,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         echo "</div>\n</div>\n";
         echo form_button('save_fb', $locale['uf_fb_connect_222'], 'save_fb');
         echo closeform();
-        echo closeside();
+        closeside();
     }
 
     public function login_authenticate($user) {

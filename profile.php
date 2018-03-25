@@ -55,7 +55,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $userFields->userData = $user_data;
     $userFields->showAdminOptions = TRUE;
     $userFields->method = 'display';
-    $userFields->plugin_folder = INCLUDES."user_fields/";
+    $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->display_profile_output();
 

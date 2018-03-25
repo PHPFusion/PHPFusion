@@ -23,6 +23,9 @@ $google = new GoogleAuthenticator();
 $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
 $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
 $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
+$user = [];
+$secret = '';
+$remember = '';
 
 if (isset($_GET['restore_code']) && isset($_GET['uid']) && isnum($_GET['uid'])) {
     $restore_code = stripinput($_GET['restore_code']);
@@ -63,7 +66,7 @@ if (isset($_SESSION['secret_code'])) {
                     $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
                     if ($checkResult) {
                         // Authenticate the User
-                        \PHPFusion\Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, true);
+                        \PHPFusion\Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                         \PHPFusion\Authenticate::_setUserTheme($user);
                         unset($_SESSION['uid']);
                         unset($_SESSION['secret_code']);
@@ -117,7 +120,7 @@ if (isset($_SESSION['secret_code'])) {
             $tpl->set_template($path);
             $tpl->set_tag('image_src', 'images/icon.png');
             $tpl->set_tag('input', form_text('g_code', 'Authentication Code', '', [
-                'required'    => true,
+                'required'    => TRUE,
                 'type'        => 'password',
                 'error_text'  => 'You need to provide a valid Authentication Code',
                 'placeholder' => 'Enter Google Authentication Code'
