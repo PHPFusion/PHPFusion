@@ -29,6 +29,7 @@ class Login {
     private static $drivers = [];
     private static $driver_status = [];
     private static $driver_config_status = [];
+    private static $driver_settings = [];
 
     public function set_current_language() {
         $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
@@ -49,7 +50,7 @@ class Login {
         return (string)$field_title;
     }
 
-    private function cache_driver() {
+    public function cache_driver($driver_name = NULL) {
         if (empty(self::$drivers)) {
             $result = dbquery("SELECT * FROM ".DB_LOGIN);
             if (dbrows($result)) {
@@ -58,8 +59,11 @@ class Login {
                 }
             }
         }
-
+        if ($driver_name !== NULL) {
+            return (isset(self::$drivers[$driver_name]) ? self::$drivers[$driver_name] : NULL);
+        }
         return self::$drivers;
+
     }
 
     public function check_driver_config($title = '') {
@@ -109,6 +113,29 @@ class Login {
     }
 
     /**
+     * Get the driver settings
+     *
+     * @param string $title
+     *
+     * @return int
+     */
+    public function get_driver_settings($title = '') {
+        if (empty(self::$driver_settings)) {
+            $drivers = $this->cache_driver();
+            if (!empty($drivers)) {
+                foreach ($drivers as $driver_title => $data) {
+                    self::$driver_settings[$driver_title] = $data['login_settings'];
+                }
+            }
+        }
+        if ($title) {
+            return (isset(self::$driver_settings[$title]) ? self::$driver_settings[$title] : NULL);
+        }
+
+        return self::$driver_settings;
+    }
+
+    /**
      * This is read by the the authenticator class.
      *
      * @param array $userdata
@@ -128,10 +155,8 @@ class Login {
             if (!empty($driver)) {
                 foreach ($driver as $driver_title => $data) {
                     if ($data['login_type'] == '2FA') {
-
                         $locale_file_path = LOGIN_LOCALESET.$driver_title.'.php';
                         $driver_file_path = INFUSIONS.'login/user_fields/'.$driver_title.'_include_var.php';
-
                         if (file_exists($locale_file_path) && file_exists($driver_file_path)) {
 
                             include($locale_file_path);
@@ -170,6 +195,54 @@ class Login {
 
     // Outputs a string where MVT logins can display the user fields buttons.
     public function get_login_methods() {
+
+        $this->set_current_language();
+        require_once INFUSIONS.'login/infusion_db.php';
+
+        $driver = $this->cache_driver();
+
+        if (!empty($driver)) {
+            foreach ($driver as $driver_title => $data) {
+                if ($data['login_type'] == 'LOGIN') {
+                    $locale_file_path = LOGIN_LOCALESET.$driver_title.'.php';
+                    $driver_file_path = INFUSIONS.'login/user_fields/'.$driver_title.'_include_var.php';
+
+                    if (file_exists($locale_file_path) && file_exists($driver_file_path)) {
+
+                        include($locale_file_path);
+                        include($driver_file_path);
+
+                        if (!empty($user_field_auth) && !empty($user_field_dbname)) {
+                            // Display the field with accessing the class or function names
+                            $authenticate_method = NULL;
+
+                            // This is the class
+                            if (is_array($user_field_auth) && count($user_field_auth) > 1) {
+                                $login_class = $user_field_auth[0];
+                                $login_method = $user_field_auth[1];
+                                $login_authenticator = new $login_class();
+                                // Call the authentication method
+                                $login_authenticator->$login_method();
+                            } elseif (is_callable($user_field_auth)) {
+                                // Call the authentication method
+                                $login_methods = $user_field_auth();
+                            }
+                        }
+                        unset($user_field_auth);
+                        unset($user_field_dbname);
+                        unset($login_methods);
+                    } else {
+                        die($locale_file_path.' does not exist');
+                        die($driver_file_path.' does not exsit');
+                    }
+                }
+            }
+            unset($user_field_login);
+            unset($user_field_dbname);
+            unset($login_methods);
+
+        }
+
         $this->set_current_language();
         // parse all login methods here into an array, an array of html buttons and fields.
         // each must have its form module.
