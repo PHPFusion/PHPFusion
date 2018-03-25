@@ -75,7 +75,7 @@ class PageController extends PageModel {
         ob_end_clean();
         $htmlArray['pagenav'] = '';
         $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
-        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
+        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : $eval));
         $htmlArray['count'] = count($htmlArray['body']);
         if ($htmlArray['count'] > 0) {
             if ($htmlArray['rowstart'] > $htmlArray['count']) {
