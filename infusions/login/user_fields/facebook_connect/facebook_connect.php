@@ -12,7 +12,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
      *
      * @var array
      */
-    private $settings = [
+    private $default_settings = [
         'app_id'               => '',
         'button_width'         => '',
         'button_size'          => '',
@@ -22,16 +22,15 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         'button_text'          => '',
         'enable_logout'        => '',
     ];
+    private $settings = [];
 
     /**
      * Display the driver settings form
      */
     public function display_settings_form() {
-
-        $driver_settings = $this->get_driver_settings('user_fb_connect');
-        if (!empty($driver_settings)) {
-            $this->settings += explode(",", $driver_settings);
-        }
+        $locale = fusion_get_locale('', LOGIN_LOCALESET.'user_fb_connect.php');
+        $this->settings += $this->load_driver_settings('user_fb_connect');
+        $this->settings += $this->default_settings;
 
         if (isset($_POST['save_fb'])) {
             $this->settings = [
@@ -44,38 +43,46 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                 'button_text'          => form_sanitizer($_POST['button_text'], '', 'button_text'),
                 'enable_logout'        => (isset($_POST['enable_logout']) ? '1' : '0')
             ];
-            //print_p($this->settings);
+            // Stored as an encrypted value to protect sensitive information.
+            if ($this->update_driver_settings('user_fb_connect', $this->settings)) {
+                redirect(FUSION_REQUEST);
+            }
         }
 
-        echo "<div class='well'>Facebook Login with the Facebook SDK enables people to sign into your webpage with their Facebook credentials.</div>\n";
-        echo openside("<h4><i class='fab fa-facebook-square fa-lg m-r-10'></i>Facebook Plugin Settings</h4>");
+        echo "<div class='well'>".$locale['uf_fb_connect_200']."</div>\n";
+        echo openside("<h4><i class='fab fa-facebook-square fa-lg m-r-10'></i>".$locale['uf_fb_connect_201']."</h4>");
         echo openform('facebook_settings_frm', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6'>\n";
-        echo form_text('app_id', 'Facebook App ID', $this->settings['app_id'], ['required' => TRUE, 'placeholder' => 'Enter your Facebook Developer App ID']);
+        echo form_text('app_id', $locale['uf_fb_connect_202'], $this->settings['app_id'], ['required' => TRUE, 'placeholder' => $locale['uf_fb_connect_203']]);
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-6'>\n";
-        echo "<strong>You need to have a valid Facebook Client APP ID to use this login feature</strong>.<br/>If you do not have an APP ID, create and retrieve the Facebook Client APP ID in your Facebook Developer page.";
+        echo "<strong>".$locale['uf_fb_connect_204']."</strong>.<br/>".$locale['uf_fb_connect_205'];
         echo "</div>\n";
         echo "</div>\n";
-
         echo "<hr/>\n";
-        echo form_para('Configure Plugin', 'cfg');
+        echo form_para($locale['uf_fb_connect_206'], 'cfg');
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6'>\n";
-        echo form_text('button_width', 'Width', $this->settings['button_width'], ['placeholder' => 'The pixel width of the facebook plugin button']);
-        echo form_select('button_size', 'Button Size', $this->settings['button_size'], ['options' => ['small' => 'Small', 'medium' => 'Medium', 'large' => 'Large']]);
-        echo form_checkbox('enable_friends_faces', 'Show Friends\' Faces', $this->settings['enable_friends_faces'], ['reverse_label' => TRUE, 'ext_tip' => 'Show profile photos of friends who have used this site']);
-        echo form_checkbox('enable_details', 'Include name and profile picture when user is signed into Facebook', $this->settings['enable_details'], ['reverse_label' => TRUE]);
+        echo form_text('button_width', $locale['uf_fb_connect_207'], $this->settings['button_width'], ['placeholder' => $locale['uf_fb_connect_208']]);
+        echo form_select('button_size', $locale['uf_fb_connect_209'], $this->settings['button_size'], ['options' => [
+            'small'  => $locale['uf_fb_connect_210'],
+            'medium' => $locale['uf_fb_connect_211'],
+            'large'  => $locale['uf_fb_connect_212']
+        ]]);
+        echo form_checkbox('enable_friends_faces', $locale['uf_fb_connect_213'], $this->settings['enable_friends_faces'], ['reverse_label' => TRUE, 'ext_tip' => $locale['uf_fb_connect_214']]);
+        echo form_checkbox('enable_details', $locale['uf_fb_connect_215'], $this->settings['enable_details'], ['reverse_label' => TRUE]);
         echo "</div><div class='col-xs-12 col-sm-6'>\n";
-        echo form_text('max_photo_rows', 'Maximum Rows of Photos', $this->settings['max_photo_rows'], ['placeholder' => 'The maximum number of rows of profile photos to show']);
-        echo form_select('button_text', 'Button Text', $this->settings['button_text'], ['options' => ['continue_with' => 'Continue With...', 'login_with' => 'Login With...']]);
-        echo form_checkbox('enable_logout', 'Enable Logout Button', $this->settings['enable_logout'], ['reverse_label' => TRUE]);
+        echo form_text('max_photo_rows', $locale['uf_fb_connect_216'], $this->settings['max_photo_rows'], ['placeholder' => $locale['uf_fb_connect_217']]);
+        echo form_select('button_text', $locale['uf_fb_connect_218'], $this->settings['button_text'], ['options' => [
+            'continue_with' => $locale['uf_fb_connect_219'],
+            'login_with'    => $locale['uf_fb_connect_220']
+        ]]);
+        echo form_checkbox('enable_logout', $locale['uf_fb_connect_221'], $this->settings['enable_logout'], ['reverse_label' => TRUE]);
         echo "</div>\n</div>\n";
-        echo form_button('save_fb', 'Save Facebook Settings', 'save_fb');
+        echo form_button('save_fb', $locale['uf_fb_connect_222'], 'save_fb');
         echo closeform();
         echo closeside();
-
     }
 
     public function login_authenticate($user) {

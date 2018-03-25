@@ -30,3 +30,4 @@ $locale['login_123'] = "There are no configuration. Please verify the driver set
 $locale['login_124'] = "Back to Driver Installation Page";
 $locale['login_125'] = "No configuration file found";
 $locale['login_126'] = "Invalid driver/Unknown error";
+$locale['login_127'] = "Configurations have been updated";
