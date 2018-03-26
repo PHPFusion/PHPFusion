@@ -232,7 +232,6 @@ if (db_exists(DB_PREFIX.'users')) {
     if (column_exists(DB_USERS, 'user_offset')) {
         $inf_altertable[] = DB_USERS." DROP COLUMN user_offset";
     }
-
 }
 
 if (db_exists(DB_EMAIL_TEMPLATES)) {
@@ -501,6 +500,12 @@ if (db_exists(DB_ADMIN)) {
 
     foreach ($new_icon_array as $admin_rights => $icon_file) {
         $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
+    }
+}
+
+if (db_exists(DB_PREFIX.'custom_pages')) {
+    if (!column_exists(DB_CUSTOM_PAGES, 'page_breaks', FALSE)) {
+        $inf_altertable[] = DB_CUSTOM_PAGES." ADD page_breaks CHAR(1) NOT NULL DEFAULT '' AFTER page_status";
     }
 }
 

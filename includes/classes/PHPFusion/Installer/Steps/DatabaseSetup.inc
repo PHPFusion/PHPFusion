@@ -188,15 +188,15 @@ class InstallerDbSetup extends Install_Core {
 
                     // Create missing new tables
                     if (!empty($to_create)) {
-                        $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
+                        //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         if (!$debug_process) {
                             foreach ($to_create as $table_name => $table_process) {
                                 $current_count = $current_count + 1;
-                                /*$microtime = microtime(TRUE);
+                                $microtime = microtime(TRUE);
                                 if ($result = dbquery($table_process)) {
                                     $microtime = microtime(TRUE) - $microtime;
-                                }*/
-                                $message .= $table_name." created<br/>\n";
+                                }
+                                /*$message .= $table_name." created<br/>\n";*/
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                             }
                             //addNotice("success", $message);
@@ -208,17 +208,17 @@ class InstallerDbSetup extends Install_Core {
 
                     // Alterations of inconsistent columns - varchar(200) to text
                     if (!empty($to_alter_column)) {
-                        $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
+                        //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         if (!$debug_process) {
                             foreach ($to_alter_column as $table_name => $table_processes) {
                                 $current_count = $current_count + 1;
                                 if (!empty($table_processes)) {
                                     foreach ($table_processes as $table_alter) {
-                                        /*$microtime = microtime(TRUE);
+                                        $microtime = microtime(TRUE);
                                         if ($result = dbquery($table_alter)) {
                                             $microtime = microtime(TRUE) - $microtime;
-                                        }*/
-                                        $message .= $table_name." altered<br/>\n";
+                                        }
+                                        /*$message .= $table_name." altered<br/>\n";*/
                                     }
                                 }
                                 //addNotice("info", $message);
@@ -230,16 +230,16 @@ class InstallerDbSetup extends Install_Core {
                     }
                     // Adding missing columns on a specific table
                     if (!empty($to_add_column)) {
-                        $message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
+                        //$message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
                         if (!$debug_process) {
                             foreach ($to_add_column as $table_name => $table_processes) {
                                 $current_count = $current_count + 1;
                                 if (!empty($table_processes)) {
                                     foreach ($table_processes as $table_add) {
-                                        //$microtime = microtime(TRUE);
+                                        $microtime = microtime(TRUE);
                                         if ($result = dbquery($table_add)) {
-                                            //$microtime = microtime(TRUE) - $microtime;
-                                            $message .= $table_name." altered<br/>\n";
+                                            $microtime = microtime(TRUE) - $microtime;
+                                            //$message .= $table_name." altered<br/>\n";//
                                         }
                                         //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
                                     }
@@ -253,14 +253,14 @@ class InstallerDbSetup extends Install_Core {
                     }
                     // Insert default rows on all required tables
                     if (!empty($to_insert_rows)) {
-                        $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
+                        // $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
                         if (!$debug_process) {
                             foreach ($to_insert_rows as $table_name => $row_inserts) {
                                 $current_count = $current_count + 1;
-                               // $microtime = microtime(TRUE);
+                                $microtime = microtime(TRUE);
                                 if ($result = dbquery($row_inserts)) {
-                                    //$microtime = microtime(TRUE) - $microtime;
-                                    $message .= $table_name." inserted<br/>\n";
+                                    $microtime = microtime(TRUE) - $microtime;
+                                    //$message .= $table_name." inserted<br/>\n";
                                     //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                                 }
                             }

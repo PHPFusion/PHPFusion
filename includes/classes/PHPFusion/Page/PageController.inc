@@ -27,13 +27,13 @@ use PHPFusion\Panels;
  * @package PHPFusion\Page
  */
 class PageController extends PageModel {
-
     protected static $info = [
-        'title'   => '',
-        'error'   => '',
-        'body'    => '',
-        'count'   => 0,
-        'pagenav' => '',
+        'title'       => '',
+        'error'       => '',
+        'body'        => '',
+        'count'       => 0,
+        'pagenav'     => '',
+        'line_breaks' => ''
     ];
 
     public static function display_Widget($colData) {
@@ -65,18 +65,22 @@ class PageController extends PageModel {
      */
     public static function displayContentHTML($colData) {
         require_once THEMES."templates/global/custompage.php";
+        $htmlArray = [];
+
         ob_start();
         if (fusion_get_settings("allow_php_exe")) {
             eval("?>".stripslashes($colData['page_content'])."<?php ");
         } else {
             echo "<p>".parse_textarea($colData['page_content'])."</p>\n";
         }
+
         $eval = ob_get_contents();
         ob_end_clean();
         $htmlArray['pagenav'] = '';
         $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
-        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : $eval));
+        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", self::$info['line_breaks'] == 'y' ? nl2br($eval) : $eval);
         $htmlArray['count'] = count($htmlArray['body']);
+
         if ($htmlArray['count'] > 0) {
             if ($htmlArray['rowstart'] > $htmlArray['count']) {
                 redirect(BASEDIR."viewpage.php?page_id=".intval($_GET['page_id']));
@@ -95,7 +99,6 @@ class PageController extends PageModel {
      * @param $page_id
      */
     protected static function set_PageInfo($page_id) {
-
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
         $page_id = ((!empty($page_id)) ? intval($page_id) : isset($_GET['page_id']) && isnum($_GET['page_id']) ? intval($_GET['page_id']) : 0);
@@ -139,6 +142,7 @@ class PageController extends PageModel {
                 set_meta("keywords", self::$data['page_keywords']);
             }
             self::$info['title'] = self::$data['page_title'];
+            self::$info['line_breaks'] = self::$data['page_breaks'];
             self::$info['body'] = PageView::display_Composer();
         } else {
             add_to_title($locale['global_200'].$locale['page_401']);

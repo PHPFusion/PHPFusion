@@ -79,7 +79,7 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
                 <!--//Icon-->
             </div>
             <h3><?php echo $boxData['box_title'] ?></h3>
-            <p><?php echo $boxData['box_description']; ?></p>
+            <p><?php echo nl2br($boxData['box_description']) ?></p>
             <?php echo $box_link ?>
         </div>
         <?php

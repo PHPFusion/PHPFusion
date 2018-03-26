@@ -27,10 +27,7 @@ use PHPFusion\BreadCrumbs;
  * @package PHPFusion\Page
  */
 class PageAdmin extends PageModel {
-
     protected static $page_instance = NULL;
-
-
     protected static $locale = [];
     protected static $textarea_options = [];
     protected static $is_editing = FALSE;

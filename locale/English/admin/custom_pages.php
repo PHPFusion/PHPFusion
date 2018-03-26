@@ -34,6 +34,7 @@ $locale['page_0305'] = "Page Status";
 $locale['page_0306'] = "Page Visibility";
 $locale['page_0307'] = "Published On";
 $locale['page_0308'] = "Page Category";
+$locale['page_0308a'] = "Automatic Line breaks";
 $locale['page_0309'] = "Site Links Attributes";
 $locale['page_0310'] = "No Site Links defined";
 $locale['page_0311'] = "Add Site Links";
