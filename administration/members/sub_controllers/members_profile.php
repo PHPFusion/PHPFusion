@@ -50,7 +50,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postName = "add_new_user";
         $userFields->postValue = self::$locale['ME_450'];
         $userFields->displayValidation = fusion_get_settings("display_validation");
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
@@ -69,7 +69,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postValue = self::$locale['u101'];
         $userFields->displayValidation = $settings['display_validation'];
         $userFields->displayTerms = $settings['enable_terms'];
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
@@ -100,7 +100,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postValue = self::$locale['ME_437'];
         $userFields->displayValidation = 0;
         $userFields->displayTerms = FALSE;
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;

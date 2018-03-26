@@ -24,6 +24,8 @@ add_to_title($locale['login_002']);
 $login = new \PHPFusion\Infusions\Login\Login();
 $files = $login->cache_files();
 $driver_type = [];
+$user_field_name = '';
+$user_field_desc = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'configure' && isset($_GET['driver'])) {
     if ($driver = $login->cache_driver($_GET['driver'])) {
@@ -40,6 +42,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'configure' && isset($_GET['dri
                 'link'  => FUSION_REQUEST,
                 'title' => $page_title,
             ]);
+            $settings_found = FALSE;
+            $settings_method = '';
             opentable($locale['login_002']);
             if (!empty($user_field_settings)) {
                 $settings_found = FALSE;
@@ -53,7 +57,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'configure' && isset($_GET['dri
                         $settings->$settings_method();
                         $settings_found = TRUE;
                     }
-                } elseif (is_callable($settings_method)) {
+                } else if (is_callable($settings_method)) {
                     // Call the function calling method
                     $settings = $settings_method();
                     $settings_found = TRUE;

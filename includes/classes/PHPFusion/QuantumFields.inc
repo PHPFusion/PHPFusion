@@ -1795,10 +1795,10 @@ class QuantumFields extends \SqlHandler {
 
         $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], ['required' => 1]);
         // cannot move if there are siblings
-        if (isset($this->field_cat_index[$_GET['cat_id']])) {
+        if (isset($_GET['cat_id']) && isset($this->field_cat_index[$_GET['cat_id']])) {
             $html .= form_hidden('field_parent', '', $this->field_cat_data['field_parent']);
         } else {
-            $cat_list[] = $_GET['cat_id'];
+            $cat_list[] = isset($_GET['cat_id']) ? $_GET['cat_id'] : '';
             if (!empty($this->cat_list)) {
                 foreach ($this->cat_list as $id => $value) {
                     $cat_list[] = $id;

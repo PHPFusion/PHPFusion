@@ -15,9 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied!");
+}
+
 if (!defined('LOGIN_LOCALESET')) {
     define('LOGIN_LOCALESET', INFUSIONS.'login/locale/'.LANGUAGE.'/');
 }
+
 if (!defined('DB_LOGIN')) {
     define('DB_LOGIN', DB_PREFIX.'login');
 }
+
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("L1", "<i class='admin-ico fa fa-fw fa-sign-in'></i>");
