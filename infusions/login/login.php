@@ -24,7 +24,7 @@ namespace PHPFusion\Infusions\Login;
  */
 class Login {
 
-    private $login_methods = [];
+    private static $login_connectors = [];
     private static $current_user_language = 'English';
     private static $drivers = [];
     private static $driver_status = [];
@@ -244,7 +244,7 @@ class Login {
     }
 
     // Outputs a string where MVT logins can display the user fields buttons.
-    public function get_login_methods() {
+    public function get_login_connectors() {
 
         $this->set_current_language();
         require_once INFUSIONS.'login/infusion_db.php';
@@ -253,7 +253,8 @@ class Login {
 
         if (!empty($driver)) {
             foreach ($driver as $driver_title => $data) {
-                if ($data['login_type'] == 'LOGIN') {
+
+                if ($data['login_type'] == 'LGA') {
                     $locale_file_path = LOGIN_LOCALESET.$driver_title.'.php';
                     $driver_file_path = INFUSIONS.'login/user_fields/'.$driver_title.'_include_var.php';
 
@@ -262,58 +263,26 @@ class Login {
                         include($locale_file_path);
                         include($driver_file_path);
 
-                        if (!empty($user_field_auth) && !empty($user_field_dbname)) {
+                        if (!empty($user_field_login) && !empty($user_field_dbname)) {
                             // Display the field with accessing the class or function names
-                            $authenticate_method = NULL;
+                            $login_connectors = NULL;
 
                             // This is the class
-                            if (is_array($user_field_auth) && count($user_field_auth) > 1) {
-                                $login_class = $user_field_auth[0];
-                                $login_method = $user_field_auth[1];
-                                $login_authenticator = new $login_class();
+                            if (is_array($user_field_login) && count($user_field_login) > 1) {
+                                $login_class = $user_field_login[0];
+                                $login_method = $user_field_login[1];
+                                $login_connectors = new $login_class();
                                 // Call the authentication method
-                                $login_authenticator->$login_method();
-                            } elseif (is_callable($user_field_auth)) {
+                                self::$login_connectors[] = $login_connectors->$login_method();
+                            } elseif (is_callable($user_field_login)) {
                                 // Call the authentication method
-                                $login_methods = $user_field_auth();
+                                self::$login_connectors[] = $login_methods = $user_field_login();
                             }
                         }
-                        unset($user_field_auth);
+                        unset($user_field_login);
                         unset($user_field_dbname);
-                        unset($login_methods);
-                    } else {
-                        die($locale_file_path.' does not exist');
-                        die($driver_file_path.' does not exsit');
+                        unset($login_connectors);
                     }
-                }
-            }
-            unset($user_field_login);
-            unset($user_field_dbname);
-            unset($login_methods);
-
-        }
-
-        $this->set_current_language();
-        // parse all login methods here into an array, an array of html buttons and fields.
-        // each must have its form module.
-        $files = $this->cache_files();
-        foreach ($files as $file) {
-            include INFUSIONS.'login/user_fields/'.$file;
-            if (!empty($user_field_login) && !empty($user_field_dbname)) {
-                if ($this->login_db_settings[$user_field_dbname]) { // enable by administrator.
-                    // now display the field with accessing the class or function names
-                    $login_methods = NULL;
-                    if (is_array($user_field_login) && count($user_field_login) > 1) {
-                        $login_class = $user_field_login[0];
-                        $login_method = $user_field_login[1];
-                        $login_param = isset($user_field_login[2]) ? $user_field_login[2] : '';
-                        $login_authenticator = new $login_class();
-                        $login_methods = $login_authenticator->$login_method($login_param);
-                    } elseif (is_callable($user_field_login)) {
-                        $login_methods = $user_field_login();
-                    }
-                    // this is a first step.
-                    $this->login_methods[] = $login_methods;
                 }
             }
             unset($user_field_login);
@@ -321,7 +290,7 @@ class Login {
             unset($login_methods);
         }
 
-        return $this->login_methods;
+        return self::$login_connectors;
     }
 
     public function register_new_user() {

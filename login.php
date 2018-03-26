@@ -97,7 +97,8 @@ if (!iMEMBER) {
     if (file_exists(INFUSIONS.'login/login.php')) {
         $login = new \PHPFusion\Infusions\Login\Login();
     }
-    $login_methods = (method_exists($login, 'get_login_methods') ? $login->get_login_methods() : ''); // go for an array.
+    $connectors = (method_exists($login, 'get_login_connectors') ? $login->get_login_connectors() : ''); // get the buttons
+
     $info = [
         'open_form'            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
         'user_name'            => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]),
@@ -108,7 +109,7 @@ if (!iMEMBER) {
         'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
         'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
         'close_form'           => closeform(),
-        'login_methods'        => $login_methods
+        'connect_buttons'      => $connectors
     ];
 }
 display_loginform($info);

@@ -96,17 +96,102 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         return NULL;
     }
 
-    public function login_connector() {
-        if (isset($user['user_gauth']) && !empty($user['user_gauth'])) { // check if there are any secret code.
-            $_SESSION['secret_code'] = $user['user_gauth'];
-            $_SESSION['uid'] = $user['user_id'];
-            die('you have reached the connector');
-            echo "<script>";
+    public function display_login() {
+        // now lets read the sttings
+        $fbSettings = $this->load_driver_settings('user_fb_connect');
+        //print_p($fbSettings);
+        if (!empty($fbSettings['app_id'])) {
+            $locale_prefix = fusion_get_locale('xml_lang').'_'.fusion_get_locale('region');
+            echo "<div id='fb-root'></div>
 
-            //redirect(INFUSIONS.'login/user_fields/google_auth/authentication.php');
+            <script>
+            $.ajaxSetup({ cache: true });            
+            // Load the Javascript SDK
+            window.fbAsyncInit = function() {
+                FB.init({
+                  appId      : '".$fbSettings['app_id']."',
+                  cookie     : true,  // enable cookies to allow the server to access 
+                                      // the session
+                  xfbml      : true,  // parse social plugins on this page
+                  version    : 'v2.8' // use graph api version 2.8
+                });
+                // Now that we've initialized the JavaScript SDK, we call 
+                // FB.getLoginStatus().  This function gets the state of the
+                // person visiting this page and can return one of three states to
+                // the callback you provide.  They can be:
+                //
+                // 1. Logged into your app ('connected')
+                // 2. Logged into Facebook, but not your app ('not_authorized')
+                // 3. Not logged into Facebook and can't tell if they are logged into
+                //    your app or not.
+                //
+                // These three cases are handled in the callback function.            
+                FB.getLoginStatus(function(response) {
+                  statusChangeCallback(response);
+                });            
+              };
+              
+              // Load the SDK asynchronously
+            (function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = 'https://connect.facebook.net/".$locale_prefix."/sdk.js#xfbml=1&version=v2.7';
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+              
+              // This is called with the results from from FB.getLoginStatus().
+              function statusChangeCallback(response) {
+                console.log('statusChangeCallback');
+                console.log(response);
+                // The response object is returned with a status field that lets the
+                // app know the current login status of the person.
+                // Full docs on the response object can be found in the documentation
+                // for FB.getLoginStatus().
+                if (response.status === 'connected') {
+                  // Logged into your app and Facebook.                  
+                  LoginPHPFusion();
+                } else {
+                  // The person is not logged into your app or we are unable to tell.
+                  //document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
+                  console.log('we are not able to log into this app');
+                }
+              }
+
+            // Here we run a very simple test of the Graph API after login is
+              // successful.  See statusChangeCallback() for when this call is made.
+              function LoginPHPFusion() {
+                console.log('Welcome!  Fetching your information.... ');
+                FB.api('/me', function(response) {                    
+                  console.log('Successful login for: ' + response.name);
+                  console.log(response);
+                  //document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
+                  
+                });
+              }              
+            </script>";
+            $button_data_settings = [
+                'data-width'            => $fbSettings['button_width'] ?: "",
+                'data-max-rows'         => $fbSettings['max_photo_rows'] ?: "1",
+                'data-size'             => $fbSettings['button_size'] ?: "",
+                'data-button-type'      => $fbSettings['button_text'] ?: 'continue_with',
+                'data-show-faces'       => $fbSettings['enable_friends_faces'] ? 'true' : 'false',
+                'data-auto-logout-link' => $fbSettings['enable_logout'] ? 'true' : 'false',
+                'data-use-continue-as'  => $fbSettings['enable_details'] ? 'true' : 'false',
+            ];
+            $data_attr = implode(' ', array_map(
+                function ($keys, $values) {
+                    if ($values) {
+                        return "$keys='$values'";
+                    }
+                }, array_keys($button_data_settings), array_values($button_data_settings)));
+
+            return "<div class='fb-login-button' ".$data_attr."></div>";
         }
 
         return NULL;
     }
 
 }
+
+require_once __DIR__.'/Facebook/autoload.php';

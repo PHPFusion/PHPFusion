@@ -112,7 +112,7 @@ if (!empty($footerError)) {
     echo "<div class='admin-message container'>".$footerError."</div>\n";
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
+//echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
 // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139

@@ -61,8 +61,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'configure' && isset($_GET['dri
             }
             if ($settings_found === FALSE) {
                 echo "<div class='alert alert-warning strong'>".$locale['login_123']."</div>";
-                echo "<a href='".clean_request('', ['action', 'driver'], FALSE)."'>".$locale['login_124']."</a>\n";
             }
+            echo "<p><a class='strong' href='".clean_request('', ['action', 'driver'], FALSE)."'><i class='fas fa-caret-left m-r-10'></i>".$locale['login_124']."</a></p>";
         } else {
             addNotice("danger", $locale['login_125']);
         }
