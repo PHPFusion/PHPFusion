@@ -193,5 +193,3 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
     }
 
 }
-
-require_once __DIR__.'/Facebook/autoload.php';
