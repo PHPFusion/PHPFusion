@@ -244,7 +244,7 @@ function get_core_tables($localeset) {
         'page_breaks'       => [
             'type'   => 'CHAR',
             'length' => 1,
-        ], //page_breaks CHAR(1) NOT NULL DEFAULT '0',
+        ], //page_breaks CHAR(1) NOT NULL DEFAULT '',
         'page_user'         => [
             'type'     => 'MEDIUMINT',
             'length'   => 9,
