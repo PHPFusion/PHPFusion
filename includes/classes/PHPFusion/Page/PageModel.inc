@@ -18,7 +18,6 @@
 namespace PHPFusion\Page;
 
 class PageModel {
-
     protected static $admin_composer_opts = [];
     protected static $composerData = [];
     protected static $widgets = [];
@@ -35,6 +34,7 @@ class PageModel {
         'page_content'      => '',
         'page_keywords'     => '',
         'page_status'       => 0,
+        'page_breaks'       => '',
         'page_user'         => 0,
         'page_datestamp'    => 0,
         'page_language'     => LANGUAGE,

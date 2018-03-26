@@ -20,8 +20,6 @@ namespace PHPFusion\Page\Composer\Node;
 use PHPFusion\Page\PageAdmin;
 
 class ComposeContent extends PageAdmin {
-
-
     public static function displayContent() {
         // add page row and grid data to custom page
         if (empty(self::$data['page_datestamp'])) {
@@ -101,6 +99,14 @@ class ComposeContent extends PageAdmin {
                                 'placeholder' => self::$locale['choose'],
                                 'inline'      => FALSE,
                             ], DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);
+
+                            if (fusion_get_settings('tinymce_enabled') != 1) {
+                                echo form_checkbox('page_breaks', self::$locale['page_0308a'], self::$data['page_breaks'], [
+                                    'value'         => 'y',
+                                    'class'         => 'm-b-5',
+                                    'reverse_label' => TRUE
+                                ]);
+                            }
                         ?>
 
                     </div>

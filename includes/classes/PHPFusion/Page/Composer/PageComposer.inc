@@ -134,6 +134,12 @@ class PageComposer extends PageAdmin {
                         'page_footer_panel' => self::$data['page_footer_panel']
                     ];
 
+                    if (fusion_get_settings('tinymce_enabled') != 1) {
+                        self::$data['page_breaks'] = isset($_POST['page_breaks']) ? 'y' : 'n';
+                    } else {
+                        self::$data['page_breaks'] = 'n';
+                    }
+
                     if (\defender::safe()) {
                         self::execute_PageSQL();
                         self::compose_DefaultPage();

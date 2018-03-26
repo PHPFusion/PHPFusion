@@ -37,6 +37,12 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
+if (db_exists(DB_PREFIX.'custom_pages')) {
+    if (!column_exists(DB_CUSTOM_PAGES, 'page_breaks', FALSE)) {
+        $inf_altertable[] = DB_CUSTOM_PAGES." ADD page_breaks CHAR(1) NOT NULL DEFAULT '0' AFTER page_status";
+    }
+}
+
 if (db_exists(DB_PREFIX.'faqs')) {
     $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
 }
