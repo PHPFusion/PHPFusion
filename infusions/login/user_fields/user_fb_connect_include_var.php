@@ -24,7 +24,13 @@ $user_field_name = $locale['uf_fb_connect'];
 $user_field_desc = $locale['uf_fb_connect_desc'];
 $user_field_dbname = "user_facebook_uid";
 $user_field_group = 1;
-$user_field_dbinfo = "MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0'";
+/**
+ * This is a string according to facebook.
+ * https://stackoverflow.com/questions/7138119/saving-facebook-id-as-int-or-varchar
+ *
+ * Since we do not use it for comparative result searching nor need to index it, it is safe to put it as a varchar.
+ */
+$user_field_dbinfo = "VARCHAR(100) NOT NULL DEFAULT ''";
 $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';

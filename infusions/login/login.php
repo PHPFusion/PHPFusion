@@ -143,7 +143,7 @@ class Login {
      *
      * @return array
      */
-    protected function load_driver_settings($title) {
+    public function load_driver_settings($title) {
         $settings = [];
         $driver_settings = $this->get_driver_settings($title);
         if (!empty($driver_settings)) {
