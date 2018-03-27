@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../../../maincore.php';
 require_once THEMES.'templates/header.php';
+
+$locale = fusion_get_locale('', LOGIN_LOCALESET.'user_gauth.php');
 require_once INFUSIONS.'login/user_fields/user_gauth_include_var.php';
 
 $google = new GoogleAuthenticator();
@@ -56,7 +58,7 @@ if (isset($_SESSION['secret_code'])) {
 
             if (isset($_POST['authenticate'])) {
 
-                if (!$_SESSION['auth_attempt'][USER_IP]) {
+                if (!isset($_SESSION['auth_attempt'][USER_IP])) {
                     $_SESSION['auth_attempt'][USER_IP] = 3;
                 }
 
