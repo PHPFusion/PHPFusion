@@ -142,7 +142,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                 $app_id = $app_info->id;
                 $locale_prefix = fusion_get_locale('xml_lang').'_'.fusion_get_locale('region');
                 $redirect_link = fusion_get_settings('siteurl');
-                $redirect_link .= ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/');
+                $redirect_link .= isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php';
 
                 echo "<div id='fb-root'></div>
 

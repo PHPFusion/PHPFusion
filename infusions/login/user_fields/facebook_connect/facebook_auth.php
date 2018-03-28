@@ -33,7 +33,7 @@ class Facebook_Auth extends Facebook_Connect {
                 ':id'    => $facebook_id,
                 ':email' => $facebook_email
             ))) {
-                $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_theme FROM ".DB_USERS." WHERE user_email=:email AND user_facebook_uid=:id LIMIT 1", array(
+                $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_email=:email AND user_facebook_uid=:id LIMIT 1", array(
                     ':id'    => $facebook_id,
                     ':email' => $facebook_email
                 )));
@@ -53,7 +53,7 @@ class Facebook_Auth extends Facebook_Connect {
                         $response = 'connect-form';
                     } else {
 
-                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_theme FROM ".DB_USERS." WHERE user_email=:email LIMIT 1", array(
+                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_email=:email LIMIT 1", array(
                             ':email' => $facebook_email
                         )));
                         // Update the facebook user id
