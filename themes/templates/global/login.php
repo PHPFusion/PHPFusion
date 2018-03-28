@@ -61,9 +61,9 @@ if (!function_exists("display_loginform")) {
             echo $info['forgot_password_link']."<br/><br/>";
             echo $info['close_form'];
             // Facebook, Google Auth, etc.
-            if (!empty($info['login_methods'])) {
+            if (!empty($info['connect_buttons'])) {
                 echo "<hr/>";
-                foreach ($info['login_methods'] as $mhtml) {
+                foreach ($info['connect_buttons'] as $mhtml) {
                     echo $mhtml;
                 }
             }
