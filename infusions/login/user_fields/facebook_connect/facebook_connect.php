@@ -223,17 +223,21 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
               // Here we run a very simple test of the Graph API after login is
               // successful.  See statusChangeCallback() for when this call is made.
               function do_facebook_authenticate() {
-                 console.log('Welcome!  Fetching your information.... ');                
+                 console.log('Welcome!  Fetching your information.... ');
+                 // i will attempt to embed this into facebook_auth.
+                 
                  FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {
+                     console.log(response);
+                     
                      $.ajax({
                            'url': 'infusions/login/user_fields/facebook_connect/facebook_auth.php',
                            'data': response,
                            'dataType': 'json',
                            'success': function(e) {
                                
-                               //console.log(e.response);
-                               
-                               if (e.response) {                                   
+                               console.log(e);
+                               if (e.response) {
+                                   
                                    if (e.response === 'authenticated') {         
                                        console.log('user has been authenticated');                                                                      
                                        window.location = '$redirect_link';

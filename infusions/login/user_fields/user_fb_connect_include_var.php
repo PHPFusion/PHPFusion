@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 $user_field_api_version = "1.0.0";
 $user_field_name = $locale['uf_fb_connect'];
 $user_field_desc = $locale['uf_fb_connect_desc'];
-$user_field_dbname = "user_facebook_uid";
+$user_field_dbname = "user_fb_connect";
 $user_field_group = 1;
 /**
  * This is a string according to facebook.
