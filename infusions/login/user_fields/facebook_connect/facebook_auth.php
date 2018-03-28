@@ -27,6 +27,7 @@ class Facebook_Auth extends Facebook_Connect {
      */
     public static function get_fb_json_authenticate() {
         // extends user column with the following field structure
+        $locale = fusion_get_locale("", LOGIN_LOCALESET.'user_fb_connect.php');
         $facebook_id = stripinput($_REQUEST['id']);
         $facebook_email = stripinput($_REQUEST['email']);
         // if $_REQUEST['skip_auth'] is true - do not authorize login.
@@ -45,28 +46,34 @@ class Facebook_Auth extends Facebook_Connect {
 
         if (in_array('user_fb_connect', $table)) {
 
-            if (dbcount("(user_id)", DB_USERS, "user_email=:email AND user_fb_connect=:id", array(
+            if (dbcount("(user_id)", DB_USERS, "user_fb_connect=:id AND user_status=0", array(
                 ':id'    => $facebook_id,
-                ':email' => $facebook_email
+                //':email' => $facebook_email
             ))) {
-                $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_email=:email AND user_facebook_uid=:id LIMIT 1", array(
+
+                $response = 'authenticated-skip';
+
+                $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_facebook_uid=:id LIMIT 1", array(
                     ':id'    => $facebook_id,
-                    ':email' => $facebook_email
+                    //':email' => $facebook_email
                 )));
 
                 if (empty($_REQUEST['skip_auth'])) { // if  is false only
                     \PHPFusion\Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], FALSE, TRUE);
                     \PHPFusion\Authenticate::_setUserTheme($user);
                     unset($_SESSION['facebook_user'][USER_IP]);
+                    $response = 'authenticated';
                 }
 
-                $response = 'authenticated';
-
             } else {
+
                 $response = 'register-form';
-                if ($count = dbcount("(user_id)", DB_USERS, "user_email=:email", array(':email' => $facebook_email))) {
+
+                if ($count = dbcount("(user_id)", DB_USERS, "user_email=:email AND user_status=0", array(':email' => $facebook_email))) {
                     if ($count > 1) {
+
                         $response = 'connect-form';
+                        // for existing user account. select that account to another page.
 
                     } else {
 
@@ -84,6 +91,47 @@ class Facebook_Auth extends Facebook_Connect {
                             unset($_SESSION['facebook_user'][USER_IP]);
                         }
                         $response = 'authenticated';
+                    }
+                } else {
+                    // this user does not have account. we need to check if the user is login or not. if he is...
+                    // then it means he is in edit_profile.php
+                    // double check with skip_auth is present.
+                    if (iMEMBER && !empty($_REQUEST['skip_auth'])) {
+                        // this person is trying to pair his current login FB account into this user account.
+                        // now we need to check if he has entered email if yes, we show him link to activate email.
+                        // if no, we confirm and send email.
+                        if (!dbcount("(email_user)", DB_LOGIN_EMAILS, "email_address=:email", [':email' => $facebook_email])) {
+                            // not yet entered
+                            // enter email.
+                            $response = 'emailed';
+                            $user_id = fusion_get_user('user_id');
+                            $user_name = fusion_get_user('user_name');
+                            $email_data = [
+                                'email_user'     => fusion_get_user('user_id'),
+                                'email_address'  => $facebook_email,
+                                'email_type'     => 'facebook',
+                                'email_validate' => 1,
+                            ];
+                            $email_id = dbquery_insert(DB_LOGIN_EMAILS, $email_data, 'save', ['keep_session' => true]);
+                            $code = json_encode(array('email_id' => $email_id, 'facebook_email' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME));
+                            $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
+                            $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;
+
+                            $subject = strtr($locale['uf_fb_connect_500'], array('{SITE_NAME}' => fusion_get_settings('sitename')));
+                            $message = strtr($locale['uf_fb_connect_501'], array(
+                                '{USER_NAME}'  => $user_name,
+                                '{SITE_NAME}'  => fusion_get_settings('sitename'),
+                                '{ADMIN_NAME}' => fusion_get_settings('siteadmin'),
+                                '{LINK}'       => "<a href='$link'>$link</a>",
+                            ));
+                            sendemail($user_name, $facebook_email, fusion_get_settings('site_admin'), $subject, $message, 'html');
+                            addNotice('success', $locale['uf_fb_connect_502'], 'all');
+                        } else {
+                            $response = 'verify-email';
+                            addNotice('success', $locale['uf_fb_connect_503'], 'all');
+                        }
+                    } else {
+                        // go for registration form here.
                     }
                 }
             }

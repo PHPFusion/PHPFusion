@@ -136,6 +136,169 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
      * @return null|string
      */
     public function display_login(array $options = array()) {
+        $locale = fusion_get_locale('', LOGIN_LOCALESET.'user_fb_connect.php');
+
+        $default_options = [
+            'skip_auth'          => FALSE,
+            'display_connection' => FALSE,
+        ];
+
+        $options += $default_options;
+
+        $fbSettings = $this->load_driver_settings('user_fb_connect');
+
+        if (!empty($fbSettings['app_id'])) {
+            $app_info = $this->get_fb_app(true);
+            if (!empty($app_info) && is_object($app_info)) {
+                // Application have been verified by Facebook.
+                $app_id = $app_info->id;
+                $locale_prefix = fusion_get_locale('xml_lang').'_'.fusion_get_locale('region');
+                $redirect_link = fusion_get_settings('siteurl');
+                $redirect_link .= isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php';
+
+                // Facebook Javascript SDK
+                echo "<div id='fb-root'></div>                
+                <script>
+                $.ajaxSetup({ cache: true });            
+                // Load the Javascript SDK
+                window.fbAsyncInit = function() {
+                    FB.init({
+                      appId      : '$app_id',
+                      cookie     : true,  // enable cookies to allow the server to access                                           
+                      xfbml      : true,  // parse social plugins on this page
+                      version    : 'v2.8' // use graph api version 2.8
+                    });                                        
+                  };
+                  
+                  // Load the SDK asynchronously
+                (function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = 'https://connect.facebook.net/".$locale_prefix."/sdk.js#xfbml=1&version=v2.7';
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+                  
+                 // This is called with the results from from FB.getLoginStatus().
+                 function statusChangeCallback(response) {
+                    //console.log('statusChangeCallback');
+                    if (response.status === 'connected') {
+                        //console.log('User is connected with $app_id');
+                        // We will use this because this is the most comprehensive token authentication source provided by Facebook.
+                        // Src official issued press statement method - https://www.facebook.com/FacebookforDevelopers/videos/10152795636318553/
+                        //https://developers.facebook.com/docs/graph-api/reference/v2.12/debug_token                    
+                        FB.api(
+                        '/debug_token?input_token='+response.authResponse.accessToken,
+                        function (response) {                                    
+                            //console.log('Authenticating...');                        
+                            if (response && !response.error) {                                                
+                                /* handle the result */                                                        
+                                if (response.data.is_valid === true && response.data.app_id === '$app_id') {
+                                    // this means that the current access token is issued by PHP Fusion.
+                                    // authenticate the user or register the user.
+                                    //console.log('User has given permissions. Now authenticate.');
+                                    facebookAuthentication();
+                                }                      
+                            } else {
+                                // we encountered an error.
+                                console.log('We have encountered an error and may not be able to proceed to log you in. User need to click button again.');                                
+                            }
+                        }
+                        );                
+                    } else {                    
+                        console.log('User is not connected to Facebook.');                                        
+                    }               
+                  }
+                    
+                  // Here we run a very simple test of the Graph API after login is
+                  // successful.  See statusChangeCallback() for when this call is made.
+                  function facebookAuthentication() {
+                     //console.log('Welcome!  Fetching your information.... ');                                      
+                     FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {                        
+                         response['skip_auth'] = '".$options['skip_auth']."';                        
+                         console.log(response);                    
+                         $.ajax({
+                               'url': 'infusions/login/user_fields/facebook_connect/facebook_auth.php',
+                               'data': response,
+                               'dataType': 'json',
+                               'success': function(e) {                               
+                                   console.log(e);
+                                   if (e.response) {                                   
+                                       if (e.response === 'authenticated') {         
+                                           console.log('user has been authenticated');
+                                           
+                                           //window.location = '$redirect_link';
+                                           
+                                       } else if (e.response === 'register-form') {
+                                           console.log('redirect user to a registration form');
+                                           
+                                       } else if (e.response === 'connect-form') {
+                                           console.log('there are multiple users found. send to a connecting form');
+                                           
+                                       }    
+                                   }
+                               },
+                               'error' : function(e) {
+                                   console.log('Error loading the facebook file');
+                               }                           
+                         });                                                                                             
+                    });                
+                  }    
+                  
+                  // Check login function
+                  function fusion_login() {                     
+                     FB.getLoginStatus(function(response) {                           
+                        statusChangeCallback(response);
+                     });  
+                  }
+                  
+                </script>";
+
+                $button_text = '';
+                $button_size = '';
+                if ($options['display_connection'] === TRUE) {
+                    $button_text = $locale['uf_fb_connect_402'];
+                    // Show whether user is connected to facebook or not.
+                    if (!empty(fusion_get_userdata('user_fb_connect'))) {
+                        $button_text = $locale['uf_fb_connect_403'];
+                    }
+                }
+
+                $button_data_settings = [
+                    'data-width'            => $fbSettings['button_width'] ?: "",
+                    'data-max-rows'         => $fbSettings['max_photo_rows'] ?: "1",
+                    'data-show-faces'       => $fbSettings['enable_friends_faces'] ? 'true' : 'false',
+                    'data-auto-logout-link' => $fbSettings['enable_logout'] ? 'true' : 'false',
+                    'data-scope'            => 'public_profile,email'
+                ];
+
+                if (empty($button_text)) {
+                    $button_data_settings['data-button-type'] = $fbSettings['button_text'] ?: 'continue_with';
+                    $button_data_settings['data-use-continue-as'] = $fbSettings['enable_details'] ? 'true' : 'false';
+                    $button_data_settings['data-size'] = $fbSettings['button_size'] ?: "medium";
+                } else {
+                    $button_size = " size='large'";
+                }
+
+                $data_attr = implode(' ', array_map(
+                    function ($keys, $values) {
+                        if ($values) {
+                            return "$keys='$values'";
+                        }
+                    }, array_keys($button_data_settings), array_values($button_data_settings)));
+
+                return "<div class='fb-login-button' $data_attr.$button_size onlogin='fusion_login()'>$button_text</div>\n";
+
+                //return "<div type='button' class='fb-login-button' size='large' onlogin='fusion_login()'>$button_text</div>\n";
+            }
+        }
+
+        return NULL;
+
+    }
+
+    // Working front end version -- backup
+    public function display_login_bak(array $options = array()) {
 
         $default_options = [
             'skip_auth'       => FALSE,
@@ -277,5 +440,5 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         return NULL;
 
     }
-
+    
 }

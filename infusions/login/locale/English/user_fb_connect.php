@@ -27,3 +27,15 @@ $locale['uf_fb_connect_220'] = "Continue With...";
 $locale['uf_fb_connect_221'] = "Login With...";
 $locale['uf_fb_connect_222'] = "Enable Logout Button";
 $locale['uf_fb_connect_223'] = "Save Facebook Settings";
+
+// User Fields Connector
+$locale['uf_fb_connect_400'] = 'Facebook is not yet connected to your user account';
+$locale['uf_fb_connect_401'] = 'Facebook is connected to your account';
+$locale['uf_fb_connect_402'] = 'Connect User Account to Facebook';
+$locale['uf_fb_connect_403'] = 'Disconnect User Account from Facebook';
+
+// Email
+$locale['uf_fb_connect_500'] = "{SITE_NAME} - Account Email Activation";
+$locale['uf_fb_connect_501'] = "Dear {USER_NAME},\n\nYou recently have tried to link your Facebook Account with {SITE_NAME} User Account. To complete the account sync, please click on the link below:\n{LINK}\n\nWe advise you to activate your account within 3 days after you recieve this email, to avoid account expiration and termination of related services.\n\nSincerely,\n{ADMIN_NAME}, {SITE_NAME}";
+$locale['uf_fb_connect_502'] = "We have sent a verification email to your Facebook email address.";
+$locale['uf_fb_connect_503'] = "This Facebook Account has been associated with an account.";
