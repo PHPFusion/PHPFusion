@@ -41,17 +41,25 @@ $inf_adminpanel[] = [
 
 /**
  * Login ID     incremental
- * Login Type   2FA/AUTH
+ * Login Type   2FA (2 factor authentication) / LGA (Login Authentication)
  * Login Name   Title of Driver
  */
 
-// i dont think this is necessary. once we have the driver, auto read. check if tableless system works or not.
 $inf_newtable[] = DB_LOGIN." (
     login_name VARCHAR(100) NOT NULL DEFAULT '0',
     login_type VARCHAR(10) NOT NULL DEFAULT '0',
     login_status TINYINT(1) NOT NULL DEFAULT '0',
     login_settings TEXT NOT NULL,
     PRIMARY KEY (login_name)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_LOGIN_EMAILS." (    
+    email_address VARCHAR(50) NOT NULL DEFAULT '0',
+    email_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    email_type VARCHAR(10) NOT NULL DEFAULT '0',
+    email_verified TINYINT(1) NOT NULL DEFAULT '0'
+    KEY email_uid (email_uid)
+    KEY email_address (email_address)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_droptable[] = DB_LOGIN;

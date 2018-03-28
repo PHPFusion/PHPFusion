@@ -100,11 +100,12 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
     }
 
     /**
-     * Verify User Facebook Login button with Facebook Graph
+     * Verify User Facebook Login Settings data with Facebook
      *
      * @return mixed
      */
-    public function get_fb_app_token() {
+    public function get_fb_app() {
+
         $fbSettings = $this->load_driver_settings('user_fb_connect');
         $url = "https://graph.facebook.com/app/?access_token=".$fbSettings['app_id']."|".$fbSettings['app_secret']."&client_credentials=client_credentials";
         $headers = array(
@@ -128,15 +129,25 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
 
     /**
      * Display the Facebook Login Button
-     *
      * Using the Facebook JS SDK to prevent massive code library commits and syncs
+     *
+     * @param array $options
      *
      * @return null|string
      */
-    public function display_login() {
+    public function display_login(array $options = array()) {
+
+        $default_options = [
+            'skip_auth'       => FALSE,
+            'facebook_button' => TRUE,
+        ];
+
+        $options += $default_options;
+
         $fbSettings = $this->load_driver_settings('user_fb_connect');
+
         if (!empty($fbSettings['app_id'])) {
-            $app_info = $this->get_fb_app_token(true);
+            $app_info = $this->get_fb_app(true);
             if (!empty($app_info) && is_object($app_info)) {
                 // Application have been verified by Facebook.
                 $app_id = $app_info->id;
@@ -144,129 +155,102 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                 $redirect_link = fusion_get_settings('siteurl');
                 $redirect_link .= isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php';
 
-                echo "<div id='fb-root'></div>
-
-            <script>
-            $.ajaxSetup({ cache: true });            
-            // Load the Javascript SDK
-            window.fbAsyncInit = function() {
-                FB.init({
-                  appId      : '$app_id',
-                  cookie     : true,  // enable cookies to allow the server to access 
-                                      // the session
-                  xfbml      : true,  // parse social plugins on this page
-                  version    : 'v2.8' // use graph api version 2.8
-                });
-                // Now that we've initialized the JavaScript SDK, we call 
-                // FB.getLoginStatus().  This function gets the state of the
-                // person visiting this page and can return one of three states to
-                // the callback you provide.  They can be:
-                //
-                // 1. Logged into your app ('connected')
-                // 2. Logged into Facebook, but not your app ('not_authorized')
-                // 3. Not logged into Facebook and can't tell if they are logged into
-                //    your app or not.
-                //
-                // These three cases are handled in the callback function.            
-                          
-              };
-              
-              // Load the SDK asynchronously
-            (function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = 'https://connect.facebook.net/".$locale_prefix."/sdk.js#xfbml=1&version=v2.7';
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-              
-             // This is called with the results from from FB.getLoginStatus().
-             function statusChangeCallback(response) {
-                console.log('statusChangeCallback');
-                if (response.status === 'connected') {
-                    console.log('User is connected with $app_id');
-                    // We will use this because this is the most comprehensive token authentication source provided by Facebook.
-                    // Src official issued press statement method - https://www.facebook.com/FacebookforDevelopers/videos/10152795636318553/
-                    //https://developers.facebook.com/docs/graph-api/reference/v2.12/debug_token                    
-                    FB.api(
-                    '/debug_token?input_token='+response.authResponse.accessToken,
-                    function (response) {            
-                        
-                        console.log('Authenticating...');
-                        
-                        if (response && !response.error) {                                                
-                            /* handle the result */                                                        
-                            if (response.data.is_valid === true && response.data.app_id === '$app_id') {
-                                // this means that the current access token is issued by PHP Fusion.
-                                // authenticate the user or register the user.
-                                console.log('User has given permissions. Now authenticate.');
-                                do_facebook_authenticate();
-                            }                      
-                        } else {
-                            // we encountered an error.
-                            console.log('We have encountered an error and may not be able to proceed to log you in. User need to click button again.');
-                            // we need to figure out another action.
+                // Facebook Javascript SDK
+                echo "<div id='fb-root'></div>                
+                <script>
+                $.ajaxSetup({ cache: true });            
+                // Load the Javascript SDK
+                window.fbAsyncInit = function() {
+                    FB.init({
+                      appId      : '$app_id',
+                      cookie     : true,  // enable cookies to allow the server to access                                           
+                      xfbml      : true,  // parse social plugins on this page
+                      version    : 'v2.8' // use graph api version 2.8
+                    });                                        
+                  };
+                  
+                  // Load the SDK asynchronously
+                (function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = 'https://connect.facebook.net/".$locale_prefix."/sdk.js#xfbml=1&version=v2.7';
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+                  
+                 // This is called with the results from from FB.getLoginStatus().
+                 function statusChangeCallback(response) {
+                    //console.log('statusChangeCallback');
+                    if (response.status === 'connected') {
+                        //console.log('User is connected with $app_id');
+                        // We will use this because this is the most comprehensive token authentication source provided by Facebook.
+                        // Src official issued press statement method - https://www.facebook.com/FacebookforDevelopers/videos/10152795636318553/
+                        //https://developers.facebook.com/docs/graph-api/reference/v2.12/debug_token                    
+                        FB.api(
+                        '/debug_token?input_token='+response.authResponse.accessToken,
+                        function (response) {                                    
+                            //console.log('Authenticating...');                        
+                            if (response && !response.error) {                                                
+                                /* handle the result */                                                        
+                                if (response.data.is_valid === true && response.data.app_id === '$app_id') {
+                                    // this means that the current access token is issued by PHP Fusion.
+                                    // authenticate the user or register the user.
+                                    //console.log('User has given permissions. Now authenticate.');
+                                    do_facebook_authenticate();
+                                }                      
+                            } else {
+                                // we encountered an error.
+                                console.log('We have encountered an error and may not be able to proceed to log you in. User need to click button again.');                                
+                            }
                         }
-                    }
-                    );                
-                } else {                    
-                    console.log('User is not connected to Facebook.');
-                    // we need to figure out another action.
+                        );                
+                    } else {                    
+                        console.log('User is not connected to Facebook.');                                        
+                    }               
+                  }
                     
-                }
-                
-              }
-              // 54932 - old hien id. - meang.czac@outlook.com
-              // 16331 - new Chan id. - meangczac.chan@gmail.com
-              // User facebook UID must be present.
-                
-              // Here we run a very simple test of the Graph API after login is
-              // successful.  See statusChangeCallback() for when this call is made.
-              function do_facebook_authenticate() {
-                 console.log('Welcome!  Fetching your information.... ');
-                 // i will attempt to embed this into facebook_auth.
-                 
-                 FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {
-                     console.log(response);
-                     
-                     $.ajax({
-                           'url': 'infusions/login/user_fields/facebook_connect/facebook_auth.php',
-                           'data': response,
-                           'dataType': 'json',
-                           'success': function(e) {
-                               
-                               console.log(e);
-                               if (e.response) {
-                                   
-                                   if (e.response === 'authenticated') {         
-                                       console.log('user has been authenticated');                                                                      
-                                       window.location = '$redirect_link';
-                                       
-                                   } else if (e.response === 'register-form') {
-                                       console.log('redirect user to a registration form');
-                                       
-                                   } else if (e.response === 'connect-form') {
-                                       console.log('there are multiple users found. send to a connecting form');
-                                       
-                                   }    
-                               }
-                               
-                           },
-                           'error' : function(e) {
-                               console.log('Error loading the facebook file');
-                           }                           
-                     });                                                                                             
-                });                
-              }    
-              //https://stackoverflow.com/questions/11771534/facebook-api-how-is-onlogin-called
-              function fusion_login() {
-                 //alert('we are going to check your login status now');
-                 FB.getLoginStatus(function(response) {                           
-                    statusChangeCallback(response);
-                 });  
-              }
-                             
-            </script>";
+                  // Here we run a very simple test of the Graph API after login is
+                  // successful.  See statusChangeCallback() for when this call is made.
+                  function do_facebook_authenticate() {
+                     //console.log('Welcome!  Fetching your information.... ');                                      
+                     FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {                        
+                         response['skip_auth'] = '".$options['skip_auth']."';                        
+                         console.log(response);                    
+                         $.ajax({
+                               'url': 'infusions/login/user_fields/facebook_connect/facebook_auth.php',
+                               'data': response,
+                               'dataType': 'json',
+                               'success': function(e) {                               
+                                   console.log(e);
+                                   if (e.response) {                                   
+                                       if (e.response === 'authenticated') {         
+                                           console.log('user has been authenticated');                                                                      
+                                           window.location = '$redirect_link';
+                                           
+                                       } else if (e.response === 'register-form') {
+                                           console.log('redirect user to a registration form');
+                                           
+                                       } else if (e.response === 'connect-form') {
+                                           console.log('there are multiple users found. send to a connecting form');
+                                           
+                                       }    
+                                   }
+                               },
+                               'error' : function(e) {
+                                   console.log('Error loading the facebook file');
+                               }                           
+                         });                                                                                             
+                    });                
+                  }    
+                  
+                  // Check login function
+                  function fusion_login() {                     
+                     FB.getLoginStatus(function(response) {                           
+                        statusChangeCallback(response);
+                     });  
+                  }
+                                 
+                </script>";
 
                 $button_data_settings = [
                     'data-width'            => $fbSettings['button_width'] ?: "",

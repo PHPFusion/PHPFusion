@@ -45,7 +45,7 @@ class Facebook_Auth extends Facebook_Connect {
 
         if (in_array('user_fb_connect', $table)) {
 
-            if (dbcount("(user_id)", DB_USERS, "user_email=:email AND user_facebook_uid=:id", array(
+            if (dbcount("(user_id)", DB_USERS, "user_email=:email AND user_fb_connect=:id", array(
                 ':id'    => $facebook_id,
                 ':email' => $facebook_email
             ))) {

@@ -32,7 +32,18 @@ if ($profile_method == "input") {
 
     } else {
 
-        require_once(INFUSIONS.'login/user_fields/facebook_connect/facebook_connect.php');
+        /**
+         * Further roadmap in future...
+         * We will need email merging for this to work.
+         * Problem:
+         * The facebook button uses your current login session with Facebook, which may be on a different email account.
+         * Now, if the email account is different here, we need to bind both email to one single account.
+         * We will need an email table creation table...
+         *
+         *
+         *
+         */
+        /*require_once(INFUSIONS.'login/user_fields/facebook_connect/facebook_connect.php');
         $fb = new Facebook_Connect();
         $user = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -48,8 +59,9 @@ if ($profile_method == "input") {
         $tpl->set_tag('site_name', fusion_get_settings('sitename'));
         $tpl->set_tag('header_text', $locale['user_fb_connect_400']);
         $tpl->set_tag('button_text', $locale['user_fb_connect_402']);
-        $tpl->set_tag('content', $fb->display_login());
-        $user_fields = $tpl->get_output();
+        $tpl->set_tag('content', $fb->display_login(array('skip_auth'=>true, 'facebook_button'=>false)));
+        $user_fields = $tpl->get_output(); */
+
     }
     // Display in profile
 } else if ($profile_method == "display") {
