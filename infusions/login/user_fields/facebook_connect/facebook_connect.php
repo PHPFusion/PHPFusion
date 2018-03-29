@@ -141,6 +141,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         $default_options = [
             'skip_auth'          => FALSE,
             'display_connection' => FALSE,
+            'redirect_link'      => '',
         ];
 
         $options += $default_options;
@@ -153,8 +154,11 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                 // Application have been verified by Facebook.
                 $app_id = $app_info->id;
                 $locale_prefix = fusion_get_locale('xml_lang').'_'.fusion_get_locale('region');
-                $redirect_link = fusion_get_settings('siteurl');
-                $redirect_link .= isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php';
+                /**
+                 * Optional through globals.
+                 * $_GET['rel'] - /{SITE_PATH}/redirect-file.php
+                 */
+                $redirect_link = ($options['redirect_link'] ?: fusion_get_settings('siteurl').(isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php'));
 
                 // Facebook Javascript SDK
                 echo "<div id='fb-root'></div>                
@@ -216,30 +220,36 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                      //console.log('Welcome!  Fetching your information.... ');                                      
                      FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {                        
                          response['skip_auth'] = '".$options['skip_auth']."';                        
-                         console.log(response);                    
+                         console.log(response);
+                        var file_url = '".rtrim(fusion_get_settings('site_path'), '/')."/infusions/login/user_fields/facebook_connect/facebook_auth.php';
                          $.ajax({
-                               'url': 'infusions/login/user_fields/facebook_connect/facebook_auth.php',
+                               'url': file_url,
                                'data': response,
                                'dataType': 'json',
-                               'success': function(e) {                               
-                                   console.log(e);
-                                   if (e.response) {                                   
-                                       if (e.response === 'authenticated') {         
+                               'success': function(e) {   
+                                   console.log('Getting Authentication Response...');
+                                   //console.log(e);
+                                   console.log(e.response);
+                                   
+                                   if (e.response) {
+                                       //alert('$redirect_link');
+                                       window.location = '$redirect_link';
+                                       
+                                       /* if (e.response === 'authenticated') {         
                                            console.log('user has been authenticated');
-                                           
-                                           //window.location = '$redirect_link';
+                                           alert('$redirect_link');
+                                           window.location = '$redirect_link';
                                            
                                        } else if (e.response === 'register-form') {
-                                           console.log('redirect user to a registration form');
-                                           
+                                           console.log('redirect user to a registration form');                                           
                                        } else if (e.response === 'connect-form') {
-                                           console.log('there are multiple users found. send to a connecting form');
-                                           
-                                       }    
+                                           console.log('there are multiple users found. send to a connecting form');                                           
+                                       }
+                                       */
                                    }
                                },
                                'error' : function(e) {
-                                   console.log('Error loading the facebook file');
+                                   //alert('Facebook Authentication Error');
                                }                           
                          });                                                                                             
                     });                
@@ -288,8 +298,6 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                     }, array_keys($button_data_settings), array_values($button_data_settings)));
 
                 return "<div class='fb-login-button' $data_attr.$button_size onlogin='fusion_login()'>$button_text</div>\n";
-
-                //return "<div type='button' class='fb-login-button' size='large' onlogin='fusion_login()'>$button_text</div>\n";
             }
         }
 
@@ -440,5 +448,5 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         return NULL;
 
     }
-    
+
 }

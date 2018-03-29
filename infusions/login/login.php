@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion\Infusions\Login;
+
+use PHPFusion\Authenticate;
+use PHPFusion\PasswordAuth;
+
 /**
  * Class Login
  *
@@ -62,6 +66,7 @@ class Login {
         if ($driver_name !== NULL) {
             return (isset(self::$drivers[$driver_name]) ? self::$drivers[$driver_name] : NULL);
         }
+
         return self::$drivers;
 
     }
@@ -294,6 +299,121 @@ class Login {
     }
 
     public function register_new_user() {
+    }
+
+    /**
+     * Generate a new set of password, hash, salt and algo for new user registration
+     *
+     * @return array
+     */
+    public static function get_new_user_password() {
+        $loginPass = new PasswordAuth();
+        $newLoginPass = $loginPass->getNewPassword(12);
+        $loginPass->inputNewPassword = $newLoginPass;
+        $loginPass->inputNewPassword2 = $newLoginPass;
+
+        return array(
+            'password_test' => ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE),
+            'password'      => $newLoginPass,
+            'algo'          => $loginPass->getNewAlgo(),
+            'salt'          => $loginPass->getNewSalt(),
+            'hash'          => $loginPass->getNewHash(),
+        );
+    }
+
+    /**
+     * Authenticate password
+     *
+     * @param $input_password
+     * @param $hash
+     * @param $algo
+     * @param $salt
+     *
+     * @return bool
+     */
+    public static function verify_user_password($input_password, $hash, $algo, $salt) {
+        $inputHash = ($algo != 'md5' ? hash_hmac($algo, $input_password, $salt) : md5(md5($input_password)));
+        if ($inputHash === $hash) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    protected static function send_email_verification($userData) {
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
+        require_once(INCLUDES."sendmail_include.php");
+
+        $user_name = $userData['user_name'];
+        $user_email = $userData['user_email'];
+        $userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $user_email);
+        $userPassword = $userData['input_password'];
+        $activationUrl = $settings['siteurl']."register.php?email=".$user_email."&code=".$userCode;
+
+        $message = str_replace("USER_NAME", $user_name, $locale['u152']);
+        $message = str_replace("SITENAME", fusion_get_settings("sitename"), $message);
+        $message = str_replace("SITEUSERNAME", fusion_get_settings("siteusername"), $message);
+        $message = str_replace("USER_PASSWORD", $userPassword, $message);
+        $message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
+        $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
+
+        if (!sendemail($user_name, $user_email, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
+            $message = strtr($locale['u154'], [
+                '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
+                '[/LINK]' => "</strong></a>"
+            ]);
+            addNotice('warning', $locale['u153']."<br />".$message, 'all');
+        }
+        $userInfo = base64_encode(serialize($userData));
+        dbquery("INSERT INTO ".DB_NEW_USERS."
+					(user_code, user_name, user_email, user_datestamp, user_info)
+					VALUES
+					('".$userCode."', '".$user_name."', '".$user_email."', '".TIME."', '".$userInfo."')
+					");
+        addNotice("success", $locale['u150'], 'all');
+    }
+
+    /**
+     * Authenticate a user login session
+     *
+     * @param $user_id
+     */
+    protected function authenticate_user_login($user_id) {
+        $user = fusion_get_user($user_id);
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
+        $remember = false;
+        // Initialize password auth
+        if (!empty($user['user_id']) && $user['user_status'] == 0 && $user['user_actiontime'] == 0) {
+            // Implement new login class
+            $authenticate_methods = $this->authenticate($user);
+            if (empty($authenticate_methods)) {
+                Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
+                Authenticate::_setUserTheme($user);
+            }
+
+        } else {
+            require_once INCLUDES."suspend_include.php";
+            require_once INCLUDES."sendmail_include.php";
+            if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
+                dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
+                if ($user['user_status'] == 3) {
+                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
+                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
+                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                    unsuspend_log($user['user_id'], 3, $locale['global_450'], TRUE);
+                } else {
+                    $subject = $locale['global_454'];
+                    $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_452']);
+                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                }
+                $message = str_replace("USER_NAME", $user['user_name'], $message);
+                sendemail($user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
+            } else {
+                redirect(Authenticate::getRedirectUrl(4, $user['user_status'], $user['user_id']));
+            }
+        }
 
     }
 

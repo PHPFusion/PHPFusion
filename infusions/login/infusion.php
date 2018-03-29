@@ -54,12 +54,12 @@ $inf_newtable[] = DB_LOGIN." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_LOGIN_EMAILS." (    
-    email_address VARCHAR(50) NOT NULL DEFAULT '0',
+    email_address VARCHAR(50) NOT NULL DEFAULT '',
     email_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    email_type VARCHAR(10) NOT NULL DEFAULT '0',
+    email_type VARCHAR(10) NOT NULL DEFAULT '',
     email_verified TINYINT(1) NOT NULL DEFAULT '0',
-    KEY email_user (email_user),
-    KEY email_address (email_address)
+    PRIMARY KEY (email_address),
+    KEY email_user (email_user)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_droptable[] = DB_LOGIN;

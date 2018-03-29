@@ -42,6 +42,7 @@ if ($profile_method == "input") {
         $tpl->set_tag('site_name', fusion_get_settings('sitename'));
         $tpl->set_tag('title', $locale['uf_fb_connect_desc']);
         $tpl->set_tag('header_text', $locale['uf_fb_connect_400']);
+        $tpl->set_tag('header_description', str_replace('{SITE_NAME}', fusion_get_settings('sitename'), $locale['uf_fb_connect_404']));
         if (!empty($user['user_fb_connect'])) {
             $tpl->set_tag('header_text', $locale['uf_fb_connect_401']);
         }
@@ -50,10 +51,25 @@ if ($profile_method == "input") {
                 'skip_auth'          => true,
                 'facebook_button'    => true,
                 'display_connection' => true,
+                'redirect_link'      => FUSION_REQUEST
             )
         ));
-        $user_fields = $tpl->get_output();
 
+        if (dbcount("(email_address)", DB_LOGIN_EMAILS, "email_user=:uid AND email_type=:t AND email_verified=0", [
+            ':uid' => $user['user_id'],
+            ':t'   => 'facebook'
+        ])) {
+            $tpl->set_block('notice', array('text' => nl2br($locale['uf_fb_connect_405'])));
+        }
+
+        /* $email = 'meang.czac@outlook.com';
+        $user_id = '16331';
+        $code = json_encode(array('email_address' => $email, 'user_id' => $user_id, 'datestamp' => TIME));
+        $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
+        $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;
+        echo "<a href='$link'>$link</a>"; */
+
+        $user_fields = $tpl->get_output();
     }
 
 }

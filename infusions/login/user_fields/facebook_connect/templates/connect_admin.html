@@ -2,7 +2,12 @@
 <div class="list-group-item no-shadow">
     <div class="clearfix">
         <h3 id='{%header_id%}' class="m-0">{%header_text%}</h3>
-        <p>Connect your Facebook Account with your {%site_name%} User Account.</p>
+        <p>{%header_description%}</p>
+        {notice.{
+        <div class="alert alert-warning">
+            {%text%}
+        </div>
+        }}
         <hr/>
         {%content%}
     </div>
