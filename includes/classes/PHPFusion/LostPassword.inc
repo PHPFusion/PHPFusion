@@ -49,7 +49,7 @@ class LostPassword extends PasswordAuth {
         //$email = stripinput(trim(preg_replace("/ +/i", "", $email)));
         //if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $check = dbcount("(user_id)", DB_USERS, "user_email=", [':email' => $email]);
+            $check = dbcount("(user_id)", DB_USERS, "user_email=:email", [':email' => $email]);
             if ($check > 0) {
                 $this->_userEMail = $email;
 
