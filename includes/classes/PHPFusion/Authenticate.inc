@@ -317,11 +317,7 @@ class Authenticate {
                     LIMIT 1");
                 if (dbrows($result) == 1) {
                     $user = dbarray($result);
-                    if ($user['user_admin_algo'] != "md5") {
-                        $inputHash = hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']);
-                    } else {
-                        $inputHash = md5(md5($pass));
-                    }
+                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
                     if ($inputHash == $user['user_admin_password']) {
                         return TRUE;
                     }
@@ -415,15 +411,11 @@ class Authenticate {
         return Authenticate::getEmptyUserData();
     }
 
-    // Get Empty User Data
-
     public static function getEmptyUserData() {
         global $settings;
 
         return ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']];
     }
-
-    // Set user theme
 
     public static function setLastVisitCookie() {
         global $userdata;

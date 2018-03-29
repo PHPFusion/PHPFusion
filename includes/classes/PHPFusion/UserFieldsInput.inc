@@ -126,7 +126,7 @@ class UserFieldsInput {
                  * Create user
                  */
                 dbquery_insert(DB_USERS, $this->data, 'save');
-                $this->_completeMessage = $locale['u160']." - ".$locale['u161'];;
+                $this->_completeMessage = $locale['u160']." - ".$locale['u161'];
 
                 if (defined("ADMIN_PANEL")) {
                     global $aidlink;
@@ -217,15 +217,15 @@ class UserFieldsInput {
 
                 if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
                     // Check for invalid characters
-                    $defender->stop();
-                    $defender->setInputError('user_name');
-                    $defender->setErrorText('user_name', $locale['u120']);
+                    \defender::stop();
+                    \defender::setInputError('user_name');
+                    \defender::setErrorText('user_name', $locale['u120']);
 
                 } else if (in_array($this->_userName, $uban)) {
                     // Check for contains username
-                    $defender->stop();
-                    $defender->setInputError('user_name');
-                    $defender->setErrorText('user_name', $locale['u119']);
+                    \defender::stop();
+                    \defender::setInputError('user_name');
+                    \defender::setErrorText('user_name', $locale['u119']);
 
                 } else {
 
@@ -235,9 +235,9 @@ class UserFieldsInput {
                     if ($name_active == 0 && $name_inactive == 0) {
                         $this->data['user_name'] = $this->_userName;
                     } else {
-                        $defender->stop();
-                        $defender->setInputError('user_name');
-                        $defender->setErrorText('user_name', $locale['u121']);
+                        \defender::stop();
+                        \defender::setInputError('user_name');
+                        \defender::setErrorText('user_name', $locale['u121']);
                     }
                 }
             } else {

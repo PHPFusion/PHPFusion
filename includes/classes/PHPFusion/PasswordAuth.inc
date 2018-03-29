@@ -36,7 +36,7 @@ class PasswordAuth {
     public function isValidCurrentPassword($createNewHash = FALSE) {
         $inputPasswordHash = $this->_hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
         if ($inputPasswordHash == $this->currentPasswordHash) {
-            if ($createNewHash == TRUE) {
+            if ($createNewHash === TRUE) {
                 $this->_setNewHash($this->inputPassword);
             }
 
@@ -71,7 +71,7 @@ class PasswordAuth {
 
     // Get new password hash
 
-    public static function getNewPassword($length = 12) {
+    public function getNewPassword($length = 12) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
