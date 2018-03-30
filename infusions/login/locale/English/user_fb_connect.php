@@ -1,6 +1,24 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: login/locale/English/user_fb_connect.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
 $locale['uf_fb_connect'] = "Facebook Login";
 $locale['uf_fb_connect_desc'] = "Facebook Login Connector";
+$locale['uf_fb_connect_verify'] = "Facebook Login Confirmation";
 
 // Driver configuration form
 $locale['uf_fb_connect_200'] = "Facebook Login with the Facebook SDK enables people to sign into your webpage with their Facebook credentials.";
@@ -28,6 +46,17 @@ $locale['uf_fb_connect_221'] = "Login With...";
 $locale['uf_fb_connect_222'] = "Enable Logout Button";
 $locale['uf_fb_connect_223'] = "Save Facebook Settings";
 
+// Verification responses
+$locale['uf_fb_connect_300'] = "Facebook Login Email Address is now Verified";
+$locale['uf_fb_connect_301'] = "Thank you for your verification. Your Facebook Login is now activated.";
+$locale['uf_fb_connect_302'] = "Invalid Email address.";
+$locale['uf_fb_connect_303'] = "We could not verify the email address. Please try to connect your Facebook Login again.";
+$locale['uf_fb_connect_304'] = "Activation Code expired.";
+$locale['uf_fb_connect_305'] = "The activation email has expired. Please try to connect your Facebook Login again.";
+$locale['uf_fb_connect_306'] = "Invalid Activation Code.";
+$locale['uf_fb_connect_307'] = "The activation code is invalid. Please try to connect your Facebook Login again.";
+
+
 // User Fields Connector
 $locale['uf_fb_connect_400'] = "Facebook is not yet connected to your user account";
 $locale['uf_fb_connect_401'] = "Facebook is connected to your account";
@@ -35,6 +64,7 @@ $locale['uf_fb_connect_402'] = "Connect User Account to Facebook";
 $locale['uf_fb_connect_403'] = "Disconnect User Account from Facebook";
 $locale['uf_fb_connect_404'] = "Connect connect your Facebook Account with your {SITE_NAME} User Account.";
 $locale['uf_fb_connect_405'] = "You have Facebook Account pending for activation.\nPlease check your registered Facebook email for the activation link.";
+$locale['uf_fb_connect_406'] = "Back to Main";
 
 // Email
 $locale['uf_fb_connect_500'] = "{SITE_NAME} - Account Email Activation";
@@ -43,3 +73,4 @@ $locale['uf_fb_connect_502'] = "We have sent a verification email to your Facebo
 $locale['uf_fb_connect_503'] = "This Facebook Account has been associated with an existing User Account.";
 $locale['uf_fb_connect_504'] = "You have already connected to your Facebook";
 $locale['uf_fb_connect_505'] = "You have successfully connected your Facebook Account.";
+

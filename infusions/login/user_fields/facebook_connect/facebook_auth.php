@@ -1,4 +1,21 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: login/user_fields/facebook_connect/facebook_auth.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
 require_once __DIR__.'/../../../../maincore.php';
 require_once __DIR__.'/facebook_connect.php';
 
@@ -67,13 +84,13 @@ class Facebook_Auth extends Facebook_Connect {
 
                 } else {
 
+                    $response = 'not connected';
+
                     // Not connected to Facebook yet.
                     $user_id = fusion_get_userdata('user_id');
                     $user_name = fusion_get_userdata('user_name');
                     $user_email = fusion_get_userdata('user_email');
                     $user_emails = array();
-                    // additional emails
-                    // cache system emails
                     $email_result = dbquery("SELECT email_address FROM ".DB_LOGIN_EMAILS." WHERE email_address=:email AND email_user=:id", [
                         ':email' => $facebook_email,
                         ':id'    => $user_id
@@ -96,6 +113,7 @@ class Facebook_Auth extends Facebook_Connect {
 
                         if (!$is_admin) {
                             // Log you in
+                            $response = "first connect";
                             self::authenticate_user_login($user['user_id']);
                         }
 
@@ -105,6 +123,8 @@ class Facebook_Auth extends Facebook_Connect {
                         if (!dbcount("(user_id)", DB_USERS, "user_email=:email", [':email' => $facebook_email])) {
 
                             // send an email verification - activation email
+                            $response = "connecting facebook";
+
                             if ($is_admin) {
 
                                 $data['email_data'] = [
@@ -114,19 +134,33 @@ class Facebook_Auth extends Facebook_Connect {
                                     'email_ref'      => $facebook_id,
                                     'email_verified' => 0,
                                 ];
+
+                                if (fusion_get_settings('email_verification')) {
+
+                                    $code = json_encode(array('email_address' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME));
+                                    $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
+                                    $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;
+                                    $link = urlencode($link);
+                                    $subject = strtr($locale['uf_fb_connect_500'], array('{SITE_NAME}' => fusion_get_settings('sitename')));
+                                    $message = strtr($locale['uf_fb_connect_501'], array(
+                                        '{USER_NAME}'  => $user_name,
+                                        '{SITE_NAME}'  => fusion_get_settings('sitename'),
+                                        '{ADMIN_NAME}' => fusion_get_settings('siteusername'),
+                                        '{LINK}'       => "<a href='$link'>$link</a>",
+                                    ));
+                                    sendemail($user_name, $facebook_email, fusion_get_settings('siteusername'), $subject, $message, 'html');
+                                    addNotice('success', $locale['uf_fb_connect_502'], 'all');
+                                } else {
+
+                                    // Connect Facebook Account to User
+                                    $user = fusion_get_userdata();
+                                    $user['user_fb_connect'] = $facebook_id;
+                                    dbquery_insert(DB_USERS, $user, 'update');
+                                    // Change email verified to true
+                                    $data['email_data']['email_verified'] = 1;
+                                }
+
                                 dbquery_insert(DB_LOGIN_EMAILS, $data['email_data'], 'save', ['keep_session' => true]);
-                                addNotice('success', $locale['uf_fb_connect_502'], 'all');
-                                $code = json_encode(array('email_address' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME));
-                                $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
-                                $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;
-                                $subject = strtr($locale['uf_fb_connect_500'], array('{SITE_NAME}' => fusion_get_settings('sitename')));
-                                $message = strtr($locale['uf_fb_connect_501'], array(
-                                    '{USER_NAME}'  => $user_name,
-                                    '{SITE_NAME}'  => fusion_get_settings('sitename'),
-                                    '{ADMIN_NAME}' => fusion_get_settings('siteusername'),
-                                    '{LINK}'       => "<a href='$link'>$link</a>",
-                                ));
-                                sendemail($user_name, $facebook_email, fusion_get_settings('siteusername'), $subject, $message, 'html');
                                 addNotice('success', $locale['uf_fb_connect_502'], 'all');
 
                             } else {
@@ -139,11 +173,10 @@ class Facebook_Auth extends Facebook_Connect {
                                     'user_hash'       => $user_password['hash'],
                                     'user_algo'       => $user_password['algo'],
                                     'user_salt'       => $user_password['salt'],
-                                    'user_email'      => '',
+                                    'user_email'      => $facebook_email,
                                     'user_gender'     => $data['facebook_data']['user_gender'],
                                     'user_hide_email' => 1,
                                     'user_status'     => $settings['admin_activation'] ? 2 : 0,
-                                    'user_xxx'        => '',
                                     'user_joined'     => TIME,
                                     'user_ip'         => USER_IP,
                                     'user_ip_type'    => USER_IP_TYPE,
@@ -162,6 +195,7 @@ class Facebook_Auth extends Facebook_Connect {
 
                                 }
                             }
+
                         } else {
                             // cannot use this account.
                             addNotice('danger', $locale['uf_fb_connect_503'], 'all');
