@@ -33,7 +33,7 @@ if ($profile_method == "input") {
         $tpl->set_template(__DIR__.'/google_auth/templates/create.html');
         // html text replacement
         $tpl->set_tag('title', $locale['uf_gauth_108']);
-        $tpl->set_tag('description', $locale['uf_gauth_111']);
+        $tpl->set_tag('description', str_replace('{SITE_NAME}', fusion_get_settings('sitename'), $locale['uf_gauth_111']));
 
         if (isset($_POST['authenticate']) && isset($_POST['enable_2step']) && $_POST['enable_2step'] == 1) {
             $google = new GoogleAuthenticator();
@@ -121,14 +121,14 @@ if ($profile_method == "input") {
                 'button'       => form_button('authenticate', $locale['uf_gauth_106'], $locale['uf_gauth_106'], ['class' => 'btn-primary'])
             ]);
 
-            add_to_jquery("           
+            add_to_jquery("
             $('input[name=\"enable_2step\"]').bind('change', function(e) {
-                if ($(this).val() == 1) {                
+                if ($(this).val() == 1) {
                     $('#gauth_setup_form').slideDown();
-                    
-                } else {                               
+
+                } else {
                     $('#gauth_setup_form').slideUp();
-                    
+
                 }
             });
             ");

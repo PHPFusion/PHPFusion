@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 $locale['uf_gauth'] = "Google 2-Step Authenticator";
 $locale['uf_gauth_desc'] = "2 Factor Authentication using Google Authenticator.";
 
@@ -30,7 +29,7 @@ $locale['uf_gauth_107'] = "Deactivate Code";
 $locale['uf_gauth_108'] = "Enable Two-Step Authentication Code";
 $locale['uf_gauth_109'] = "No, I do not want to use 2-Step Authentication";
 $locale['uf_gauth_110'] = "Yes, I wish to enroll 2-Step Authentication";
-$locale['uf_gauth_111'] = "Your PHP Fusion account been protected with Google Authenticator. Google Authenticator is a secure, easy to use, two-factor authentication application for your mobile device that is immune from replay-attacks, man-in-the-middle attacks, and a host of other thread vectors.";
+$locale['uf_gauth_111'] = "Your {SITE_NAME} account been protected with Google Authenticator. Google Authenticator is a secure, easy to use, two-factor authentication application for your mobile device that is immune from replay-attacks, man-in-the-middle attacks, and a host of other thread vectors.";
 $locale['uf_gauth_112'] = "Your account have been secured with the Two-Step Authentication.";
 $locale['uf_gauth_113'] = "Please make sure you do not remove the pairing on your app before deactivating on your user account. You will need it to deactivate the Two-Step Authentication on this user account.";
 $locale['uf_gauth_114'] = "Deactivate the Two-Step Authentication by entering the passcode below:";
@@ -53,7 +52,7 @@ $locale['uf_gauth_142'] = "You have successfully deactivated the Two Step Authen
 $locale['uf_gauth_143'] = "Your code failed to be authenticated. Please try again.";
 
 $locale['uf_gauth_150'] = "Two-Step Authentication requires the Google Authenticator App.";
-$locale['uf_gauth_151'] = "Scan the barcode or enter this information:";
+$locale['uf_gauth_151'] = "Scan the QR Code or enter this information:";
 $locale['uf_gauth_152'] = "Account Name:";
 $locale['uf_gauth_153'] = "Your Secret Key:";
 $locale['uf_gauth_154'] = "Use your Google Authenticator app to scan this QR code and enter the one time password below.";
@@ -65,4 +64,4 @@ $locale['uf_gauth_158'] = "Visit the App Store and search for Google Authenticat
 $locale['uf_gauth_159'] = "Android:";
 $locale['uf_gauth_160'] = "Visit Google Play and search for Google Authenticator.";
 $locale['uf_gauth_161'] = "Blackberry:";
-$locale['uf_gauth_162'] = "Visit <a href='www.m.google.com/authenticator'>www.m.google.com/authenticator</a> on your web browser.";
+$locale['uf_gauth_162'] = "Visit <a href='http://m.google.com/authenticator' target='_blank'>m.google.com/authenticator</a> on your web browser.";
