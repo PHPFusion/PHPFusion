@@ -31,6 +31,10 @@ if ($profile_method == "input") {
         require_once INFUSIONS.'login/user_fields/google_auth/google_auth.php';
         $tpl = \PHPFusion\Template::getInstance('gauth');
         $tpl->set_template(__DIR__.'/google_auth/templates/create.html');
+        // html text replacement
+        $tpl->set_tag('title', $locale['uf_gauth_108']);
+        $tpl->set_tag('description', $locale['uf_gauth_111']);
+
         if (isset($_POST['authenticate']) && isset($_POST['enable_2step']) && $_POST['enable_2step'] == 1) {
             $google = new GoogleAuthenticator();
             $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
@@ -43,11 +47,11 @@ if ($profile_method == "input") {
                     'user_gauth' => $secret,
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
-                addNotice('success', "You have successfully activated the Two Step Authentication login on your user account.");
+                addNotice('success', $locale['uf_gauth_140']);
                 redirect(FUSION_REQUEST);
             } else {
                 // unsuccessful. try again.
-                addNotice('danger', "Your code failed to be authenticated. Please try again.");
+                addNotice('danger', $locale['uf_gauth_141']);
                 redirect(FUSION_REQUEST);
             }
         } elseif (isset($_POST['deactivate'])) {
@@ -62,42 +66,61 @@ if ($profile_method == "input") {
                     'user_gauth' => '',
                 ];
                 dbquery_insert(DB_USERS, $user, 'update');
-                addNotice('success', "You have successfully deactivated the Two Step Authentication login on your user account.");
+                addNotice('success', $locale['uf_gauth_142']);
                 redirect(FUSION_REQUEST);
             } else {
                 // unsuccessful. try again.
-                addNotice('danger', "Your code failed to be authenticated. Please try again.");
+                addNotice('danger', $locale['uf_gauth_143']);
                 redirect(FUSION_REQUEST);
             }
         }
         if (!empty($field_value)) {
             // Reset options
             $tpl->set_block('current_block', [
-                'text_input' => form_text('g_code', 'Authentication Code', '', ['type' => 'password', 'required' => true, 'placeholder' => 'Enter Google Authentication Code']),
-                'button'     => form_button('deactivate', 'Deactivate', 'deactivate', ['class' => 'btn-primary btn-bordered'])
+                'title'       => $locale['uf_gauth_112'],
+                'description' => $locale['uf_gauth_113'],
+                'detail'      => $locale['uf_gauth_114'],
+                'text_input'  => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => true, 'placeholder' => $locale['uf_gauth_105']]),
+                'button'      => form_button('deactivate', $locale['uf_gauth_107'], $locale['uf_gauth_107'], ['class' => 'btn-primary'])
             ]);
             $user_fields = $tpl->get_output();
         } else {
-
             // do the tpl here
             $google = new GoogleAuthenticator();
             $account_name = fusion_get_userdata('user_email');
             $site_name = fusion_get_settings('sitename');
             $secret = $google->createSecret();
             $qrCodeUrl = $google->getQRCodeGoogleUrl($account_name, $secret, $site_name);
+
             $tpl->set_block('new_block', [
-                'radio'        => form_checkbox('enable_2step', 'Enable Two-Step Authentication', '', [
+                'title'        => $locale['uf_gauth_115'],
+                'subtitle'     => $locale['uf_gauth_116'],
+                'i_title'      => $locale['uf_gauth_150'],
+                'i_subtitle'   => $locale['uf_gauth_151'],
+                'd_name'       => $locale['uf_gauth_152'],
+                'd_key'        => $locale['uf_gauth_153'],
+                'i_detail'     => $locale['uf_gauth_154'],
+                'i_text'       => $locale['uf_gauth_155'],
+                'm_title'      => $locale['uf_gauth_156'],
+                'm_text_1'     => $locale['uf_gauth_157'],
+                'm_text_2'     => $locale['uf_gauth_158'],
+                'm_text_3'     => $locale['uf_gauth_159'],
+                'm_text_4'     => $locale['uf_gauth_160'],
+                'm_text_5'     => $locale['uf_gauth_161'],
+                'm_text_6'     => $locale['uf_gauth_162'],
+                'radio'        => form_checkbox('enable_2step', $locale['uf_gauth_108'], '', [
                         'options' => [
-                            0 => 'No, I do not want to use 2-Step Authentication',
-                            1 => 'Yes, I wish to enroll 2-Step Authentication'
+                            0 => $locale['uf_gauth_109'],
+                            1 => $locale['uf_gauth_110']
                         ],
                         'type'    => 'radio']).form_hidden('secret', '', $secret),
                 'account_name' => $account_name,
                 'key'          => $secret,
                 'image_src'    => $qrCodeUrl,
-                'text_input'   => form_text('g_code', 'Authentication Code', '', ['type' => 'password', 'required' => true, 'placeholder' => 'Enter Google Authentication Code']),
-                'button'       => form_button('authenticate', 'Verify Code', 'Verify Code', ['class' => 'btn-primary btn-bordered'])
+                'text_input'   => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => true, 'placeholder' => $locale['uf_gauth_105']]),
+                'button'       => form_button('authenticate', $locale['uf_gauth_106'], $locale['uf_gauth_106'], ['class' => 'btn-primary'])
             ]);
+
             add_to_jquery("           
             $('input[name=\"enable_2step\"]').bind('change', function(e) {
                 if ($(this).val() == 1) {                

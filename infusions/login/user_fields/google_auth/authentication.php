@@ -29,6 +29,7 @@ $user = [];
 $secret = '';
 $remember = '';
 
+// restore code
 if (isset($_GET['restore_code']) && isset($_GET['uid']) && isnum($_GET['uid'])) {
     $restore_code = stripinput($_GET['restore_code']);
     $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:uid", [':uid' => intval($_GET['uid'])]);
@@ -37,13 +38,13 @@ if (isset($_GET['restore_code']) && isset($_GET['uid']) && isnum($_GET['uid'])) 
         if ($restore_code == $user['user_id'].hash_hmac($algo, $user['user_id'].$secret.$secret_key, $salt)) {
             // restore the account
             dbquery("UPDATE ".DB_USERS." SET user_status=0 WHERE user_status=5 AND user_id=:uid", [':uid' => intval($_GET['uid'])]);
-            addNotice("success", "Your account has been sucessfully restored");
+            addNotice("success", $locale['uf_gauth_130']);
         } else {
-            addNotice("danger", "Invalid restore code. We could not restore your account. Please contact the site administrator.");
+            addNotice("danger", $locale['uf_gauth_131']);
             redirect(BASEDIR.'index.php');
         }
     } else {
-        addNotice("danger", "Sorry, we could not find the user account. Please contact the site administrator.");
+        addNotice("danger", $locale['uf_gauth_132']);
         redirect(BASEDIR.'index.php');
     }
 }
@@ -55,15 +56,11 @@ if (isset($_SESSION['secret_code'])) {
     if (!empty($verify_secret)) {
         $user = fusion_get_user($user_id);
         if (!empty($user)) {
-
             if (isset($_POST['authenticate'])) {
-
                 if (!isset($_SESSION['auth_attempt'][USER_IP])) {
                     $_SESSION['auth_attempt'][USER_IP] = 3;
                 }
-
                 $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
-
                 if (\defender::safe()) {
                     $checkResult = $google->verifyCode($secret, $gCode, 2);    // 2 = 2*30sec clock tolerance
                     if ($checkResult) {
@@ -76,10 +73,9 @@ if (isset($_SESSION['secret_code'])) {
                         redirect(BASEDIR.'index.php');
 
                     } else {
-
                         if (!empty($_SESSION['auth_attempt'][USER_IP])) {
                             $_SESSION['auth_attempt'][USER_IP] = $_SESSION['auth_attempt'][USER_IP] - 1;
-                            addNotice('danger', "We could not verify your authentication code. You have ".$_SESSION['auth_attempt'][USER_IP]." attempts left");
+                            addNotice('danger', str_replace('{D}', $_SESSION['auth_attempt'][USER_IP], $locale['uf_gauth_123']));
                         } else {
 
                             $key = $user_id.$secret.$secret_key;
@@ -87,23 +83,13 @@ if (isset($_SESSION['secret_code'])) {
                             $restore_hash = $user_id.$hash;
                             $restore_link = fusion_get_settings('siteurl').'/infusions/login/google_auth/authentication.php?uid='.$user_id.'&amp;restore_hash='.$restore_hash;
                             // ban the user
-                            addNotice("danger", "Your account has been temporarily suspended. Please contact the administrator at ".fusion_get_settings('site_email'));
-                            $subject = "Account Suspended due to Suspicious Account Login";
-                            $message = "Dear {USERNAME},\n\n
-                            We have recently find that there was multiple attempts to login into your user account at {SITENAME}. And as a security measure, we have temporarily
-                            [strong]suspended the account[/strong]. If you feel that there was an error to this, you can restore your account with the link below.\n\n
-                            {RESTORE_LINK}\n\n
-                            Your regards,\n
-                            {SITE_ADMIN}\n
-                            Site Administrator,\n
-                            {SITENAME}               
-                            ";
-
-                            $message = parse_textarea(strtr($message, [
+                            addNotice("danger", str_replace('{SITE_NAME}', fusion_get_settings('sitename'), $locale['uf_gauth_120']));
+                            $subject = $locale['uf_gauth_121'];
+                            $message = parse_textarea(strtr($locale['uf_gauth_122'], [
                                 '{USERNAME}'     => $user['user_name'],
                                 '{SITENAME}'     => fusion_get_settings('sitename'),
                                 '{RESTORE_LINK}' => "<a href='$restore_link'>$restore_link</a>",
-                                '{SITE_ADMIN}'   => fusion_get_settings('site_admin'),
+                                '{SITE_ADMIN}'   => fusion_get_settings('siteusername'),
                             ]));
                             $mail = sendemail($user['user_name'], $user['user_email'], fusion_get_settings('site_admin'), fusion_get_settings('site_email'), $subject, $message);
                             if ($mail) {
@@ -121,13 +107,16 @@ if (isset($_SESSION['secret_code'])) {
             $path = __DIR__.'/templates/authorize.html';
             $tpl->set_template($path);
             $tpl->set_tag('image_src', 'images/icon.png');
-            $tpl->set_tag('input', form_text('g_code', 'Authentication Code', '', [
+            $tpl->set_tag('title', $locale['uf_gauth_100']);
+            $tpl->set_tag('description', $locale['uf_gauth_101']);
+            $tpl->set_tag('detail', $locale['uf_gauth_102']);
+            $tpl->set_tag('input', form_text('g_code', $locale['uf_gauth_103'], '', [
                 'required'    => TRUE,
                 'type'        => 'password',
-                'error_text'  => 'You need to provide a valid Authentication Code',
-                'placeholder' => 'Enter Google Authentication Code'
+                'error_text'  => $locale['uf_gauth_104'],
+                'placeholder' => $locale['uf_gauth_105']
             ]));
-            $tpl->set_tag('button', form_button('authenticate', 'Verify', 'Verify', ['class' => 'btn-block btn-primary btn-bordered']));
+            $tpl->set_tag('button', form_button('authenticate', $locale['uf_gauth_106'], $locale['uf_gauth_106'], ['class' => 'btn-block btn-primary']));
             echo openform('gauth_frm', 'post', FUSION_REQUEST);
             echo $tpl->get_output();
             echo closeform();
