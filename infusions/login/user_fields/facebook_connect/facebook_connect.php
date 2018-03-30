@@ -174,6 +174,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                  * Optional through globals.
                  * $_GET['rel'] - /{SITE_PATH}/redirect-file.php
                  */
+                // FB connect should not redirect. Let auth handle it.
                 $redirect_link = ($options['redirect_link'] ?: fusion_get_settings('siteurl').(isset($_GET['rel']) ? ltrim((str_replace(fusion_get_settings('site_path'), '', substr($_GET['rel'], -1) !== '/' ? $_GET['rel'] : $_GET['rel'].'index.php')), '/') : 'index.php'));
 
                 // Facebook Javascript SDK
@@ -236,32 +237,19 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
                      //console.log('Welcome!  Fetching your information.... ');                                      
                      FB.api('/me?fields=id,cover,name,first_name,last_name,gender,locale,timezone,email', function(response) {                        
                          response['skip_auth'] = '".$options['skip_auth']."';                        
-                         console.log(response);
+                         //console.log(response);
                         var file_url = '".rtrim(fusion_get_settings('site_path'), '/')."/infusions/login/user_fields/facebook_connect/facebook_auth.php';
                          $.ajax({
                                'url': file_url,
                                'data': response,
                                'dataType': 'json',
                                'success': function(e) {   
-                                   console.log('Getting Authentication Response...');
-                                   //console.log(e);
-                                   console.log(e.response);
-                                   
+                                   //console.log('Getting Authentication Response...');
+                                   console.log(e);
+                                   //console.log(e.response);                                   
                                    if (e.response) {
                                        //alert('$redirect_link');
-                                       window.location = '$redirect_link';
-                                       
-                                       /* if (e.response === 'authenticated') {         
-                                           console.log('user has been authenticated');
-                                           alert('$redirect_link');
-                                           window.location = '$redirect_link';
-                                           
-                                       } else if (e.response === 'register-form') {
-                                           console.log('redirect user to a registration form');                                           
-                                       } else if (e.response === 'connect-form') {
-                                           console.log('there are multiple users found. send to a connecting form');                                           
-                                       }
-                                       */
+                                       window.location = '$redirect_link';                    
                                    }
                                },
                                'error' : function(e) {

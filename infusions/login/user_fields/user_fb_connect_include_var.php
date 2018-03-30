@@ -37,8 +37,6 @@ $user_field_error = '';
 
 // add new parameter for reader
 $user_field_login = array("Facebook_Connect", "display_login");
-$user_field_auth = array("Facebook_Connect", "login_authenticate");
-$user_field_auth_type = "LGA";
 $user_field_settings = array("Facebook_Connect", "display_settings_form");
 // Require new API to store settings.
 // What is our APP ID?

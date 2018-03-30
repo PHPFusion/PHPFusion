@@ -74,12 +74,13 @@ class Facebook_Auth extends Facebook_Connect {
                     if ($is_admin) {
                         addNotice('success', $locale['uf_fb_connect_504']);
                     } else {
-                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_facebook_uid=:id LIMIT 1", array(
+
+                        // This is incorrect.
+                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_fb_connect=:id LIMIT 1", array(
                             ':id' => $facebook_id,
                         )));
-                        \PHPFusion\Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], FALSE, TRUE);
-                        \PHPFusion\Authenticate::_setUserTheme($user);
-                        unset($_SESSION['facebook_user'][USER_IP]);
+                        self::authenticate_user_login($user['user_id']);
+                        $response = array($user);
                     }
 
                 } else {
@@ -137,6 +138,7 @@ class Facebook_Auth extends Facebook_Connect {
 
                                 if (fusion_get_settings('email_verification')) {
 
+                                    include(INCLUDES.'sendmail_include.php');
                                     $code = json_encode(array('email_address' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME));
                                     $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
                                     $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;

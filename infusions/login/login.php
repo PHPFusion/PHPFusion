@@ -380,19 +380,20 @@ class Login {
      * @param $user_id
      */
     protected function authenticate_user_login($user_id) {
-        $user = fusion_get_user($user_id);
+
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+        $user = fusion_get_user($user_id);
         $remember = false;
         // Initialize password auth
-        if (!empty($user['user_id']) && $user['user_status'] == 0 && $user['user_actiontime'] == 0) {
+        if (!empty($user['user_id']) && $user['user_status'] == 0) {
             // Implement new login class
-            $authenticate_methods = $this->authenticate($user);
+            $login = new Login();
+            $authenticate_methods = $login->authenticate($user);
             if (empty($authenticate_methods)) {
                 Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
                 Authenticate::_setUserTheme($user);
             }
-
         } else {
             require_once INCLUDES."suspend_include.php";
             require_once INCLUDES."sendmail_include.php";
@@ -410,11 +411,8 @@ class Login {
                 }
                 $message = str_replace("USER_NAME", $user['user_name'], $message);
                 sendemail($user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-            } else {
-                redirect(Authenticate::getRedirectUrl(4, $user['user_status'], $user['user_id']));
             }
         }
-
     }
 
 }

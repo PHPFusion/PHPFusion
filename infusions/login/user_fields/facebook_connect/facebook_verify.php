@@ -39,7 +39,11 @@ if (isset($_REQUEST['code'])) {
                     ':uid'   => $user_id
                 );
                 if (dbcount("(email_address)", DB_LOGIN_EMAILS, $sql_cond, $sql_param)) {
+                    $data = dbarray(dbquery("SELECT email_ref FROM ".DB_LOGIN_EMAILS." WHERE $sql_cond", $sql_param));
+                    // Set email verified
                     dbquery("UPDATE ".DB_LOGIN_EMAILS." SET email_verified=1 WHERE $sql_cond", $sql_param);
+                    // Set new Facebook ID
+                    dbquery("UPDATE ".DB_USERS." SET user_fb_connect=:ref WHERE user_id=:uid", array(':ref' => $data['email_ref'], ':uid' => $user_id));
                     $tpl->set_block('success', ['title' => $locale['uf_fb_connect_300'], 'description' => $locale['uf_fb_connect_301']]);
                 } else {
                     $tpl->set_block('error', ['title' => $locale['uf_fb_connect_302'], 'description' => $locale['uf_fb_connect_303']]);
