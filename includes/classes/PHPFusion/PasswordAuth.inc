@@ -71,7 +71,7 @@ class PasswordAuth {
 
     // Get new password hash
 
-    public function getNewPassword($length = 12) {
+    public static function getNewPassword($length = 12) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
