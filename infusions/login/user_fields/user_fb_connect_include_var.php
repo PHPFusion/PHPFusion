@@ -38,6 +38,7 @@ $user_field_error = '';
 // add new parameter for reader
 $user_field_login = ["Facebook_Connect", "display_login"];
 $user_field_settings = ["Facebook_Connect", "display_settings_form"];
+$user_field_auth_type = "LGA";
 // Require new API to store settings.
 // What is our APP ID?
 // Or anything we required? Yes we need at least an APP ID
