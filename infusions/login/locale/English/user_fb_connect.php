@@ -60,7 +60,7 @@ $locale['uf_fb_connect_400'] = "Facebook is not yet connected to your user accou
 $locale['uf_fb_connect_401'] = "Facebook is connected to your account";
 $locale['uf_fb_connect_402'] = "Connect User Account to Facebook";
 $locale['uf_fb_connect_403'] = "Disconnect User Account from Facebook";
-$locale['uf_fb_connect_404'] = "Connect connect your Facebook Account with your {SITE_NAME} User Account.";
+$locale['uf_fb_connect_404'] = "Connect your Facebook Account with your {SITE_NAME} User Account.";
 $locale['uf_fb_connect_405'] = "You have Facebook Account pending for activation.<br/>Please check your registered Facebook email for the activation link.";
 $locale['uf_fb_connect_406'] = "Back to Main";
 
