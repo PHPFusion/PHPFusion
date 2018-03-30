@@ -28,7 +28,7 @@ class Components {
         echo '<aside id="theme-settings" class="hidden-xs">';
             echo '<a href="#" title="'.$this->SetLocale('002').'" data-action="theme-settings" class="btn-theme-settings cogs-animation">';
                 echo '<i class="fa fa-cog fa-spin"></i>';
-                echo '<i class="fa fa-cog fa-spin fa-spin-reverse"></i>';
+                echo '<i class="fa fa-cog fa-spin"></i>';
                 echo '<i class="fa fa-cog fa-spin"></i>';
             echo '</a>';
 
