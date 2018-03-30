@@ -379,7 +379,7 @@ class Login {
      *
      * @param $user_id
      */
-    protected function authenticate_user_login($user_id) {
+    protected static function authenticate_user_login($user_id) {
 
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
