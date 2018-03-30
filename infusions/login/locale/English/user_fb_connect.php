@@ -15,13 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 $locale['uf_fb_connect'] = "Facebook Login";
 $locale['uf_fb_connect_desc'] = "Facebook Login Connector";
 $locale['uf_fb_connect_verify'] = "Facebook Login Confirmation";
 
 // Driver configuration form
-$locale['uf_fb_connect_200'] = "Facebook Login with the Facebook SDK enables people to sign into your webpage with their Facebook credentials.";
+$locale['uf_fb_connect_200'] = "Facebook Login with the Facebook SDK enables people to sign into your web page with their Facebook credentials.";
 $locale['uf_fb_connect_201'] = "Facebook Login Settings";
 $locale['uf_fb_connect_202'] = "Facebook App ID";
 $locale['uf_fb_connect_203'] = "Facebook App Secret";
@@ -56,21 +55,19 @@ $locale['uf_fb_connect_305'] = "The activation email has expired. Please try to 
 $locale['uf_fb_connect_306'] = "Invalid Activation Code.";
 $locale['uf_fb_connect_307'] = "The activation code is invalid. Please try to connect your Facebook Login again.";
 
-
 // User Fields Connector
 $locale['uf_fb_connect_400'] = "Facebook is not yet connected to your user account";
 $locale['uf_fb_connect_401'] = "Facebook is connected to your account";
 $locale['uf_fb_connect_402'] = "Connect User Account to Facebook";
 $locale['uf_fb_connect_403'] = "Disconnect User Account from Facebook";
 $locale['uf_fb_connect_404'] = "Connect connect your Facebook Account with your {SITE_NAME} User Account.";
-$locale['uf_fb_connect_405'] = "You have Facebook Account pending for activation.\nPlease check your registered Facebook email for the activation link.";
+$locale['uf_fb_connect_405'] = "You have Facebook Account pending for activation.<br/>Please check your registered Facebook email for the activation link.";
 $locale['uf_fb_connect_406'] = "Back to Main";
 
 // Email
 $locale['uf_fb_connect_500'] = "{SITE_NAME} - Account Email Activation";
-$locale['uf_fb_connect_501'] = "Dear {USER_NAME},\n\nYou recently have tried to link your Facebook Account with {SITE_NAME} User Account. To complete the account sync, please click on the link below:\n{LINK}\n\nWe advise you to activate your account within 3 days after you recieve this email, to avoid account expiration and termination of related services.\n\nSincerely,\n{ADMIN_NAME}, {SITE_NAME}";
+$locale['uf_fb_connect_501'] = "Dear {USER_NAME},<br/><br/>You recently have tried to link your Facebook Account with {SITE_NAME} User Account. To complete the account sync, please click on the link below:<br/>{LINK}<br/><br/>We advise you to activate your account within 3 days after you receive this email, to avoid account expiration and termination of related services.<br/><br/>Sincerely,<br/>{ADMIN_NAME}, {SITE_NAME}";
 $locale['uf_fb_connect_502'] = "We have sent a verification email to your Facebook email address.";
 $locale['uf_fb_connect_503'] = "This Facebook Account has been associated with an existing User Account.";
 $locale['uf_fb_connect_504'] = "You have already connected to your Facebook";
 $locale['uf_fb_connect_505'] = "You have successfully connected your Facebook Account.";
-

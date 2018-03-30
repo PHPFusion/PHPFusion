@@ -29,7 +29,7 @@ $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';
 // add new parameter for reader
-$user_field_auth = array("GoogleAuthenticator", "login_authenticate");
+$user_field_auth = ["GoogleAuthenticator", "login_authenticate"];
 $user_field_auth_type = "2FA";
 //$user_field_login = "GoogleAuthenticator";
 require_once __DIR__.'/google_auth/google_auth.php';

@@ -68,7 +68,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         }
 
         echo "<div class='well'>".$locale['uf_fb_connect_200']."</div>\n";
-        echo openside("<h4><i class='fab fa-facebook-square fa-lg m-r-10'></i>".$locale['uf_fb_connect_201']."</h4>");
+        openside("<h4><i class='fab fa-facebook-square fa-lg m-r-10'></i>".$locale['uf_fb_connect_201']."</h4>");
         echo openform('facebook_settings_frm', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6'>\n";
@@ -101,7 +101,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         echo "</div>\n</div>\n";
         echo form_button('save_fb', $locale['uf_fb_connect_223'], 'save_fb');
         echo closeform();
-        echo closeside();
+        closeside();
     }
 
     public function login_authenticate($user) {
@@ -124,15 +124,15 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
 
         $fbSettings = $this->load_driver_settings('user_fb_connect');
         $url = "https://graph.facebook.com/app/?access_token=".$fbSettings['app_id']."|".$fbSettings['app_secret']."&client_credentials=client_credentials";
-        $headers = array(
+        $headers = [
             'Accept: application/json',
             'Content-Type: application/json',
-        );
+        ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         // $output contains the output string
         $output = curl_exec($ch);
@@ -151,7 +151,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
      *
      * @return null|string
      */
-    public function display_login(array $options = array()) {
+    public function display_login(array $options = []) {
         $locale = fusion_get_locale('', LOGIN_LOCALESET.'user_fb_connect.php');
 
         $default_options = [
@@ -165,7 +165,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         $fbSettings = $this->load_driver_settings('user_fb_connect');
 
         if (!empty($fbSettings['app_id'])) {
-            $app_info = $this->get_fb_app(true);
+            $app_info = $this->get_fb_app();
             if (!empty($app_info) && is_object($app_info)) {
                 // Application have been verified by Facebook.
                 $app_id = $app_info->id;
@@ -310,7 +310,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
     }
 
     // Working front end version -- backup
-    public function display_login_bak(array $options = array()) {
+    public function display_login_bak(array $options = []) {
 
         $default_options = [
             'skip_auth'       => FALSE,
@@ -322,7 +322,7 @@ class Facebook_Connect extends \PHPFusion\Infusions\Login\Login {
         $fbSettings = $this->load_driver_settings('user_fb_connect');
 
         if (!empty($fbSettings['app_id'])) {
-            $app_info = $this->get_fb_app(true);
+            $app_info = $this->get_fb_app();
             if (!empty($app_info) && is_object($app_info)) {
                 // Application have been verified by Facebook.
                 $app_id = $app_info->id;

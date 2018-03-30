@@ -47,24 +47,24 @@ if ($profile_method == "input") {
             $tpl->set_tag('header_text', $locale['uf_fb_connect_401']);
         }
         $tpl->set_tag('content', $fb->display_login(
-            array(
-                'skip_auth'          => true,
-                'facebook_button'    => true,
-                'display_connection' => true,
+            [
+                'skip_auth'          => TRUE,
+                'facebook_button'    => TRUE,
+                'display_connection' => TRUE,
                 'redirect_link'      => FUSION_REQUEST
-            )
+            ]
         ));
 
         if (dbcount("(email_address)", DB_LOGIN_EMAILS, "email_user=:uid AND email_type=:t AND email_verified=0", [
             ':uid' => $user['user_id'],
             ':t'   => 'facebook'
         ])) {
-            $tpl->set_block('notice', array('text' => nl2br($locale['uf_fb_connect_405'])));
+            $tpl->set_block('notice', ['text' => nl2br($locale['uf_fb_connect_405'])]);
         }
 
         $email = 'meang.czac@outlook.com';
         $user_id = '16331';
-        $code = json_encode(array('email_address' => $email, 'user_id' => $user_id, 'datestamp' => TIME));
+        $code = json_encode(['email_address' => $email, 'user_id' => $user_id, 'datestamp' => TIME]);
         $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
         $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.urlencode($code);
         echo "<a href='$link'>$link</a>";

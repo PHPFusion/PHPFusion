@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once __DIR__.'/../../../../maincore.php';
 require_once __DIR__.'/facebook_connect.php';
 
@@ -45,6 +44,7 @@ class Facebook_Auth extends Facebook_Connect {
     public static function get_fb_json_authenticate() {
         // extends user column with the following field structure
         $response = 'error';
+        $data = [];
 
         if (isset($_REQUEST['id']) && isset($_REQUEST['email'])) {
 
@@ -52,23 +52,23 @@ class Facebook_Auth extends Facebook_Connect {
             $facebook_id = stripinput($_REQUEST['id']);
             $facebook_email = stripinput($_REQUEST['email']);
 
-            $data['facebook_data'] = array(
+            $data['facebook_data'] = [
                 'user_email'        => $facebook_email,
                 'user_facebook_uid' => $facebook_id,
                 'user_firstname'    => stripinput($_REQUEST['first_name']),
                 'user_lastname'     => stripinput($_REQUEST['last_name']),
                 'user_gender'       => stripinput($_REQUEST['gender']),
                 'user_timezone'     => stripinput($_REQUEST['timezone'])
-            );
+            ];
             $table = fieldgenerator(DB_USERS);
             $is_admin = iMEMBER && !empty($_REQUEST['skip_auth']) ? TRUE : FALSE;
 
             if (in_array('user_fb_connect', $table)) {
 
                 // Check if use has connect before
-                if (dbcount("(user_id)", DB_USERS, "user_fb_connect=:id AND user_status=0", array(
+                if (dbcount("(user_id)", DB_USERS, "user_fb_connect=:id AND user_status=0", [
                     ':id' => $facebook_id,
-                ))) {
+                ])) {
                     // your account has been associated before.
                     $response = 'authenticated';
                     if ($is_admin) {
@@ -76,11 +76,11 @@ class Facebook_Auth extends Facebook_Connect {
                     } else {
 
                         // This is incorrect.
-                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_fb_connect=:id LIMIT 1", array(
+                        $user = dbarray(dbquery("SELECT user_id, user_salt, user_algo, user_level, user_theme FROM ".DB_USERS." WHERE user_fb_connect=:id LIMIT 1", [
                             ':id' => $facebook_id,
-                        )));
+                        ]));
                         self::authenticate_user_login($user['user_id']);
-                        $response = array($user);
+                        $response = [$user];
                     }
 
                 } else {
@@ -91,7 +91,7 @@ class Facebook_Auth extends Facebook_Connect {
                     $user_id = fusion_get_userdata('user_id');
                     $user_name = fusion_get_userdata('user_name');
                     $user_email = fusion_get_userdata('user_email');
-                    $user_emails = array();
+                    $user_emails = [];
                     $email_result = dbquery("SELECT email_address FROM ".DB_LOGIN_EMAILS." WHERE email_address=:email AND email_user=:id", [
                         ':email' => $facebook_email,
                         ':id'    => $user_id
@@ -110,7 +110,7 @@ class Facebook_Auth extends Facebook_Connect {
                         // Update Facebook ID
                         $user = fusion_get_userdata();
                         $user['user_fb_connect'] = $facebook_id;
-                        dbquery_insert(DB_USERS, $user, 'update', ['keep_session' => true]);
+                        dbquery_insert(DB_USERS, $user, 'update', ['keep_session' => TRUE]);
 
                         if (!$is_admin) {
                             // Log you in
@@ -139,17 +139,17 @@ class Facebook_Auth extends Facebook_Connect {
                                 if (fusion_get_settings('email_verification')) {
 
                                     include(INCLUDES.'sendmail_include.php');
-                                    $code = json_encode(array('email_address' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME));
+                                    $code = json_encode(['email_address' => $facebook_email, 'user_id' => $user_id, 'datestamp' => TIME]);
                                     $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
                                     $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.$code;
                                     $link = urlencode($link);
-                                    $subject = strtr($locale['uf_fb_connect_500'], array('{SITE_NAME}' => fusion_get_settings('sitename')));
-                                    $message = strtr($locale['uf_fb_connect_501'], array(
+                                    $subject = strtr($locale['uf_fb_connect_500'], ['{SITE_NAME}' => fusion_get_settings('sitename')]);
+                                    $message = strtr($locale['uf_fb_connect_501'], [
                                         '{USER_NAME}'  => $user_name,
                                         '{SITE_NAME}'  => fusion_get_settings('sitename'),
                                         '{ADMIN_NAME}' => fusion_get_settings('siteusername'),
                                         '{LINK}'       => "<a href='$link'>$link</a>",
-                                    ));
+                                    ]);
                                     sendemail($user_name, $facebook_email, fusion_get_settings('siteusername'), $subject, $message, 'html');
                                     addNotice('success', $locale['uf_fb_connect_502'], 'all');
                                 } else {
@@ -162,7 +162,7 @@ class Facebook_Auth extends Facebook_Connect {
                                     $data['email_data']['email_verified'] = 1;
                                 }
 
-                                dbquery_insert(DB_LOGIN_EMAILS, $data['email_data'], 'save', ['keep_session' => true]);
+                                dbquery_insert(DB_LOGIN_EMAILS, $data['email_data'], 'save', ['keep_session' => TRUE]);
                                 addNotice('success', $locale['uf_fb_connect_502'], 'all');
 
                             } else {
@@ -190,7 +190,7 @@ class Facebook_Auth extends Facebook_Connect {
                                 if ($settings['email_verification']) {
                                     self::send_email_verification($user);
                                 } else {
-                                    dbquery_insert(DB_USERS, $user, 'save', ['keep_session' => true]);
+                                    dbquery_insert(DB_USERS, $user, 'save', ['keep_session' => TRUE]);
                                     // Authenticate and login
                                     addNotice("success", $locale['uf_fb_connect_505'], 'all');
                                     self::authenticate_user_login($user['user_id']);
@@ -208,7 +208,7 @@ class Facebook_Auth extends Facebook_Connect {
             }
         }
 
-        return json_encode(array('response' => $response, 'data' => $data));
+        return json_encode(['response' => $response, 'data' => $data]);
     }
 }
 

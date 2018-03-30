@@ -31,6 +31,4 @@ if (!defined('DB_LOGIN_EMAILS')) {
     define('DB_LOGIN_EMAILS', DB_PREFIX.'login_emails');
 }
 
-
-
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("L1", "<i class='admin-ico fa fa-fw fa-sign-in'></i>");

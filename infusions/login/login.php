@@ -152,7 +152,7 @@ class Login {
         $settings = [];
         $driver_settings = $this->get_driver_settings($title);
         if (!empty($driver_settings)) {
-            $settings = json_decode(\defender::decrypt_string($driver_settings, SECRET_KEY_SALT), true);
+            $settings = json_decode(\defender::decrypt_string($driver_settings, SECRET_KEY_SALT), TRUE);
         }
 
         return (array)$settings;
@@ -166,7 +166,7 @@ class Login {
      *
      * @return bool
      */
-    protected function update_driver_settings($title, $settings_array = array()) {
+    protected function update_driver_settings($title, $settings_array = []) {
         if (\defender::safe() && !empty($settings_array) && !empty($title)) {
             // I will need a pair to encrypt
             /* $encoded = json_encode($settings_array);
@@ -197,7 +197,7 @@ class Login {
      *
      * @return bool
      */
-    public function authenticate(array $userdata = array()) {
+    public function authenticate(array $userdata = []) {
         // set language constants
         $this->set_current_language();
         require_once INFUSIONS.'login/infusion_db.php';
@@ -226,7 +226,7 @@ class Login {
                                     $login_authenticator = new $login_class();
                                     // Call the authentication method
                                     $login_authenticator->$login_method($userdata);
-                                } elseif (is_callable($user_field_auth)) {
+                                } else if (is_callable($user_field_auth)) {
                                     // Call the authentication method
                                     $login_methods = $user_field_auth();
                                 }
@@ -279,7 +279,7 @@ class Login {
                                 $login_connectors = new $login_class();
                                 // Call the authentication method
                                 self::$login_connectors[] = $login_connectors->$login_method();
-                            } elseif (is_callable($user_field_login)) {
+                            } else if (is_callable($user_field_login)) {
                                 // Call the authentication method
                                 self::$login_connectors[] = $login_methods = $user_field_login();
                             }
@@ -312,13 +312,13 @@ class Login {
         $loginPass->inputNewPassword = $newLoginPass;
         $loginPass->inputNewPassword2 = $newLoginPass;
 
-        return array(
+        return [
             'password_test' => ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE),
             'password'      => $newLoginPass,
             'algo'          => $loginPass->getNewAlgo(),
             'salt'          => $loginPass->getNewSalt(),
             'hash'          => $loginPass->getNewHash(),
-        );
+        ];
     }
 
     /**
@@ -367,10 +367,10 @@ class Login {
         }
         $userInfo = base64_encode(serialize($userData));
         dbquery("INSERT INTO ".DB_NEW_USERS."
-					(user_code, user_name, user_email, user_datestamp, user_info)
-					VALUES
-					('".$userCode."', '".$user_name."', '".$user_email."', '".TIME."', '".$userInfo."')
-					");
+                    (user_code, user_name, user_email, user_datestamp, user_info)
+                    VALUES
+                    ('".$userCode."', '".$user_name."', '".$user_email."', '".TIME."', '".$userInfo."')
+                    ");
         addNotice("success", $locale['u150'], 'all');
     }
 
@@ -384,7 +384,7 @@ class Login {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
         $user = fusion_get_user($user_id);
-        $remember = false;
+        $remember = FALSE;
         // Initialize password auth
         if (!empty($user['user_id']) && $user['user_status'] == 0) {
             // Implement new login class

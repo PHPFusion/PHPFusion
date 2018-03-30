@@ -54,7 +54,7 @@ if ($profile_method == "input") {
                 addNotice('danger', $locale['uf_gauth_141']);
                 redirect(FUSION_REQUEST);
             }
-        } elseif (isset($_POST['deactivate'])) {
+        } else if (isset($_POST['deactivate'])) {
             $google = new GoogleAuthenticator();
             $gCode = form_sanitizer($_POST['g_code'], '', 'g_code');
             $secret = fusion_get_userdata('user_gauth');
@@ -80,7 +80,7 @@ if ($profile_method == "input") {
                 'title'       => $locale['uf_gauth_112'],
                 'description' => $locale['uf_gauth_113'],
                 'detail'      => $locale['uf_gauth_114'],
-                'text_input'  => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => true, 'placeholder' => $locale['uf_gauth_105']]),
+                'text_input'  => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => TRUE, 'placeholder' => $locale['uf_gauth_105']]),
                 'button'      => form_button('deactivate', $locale['uf_gauth_107'], $locale['uf_gauth_107'], ['class' => 'btn-primary'])
             ]);
             $user_fields = $tpl->get_output();
@@ -117,7 +117,7 @@ if ($profile_method == "input") {
                 'account_name' => $account_name,
                 'key'          => $secret,
                 'image_src'    => $qrCodeUrl,
-                'text_input'   => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => true, 'placeholder' => $locale['uf_gauth_105']]),
+                'text_input'   => form_text('g_code', $locale['uf_gauth_103'], '', ['type' => 'password', 'required' => TRUE, 'placeholder' => $locale['uf_gauth_105']]),
                 'button'       => form_button('authenticate', $locale['uf_gauth_106'], $locale['uf_gauth_106'], ['class' => 'btn-primary'])
             ]);
 
