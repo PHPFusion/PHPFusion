@@ -513,5 +513,6 @@ $locale['fmt_points'] = "point|points";
 $locale['fmt_admin'] = "admin|admins";
 $locale['fmt_group'] = "group|groups";
 $locale['fmt_category'] = "category|categories";
+$locale['fmt_review'] = "review|reviews";
 // include Defender locales
 include __DIR__."/defender.php";

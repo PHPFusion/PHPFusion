@@ -124,9 +124,10 @@ class Console_Core extends Install_Core {
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
             $html .= "<script type=\"text/javascript\">$(function() {
-            var diff_height = $('.block-container').height() - $('body').height();
+            var container = $('.block-container');
+            var diff_height = container.height() - $('body').height();
             if (diff_height > 1) {
-            $('.block-container').css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
+            container.css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
             }
             ".$fusion_jquery_tags."
             });\n</script>\n";

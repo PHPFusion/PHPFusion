@@ -26,7 +26,7 @@ class Template {
 
     private static $instance = NULL;
     private $template = '';
-    private $locale = '';
+    private $locale = [];
     private $block = [];
     private $block_render = [];
     private $block_source = [];

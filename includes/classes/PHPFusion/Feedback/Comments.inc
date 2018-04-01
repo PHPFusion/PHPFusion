@@ -300,43 +300,45 @@ class Comments {
              * Comments
              */
             if (is_callable($comments_template)) {
-                #todo: to template
                 $ratings_html = '';
+                $c_info = $this->c_arr['c_info'];
                 if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
                     if (!empty($c_info['ratings_count'])) {
-                        $ratings_html = "<ul class='well clearfix p-15'>\n";
-                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+                        ob_start();
+                        display_comments_ratings($info = []);
+
+                        $stars = '';
                         for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
-                            $ratings_html .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
+                            $stars .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
                         }
-                        $ratings_html .= "<span class='text-lighter m-l-5'>".format_word($c_info['ratings_count']['total'], "review|reviews")."</span>\n";
-                        $ratings_html .= "</li>\n";
-                        $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+
+                        $ratings = '';
                         for ($i = 5; $i >= 1; $i--) {
                             $bal = 5 - $i;
-                            $ratings_html .= "<div class='row'>\n";
-                            $ratings_html .= "<div class='display-inline-block m-r-5'>\n";
-                            for ($x = 1; $x <= $i; $x++) {
-                                $ratings_html .= "<i class='fa fa-star text-warning'></i>\n";
-                            }
-                            for ($b = 1; $b <= $bal; $b++) {
-                                $ratings_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
-                            }
-                            $ratings_html .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
-                            $ratings_html .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
-                            $progress_num = $c_info['ratings_count'][$i] > 0 ? floor($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100 : 0;
-                            $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
-                            $ratings_html .= "</div>\n";
-                            $ratings_html .= "</div>\n";
-                        }
-                        $ratings_html .= "</li>\n";
-                        $ratings_html .= "</ul>\n";
-                        $ratings_html .= ($c_info['ratings_remove_form'] ?: '');
-                    }
+                            $ratings .= "<div class='display-inline-block m-r-5'>\n";
 
-                    $html .= "<div class='ratings overflow-hide m-b-10'>\n";
-                    $html .= $ratings_html;
-                    $html .= "</div>\n";
+                            for ($x = 1; $x <= $i; $x++) {
+                                $ratings .= "<i class='fa fa-star text-warning'></i>\n";
+                            }
+
+                            for ($b = 1; $b <= $bal; $b++) {
+                                $ratings .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                            }
+
+                            $ratings .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
+                            $ratings .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
+                            $progress_num = $c_info['ratings_count'][$i] == 0 ? 0 : round((($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100), 1);
+                            $ratings .= progress_bar($progress_num, '', FALSE, '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
+                            $ratings .= "</div>\n";
+                        }
+
+                        $ratings_html = strtr(ob_get_clean(), [
+                            '{%stars%}'                 => $stars,
+                            '{%reviews%}'               => format_word($c_info['ratings_count']['total'], $this->locale['fmt_review']),
+                            '{%ratings%}'               => $ratings,
+                            '{%ratings_remove_button%}' => $c_info['ratings_remove_form'] ?: ''
+                        ]);
+                    }
                 }
 
                 // @bug: Split the array into page chunks. [0] for page 1, [1] for page 2
@@ -437,6 +439,8 @@ class Comments {
 
             $can_post = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
 
+            $data['show_reply_link'] = $can_post && $this->getParams('comment_allow_reply') ? TRUE : FALSE;
+
             $comments_html .= "<!---comment-".$data['comment_id']."--->\n";
             ob_start();
             display_comments_list($data);
@@ -448,7 +452,7 @@ class Comments {
                     '{%comment_ratings%}'      => $data['comment_ratings'],
                     '{%comment_subject%}'      => $data['comment_subject'],
                     '{%comment_message%}'      => $data['comment_message'],
-                    '{%comment_reply_link%}'   => ($can_post && $this->getParams('comment_allow_reply') ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
+                    '{%comment_reply_link%}'   => ($data['show_reply_link'] ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
                     '{%comment_edit_link%}'    => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
                     '{%comment_delete_link%}'  => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
                     '{%comment_reply_form%}'   => ($data['reply_form'] ?: ''),

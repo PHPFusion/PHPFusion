@@ -566,11 +566,11 @@ class Router extends RewriteDriver {
             echo $query.";<br />\n";
         }
         echo "<script type='text/javascript'>
-        function rewritestoggledebugdiv() {
+        $('#rewritestoggledebugdiv').on('click', function() {
             $('#rewrites-debug-info').slideToggle('slow');
-        }
+        });
         </script>\n";
-        echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
+        echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' id='rewritestoggledebugdiv' />\n<br />";
         echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
         echo "Request URI: <strong>".$this->requesturi."</strong><br />";
         echo "<div id='rewrites-debug-info' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";

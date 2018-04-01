@@ -262,6 +262,7 @@ class PrivateMessages {
         if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
             $_GET['folder'] = "inbox";
         }
+
         function validate_user($user_id) {
             if (isnum($user_id) && dbcount("(user_id)", DB_USERS,
                     "user_id=:userid AND user_status =:status", [':userid' => $user_id, ':status' => '0'])

@@ -1017,7 +1017,7 @@ abstract class RewriteDriver {
      * search patterns.
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
-     * @param array  $pattern Array of Tags to be added.
+     * @param string $pattern Array of Tags to be added.
      * @param string $type Type or Handler name
      *
      * @access protected
