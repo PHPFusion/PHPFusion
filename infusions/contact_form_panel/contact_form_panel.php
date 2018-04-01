@@ -50,7 +50,7 @@ if (isset($_POST['sendmessage'])) {
         include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_check.php';
         if ($_CAPTCHA_IS_VALID == FALSE) {
             \defender::stop();
-            addNotice('warning', $locale['424']);
+            addNotice('warning', $locale['CT_424']);
         }
     }
 
@@ -69,23 +69,23 @@ if (isset($_POST['sendmessage'])) {
             if ($template_data['template_active'] == '1') {
                 if (!sendemail_template('CONTACT', $input['subject'], $input['message'], '', $template_data['template_sender_name'], '', $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
                     \defender::stop();
-                    addNotice('warning', $locale['425']);
+                    addNotice('warning', $locale['CT_425']);
                 }
             } else {
                 if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                     \defender::stop();
-                    addNotice('warning', $locale['425']);
+                    addNotice('warning', $locale['CT_425']);
                 }
             }
         } else {
             if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
                 \defender::stop();
-                addNotice('warning', $locale['425']);
+                addNotice('warning', $locale['CT_425']);
             }
         }
 
         if (\defender::safe()) {
-            addNotice('warning', $locale['425']);
+            addNotice('warning', $locale['CT_425']);
             redirect(FUSION_SELF);
         }
     }
@@ -94,23 +94,23 @@ if (isset($_POST['sendmessage'])) {
 $captcha = '';
 if (!iADMIN && $settings['display_validation']) {
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        $captcha = form_text('captcha_code', $locale['408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
+        $captcha = form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE]);
     }
 }
 
-$message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['401']);
+$message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['CT_401']);
 $message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
 
 $info = [
-    'tablename'    => $locale['400'],
+    'tablename'    => $locale['CT_400'],
     'prmessages'   => $message,
     'openform'     => openform('contactform', 'post', FUSION_SELF, ['max_tokens' => 1]),
-    'mail_name'    => form_text('mailname', $locale['402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['420'], 'max_length' => 64]),
-    'email'        => form_text('email', $locale['403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64]),
-    'subject'      => form_text('subject', $locale['404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64]),
-    'message'      => form_textarea('message', $locale['405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128]),
+    'mail_name'    => form_text('mailname', $locale['CT_402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['CT_420'], 'max_length' => 64]),
+    'email'        => form_text('email', $locale['CT_403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['CT_421'], 'type' => 'email', 'max_length' => 64]),
+    'subject'      => form_text('subject', $locale['CT_404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['CT_422'], 'max_length' => 64]),
+    'message'      => form_textarea('message', $locale['CT_405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['CT_423'], 'max_length' => 128]),
     'captcha_code' => $captcha,
-    'button'       => form_button('sendmessage', $locale['406'], $locale['406'], ['class' => 'btn-primary', 'icon' => 'fa fa-send']),
+    'button'       => form_button('sendmessage', $locale['CT_406'], $locale['CT_406'], ['class' => 'btn-primary', 'icon' => 'fa fa-send']),
     'closeform'    => closeform()
 ];
 
