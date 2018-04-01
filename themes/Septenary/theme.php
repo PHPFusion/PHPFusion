@@ -70,7 +70,7 @@ function closeside() {
  * @param bool|FALSE $title
  */
 function opentable($title = FALSE) {
-    \PHPFusion\SeptenaryTheme::opentable($title = FALSE);
+    \PHPFusion\SeptenaryTheme::opentable($title);
 }
 
 /**
