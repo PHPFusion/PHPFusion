@@ -26,6 +26,7 @@ class Template {
 
     private static $instance = NULL;
     private $template = '';
+    private $locale = '';
     private $block = [];
     private $block_render = [];
     private $block_source = [];
@@ -74,6 +75,15 @@ class Template {
     }
 
     /**
+     * Defines the instance to replace locales
+     *
+     * @param array $locales
+     */
+    public function set_locale(array $locales = array()) {
+        $this->locale = $locales;
+    }
+
+    /**
      * Sets to repeat on a subitem defined in the HTML markup  - {block_id.{<subitem_html>}}
      * This function adds a subitem for every set_block used
      *
@@ -107,6 +117,18 @@ class Template {
      */
     public function get_output() {
         $this->template = trim($this->template);
+
+        // Locale replacements
+        if (!empty($this->locale)) {
+            $locale_list = array();
+            foreach ($this->locale as $key => $value) {
+                $locale_list["{[$key]}"] = nl2br($value);
+            }
+            if (!empty($locale_list)) {
+                $this->template = strtr($this->template, $locale_list);
+            }
+        }
+
         $block_pattern = '/\{([0-9a-zA-Z_]+)\.\{(.*?)\}\}/s'; // group 1 is id, group 2 is the child template
         preg_match_all($block_pattern, $this->template, $cache, PREG_SET_ORDER);
         // set to ID and Template
