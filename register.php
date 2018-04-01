@@ -39,7 +39,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
         redirect("register.php?error=activate");
     }
 
-    $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'");
+    $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => $_GET['code'], ':email' => $_GET['email']]);
 
     if (dbrows($result) > 0) {
 
@@ -51,7 +51,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 
         dbquery_insert(DB_USERS, $user_info, 'save');
 
-        $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
+        $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
 
         if (fusion_get_settings('admin_activation') == 1) {
             addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
