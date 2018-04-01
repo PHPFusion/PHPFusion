@@ -107,6 +107,5 @@ if (iGUEST) {
 echo openform('contactform', 'post', FORM_REQUEST);
 echo render_contact_form($info);
 echo closeform();
-closetable();
 
 require_once THEMES."templates/footer.php";
