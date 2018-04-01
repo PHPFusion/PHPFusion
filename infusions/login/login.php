@@ -55,7 +55,7 @@ class Login {
     }
 
     public function cache_driver($driver_name = NULL) {
-        if (empty(self::$drivers)) {
+        if (empty(self::$drivers) && infusion_exists('login')) {
             $result = dbquery("SELECT * FROM ".DB_LOGIN);
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
