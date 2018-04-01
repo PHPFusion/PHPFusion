@@ -196,8 +196,9 @@ class SeptenaryComponents {
         $userdata = fusion_get_userdata();
         $locale = self::$locale;
 
-        echo "<header id='top'>";
+        echo "<header id='top-header'>";
         echo "<div class='overlay'>\n";
+
         $this->open_grid('section-1', 1);
         echo "<div class='row hidden-xs'>\n";
         echo "<div id='logo' class='hidden-xs hidden-md col-lg-3 p-t-5 text-smaller'>\n</div>\n";
@@ -267,7 +268,8 @@ class SeptenaryComponents {
         echo "<div class='header-nav'>\n";
         echo showsublinks('', 'navbar-default', ['show_header' => TRUE])."\n";
         echo "</div>\n";
-        $this->close_grid();
+        $this->close_grid(1);
+
         echo "</div>\n";
 
         $this->display_Showcase();
@@ -434,7 +436,8 @@ class SeptenaryComponents {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
         echo "<div class='pull-right'>\n";
-        echo "<a href='#top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
+        echo "<a href='#' id='top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
+        add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
         echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
         <p>".showcopyright()."</p>
@@ -448,17 +451,13 @@ class SeptenaryComponents {
             echo showrendertime();
             echo showMemoryUsage();
         }
-        $footer_errors = showFooterErrors();
-        if (!empty($footer_errors)) {
-            echo "<div>\n";
-            echo showFooterErrors();
-            echo "</div>\n";
-        }
+
+        echo showFooterErrors();
 
         echo "</p>\n";
         echo "</div>\n";
         echo "</div>\n";
-        $this->close_grid(1);
+        $this->close_grid(TRUE);
     }
 
 }

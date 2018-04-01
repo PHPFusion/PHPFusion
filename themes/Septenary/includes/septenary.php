@@ -102,11 +102,8 @@ class SeptenaryTheme extends SeptenaryComponents {
      * Adds Theme Javascript and Meta header
      */
     private function setHeader() {
-
         if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
-
-            add_to_head("<script src='".THEME."includes/search.js'></script>");
-            add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1'>
+            add_to_head("
             <!--[if lt IE 8]>
             <div style=' clear: both; text-align:center; position: relative;'>
             <a href='http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode'>
