@@ -647,12 +647,19 @@ function parseubb($text, $selected = "") {
  */
 function hide_email($email, $title = "", $subject = "") {
     if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
+        $enc_email = '';
         $parts = explode("@", $email);
-        $MailLink = "<a href='mailto:".$parts[0]."@".$parts[1];
+        $email = $parts[0].'@'.$parts[1];
+        for ($i = 0; $i < strlen($email); $i++) {
+            $enc_email .= '&#'.ord($email[$i]).';';
+        }
+
+        $MailLink = "<a href='mailto:".$enc_email;
         if ($subject != "") {
             $MailLink .= "?subject=".urlencode($subject);
         }
-        $MailLink .= "'>".($title ? $title : $parts[0]."@".$parts[1])."</a>";
+        $MailLink .= "'>".($title ? $title : $enc_email)."</a>";
+
         $MailLetters = "";
         for ($i = 0; $i < strlen($MailLink); $i++) {
             $l = substr($MailLink, $i, 1);
@@ -669,6 +676,7 @@ function hide_email($email, $title = "", $subject = "") {
             $index += 48;
             $MailIndexes .= chr($index);
         }
+
         $MailIndexes = str_replace("\\", "\\\\", $MailIndexes);
         $MailIndexes = str_replace("\"", "\\\"", $MailIndexes);
         $res = "<script type='text/javascript'>";

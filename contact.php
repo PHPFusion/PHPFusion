@@ -17,10 +17,11 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
+require_once THEMES."templates/global/contact.php";
 
+$settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'contact.php');
 add_to_title($locale['global_200'].$locale['CT_400']);
-$settings = fusion_get_settings();
 
 $input = [
     'mailname'     => '',
@@ -29,7 +30,6 @@ $input = [
     'message'      => '',
     'captcha_code' => '',
 ];
-
 if (isset($_POST['sendmessage'])) {
     foreach ($input as $key => $value) {
         if (isset($_POST[$key])) {
@@ -88,42 +88,25 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 }
-
-opentable($locale['CT_400']);
-$message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['CT_401']);
-$message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
-echo "<div class='text-center well'>".$message."</div>\n";
-echo "<!--contact_pre_idx-->";
-echo openform('contactform', 'post', FORM_REQUEST);
-echo form_text('mailname', $locale['CT_402'], $input['mailname'], ['required' => TRUE, 'error_text' => $locale['CT_420'], 'max_length' => 64]);
-echo form_text('email', $locale['CT_403'], $input['email'], ['required' => TRUE, 'error_text' => $locale['CT_421'], 'type' => 'email', 'max_length' => 64]);
-echo form_text('subject', $locale['CT_404'], $input['subject'], ['required' => TRUE, 'error_text' => $locale['CT_422'], 'max_length' => 64]);
-echo form_textarea('message', $locale['CT_405'], $input['message'], ['required' => TRUE, 'error_text' => $locale['CT_423'], 'max_length' => 128]);
-
+$info['message'] = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['CT_401']);
+$info['message'] = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $info['message']);
+$info['input'] = $input;
 if (iGUEST) {
-    echo '<div class="row">';
-    echo '<div class="col-xs-12 col-sm-8 col-md-6">';
-
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
-
-    echo display_captcha([
+    $captcha_settings = array(
         'captcha_id' => 'captcha_contact',
         'input_id'   => 'captcha_code_contact',
         'image_id'   => 'captcha_image_contact'
-    ]);
-    echo '</div>';
-    echo '<div class="col-xs-12 col-sm-4 col-md-6">';
-
+    );
+    $info['captcha'] = display_captcha($captcha_settings);
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-        echo form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
+        $info['captcha_code'] = form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
     }
-
-    echo '</div>';
-    echo '</div>';
 }
 
-echo form_button('sendmessage', $locale['CT_406'], $locale['CT_406'], ['class' => 'btn-primary', 'icon' => 'fa fa-send-o']);
+echo openform('contactform', 'post', FORM_REQUEST);
+echo render_contact_form($info);
 echo closeform();
-echo "<!--contact_sub_idx-->";
 closetable();
+
 require_once THEMES."templates/footer.php";
