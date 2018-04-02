@@ -62,13 +62,6 @@ if ($profile_method == "input") {
             $tpl->set_block('notice', ['text' => nl2br($locale['uf_fb_connect_405'])]);
         }
 
-        $email = 'meang.czac@outlook.com';
-        $user_id = '16331';
-        $code = json_encode(['email_address' => $email, 'user_id' => $user_id, 'datestamp' => TIME]);
-        $code = \defender::encrypt_string($code, SECRET_KEY_SALT);
-        $link = INFUSIONS.'login/user_fields/facebook_connect/facebook_verify.php?code='.urlencode($code);
-        echo "<a href='$link'>$link</a>";
-
         $user_fields = $tpl->get_output();
     }
 
