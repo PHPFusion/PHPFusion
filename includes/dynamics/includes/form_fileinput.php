@@ -142,7 +142,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $value = json_encode($value);
     }
 
-    $lang = '';
+    //$lang = '';
+    $lang = 'language: "'.$locale['short_lang_name'].'",';
     if (!defined('form_fileinput')) {
         add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
         if ($locale['text-direction'] == 'rtl') {
@@ -152,7 +153,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
         if (file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
             add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
-            $lang = 'language: "'.$locale['short_lang_name'].'",';
+            //$lang = 'language: "'.$locale['short_lang_name'].'",';
         }
         define('form_fileinput', TRUE);
     }
@@ -284,8 +285,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 uploadClass: 'btn btn-default button',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn ".$options['btn_class']." button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
@@ -310,8 +309,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 uploadClass: 'btn btn-modal btn-lg',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']."\"></i>',
@@ -342,8 +339,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 uploadClass: 'btn btn-modal',
                 captionClass : '',
                 maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',
                 browseIcon: '<i class=\"".$options['icon']."\"></i>',
