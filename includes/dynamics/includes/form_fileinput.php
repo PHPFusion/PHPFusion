@@ -143,7 +143,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     }
 
     //$lang = '';
-    $lang = 'language: "'.$locale['short_lang_name'].'",';
+    $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
     if (!defined('form_fileinput')) {
         add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
         if ($locale['text-direction'] == 'rtl') {
