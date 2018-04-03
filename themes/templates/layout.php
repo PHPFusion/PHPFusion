@@ -135,7 +135,7 @@ if (!defined('FONTAWESOME-V4')) {
     if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
         echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.min.js'></script>\n";
         echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fa-v4-shims.min.js'></script>\n";
-        echo "<script type='text/javascript'>window.FontAwesomeConfig = {searchPseudoElements: true}</script>\n";
+        // echo "<script type='text/javascript'>window.FontAwesomeConfig = {searchPseudoElements: true}</script>\n";
     }
 }
 
