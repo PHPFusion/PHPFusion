@@ -223,7 +223,7 @@ if (dbrows($result)) {
 
         // Update new access levels for forum moderators
         if (!empty($data['forum_mods'])) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='-".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."' AND forum_mods != 0";
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='-".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."' AND forum_mods != 0 OR forum_mods != ''";
         }
     }
 
