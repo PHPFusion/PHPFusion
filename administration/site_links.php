@@ -351,7 +351,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             'inline'     => TRUE
         ]);
         echo form_text('link_order', $this->locale['SL_0023'], $this->data['link_order'], [
-            'class'  => 'pull-left',
             'inline' => TRUE,
             'width'  => '250px',
             'type'   => 'number'
@@ -561,21 +560,11 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
         echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=link_form", ["ref"], FALSE)."' >".$this->locale['SL_0010']."</a>\n";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>\n";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>\n";
-        echo "<a class='btn pointer btn-default btn-sm m-r-10' onclick=\"run_admin('move');\"><i class='fa fa-hand-grab-o fa-fw'></i> ".$this->locale['move']."</a>\n";
-        echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>\n";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#link_table');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>\n";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#link_table');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>\n";
+        echo "<a class='btn pointer btn-default btn-sm m-r-10' onclick=\"run_admin('move', '#table_action', '#link_table');\"><i class='fa fa-hand-grab-o fa-fw'></i> ".$this->locale['move']."</a>\n";
+        echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#link_table');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>\n";
         echo "</div>\n";
-
-        // Escape Javascript for IDE friendly
-        ?>
-        <script>
-            function run_admin(action) {
-                $('#table_action').val(action);
-                $('#link_table').submit();
-            }
-        </script>
-        <?php
 
         $filter_values = [
             "link_name"       => !empty($_POST['news_text']) ? form_sanitizer($_POST['link_name'], "", "link_name") : "",
@@ -878,8 +867,10 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         } else {
             echo "<tr>\n";
-            echo "<td colspan='8' class='text-center'>".$this->locale['SL_0062']."</td>\n";
+            echo "<td colspan='10' class='text-center'>".$this->locale['SL_0062']."</td>\n";
             echo "</tr>\n";
+
+            redirect(FUSION_SELF.$this->aidlink);
         }
         echo "</tbody>\n";
         echo "</table>\n</div>";

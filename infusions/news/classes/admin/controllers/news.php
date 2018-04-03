@@ -853,20 +853,13 @@ class NewsAdmin extends NewsAdminModel {
             echo "<div class='row clearfix'>\n";
             echo "<div class='col-xs-12 col-sm-12 col-md-8 pull-right text-right'>\n";
             echo "<a class='btn btn-success m-r-10' href='".clean_request("ref=news_form", ["ref"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
-            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
-            echo "<a class='btn btn-danger m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</a>";
+            echo "<a class='btn btn-default m-r-10' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</a>";
+            echo "<a class='btn btn-danger m-r-10' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
             echo "</div>\n";
-            ?>
-            <script>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#news_table').submit();
-                }
-            </script>
-            <?php
+
             $filter_values = [
                 "news_text"       => !empty($_POST['news_text']) ? form_sanitizer($_POST['news_text'], "", "news_text") : "",
                 "news_status"     => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",

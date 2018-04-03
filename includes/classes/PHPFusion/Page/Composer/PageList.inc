@@ -133,19 +133,11 @@ class PageList extends PageAdmin {
 
             echo "<div class='pull-right'>\n";
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("section=compose_frm", ["section"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['page_0200']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
-            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#cp_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#cp_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</a>";
+            echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#cp_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</a>";
             echo "</div>\n";
-            ?>
-            <script>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#cp_table').submit();
-                }
-            </script>
 
-            <?php
             $filter_values = [
                 "page_title"    => !empty($_POST['page_title']) ? form_sanitizer($_POST['page_title'], "", "page_title") : "",
                 "page_status"   => !empty($_POST['page_status']) ? form_sanitizer($_POST['page_status'], "", "page_status") : "",
