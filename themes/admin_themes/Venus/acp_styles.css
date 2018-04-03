@@ -31,6 +31,9 @@ section.login-bg {
     background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: -webkit-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: -o-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
+    background: -webkit-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
+    background: -moz-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
+    background: -o-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
     background-position: 0px -80%;
@@ -71,6 +74,7 @@ section.login-bg {
 
 .block-content {
     -webkit-box-shadow: 0px 0px 0.8em rgba(255, 255, 255, 0.5);
+    -moz-box-shadow: 0px 0px 0.8em rgba(255, 255, 255, 0.5);
     box-shadow: 0px 0px 0.8em rgba(255, 255, 255, 0.5);
     padding-top: 2.833em;
     -webkit-border-radius: 6px;
@@ -90,7 +94,10 @@ section.login-bg {
     margin: 0px;
     z-index: 0;
     -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
+    -webkit-border-radius: 0.278em;
+    -moz-border-radius: 0.278em;
     border-radius: 0.278em;
     color: #fff;
     font-size: 20px;
@@ -102,6 +109,7 @@ section.login-bg {
     -moz-border-left-colors: none;
     -webkit-border-image: none;
     -o-border-image: none;
+    -moz-border-image: none;
     border-image: none;
     background: rgb(167, 207, 223);
     background: -moz-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
@@ -158,6 +166,8 @@ section.login-bg {
     border-bottom: 1px solid rgb(221, 221, 221);
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
 
@@ -409,6 +419,8 @@ section.login-bg {
 }
 
 .panel {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
     border-radius: 0px;
 }
 
@@ -755,6 +767,8 @@ nav ul > li.open > a {
 
 @media (min-width: 900px) {
     #acp-header {
+        width: -webkit-calc(100% - 250px);
+        width: -moz-calc(100% - 250px);
         width: calc(100% - 250px);
         margin-left: 250px;
     }
@@ -765,6 +779,8 @@ nav ul > li.open > a {
 
     #acp-content {
         margin-left: 250px;
+        width: -webkit-calc(100% - 250px);
+        width: -moz-calc(100% - 250px);
         width: calc(100% - 250px);
     }
 
@@ -845,6 +861,7 @@ nav ul > li.open > a {
     padding: 15px 20px;
     -webkit-transition: color 0.2s ease-in-out 0s;
     -o-transition: color 0.2s ease-in-out 0s;
+    -moz-transition: color 0.2s ease-in-out 0s;
     transition: color 0.2s ease-in-out 0s;
     outline: medium none;
     text-shadow: 0px 1px #fff;
@@ -881,6 +898,7 @@ nav ul > li.open > a {
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(11%, rgb(1, 99, 172)), color-stop(99%, rgb(67, 166, 218)), to(rgb(115, 189, 228)));
     background-image: -webkit-linear-gradient(bottom, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
     background-image: -o-linear-gradient(bottom, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
+    background-image: -moz-linear-gradient(bottom, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
     background-image: linear-gradient(to top, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
     color: #fff;
     border-bottom: 1px solid rgb(3, 84, 145);
@@ -1059,6 +1077,8 @@ html[dir="rtl"] .breadcrumb > li:after {
     border-left: 1px solid #dddddd;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 

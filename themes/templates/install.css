@@ -5,37 +5,32 @@ body {
     color: #fff;
     padding: 5% 0%;
     background: #DFDFDF;
-    background: -moz-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
-    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(215, 220, 224, 1)), color-stop(100%, #DFDFDF));
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
-    background: -o-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
-    background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
-    background: -webkit-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
-    background: -o-radial-gradient(center ellipse, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
+    background: -webkit-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
+    background: -moz-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
+    background: -o-radial-gradient(center, ellipse, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
     background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, #DFDFDF 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='##DFDFDF', GradientType=1);
     background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
     background-size: cover;
     min-height: 100vh;
 }
 
 body.install {
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
     background-size: cover;
     min-height: 600px;
     height: 100%;
     position: relative;
     height: 100%;
     background: #0E233B;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
-    background-image: -ms-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
-    background-image: -moz-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
-    background-image: -o-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
-    background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #294566), color-stop(1, #0c1f38));
-    background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #294566 0%, #0c1f38 100%);
     background-image: -webkit-radial-gradient(ellipse farthest-corner at center, #294566 0%, #0c1f38 100%);
+    background-image: -moz-radial-gradient(ellipse farthest-corner at center, #294566 0%, #0c1f38 100%);
     background-image: -o-radial-gradient(ellipse farthest-corner at center, #294566 0%, #0c1f38 100%);
     background-image: radial-gradient(ellipse farthest-corner at center, #294566 0%, #0c1f38 100%);
     background-repeat: no-repeat;
@@ -64,17 +59,21 @@ body.install {
 
 .block {
     padding: 40px 20px 20px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    -webkit-box-shadow: 0px 0px 4px rgba(50, 50, 50, 0.5);
-    box-shadow: 0px 0px 4px rgba(50, 50, 50, 0.5);
-    background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, .75);
+    -webkit-box-shadow: 0px 0px 4px rgba(50, 50, 50, .5);
+    -moz-box-shadow: 0px 0px 4px rgba(50, 50, 50, .5);
+    box-shadow: 0px 0px 4px rgba(50, 50, 50, .5);
+    background: none repeat scroll 0% 0% rgba(255, 255, 255, .2);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
     border-radius: 0;
     margin: 0px;
 }
 
 .block-content {
-    -webkit-box-shadow: 0px 0px 0.8em rgba(255, 255, 255, 0.5);
-    box-shadow: 0px 0px 0.8em rgba(255, 255, 255, 0.5);
+    -webkit-box-shadow: 0px 0px 0.8em rgba(255, 255, 255, .5);
+    -moz-box-shadow: 0px 0px 0.8em rgba(255, 255, 255, .5);
+    box-shadow: 0px 0px 0.8em rgba(255, 255, 255, .5);
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
@@ -91,8 +90,11 @@ body.install {
     top: -60px;
     margin: 0px;
     z-index: 0;
-    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, .8);
+    -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, .8);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, .8);
+    -webkit-border-radius: 0.278em;
+    -moz-border-radius: 0.278em;
     border-radius: 0.278em;
     color: rgb(255, 255, 255);
     font-size: 20px;
@@ -102,16 +104,15 @@ body.install {
     -moz-border-right-colors: none;
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
-    -webkit-border-image: none;
     -o-border-image: none;
+    -webkit-border-image: none;
+    -moz-border-image: none;
     border-image: none;
     background: rgb(167, 207, 223);
-    background: -moz-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(167, 207, 223, 1)), color-stop(100%, rgba(35, 83, 138, 1)));
-    background: -webkit-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
-    background: -o-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
-    background: -ms-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, from(rgba(167, 207, 223, 1)), to(rgba(35, 83, 138, 1)));
+    background: -webkit-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
+    background: -moz-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
+    background: -o-linear-gradient(top, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
     background: linear-gradient(to bottom, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a7cfdf', endColorstr='#23538a', GradientType=0);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
@@ -127,6 +128,8 @@ body.install {
     font-weight: bold !important;
     color: rgb(51, 51, 51) !important;
     background: rgb(246, 248, 249) !important;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
     border-radius: 6px;
 }
 

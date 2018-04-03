@@ -57,5 +57,6 @@ Gallery CSS for FusionTheme
     top: 0;
     background: -webkit-linear-gradient(transparent 32px, white);
     background: -o-linear-gradient(transparent 32px, white);
+    background: -moz-linear-gradient(transparent 32px, white);
     background: linear-gradient(transparent 32px, white);
 }

@@ -46,8 +46,10 @@ if (!function_exists("render_gallery")) {
                         $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
                 if (!empty($info['album_edit']) && !empty($info['album_delete'])) {
                     echo "</div>\n<div class='panel-footer'>\n";
+                    echo '<div class="btn-group btn-group-sm">';
                     echo "<a class='btn btn-default' href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
                     echo "<a class='btn btn-danger' href='".$info['album_delete']['link']."' title='".$info['album_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a>\n";
+                    echo '</div>';
                 }
                 echo "</div></div>\n";
             }

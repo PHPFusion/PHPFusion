@@ -69,12 +69,18 @@
 
 #support {
     background: url(../../../../templates/global/default_home/images/bg04.jpg) fixed bottom;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
     height: 600px;
 }
 
 #home_parallax {
     background: url(../../../../templates/global/default_home/images/bg02.jpg) fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
     height: 750px;
 }
