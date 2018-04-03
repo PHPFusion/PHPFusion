@@ -363,7 +363,7 @@ class Panels {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
             }
             if (defined("LEFT_OFF")) {
-                $exclude_list[] = FUSION_SELF;
+                $exclude_list = FUSION_SELF;
             }
         } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
