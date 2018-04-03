@@ -84,29 +84,23 @@ class News extends Core {
         ob_start();
         openside(fusion_get_locale('news_0009'));
         ?>
-        <ul>
-            <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
-                <li class='list-group-item p-t-5 p-b-5'>
-                    <a href='<?php echo $category['link'] ?>'>
-                        <h5 class='text-uppercase'>
-                            <strong><?php echo $category['name'] ?></strong>
-                        </h5>
-                    </a>
-                </li>
-            <?php endforeach; ?>
+        <ul><?php
+            foreach ($info['news_categories'][0] as $id => $data) {
+                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' active' : '';
+                echo '<li class="list-group-item p-t-5 p-b-5 '.$active.'"><a href="'.INFUSIONS.'news/news.php?cat_id='.$id.'">'.$data['name'].'</a></li>';
 
-            <?php
-            if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
-                foreach ($info['news_categories'][1] as $category_id => $category) : ?>
-                    <li class='list-group-item p-t-5 p-b-5'>
-                        <a href='<?php echo $category['link'] ?>'>
-                            <h5 class='text-uppercase'>
-                                <strong><?php echo $category['name'] ?></strong>
-                            </h5>
-                        </a>
-                    </li>
-                <?php endforeach;
-            } ?>
+                if ($id != 0 && $info['news_categories'] != 0) {
+                    foreach ($info['news_categories'] as $sub_cats_id => $sub_cats) {
+                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
+                                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $sub_cat_id ? ' active' : '';
+                                echo '<li class="list-group-item p-t-5 p-b-5 '.$active.'"><a class="p-l-10" href="'.INFUSIONS.'news/news.php?cat_id='.$sub_cat_id.'">'.$sub_cat_data['name'].'</a></li>';
+                            }
+                        }
+                    }
+                }
+            }
+            ?>
         </ul>
         <?php
         closeside();

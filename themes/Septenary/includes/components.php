@@ -440,7 +440,7 @@ class SeptenaryComponents {
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
         echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
-        <p>".showcopyright()."</p>
+        <p>".showcopyright().showprivacypolicy()."</p>
         <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
         <p>";
         if ($settings['visitorcounter_enabled']) {

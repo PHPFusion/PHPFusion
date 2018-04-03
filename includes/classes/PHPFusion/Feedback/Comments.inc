@@ -314,6 +314,7 @@ class Comments {
 
                         $ratings = '';
                         for ($i = 5; $i >= 1; $i--) {
+                            $ratings .= '<div>';
                             $bal = 5 - $i;
                             $ratings .= "<div class='display-inline-block m-r-5'>\n";
 
@@ -330,6 +331,7 @@ class Comments {
                             $progress_num = $c_info['ratings_count'][$i] == 0 ? 0 : round((($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100), 1);
                             $ratings .= progress_bar($progress_num, '', FALSE, '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
                             $ratings .= "</div>\n";
+                            $ratings .= '</div>';
                         }
 
                         $ratings_html = strtr(ob_get_clean(), [

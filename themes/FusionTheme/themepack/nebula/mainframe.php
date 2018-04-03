@@ -314,7 +314,7 @@ class MainFrame extends Core {
         echo "<h4>".self::$locale['NB_001']."</h4>\n";
         echo "<p>".fusion_get_settings('description')."</p>\n";
         echo stripslashes(strip_tags(fusion_get_settings('footer')));
-        echo "<p>".showcopyright()."</p>\n";
+        echo "<p>".showcopyright().showprivacypolicy()."</p>\n";
         echo "</div>\n";
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');

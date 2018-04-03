@@ -169,13 +169,19 @@ if (!function_exists('render_main_news')) {
         ?>
         <ul>
             <?php if (!empty($info['news_categories'])) {
-                foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
-                    echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
-                }
+                foreach ($info['news_categories'][0] as $id => $data) {
+                    $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' class="text-dark"' : '';
+                    echo '<li><a'.$active.' href="'.INFUSIONS.'news/news.php?cat_id='.$id.'">'.$data['name'].'</a></li>';
 
-                if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
-                    foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
-                        echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+                    if ($id != 0 && $info['news_categories'] != 0) {
+                        foreach ($info['news_categories'] as $sub_cats_id => $sub_cats) {
+                            foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                                if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
+                                    $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $sub_cat_id ? ' class="active"' : '';
+                                    echo '<li'.$active.'><a class="p-l-10" href="'.INFUSIONS.'news/news.php?cat_id='.$sub_cat_id.'">'.$sub_cat_data['name'].'</a></li>';
+                                }
+                            }
+                        }
                     }
                 }
             } else {

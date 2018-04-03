@@ -31,7 +31,7 @@ $result = dbquery("SELECT blog_id, blog_subject, blog_datestamp
 ", [':draft' => '0', ':language' => LANGUAGE]);
 
 if (dbrows($result)) {
-    echo "<ul class='blog_archive_inner list-style-none' id='blog_archive'>\n";
+    echo "<ul class='blog_archive_inner' id='blog_archive'>\n";
     $data = [];
     while ($row = dbarray($result)) {
         $year = date('Y', $row['blog_datestamp']);

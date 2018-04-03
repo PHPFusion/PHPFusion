@@ -122,13 +122,19 @@ if (!function_exists('display_main_news')) {
         echo "<span class='display-inline-block m-b-10 strong text-smaller text-uppercase'> ".$locale['news_0010']."</span><br/>\n";
 
         if (is_array($info['news_categories'][0])) {
-            foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
-                echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
-            }
+            foreach ($info['news_categories'][0] as $id => $data) {
+                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' class="text-dark"' : '';
+                echo "<a href='".INFUSIONS."news/news.php?cat_id=".$id."' class='btn btn-sm btn-default ".$active."'>".$data['name']."</a>";
 
-            if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
-                foreach ($info['news_categories'][1] as $cat_id => $cat_data) {
-                    echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
+                if ($id != 0 && $info['news_categories'] != 0) {
+                    foreach ($info['news_categories'] as $sub_cats_id => $sub_cats) {
+                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
+                                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $sub_cat_id ? ' class="active"' : '';
+                                echo "<a href='".INFUSIONS."news/news.php?cat_id=".$sub_cat_id."' class='btn btn-sm btn-default ".$active."'>".$sub_cat_data['name']."</a>";
+                            }
+                        }
+                    }
                 }
             }
 
