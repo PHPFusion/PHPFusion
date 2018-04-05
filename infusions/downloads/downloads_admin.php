@@ -174,17 +174,24 @@ function download_listing() {
                 $download_url = $data2['download_url'];
             }
             echo "<li class='list-group-item'>\n";
-            echo "<div class='pull-right'>\n".$locale['download_0207']."
-            <a style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;section=download_category&amp;action=edit&amp;cat_id=".$data2['download_cat_id']."' class='badge'>
-            ".$data2['download_cat_name']."</a>
-            </div>\n";
             echo "<div class='pull-left m-r-10'>\n";
             echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
             echo "</div>\n";
             echo "<div class='overflow-hide'>\n";
-            echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
+
+            echo '<div class="clearfix">';
+            echo "<div class='pull-right'>\n".$locale['download_0207']."
+            <a style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;section=download_category&amp;action=edit&amp;cat_id=".$data2['download_cat_id']."' class='badge'>
+            ".$data2['download_cat_name']."</a>
+            </div>\n";
+            echo "<span class='strong text-dark'>".$data2['download_title']."</span>\n";
+            echo '</div>';
+
+            echo '<div class="clearfix">';
             $dlText = strip_tags(parse_textarea($data2['download_description_short']));
             echo fusion_first_words($dlText, '50');
+            echo '</div>';
+
             echo "<div class='m-t-5'>\n";
             echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0226']."</a>\n";
             echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
