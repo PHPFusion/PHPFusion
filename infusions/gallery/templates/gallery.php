@@ -35,7 +35,7 @@ if (!function_exists("render_gallery")) {
                 echo "<div class='panel-heading'>\n";
                 echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'], 18)."</strong>\n</a>\n";
                 echo "</div>\n";
-                echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
+                echo "<div class='overflow-hide album_thumbnail' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
                 echo $info['image'];
                 echo "</div>\n";
                 echo "<div class='panel-body'>\n";

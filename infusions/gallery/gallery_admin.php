@@ -29,8 +29,8 @@ $gll_settings = get_settings("gallery");
 add_to_head("
 <style>
 .panel-default > .panel-image-wrapper {
-    height: 150px;
-    max-height: 150px;
+    height: 120px;
+    max-height: 120px;
     min-width: 100%;
     overflow: hidden;
 }
@@ -224,12 +224,12 @@ function gallery_photo_listing() {
                 echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['gallery_0017']."</a></li>\n";
                 echo "</ul>\n";
                 echo "</div>\n";
-                echo "<div class='overflow-hide'>\n";
+                echo "<div class='clearfix'>\n";
                 echo "<h4 class='album_title'><strong>".$data['photo_title']."</strong>\n</h4>\n";
                 echo "</div>\n";
                 echo "<div class='display-block'>\n";
                 echo "<span class='m-r-10'>\n<i class='fa fa-comments-o' title='".$locale['comments']."'></i> ".$data['comment_count']."</span>\n";
-                echo "<span class='m-r-5'>\n<i class='fa fa-star' title='".$locale['ratings']."'></i> ".($rcount > 0 ? $rcount / $vcount * 10 : 0)." /10</span>\n";
+                echo "<span class='m-r-5'>\n<i class='fa fa-star' title='".$locale['ratings']."'></i> ".number_format(($rcount > 0 ? $rcount / $vcount * 10 : 0), 2)." /10</span>\n";
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "</div>\n";
