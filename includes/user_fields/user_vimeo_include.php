@@ -32,10 +32,16 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_vimeo', $locale['uf_vimeo'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
-    //https://vimeo.com/user1577007
+    $link = '';
     if ($field_value) {
-        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.vimeo.com/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_vimeo_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.vimeo.com/".$field_value : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_vimeo_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = ['title' => $icon.$locale['uf_vimeo'], 'value' => $field_value ?: ''];
+    $user_fields = array(
+        'icon'  => $icon,
+        'link'  => $link,
+        'type'  => 'social',
+        'title' => $locale['uf_vimeo'],
+        'value' => $field_value ?: ''
+    );
 }

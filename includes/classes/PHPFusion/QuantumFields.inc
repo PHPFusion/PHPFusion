@@ -1227,8 +1227,8 @@ class QuantumFields extends \SqlHandler {
             'error_text'           => $data['field_error'],
             'required'             => (bool)$data['field_required'],
             'placeholder'          => $data['field_default'],
-            'plugin_folder'        => INCLUDES.'user_fields/',
-            'plugin_locale_folder' => LOCALE.LOCALESET.'/user_fields/',
+            'plugin_folder'        => $this->plugin_folder,
+            'plugin_locale_folder' => $this->plugin_locale_folder,
             'debug'                => FALSE
         ];
 
@@ -1247,6 +1247,7 @@ class QuantumFields extends \SqlHandler {
         if (is_array($options['plugin_folder']) && !empty($options['plugin_folder'])) {
             $p_folder = $options['plugin_folder'];
             unset($options['plugin_folder']);
+
             foreach ($p_folder as $plugin_folder) {
                 $plugin_folder = rtrim($plugin_folder, '/').'/';
                 // Identify the correct folder for the current module.
@@ -1287,6 +1288,8 @@ class QuantumFields extends \SqlHandler {
             case 'file':
                 $user_data = $callback_data;
                 $profile_method = $method;
+                //print_p($options['plugin_locale_folder']);
+
                 $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
                 include($options['plugin_folder'].$data['field_name']."_include.php");
 

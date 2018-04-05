@@ -134,7 +134,7 @@ if ($profile_method == "input") {
             ");
             $user_fields = $tpl->get_output();
         }
-        add_to_jquery("$('button#update_profile').prop('disabled', true).hide();");
+        //add_to_jquery("$('button#update_profile').prop('disabled', true).hide();");
     }
     // Display in profile
 } else if ($profile_method == "display") {

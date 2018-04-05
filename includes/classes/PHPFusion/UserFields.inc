@@ -372,7 +372,7 @@ class UserFields extends QuantumFields {
         if (!empty($this->info['user_field'])) {
             foreach ($this->info['user_field'] as $catID => $fieldData) {
                 if (!empty($fieldData['title'])) {
-                    $user_fields .= form_para($fieldData['title'], 'user_fields_'.$catID);
+                    $user_fields .= $fieldData['title'];
                 }
                 if (!empty($fieldData['fields'])) {
                     foreach ($fieldData['fields'] as $_id => $_fields) {
@@ -591,7 +591,7 @@ class UserFields extends QuantumFields {
                     } else {
                         // Display User Fields
                         if (isset($item[$cat_id])) {
-                            $fields['user_field'][$cat_id]['title'] = form_para($cat, 'cat-'.$cat_id, 'profile_category_name');
+                            $fields['user_field'][$cat_id]['title'] = $cat;
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 // Outputs array
                                 $field_output = $this->display_fields($field, $this->callback_data, $this->method);
@@ -620,6 +620,9 @@ class UserFields extends QuantumFields {
         $aidlink = fusion_get_aidlink();
 
         $this->info['section'] = $this->getProfileSections();
+        $this->info['user_id'] = $this->userData['user_id'];
+        $this->info['user_name'] = $this->userData['user_name'];
+
         $current_section = [['id' => 1]];
         if (!empty($this->info['section'])) {
             $current_section = current($this->info['section']);
@@ -692,18 +695,21 @@ class UserFields extends QuantumFields {
 
         // Groups - need translating.
         $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
+        $this->info['core_field']['profile_user_group']['value'] = '';
         $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
-        $grp_html = '';
         $user_groups = array_filter($user_groups);
+        $group_info = array();
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
-                $grp_html .= $i > 0 ? ', ' : '';
-                $grp_html .= "<span class='user_group'><a href='".BASEDIR."profile.php?group_id=".$user_groups[$i]."'>".getgroupname($user_groups[$i])."</a></span>";
+                if ($group_name = getgroupname($user_groups[$i])) {
+                    $group_info[] = array(
+                        'group_url'  => BASEDIR."profile.php?group_id=".$user_groups[$i],
+                        'group_name' => $group_name
+                    );
+                }
             }
-            $this->info['core_field']['profile_user_group']['value'] = $grp_html;
-        } else {
-            $this->info['core_field']['profile_user_group']['value'] = $locale['user_na'];
+            $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
         }
 
         $this->info = $this->info + $this->get_user_fields();
@@ -720,105 +726,9 @@ class UserFields extends QuantumFields {
 
             }
         }
-        /*
-         * The template
-         */
-        ob_start();
-        //print_p($this->info);
-        display_user_field($this->info);
-        $field_template = ob_get_clean();
-        ob_start();
-        display_user_field_container($this->info);
-        $field_wrapper = ob_get_clean();
 
-        $basic_info = '';
-        $user_avatar = '';
-        $user_name = '';
-        $user_level = '';
-
-        // Basic User Information
-        if (!empty($this->info['core_field'])) {
-            foreach ($this->info['core_field'] as $field_id => $field_data) {
-                switch ($field_id) {
-                    case 'profile_user_avatar':
-                        $avatar['user_id'] = $this->userData['user_id'];
-                        $avatar['user_name'] = $this->userData['user_name'];
-                        $avatar['user_avatar'] = $field_data['value'];
-                        $avatar['user_status'] = $field_data['status'];
-                        $user_avatar = display_avatar($avatar, '50px', 'profile-avatar', FALSE, '');
-                        break;
-                    case 'profile_user_name':
-                        $user_name = $field_data['value'];
-                        break;
-                    case 'profile_user_level':
-                        $user_level = $field_data['value'];
-                        break;
-                    default:
-                        $basic_info .= strtr($field_template, [
-                            '{%field_id%}'    => $field_id,
-                            '{%field_title%}' => !empty($field_data['title']) ? $field_data['title'] : $locale['na'],
-                            '{%field_value%}' => !empty($field_data['value']) ? $field_data['value'] : $locale['na']
-                        ]);
-                        break;
-                }
-            }
-        }
-
-        //User Fields Module Information
-        $extended_info = '';
-        if (!empty($this->info['user_field'])) {
-            foreach ($this->info['user_field'] as $catID => $fieldData) {
-                $user_fields = '';
-                if (!empty($fieldData['title'])) {
-                    $user_fields .= form_para($fieldData['title'], 'user_fields_'.$catID);
-                }
-                if (!empty($fieldData['fields'])) {
-                    foreach ($fieldData['fields'] as $_id => $_fields) {
-                        if (!empty($_fields)) {
-                            $user_fields .= strtr($field_template, [
-                                '{%field_id%}'    => $_id,
-                                '{%field_title%}' => $_fields['title'],
-                                '{%field_value%}' => $_fields['value']
-                            ]);
-                        }
-                    }
-                }
-                $extended_info .= strtr($field_wrapper, [
-                    '{%user_fields%}' => $user_fields
-                ]);
-            }
-        } else {
-            $this->info['no_fields'] = $locale['uf_108'];
-        }
-
-        // Tabs
-        if (!empty($this->info['section'])) {
-            foreach ($this->info['section'] as $page_section) {
-                $tab_title['title'][$page_section['id']] = $page_section['name'];
-                $tab_title['id'][$page_section['id']] = $page_section['id'];
-                $tab_title['icon'][$page_section['id']] = $page_section['icon'];
-            }
-        }
-
-        /*
-         * Template Output
-         */
-        ob_start();
-        display_user_profile($this->info);
-        echo strtr(ob_get_clean(), [
-                '{%tab_header%}'    => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, FALSE, 'section') : '',
-                '{%user_avatar%}'   => $user_avatar,
-                '{%user_name%}'     => $user_name,
-                '{%user_level%}'    => $user_level,
-                '{%admin_buttons%}' => !empty($this->info['admin']) ? $this->info['admin'] : '',
-                '{%buttons%}'       => !empty($this->info['buttons']) ? implode(" ", array_values($this->info['buttons'])) : '',
-                '{%basic_info%}'    => $basic_info,
-                '{%extended_info%}' => $extended_info,
-                '{%tab_footer%}'    => isset($tab_title) ? closetab() : '',
-                '{%no_fields%}'     => !empty($this->info['no_fields']) ? $this->info['no_fields'] : ''
-            ]
-        );
-
+        // Display Template
+        echo display_user_profile($this->info);
     }
 
     /*
@@ -859,6 +769,9 @@ class UserFields extends QuantumFields {
                 }
             }
         }
+
+        // drop this and output as array
+
         $html = "";
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-3'>\n";
