@@ -61,7 +61,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
          * Global vars
          */
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['weblink_id']) && isnum($_POST['weblink_id'])) || (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-            $result = dbquery("SELECT * FROM ".DB_WEBLINKS." WHERE weblink_id='".(isset($_POST['weblink_id']) ? $_POST['weblink_id'] : $_GET['weblink_id'])."'");
+            $result = dbquery("SELECT * FROM ".DB_WEBLINKS." WHERE weblink_id='".(isset($_POST['weblink_id']) ? isnum($_POST['weblink_id']) : isnum($_GET['weblink_id']))."'");
             if (dbrows($result)) {
                 $this->weblink_data = dbarray($result);
             } else {
