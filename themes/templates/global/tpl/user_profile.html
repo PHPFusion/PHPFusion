@@ -1,0 +1,88 @@
+<!--userprofile_pre_idx-->
+<section id='user-profile' class='spacer-sm overflow-hide'>
+
+    <div class="list-group">
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <div class="profile-header-left">
+                        <div class="pull-left m-r-15">{%user_avatar%}</div>
+                        <div class="overflow-hide">
+                            <h3 class="m-0">{%user_name%}</h3>
+                            {%user_level%}
+                            <div class="spacer-sm">
+                                <a class="btn btn-success" href="#">Send a Message</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="profile-header-right">
+                        <ul class="block">
+                            {user_core_fields.{
+                            <li>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-3">
+                                        <strong>{%title%}</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-9">
+                                        {%value%}
+                                    </div>
+                                </div>
+                            </li>
+                            }}
+                        </ul>
+                        {social_icons.{
+                        <a class="social-icons" title="{%title%}" href="{%link%}">{%icon%}</a>
+                        }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {%tab_header%}
+    <div class="spacer-sm">
+        <div class="row">
+            <div class="col-xs-12 col-sm-9">
+                <div class="list-group">
+                    <div class="list-group-item">
+                        {fields_block.{
+                        {%fields%}
+                        <hr/>
+                        }}
+                    </div>
+
+                    <div class='list-group-item'>
+                        <blockquote>This part will be disintegrated and removed in the next commit.</blockquote>
+                        {%admin_buttons%}
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                <div class="m-b-20 p-10">
+                    <h5 class="text-uppercase">{[u057]}</h5>
+                    {user_groups.{
+                    <div class="block">
+                        <a href="{%group_url%}">{%group_name%}</a>
+                    </div>
+                    }}
+                    {user_group_na.{
+                    {[u117]}
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class='spacer-sm'>
+
+
+        <div class='clearfix'>{%basic_info%}</div>
+
+    </div>
+    {%tab_footer%}
+</section>
+<!--userprofile_sub_idx-->

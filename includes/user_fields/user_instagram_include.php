@@ -30,12 +30,16 @@ if ($profile_method == "input") {
         ] + $options);
     // Display in profile
 } else if ($profile_method == "display") {
+    $link = '';
     if ($field_value) {
-        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.instagram.com/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_instagram_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.instagram.com/".$field_value : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_instagram_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = [
-        'title' => $icon.$locale['uf_instagram'],
+    $user_fields = array(
+        'link'  => $link,
+        'icon'  => $icon,
+        'type'  => 'social',
+        'title' => $locale['uf_instagram'],
         'value' => $field_value ?: ''
-    ];
+    );
 }

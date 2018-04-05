@@ -20,17 +20,21 @@ if (!defined("IN_FUSION")) {
 }
 
 if ($profile_method == "input") {
-    //Nothing here
     $user_fields = '';
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
+        $user_fields .= "<div class='row'>\n<div class='col-xs-12 col-sm-3 strong'>".$locale['uf_shouts-stat']."</div>\n<div class='col-xs-12 col-sm-9'>\n";
         if (infusion_exists('shoutbox_panel')) {
-            $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_shouts-stat']."</div>";
+            $user_fields .= "--";
+        } else {
+            $user_fields .= "<div class='alert alert-warning'><strong><i class='fas fa-exclamation-triangle m-r-10'></i>".$locale['uf_shouts-stat_na']."</strong></div>";
         }
+        $user_fields .= "</div>\n</div>\n";
     }
 } else if ($profile_method == "display") {
     if (infusion_exists('shoutbox_panel')) {
         $user_fields = [
             'title' => $locale['uf_shouts-stat'],
-            'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"))];
+            'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"))
+        ];
     }
 }

@@ -34,5 +34,9 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_aim', $locale['uf_aim'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $icon.$locale['uf_aim'], 'value' => $field_value ?: ''];
+    $user_fields = array(
+        'icon'  => $icon,
+        'title' => $icon.$locale['uf_aim'],
+        'value' => $field_value ?: ''
+    );
 }
