@@ -790,7 +790,7 @@ if (!function_exists("thumbnail")) {
             define('colorbox', TRUE);
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-            add_to_jquery("$('.colorbox').colorbox();");
+            add_to_jquery("$('.colorbox').colorbox({width: '75%', height: '75%'});");
         }
 
         return $html;
