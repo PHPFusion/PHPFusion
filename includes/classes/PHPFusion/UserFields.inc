@@ -685,7 +685,7 @@ class UserFields extends QuantumFields {
         }
 
         // IP
-        $this->info['core_field']['profile_user_ip'] = [];
+        //$this->info['core_field']['profile_user_ip'] = [];
         if (iADMIN && checkrights("M")) {
             $this->info['core_field']['profile_user_ip'] = [
                 'title' => $locale['u049'],
