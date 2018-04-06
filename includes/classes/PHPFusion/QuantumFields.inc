@@ -1534,7 +1534,7 @@ class QuantumFields extends \SqlHandler {
         if (!empty($_POST)) {
             $tabs->set_remember(FALSE);
         }
-        echo $tabs->opentab($tab_title, $tab_active, 'amd', FALSE, FALSE, '', []);
+        echo $tabs->opentab($tab_title, $tab_active, 'amd', TRUE, FALSE, '', []);
         echo $tabs->opentabbody($tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', [

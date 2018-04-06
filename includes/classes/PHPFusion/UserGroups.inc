@@ -60,7 +60,6 @@ class UserGroups {
         $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." WHERE group_id='".intval($group_id)."'");
 
         if (dbrows($result) > 0) {
-
             $members = [];
             $members_per_page = 20;
             $data = dbarray($result);
@@ -92,6 +91,8 @@ class UserGroups {
                 'group_members' => $members,
             ];
             $this->info += $data;
+        } else {
+            redirect(BASEDIR.'index.php');
         }
 
         return $this->info;
