@@ -1048,7 +1048,7 @@ class QuantumFields extends \SqlHandler {
                 }
                 // Edit/Delete Category Administration
                 echo "<div class='clearfix'>\n";
-                echo "<div class='m-t-20 pull-right'>\n";
+                echo "<div class='m-t-20 m-b-10 pull-right'>\n";
                 echo "<div class='btn-group'>\n";
                 echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
                 echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
@@ -1484,11 +1484,13 @@ class QuantumFields extends \SqlHandler {
         $tab_title['title'][] = $this->locale['fields_0300'];
         $tab_title['id'][] = 'dyn';
         $tab_title['icon'][] = '';
+
         if (!empty($this->cat_list)) {
             $tab_title['title'][] = $this->locale['fields_0301'];
             $tab_title['id'][] = 'mod';
             $tab_title['icon'][] = '';
         }
+
         // Extended Tabs
         // add category
         $tab_active = tab_active($tab_title, 0);
@@ -1530,11 +1532,13 @@ class QuantumFields extends \SqlHandler {
         }
 
         $tabs = new \FusionTabs();
-        $tabs->set_remember(TRUE);
+
+        /*$tabs->set_remember(TRUE);
         if (!empty($_POST)) {
             $tabs->set_remember(FALSE);
-        }
-        echo $tabs->opentab($tab_title, $tab_active, 'amd', TRUE, FALSE, '', []);
+        }*/
+
+        echo $tabs->opentab($tab_title, $tab_active, 'amd', FALSE, FALSE, 'action', []);
         echo $tabs->opentabbody($tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', [
@@ -1564,8 +1568,7 @@ class QuantumFields extends \SqlHandler {
             if (!empty($this->available_field_info)) {
                 foreach ($this->available_field_info as $title => $module_data) {
                     echo "<div class='list-group-item'>";
-                    echo form_button('add_module', $this->locale['fields_0312'], $title,
-                        ['class' => 'btn-sm btn-default pull-right m-l-10']);
+                    echo form_button('add_module', $this->locale['fields_0312'], $title, ['class' => 'btn-sm btn-default pull-right m-l-10']);
                     echo "<div class='overflow-hide'>\n";
                     echo "<span class='text-dark strong'>".$module_data['title']."</span><br/>\n";
                     echo "<span>".$module_data['description']."</span>\n<br/>";
