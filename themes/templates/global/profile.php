@@ -106,9 +106,7 @@ if (!function_exists('display_profile_form')) {
  * print_p($current_user_info); // debug print
  */
 if (!function_exists('display_user_profile')) {
-
     function display_user_profile($info) {
-        //print_p($info);
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
 
         $tpl = \PHPFusion\Template::getInstance('user_profile');
@@ -148,7 +146,7 @@ if (!function_exists('display_user_profile')) {
                         $avatar['user_name'] = $info['user_name'];
                         $avatar['user_avatar'] = $field_data['value'];
                         $avatar['user_status'] = $field_data['status'];
-                        $user_avatar = display_avatar($avatar, '100px', 'profile-avatar', FALSE, '');
+                        $user_avatar = display_avatar($avatar, '550px', 'profile-avatar', FALSE, 'img-responsive');
                         break;
                     case 'profile_user_name':
                         $user_name = $field_data['value'];
@@ -171,10 +169,11 @@ if (!function_exists('display_user_profile')) {
                 if (!empty($categoryData['fields'])) {
                     foreach ($categoryData['fields'] as $_id => $_fields) {
                         if (!empty($_fields)) {
-                            if (isset($_fields['type'])) {
+                            if (isset($_fields['type']) && $_fields['type'] == 'social') {
                                 $tpl->set_block('social_icons', $_fields);
                             } else {
-                                $tpl2->set_block('user_fields', array(
+                                $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
+                                $tpl2->set_block($block_type, array(
                                     'id'    => $_id,
                                     'title' => $_fields['title'],
                                     'value' => $_fields['value']
@@ -205,7 +204,14 @@ if (!function_exists('display_user_profile')) {
         $tpl->set_tag('user_name', $user_name);
         $tpl->set_tag('user_avatar', $user_avatar);
         $tpl->set_tag('user_level', $user_level);
-        $tpl->set_tag('admin_buttons', (!empty($info['admin']) ? $info['admin'] : ''));
+
+        if (!empty($info['user_admin'])) {
+            $tpl->set_block('user_admin', $info['user_admin']);
+        }
+        if (!empty($info['group_admin'])) {
+            $tpl->set_block('group_admin', $info['group_admin']);
+        }
+
         $tpl->set_tag('buttons', (!empty($info['buttons']) ? $info['buttons'] : ''));
         $tpl->set_tag('basic_info', $basic_info);
         $tpl->set_tag('tab_footer', (isset($tab_title) ? closetab() : ''));

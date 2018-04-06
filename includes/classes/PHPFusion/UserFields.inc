@@ -619,6 +619,26 @@ class UserFields extends QuantumFields {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
 
+        // Add User to Groups
+        if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] !== fusion_get_userdata('user_id')) {
+            if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
+                $lookup = stripinput($_GET['lookup']);
+                $user_group = stripinput($_POST['user_group']);
+                if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->userData['user_groups'])) {
+                    $userdata = [
+                        'user_groups' => $this->userData['user_groups'].".".$user_group,
+                        'user_id'     => $lookup
+                    ];
+                    dbquery_insert(DB_USERS, $userdata, 'update');
+                }
+                if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
+                    redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->userData['user_id']);
+                } else {
+                    redirect(BASEDIR."profile.php?lookup=".$lookup);
+                }
+            }
+        }
+
         $this->info['section'] = $this->getProfileSections();
         $this->info['user_id'] = $this->userData['user_id'];
         $this->info['user_name'] = $this->userData['user_name'];
@@ -720,7 +740,37 @@ class UserFields extends QuantumFields {
 
             if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->userData['user_id'] != '1') {
 
-                $this->info['admin'] = self::renderAdminOptions();
+                $groups_cache = cache_groups();
+                $user_groups_opts = [];
+                $this->info['user_admin'] = array(
+                    'user_edit_title'     => $locale['u069'],
+                    'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id'],
+                    'user_ban_title'      => $locale['u070'],
+                    'user_ban_link'       => ADMIN."members.php".$aidlink."&amp;action=1&amp;lookup=".$this->userData['user_id'],
+                    'user_suspend_title'  => $locale['u071'],
+                    'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->userData['user_id'],
+                    'user_delete_title'   => $locale['u072'],
+                    'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id'],
+                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\""
+                );
+                if (count($groups_cache) > 0) {
+                    foreach ($groups_cache as $group) {
+                        if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
+                            $user_groups_opts[$group['group_id']] = $group['group_name'];
+                        }
+                    }
+                    if (iADMIN && checkrights("UG") && !empty($user_groups_opts)) {
+                        $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
+                        if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
+                            $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
+                        }
+                        $this->info['group_admin']['ug_openform'] = openform("admin_grp_form", "post", $submit_link);
+                        $this->info['group_admin']['ug_closeform'] = closeform();
+                        $this->info['group_admin']['ug_title'] = $locale['u061'];
+                        $this->info['group_admin']['ug_dropdown_input'] = form_select("user_group", '', "", ["options" => $user_groups_opts, "width" => "100%", "inner_width" => "100%", "inline" => FALSE, 'class' => 'm-0']);
+                        $this->info['group_admin']['ug_button'] = form_button("add_to_group", $locale['u059'], $locale['u059']);
+                    }
+                }
 
                 $this->info['buttons'][] = "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id']."'>".$locale['u054']."</a>\n";
 
@@ -747,69 +797,6 @@ class UserFields extends QuantumFields {
         return $html;
     }
 
-    private function renderAdminOptions() {
-        $userdata = fusion_get_userdata();
-        $aidlink = fusion_get_aidlink();
-        $locale = fusion_get_locale();
-        $groups_cache = cache_groups();
-        $user_groups_opts = [];
-
-        if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] != $userdata['user_id']) {
-            if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
-                if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)",
-                    $this->userData['user_groups'])
-                ) {
-                    dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
-                }
-
-                if (isset($_GET['step']) && $_GET['step'] == "view") {
-                    redirect(ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']);
-                } else {
-                    redirect(BASEDIR."profile.php?lookup=".$_GET['lookup']);
-                }
-            }
-        }
-
-        // drop this and output as array
-
-        $html = "";
-        $html .= "<div class='row'>\n";
-        $html .= "<div class='col-xs-12 col-sm-3'>\n";
-        $html .= form_para($locale['u058'], "admin_options");
-        $html .= "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-        $html .= "<div class='well text-center'>\n";
-        $html .= "<div class='btn-group'>\n<!--profile_admin_options-->\n";
-        $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id']."'>".$locale['u069']."</a>\n";
-        $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;user_id=".$this->userData['user_id']."'>".$locale['u070']."</a>\n";
-        $html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;user_id=".$this->userData['user_id']."'>".$locale['u071']."</a>\n";
-        $html .= "<a class='btn btn-danger' href='".ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id']."' onclick=\"return confirm('".$locale['u073']."');\">".$locale['u072']."</a>\n";
-        $html .= "</div>\n";
-        if (count($groups_cache) > 0) {
-            foreach ($groups_cache as $group) {
-                if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
-                    $user_groups_opts[$group['group_id']] = $group['group_name'];
-                }
-            }
-
-            if (iADMIN && checkrights("UG") && $user_groups_opts) {
-                $submit_link = BASEDIR."profile.php?lookup=".$this->userData['user_id'];
-                if (isset($_GET['step']) && $_GET['step'] == "view") {
-                    $submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
-                }
-
-                $html .= openform("admin_form", "post", $submit_link, ['class' => 'm-t-15']);
-                $html .= '<div class="row"><div class="col-xs-12 col-sm-10">';
-                $html .= form_select("user_group", $locale['u061'], "", ["options" => $user_groups_opts, "inline" => TRUE, "class" => "m-b-10"]);
-                $html .= '</div><div class="col-xs-12 col-sm-2">';
-                $html .= form_button("add_to_group", $locale['u059'], $locale['u059']);
-                $html .= '</div></div>';
-                $html .= closeform();
-            }
-        }
-        $html .= "</div>\n</div>\n</div>\n";
-
-        return $html;
-    }
 
     /**
      * Get User Data of the current page.

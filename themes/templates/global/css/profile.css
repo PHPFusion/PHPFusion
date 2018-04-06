@@ -1,56 +1,6 @@
-.profile-header-right {
-    border-left: 1px solid #ddd;
-    padding-left: 35px;
-}
-.profile_text {
-    color: rgb(0, 0, 0);
-}
-
-.profile_link_nav > li > a {
-    font-size: 110%;
-    padding-bottom: 5px;
-    display: inline-block;
-}
-
-.profile_link_nav .active {
-    font-weight: 600;
-}
-
-.nav-tabs > li > a,
-.nav-tabs > li > a:hover,
-.nav-tabs > li > a:focus,
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    background: transparent;
-    border: 0;
-}
-
-.nav-tabs > li > a {
-    color: #8394A8;
-}
-
-.nav-tabs > li > a:hover,
-.nav-tabs > li > a:focus {
-    color: rgb(0, 0, 0);
-    border-bottom: 3px solid rgba(0, 0, 0, .2);
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    border-bottom: 3px solid #11ACEC;
-    color: #11ACEC;
-}
-
-.list-group-item {
-    box-shadow: none;
-}
-
 .social-icons {
     display: inline;
 }
-
 .social-icons > img {
     max-width: 25px;
 }

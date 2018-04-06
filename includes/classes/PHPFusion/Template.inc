@@ -32,6 +32,7 @@ class Template {
     private $block_source = [];
     private $tag = [];
     private static $key = '';
+    private static $locale_list = array();
 
     /**
      * @param $key
@@ -61,7 +62,7 @@ class Template {
      */
     public function set_template($template_src) {
         ob_start();
-        include $template_src;
+        @include $template_src;
         $this->template = ob_get_clean();
     }
 
@@ -110,6 +111,27 @@ class Template {
     }
 
     /**
+     * Recursively parse array into an array
+     *
+     * @param $array
+     *
+     * @return array
+     */
+    private function assign_template_locales($array) {
+        if (!empty($array)) {
+            foreach ($array as $key => $value) {
+                if (is_array($value)) {
+                    self::$locale_list = array_merge(self::$locale_list, $this->assign_template_locales($value));
+                } else {
+                    self::$locale_list["{[$key]}"] = $value ? nl2br($value) : "";
+                }
+            }
+        }
+
+        return (array)self::$locale_list;
+    }
+
+    /**
      * Renders the output
      * Any unused blocks will not be parsed and deleted. This is useful to remove a div wrapper if condition fails.
      *
@@ -120,12 +142,8 @@ class Template {
 
         // Locale replacements
         if (!empty($this->locale)) {
-            $locale_list = array();
-            foreach ($this->locale as $key => $value) {
-                $locale_list["{[$key]}"] = nl2br($value);
-            }
-            if (!empty($locale_list)) {
-                $this->template = strtr($this->template, $locale_list);
+            if ($this->assign_template_locales($this->locale)) {
+                $this->template = strtr($this->template, self::$locale_list);
             }
         }
 
