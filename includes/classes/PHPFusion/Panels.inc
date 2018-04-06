@@ -56,6 +56,7 @@ class Panels {
                 self::cachePanels();
             }
         }
+
         if ($panel_id) {
             self::$panel_id = 1;
         }
@@ -69,12 +70,12 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-
         $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
         $param = [
             ':panel_status' => 1,
         ];
         $p_result = dbquery($panel_query, $param);
+
         if (dbrows($p_result)) {
             $panel_side = 0;
             $panel_order = 0;
@@ -231,10 +232,12 @@ class Panels {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
 
-        $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
-            global $filepath;
-            $site['path'] = $filepath;
+            $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+            $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+            $site['path'] = $file_path;
+        } else {
+            $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         }
 
         // Add admin message
@@ -406,13 +409,15 @@ class Panels {
         if (is_array($exclude_list)) {
             if (fusion_get_settings('site_seo')) {
                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
-                $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
-                $script_url = !empty($params) ? explode("/", $file_path) : explode("/", $_SERVER['PHP_SELF']);
+                $file_path = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $script_url = explode("/", $file_path);
             } else {
                 $script_url = explode("/", $_SERVER['PHP_SELF']);
             }
+
             $url_count = count($script_url);
-            $base_url_count = substr_count(BASEDIR, "/") + 1;
+            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
+
             $match_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;
