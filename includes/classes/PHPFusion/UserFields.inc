@@ -413,7 +413,9 @@ class UserFields extends QuantumFields {
                 '{%eula%}'                      => $this->info['terms'],
                 '{%post_button%}'               => $this->info['button'],
                 '{%close_form%}'                => $this->info['closeform'],
-                '{%tab_footer%}'                => isset($tab_title) ? closetab() : ''
+                '{%tab_footer%}'                => isset($tab_title) ? closetab() : '',
+                '{%opentable%}'                 => fusion_get_function('opentable', ''),
+                '{%closetable%}'                => fusion_get_function('closetable')
             ]
         );
     }
@@ -719,14 +721,14 @@ class UserFields extends QuantumFields {
         $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
         $user_groups = array_filter($user_groups);
-        $group_info = array();
+        $group_info = [];
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
                 if ($group_name = getgroupname($user_groups[$i])) {
-                    $group_info[] = array(
+                    $group_info[] = [
                         'group_url'  => BASEDIR."profile.php?group_id=".$user_groups[$i],
                         'group_name' => $group_name
-                    );
+                    ];
                 }
             }
             $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
@@ -742,7 +744,7 @@ class UserFields extends QuantumFields {
 
                 $groups_cache = cache_groups();
                 $user_groups_opts = [];
-                $this->info['user_admin'] = array(
+                $this->info['user_admin'] = [
                     'user_edit_title'     => $locale['u069'],
                     'user_edit_link'      => ADMIN."members.php".$aidlink."&amp;ref=edit&amp;lookup=".$this->userData['user_id'],
                     'user_ban_title'      => $locale['u070'],
@@ -752,7 +754,7 @@ class UserFields extends QuantumFields {
                     'user_delete_title'   => $locale['u072'],
                     'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id'],
                     'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\""
-                );
+                ];
                 if (count($groups_cache) > 0) {
                     foreach ($groups_cache as $group) {
                         if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {

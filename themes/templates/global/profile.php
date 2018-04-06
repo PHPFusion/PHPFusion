@@ -69,6 +69,7 @@ if (!function_exists('display_profile_form')) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
         ?>
         <!--HTML-->
+        {%opentable%}
         {%tab_header%}
         <!--editprofile_pre_idx-->
         <div id='profile_form' class='row m-t-20'>
@@ -91,6 +92,7 @@ if (!function_exists('display_profile_form')) {
         </div>
         <!--editprofile_sub_idx-->
         {%tab_footer%}
+        {%closetable%}
         <!--//HTML-->
         <?php
     }
@@ -107,11 +109,20 @@ if (!function_exists('display_profile_form')) {
  */
 if (!function_exists('display_user_profile')) {
     function display_user_profile($info) {
+        $locale = fusion_get_locale();
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
 
         $tpl = \PHPFusion\Template::getInstance('user_profile');
         $tpl->set_template(__DIR__.'/tpl/user_profile.html');
         $tpl->set_locale(fusion_get_locale());
+
+        $tpl->set_tag('opentable', fusion_get_function('opentable', ''));
+        $tpl->set_tag('closetable', fusion_get_function('closetable'));
+
+        $user_name = '';
+        $user_avatar = '';
+        $user_level = '';
+        $basic_info = '';
 
         // Basic User Information
         if (!empty($info['core_field'])) {
@@ -120,12 +131,12 @@ if (!function_exists('display_user_profile')) {
             foreach ($info['core_field'] as $field_id => $field_data) {
                 // Sets data to core field block
                 $tpl->set_block($field_id, $field_data);
-                $skip = array(
+                $skip = [
                     'profile_user_avatar',
                     'profile_user_name',
                     'profile_user_level',
                     'profile_user_group'
-                );
+                ];
                 if (!in_array($field_id, $skip)) {
                     $tpl->set_block('user_core_fields', $field_data);
                 }
@@ -173,18 +184,18 @@ if (!function_exists('display_user_profile')) {
                                 $tpl->set_block('social_icons', $_fields);
                             } else {
                                 $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
-                                $tpl2->set_block($block_type, array(
+                                $tpl2->set_block($block_type, [
                                     'id'    => $_id,
                                     'title' => $_fields['title'],
                                     'value' => $_fields['value']
-                                ));
+                                ]);
                             }
                         }
                     }
                     if (!empty($categoryData['title'])) {
-                        $tpl2->set_block('user_fields_cat', array('category_title' => $categoryData['title']));
+                        $tpl2->set_block('user_fields_cat', ['category_title' => $categoryData['title']]);
                     }
-                    $tpl->set_block('fields_block', array("fields" => $tpl2->get_output()));
+                    $tpl->set_block('fields_block', ["fields" => $tpl2->get_output()]);
                 }
             }
         } else {

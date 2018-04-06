@@ -1734,3 +1734,7 @@ blockquote {
     border-radius: 3px;
     padding: 3px 10px;
 }
+
+.maintenance {
+    height: 100vh;
+}
