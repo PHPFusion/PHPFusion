@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 class PrivateMessages {
@@ -41,6 +42,7 @@ class PrivateMessages {
         }
 
         $this->setInbox();
+
         if ($_GET['folder'] == "options") {
             $this->display_settings();
         } else {
@@ -50,23 +52,28 @@ class PrivateMessages {
             set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
 
             $query = [
-                "outbox"  => [$this->info['outbox_total'], "message_folder='1'"],
-                "inbox"   => [$this->info['inbox_total'], "message_folder='0'"],
-                "archive" => [$this->info['archive_total'], "message_folder='2'"],
+                "inbox"   => array($this->info['inbox_total'], "message_folder='0'",),
+                "outbox"  => array($this->info['outbox_total'], "message_folder='1'"),
+                "archive" => array($this->info['archive_total'], "message_folder='2'"),
             ];
+            $totals = array(
+                'inbox'   => $this->info['inbox_count'],
+                'outbox'  => $this->info['outbox_count'],
+                'archive' => $this->info['archive_count']
+            );
 
-            if ($query[$_GET['folder']][0] > 0) {
-
+            if ($totals[$_GET['folder']] > 0) {
                 // Get messages
-                $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, max(m.message_id) as last_message
+                $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, max(m.message_id) AS last_message
                     FROM ".DB_MESSAGES." m
                     INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-                    WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
-                    group by message_id
+                    WHERE message_to='".$userdata['user_id']."' AND ".$query[$_GET['folder']][1]."
+                    GROUP BY message_id
                     ORDER BY m.message_datestamp DESC
                 ");
 
                 $this->info['max_rows'] = dbrows($result);
+
                 if ($this->info['max_rows']) {
 
                     while ($data = dbarray($result)) {
@@ -252,6 +259,7 @@ class PrivateMessages {
         }
     }
 
+    // Get the counts.
     private function setInbox() {
         $userdata = fusion_get_userdata();
         /**
@@ -282,9 +290,16 @@ class PrivateMessages {
         if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
-        $in_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_read=:mread AND message_folder=:folder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mread' => '0', ':folder' => '0']);
-        $out_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:folder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':folder' => '1']);
-        $arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:folder AND message_read=:mread", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mread' => '0', ':folder' => '2']);
+
+        $unread_inbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_read=0 AND message_folder=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+        $total_inbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+
+        $unread_outbox = dbcount("(message_id)", DB_MESSAGES, "message_to=:mto AND message_folder=1 AND message_read=0", [':mto' => $userdata['user_id']]);
+        $total_outbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=1", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+
+        $unread_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2 AND message_read=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+        $total_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+
         $this->info = [
             'folders'       => [
                 'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402'], 'icon' => 'fa fa-inbox'],
@@ -292,9 +307,12 @@ class PrivateMessages {
                 'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404'], 'icon' => 'fa fa-archive'],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425'], 'icon' => 'fa fa-cog'],
             ],
-            'inbox_total'   => dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:mfolder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mfolder' => '0'])."/".$in_read,
-            'outbox_total'  => dbcount("(message_id)", DB_MESSAGES, "message_from=:mfrom AND message_folder=:mfolder", [':mfrom' => $userdata['user_id'], ':mfolder' => '0'])."/".$out_read,
-            'archive_total' => dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=:mfolder", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id'], ':mfolder' => '2'])."/".$arc_read,
+            'inbox_count'   => intval($total_inbox),
+            'outbox_count'  => intval($total_outbox),
+            'archive_count' => intval($total_arc),
+            'inbox_total'   => $unread_inbox."/".$total_inbox,
+            'outbox_total'  => $unread_outbox."/".$total_outbox,
+            'archive_total' => $unread_arc."/".$total_arc,
             'button'        => [
                 'new'     => [
                     'link' => BASEDIR."messages.php?msg_send=new",
@@ -302,7 +320,7 @@ class PrivateMessages {
                 ],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'name' => $this->locale['425']],
             ],
-            'actions_form'  => "",
+            'actions_form'  => '',
         ];
         add_to_title($this->locale['global_200'].$this->locale['400']);
         add_to_meta("description", $this->locale['400']);
@@ -603,7 +621,7 @@ class PrivateMessages {
                     WHERE u.user_id=:userid GROUP BY u.user_id", [':userid' => $to]
                 );
 
-                if (dbrows($result) > 0) {
+                if (dbrows($result)) {
                     $data = dbarray($result);
                     $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $from]);
                     if (dbrows($result2)) {
@@ -658,15 +676,12 @@ class PrivateMessages {
                                     if (dbrows($template_result)) {
                                         $template_data = dbarray($template_result);
                                         if ($template_data['template_active'] == "1") {
-                                            sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'],
-                                                "", $data['user_email']);
+                                            sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
                                         } else {
-                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"),
-                                                fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                            sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
                                         }
                                     } else {
-                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"),
-                                            fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
+                                        sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $locale['625'], $data['user_name'].$message_content);
                                     }
                                 }
                             } else {
@@ -707,7 +722,7 @@ class PrivateMessages {
         } else {
             $result = NULL;
             if ($to <= USER_LEVEL_MEMBER && $to >= USER_LEVEL_SUPER_ADMIN) { // -101, -102, -103 only
-                $result = dbquery("SELECT user_id from ".DB_USERS." WHERE user_level <=:level AND user_status=:status", [':level' => $to, ':status' => '0']);
+                $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_level <=:level AND user_status=:status", [':level' => $to, ':status' => '0']);
             } else {
                 $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)." AND user_status='0'");
             }
