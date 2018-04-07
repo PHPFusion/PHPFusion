@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/deviantart.svg' alt='DeviantArt'/>";
+$icon = "<img src='".IMAGES."user_fields/social/deviantart.svg' title='DeviantArt' alt='DeviantArt'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -37,11 +37,11 @@ if ($profile_method == "input") {
         $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "http://".$field_value.".deviantart.com" : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_da_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
+    $user_fields = [
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
         'title' => $locale['uf_da'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

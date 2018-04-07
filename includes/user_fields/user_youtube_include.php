@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/youtube.svg' alt='YouTube'/>";
+$icon = "<img src='".IMAGES."user_fields/social/youtube.svg' title='YouTube' alt='YouTube'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -37,11 +37,11 @@ if ($profile_method == "input") {
         $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.youtube.com/user/".$field_value : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? '' : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? '' : "rel='nofollow' ")."target='_blank'>".$locale['uf_youtube']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
+    $user_fields = [
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
         'title' => $locale['uf_youtube'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

@@ -23,6 +23,8 @@ if ($profile_method == "input") {
     $options += ['inline' => TRUE, "type" => "number", 'max_length' => 20];
     $user_fields = form_text('user_phone_home', $locale['uf_phone_home'], $field_value, $options);
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $locale['uf_phone_home'], 'value' => $field_value ?: ""];
-
+    $user_fields = [
+        'title' => $locale['uf_phone_home'],
+        'value' => $field_value ?: ''
+    ];
 }

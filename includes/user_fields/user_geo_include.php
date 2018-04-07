@@ -31,5 +31,8 @@ if ($profile_method == "input") {
     } else {
         $field_value = $locale['na'];
     }
-    $user_fields = ['title' => $locale['uf_geo'], 'value' => $field_value];
+    $user_fields = [
+        'title' => $locale['uf_geo'],
+        'value' => $field_value]
+    ;
 }

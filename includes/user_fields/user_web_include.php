@@ -38,6 +38,6 @@ if ($profile_method == "input") {
     }
     $user_fields = [
         'title' => $locale['uf_web'],
-        'value' => $field_value ?: ""
+        'value' => $field_value ?: ''
     ];
 }

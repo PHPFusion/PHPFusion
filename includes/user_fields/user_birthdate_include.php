@@ -50,6 +50,9 @@ if ($profile_method == "input") {
             'value' => showdate($fmt[(in_array(fusion_get_locale('datepicker', LOCALE.LOCALESET.'global.php'), $fmt_lg) ? 0 : 1)], $lastday)
         ];
     } else {
-        $user_fields = ['title' => $locale['uf_birthdate'], 'value' => $locale['na']];
+        $user_fields = [
+            'title' => $locale['uf_birthdate'],
+            'value' => $locale['na']
+        ];
     }
 }

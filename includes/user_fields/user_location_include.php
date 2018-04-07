@@ -26,5 +26,8 @@ if ($profile_method == "input") {
 
     //Display in profile
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $locale['uf_location'], 'value' => $field_value ?: ""];
+    $user_fields = [
+        'title' => $locale['uf_location'],
+        'value' => $field_value ?: ''
+    ];
 }

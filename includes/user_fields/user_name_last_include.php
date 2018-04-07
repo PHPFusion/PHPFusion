@@ -23,5 +23,8 @@ if ($profile_method == "input") {
     $options += ['inline' => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_name_last', $locale['uf_name_last'], $field_value, $options);
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $locale['uf_name_last'], 'value' => $field_value ?: ""];
+    $user_fields = [
+        'title' => $locale['uf_name_last'],
+        'value' => $field_value ?: ''
+    ];
 }

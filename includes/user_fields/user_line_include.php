@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/line.svg' alt='Line'/>";
+$icon = "<img src='".IMAGES."user_fields/social/line.svg' title='Line' alt='Line'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -34,5 +34,9 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_line', $locale['uf_line'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $icon.$locale['uf_line'], 'value' => $field_value ?: ''];
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $icon.$locale['uf_line'],
+        'value' => $field_value ?: ''
+    ];
 }

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/facebook.svg' alt='Facebook'/>";
+$icon = "<img src='".IMAGES."user_fields/social/facebook.svg' title='Facebook' alt='Facebook'/>";
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_facebook', $locale['uf_facebook'], $field_value, [

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/googleplus.svg' alt='Google Plus'/>";
+$icon = "<img src='".IMAGES."user_fields/social/googleplus.svg' title='Google Plus' alt='Google Plus'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -37,11 +37,11 @@ if ($profile_method == "input") {
         $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://plus.google.com/+".$field_value : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? '' : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_googleplus_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
+    $user_fields = [
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
         'title' => $locale['uf_googleplus'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

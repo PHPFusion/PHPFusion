@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 // Display user field input
-$icon = "<img src='".IMAGES."user_fields/social/skype.svg' alt='Skype'/>";
+$icon = "<img src='".IMAGES."user_fields/social/skype.svg' title='Skype' alt='Skype'/>";
 if ($profile_method == 'input') {
     $options = [
             'inline'           => TRUE,
@@ -35,5 +35,9 @@ if ($profile_method == 'input') {
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
     // Display user field input
 } else if ($profile_method == 'display') {
-    $user_fields = ['title' => $icon.$locale['uf_skype'], 'value' => $field_value ?: ""];
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $icon.$locale['uf_skype'],
+        'value' => $field_value ?: ''
+    ];
 }

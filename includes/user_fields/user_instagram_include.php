@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/instagram.svg' alt='Instagram'/>";
+$icon = "<img src='".IMAGES."user_fields/social/instagram.svg' title='Instagram' alt='Instagram'/>";
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_instagram', $locale['uf_instagram'], $field_value, [
@@ -35,11 +35,11 @@ if ($profile_method == "input") {
         $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.instagram.com/".$field_value : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_instagram_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
+    $user_fields = [
         'link'  => $link,
         'icon'  => $icon,
         'type'  => 'social',
         'title' => $locale['uf_instagram'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

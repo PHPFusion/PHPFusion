@@ -27,7 +27,7 @@ if ($profile_method == "input") {
         if (infusion_exists('forum')) {
             $user_fields .= "--";
         } else {
-            $user_fields .= "<div class='alert alert-warning'><i class='fas fa-attention-triangle m-r-10'></i> ".$locale['uf_forum-stat_na']."</div>\n";
+            $user_fields .= "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle m-r-10'></i> ".$locale['uf_forum-stat_na']."</div>\n";
         }
         $user_fields .= "</div>\n</div>\n<br/>";
     }

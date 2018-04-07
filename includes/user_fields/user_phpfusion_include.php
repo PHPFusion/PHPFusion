@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."php-fusion-icon.png' alt='PHP Fusion'/>";
+$icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHP Fusion'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [
@@ -32,5 +32,9 @@ if ($profile_method == "input") {
     $user_fields = form_text('user_phpfusion', $locale['uf_phpfusion'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
-    $user_fields = ['title' => $icon.$locale['uf_phpfusion'], 'value' => $field_value ?: ''];
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $icon.$locale['uf_phpfusion'],
+        'value' => $field_value ?: ''
+    ];
 }

@@ -67,7 +67,10 @@ if ($profile_method == "input") {
             $ab = openform('delete_me', 'post', $action_url);
             $ab .= form_button('delete_me', $locale['uf_delete_del'], "delete_me");
             $ab .= closeform();
-            $user_fields = ['title' => $locale['uf_delete'], 'value' => $ab];
+            $user_fields = [
+                'title' => $locale['uf_delete'],
+                'value' => $ab
+            ];
         }
     }
 }

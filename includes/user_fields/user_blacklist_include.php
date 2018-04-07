@@ -41,24 +41,24 @@ if (!function_exists('show_blacklist')) {
         }
 
         add_to_jquery("
-    $('.unblock').bind('click', function(e) {
-    var user_id = $(this).val();
-    $.ajax({
-        type: 'POST',
-        url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
-        data: { user_id : user_id },
-        dataType: 'html',
-        success: function(data) {
-            alert(data);
-            $('#'+user_id+'-user-list').addClass('display-none');
-            $('#ignore-message').html(data).removeClass('display-none');
-        },
-        error: function() {
-            alert('".$locale['uf_blacklist_desc']."');
-        }
-        });
-    });
-    ");
+            $('.unblock').bind('click', function(e) {
+            var user_id = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
+                data: { user_id : user_id },
+                dataType: 'html',
+                success: function(data) {
+                    alert(data);
+                    $('#'+user_id+'-user-list').addClass('display-none');
+                    $('#ignore-message').html(data).removeClass('display-none');
+                },
+                error: function() {
+                    alert('".$locale['uf_blacklist_desc']."');
+                }
+                });
+            });
+        ");
     }
 }
 

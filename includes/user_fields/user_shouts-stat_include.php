@@ -26,7 +26,7 @@ if ($profile_method == "input") {
         if (infusion_exists('shoutbox_panel')) {
             $user_fields .= "--";
         } else {
-            $user_fields .= "<div class='alert alert-warning'><strong><i class='fas fa-exclamation-triangle m-r-10'></i>".$locale['uf_shouts-stat_na']."</strong></div>";
+            $user_fields .= "<div class='alert alert-warning'><strong><i class='fa fa-exclamation-triangle m-r-10'></i>".$locale['uf_shouts-stat_na']."</strong></div>";
         }
         $user_fields .= "</div>\n</div>\n";
     }
