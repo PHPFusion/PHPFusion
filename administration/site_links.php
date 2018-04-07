@@ -870,7 +870,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             echo "<td colspan='10' class='text-center'>".$this->locale['SL_0062']."</td>\n";
             echo "</tr>\n";
 
-            redirect(FUSION_SELF.$this->aidlink);
+            //redirect(FUSION_SELF.$this->aidlink);
         }
         echo "</tbody>\n";
         echo "</table>\n</div>";
