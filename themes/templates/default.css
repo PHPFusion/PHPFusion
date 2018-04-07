@@ -497,6 +497,10 @@ Grids
     display: table;
 }
 
+.display-table-row {
+    display: table-row;
+}
+
 .display-table-cell {
     display: table-cell;
 }
@@ -734,22 +738,27 @@ a .entypo, a .entypo-social {
 
 .icon-xs {
     font-size: 16px !important;
+    width: 16px;
 }
 
 .icon-sm {
     font-size: 32px !important;
+    width: 32px;
 }
 
 .icon-md {
     font-size: 48px !important;
+    width: 48px;
 }
 
 .icon-lg {
     font-size: 128px !important;
+    width: 128px;
 }
 
 .icon-xl {
     font-size: 256px !important;
+    width: 256px;
 }
 
 /* clearfix */

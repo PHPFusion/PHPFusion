@@ -45,10 +45,10 @@ class PrivateMessages {
 
         if ($_GET['folder'] == "options") {
             $this->display_settings();
+
         } else {
 
             add_to_title($this->locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
-
             set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
 
             $query = [
@@ -64,12 +64,14 @@ class PrivateMessages {
 
             if ($totals[$_GET['folder']] > 0) {
                 // Get messages
-                $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, max(m.message_id) AS last_message
-                    FROM ".DB_MESSAGES." m
-                    INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-                    WHERE message_to='".$userdata['user_id']."' AND ".$query[$_GET['folder']][1]."
-                    GROUP BY message_id
-                    ORDER BY m.message_datestamp DESC
+                $result = dbquery("
+                SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level,
+                max(m.message_id) AS last_message
+                FROM ".DB_MESSAGES." m
+                INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+                WHERE message_to='".$userdata['user_id']."' AND ".$query[$_GET['folder']][1]."
+                GROUP BY message_id
+                ORDER BY m.message_datestamp DESC
                 ");
 
                 $this->info['max_rows'] = dbrows($result);
@@ -81,7 +83,8 @@ class PrivateMessages {
                             'user_id'     => $data['user_id'],
                             'user_name'   => $data['user_name'],
                             'user_status' => $data['user_status'],
-                            'user_avatar' => $data['user_avatar']
+                            'user_avatar' => $data['user_avatar'],
+                            'user_level'  => $data['user_level']
                         ];
                         $data['message'] = [
                             'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
@@ -114,6 +117,7 @@ class PrivateMessages {
             } else if (isset($_POST['mark'])) {
                 $this->mark_pm();
             }
+
             // Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
             ob_start();
             if (isset($_GET['msg_read'])) {
@@ -121,19 +125,20 @@ class PrivateMessages {
                 echo form_hidden('selectedPM', '', $_GET['msg_read']);
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == "archive") {
-                    echo form_button('unarchive_pm', '', 'unarchive_pm', ['icon' => 'fa fa-unlock', 'icon_class' => '']);
+                    echo form_button('unarchive_pm', fusion_get_locale('413'), 'unarchive_pm', array('icon' => 'fa fa-unlock'));
                 } else if ($_GET['folder'] == "inbox") {
-                    echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock', 'icon_class' => '']);
+                    echo form_button('archive_pm', fusion_get_locale('412'), 'archive_pm', array('icon' => 'fa fa-lock'));
                 }
-                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o', 'icon_class' => '']);
+                echo form_button('delete_pm', fusion_get_locale('416'), 'delete_pm', array('icon' => 'fa fa-trash-o', 'class' => 'btn-danger'));
                 echo "</div>\n";
                 echo closeform();
             } else {
+
                 echo openform('actionform', 'post', FUSION_REQUEST);
                 ?>
                 <!-- pm_idx -->
                 <div class="dropdown display-inline-block m-r-10">
-                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i> <span class="caret"></span></a>
+                    <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $this->locale['418'] ?></a></li>
                         <li><a id="check_unread_pm" data-action="check" class="pointer"><?php echo $this->locale['415'] ?></a></li>
@@ -144,17 +149,17 @@ class PrivateMessages {
                 echo form_hidden('selectedPM', '', '');
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
                 if ($_GET['folder'] == 'archive') {
-                    echo form_button('unarchive_pm', '', 'unarchive_pm', ['icon' => 'fa fa-unlock', 'icon_class' => '']);
+                    echo form_button('unarchive_pm', fusion_get_locale('413'), 'unarchive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock'));
                 } else {
                     if ($_GET['folder'] !== 'outbox') {
-                        echo form_button('archive_pm', '', 'archive_pm', ['icon' => 'fa fa-lock', 'icon_class' => '']);
+                        echo form_button('archive_pm', fusion_get_locale('412'), 'archive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock'));
                     }
                 }
-                echo form_button('delete_pm', '', 'delete_pm', ['icon' => 'fa fa-trash-o', 'icon_class' => '']);
+                echo form_button('delete_pm', fusion_get_locale('416'), 'delete_pm', array('class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o'));
                 echo "</div>\n";
                 ?>
                 <div class="dropdown display-inline-block m-r-10">
-                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span class="caret"></span></a>
+                    <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle"><?php echo $this->locale['444'] ?>&hellip; <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><?php echo form_button('mark', $this->locale['493'], 'mark_all', ['input_id' => 'mark_all', 'class' => 'btn-link btn-block align-left']) ?></li>
                         <li><?php echo form_button('mark', $this->locale['494'], 'mark_read', ['input_id' => 'mark_read', 'class' => 'btn-link btn-block align-left']) ?></li>
@@ -243,8 +248,9 @@ class PrivateMessages {
                     });
                 ");
             }
-            $this->info['actions_form'] = ob_get_contents();
-            ob_end_clean();
+
+            $this->info['actions_form'] = ob_get_clean();
+
             // The mail forms
             if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
                 if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
@@ -315,8 +321,8 @@ class PrivateMessages {
             'archive_total' => $unread_arc."/".$total_arc,
             'button'        => [
                 'new'     => [
-                    'link' => BASEDIR."messages.php?msg_send=new",
-                    'name' => $this->locale['401']
+                    'link'  => BASEDIR."messages.php?msg_send=new",
+                    'title' => $this->locale['401']
                 ],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'name' => $this->locale['425']],
             ],
