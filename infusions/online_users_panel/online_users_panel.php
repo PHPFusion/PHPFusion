@@ -40,7 +40,7 @@ while ($data = dbarray($result)) {
     }
 }
 $tpl->set_tag('guest', $guests);
-$tpl->set_tag('members', number_format(count($guests), 0));
+$tpl->set_tag('members', number_format(count($members), 0));
 $tpl->set_tag('total_members', number_format(dbcount("(user_id)", DB_USERS, "user_status<='1'"), 0));
 if (!empty($members)) {
     $profile_link = implode("<br/>\n", array_map(function ($members) {
