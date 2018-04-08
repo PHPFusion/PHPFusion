@@ -90,9 +90,10 @@ if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
     if ($url['query']) {
         parse_str($url['query'], $fusion_query); // this is original.
     }
-    $prefix = $url ? '?' : '';
+    $prefix = !empty($fusion_query ? '?' : '');
     $site_path = str_replace($settings['site_path'], '', $url['path']);
-    redirect($settings['siteurl'].$site_path.$prefix.http_build_query($fusion_query, 'flags_', '&amp;'));
+    $site_path = $settings['siteurl'].$site_path.$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
+    redirect($site_path);
 }
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
