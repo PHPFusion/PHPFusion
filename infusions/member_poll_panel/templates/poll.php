@@ -22,34 +22,28 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_poll')) {
     function render_poll($info) {
         if (!empty($info['poll_table'])){
-            openside($info['poll_tablename']);
-            echo "<div class='row m-t-20'>\n";
-            foreach ($info['poll_table'] as $key => $inf) {
-                echo "<div class='col-xs-12 col-sm-12'>\n";
-                    echo "<div class='panel panel-default'>\n";
-                        echo "<div class='panel-heading text-center'>\n";
-                            echo $inf['poll_title'];
-                        echo "</div>\n";
-
-                        echo "<div class='panel-body'>\n";
-                            foreach ($inf['poll_option'] as $inf_opt) {
-                                echo $inf_opt;
-                            }
-                        echo "</div>\n";
-
-                        echo "<div class='panel-footer text-center'>\n";
-                            foreach ($inf['poll_foot'] as $inf_opt) {
-                               echo "<p class='text-center m-b-0'>".$inf_opt."</p>\n";
-                            }
-                        echo "</div>\n";
-                    echo "</div>\n";
-                echo "</div>\n";
+            $tpl = \PHPFusion\Template::getInstance('member_poll');
+            $tpl->set_template(__DIR__.'/poll.html');
+            $tpl->set_locale(fusion_get_locale());
+            $tpl->set_tag('openside', fusion_get_function('openside', $info['poll_tablename']));
+            $tpl->set_tag('closeside', fusion_get_function('closeside'));
+            if (!empty($info['poll_arch'])) {
+                $tpl->set_block('poll_arch', array(
+                    'content' => $info['poll_arch']
+                ));
+            }
+            foreach ($info['poll_table'] as $key => $poll) {
+                if (!empty($poll['poll_option'])) {
+                    $poll['poll_option'] = implode('', $poll['poll_option']);
+                }
+                if (!empty($poll['poll_foot'])) {
+                    $poll['poll_foot'] = "<div class='text-center'>\n".implode("</div>\n<div class='text-center'>\n", $poll['poll_foot'])."</div>\n";
+                }
+                $tpl->set_block('polls', $poll);
             }
 
-            echo !empty($info['poll_arch']) ? '<div class="text-center">'.$info['poll_arch'].'</div>' : "";
+            echo $tpl->get_output();
 
-            echo "</div>\n";
-            closeside();
         }
     }
 }
