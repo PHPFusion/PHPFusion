@@ -186,6 +186,7 @@ if (!function_exists('display_user_profile')) {
                                 $block_type = ($_fields['title'] ? 'user_fields_inline' : 'user_fields');
                                 $tpl2->set_block($block_type, [
                                     'id'    => $_id,
+                                    'icon'  => !empty($_fields['icon']) ? $_fields['icon'] : '',
                                     'title' => $_fields['title'],
                                     'value' => $_fields['value']
                                 ]);
