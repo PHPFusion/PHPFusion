@@ -39,7 +39,7 @@ if ($profile_method == "input") {
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
-        'title' => $icon.$locale['uf_vk'],
+        'title' => $locale['uf_vk'],
         'value' => $field_value ?: ''
     ];
 }

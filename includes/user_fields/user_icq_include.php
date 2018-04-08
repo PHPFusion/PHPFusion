@@ -37,7 +37,7 @@ if ($profile_method == "input") {
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_icq'],
+        'title' => $locale['uf_icq'],
         'value' => $field_value ?: ''
     ];
 }

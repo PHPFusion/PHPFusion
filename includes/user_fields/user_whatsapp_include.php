@@ -35,7 +35,7 @@ if ($profile_method == "input") {
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_whatsapp'],
+        'title' => $locale['uf_whatsapp'],
         'value' => $field_value ?: ''
     ];
 }

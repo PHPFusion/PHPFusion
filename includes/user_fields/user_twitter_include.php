@@ -43,6 +43,7 @@ if ($profile_method == "input") {
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
-        'title' => $locale['uf_twitter'], 'value' => $field_value ?: ''
+        'title' => $locale['uf_twitter'],
+        'value' => $field_value ?: ''
     ];
 }

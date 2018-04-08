@@ -36,7 +36,7 @@ if ($profile_method == "input") {
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_yahoo'],
+        'title' => $locale['uf_yahoo'],
         'value' => $field_value ?: ''
     ];
 }

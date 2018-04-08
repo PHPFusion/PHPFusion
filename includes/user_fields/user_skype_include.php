@@ -37,7 +37,7 @@ if ($profile_method == 'input') {
 } else if ($profile_method == 'display') {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_skype'],
+        'title' => $locale['uf_skype'],
         'value' => $field_value ?: ''
     ];
 }

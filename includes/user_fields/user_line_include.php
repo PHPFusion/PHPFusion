@@ -36,7 +36,7 @@ if ($profile_method == "input") {
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_line'],
+        'title' => $locale['uf_line'],
         'value' => $field_value ?: ''
     ];
 }

@@ -38,7 +38,7 @@ if ($profile_method == "input") {
 } else if ($profile_method == "display") {
     $user_fields = [
         'icon'  => $icon,
-        'title' => $icon.$locale['uf_msn'],
+        'title' => $locale['uf_msn'],
         'value' => hide_email($field_value) ?: ''
     ];
 }

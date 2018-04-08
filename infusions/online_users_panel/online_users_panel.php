@@ -27,7 +27,7 @@ $tpl->set_tag('closeside', fusion_get_function('closeside'));
 
 $result = dbquery("SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status
     FROM ".DB_ONLINE." ton
-    LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id    
+    LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id
 ");
 $guests = 0;
 $members = [];

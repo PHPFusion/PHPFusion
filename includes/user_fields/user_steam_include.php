@@ -48,7 +48,7 @@ if ($profile_method == "input") {
         'icon'  => $icon,
         'link'  => $link,
         'type'  => 'social',
-        'title' => $icon.$locale['uf_steam'],
+        'title' => $locale['uf_steam'],
         'value' => $field_value ?: ''
     ];
 }
