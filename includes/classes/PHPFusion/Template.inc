@@ -34,6 +34,12 @@ class Template {
     private static $key = '';
     private static $locale_list = array();
 
+    private function __construct() {
+    }
+
+    private function __clone() {
+    }
+
     /**
      * @param $key
      *
@@ -42,10 +48,13 @@ class Template {
     public static function getInstance($key = 'Default') {
         if (empty(self::$instance[$key])) {
             self::$instance[$key] = new static();
-            self::$key = $key;
         }
-
+        self::$key = $key;
         return (object)self::$instance[$key];
+    }
+
+    public static function set_key($key) {
+        self::$key = $key;
     }
 
     /**
@@ -55,14 +64,23 @@ class Template {
         return $this->block;
     }
 
+    private static $registered_templates = array();
+
+    public function register_template($template_file_path) {
+        self::$registered_templates[self::$key] = $template_file_path;
+    }
+
     /**
      * Define the instance to read a specific HTML file
      *
-     * @param $template_src     Template File Source
+     * @param $template_file_path     Template File Source
      */
-    public function set_template($template_src) {
+    public function set_template($template_file_path) {
+        if (isset(self::$registered_templates[self::$key])) {
+            $template_file_path = self::$registered_templates[self::$key];
+        }
         ob_start();
-        @include $template_src;
+        @include $template_file_path;
         $this->template = ob_get_clean();
     }
 
