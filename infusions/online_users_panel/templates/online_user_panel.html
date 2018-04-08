@@ -1,0 +1,19 @@
+{%openside%}
+<strong>{[global_011]}</strong> {%guest%}<br/><br/>
+<strong>{[global_012]}</strong> {%members%}<br/><br/>
+<div class="users">
+    {user_link.{
+    {%plink%}
+    }}
+</div>
+<hr/>
+<div class="spacer-xs">
+    <i class="fas fa-users m-r-10"></i><strong>{[global_014]}:</strong> <span class="side">{%total_members%}</span><br/>
+    {unactivated_members.{
+    <i class="fas fa-user-circle m-r-10"></i><a href="{%admin_link%}" class="strong">{[global_015]}</a>:
+    {%total_members%}<br/>
+    }}
+    <i class="fas fa-user m-r-10"></i><strong>{[global_016]}:</strong> <span
+        class="side">{%latest_member_profile_link%}</span>
+</div>
+{%closeside%}
