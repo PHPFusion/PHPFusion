@@ -47,11 +47,12 @@ function showrendertime($queries = TRUE) {
 /**
  * Developer tools only (Translations not Required)
  *
- * @param bool $show_sql_performance
+ * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
+ * @param string $performance_threshold - results that is slower than this will be highlighted
  *
- * @return bool|string
+ * @return string
  */
-function showBenchmark($show_sql_performance = FALSE) {
+function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
         $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
@@ -62,8 +63,9 @@ function showBenchmark($show_sql_performance = FALSE) {
         if (!empty($query_log)) {
             foreach ($query_log as $connectionID => $sql) {
                 $current_time = $sql[0];
-                $modal_body .= "<div class='spacer-xs m-10'>\n";
-                $modal_body .= "<h5><strong>SQL run#$i : ".($sql[0] > .1 ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
+                $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
+                $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
+                $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
                 $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
                 $modal_body .= "<div>\n";
                 $end_sql = end($sql[3]);

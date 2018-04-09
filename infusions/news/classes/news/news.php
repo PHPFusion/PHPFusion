@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\News;
 
 use PHPFusion\BreadCrumbs;
@@ -23,6 +24,9 @@ use PHPFusion\Feedback\Comments;
 abstract class News extends NewsServer {
     protected static $locale = [];
     public $info = [];
+
+    protected static $news_ratings = array();
+    protected static $news_comment_count = array();
 
     protected function __construct() {
     }
@@ -185,29 +189,45 @@ abstract class News extends NewsServer {
         return INFUSIONS.'news/news.php?cat_id='.$news_cat_id;
     }
 
-
-    protected static function rating_comments($id, $type) {
-        $count_db = dbarray(dbquery("SELECT
-                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating, COUNT(rating_item_id) AS count_votes
+    /**
+     * Count the total votes and total sum of ratings in a news item
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    protected static function count_ratings($id) {
+        if (!isset(self::$news_ratings[$id])) {
+            self::$news_ratings[$id] = dbarray(dbquery("SELECT
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS news_sum_rating, COUNT(rating_item_id) AS news_count_votes
                 FROM ".DB_RATINGS."
-                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
+                WHERE rating_item_id='".$id."' AND rating_type='N'
              "));
+        }
 
-        return array('news_sum_rating' => $count_db['sum_rating'], 'news_count_votes' => $count_db['count_votes']);
+        return (array)self::$news_ratings[$id];
     }
 
-    protected static function count_comments($id, $type) {
-        $count_db = dbarray(dbquery("SELECT
+    /**
+     * Count the number of comments in a news item
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    protected static function count_comments($id) {
+        if (!isset(self::$news_comment_count[$id])) {
+            self::$news_comment_count[$id] = dbarray(dbquery("SELECT
                 COUNT(comment_item_id) AS count_comment
                 FROM ".DB_COMMENTS."
-                WHERE comment_item_id='".$id."' AND comment_type='".$type."' AND comment_hidden='0'
+                WHERE comment_item_id='".$id."' AND comment_type='N' AND comment_hidden='0'
              "));
 
-        return $count_db['count_comment'];
-    }
-    //    protected function check_NewsFilter() {
+        }
 
-    //    }
+        return (int)self::$news_comment_count[$id]['count_comment'];
+    }
+
     /**
      * Sql filter between $_GET['type']
      * most commented
@@ -375,7 +395,7 @@ abstract class News extends NewsServer {
             $news_sum_rating = 0;
             $news_count_votes = 0;
             if ($data['news_allow_ratings']) {
-                $ratings = self::rating_comments($data['news_id'], 'N');
+                $ratings = self::count_ratings($data['news_id']);
                 $news_count_votes = $ratings['news_count_votes'];
                 $news_sum_rating = $ratings['news_sum_rating'];
             }
@@ -387,13 +407,13 @@ abstract class News extends NewsServer {
                 "news_url"              => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
                 "news_cat_link"         => ($data['news_cat_id'] ? INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'] : ''),
                 'news_anchor'           => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
-                'news_news'     => $news_news,
-                'news_extended' => $news_extended,
-                'page_count'    => $pagecount,
-                "news_keywords" => $data['news_keywords'],
-                "user_id"       => $data['user_id'],
-                "user_name"     => $data['user_name'],
-                "user_status"   => $data['user_status'],
+                'news_news'             => $news_news,
+                'news_extended'         => $news_extended,
+                'page_count'            => $pagecount,
+                "news_keywords"         => $data['news_keywords'],
+                "user_id"               => $data['user_id'],
+                "user_name"             => $data['user_name'],
+                "user_status"           => $data['user_status'],
                 "user_avatar"           => $data['user_avatar'],
                 'user_level'            => $data['user_level'],
                 "news_date"             => $data['news_datestamp'],
@@ -406,11 +426,11 @@ abstract class News extends NewsServer {
                 "news_image_optimized"  => $imageSource, // optimized image
                 "news_ext"              => $data['news_extended'] ? "y" : "n",
                 "news_reads"            => $data['news_reads'],
-                "news_comments"         => self::count_comments($data['news_id'], 'N'),
+                "news_comments"         => self::count_comments($data['news_id']),
                 'news_sum_rating'       => $news_sum_rating,
                 'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments(self::count_comments($data['news_id'], 'N'), INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments(self::count_comments($data['news_id']), INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
                 "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,
@@ -673,8 +693,7 @@ abstract class News extends NewsServer {
             ob_start();
             require_once INCLUDES."ratings_include.php";
             showratings("N", $item_id, BASEDIR."infusions/news/news.php?readmore=".$item_id);
-            $html = ob_get_contents();
-            ob_end_clean();
+            $html = ob_get_clean();
         }
 
         return (string)$html;
