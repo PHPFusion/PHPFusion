@@ -4,11 +4,14 @@
     <div class="row">
         <div class="col-xs-12 col-sm-2">
             {%user_avatar%}
-            <a class="btn btn-success btn-block spacer-sm" href="#">{[send_message]}</a>
+            {buttons.{
+            <a class="btn btn-success btn-block spacer-sm" href="{%user_pm_link%}">{[send_message]}</a>
+            }}
         </div>
         <div class="col-xs-12 col-sm-10">
             {user_admin.{
             <div class="pull-right btn-group">
+                <a class="btn btn-sm btn-default" href="{%user_susp_link%}">{%user_susp_title%}</a>
                 <a class="btn btn-sm btn-default" href="{%user_edit_link%}">{%user_edit_title%}</a>
                 <a class="btn btn-sm btn-default" href="{%user_ban_link%}">{%user_ban_title%}</a>
                 <a class="btn btn-sm btn-default" href="{%user_suspend_link%}">{%user_suspend_title%}</a>

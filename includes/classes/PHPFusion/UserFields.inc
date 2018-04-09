@@ -738,7 +738,10 @@ class UserFields extends QuantumFields {
 
         if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
-            $this->info['buttons'][] = "<a class='btn btn-default' href='".BASEDIR."messages.php?msg_send=".$this->userData['user_id']."'>".$locale['u043']."</a>\n";
+            $this->info['buttons'] = [
+                'user_pm_title'     => $locale['u043'],
+                'user_pm_link'      => BASEDIR."messages.php?msg_send=".$this->userData['user_id']
+            ];
 
             if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->userData['user_id'] != '1') {
 
@@ -753,7 +756,9 @@ class UserFields extends QuantumFields {
                     'user_suspend_link'   => ADMIN."members.php".$aidlink."&amp;action=3&amp;lookup=".$this->userData['user_id'],
                     'user_delete_title'   => $locale['u072'],
                     'user_delete_link'    => ADMIN."members.php".$aidlink."&amp;ref=delete&amp;lookup=".$this->userData['user_id'],
-                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\""
+                    'user_delete_onclick' => "onclick=\"return confirm('".$locale['u072']."');\"",
+                    'user_susp_title'     => $locale['u054'],
+                    'user_susp_link'      => ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id']
                 ];
                 if (count($groups_cache) > 0) {
                     foreach ($groups_cache as $group) {
@@ -773,9 +778,6 @@ class UserFields extends QuantumFields {
                         $this->info['group_admin']['ug_button'] = form_button("add_to_group", $locale['u059'], $locale['u059']);
                     }
                 }
-
-                $this->info['buttons'][] = "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;ref=log&amp;lookup=".$this->userData['user_id']."'>".$locale['u054']."</a>\n";
-
             }
         }
 

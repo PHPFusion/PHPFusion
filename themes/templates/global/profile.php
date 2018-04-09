@@ -223,8 +223,10 @@ if (!function_exists('display_user_profile')) {
         if (!empty($info['group_admin'])) {
             $tpl->set_block('group_admin', $info['group_admin']);
         }
+        if (!empty($info['buttons'])) {
+            $tpl->set_block('buttons', $info['buttons']);
+        }
 
-        $tpl->set_tag('buttons', (!empty($info['buttons']) ? $info['buttons'] : ''));
         $tpl->set_tag('basic_info', $basic_info);
         $tpl->set_tag('tab_footer', (isset($tab_title) ? closetab() : ''));
         $tpl->set_tag('no_fields', (!empty($info['no_fields']) ? $info['no_fields'] : ''));
