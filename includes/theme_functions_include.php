@@ -74,7 +74,32 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
                     $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
                     foreach ($sql[3] as $id => $debug_backtrace) {
                         $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
-                        $modal_body .= "<code>Query::: ".$debug_backtrace['args'][0].", --- ".implode(', ', $debug_backtrace['args'][1])."</code><br/>";
+                        if (!empty($debug_backtrace['args'][0])) {
+                            $debug_line = $debug_backtrace['args'][0];
+                            if (is_array($debug_backtrace['args'][0])) {
+                                $debug_line = "";
+                                foreach ($debug_backtrace['args'][0] as $line) {
+                                    if (!is_array($line)) {
+                                        $debug_line .= "<br/>".$line;
+                                    }
+                                }
+                            }
+
+                            $debug_param = "";
+                            if (!empty($debug_backtrace['args'][1])) {
+                                if (is_array($debug_backtrace['args'][1])) {
+                                    $debug_param .= "<br/>array(";
+                                    foreach ($debug_backtrace['args'][1] as $key => $value) {
+                                        $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
+                                    }
+                                    $debug_param .= "<br/>);";
+                                } else {
+                                    $debug_param .= $debug_backtrace['args'][1];
+                                }
+                            }
+                            $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
+                        }
+
                     }
                     $modal_body .= "</div>\n";
                 }
