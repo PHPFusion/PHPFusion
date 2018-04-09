@@ -131,25 +131,29 @@ if (!function_exists('set_setting')) {
     }
 }
 
-/**
- * Check whether an infusion is installed or not from the infusions table
- *
- * @param $infusion_folder
- *
- * @return bool
- */
 if (!function_exists('infusion_exists')) {
+    /**
+     * Check whether an infusion is installed or not from the infusions table
+     *
+     * @param $infusion_folder
+     *
+     * @return bool
+     */
     function infusion_exists($infusion_folder) {
-        static $inf_exists_check = [];
-        if (empty($inf_exists_check[$infusion_folder])) {
-            $inf_exists_check[$infusion_folder] = dbcount("(inf_id)", DB_INFUSIONS, 'inf_folder=:folder_name', [':folder_name' => $infusion_folder]) ? TRUE : FALSE;
+        // get the whole thing is faster maybe
+        static $infusions_installed = array();
+        if (empty($infusions_installed)) {
+            $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
+            if (dbrows($result)) {
+                while ($data = dbarray($result)) {
+                    $infusions_installed[$data['inf_folder']] = TRUE;
+                }
+            }
         }
 
-        return (boolean)$inf_exists_check[$infusion_folder];
+        return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
+
     }
-} else {
-    print_p('You are calling the infusions_include.php file twice. Please report where by copying the following:');
-    print_p(debug_backtrace());
 }
 
 /**
