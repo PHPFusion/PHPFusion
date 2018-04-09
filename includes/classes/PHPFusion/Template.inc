@@ -24,6 +24,8 @@ namespace PHPFusion;
  */
 class Template {
 
+    const DefaultID = 'Default';
+
     private static $instance = NULL;
     private $template = '';
     private $locale = [];
@@ -43,14 +45,15 @@ class Template {
     /**
      * @param $key
      *
-     * @return object
+     * @return static
      */
-    public static function getInstance($key = 'Default') {
-        if (empty(self::$instance[$key])) {
+    public static function getInstance($key = self::DefaultID) {
+        if (!isset(self::$instance[$key])) {
             self::$instance[$key] = new static();
         }
         self::$key = $key;
-        return (object)self::$instance[$key];
+
+        return self::$instance[$key];
     }
 
     public static function set_key($key) {
