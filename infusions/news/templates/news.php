@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: news.php
-| Author: Frederick MC Chan (Chan)
+| Author: PHP Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('display_main_news')) {
     /**
-     * News Page Template
+     * News Main Page Template
      *
      * @param $info
      */
@@ -48,7 +48,6 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         */
 
-        // Commercial grade
         $tpl = \PHPFusion\Template::getInstance('news');
         $tpl->set_template(__DIR__.'/html/news.html');
         $tpl->set_locale(fusion_get_locale());
