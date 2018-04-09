@@ -130,7 +130,7 @@ class ImageRepo {
             $selects_[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
         }
 
-        if ($installedTables['news'] && column_exists(DB_NEWS_CATS, 'news_cat_language', FALSE)) {
+        if ($installedTables['news']) {
             $selects_[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? " where news_cat_language='".LANGUAGE."'" : "");
         }
 

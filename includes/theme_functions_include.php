@@ -69,7 +69,15 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
                 $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
                 $modal_body .= "<div>\n";
                 $end_sql = end($sql[3]);
-                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span>\n\r";
+                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                if (is_array($sql[3])) {
+                    $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
+                    foreach ($sql[3] as $id => $debug_backtrace) {
+                        $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                        $modal_body .= "<code>Query::: ".$debug_backtrace['args'][0].", --- ".implode(', ', $debug_backtrace['args'][1])."</code><br/>";
+                    }
+                    $modal_body .= "</div>\n";
+                }
                 $modal_body .= "</div>\n";
                 $modal_body .= "</div>\n";
                 $i++;
