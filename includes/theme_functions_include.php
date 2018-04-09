@@ -32,7 +32,8 @@ if (!defined("IN_FUSION")) {
  */
 function showrendertime($queries = TRUE) {
     $locale = fusion_get_locale();
-    $mysql_queries_count = DatabaseFactory::getConnection('default')->getGlobalQueryCount();
+    $db_connection = DatabaseFactory::getConnection('default');
+    $mysql_queries_count = $db_connection::getGlobalQueryCount();
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
         $res = showBenchmark();
         $res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : '');

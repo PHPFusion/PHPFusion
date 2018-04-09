@@ -82,8 +82,6 @@ if (!function_exists('display_main_news')) {
                         $carousel = TRUE;
                         $news['carousel_active'] = ($i == 0 ? ' class="active"' : '');
                         $news['carousel_item_active'] = ($i == 0 ? ' active' : '');
-                        $news['display_comments'] = ($news['news_allow_comments'] ? display_comments($news['news_comments'], INFUSIONS."news/news.php?readmore=".$news['news_id']."#comments") : '');
-                        $news['display_ratings'] = ($news['news_allow_ratings'] ? display_ratings($news['news_sum_rating'], $news['news_count_votes'], $news['news_link'].'#postrating') : '');
                         $tpl->set_block('carousel_item', $news);
                         $tpl->set_block('carousel_indicators', array(
                             'indicator_num'   => $i,

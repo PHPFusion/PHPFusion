@@ -129,7 +129,7 @@ abstract class News extends NewsServer {
         $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
         if ($info['news_total_rows']) {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
-            $result = dbquery($this->get_NewsQuery($filter));
+            $result = dbquery(self::get_NewsQuery($filter));
             $info['news_item_rows'] = dbrows($result);
             if ($info['news_item_rows'] > 0) {
                 $news_count = 0;
@@ -188,22 +188,12 @@ abstract class News extends NewsServer {
 
     protected static function rating_comments($id, $type) {
         $count_db = dbarray(dbquery("SELECT
-                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating
+                IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS sum_rating, COUNT(rating_item_id) AS count_votes
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id='".$id."' AND rating_type='".$type."'
              "));
 
-        return $count_db['sum_rating'];
-    }
-
-    protected static function votes_comments($id, $type) {
-        $count_db = dbarray(dbquery("SELECT
-                COUNT(rating_item_id) AS count_votes
-                FROM ".DB_RATINGS."
-                WHERE rating_item_id='".$id."' AND rating_type='".$type."'
-             "));
-
-        return $count_db['count_votes'];
+        return array('news_sum_rating' => $count_db['sum_rating'], 'news_count_votes' => $count_db['count_votes']);
     }
 
     protected static function count_comments($id, $type) {
@@ -382,13 +372,21 @@ abstract class News extends NewsServer {
                 ];
             }
 
+            $news_sum_rating = 0;
+            $news_count_votes = 0;
+            if ($data['news_allow_ratings']) {
+                $ratings = self::rating_comments($data['news_id'], 'N');
+                $news_count_votes = $ratings['news_count_votes'];
+                $news_sum_rating = $ratings['news_sum_rating'];
+            }
+
             $info = [
-                "news_id"       => $data['news_id'],
-                'news_subject'  => $news_subject,
-                'news_link'     => $info['news_link'],
-                "news_url"      => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-                "news_cat_link" => ($data['news_cat_id'] ? INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'] : ''),
-                'news_anchor'   => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
+                "news_id"               => $data['news_id'],
+                'news_subject'          => $news_subject,
+                'news_link'             => $info['news_link'],
+                "news_url"              => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
+                "news_cat_link"         => ($data['news_cat_id'] ? INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'] : ''),
+                'news_anchor'           => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
                 'news_news'     => $news_news,
                 'news_extended' => $news_extended,
                 'page_count'    => $pagecount,
@@ -409,12 +407,12 @@ abstract class News extends NewsServer {
                 "news_ext"              => $data['news_extended'] ? "y" : "n",
                 "news_reads"            => $data['news_reads'],
                 "news_comments"         => self::count_comments($data['news_id'], 'N'),
-                'news_sum_rating'       => self::rating_comments($data['news_id'], 'N'),
-                'news_count_votes'      => self::votes_comments($data['news_id'], 'N'),
+                'news_sum_rating'       => $news_sum_rating,
+                'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
                 "news_display_comments" => $data['news_allow_comments'] ? display_comments(self::count_comments($data['news_id'], 'N'), INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
-                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings(self::rating_comments($data['news_id'], 'N'), self::votes_comments($data['news_id'], 'N'), INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
+                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,
                 'news_admin_actions'    => $admin_actions,
                 "news_sticky"           => $data['news_sticky'],
@@ -480,7 +478,7 @@ abstract class News extends NewsServer {
 
             if ($max_news_rows) {
 
-                $result = dbquery($this->get_NewsQuery(['condition' => "news_cat='".$data['news_cat_id']."'"]));
+                $result = dbquery(self::get_NewsQuery(['condition' => "news_cat='".$data['news_cat_id']."'"]));
                 $info['news_item_rows'] = dbrows($result);
                 $info['news_total_rows'] = $max_news_rows;
                 $this->news_cat_breadcrumbs($news_cat_index);
@@ -501,7 +499,7 @@ abstract class News extends NewsServer {
 
             if ($max_news_rows) {
                 // apply filter.
-                $result = dbquery($this->get_NewsQuery(['condition' => 'news_cat=0']));
+                $result = dbquery(self::get_NewsQuery(['condition' => 'news_cat=0']));
 
                 BreadCrumbs::getInstance()->addBreadCrumb([
                     'link'  => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
