@@ -132,8 +132,8 @@ class News extends Core {
                     </h3>
                 </div>
                 <?php
-                $start_nc_url = ($info['news_cat_url'] ? "<a href='".$info['news_cat_url']."' title='".$info['news_cat_name']."'>" : '');
-                $end_nc_url = ($info['news_cat_url'] ? "</a>" : '');
+                $start_nc_url = ($info['news_cat_link'] ? "<a href='".$info['news_cat_link']."' title='".$info['news_cat_name']."'>" : '');
+                $end_nc_url = ($info['news_cat_link'] ? "</a>" : '');
                 ?>
                 <div class='post-meta'>
                     <ul class="meta-left">
@@ -228,8 +228,8 @@ class News extends Core {
                 <ul class='meta-left'>
                     <li><?php echo self::$locale['NB_200'].' '.profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
                     <?php
-                    $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
-                    $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
+                    $start_nc_url = ($news['news_cat_link'] ? "<a href='".$news['news_cat_link']."' title='".$news['news_cat_name']."'>" : '');
+                    $end_nc_url = ($news['news_cat_link'] ? "</a>" : '');
                     ?>
                     <li><?php echo $start_nc_url.$news['news_cat_name'].$end_nc_url ?></li>
                     <li><?php echo showdate('newsdate', $news['news_datestamp']).', '.timer($news['news_datestamp']); ?></li>
