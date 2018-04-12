@@ -38,6 +38,10 @@ add_to_head("
     margin-top: inherit !important;
     margin-left: inherit !important;
 }
+.panel-default > .panel-image-wrapper .thumb > a > img {
+    display: block;
+    width: 100%;
+}
 .panel-default .album_title {
     width: 100%;
     margin-bottom: 5px;
