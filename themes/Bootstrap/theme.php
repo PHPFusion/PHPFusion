@@ -165,7 +165,7 @@ function render_page() {
     echo "<hr>\n";
     echo showbanners(2);
     echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
-    echo "<span>".stripslashes(strip_tags($settings['footer']))."</span><br/>\n";
+    echo "<span>".stripslashes($settings['footer'])."</span><br/>\n";
     echo "<span>".showcopyright().showprivacypolicy()."</span><br/>\n";
     echo "<span>Bootstrap Theme by <a href='http://www.php-fusion.co.uk' target='_blank'>PHP-Fusion Inc</a></span><br/>\n";
     echo "<span>";
