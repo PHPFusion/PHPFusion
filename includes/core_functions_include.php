@@ -1398,11 +1398,12 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     // then we make a infinity recursive function to loop/break it out.
     $crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
     // then we sort in reverse.
-    if (!empty($crumb['title']) && count($crumb['title']) > 1) {
+    $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
+    if ($title_count) {
         krsort($crumb['title']);
         krsort($crumb['link']);
     }
-    if (!empty($crumb['title']) && count($crumb['title']) > 1) {
+    if ($title_count) {
         foreach ($crumb['title'] as $i => $value) {
             \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
