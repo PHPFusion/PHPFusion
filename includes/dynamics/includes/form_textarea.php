@@ -397,8 +397,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
         $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
         add_to_jquery("
-        var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-        $('#".$options['input_id']."-wordcount').text(init_str);
+        if ($('#".$options['input_id']."').length) {
+            var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
+            $('#".$options['input_id']."-wordcount').text(init_str);
+        }
         $('#".$options['input_id']."').on('input propertychange paste', function() {
         var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
         $('#".$options['input_id']."-wordcount').text(str);
