@@ -126,8 +126,7 @@ class News extends Core {
                 <div class='post-title'>
                     <h3>
                         <a href='<?php echo $info['news_url'] ?>' rel='bookmark'>
-                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>
-                                :</strong><?php echo $info['news_subject'] ?>
+                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
                         </a>
                     </h3>
                 </div>
@@ -144,7 +143,7 @@ class News extends Core {
                     </ul>
                     <ul class='meta-right'>
                         <li><i class='fa fa-comment-o'></i> <?php echo $info['news_display_comments'] ?></li>
-                        <li><i class='fa fa-heart-o'></i> <?php echo $info['news_display_ratings'] ?></li>
+                        <li><?php echo $info['news_display_ratings'] ?></li>
                         <?php if (!empty($info['news_admin_actions'])) : ?>
                             <li>
                                 <?php

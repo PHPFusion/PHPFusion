@@ -100,7 +100,7 @@ if (!function_exists('render_photo_album')) {
             global $gallery_settings;
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
-            echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
+            echo "<div class='overflow-hide' style='height: 120px;'>\n";
             echo $info['image'];
             echo "</div>\n";
             echo "<div class='panel-body'>\n";

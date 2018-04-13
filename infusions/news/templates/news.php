@@ -100,6 +100,7 @@ if (!function_exists('display_main_news')) {
                         $ni_html .= ob_get_clean();
 
                     } else {
+                    $news['news_admin_actions'] = '';
                         if ($x > 6) {
                             $x = 1;
                         }

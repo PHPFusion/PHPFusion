@@ -313,7 +313,7 @@ class MainFrame extends Core {
         //$this->get_Modules('footer\\contact');
         echo "<h4>".self::$locale['NB_001']."</h4>\n";
         echo "<p>".fusion_get_settings('description')."</p>\n";
-        echo stripslashes(strip_tags(fusion_get_settings('footer')));
+        echo stripslashes(fusion_get_settings('footer'));
         echo "<p>".showcopyright().showprivacypolicy()."</p>\n";
         echo "</div>\n";
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
