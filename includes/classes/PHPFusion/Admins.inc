@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
+
+use Defender\Token;
 
 /**
  * Class Admin
@@ -23,7 +26,9 @@ namespace PHPFusion;
  * Determine how to we set variables on 3rd party script
  */
 class Admins {
+
     private static $instance = NULL;
+
     /**
      * @var array - default section icons
      */
@@ -104,14 +109,196 @@ class Admins {
     }
 
     /**
-     * @return object
+     * Add instance
+     *
+     * @return static
      */
     public static function getInstance() {
         if (empty(self::$instance)) {
             self::$instance = new static();
         }
 
-        return (object)self::$instance;
+        return self::$instance;
+    }
+
+    public function setCache($form_id, $form_type, $cache_time = 36000) {
+        // set one instance of cache
+        echo "<script>
+        
+        </script>";
+    }
+
+    /**
+     * @param       $form_id
+     * @param       $form_type
+     * @param       $item_id
+     * @param array $field_names - format as (array('field_name' => 'Locale'));
+     *
+     * @return string
+     */
+    public function renderCache($form_id, $form_type, $item_id, array $field_names) {
+        $html = "";
+
+        return $html;
+    }
+
+    /**
+     * Cache the Current Field Inputs within Login session.
+     *
+     * @param       $form_id
+     * @param       $form_type
+     * @param       $item_id
+     * @param array $callback_fields
+     * @param int   $cache_time
+     *
+     * @return string
+     */
+    public function requestCache($form_id, $form_type, $item_id, array $callback_fields = array(), $cache_time = 30000) {
+        /*
+        add_to_footer("<script src='".INCLUDES."jquery/confirm/jquery-confirm.min.js'></script>");
+        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/confirm/jquery-confirm.min.css'>");
+        add_to_jquery("
+            var input_fields = $('#$form_id').serialize();
+            $.confirm({
+            title: 'Restore Editing Session',
+            content: 'There is a draft found for your previous editing session. Do you wish to restore?',
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        url: '$remote',
+                        type: 'post',
+                        data: {
+                        'fusion_token': '$token',
+                        'aidlink': '".fusion_get_aidlink()."',
+                        'fields': input_fields,
+                        'form_id' : '$form_id',
+                        'item_id':'$item_id',
+                        'form_type':'$form_type',
+                        'callback':'read_cache'
+                        },
+                        dataType: 'json',
+                        success: function (e) {
+                            if (e.response == 200) {
+                                $.each(e.data, function(key, value) {
+                                    $('#'+key).val( value );
+                                });
+                                setTimeout(function(e) {
+                                    //$.alert('Your editing session has been restored');
+                                    setTimeout( function(e) {UpdateAdminCache() }, $cache_time);
+                                }, 100);
+                            }
+                        },
+                        error: function(e) {
+                        }
+                   });
+                },
+                cancel: function () {
+                    //$.alert('Canceled!');
+                }
+                /*somethingElse: {
+                    text: 'Something else',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        $.alert('Something else?');
+                    }
+                }
+            }
+        });
+        ");*/
+        $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
+        $token = Token::generate_token($form_id, 5, $remote); // see i can only save about 5 times only. so i need to regen it.
+        add_to_jquery("
+        function timedCacheRequest(timeout) {            
+            setTimeout(UpdateAdminCache, timeout);
+        }        
+        function UpdateAdminCache(poll) {                            
+            var input_fields = $('#$form_id').serialize();            
+            var ttl = '$cache_time';            
+            $.ajax({
+            url: '$remote',
+            type: 'post',
+            dataType: 'html',
+            data: {
+                'fusion_token': '$token',
+                'aidlink': '".fusion_get_aidlink()."', 
+                'fields': input_fields, 
+                'form_id' : '$form_id',  
+                'form_type':'$form_type', 
+                'item_id': '$item_id', 
+                'callback':'set_cache',
+            },
+            dataType: 'json',
+            success: function (e) {                
+                console.log(e);
+                console.log(poll);
+                if (typeof poll === 'undefined') {
+                    console.log('we are starting a long poll now');
+                    timedCacheRequest(ttl);
+                }
+            }
+            });
+        }
+        // add abort long poll once we change fields.            
+        $('#".$form_id." :input').blur(function(e) {
+            UpdateAdminCache(1);                
+        });
+        ");
+        if (!isset($_GET['autosave'])) {
+            // not to pass prefix xhr for security reason.
+            add_to_jquery("
+            setTimeout( function(e) { UpdateAdminCache() }, $cache_time);
+            ");
+        }
+
+        $html = "";
+        if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
+
+            $html .= "<label class='list-group-item text-normal spacer-xs p-15'>There is an autosave of this post that is more recent than the version below. <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>View the autosave</a></label>";
+
+            if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
+
+                $html .= "<div id='rev-window'>\n";
+                $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>Saved Revisions</h4>");
+                $session = html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
+                parse_str($session, $data);
+                unset($data['form_id']);
+                unset($data['fusion_token']);
+
+                $html .= "<dl id='restore_results' class='dl-horizontal'>\n";
+                $fill_js = "";
+                foreach ($data as $field_name => $value) {
+                    if (isset($callback_fields[$field_name])) {
+                        $html .= "<dt>".$callback_fields[$field_name]."</dt>\n";
+                        $html .= "<dd class='m-b-15'><samp>".nl2br(html_entity_decode($value))."</samp>".form_hidden('s_'.$field_name, '', $value)."</dd>\n";
+                        $fill_js .= "
+                    var c = $('#s_$field_name').val();
+                    $('#".$field_name."').val(c);
+                    ";
+                    }
+                }
+                $html .= "</dl>\n";
+                $html .= "<div class='text-right'>\n";
+                $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>Cancel</button>\n";
+                $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>Fill to Autosave</button>\n";
+                $html .= "</div>\n";
+                $html .= fusion_get_function('closeside');
+                $html .= "</div>\n";
+                add_to_jquery("            
+            $('button[name^=\"fill_session\"]').bind('click', function(e) {                
+                $fill_js
+                $('#rev-window').hide();
+                UpdateAdminCache();
+            });
+            $('button[name^=\"cancel_session\"]').bind('click', function(e) {
+                $('#rev-window').hide();
+                UpdateAdminCache();
+            });
+            ");
+            }
+        }
+
+        return $html;
     }
 
     public function setAdmin() {
@@ -169,9 +356,9 @@ class Admins {
     }
 
     /**
-     * @param $page - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons - Section Icons
+     * @param $icons         - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
@@ -183,6 +370,7 @@ class Admins {
         if (empty(self::$locale)) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
+
         return self::$locale;
     }
 
@@ -264,7 +452,7 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type  - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -272,7 +460,7 @@ class Admins {
     }
 
     /**
-     * @param $type - submissions prefix
+     * @param $type    - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
@@ -300,7 +488,7 @@ class Admins {
     }
 
     /**
-     * @param $type - comment prefix
+     * @param $type  - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -315,7 +503,7 @@ class Admins {
     }
 
     /**
-     * @param $type - infusion_name
+     * @param $type    - infusion_name
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
