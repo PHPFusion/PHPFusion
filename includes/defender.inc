@@ -141,20 +141,21 @@ class defender {
             $hash = $encrypt ? md5('administration') : 'administration';
         } else {
             $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
-            if (!empty($file)) {
-                // file needs to take out the request string.
-                if (stristr($file, '?')) {
-                    $file_arr = explode('?', $file);
-                    $file = $file_arr[0];
-                }
-                $hash = $encrypt ? md5($file) : $file;
-            } else if (!empty($_POST['file'])) {
-                if (stristr($_POST['file'], '?')) {
-                    $file_arr = explode('?', $_POST['file']);
-                    $file = $file_arr[0];
-                }
-                $hash = $encrypt ? md5($file) : $file;
+        }
+
+        if (!empty($file)) {
+            // file needs to take out the request string.
+            if (stristr($file, '?')) {
+                $file_arr = explode('?', $file);
+                $file = $file_arr[0];
             }
+            $hash = $encrypt ? md5($file) : $file;
+        } else if (!empty($_POST['file'])) {
+            if (stristr($_POST['file'], '?')) {
+                $file_arr = explode('?', $_POST['file']);
+                $file = $file_arr[0];
+            }
+            $hash = $encrypt ? md5($file) : $file;
         }
 
         return (string)$hash;
@@ -295,9 +296,9 @@ class defender {
 
                 if ($this->field_config['required'] && (!$value[LANGUAGE])) {
 
-                    $this->stop();
+                    self::stop();
                     $iname = $input_name."[".LANGUAGE."]";
-                    $this->setInputError($iname);
+                    self::setInputError($iname);
 
                     return $default;
 
@@ -332,10 +333,10 @@ class defender {
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
-                        $this->stop();
+                        self::stop();
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            $this->stop();
+                            self::stop();
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
                         } else {
@@ -418,12 +419,12 @@ class defender {
 
                 return \Defender\Validation::getValidated();
             } else {
-                $this->stop();
+                self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
                 addNotice('danger', sprintf($locale['type_unknown'], self::$inputName));
             }
         } catch (Exception $e) {
-            $this->stop();
+            self::stop();
             addNotice('danger', $e->getMessage());
         }
     }

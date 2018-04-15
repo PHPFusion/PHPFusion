@@ -810,7 +810,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = []) {
         $result = dbquery($sql);
         if (!$options['keep_session']) {
             //print_p('field session unset during '.$sql);
-            $defender->unset_field_session();
+            $defender::unset_field_session();
         }
     }
     if ($result === FALSE) {
