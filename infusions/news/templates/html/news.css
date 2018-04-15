@@ -3,7 +3,7 @@
     width: 100%;
     height: 500px;
     position: absolute;
-    background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(0, 0, 0, .45);
     content: ' ';
 }
 
@@ -170,6 +170,7 @@ news item
 
 .news-item.lg .featured-image img {
     height: var(--large-item-height);
+    min-width: 100%;
 }
 
 .news-item .hidden-block {
@@ -264,6 +265,7 @@ news item
 }
 
 .news-item .news-news {
+    height: 90px;
     position: relative;
     margin-top: -24px;
     margin-bottom: 13px;

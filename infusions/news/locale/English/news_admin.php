@@ -113,6 +113,15 @@ $locale['news_0703'] = "Use the following form to submit News. Your submission w
 Administrator. [SITENAME] reserves the right to amend or edit any submission. News
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['news_0704'] = "Return to [SITENAME]";
+
+// New locale requried to update
+$locale['news_0705'] = "Width";
+$locale['news_0706'] = "Height";
+$locale['news_0707'] = "Main Settings";
+$locale['news_0708'] = "Configuration for News System";
+$locale['news_0709'] = "Photo Settings";
+$locale['news_0710'] = "Configuration for News Photos";
+
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";
@@ -127,3 +136,4 @@ $locale['956'] = "Square";
 $locale['957'] = "Image on Front-page";
 $locale['958'] = "Image on Read-more";
 $locale['959'] = "Uploaded Photo";
+

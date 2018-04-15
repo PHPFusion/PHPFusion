@@ -16,8 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\News;
-
+/**
+ * Class NewsAdminModel
+ *
+ * @package PHPFusion\News
+ */
 class NewsAdminModel extends NewsServer {
+
+    /**
+     * @var array
+     */
     private static $admin_locale = [];
 
     /**
@@ -61,6 +69,11 @@ class NewsAdminModel extends NewsServer {
         'news_image_datestamp' => TIME,
     ];
 
+    /**
+     * Get the admin locale
+     *
+     * @return array|null
+     */
     public static function get_newsAdminLocale() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE."English/admin/settings.php";
