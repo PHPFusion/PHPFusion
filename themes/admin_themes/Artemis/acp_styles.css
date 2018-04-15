@@ -2482,6 +2482,14 @@ input[type=text] {
     background-color: #f1f8ff;
 }
 
+#extended .form-group,
+#extended .panel-txtarea,
+#snippet .form-group,
+#snippet .panel-txtarea {
+    border: 0;
+    margin: 0;
+}
+
 html[dir="rtl"] #devlpr label:not(.label-success and .label-default) {
     text-align: right;
 }

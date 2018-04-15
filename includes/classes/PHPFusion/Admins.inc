@@ -246,15 +246,13 @@ class Admins {
         ");
         if (!isset($_GET['autosave'])) {
             // not to pass prefix xhr for security reason.
-            add_to_jquery("
-            setTimeout( function(e) { UpdateAdminCache() }, $cache_time);
-            ");
+            add_to_jquery("setTimeout( function(e) { UpdateAdminCache() }, $cache_time);");
         }
 
         $html = "";
         if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
 
-            $html .= "<label class='list-group-item text-normal spacer-xs p-15'>There is an autosave of this post that is more recent than the version below. <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>View the autosave</a></label>";
+            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>There is an autosave of this post that is more recent than the version below. <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>View the autosave</a></label>";
 
             if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
 
@@ -272,9 +270,9 @@ class Admins {
                         $html .= "<dt>".$callback_fields[$field_name]."</dt>\n";
                         $html .= "<dd class='m-b-15'><samp>".nl2br(html_entity_decode($value))."</samp>".form_hidden('s_'.$field_name, '', $value)."</dd>\n";
                         $fill_js .= "
-                    var c = $('#s_$field_name').val();
-                    $('#".$field_name."').val(c);
-                    ";
+                            var c = $('#s_$field_name').val();
+                            $('#".$field_name."').val(c);
+                        ";
                     }
                 }
                 $html .= "</dl>\n";
@@ -285,15 +283,15 @@ class Admins {
                 $html .= fusion_get_function('closeside');
                 $html .= "</div>\n";
                 add_to_jquery("            
-            $('button[name^=\"fill_session\"]').bind('click', function(e) {                
-                $fill_js
-                $('#rev-window').hide();
-                UpdateAdminCache();
-            });
-            $('button[name^=\"cancel_session\"]').bind('click', function(e) {
-                $('#rev-window').hide();
-                UpdateAdminCache();
-            });
+                    $('button[name^=\"fill_session\"]').bind('click', function(e) {                
+                        $fill_js
+                        $('#rev-window').hide();
+                        UpdateAdminCache();
+                    });
+                    $('button[name^=\"cancel_session\"]').bind('click', function(e) {
+                        $('#rev-window').hide();
+                        UpdateAdminCache();
+                    });
             ");
             }
         }

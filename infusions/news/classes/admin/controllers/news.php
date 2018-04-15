@@ -214,16 +214,6 @@ class NewsAdmin extends NewsAdminModel {
     }
 
     private function newsContent_form() {
-
-        echo "<style>
-        #extended .form-group,
-        #extended .panel-txtarea,
-        #snippet .form-group,
-        #snippet .panel-txtarea {
-        border:0;
-        margin:0;
-        }
-        </style>";
         $news_settings = self::get_news_settings();
 
         $news_cat_opts = [];
@@ -245,7 +235,7 @@ class NewsAdmin extends NewsAdminModel {
             'placeholder' => self::$locale['news_0203a'],
             'form_name'   => 'news_form',
             'wordcount'   => TRUE,
-            'rows'        => '50',
+            'rows'        => '30',
             'file_filter' => explode(',', $news_settings['news_file_types']),
         ];
         $extendedSettings = [
@@ -305,7 +295,7 @@ class NewsAdmin extends NewsAdminModel {
                 'placeholder' => self::$locale['news_0200'],
             ]
         );
-        echo "<ul class='nav nav-tabs clearfix'>\n";
+        echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
         echo "<li class='active'><a data-toggle='tab' href='#snippet'>".self::$locale['news_0203']."</a></li>";
         echo "<li><a data-toggle='tab' href='#extended'>".self::$locale['news_0204']."</a></li>";
         echo "</ul>\n";
