@@ -328,10 +328,10 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide' : '').$error_class.' '.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-12 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
         $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
@@ -415,7 +415,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     }
     // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-    \defender::getInstance()->add_field_session([
+    \defender::add_field_session([
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
@@ -732,7 +732,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
 
         $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=".$options['tip']."></i>" : '')."</label>\n" : '';
+        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3" : 'col-xs-12')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=".$options['tip']."></i>" : '')."</label>\n" : '';
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     }
     if ($level == 0) {

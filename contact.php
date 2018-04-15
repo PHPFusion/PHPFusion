@@ -89,10 +89,6 @@ if (isset($_POST['sendmessage'])) {
     }
 }
 $site_email = hide_email(fusion_get_settings('siteemail'));
-
-print_p("Your site email is printed as $site_email");
-print_p("I will leave this on for 24 hours and remove it after issue is closed");
-
 $info['message'] = str_replace("[SITE_EMAIL]", $site_email, $locale['CT_401']);
 $info['message'] .= str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $info['message']);
 $info['input'] = $input;

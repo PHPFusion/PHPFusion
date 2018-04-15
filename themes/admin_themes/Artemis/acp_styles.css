@@ -1755,13 +1755,14 @@ table {
 
 .form-group-lg input.form-control {
     font-size: 25px;
-    font-family: serif;
 }
 
 textarea.form-control {
     overflow-y: auto !important;
-    max-height: 300px;
-    padding: 2px 5px !important;
+    max-height: 1000px;
+    padding: 12px 15px !important;
+    font-size: 15px;
+    line-height: 1.1;
 }
 
 /* Site Information */

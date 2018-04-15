@@ -114,7 +114,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
     }
 
-    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
+    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "\n";
 
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
@@ -135,7 +135,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."'>\n";
 
-    $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">\n" : "";
+    $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."' ".($options['inner_width'] ? "style='width: ".$options['inner_width']."'" : '').">\n" : "";
 
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
 
@@ -153,7 +153,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session([
+    \defender::getInstance()::add_field_session([
         'input_name' => str_replace("[]", "", $input_name),
         'title'      => trim($title, '[]'),
         'id'         => $options['input_id'],
