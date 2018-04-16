@@ -153,7 +153,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= "</div>\n";
 
-    \defender::getInstance()::add_field_session([
+    \defender::add_field_session([
         'input_name' => str_replace("[]", "", $input_name),
         'title'      => trim($title, '[]'),
         'id'         => $options['input_id'],

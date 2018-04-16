@@ -340,7 +340,7 @@ class defender {
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
                         } else {
-                            $this->setInputError($input_name);
+                            self::setInputError($input_name);
                         }
                         // Add a notice
                         if (self::$debug) {
@@ -366,7 +366,7 @@ class defender {
                     if (intval($value)) {
                         return stripinput($value); // numbers
                     } else {
-                        return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
+                        return stripinput(trim(preg_replace("/ +/i", " ", $value)));
                     }
                 } else {
                     $secured = [];
@@ -374,7 +374,7 @@ class defender {
                         if (intval($unsecured)) {
                             $secured[] = stripinput($unsecured); // numbers
                         } else {
-                            $secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
+                            $secured[] = stripinput(trim(preg_replace("/ +/i", " ", $unsecured)));
                         }
                     }
 

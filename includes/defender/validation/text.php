@@ -49,7 +49,7 @@ class Text extends \Defender\Validation {
                         return self::$inputDefault;
                     }
                 }
-                $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
+                $vars[] = stripinput(trim(preg_replace("/ +/i", " ", $val)));
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
@@ -62,7 +62,7 @@ class Text extends \Defender\Validation {
                     return FALSE;
                 }
             }
-            $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords(self::$inputValue))));
+            $value = stripinput(trim(preg_replace("/ +/i", " ", self::$inputValue)));
         }
         if (self::$inputConfig['required'] && !$value) {
             \defender::setInputError(self::$inputName);
