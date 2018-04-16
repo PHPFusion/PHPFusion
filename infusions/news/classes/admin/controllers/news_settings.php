@@ -32,7 +32,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-        pageAccess("S8");
+        pageAccess("N");
         require_once INCLUDES."mimetypes_include.php";
 
         $locale = self::get_newsAdminLocale();
