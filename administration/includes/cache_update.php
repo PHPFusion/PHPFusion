@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: cache_update.php
+| Author: Frederick MC Chan (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 // cache all entries of a form to session
 require_once(__DIR__.'/../../maincore.php');
 header("Content-Type: text/html; charset=".fusion_get_locale('charset'));
@@ -45,5 +61,7 @@ if (isset($_REQUEST['form_id'])
         $status['response'] = 501;
     }
 }
+
+header('Content-Type: application/json');
 
 echo json_encode($status);
