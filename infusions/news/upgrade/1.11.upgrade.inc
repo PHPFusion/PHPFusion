@@ -102,29 +102,19 @@ if (!db_exists(DB_NEWS_IMAGES)) {
 }
 
 // Port Photos into New Tables
-$query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS." WHERE news_image<>'' ORDER BY news_id ASC";
+$query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS." WHERE news_image !='' ORDER BY news_id ASC";
 $result = dbquery($query);
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         if (!empty($data['news_image'])) {
-            $insert_rows = DB_NEWS_IMAGES." (news_id, news_image, news_image_t1, news_image_t2, news_image_user, news_image_datestamp) VALUES (
-            '".$data['news_id']."',
-            '".$data['news_image']."',
-            '".$data['news_image_t1']."',
-            '".$data['news_image_t2']."',
-            '".$data['news_image_user']."',
-            '".$data['news_image_datestamp']."'
-            )";
-            dbquery("INSERT INTO ".$insert_rows);
-            $id = dblastid();
-            // We update news column
-            dbquery("UPDATE ".DB_NEWS." SET news_image_align=:align, news_image_full_default=:id, news_image_front_default=:id2",
-                [
-                    ':align' => 'news-img-center',
-                    ':id'    => $id,
-                    ':id2'   => $id
-                ]
+            $id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', array('keep_session' => TRUE));
+            $cdata = array(
+                'news_id'                  => $data['news_id'],
+                'news_image_align'         => 'news-img-center',
+                'news_image_full_default'  => $id,
+                'news_image_front_default' => $id,
             );
+            dbquery_insert(DB_NEWS, $cdata, 'update', array('keep_session' => TRUE));
             // Now we move all the images over
             if (!empty($data['news_image']) && file_exists(IMAGES."news/".$data['news_image'])) {
                 rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
