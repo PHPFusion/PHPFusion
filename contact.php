@@ -30,6 +30,7 @@ $input = [
     'message'      => '',
     'captcha_code' => '',
 ];
+
 if (isset($_POST['sendmessage'])) {
     foreach ($input as $key => $value) {
         if (isset($_POST[$key])) {
@@ -88,17 +89,19 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 }
+
 $site_email = hide_email(fusion_get_settings('siteemail'));
-$info['message'] = str_replace("[SITE_EMAIL]", $site_email, $locale['CT_401']);
-$info['message'] .= str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $info['message']);
+$info['message'] = str_replace(["[PM_LINK]", "[SITE_EMAIL]"], ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email], $locale['CT_401']);
 $info['input'] = $input;
+
 if (iGUEST) {
     include INCLUDES.'captchas/'.$settings['captcha'].'/captcha_display.php';
-    $captcha_settings = array(
+    $captcha_settings = [
         'captcha_id' => 'captcha_contact',
         'input_id'   => 'captcha_code_contact',
         'image_id'   => 'captcha_image_contact'
-    );
+    ];
+
     $info['captcha'] = display_captcha($captcha_settings);
     if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
         $info['captcha_code'] = form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
