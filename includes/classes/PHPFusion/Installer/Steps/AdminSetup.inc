@@ -99,7 +99,7 @@ class InstallerAdminSetup extends Install_Core {
                     addNotice('success', self::$locale['setup_1217']);
 
                     require_once(INCLUDES."multisite_include.php");
-                    $this->installer_step(self::STEP_INTRO);
+                    self::installer_step(self::STEP_INTRO);
                     new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
                         filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
@@ -156,21 +156,21 @@ class InstallerAdminSetup extends Install_Core {
 
     private function validate_UserData() {
         return [
-            'user_name'           => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
-            'user_email'          => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+            'user_name'           => stripinput(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
+            'user_email'          => stripinput(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
             'user_algo'           => self::INSTALLER_ALGO,
             'user_salt'           => '',
             'user_password'       => '',
             'user_admin_algo'     => self::INSTALLER_ALGO,
             'user_admin_salt'     => '',
             'user_admin_password' => '',
-            'password1'           => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-            'password2'           => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-            'admin_password1'     => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-            'admin_password2'     => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+            'password1'           => stripinput(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+            'password2'           => stripinput(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+            'admin_password1'     => stripinput(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+            'admin_password2'     => stripinput(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
             'user_rights'         => self::USER_RIGHTS_SA,
             'user_hide_email'     => 1,
-            'user_timezone'       => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
+            'user_timezone'       => stripinput(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
             'user_joined'         => TIME,
             'user_lastvisit'      => TIME,
             'user_ip'             => USER_IP,
@@ -342,7 +342,7 @@ class InstallerAdminSetup extends Install_Core {
                 if (\defender::safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
-
+                    $batch_core = Batch_Core::getInstance();
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
                         self::$userData['user_id'] = 1;
@@ -376,7 +376,8 @@ class InstallerAdminSetup extends Install_Core {
                         $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
-                                $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
+
+                                $sql_inserts = $batch_core::batch_insert_rows('site_links', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
@@ -399,7 +400,7 @@ class InstallerAdminSetup extends Install_Core {
                         if (!empty($langDiff)) {
 
                             foreach ($langDiff as $language) {
-                                $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
+                                $sql_inserts = $batch_core::batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
@@ -431,11 +432,11 @@ class InstallerAdminSetup extends Install_Core {
                     if (\defender::safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
-                        $this->installer_step(self::STEP_INFUSIONS);
+                        self::installer_step(self::STEP_INFUSIONS);
                         redirect(FUSION_REQUEST);
                         //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_REQUEST);
                     } else {
-                        $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                        self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
                         redirect(FUSION_REQUEST);
                     }
                 }
@@ -445,11 +446,11 @@ class InstallerAdminSetup extends Install_Core {
 
     private function validate_SiteData() {
         $array = [
-            'sitename'          => \defender::getInstance()->form_sanitizer($_POST['sitename'], '', 'sitename'),
-            'siteemail'         => \defender::getInstance()->form_sanitizer($_POST['siteemail'], '', 'siteemail'),
-            'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''), '', 'enabled_languages'),
-            'siteusername'      => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
-            'default_timezone'  => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'default_timezone'), '', 'default_timezone')
+            'sitename'          => stripinput($_POST['sitename'], '', 'sitename'),
+            'siteemail'         => stripinput($_POST['siteemail'], '', 'siteemail'),
+            'enabled_languages' => stripinput((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''), '', 'enabled_languages'),
+            'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
+            'default_timezone'  => stripinput(filter_input(INPUT_POST, 'default_timezone'), '', 'default_timezone')
         ];
 
         return $array;

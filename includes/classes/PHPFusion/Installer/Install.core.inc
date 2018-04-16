@@ -112,41 +112,15 @@ class Install_Core extends Infusion_Core {
     protected function __construct() {
     }
 
-    public static function getInstance() {
+    /**
+     * @return null|static
+     */
+    public static function getInstallInstance() {
         $settings = fusion_get_settings();
 
         if (self::$setup_instance == NULL) {
 
             self::$setup_instance = new static();
-
-            session_start();
-
-            define('IN_SETUP', TRUE);
-
-            require_once BASEDIR.'includes/dynamics.inc';
-            require_once BASEDIR.'includes/autoloader.php';
-
-            self::installer_step();
-
-            self::verify_requirements();
-
-            define('iMEMBER', FALSE);
-
-            define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
-
-            define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-
-            define("FUSION_ROOT", '');
-
-            define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-
-            self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
-
-            define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
-
-            define("LOCALESET", LANGUAGE."/");
-
-            self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
 
             // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {
@@ -154,12 +128,31 @@ class Install_Core extends Infusion_Core {
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
+            session_start();
+
+            define('IN_SETUP', TRUE);
+
+            require_once BASEDIR.'includes/dynamics.inc';
+            require_once BASEDIR.'includes/autoloader.php';
+            \Dynamics::getInstance();
+
+            self::installer_step();
+            self::verify_requirements();
+
+            define('iMEMBER', FALSE);
+            define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
+            define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
+            define("FUSION_ROOT", '');
+            define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
+
+            self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
+            define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
+            define("LOCALESET", LANGUAGE."/");
+            self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
             self::$locale_files = fusion_get_detected_language();
 
             self::detect_upgrade();
 
-            // Run dynamics API
-            \Dynamics::getInstance();
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
 
@@ -214,6 +207,7 @@ class Install_Core extends Infusion_Core {
             'db_user' => '',
             'db_pass' => '',
         ];
+
         if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
             self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
         }
@@ -287,13 +281,22 @@ class Install_Core extends Infusion_Core {
     }
 
     private static function detect_upgrade() {
+
+        // Read the config_temp.php
+        self::set_empty_prefix();
+
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
+
             if (empty(self::$connection['pdo_enabled'])) {
                 self::$connection['pdo_enabled'] = FALSE;
             }
+
             require_once(INCLUDES.'multisite_include.php');
+
             $validation = Requirements::get_system_validation();
+
             $version = fusion_get_settings('version');
+
             if (!empty($version)) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, $version, ">")) {
@@ -305,7 +308,6 @@ class Install_Core extends Infusion_Core {
                             define('DB_PREFIX', self::$connection['DB_PREFIX']);
                         }
                         self::set_empty_prefix();
-
                         return TRUE;
                     }
                 }
@@ -317,8 +319,8 @@ class Install_Core extends Infusion_Core {
 
     public function install_phpfusion() {
         $current_content = $this->get_InstallerContent();
-        $content = Console_Core::getInstance()->getView($current_content);
-        echo strtr(Console_Core::getInstance()->getLayout(), ['{%content%}' => $content]);
+        $content = Console_Core::getConsoleInstance()->getView($current_content);
+        echo strtr(Console_Core::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
     }
 
     private function get_InstallerContent() {

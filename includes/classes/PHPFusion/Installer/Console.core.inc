@@ -23,7 +23,10 @@ class Console_Core extends Install_Core {
 
     private static $console_instance = NULL;
 
-    public static function getInstance() {
+    /**
+     * @return null|static
+     */
+    public static function getConsoleInstance() {
         if (self::$console_instance == NULL) {
             self::$console_instance = new static();
         }
@@ -31,7 +34,7 @@ class Console_Core extends Install_Core {
         return self::$console_instance;
     }
 
-    public static function getView($content) {
+    public function getView($content) {
         $steps = [
             '1' => self::$locale['setup_0101'],
             '2' => self::$locale['setup_0102'],
@@ -88,7 +91,7 @@ class Console_Core extends Install_Core {
      *
      * @return string
      */
-    public static function getLayout() {
+    public function getLayout() {
         $html = "<!DOCTYPE html>\n";
         $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";

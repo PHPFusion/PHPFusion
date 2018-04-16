@@ -33,6 +33,7 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch_Core extends Install_Core {
+
     const PROGRESS = "setTimeout(
                     function(){
                         $('.progress-bar').animate({
@@ -156,8 +157,7 @@ class Batch_Core extends Install_Core {
 
         if (self::$runtime_results === NULL) {
 
-            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
-                TRUE)) {
+            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
 
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
@@ -354,7 +354,7 @@ class Batch_Core extends Install_Core {
     private function create_new_table() {
         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
         // Will only set and create on current locale only
-        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$localeset);
+        $batch_inserts = self::batch_insert_rows(self::$table_name, self::$localeset);
         if (!empty($batch_inserts)) {
             self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
         }
@@ -419,7 +419,7 @@ class Batch_Core extends Install_Core {
 
         return strtr(self::CREATE_TABLE_STATEMENT, [
             '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
-            '{%table_attr%}' => implode(',', $line),
+            '{%table_attr%}' => implode(', ', $line),
             '{%collation%}'  => Batch_Core::FUSION_TABLE_COLLATION
         ]);
 
@@ -472,7 +472,9 @@ class Batch_Core extends Install_Core {
                     if (!empty($upgrade_files) && is_array($upgrade_files)) {
 
                         foreach ($upgrade_files as $upgrade_file) {
+
                             $filename = rtrim($upgrade_file, 'upgrade.inc');
+
                             if (version_compare($filename, fusion_get_settings('version'), ">=")) {
                                 /*
                                  * Use Infusions Core to load upgrade statements

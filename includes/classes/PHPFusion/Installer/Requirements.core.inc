@@ -391,8 +391,12 @@ class Requirements extends Install_Core {
 }
 
 function test_table($db_prefix) {
+
     $table_name = uniqid($db_prefix, FALSE);
-    $result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    $sql = "CREATE TABLE $table_name (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+    $result = dbquery($sql);
     if (!$result) {
         return FALSE;
     }
