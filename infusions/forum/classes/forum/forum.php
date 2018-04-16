@@ -40,6 +40,7 @@ class Forum extends ForumServer {
      * Executes forum
      */
     public function set_ForumInfo() {
+
         $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -50,16 +51,22 @@ class Forum extends ForumServer {
                 redirect(INFUSIONS.'forum/index.php');
             }
         }
+
         if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
-            if ($_GET['section'] == 'latest')
-                redirect(INFUSIONS.'forum/index.php?section=latest');
-            if ($_GET['section'] == 'mypost')
-                redirect(INFUSIONS.'forum/index.php?section=mypost');
-            if ($_GET['section'] == 'tracked')
-                redirect(INFUSIONS.'forum/index.php?section=tracked');
+            if (isset($_GET['section'])) {
+                if ($_GET['section'] == 'latest') {
+                    redirect(INFUSIONS.'forum/index.php?section=latest');
+                }
+                if ($_GET['section'] == 'mypost') {
+                    redirect(INFUSIONS.'forum/index.php?section=mypost');
+                }
+                if ($_GET['section'] == 'tracked') {
+                    redirect(INFUSIONS.'forum/index.php?section=tracked');
+                }
+            }
         }
 
-        $this->forum_info = [
+        $this->forum_info = array(
             'forum_id'         => isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0,
             'parent_id'        => 0,
             'forum_page_link'  => [],
@@ -71,13 +78,14 @@ class Forum extends ForumServer {
             'threads'          => [],
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
-        ];
+        );
 
         if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php')) {
             add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('forum_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_forums.php"/>');
         }
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
+
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM."index.php", "title" => $locale['forum_0000']]);
 
         // Additional Sections in Index View
@@ -145,7 +153,7 @@ class Forum extends ForumServer {
 
                     // @todo: turn this into ajax filtration to cut down SEO design pattern
                     // This is the thread filtration pattern, and therefore should go to the thread class , not the forum class.
-                    $this->forum_info['filter'] = $this->filter()->get_FilterInfo();
+                    $this->forum_info['filter'] = self::filter()->get_FilterInfo();
 
                     // this is the current forum data
                     $this->forum_info = array_merge($this->forum_info, dbarray($result));

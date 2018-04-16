@@ -79,8 +79,9 @@ class ForumThreads extends ForumServer {
         WHERE ".($forum_id ? " tf.forum_id='".intval($forum_id)."' AND " : "")." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')." GROUP BY t.thread_id";
 
-        if (!empty($filter['debug']))
+        if (!empty($filter['debug'])) {
             print_p($thread_query);
+        }
 
         $thread_result = dbquery($thread_query);
         $info['thread_max_rows'] = dbrows($thread_result);
