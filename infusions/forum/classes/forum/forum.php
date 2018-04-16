@@ -40,7 +40,7 @@ class Forum extends ForumServer {
      * Executes forum
      */
     public function set_ForumInfo() {
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
 

@@ -62,7 +62,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
     private function display_uf_settings() {
 
-        $_enabled = $this->get_forum_settings('forum_enabled_userfields');
+        $_enabled = self::get_forum_settings('forum_enabled_userfields');
 
         if (isset($_POST['save_forum_uf'])) {
             $current_uf = !empty($_POST['uf_field_enabled']) ? form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled') : '';
@@ -190,7 +190,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         }
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
@@ -342,7 +342,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         }
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";

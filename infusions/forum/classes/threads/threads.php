@@ -298,7 +298,7 @@ class ForumThreads extends ForumServer {
             }
         }
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $locale = fusion_get_locale('', [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
         $userdata = fusion_get_userdata();
         $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
@@ -657,7 +657,7 @@ class ForumThreads extends ForumServer {
      */
     private function handle_quick_reply() {
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $locale = fusion_get_locale();
 
@@ -744,7 +744,7 @@ class ForumThreads extends ForumServer {
      */
     private function get_thread_post() {
         global $pid;
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
 

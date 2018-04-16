@@ -170,13 +170,13 @@ class ViewThread extends ForumServer {
      */
     public function render_reply_form() {
 
-        $thread = $this->thread();
+        $thread = self::thread();
 
         $thread_info = $thread->get_threadInfo();
 
         $thread_data = $thread_info['thread'];
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
@@ -477,13 +477,13 @@ class ViewThread extends ForumServer {
      */
     public function render_edit_form() {
 
-        $thread = $this->thread();
+        $thread = self::thread();
 
         $thread_info = $thread->get_threadInfo();
 
         $thread_data = $thread_info['thread'];
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $locale = fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 

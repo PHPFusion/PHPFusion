@@ -32,7 +32,7 @@ class Forum_Postify extends ForumServer {
 
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::$settings = fusion_get_settings();
-        self::get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         if (!isset($_GET['forum_id'])) throw new \Exception(self::$locale['forum_0587']);
         if (!isset($_GET['thread_id'])) throw new \Exception(self::$locale['forum_0588']);

@@ -792,7 +792,7 @@ class ForumAdminView extends ForumAdminInterface {
         require_once INCLUDES.'photo_functions_include.php';
         require_once INCLUDES.'infusions_include.php';
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $language_opts = fusion_get_enabled_languages();
         $admin_title = ($this->data['forum_id'] ? self::$locale['forum_002'] : self::$locale['forum_001']);
 
@@ -1089,7 +1089,7 @@ class ForumAdminView extends ForumAdminInterface {
             $this->level['title'][0]) : self::$locale['forum_root'];
         add_to_title(" ".$title);
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
         $threads_per_page = $forum_settings['threads_per_page'];
         $max_rows = dbcount("('forum_id')", DB_FORUMS,
             (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
