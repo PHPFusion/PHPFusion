@@ -72,24 +72,10 @@ class Login {
                             echo $info['user_pass'];
                             echo $info['remember_me'];
                             echo $info['login_button'];
-                            echo $info['close_form'];
-
-                            if (!empty($info['connect_buttons'])) {
-                                echo "<div class='position-relative'>\n";
-                                echo "<hr class='position-absolute display-block m-t-10' style='width:100%; z-index:-1;'/>\n";
-                                echo "<h4 class='text-center'>\n".$locale['or']."</h4>\n";
-                                echo "</div>\n";
-                                echo "<div class='m-b-20 m-t-20'>\n";
-                                foreach ($info['connect_buttons'] as $connectors) {
-                                    echo $connectors;
-                                }
-                                echo "</div>\n";
-                            }
-                            echo $info['registration_link'];
+                            echo $info['registration_link']."<br/><br/>";
                             echo $info['forgot_password_link']."<br/><br/>";
-                            echo "<div class='m-t-20'>\n";
+                            echo $info['close_form'];
                             echo showcopyright();
-                            echo "</div>\n";
                             ?>
                         </div>
                     </div>

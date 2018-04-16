@@ -154,7 +154,7 @@ class MainFrame extends Core {
                 echo "<div class='container'>\n";
             }
             echo($this->getParam('upper_content') ?: "");
-            echo defined('AU_CENTER') && AU_CENTER ? AU_CENTER : '';
+            echo AU_CENTER;
             if ($this->getParam('upper_container')) {
                 echo "</div>\n";
             }
@@ -189,11 +189,11 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-        /*$side_span = 3;
+        $side_span = 3;
         $main_span = 12;
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
             $main_span = $main_span - $side_span;
-        }*/
+        }
         if (defined('LEFT') && LEFT) :
             echo "<div class='nebulaCanvas off'>\n";
             echo "<a class='canvas-toggle' href='#' data-target='nebulaCanvas'><i class='fa fa-bars fa-lg'></i></a>\n";
@@ -233,7 +233,7 @@ class MainFrame extends Core {
         echo "</div>\n";
         if (defined('RIGHT') && $this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
             echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
-            echo $this->getParam('right_pre_content').(defined('RIGHT') && RIGHT ? RIGHT : '').$this->getParam('right_post_content');
+            echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
             echo "</div>\n";
         endif;
 
@@ -313,8 +313,8 @@ class MainFrame extends Core {
         //$this->get_Modules('footer\\contact');
         echo "<h4>".self::$locale['NB_001']."</h4>\n";
         echo "<p>".fusion_get_settings('description')."</p>\n";
-        echo stripslashes(fusion_get_settings('footer'));
-        echo "<p>".showcopyright().showprivacypolicy()."</p>\n";
+        echo stripslashes(strip_tags(fusion_get_settings('footer')));
+        echo "<p>".showcopyright()."</p>\n";
         echo "</div>\n";
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');

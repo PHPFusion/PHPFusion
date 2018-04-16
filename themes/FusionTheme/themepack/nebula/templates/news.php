@@ -18,7 +18,6 @@
 namespace ThemePack\Nebula\Templates;
 
 use ThemeFactory\Core;
-use \PHPFusion\News\NewsServer;
 
 /**
  * Class News
@@ -32,7 +31,7 @@ class News extends Core {
      * @param $info
      */
     public static function display_news($info) {
-        $news_settings = NewsServer::get_news_settings();
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
 
         /*
          * FusionTheme Controller
@@ -84,23 +83,29 @@ class News extends Core {
         ob_start();
         openside(fusion_get_locale('news_0009'));
         ?>
-        <ul><?php
-            foreach ($info['news_categories'][0] as $id => $data) {
-                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' active' : '';
-                echo '<li class="list-group-item p-t-5 p-b-5 '.$active.'"><a href="'.INFUSIONS.'news/news.php?cat_id='.$id.'">'.$data['name'].'</a></li>';
+        <ul>
+            <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
+                <li class='list-group-item p-t-5 p-b-5'>
+                    <a href='<?php echo $category['link'] ?>'>
+                        <h5 class='text-uppercase'>
+                            <strong><?php echo $category['name'] ?></strong>
+                        </h5>
+                    </a>
+                </li>
+            <?php endforeach; ?>
 
-                if ($id != 0 && $info['news_categories'] != 0) {
-                    foreach ($info['news_categories'] as $sub_cats_id => $sub_cats) {
-                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
-                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
-                                $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $sub_cat_id ? ' active' : '';
-                                echo '<li class="list-group-item p-t-5 p-b-5 '.$active.'"><a class="p-l-10" href="'.INFUSIONS.'news/news.php?cat_id='.$sub_cat_id.'">'.$sub_cat_data['name'].'</a></li>';
-                            }
-                        }
-                    }
-                }
-            }
-            ?>
+            <?php
+            if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
+                foreach ($info['news_categories'][1] as $category_id => $category) : ?>
+                    <li class='list-group-item p-t-5 p-b-5'>
+                        <a href='<?php echo $category['link'] ?>'>
+                            <h5 class='text-uppercase'>
+                                <strong><?php echo $category['name'] ?></strong>
+                            </h5>
+                        </a>
+                    </li>
+                <?php endforeach;
+            } ?>
         </ul>
         <?php
         closeside();
@@ -126,13 +131,14 @@ class News extends Core {
                 <div class='post-title'>
                     <h3>
                         <a href='<?php echo $info['news_url'] ?>' rel='bookmark'>
-                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
+                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>
+                                :</strong><?php echo $info['news_subject'] ?>
                         </a>
                     </h3>
                 </div>
                 <?php
-                $start_nc_url = ($info['news_cat_link'] ? "<a href='".$info['news_cat_link']."' title='".$info['news_cat_name']."'>" : '');
-                $end_nc_url = ($info['news_cat_link'] ? "</a>" : '');
+                $start_nc_url = ($info['news_cat_url'] ? "<a href='".$info['news_cat_url']."' title='".$info['news_cat_name']."'>" : '');
+                $end_nc_url = ($info['news_cat_url'] ? "</a>" : '');
                 ?>
                 <div class='post-meta'>
                     <ul class="meta-left">
@@ -143,7 +149,7 @@ class News extends Core {
                     </ul>
                     <ul class='meta-right'>
                         <li><i class='fa fa-comment-o'></i> <?php echo $info['news_display_comments'] ?></li>
-                        <li><?php echo $info['news_display_ratings'] ?></li>
+                        <li><i class='fa fa-heart-o'></i> <?php echo $info['news_display_ratings'] ?></li>
                         <?php if (!empty($info['news_admin_actions'])) : ?>
                             <li>
                                 <?php
@@ -227,8 +233,8 @@ class News extends Core {
                 <ul class='meta-left'>
                     <li><?php echo self::$locale['NB_200'].' '.profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
                     <?php
-                    $start_nc_url = ($news['news_cat_link'] ? "<a href='".$news['news_cat_link']."' title='".$news['news_cat_name']."'>" : '');
-                    $end_nc_url = ($news['news_cat_link'] ? "</a>" : '');
+                    $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
+                    $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
                     ?>
                     <li><?php echo $start_nc_url.$news['news_cat_name'].$end_nc_url ?></li>
                     <li><?php echo showdate('newsdate', $news['news_datestamp']).', '.timer($news['news_datestamp']); ?></li>

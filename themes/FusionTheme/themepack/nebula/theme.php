@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 define("THEME_BULLET", "<i class='fa fa-list'></i>");
-define('BOOTSTRAP', TRUE);
-define('FONTAWESOME', TRUE);
 
 /*
  * SiteLinks Documentation

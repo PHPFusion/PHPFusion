@@ -70,8 +70,6 @@ header .navbar-default {
 
 header .navbar-default .navbar-collapse {
     background: #fff;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0;
     color: #444;
     padding: 15px 15px 12px 15px;
@@ -145,14 +143,12 @@ header .navbar-default .navbar-nav > li > a {
     display: -ms-flexbox;
     display: -ms-flex;
     display: -webkit-box;
-    display: -moz-box;
     display: flex;
     -webkit-align-items: center;
     -moz-align-items: center;
     -ms-align-items: center;
     -ms-flex-align: center;
     -webkit-box-align: center;
-    -moz-box-align: center;
     align-items: center;
     -webkit-align-content: center;
     -moz-align-content: center;
@@ -177,8 +173,6 @@ header .navbar-default .navbar-nav > li > a:before {
     left: 50%;
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
-    -moz-transform: translateX(-50%);
-    -o-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
@@ -193,12 +187,9 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background: #23262D;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0;
     top: 66px;
     -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
     border-radius: 0;
 }
@@ -344,7 +335,6 @@ header h1 {
 .nebulaFooter .form-control:focus, .nebulaFooter .form-control:active {
     border: 2px solid #4268A7;
     -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
 }
 
@@ -375,7 +365,6 @@ header h1 {
     z-index: 21;
     -webkit-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
 
@@ -523,7 +512,6 @@ Buttons
 .btn {
     -webkit-transition: all 0.3s ease-out;
     -o-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
 }
 
@@ -556,15 +544,11 @@ Buttons
     max-width: 100%;
     display: block;
     font-size: 13px;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0;
     -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-appearance: none;
     border: 1px solid #CCC;
-    -moz-box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
     box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
     -webkit-box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.08);
     letter-spacing: normal;
@@ -705,8 +689,6 @@ Alert
     margin: 0;
     font-weight: 600;
     z-index: 1;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0;
     position: relative;
     border: 0;
@@ -761,9 +743,6 @@ Login
 
 .login-bg {
     background-image: url(assets/images/loginBG.jpg);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
     text-align: center;
     display: block;
@@ -827,7 +806,6 @@ News
     height: 100%;
     opacity: 0;
     -o-transition: all .3s linear;
-    -moz-transition: all .3s linear;
     transition: all .3s linear;
     -webkit-transition: all .3s linear;
 }
@@ -835,7 +813,6 @@ News
 .news_item .post-image:hover > a:before {
     opacity: 1;
     -o-transition: all .3s linear;
-    -moz-transition: all .3s linear;
     transition: all .3s linear;
     -webkit-transition: all .3s linear;
     background: rgba(255, 255, 255, 0.7);
@@ -851,8 +828,6 @@ News
     left: 50%;
     width: 100px;
     height: 100px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
     border-radius: 50%;
     font-size: 45px;
     line-height: 100px;
@@ -862,16 +837,11 @@ News
     text-align: center;
     -webkit-transform: scale(0);
     -ms-transform: scale(0);
-    -moz-transform: scale(0);
-    -o-transform: scale(0);
     transform: scale(0);
     -webkit-transition: top .4s, opacity .4s, -webkit-transform 0s .4s;
     transition: top .4s, opacity .4s, -webkit-transform 0s .4s;
     -o-transition: top .4s, opacity .4s, transform 0s .4s;
-    -o-transition: top .4s, opacity .4s, -o-transform 0s .4s;
-    -moz-transition: top .4s, opacity .4s, transform 0s .4s, -moz-transform 0s .4s;
     transition: top .4s, opacity .4s, transform 0s .4s;
-    transition: top .4s, opacity .4s, transform 0s .4s, -webkit-transform 0s .4s, -moz-transform 0s .4s, -o-transform 0s .4s;
     transition: top .4s, opacity .4s, transform 0s .4s, -webkit-transform 0s .4s;
     z-index: 10;
 }
@@ -881,16 +851,11 @@ News
     top: 50%;
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
-    -moz-transform: scale(1);
-    -o-transform: scale(1);
     transform: scale(1);
     -webkit-transition: top 0s, opacity .4s, -webkit-transform .4s;
     transition: top 0s, opacity .4s, -webkit-transform .4s;
     -o-transition: top 0s, opacity .4s, transform .4s;
-    -o-transition: top 0s, opacity .4s, -o-transform .4s;
-    -moz-transition: top 0s, opacity .4s, transform .4s, -moz-transform .4s;
     transition: top 0s, opacity .4s, transform .4s;
-    transition: top 0s, opacity .4s, transform .4s, -webkit-transform .4s, -moz-transform .4s, -o-transform .4s;
     transition: top 0s, opacity .4s, transform .4s, -webkit-transform .4s;
 }
 
@@ -1025,8 +990,6 @@ Articles
 
 .article_search_header #search-article-btn {
     margin-left: -9px;
-    -webkit-border-radius: 0 6px 6px 0;
-    -moz-border-radius: 0 6px 6px 0;
     border-radius: 0 6px 6px 0;
     padding: 0px 22px;
     height: 46px;
@@ -1193,11 +1156,8 @@ Editor Navs
     background-image: -webkit-linear-gradient(#fcfcfc, #eee);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#eee));
     background-image: -o-linear-gradient(#fcfcfc, #eee);
-    background-image: -moz-linear-gradient(#fcfcfc, #eee);
     background-image: linear-gradient(#fcfcfc, #eee);
     border: 1px solid #d5d5d5;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -1212,7 +1172,6 @@ Editor Navs
     background-image: -webkit-linear-gradient(#eee, #ddd);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd));
     background-image: -o-linear-gradient(#eee, #ddd);
-    background-image: -moz-linear-gradient(#eee, #ddd);
     background-image: linear-gradient(#eee, #ddd);
     border-color: #ccc;
 }
@@ -1223,7 +1182,6 @@ Editor Navs
     background-image: none;
     border-color: #b5b5b5;
     -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
@@ -1311,8 +1269,6 @@ Cellphones
     #top {
         margin-top: 15px;
         margin-right: 30px;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
         border-radius: 50%;
         background: #fff;
         padding: 1% 2.8% 3.5%;
@@ -1387,8 +1343,6 @@ html[dir="rtl"] header .navbar-default .navbar-nav > li > a:before {
     right: 50%;
     -webkit-transform: translateX(50%);
     -ms-transform: translateX(50%);
-    -moz-transform: translateX(50%);
-    -o-transform: translateX(50%);
     transform: translateX(50%);
 }
 html[dir="rtl"] header .headerContent {
@@ -1466,8 +1420,6 @@ html[dir="rtl"] .article_search_header #stype-field {
 html[dir="rtl"] .article_search_header #search-article-btn {
     margin-left: inherit !important;
     margin-right: -9px;
-    -webkit-border-radius: 6px 0 0 6px;
-    -moz-border-radius: 6px 0 0 6px;
     border-radius: 6px 0 0 6px;
 }
 html[dir="rtl"] .comments-form-header {
