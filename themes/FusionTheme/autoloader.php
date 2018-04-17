@@ -4,15 +4,16 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Genesis Interface
-| The Genesis Project - 2014 - 2016 (c)
-| Network Data Model Development
-| Filename: Genesis_ACP/acp_request.php
-| Author: Guidlsquare , enVision Sdn Bhd
-| Copyright patent 0517721 IPO
-| Author's all rights reserved.
+| Filename: FusionTheme/autoloader.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
-| Released under PHP-Fusion EPAL
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once INCLUDES."theme_functions_include.php";
 
