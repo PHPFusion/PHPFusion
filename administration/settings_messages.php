@@ -30,27 +30,28 @@ $pm_settings = [
 
 if (isset($_POST['save_settings'])) {
 
-    $pm_settings = [
+    $pm_settings = array(
         'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
         'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
         'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
         'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
         'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
-    ];
+    );
 
     if (\defender::safe()) {
         foreach ($pm_settings as $settings_name => $settings_value) {
-            $data = [
-                'settings_name'  => $settings_name,
-                'settings_value' => $settings_value
-            ];
-
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name', 'keep_session' => TRUE]);
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:val WHERE settings_name=:name", array(
+                ':name' => $settings_name,
+                ':val'  => $settings_value
+            ));
         }
         addNotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 }
+
+$result = dbquery("SELECT ");
+
 opentable($locale['message_settings']);
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
