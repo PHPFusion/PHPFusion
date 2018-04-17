@@ -347,20 +347,20 @@ class InstallerAdminSetup extends Install_Core {
                     } else {
                         dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
                     }
-
+                    $enabled_lang = implode('.', self::$siteData['enabled_languages']);
                     // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".implode('.', self::$siteData['enabled_languages'])."' WHERE settings_name='enabled_languages'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".$enabled_lang."' WHERE settings_name='enabled_languages'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='default_timezone'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='serveroffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteusername']."' WHERE settings_name='siteusername'");
 
-                    if (strpos(self::$siteData['enabled_languages'], '.')) {
+                    if (strpos($enabled_lang, '.')) {
 
                         // Update all existing panel and update new enabled language values
-                        dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".self::$siteData['enabled_languages']."'");
+                        dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".$enabled_lang."'");
 
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP BY link_language ASC");
                         $installed_languages = [];
@@ -370,7 +370,7 @@ class InstallerAdminSetup extends Install_Core {
                             }
                         }
 
-                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
 
@@ -393,7 +393,7 @@ class InstallerAdminSetup extends Install_Core {
                             }
                         }
 
-                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
 
                             foreach ($langDiff as $language) {
