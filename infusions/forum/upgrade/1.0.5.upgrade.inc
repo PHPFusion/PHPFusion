@@ -424,3 +424,30 @@ $inf_adminpanel[] = [
     "title"  => $locale['setup_3012'],
     "panel"  => "admin/forums.php"
 ];
+
+// Repairs manually linked forum image attachments to new updated paths
+if (db_exists(DB_FORUM_POSTS)) {
+    if (!function_exists("forum_img_replace_callback")) {
+        function forum_img_replace_callback($matches) {
+            if (substr($matches[3], -1, 1) != "/") {
+                if (!stristr($matches[3], 'infusions/forum')) {
+                    $matches[3] = str_replace('forum', 'infusions/forum', $matches[3]);
+                }
+
+                return "[img]".$matches[1].str_replace(array("?", "&amp;", "&", "="), "", $matches[3]).$matches[4]."[/img]";
+            } else {
+                return $matches[0];
+            }
+        }
+    }
+    $regex = '#\[img\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#si';
+    $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_message LIKE '%[img]".$siteurl."%' ORDER BY post_id ASC");
+    if (dbrows($result)) {
+        $i = 1;
+        while ($data = dbarray($result)) {
+            $data['post_message'] = preg_replace_callback($regex, "forum_img_replace_callback", $data['post_message']);
+            dbquery("UPDATE ".DB_FORUM_POSTS." SET post_message=:post WHERE post_id=:post_id", array(':post' => $data['post_message'], ':post_id' => $data['post_id']));
+            $i++;
+        }
+    }
+}

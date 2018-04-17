@@ -539,7 +539,7 @@ abstract class ForumServer {
     /**
      * Mood Instance
      *
-     * @return null
+     * @return null|\PHPFusion\Forums\Threads\Forum_Mood
      */
     public static function mood() {
         if (self::$forum_mood_instance === NULL) {

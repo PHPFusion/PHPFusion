@@ -784,8 +784,8 @@ class ForumThreads extends ForumServer {
         $this->thread_info['post_rows'] = dbrows($result);
 
         if ($this->thread_info['post_rows'] > 0) {
-
-            $response = $this->mood()->post_mood();
+            $mood = self::mood();
+            $response = $mood->post_mood();
 
             if ($response) {
                 redirect(FUSION_REQUEST);
