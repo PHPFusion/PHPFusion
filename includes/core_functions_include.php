@@ -1601,7 +1601,7 @@ function fusion_get_settings($key = NULL) {
  * @return null
  */
 function fusion_get_locale($key = NULL, $include_file = '') {
-    $locale = \PHPFusion\Locale::__getInstance('Default');
+    $locale = \PHPFusion\Locale::getInstance('default');
     if ($include_file) {
         $locale::setLocale($include_file);
     }

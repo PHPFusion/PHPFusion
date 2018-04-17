@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
 
 /**
@@ -30,22 +31,21 @@ class Locale {
 
     private static $locale_file = [];
     private static $locale = [];
-    private static $instance = NULL;
+    private static $instances = NULL;
 
     /**
-     * Ensure that the class is only used once
+     * Get locale instance by key
      *
-     * @param $key
+     * @param string $key
      *
-     * @return mixed
+     * @return static
      */
-    public static function __getInstance($key) {
-
-        if (self::$instance[$key] === NULL) {
-            self::$instance[$key] = new static();
+    public static function getInstance($key = 'default') {
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static();
         }
 
-        return self::$instance[$key];
+        return self::$instances[$key];
     }
 
     /**
@@ -67,7 +67,7 @@ class Locale {
     /**
      * Iinclude a new locale file
      *
-     * @param string $include_file Can be an array or a string
+     * @param $include_file Can be an array or a string
      */
     public static function setLocale($include_file) {
         if (!empty($include_file)) {

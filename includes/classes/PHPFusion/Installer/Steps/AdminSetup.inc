@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Steps;
 
 use PHPFusion\Installer\Batch_Core;
@@ -29,15 +30,17 @@ class InstallerAdminSetup extends Install_Core {
         require_once(INCLUDES.'multisite_include.php');
         $validation = Requirements::get_system_validation();
         if (isset($validation[3])) {
-            switch (INSTALLATION_STEP) {
-                case self::STEP_TRANSFER:
-                    return $this->_transfer();
-                    break;
-                case self::STEP_PRIMARY_ADMIN_FORM:
-                    return $this->_setup();
-                    break;
-                default:
-                    return NULL;
+            if ($this->tableCheck()) {
+                switch (INSTALLATION_STEP) {
+                    case self::STEP_TRANSFER:
+                        return $this->_transfer();
+                        break;
+                    case self::STEP_PRIMARY_ADMIN_FORM:
+                        return $this->_setup();
+                        break;
+                    default:
+                        return NULL;
+                }
             }
         } else {
             return NULL;
@@ -100,14 +103,13 @@ class InstallerAdminSetup extends Install_Core {
 
                     require_once(INCLUDES."multisite_include.php");
                     self::installer_step(self::STEP_INTRO);
-                    new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
-                        filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                    new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                 }
             }
         }
 
-        $result = dbquery("SELECT * FROM ".DB_PREFIX."users WHERE user_id='1'");
+        $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='1'");
 
         if (dbrows($result) > 0) {
 
@@ -124,16 +126,11 @@ class InstallerAdminSetup extends Install_Core {
                     'callback_check' => 'username_check'
                 ]
             );
-            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
-                ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
-            $content .= form_text('password1', self::$locale['setup_1505'], '',
-                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-            $content .= form_text('password2', self::$locale['setup_1506'], '',
-                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-            $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
-                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-            $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
-                ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
+            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'], ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
+            $content .= form_text('password1', self::$locale['setup_1505'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
+            $content .= form_text('password2', self::$locale['setup_1506'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
+            $content .= form_text('admin_password1', self::$locale['setup_1507'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
+            $content .= form_text('admin_password2', self::$locale['setup_1508'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
 
         }
 
@@ -354,7 +351,7 @@ class InstallerAdminSetup extends Install_Core {
                     // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".implode('.', self::$siteData['enabled_languages'])."' WHERE settings_name='enabled_languages'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='default_timezone'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='serveroffset'");
@@ -365,7 +362,7 @@ class InstallerAdminSetup extends Install_Core {
                         // Update all existing panel and update new enabled language values
                         dbquery("UPDATE ".DB_PREFIX."panels SET panel_languages='".self::$siteData['enabled_languages']."'");
 
-                        $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
+                        $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP BY link_language ASC");
                         $installed_languages = [];
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
@@ -388,7 +385,7 @@ class InstallerAdminSetup extends Install_Core {
                         /*
                          * Need to run another check with email_templates because installed languages might be different.
                          */
-                        $result = dbquery("SELECT template_language FROM ".DB_PREFIX."email_templates GROUP by template_language ASC");
+                        $result = dbquery("SELECT template_language FROM ".DB_PREFIX."email_templates GROUP BY template_language ASC");
                         $installed_languages = [];
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {

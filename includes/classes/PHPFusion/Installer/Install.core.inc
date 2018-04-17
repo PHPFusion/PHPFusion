@@ -335,7 +335,6 @@ class Install_Core extends Infusion_Core {
 				});
 			});
         ");
-
         // Instead of using INSTALLATION STEP, we let the each file control
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
@@ -395,6 +394,23 @@ class Install_Core extends Infusion_Core {
     }
 
     private function __clone() {
+    }
+
+    /**
+     * Installer system checks
+     * Redirect to step 1 if the database has been intentionally dropped during the installation.
+     */
+    protected function tableCheck() {
+        if (!empty(self::$connection['db_name'])) {
+            $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
+            if ($rows = dbrows($result)) {
+                return TRUE;
+            } else {
+                $_SESSION['step'] = 1;
+                redirect(FUSION_REQUEST);
+            }
+        }
+        return FALSE;
     }
 
 }

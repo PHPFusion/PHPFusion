@@ -256,9 +256,9 @@ class InstallerDbSetup extends Install_Core {
                         if (!$debug_process) {
                             foreach ($to_insert_rows as $table_name => $row_inserts) {
                                 $current_count = $current_count + 1;
-                                $microtime = microtime(TRUE);
+                                //$microtime = microtime(TRUE);
                                 if ($result = dbquery($row_inserts)) {
-                                    $microtime = microtime(TRUE) - $microtime;
+                                    //$microtime = microtime(TRUE) - $microtime;
                                     //$message .= $table_name." inserted<br/>\n";
                                     //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                                 }
