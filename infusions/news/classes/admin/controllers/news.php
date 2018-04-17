@@ -86,13 +86,12 @@ class NewsAdmin extends NewsAdminModel {
                 'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
                 'news_language'            => form_sanitizer($_POST['news_language'], '', 'news_language'),
                 'news_image_front_default' => 0,
+                'news_breaks'              => 'n',
                 'news_image_align'         => form_sanitizer($_POST['news_image_align'], 'pull-left', 'news_image_align'),
             ];
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
                 $this->news_data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";
-            } else {
-                $this->news_data['news_breaks'] = "n";
             }
 
             if (\defender::safe()) {
@@ -108,6 +107,7 @@ class NewsAdmin extends NewsAdminModel {
                     if (!empty($_POST['news_image_align'])) {
                         $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                     }
+
                 } else {
 
                     if (!empty($_FILES['featured_image'])) { // when files is uploaded.
@@ -136,7 +136,8 @@ class NewsAdmin extends NewsAdminModel {
                             $this->news_data['news_image_front_default'] = $photo_data['news_image_id'];
                         }
                     }
-                    $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
+                    // Repeated
+                    //$this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                 }
 
                 if (isset($_POST['del_photo'])) {
@@ -153,12 +154,19 @@ class NewsAdmin extends NewsAdminModel {
                     if ($this->news_data['news_sticky'] == 1) {
                         dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     }
+
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
+
                         dbquery_insert(DB_NEWS, $this->news_data, 'update');
+
                         addNotice('success', self::$locale['news_0101']);
+
                     } else {
+
                         $this->data['news_name'] = fusion_get_userdata('user_id');
+
                         $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
+
                         // update the last uploaded image to the news.
                         $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
                         if (dbrows($photo_result)) {
@@ -170,11 +178,14 @@ class NewsAdmin extends NewsAdminModel {
                         }
                         addNotice('success', self::$locale['news_0100']);
                     }
+
                     if (isset($_POST['save_and_close'])) {
                         redirect(clean_request("", ['ref', 'action', 'news_id'], FALSE));
                     } else {
                         redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', ['ref'], FALSE));
                     }
+
+
                 }
             }
         }
@@ -269,12 +280,6 @@ class NewsAdmin extends NewsAdminModel {
             ];
         }
 
-        echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
-        echo "<div class='spacer-sm'>\n";
-        self::display_newsButtons('newsContent');
-        echo "</div>\n";
-        echo "<hr/>\n";
-
         // Set Session Cache
         echo Admins::getInstance()->requestCache('news_form', 'N', $this->news_data['news_id'], array(
             'news_subject'  => self::$locale['news_0200'],
@@ -282,6 +287,12 @@ class NewsAdmin extends NewsAdminModel {
             'news_extended' => self::$locale['news_0204']
         ));
 
+
+        echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
+        echo "<div class='spacer-sm'>\n";
+        self::display_newsButtons('newsContent');
+        echo "</div>\n";
+        echo "<hr/>\n";
         echo form_hidden('news_id', "", $this->news_data['news_id']);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -295,15 +306,16 @@ class NewsAdmin extends NewsAdminModel {
                 'placeholder' => self::$locale['news_0200'],
             ]
         );
+        add_to_head("<style>.panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }</style>");
         echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
         echo "<li class='active'><a data-toggle='tab' href='#snippet'>".self::$locale['news_0203']."</a></li>";
         echo "<li><a data-toggle='tab' href='#extended'>".self::$locale['news_0204']."</a></li>";
         echo "</ul>\n";
         echo "<div class='tab-content p-0'>\n";
-        echo "<div id='snippet' class='tab tab-pane fade in active'>\n";
+        echo "<div id='snippet' class='tab tab-pane fade in active p-0'>\n";
         echo form_textarea('news_news', '', $this->news_data['news_news'], $snippetSettings);
         echo "</div>\n";
-        echo "<div id='extended' class='tab tab-pane fade'>\n";
+        echo "<div id='extended' class='tab tab-pane fade p-0'>\n";
         echo form_textarea('news_extended', '', $this->news_data['news_extended'], $extendedSettings);
         echo "</div>\n";
         echo "</div>\n";

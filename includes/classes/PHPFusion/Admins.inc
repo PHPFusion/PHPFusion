@@ -233,7 +233,7 @@ class Admins {
                 console.log(e);
                 console.log(poll);
                 if (typeof poll === 'undefined') {
-                    console.log('we are starting a long poll now');
+                    //console.log('we are starting a long poll now');
                     timedCacheRequest(ttl);
                 }
             }
