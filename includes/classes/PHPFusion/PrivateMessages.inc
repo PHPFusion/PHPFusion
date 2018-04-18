@@ -180,17 +180,16 @@ class PrivateMessages {
             set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
 
             $query = [
-                "inbox"   => array($this->info['inbox_total'], "message_folder='0'",),
-                "outbox"  => array($this->info['outbox_total'], "message_folder='1'"),
-                "archive" => array($this->info['archive_total'], "message_folder='2'"),
+                'inbox'   => [$this->info['inbox_total'], "message_folder='0'"],
+                'outbox'  => [$this->info['outbox_total'], "message_folder='1'"],
+                'archive' => [$this->info['archive_total'], "message_folder='2'"]
             ];
 
-            $totals = array(
+            $totals = [
                 'inbox'   => $this->info['inbox_count'],
                 'outbox'  => $this->info['outbox_count'],
                 'archive' => $this->info['archive_count']
-            );
-
+            ];
 
             if ($totals[$_GET['folder']] > 0) {
 
@@ -300,11 +299,11 @@ class PrivateMessages {
             $html .= form_hidden('selectedPM', '', $_GET['msg_read']);
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == "archive") {
-                $html .= form_button('unarchive_pm', fusion_get_locale('413'), 'unarchive_pm', array('icon' => 'fa fa-unlock'));
+                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']);
             } else if ($_GET['folder'] == "inbox") {
-                $html .= form_button('archive_pm', fusion_get_locale('412'), 'archive_pm', array('icon' => 'fa fa-lock'));
+                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['icon' => 'fa fa-lock']);
             }
-            $html .= form_button('delete_pm', fusion_get_locale('416'), 'delete_pm', array('icon' => 'fa fa-trash-o', 'class' => 'btn-danger'));
+            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger']);
             $html .= "</div>\n";
             $html .= closeform();
         } else {
@@ -321,11 +320,11 @@ class PrivateMessages {
             </div>";
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == 'archive') {
-                $html .= form_button('unarchive_pm', fusion_get_locale('413'), 'unarchive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock'));
+                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']);
             } elseif ($_GET['folder'] !== 'outbox') {
-                $html .= form_button('archive_pm', fusion_get_locale('412'), 'archive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock'));
+                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']);
             }
-            $html .= form_button('delete_pm', fusion_get_locale('416'), 'delete_pm', array('class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o'));
+            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o']);
             $html .= "</div>\n";
             $html .= "<div class='dropdown display-inline-block m-r-10'>
                 <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'>".$this->locale['444']."&hellip; <span class='caret'></span></a>
@@ -375,7 +374,7 @@ class PrivateMessages {
                         'user_outbox'          => !empty($data['user_outbox']) ? intval($data['user_outbox']) : intval($settings['user_outbox']),
                         'user_archive'         => !empty($data['user_archive']) ? intval($data['user_archive']) : intval($settings['user_archive']),
                         'user_pm_email_notify' => !empty($data['user_pm_email_notify']) ? intval($data['user_pm_email_notify']) : intval($settings['user_pm_email_notify']),
-                        'user_pm_save_sent'    => !empty($data['user_pm_save_sent']) ? intval($data['user_pm_save_sent']) : intval($settings['user_pm_save_sent']),
+                        'user_pm_save_sent'    => !empty($data['user_pm_save_sent']) ? intval($data['user_pm_save_sent']) : intval($settings['user_pm_save_sent'])
                     ];
                 }
             } else {
@@ -411,7 +410,7 @@ class PrivateMessages {
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                    "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                    "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                 $within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'],
                         "user_archive") > 0 && self::get_pm_settings($userdata['user_id'],
                         "user_archive") - 1 > $this->info['archive_total']) ? TRUE : FALSE;
@@ -491,7 +490,7 @@ class PrivateMessages {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
                             "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
-                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read=:messageread WHERE message_id=:messageid", [':messageread' => '1', ':messageid' => intval($message_id)]);
                         }
                     }
                     redirect(clean_request('', ['folder'], TRUE));
@@ -503,7 +502,7 @@ class PrivateMessages {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
                             "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
-                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read=:messageread WHERE message_id=:messageid", [':messageread' => '0', ':messageid' => intval($message_id)]);
                         }
                     }
                     redirect(clean_request('', ['folder'], TRUE));
@@ -516,7 +515,7 @@ class PrivateMessages {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
                             "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
-                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read=:messageread WHERE message_id=:messageid", [':messageread' => '1', ':messageid' => intval($message_id)]);
                         }
                     }
                 }
@@ -529,7 +528,7 @@ class PrivateMessages {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
                             "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
                         if ($ownership && isset($this->info['items'][$message_id])) {
-                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read=:messageread WHERE message_id=:messageid", [':messageread' => '0', ':messageid' => intval($message_id)]);
                         }
                     }
                 }
