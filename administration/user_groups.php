@@ -453,7 +453,7 @@ class UserGroups {
             $html .= "</div>\n";
             $html .= "</div>\n";
             $html .= closeform();
-            $html .= fusion_get_function('closeside');
+            $html .= fusion_get_function('closeside', '');
         } else {
             $html .= "<div class='well text-center'>".self::$locale['GRP_463']."</div>\n";
         }
