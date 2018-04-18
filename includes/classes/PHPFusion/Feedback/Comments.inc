@@ -263,7 +263,7 @@ class Comments {
                     $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, '');
 
                     $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
-                        ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
+                        ['class' => 'btn-primary spacer-sm post_comment', 'input_id' => $this->getParams('comment_key').'-post_comment']
                     );
 
                     ob_start();
@@ -308,11 +308,11 @@ class Comments {
                         display_comments_ratings($info = []);
 
                         $stars = '';
+                        $ratings = '';
                         for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
                             $stars .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
                         }
 
-                        $ratings = '';
                         for ($i = 5; $i >= 1; $i--) {
                             $ratings .= '<div>';
                             $bal = 5 - $i;
