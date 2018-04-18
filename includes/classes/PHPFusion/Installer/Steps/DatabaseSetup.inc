@@ -271,46 +271,48 @@ class InstallerDbSetup extends Install_Core {
                     }
 
                     //Checking for upgrade
-                    $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
-                    if (!empty($to_upgrade) && $debug_batching === FALSE) {
-                        $error = FALSE;
-                        //$message = "<strong>Building version upgrades...</strong>\n";
-                        if (!$debug_process) {
-                            $filename = '';
-                            foreach ($to_upgrade as $filename => $file_upgrades) {
-                                $current_count = $current_count + 1;
-                                //$microtime = microtime(TRUE);
-                                if (!empty($file_upgrades)) {
-                                    foreach ($file_upgrades as $callback_method => $upgrades) {
-                                        if (!empty($upgrades)) {
-                                            self::$allow_delete = TRUE;
-                                            $method = $callback_method."_infuse";
-                                            if (method_exists($this, $method)) {
-                                                //dynamically select object pairing dynamic assigned function on dynamic callback.
-                                                $sql = [
-                                                    $callback_method => $upgrades
-                                                ];
-                                                $error = $this->$method($sql);
+                    if ($debug_batching === FALSE) {
+                        $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
+                        if (!empty($to_upgrade) && $debug_batching === FALSE) {
+                            $error = FALSE;
+                            //$message = "<strong>Building version upgrades...</strong>\n";
+                            if (!$debug_process) {
+                                $filename = '';
+                                foreach ($to_upgrade as $filename => $file_upgrades) {
+                                    $current_count = $current_count + 1;
+                                    //$microtime = microtime(TRUE);
+                                    if (!empty($file_upgrades)) {
+                                        foreach ($file_upgrades as $callback_method => $upgrades) {
+                                            if (!empty($upgrades)) {
+                                                self::$allow_delete = TRUE;
+                                                $method = $callback_method."_infuse";
+                                                if (method_exists($this, $method)) {
+                                                    //dynamically select object pairing dynamic assigned function on dynamic callback.
+                                                    $sql = [
+                                                        $callback_method => $upgrades
+                                                    ];
+                                                    $error = $this->$method($sql);
+                                                }
                                             }
                                         }
                                     }
+                                    //$microtime = microtime(TRUE) - $microtime;
+                                    //$message .= "Building version upgrades -".$filename;
+                                    //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                                 }
-                                //$microtime = microtime(TRUE) - $microtime;
-                                //$message .= "Building version upgrades -".$filename;
-                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
+                                $error = 1;
+                                if (!$error) {
+                                    //$message = "<strong>Updating your OS to latest version.</strong>\n";
+                                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
+                                        ':version_value' => $filename,
+                                        ':version_col'   => 'version'
+                                    ]);
+                                    //addNotice('warning', $message);
+                                }
+                            } else {
+                                print_p('To Upgrade:');
+                                print_p($to_upgrade);
                             }
-                            $error = 1;
-                            if (!$error) {
-                                //$message = "<strong>Updating your OS to latest version.</strong>\n";
-                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
-                                    ':version_value' => $filename,
-                                    ':version_col'   => 'version'
-                                ]);
-                                //addNotice('warning', $message);
-                            }
-                        } else {
-                            print_p('To Upgrade:');
-                            print_p($to_upgrade);
                         }
                     }
 
@@ -342,7 +344,7 @@ class InstallerDbSetup extends Install_Core {
                 $errors = Batch_Core::getInstance()->ProgressHasError();
                 //print_p($errors);
                 if (!$errors) {
-                    if (!$debug_process) {
+                    if ($debug_process === FALSE) {
                         require_once(INCLUDES.'htaccess_include.php');
                         write_config(self::$connection);
                         write_htaccess();

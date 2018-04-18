@@ -379,6 +379,10 @@ class Batch_Core extends Install_Core {
                 if (isset($col_attr['key'])) {
                     $keys[$col_attr['key']] = $col_name;
                 }
+                // Register column full text
+                if (!empty($col_attr['full_text'])) {
+                    $full_texts[] = $col_name;
+                }
 
                 // Default Attr
                 $default_create = '';
@@ -415,6 +419,11 @@ class Batch_Core extends Install_Core {
                     $line[] = $key_type > 1 ? "KEY $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
                 }
             }
+
+            if (!empty($full_texts)) {
+                $line[] = "FULLTEXT(".implode(',', $full_texts).")";
+            }
+
         }
 
         return strtr(self::CREATE_TABLE_STATEMENT, [

@@ -1248,9 +1248,10 @@ function get_core_tables($localeset) {
             'unsigned'       => TRUE,
         ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'user_name'            => [
-            'type'   => 'VARCHAR',
-            'length' => 30,
-            'key'    => 2 //KEY user_name (user_name),
+            'type'      => 'VARCHAR',
+            'length'    => 30,
+            'key'       => 2, //KEY user_name (user_name),
+            'full_text' => TRUE, // FULLTEXT (user_name ASC)
         ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
         'user_algo'            => [
             'type'    => 'VARCHAR',
