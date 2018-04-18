@@ -257,6 +257,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
     /**
      * Ranks Listing
+     *
      * @return string
      */
     protected function displayRankList() {

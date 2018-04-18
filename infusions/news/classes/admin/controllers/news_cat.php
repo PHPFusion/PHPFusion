@@ -425,6 +425,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
 
     /**
      * Recursive function to display administration table
+     *
      * @param     $data
      * @param int $id
      */

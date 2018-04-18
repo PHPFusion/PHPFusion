@@ -26,11 +26,13 @@ if (!defined("IN_FUSION")) {
 /**
  * Functions for Blog System
  * Class Functions
+ *
  * @package PHPFusion\Blog
  */
 class Functions {
     /**
      * Blog Category Hierarchy Full Data
+     *
      * @return array
      */
     public static function get_blogCat() {
@@ -39,7 +41,9 @@ class Functions {
 
     /**
      * Get Single Blog Category Data
+     *
      * @param $id
+     *
      * @return array|bool
      */
     public static function get_blogCatData($id) {
@@ -52,7 +56,9 @@ class Functions {
 
     /**
      * Validate Blog Cat
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_blogCat($id) {
@@ -69,6 +75,7 @@ class Functions {
 
     /**
      * Get Blog Category Hierarchy Index
+     *
      * @return array
      */
     public static function get_blogCatsIndex() {
@@ -77,6 +84,7 @@ class Functions {
 
     /**
      * Format Blog Category Listing
+     *
      * @return array
      */
     public static function get_blogCatsData() {
@@ -93,7 +101,9 @@ class Functions {
 
     /**
      * Validate blog
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_blog($id) {
@@ -107,6 +117,7 @@ class Functions {
     /**
      * Session based blog reads updater
      * Not used at this moment
+     *
      * @param $blog_id
      */
     public static function update_blogReads($blog_id) {
@@ -126,10 +137,12 @@ class Functions {
 
     /**
      * Get the best available paths for image and thumbnail
+     *
      * @param      $blog_image
      * @param      $blog_image_t1
      * @param      $blog_image_t2
      * @param bool $hiRes -- true for image, false for thumb
+     *
      * @return bool|string
      */
     public static function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {

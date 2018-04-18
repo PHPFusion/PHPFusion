@@ -30,6 +30,7 @@ class NewsAdminModel extends NewsServer {
 
     /**
      * News Table
+     *
      * @var array
      */
     protected $default_news_data = [
@@ -57,6 +58,7 @@ class NewsAdminModel extends NewsServer {
 
     /**
      * News Gallery Table
+     *
      * @var array
      */
     protected $default_image_data = [
@@ -90,7 +92,9 @@ class NewsAdminModel extends NewsServer {
 
     /**
      * Returns nearest data unit
+     *
      * @param $total_bit
+     *
      * @return int
      */
     protected function calculate_byte($total_bit) {

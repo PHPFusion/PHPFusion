@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_downloads')) {
     /**
      * Download Page
+     *
      * @param $info
      */
     function render_downloads($info) {
@@ -171,7 +172,9 @@ if (!function_exists('render_downloads')) {
 if (!function_exists('display_download_menu')) {
     /**
      * Download side bar
+     *
      * @param $info
+     *
      * @return string
      */
     function display_download_menu($info) {

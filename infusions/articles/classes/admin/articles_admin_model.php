@@ -22,6 +22,7 @@ class ArticlesAdminModel extends ArticlesServer {
 
     /**
      * Articles Table
+     *
      * @var array
      */
     protected $default_article_data = [

@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists("display_main_articles")) {
     /**
      * Articles Page Template
+     *
      * @param $info
      */
     function display_main_articles($info) {
@@ -149,6 +150,7 @@ if (!function_exists("display_main_articles")) {
 if (!function_exists("render_article")) {
     /**
      * Articles Item Container
+     *
      * @param      $subject
      * @param      $article
      * @param      $info
@@ -259,6 +261,7 @@ if (!function_exists("render_article")) {
 if (!function_exists("render_article_item")) {
     /**
      * Articles Item Page Template
+     *
      * @param $info
      */
     function render_article_item($info) {

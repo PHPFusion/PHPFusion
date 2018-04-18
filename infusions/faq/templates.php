@@ -59,12 +59,12 @@ if (!function_exists('render_faq_item')) {
             add_to_jquery('$(".top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},100);});');
             foreach ($info['faq_items'] as $id => $faq_data) {
                 $html->set_block('faq', [
-                    'faq_id'         => $faq_data['faq_id'],
-                    'faq_question'   => $faq_data['faq_question'],
-                    'faq_answer'     => $faq_data['faq_answer'],
-                    'print_link'     => "<a href='".$faq_data['print']['link']."' title='".$faq_data['print']['title']."'><i class='fa fa-fw fa-print m-l-10'></i></a>",
-                    'edit_link'      => !empty($faq_data['edit']['link']) ? "<a href='".$faq_data['edit']['link']."' title='".$faq_data['edit']['title']."'><i class='fa fa-fw fa-pencil m-l-10'></i></a>" : '',
-                    'delete_link'    => !empty($faq_data['delete']['link']) ? "<a href='".$faq_data['delete']['link']."' title='".$faq_data['delete']['title']."'><i class='fa fa-fw fa-trash m-l-10'></i></a>" : ''
+                    'faq_id'       => $faq_data['faq_id'],
+                    'faq_question' => $faq_data['faq_question'],
+                    'faq_answer'   => $faq_data['faq_answer'],
+                    'print_link'   => "<a href='".$faq_data['print']['link']."' title='".$faq_data['print']['title']."'><i class='fa fa-fw fa-print m-l-10'></i></a>",
+                    'edit_link'    => !empty($faq_data['edit']['link']) ? "<a href='".$faq_data['edit']['link']."' title='".$faq_data['edit']['title']."'><i class='fa fa-fw fa-pencil m-l-10'></i></a>" : '',
+                    'delete_link'  => !empty($faq_data['delete']['link']) ? "<a href='".$faq_data['delete']['link']."' title='".$faq_data['delete']['title']."'><i class='fa fa-fw fa-trash m-l-10'></i></a>" : ''
                 ]);
             }
         } else {

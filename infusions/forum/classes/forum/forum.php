@@ -66,7 +66,7 @@ class Forum extends ForumServer {
             }
         }
 
-        $this->forum_info = array(
+        $this->forum_info = [
             'forum_id'         => isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0,
             'parent_id'        => 0,
             'forum_page_link'  => [],
@@ -78,7 +78,7 @@ class Forum extends ForumServer {
             'threads'          => [],
             'section'          => isset($_GET['section']) ? $_GET['section'] : 'thread',
             'new_topic_link'   => ['link' => FORUM.'newthread.php', 'title' => $locale['forum_0057']],
-        );
+        ];
 
         if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php')) {
             add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('forum_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_forums.php"/>');

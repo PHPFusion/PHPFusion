@@ -22,6 +22,7 @@ use PHPFusion\QuantumFields;
 
 /**
  * Class ForumAdminSettings
+ *
  * @package PHPFusion\Forums\Admin
  */
 class ForumAdminSettings extends ForumAdminInterface {

@@ -21,6 +21,7 @@ use \PHPFusion\BreadCrumbs;
 
 /**
  * Class Weblinks
+ *
  * @package PHPFusion\Weblinks
  */
 abstract class Weblinks extends WeblinksServer {
@@ -34,6 +35,7 @@ abstract class Weblinks extends WeblinksServer {
 
     /**
      * Executes main page information
+     *
      * @return array
      */
     public function set_WeblinksInfo() {
@@ -66,6 +68,7 @@ abstract class Weblinks extends WeblinksServer {
 
     /**
      * Outputs core filters variables
+     *
      * @return array
      */
     private function get_WeblinkFilters() {
@@ -89,6 +92,7 @@ abstract class Weblinks extends WeblinksServer {
 
     /**
      * Outputs category variables
+     *
      * @return mixed
      */
     protected function get_WeblinkCategories() {
@@ -395,7 +399,7 @@ abstract class Weblinks extends WeblinksServer {
 
         for ($i = 1; $i < 3; $i++) {
             $inf['navbar'][$i] = [
-                'links'  => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa ".$titles[$i]['buton']." m-r-10'></i>".$titles[$i]['locale']."</a>"
+                'links' => "<a class='btn btn-default snv".($active == $i ? ' active' : '')."' href='".INFUSIONS."weblinks/weblinks.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : "").(isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : "")."switchview=".$i."'><i class='fa ".$titles[$i]['buton']." m-r-10'></i>".$titles[$i]['locale']."</a>"
             ];
         }
 

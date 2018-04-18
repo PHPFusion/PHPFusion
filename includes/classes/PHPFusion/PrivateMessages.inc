@@ -353,7 +353,7 @@ class PrivateMessages {
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == 'archive') {
                 $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']);
-            } elseif ($_GET['folder'] !== 'outbox') {
+            } else if ($_GET['folder'] !== 'outbox') {
                 $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']);
             }
             $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o']);

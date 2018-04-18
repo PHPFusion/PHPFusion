@@ -211,8 +211,8 @@ abstract class ForumServer {
     /**
      * Get HTML source of forum rank images of a member
      *
-     * @param int   $posts  The number of posts of the member
-     * @param int   $level  The level of the member
+     * @param int   $posts The number of posts of the member
+     * @param int   $level The level of the member
      * @param array $groups The groups of the member
      *
      * @return string HTML source of forum rank images

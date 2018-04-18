@@ -281,11 +281,11 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         // Set Session Cache
-        echo Admins::getInstance()->requestCache('news_form', 'N', $this->news_data['news_id'], array(
+        echo Admins::getInstance()->requestCache('news_form', 'N', $this->news_data['news_id'], [
             'news_subject'  => self::$locale['news_0200'],
             'news_news'     => self::$locale['news_0203'],
             'news_extended' => self::$locale['news_0204']
-        ));
+        ]);
 
 
         echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
@@ -686,12 +686,12 @@ class NewsAdmin extends NewsAdminModel {
                                 </div>
                             </div>
                         </div>
-                        <?php
+                    <?php
                     endforeach;
                 else:
                     ?>
                     <div class="well text-center"><?php echo self::$locale['news_0267'] ?></div>
-                    <?php
+                <?php
                 endif; ?>
             </div>
         </div>
@@ -1081,7 +1081,7 @@ class NewsAdmin extends NewsAdminModel {
                             </td>
                             <td><?php echo $data['news_id'] ?></td>
                         </tr>
-                        <?php
+                    <?php
                     endwhile;
                 else: ?>
                     <tr>

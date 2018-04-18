@@ -250,7 +250,9 @@ function blog_listing() {
 
 /**
  * Returns nearest data unit
+ *
  * @param $total_bit
+ *
  * @return int
  */
 function calculate_byte($total_bit) {
@@ -266,10 +268,12 @@ function calculate_byte($total_bit) {
 
 /**
  * Function to progressively return closest full image_path
+ *
  * @param      $blog_image
  * @param      $blog_image_t1
  * @param      $blog_image_t2
  * @param bool $hiRes
+ *
  * @return string
  */
 function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {

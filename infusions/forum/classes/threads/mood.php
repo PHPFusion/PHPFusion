@@ -22,6 +22,7 @@ use PHPFusion\QuantumFields;
 
 /**
  * Class ForumMood
+ *
  * @package PHPFusion\Forums\Threads
  */
 class Forum_Mood extends ForumServer {
@@ -34,7 +35,9 @@ class Forum_Mood extends ForumServer {
 
     /**
      * Used as post
+     *
      * @param $post_data
+     *
      * @return $this
      */
     public function set_PostData($post_data) {
@@ -193,6 +196,7 @@ class Forum_Mood extends ForumServer {
      * Mood should be present.
      * Static calls for caching, so only single query
      * Label parsing
+     *
      * @return string
      */
 

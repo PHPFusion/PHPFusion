@@ -48,7 +48,9 @@ if (!column_exists(DB_FAQS, 'faq_language', FALSE)) {
 }
 
 $settings = get_settings('faq');
-if (!isset($settings['faq_allow_submission'])) $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('faq_allow_submission', '1', 'faq')";
+if (!isset($settings['faq_allow_submission'])) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('faq_allow_submission', '1', 'faq')";
+}
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/faq/faq.svg', admin_link='../infusions/faq/faq_admin.php' WHERE admin_rights='FQ'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='faq.php'";
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

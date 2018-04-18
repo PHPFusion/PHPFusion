@@ -23,6 +23,7 @@ class WeblinksAdminModel extends WeblinksServer {
 
     /**
      * Articles Table
+     *
      * @var array
      */
     protected $default_weblink_data = [

@@ -651,7 +651,7 @@ textarea.form-control {
 
 /* btn-default */
 .btn-primary, .btn.btn-default.active {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255) !important;
     background: #2854A1;
 }
 

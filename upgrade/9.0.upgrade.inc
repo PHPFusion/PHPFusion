@@ -87,14 +87,14 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
     while ($data = dbarray($result)) {
         $current_rights = explode('.', $data['user_rights']);
         $isset_rights = array_flip($current_rights);
-        $remove_rights = array('AC', 'DC', 'NC', 'WC', 'S5', 'S8', 'S11', 'S13', 'SU');
+        $remove_rights = ['AC', 'DC', 'NC', 'WC', 'S5', 'S8', 'S11', 'S13', 'SU'];
         foreach ($remove_rights as $remove) {
             if (isset($isset_rights[$remove])) {
                 unset($current_rights[$remove]);
             }
         }
         if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN) {
-            $new_rights = array('PL', 'MI', 'LANG', 'TS', 'MAIL');
+            $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
             foreach ($new_rights as $add) {
                 if (!isset($isset_rights[$add])) {
                     $current_rights[] = $add;

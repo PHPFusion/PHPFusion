@@ -271,6 +271,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
     /**
      * Display Buttons for Form
+     *
      * @param      $unique_id
      * @param bool $breaker
      */

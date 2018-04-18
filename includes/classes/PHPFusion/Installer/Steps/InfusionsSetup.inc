@@ -158,7 +158,6 @@ class InstallerInfusions extends Install_Core {
             }
 
 
-
         }
 
         return $content;

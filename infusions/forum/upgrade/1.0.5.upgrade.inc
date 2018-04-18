@@ -434,7 +434,7 @@ if (db_exists(DB_FORUM_POSTS)) {
                     $matches[3] = str_replace('forum', 'infusions/forum', $matches[3]);
                 }
 
-                return "[img]".$matches[1].str_replace(array("?", "&amp;", "&", "="), "", $matches[3]).$matches[4]."[/img]";
+                return "[img]".$matches[1].str_replace(["?", "&amp;", "&", "="], "", $matches[3]).$matches[4]."[/img]";
             } else {
                 return $matches[0];
             }
@@ -446,7 +446,7 @@ if (db_exists(DB_FORUM_POSTS)) {
         $i = 1;
         while ($data = dbarray($result)) {
             $data['post_message'] = preg_replace_callback($regex, "forum_img_replace_callback", $data['post_message']);
-            dbquery("UPDATE ".DB_FORUM_POSTS." SET post_message=:post WHERE post_id=:post_id", array(':post' => $data['post_message'], ':post_id' => $data['post_id']));
+            dbquery("UPDATE ".DB_FORUM_POSTS." SET post_message=:post WHERE post_id=:post_id", [':post' => $data['post_message'], ':post_id' => $data['post_id']]);
             $i++;
         }
     }

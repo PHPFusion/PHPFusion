@@ -153,7 +153,7 @@ class Admins {
      *
      * @return string
      */
-    public function requestCache($form_id, $form_type, $item_id, array $callback_fields = array(), $cache_time = 30000) {
+    public function requestCache($form_id, $form_type, $item_id, array $callback_fields = [], $cache_time = 30000) {
         /*
         add_to_footer("<script src='".INCLUDES."jquery/confirm/jquery-confirm.min.js'></script>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/confirm/jquery-confirm.min.css'>");
@@ -354,9 +354,9 @@ class Admins {
     }
 
     /**
-     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons         - Section Icons
+     * @param $icons - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
@@ -450,7 +450,7 @@ class Admins {
     }
 
     /**
-     * @param $type  - submissions prefix
+     * @param $type - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -458,7 +458,7 @@ class Admins {
     }
 
     /**
-     * @param $type    - submissions prefix
+     * @param $type - submissions prefix
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
@@ -486,7 +486,7 @@ class Admins {
     }
 
     /**
-     * @param $type  - comment prefix
+     * @param $type - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
@@ -501,7 +501,7 @@ class Admins {
     }
 
     /**
-     * @param $type    - infusion_name
+     * @param $type - infusion_name
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {

@@ -36,7 +36,7 @@ while ($data = dbarray($result)) {
         $guests++;
     } else {
         // Fix doubling - insert unique key into array
-        $members[$data['user_id']] = array($data['user_id'], $data['user_name'], $data['user_status']);
+        $members[$data['user_id']] = [$data['user_id'], $data['user_name'], $data['user_status']];
     }
 }
 $tpl->set_tag('guest', $guests);
@@ -47,12 +47,12 @@ if (!empty($members)) {
         return profile_link($members[0], $members[1], $members[2]);
     }, $members));
     //echo $profile_link;
-    $tpl->set_block('user_link', array('plink' => $profile_link));
+    $tpl->set_block('user_link', ['plink' => $profile_link]);
 }
 if (iADMIN && checkrights("M") && fusion_get_settings("admin_activation") == "1") {
-    $tpl->set_block('unactivated_members', array(
+    $tpl->set_block('unactivated_members', [
             'admin_link'    => ADMIN."members.php.".fusion_get_aidlink()."&amp;status=2",
-            'total_members' => number_format(dbcount("(user_id)", DB_USERS, "user_status='2'"), 0))
+            'total_members' => number_format(dbcount("(user_id)", DB_USERS, "user_status='2'"), 0)]
     );
 }
 $data = dbarray(dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));

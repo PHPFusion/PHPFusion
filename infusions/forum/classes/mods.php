@@ -90,6 +90,7 @@ class Moderator {
 
     /**
      * Generate iMOD const
+     *
      * @param $info
      */
     public static function define_forum_mods($info) {
@@ -115,7 +116,9 @@ class Moderator {
 
     /**
      * Parse Forum Group Moderators Links
+     *
      * @param $forum_mods
+     *
      * @return string
      */
     public static function parse_forum_mods($forum_mods) {
@@ -137,6 +140,7 @@ class Moderator {
 
     /**
      * Set a post id
+     *
      * @param $value
      */
     public function setPostId($value) {
@@ -145,6 +149,7 @@ class Moderator {
 
     /**
      * Set a thread id
+     *
      * @param $value
      */
     public function setThreadId($value) {
@@ -343,6 +348,7 @@ class Moderator {
     /**
      * Unset User Post based on Thread id
      * This function assumes as if user have never posted before
+     *
      * @return int - number of posts that user have made in this thread
      */
     private function unset_userpost() {
@@ -414,6 +420,7 @@ class Moderator {
 
     /**
      * Refresh db_forum forum's stats
+     *
      * @param bool $delete_thread true if thread deletion
      */
     private function refresh_forum($delete_thread = FALSE) {

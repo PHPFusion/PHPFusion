@@ -34,7 +34,7 @@ class Template {
     private $block_source = [];
     private $tag = [];
     private static $key = '';
-    private static $locale_list = array();
+    private static $locale_list = [];
 
     private function __construct() {
     }
@@ -67,7 +67,7 @@ class Template {
         return $this->block;
     }
 
-    private static $registered_templates = array();
+    private static $registered_templates = [];
 
     public function register_template($template_file_path) {
         self::$registered_templates[self::$key] = $template_file_path;
@@ -76,7 +76,7 @@ class Template {
     /**
      * Define the instance to read a specific HTML file
      *
-     * @param $template_file_path     Template File Source
+     * @param string $template_file_path     Template File Source
      */
     public function set_template($template_file_path) {
         if (isset(self::$registered_templates[self::$key])) {
@@ -101,7 +101,7 @@ class Template {
      *
      * @param array $locales
      */
-    public function set_locale(array $locales = array()) {
+    public function set_locale(array $locales = []) {
         $this->locale = $locales;
     }
 

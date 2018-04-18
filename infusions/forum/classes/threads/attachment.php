@@ -21,12 +21,14 @@ class Attachment {
 
     /**
      * Permissions for Attachments
+     *
      * @var array
      */
     private static $permissions = [];
 
     /**
      * Object
+     *
      * @param array $thread_info
      */
     public function __construct(array $thread_info) {
@@ -35,6 +37,7 @@ class Attachment {
 
     /**
      * Set Permissions Settings
+     *
      * @param array $thread_info
      */
     private static function set_attachment_permissions(array $thread_info) {
@@ -43,7 +46,9 @@ class Attachment {
 
     /**
      * Fetches Permissions Settings
+     *
      * @param $key
+     *
      * @return bool
      */
     private static function get_attachment_permissions($key) {
