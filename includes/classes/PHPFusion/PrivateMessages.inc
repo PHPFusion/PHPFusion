@@ -85,7 +85,7 @@ class PrivateMessages {
         }
 
         if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
-            $_GET['folder'] = "inbox";
+            redirect(BASEDIR.'messages.php?folder=inbox');
         }
 
         if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && self::validate_pm_user($_POST['msg_send'])) {
