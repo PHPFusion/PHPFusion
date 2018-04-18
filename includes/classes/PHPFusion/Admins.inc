@@ -124,7 +124,7 @@ class Admins {
     public function setCache($form_id, $form_type, $cache_time = 36000) {
         // set one instance of cache
         echo "<script>
-        
+
         </script>";
     }
 
@@ -209,27 +209,27 @@ class Admins {
         $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
         $token = Token::generate_token($form_id, 5, $remote); // see i can only save about 5 times only. so i need to regen it.
         add_to_jquery("
-        function timedCacheRequest(timeout) {            
+        function timedCacheRequest(timeout) {
             setTimeout(UpdateAdminCache, timeout);
-        }        
-        function UpdateAdminCache(poll) {                            
-            var input_fields = $('#$form_id').serialize();            
-            var ttl = '$cache_time';            
+        }
+        function UpdateAdminCache(poll) {
+            var input_fields = $('#$form_id').serialize();
+            var ttl = '$cache_time';
             $.ajax({
             url: '$remote',
             type: 'post',
             dataType: 'html',
             data: {
                 'fusion_token': '$token',
-                'aidlink': '".fusion_get_aidlink()."', 
-                'fields': input_fields, 
-                'form_id' : '$form_id',  
-                'form_type':'$form_type', 
-                'item_id': '$item_id', 
+                'aidlink': '".fusion_get_aidlink()."',
+                'fields': input_fields,
+                'form_id' : '$form_id',
+                'form_type':'$form_type',
+                'item_id': '$item_id',
                 'callback':'set_cache',
             },
             dataType: 'json',
-            success: function (e) {                
+            success: function (e) {
                 console.log(e);
                 console.log(poll);
                 if (typeof poll === 'undefined') {
@@ -239,9 +239,9 @@ class Admins {
             }
             });
         }
-        // add abort long poll once we change fields.            
+        // add abort long poll once we change fields.
         $('#".$form_id." :input').blur(function(e) {
-            UpdateAdminCache(1);                
+            UpdateAdminCache(1);
         });
         ");
         if (!isset($_GET['autosave'])) {
@@ -252,12 +252,12 @@ class Admins {
         $html = "";
         if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
 
-            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>There is an autosave of this post that is more recent than the version below. <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>View the autosave</a></label>";
+            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>".self::$locale['291']."</a></label>";
 
             if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
 
                 $html .= "<div id='rev-window'>\n";
-                $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>Saved Revisions</h4>");
+                $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>");
                 $session = html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
                 parse_str($session, $data);
                 unset($data['form_id']);
@@ -277,13 +277,13 @@ class Admins {
                 }
                 $html .= "</dl>\n";
                 $html .= "<div class='text-right'>\n";
-                $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>Cancel</button>\n";
-                $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>Fill to Autosave</button>\n";
+                $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>".self::$locale['cancel']."</button>\n";
+                $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>".self::$locale['293']."</button>\n";
                 $html .= "</div>\n";
                 $html .= fusion_get_function('closeside');
                 $html .= "</div>\n";
-                add_to_jquery("            
-                    $('button[name^=\"fill_session\"]').bind('click', function(e) {                
+                add_to_jquery("
+                    $('button[name^=\"fill_session\"]').bind('click', function(e) {
                         $fill_js
                         $('#rev-window').hide();
                         UpdateAdminCache();
@@ -546,7 +546,7 @@ class Admins {
                 add_to_jquery('
                     $("[data-toggle=collapse]").click(function () {
                         $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down"); // for v4
-                        
+
                         if ($(this).find(".adl-drop svg").attr("data-icon") == "angle-down") {
                             $(this).find(".adl-drop svg").attr("data-icon", "angle-left");
                         } else {

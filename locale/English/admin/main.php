@@ -113,3 +113,8 @@ $locale['283'] = "Infusions";
 $locale['284'] = "There are no infusions installed";
 $locale['285'] = "Manage Infusions";
 $locale['286'] = "Review Submission";
+
+$locale['290'] = "There is an autosave of this post that is more recent than the version below.";
+$locale['291'] = "View the autosave";
+$locale['292'] = "Saved Revisions";
+$locale['293'] = "Fill to Autosave";
