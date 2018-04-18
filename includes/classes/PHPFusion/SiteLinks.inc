@@ -190,6 +190,7 @@ class SiteLinks {
             'show_header'          => FALSE,
             'language_switcher'    => FALSE,
             'searchbar'            => FALSE,
+            'search_icon'          => 'fa fa-search',
             'searchbar_btn_class'  => 'btn-primary',
             'caret_icon'           => 'caret',
             'link_position'        => [2, 3],
@@ -223,7 +224,7 @@ class SiteLinks {
             $start_page .= $pageInfo['basename'];
 
             if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
-                global $filepath;
+                $filepath = Router::getRouterInstance()->getFilePath();
                 $start_page = $filepath;
             }
 
@@ -459,7 +460,7 @@ class SiteLinks {
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
                 $class = (fusion_get_settings("bootstrap") ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
                 if (self::getMenuParam('additional_nav_class')) {
-                    $class = "class= '".self::getMenuParam('additional_nav_class')."'";
+                    $class = "class='".self::getMenuParam('additional_nav_class')."'";
                 }
                 $res .= "<ul $class>\n";
                 $res .= $this->showMenuLinks($id, self::getMenuParam('additional_data'));
@@ -469,7 +470,7 @@ class SiteLinks {
                         $current_language = $language_switch[LANGUAGE];
                         $language_opts = "<li class='dropdown'>";
                         $language_opts .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
-                        $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
+                        $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
                                 $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>";
@@ -486,8 +487,8 @@ class SiteLinks {
 
                 if (self::getMenuParam('searchbar') == TRUE) {
                     $searchbar = "<li class='dropdown'>";
-                    $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";
-                    $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
+                    $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
+                    $searchbar .= "<ul class='dropdown-menu dropdown-menu-right p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
                         [
@@ -501,9 +502,9 @@ class SiteLinks {
                             'append_button'      => TRUE,
                             'append_type'        => "submit",
                             "append_form_value"  => $locale['search'],
-                            "append_value"       => "<i class='fa fa-search'></i> ".$locale['search'],
+                            "append_value"       => "<i class='".self::getMenuParam('search_icon')."'></i> ".$locale['search'],
                             "append_button_name" => "search",
-                            "append_class"       => $this->getMenuParam('searchbar_btn_class'),
+                            "append_class"       => self::getMenuParam('searchbar_btn_class'),
                             'class'              => 'm-0',
                         ]
                     );
