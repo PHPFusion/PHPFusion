@@ -32,8 +32,9 @@ class Text extends \Defender\Validation {
 
         // each configuration for text validation should have a min and max length check
         $default_length = [
-            'min_length' => 1,
-            'max_length' => '',
+            'min_length'   => 1,
+            'max_length'   => '',
+            'censor_words' => TRUE,
         ];
 
         self::$inputConfig += $default_length;
@@ -49,7 +50,11 @@ class Text extends \Defender\Validation {
                         return self::$inputDefault;
                     }
                 }
-                $vars[] = stripinput(trim(preg_replace("/ +/i", " ", $val)));
+                $value = stripinput(trim(preg_replace("/ +/i", " ", $val)));
+                if (self::$inputConfig['censor_words']) {
+                    $value = censorwords($value);
+                }
+                $vars[] = $value;
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
@@ -63,6 +68,9 @@ class Text extends \Defender\Validation {
                 }
             }
             $value = stripinput(trim(preg_replace("/ +/i", " ", self::$inputValue)));
+            if (self::$inputConfig['censor_words']) {
+                $value = censorwords($value);
+            }
         }
         if (self::$inputConfig['required'] && !$value) {
             \defender::setInputError(self::$inputName);

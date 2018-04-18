@@ -61,17 +61,18 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'bbcode'              => FALSE,
         'html'                => FALSE,
         'preview'             => FALSE,
-        'path'                => IMAGES,
-        'maxlength'           => '',
-        'tip'                 => '',
-        'ext_tip'             => '',
-        'input_bbcode'        => '',
-        'wordcount'           => FALSE,
-        'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
-        'tinymce_theme'       => 'modern',
-        'tinymce_skin'        => 'lightgray',
-        'tinymce_spellcheck'  => TRUE,
-        'rows'                => 5
+        'path'               => IMAGES,
+        'maxlength'          => '',
+        'tip'                => '',
+        'ext_tip'            => '',
+        'input_bbcode'       => '',
+        'wordcount'          => FALSE,
+        'file_filter'        => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
+        'tinymce_theme'      => 'modern',
+        'tinymce_skin'       => 'lightgray',
+        'tinymce_spellcheck' => TRUE,
+        'rows'               => 5,
+        'censor_words'       => TRUE,
     ];
 
     $options += $default_options;
@@ -428,14 +429,15 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session([
-        'input_name' => $input_name,
-        'type'       => 'textarea',
-        'title'      => $label,
-        'id'         => $options['input_id'],
-        'required'   => $options['required'],
-        'safemode'   => $options['safemode'],
-        'error_text' => $options['error_text']
+    \defender::add_field_session([
+        'input_name'   => $input_name,
+        'type'         => 'textarea',
+        'title'        => $label,
+        'id'           => $options['input_id'],
+        'required'     => $options['required'],
+        'safemode'     => $options['safemode'],
+        'error_text'   => $options['error_text'],
+        'censor_words' => $options['censor_words'],
     ]);
 
     return $html;

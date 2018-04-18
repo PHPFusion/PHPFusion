@@ -366,7 +366,7 @@ class defender {
                     if (intval($value)) {
                         return stripinput($value); // numbers
                     } else {
-                        return stripinput(trim(preg_replace("/ +/i", " ", $value)));
+                        return censorwords(stripinput(trim(preg_replace("/ +/i", " ", $value))));
                     }
                 } else {
                     $secured = [];
@@ -374,7 +374,7 @@ class defender {
                         if (intval($unsecured)) {
                             $secured[] = stripinput($unsecured); // numbers
                         } else {
-                            $secured[] = stripinput(trim(preg_replace("/ +/i", " ", $unsecured)));
+                            $secured[] = censorwords(stripinput(trim(preg_replace("/ +/i", " ", $unsecured))));
                         }
                     }
 

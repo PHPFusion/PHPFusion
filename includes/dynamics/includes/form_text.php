@@ -23,12 +23,12 @@
  *
  * Generates the HTML for a textbox or password input
  *
- * @param string $input_name Name of the input, by
- * default it's also used as the ID for the input
- * @param string $label The label
+ * @param string $input_name  Name of the input, by
+ *                            default it's also used as the ID for the input
+ * @param string $label       The label
  * @param string $input_value The value to be displayed
- * in the input, usually a value from DB prev. saved
- * @param array  $options Various options
+ *                            in the input, usually a value from DB prev. saved
+ * @param array  $options     Various options
  *
  * @return string
  *
@@ -97,7 +97,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'group_size'         => '', // http://getbootstrap.com/components/#input-groups-sizing - sm, md, lg
         'password_strength'  => FALSE,
         'data'               => [],
-        'append_html'        => ''
+        'append_html'        => '',
+        'censor_words'       => TRUE,
     ];
 
     $options += $default_options;
@@ -245,7 +246,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= "</div>\n";
 
     // Add input settings in the SESSION
-    \defender::getInstance()->add_field_session([
+    \defender::add_field_session([
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],
@@ -256,7 +257,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'callback_check' => $options['callback_check'],
         'delimiter'      => $options['delimiter'],
         'min_length'     => $options['min_length'],
-        'max_length'     => $options['max_length']
+        'max_length'     => $options['max_length'],
+        'censor_words'   => $options['censor_words']
     ]);
 
     // This should affect all number inputs by type, not by ID
