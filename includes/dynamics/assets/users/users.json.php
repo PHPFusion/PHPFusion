@@ -26,12 +26,13 @@ $user_opts = [];
 
 $q = isset($_GET['q']) ? stripinput($_GET['q']) : '';
 // since search is on user_name.
-$result = dbquery("SELECT user_id, user_name, user_avatar, user_level
+$result = dbquery("SELECT user_id, user_name, user_avatar, user_level, MATCH(user_name) AGAINST (:Q1) 'score'
     FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status=:status AND
     user_name LIKE :Q ".(!isset($_GET['allow_self']) ? "AND user_id !='".fusion_get_userdata('user_id')."'" : "")."
-    ORDER BY user_level DESC, user_name ASC", [
+    ORDER BY score DESC, user_name ASC, user_level DESC", [
     ':status' => 0,
-    ':Q'      => "$q%"
+    ':Q'      => "$q%",
+    ':Q1'     => "$q%"
 ]);
 
 if (dbrows($result)) {
