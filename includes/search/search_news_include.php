@@ -25,7 +25,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (db_exists(DB_NEWS)) {
+if (infusion_exists('news')) {
 
     if (Search_Engine::get_param('stype') == 'news' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';
@@ -62,13 +62,7 @@ if (db_exists(DB_NEWS)) {
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-
-            $rows = dbcount("(news_id)", DB_NEWS,
-                (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND
-                            ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW())
-                            ".$date_search,
-                Search_Engine::get_param('search_param')
-            );
+            $rows = dbcount("(news_id)", DB_NEWS, (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".$date_search, Search_Engine::get_param('search_param'));
         } else {
             $rows = 0;
         }
