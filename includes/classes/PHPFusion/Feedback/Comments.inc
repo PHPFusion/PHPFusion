@@ -263,7 +263,7 @@ class Comments {
                     $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, '');
 
                     $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
-                        ['class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id' => $this->getParams('comment_key').'-post_comment']
+                        ['class' => 'btn-primary spacer-sm post_comment', 'input_id' => $this->getParams('comment_key').'-post_comment']
                     );
 
                     ob_start();
@@ -308,11 +308,12 @@ class Comments {
                         display_comments_ratings($info = []);
 
                         $stars = '';
+                        $ratings = '';
+
                         for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
                             $stars .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
                         }
 
-                        $ratings = '';
                         for ($i = 5; $i >= 1; $i--) {
                             $ratings .= '<div>';
                             $bal = 5 - $i;
@@ -643,7 +644,7 @@ class Comments {
             $comment_data = [
                 'comment_id'      => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : $default_comment_id,
                 'comment_name'    => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
-                'comment_subject' => empty($_POST['comment_cat']) && isset($_POST['comment_subject']) ? form_sanitizer($_POST['comment_subject'], '', 'comment_subject') : '',
+                'comment_subject' => empty($_POST['comment_cat']) && isset($_POST['comment_subject']) ? censorwords(form_sanitizer($_POST['comment_subject'], '', 'comment_subject')) : '',
                 'comment_item_id' => $this->getParams('comment_item_id'),
                 'comment_type'    => $this->getParams('comment_item_type'),
                 'comment_cat'     => form_sanitizer($_POST['comment_cat'], 0, 'comment_cat'),
@@ -653,7 +654,7 @@ class Comments {
             ];
 
             // there is a conflict. the form above and the form below is same?
-            $comment_data['comment_message'] = $comment_data['comment_cat'] ? form_sanitizer($_POST['comment_message_reply'], '', 'comment_message_reply') : form_sanitizer($_POST['comment_message'], '', 'comment_message');
+            $comment_data['comment_message'] = $comment_data['comment_cat'] ? censorwords(form_sanitizer($_POST['comment_message_reply'], '', 'comment_message_reply')) : censorwords(form_sanitizer($_POST['comment_message'], '', 'comment_message'));
 
             $ratings_query = "
             SELECT rating_id FROM ".DB_RATINGS." WHERE rating_item_id='".$comment_data['comment_item_id']."'
