@@ -57,7 +57,7 @@ if (!function_exists('display_main_news')) {
 
         // Carousel -- make it just sticky
         $ni_html = '';
-        $carousel = false;
+        $carousel = FALSE;
         if (!empty($info['news_items'])) {
 
             $tpl->set_tag('pagenav', '');
@@ -83,10 +83,10 @@ if (!function_exists('display_main_news')) {
                         $news['carousel_active'] = ($i == 0 ? ' class="active"' : '');
                         $news['carousel_item_active'] = ($i == 0 ? ' active' : '');
                         $tpl->set_block('carousel_item', $news);
-                        $tpl->set_block('carousel_indicators', array(
+                        $tpl->set_block('carousel_indicators', [
                             'indicator_num'   => $i,
                             'indicator_class' => $news['carousel_active']
-                        ));
+                        ]);
                     }
                 } else {
 
@@ -100,7 +100,7 @@ if (!function_exists('display_main_news')) {
                         $ni_html .= ob_get_clean();
 
                     } else {
-                    $news['news_admin_actions'] = '';
+                        $news['news_admin_actions'] = '';
                         if ($x > 6) {
                             $x = 1;
                         }
@@ -124,7 +124,7 @@ if (!function_exists('display_main_news')) {
             $ntpl = \PHPFusion\Template::getInstance('news_item');
             $ntpl->set_template(__DIR__.'/html/news_item.html');
             $ntpl->set_locale(fusion_get_locale());
-            $ntpl->set_block('no_news', array());
+            $ntpl->set_block('no_news', []);
             $output = $ntpl->get_output();
             $ni_html = $output;
         }
@@ -132,12 +132,12 @@ if (!function_exists('display_main_news')) {
         $tpl->set_tag("news_items", $ni_html);
 
         if ($carousel) {
-            $tpl->set_block('carousel_1_start', array());
-            $tpl->set_block('carousel_2_start', array());
-            $tpl->set_block('carousel_3_start', array());
-            $tpl->set_block('carousel_1_end', array());
-            $tpl->set_block('carousel_2_end', array());
-            $tpl->set_block('carousel_3_end', array());
+            $tpl->set_block('carousel_1_start', []);
+            $tpl->set_block('carousel_2_start', []);
+            $tpl->set_block('carousel_3_start', []);
+            $tpl->set_block('carousel_1_end', []);
+            $tpl->set_block('carousel_2_end', []);
+            $tpl->set_block('carousel_3_end', []);
         }
 
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
@@ -146,35 +146,35 @@ if (!function_exists('display_main_news')) {
         // Use Navbar
         $i = 1;
         foreach ($info['news_filter'] as $link => $title) {
-            $sec_nav[0]['fltr_'.$i] = array(
+            $sec_nav[0]['fltr_'.$i] = [
                 'link_id'     => 'fltr_'.$i,
                 'link_name'   => $title,
                 'link_active' => ((!isset($_GET['type']) && $i == '0') || isset($_GET['type']) && stristr($link, $_GET['type']) ? 'active' : ''),
                 'link_url'    => $link,
-            );
+            ];
             $i++;
         }
         if (!empty($info['news_categories'])) {
-            $nav[0]['link_all'] = array(
+            $nav[0]['link_all'] = [
                 'link_id'     => 'link_all',
                 'link_active' => (!isset($_GET['cat_id']) ? 'active' : ''),
                 'link_name'   => $locale['news_0018'],
                 'link_url'    => INFUSIONS.'news/news.php',
-            );
+            ];
             foreach ($info['news_categories'] as $subID => $subData) {
                 foreach ($subData as $cat_id => $catData) {
                     $cat_id = $cat_id ?: '012';
-                    $nav[$subID][$cat_id] = array(
+                    $nav[$subID][$cat_id] = [
                         'link_id'     => $cat_id,
                         'link_name'   => $catData['name'],
                         'link_url'    => INFUSIONS.'news/news.php?cat_id='.$cat_id,
                         'link_active' => (isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? 'active' : ''),
-                    );
+                    ];
                 }
             }
         }
 
-        $tpl->set_tag('menu', \PHPFusion\SiteLinks::setSubLinks(array(
+        $tpl->set_tag('menu', \PHPFusion\SiteLinks::setSubLinks([
             'id'              => 'news-nav',
             'navbar_class'    => 'navbar-default',
             'locale'          => fusion_get_locale(),
@@ -182,7 +182,7 @@ if (!function_exists('display_main_news')) {
             'grouping'        => 5,
             'callback_data'   => $nav,
             'additional_data' => $sec_nav,
-        ))->showSubLinks());
+        ])->showSubLinks());
 
         echo $tpl->get_output();
 

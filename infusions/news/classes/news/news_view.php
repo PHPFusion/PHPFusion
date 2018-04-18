@@ -22,6 +22,7 @@ use PHPFusion\OpenGraphNews;
 /**
  * Controller package for if/else
  * Class NewsView
+ *
  * @package PHPFusion\News
  */
 class NewsView extends News {
@@ -35,7 +36,7 @@ class NewsView extends News {
             } else {
                 redirect(INFUSIONS.'news/news.php');
             }
-        } elseif (isset($_GET['cat_id'])) {
+        } else if (isset($_GET['cat_id'])) {
             // Category Result
             if (isnum($_GET['cat_id'])) {
                 $info = $this->set_NewsCatInfo($_GET['cat_id']);

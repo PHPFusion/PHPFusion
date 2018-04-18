@@ -22,6 +22,7 @@ use \PHPFusion\BreadCrumbs;
 /**
  * Forum Administration Console and functions
  * Class Admin
+ *
  * @package PHPFusion\Forums
  */
 class Admin extends ForumServer {
@@ -150,6 +151,7 @@ class Admin extends ForumServer {
 
     /**
      * Get forum index for hierarchy traversal
+     *
      * @return array
      */
     private function get_forum_index() {
@@ -158,6 +160,7 @@ class Admin extends ForumServer {
 
     /**
      * Breadcrumb and Directory Output Handler
+     *
      * @return array
      */
     private function make_forum_breadcrumbs() {
@@ -210,7 +213,9 @@ class Admin extends ForumServer {
 
     /**
      * Get a forum full data
+     *
      * @param $forum_id
+     *
      * @return array|bool
      */
     private function get_forum($forum_id) {
@@ -378,8 +383,10 @@ class Admin extends ForumServer {
 
     /**
      * Return a valid forum name without duplicate
+     *
      * @param     $forum_name
      * @param int $forum_id
+     *
      * @return mixed
      */
     private function check_validForumName($forum_name, $forum_id = 0) {
@@ -545,8 +552,10 @@ class Admin extends ForumServer {
 
     /**
      * Delete all forum attachments
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     public static function prune_attachment($forum_id, $time = FALSE) {
@@ -574,8 +583,10 @@ class Admin extends ForumServer {
 
     /**
      * Delete all forum posts
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
@@ -586,6 +597,7 @@ class Admin extends ForumServer {
 
     /**
      * Delete all forum threads
+     *
      * @param      $forum_id
      * @param bool $time
      */
@@ -603,7 +615,9 @@ class Admin extends ForumServer {
 
     /**
      * Recalculate a forum post count
+     *
      * @param $forum_id
+     *
      * @return string
      */
     public static function recalculate_post($forum_id) {
@@ -641,6 +655,7 @@ class Admin extends ForumServer {
 
     /**
      * Remove the entire forum branch, image and order updated
+     *
      * @param bool $index
      * @param bool $time
      */
@@ -749,6 +764,7 @@ class Admin extends ForumServer {
 
     /**
      * Recalculate users post count
+     *
      * @param $forum_id
      */
     public static function prune_users_posts($forum_id) {

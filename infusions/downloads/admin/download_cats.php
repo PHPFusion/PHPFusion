@@ -188,6 +188,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 }
 /**
  * display download category container
+ *
  * @param int $parent
  * @param int $level
  */

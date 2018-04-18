@@ -36,11 +36,11 @@ if (!function_exists('display_inbox')) {
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
         $tpl->set_tag('pagenav', $info['pagenav']);
 
-        $folder_icons = array(
+        $folder_icons = [
             'inbox'   => 'fas fa-inbox',
             'outbox'  => 'fas fa-reply',
             'archive' => 'fas fa-file-alt',
-        );
+        ];
 
         // Navigation
         $i = 1;
@@ -64,12 +64,12 @@ if (!function_exists('display_inbox')) {
 
             } else {
 
-                if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
+                if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) { // read view
 
                     $data = $info['items'][$_GET['msg_read']];
-                    $tpl->set_block('actions', array('form' => $info['actions_form']));
+                    $tpl->set_block('actions', ['form' => $info['actions_form']]);
 
-                    $tpl->set_block('mail_read', array(
+                    $tpl->set_block('mail_read', [
                         'title'        => $data['message']['message_header'],
                         'avatar'       => display_avatar($data, "40px", '', FALSE, 'img-circle'),
                         'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
@@ -78,13 +78,13 @@ if (!function_exists('display_inbox')) {
                         'timer'        => timer($data['message_datestamp']),
                         'message'      => parse_textarea($data['message']['message_text'], TRUE, TRUE, FALSE, TRUE),
                         'reply_form'   => $info['reply_form']
-                    ));
+                    ]);
 
-                elseif (isset($_GET['msg_send'])) : // send new message form
+                } else if (isset($_GET['msg_send'])) { // send new message form
 
                     echo $info['reply_form'];
 
-                else : // display view
+                } else { // display view
 
                     // keep injecting new item
                     //send_pm(fusion_get_userdata('user_id'), 3, 'Test Message', lorem_ipsum(1000));
@@ -99,7 +99,7 @@ if (!function_exists('display_inbox')) {
                         foreach ($info['items'] as $message_id => $message) {
 
                             $user = $message['contact_user'];
-                            $message_arr = array(
+                            $message_arr = [
                                 'checkbox_input' => form_checkbox('pmID', '', '', [
                                     'input_id' => 'mid-'.$message_id,
                                     'value'    => $message_id,
@@ -112,7 +112,7 @@ if (!function_exists('display_inbox')) {
                                 'message_title'  => $message['message']['name'],
                                 'datestamp'      => $message['message_datestamp'] > TIME - 86400 ? timer($message['message_datestamp']) : showdate($locale['date_day'], $message['message_datestamp']),
                                 'timer'          => timer($message['message_datestamp']),
-                            );
+                            ];
 
                             if ($message['message_read']) {
                                 $read_items[] = $message_arr;
@@ -127,22 +127,22 @@ if (!function_exists('display_inbox')) {
                             $read->set_block('message', $item);
                         }
                     } else {
-                        $read->set_block('no_item', array('text' => $locale['471']));
+                        $read->set_block('no_item', ['text' => $locale['471']]);
                     }
                     if (!empty($unread_items)) {
                         foreach ($unread_items as $item) {
                             $unread->set_block('message', $item);
                         }
                     } else {
-                        $unread->set_block('no_item', array('text' => $locale['471']));
+                        $unread->set_block('no_item', ['text' => $locale['471']]);
                     }
-                    $tpl->set_block('actions', array('form' => $info['actions_form']));
-                    $tpl->set_block('mailbox', array(
+                    $tpl->set_block('actions', ['form' => $info['actions_form']]);
+                    $tpl->set_block('mailbox', [
                             'unread_content' => $unread->get_output(),
                             'read_content'   => $read->get_output()
-                        )
+                        ]
                     );
-                endif; // end display view
+                } // end display view
             }
         }
 

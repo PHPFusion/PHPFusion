@@ -180,16 +180,16 @@ class PrivateMessages {
             set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
 
             $query = [
-                "inbox"   => array($this->info['inbox_total'], "message_folder='0'",),
-                "outbox"  => array($this->info['outbox_total'], "message_folder='1'"),
-                "archive" => array($this->info['archive_total'], "message_folder='2'"),
+                'inbox'   => [$this->info['inbox_total'], "message_folder='0'"],
+                'outbox'  => [$this->info['outbox_total'], "message_folder='1'"],
+                'archive' => [$this->info['archive_total'], "message_folder='2'"]
             ];
 
-            $totals = array(
+            $totals = [
                 'inbox'   => $this->info['inbox_count'],
                 'outbox'  => $this->info['outbox_count'],
                 'archive' => $this->info['archive_count']
-            );
+            ];
 
             // The mail forms
             if ($totals[$_GET['folder']] > 0) {
@@ -219,7 +219,7 @@ class PrivateMessages {
                             'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                             'name'           => $data['message_subject'],
                             'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                            'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
+                            'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message'])
                         ];
 
                         $this->info['items'][$data['message_id']] = $data;
@@ -331,11 +331,11 @@ class PrivateMessages {
             $html .= form_hidden('selectedPM', '', $_GET['msg_read']);
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == "archive") {
-                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', array('icon' => 'fa fa-unlock'));
+                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']);
             } else if ($_GET['folder'] == "inbox") {
-                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', array('icon' => 'fa fa-lock'));
+                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['icon' => 'fa fa-lock']);
             }
-            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', array('icon' => 'fa fa-trash-o', 'class' => 'btn-danger'));
+            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger']);
             $html .= "</div>\n";
             $html .= closeform();
         } else {
@@ -352,11 +352,11 @@ class PrivateMessages {
             </div>";
             $html .= "<div class='btn-group display-inline-block m-r-10'>\n";
             if ($_GET['folder'] == 'archive') {
-                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock'));
-            } elseif ($_GET['folder'] !== 'outbox') {
-                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', array('class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock'));
+                $html .= form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']);
+            } else if ($_GET['folder'] !== 'outbox') {
+                $html .= form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']);
             }
-            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', array('class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o'));
+            $html .= form_button('delete_pm', $this->locale['416'], 'delete_pm', ['class' => 'btn-sm btn-danger', 'icon' => 'fa fa-trash-o']);
             $html .= "</div>\n";
             $html .= "<div class='dropdown display-inline-block m-r-10'>
                 <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'>".$this->locale['444']."&hellip; <span class='caret'></span></a>
@@ -438,7 +438,7 @@ class PrivateMessages {
     private function archive_pm() {
         $userdata = fusion_get_userdata();
 
-        $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+        $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
@@ -459,7 +459,7 @@ class PrivateMessages {
     private function unarchive_pm() {
         $userdata = fusion_get_userdata();
 
-        $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+        $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
@@ -483,7 +483,7 @@ class PrivateMessages {
     private function delete_pm() {
         $userdata = fusion_get_userdata();
 
-        $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+        $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
@@ -530,7 +530,7 @@ class PrivateMessages {
                 }
                 break;
             case "mark_read":
-                $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+                $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
@@ -543,7 +543,7 @@ class PrivateMessages {
                 redirect(clean_request('', ['folder'], TRUE));
                 break;
             case "mark_unread":
-                $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+                $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,

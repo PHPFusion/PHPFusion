@@ -107,14 +107,14 @@ $result = dbquery($query);
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         if (!empty($data['news_image'])) {
-            $id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', array('keep_session' => TRUE));
-            $cdata = array(
+            $id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
+            $cdata = [
                 'news_id'                  => $data['news_id'],
                 'news_image_align'         => 'news-img-center',
                 'news_image_full_default'  => $id,
                 'news_image_front_default' => $id,
-            );
-            dbquery_insert(DB_NEWS, $cdata, 'update', array('keep_session' => TRUE));
+            ];
+            dbquery_insert(DB_NEWS, $cdata, 'update', ['keep_session' => TRUE]);
             // Now we move all the images over
             if (!empty($data['news_image']) && file_exists(IMAGES."news/".$data['news_image'])) {
                 rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);

@@ -198,6 +198,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
     /**
      * Ranks Listing
+     *
      * @return string
      */
     protected function displayTagList() {

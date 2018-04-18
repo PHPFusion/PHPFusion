@@ -739,8 +739,8 @@ class UserFields extends QuantumFields {
         if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
             $this->info['buttons'] = [
-                'user_pm_title'     => $locale['u043'],
-                'user_pm_link'      => BASEDIR."messages.php?msg_send=".$this->userData['user_id']
+                'user_pm_title' => $locale['u043'],
+                'user_pm_link'  => BASEDIR."messages.php?msg_send=".$this->userData['user_id']
             ];
 
             if (checkrights('M') && fusion_get_userdata('user_level') <= USER_LEVEL_ADMIN && $this->userData['user_id'] != '1') {

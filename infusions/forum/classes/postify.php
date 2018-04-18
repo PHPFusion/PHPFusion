@@ -34,8 +34,10 @@ class Forum_Postify extends ForumServer {
         self::$settings = fusion_get_settings();
         $forum_settings = self::get_forum_settings();
 
-        if (!isset($_GET['forum_id'])) throw new \Exception(self::$locale['forum_0587']);
-        if (!isset($_GET['thread_id'])) throw new \Exception(self::$locale['forum_0588']);
+        if (!isset($_GET['forum_id']))
+            throw new \Exception(self::$locale['forum_0587']);
+        if (!isset($_GET['thread_id']))
+            throw new \Exception(self::$locale['forum_0588']);
 
         self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 

@@ -47,14 +47,14 @@ if (isset($_REQUEST['form_id'])
                     unset($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
                 }
             }*/
-        } elseif ($_REQUEST['callback'] == 'read_cache') {
+        } else if ($_REQUEST['callback'] == 'read_cache') {
             $status['response'] = 600;
             if (!empty($_SESSION['form_cache'][$form_id][$form_type])) {
                 parse_str(html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]), $status['data']);
                 unset($status['data']['fusion_token']);
                 $status['response'] = 200;
             }
-        } elseif ($_REQUEST['callback'] == 'cancel') {
+        } else if ($_REQUEST['callback'] == 'cancel') {
             unset($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
         }
     } else {

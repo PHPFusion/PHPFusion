@@ -22,6 +22,7 @@ use PHPFusion\QuantumFields;
 class ForumAdminMood extends ForumAdminInterface {
     /**
      * Forum mood data
+     *
      * @var array
      */
     private $data = [

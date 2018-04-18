@@ -25,8 +25,8 @@ abstract class News extends NewsServer {
     protected static $locale = [];
     public $info = [];
 
-    protected static $news_ratings = array();
-    protected static $news_comment_count = array();
+    protected static $news_ratings = [];
+    protected static $news_comment_count = [];
 
     protected function __construct() {
     }
@@ -602,7 +602,7 @@ abstract class News extends NewsServer {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }

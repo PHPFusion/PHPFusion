@@ -234,6 +234,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
 
     /**
      * Generate sets of push buttons for article Content form
+     *
      * @param      $unique_id
      * @param bool $breaker
      */

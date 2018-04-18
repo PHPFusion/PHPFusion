@@ -128,7 +128,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0705']
             ]).
             form_text('news_thumb_h', '', $news_settings['news_thumb_h'], [
@@ -136,7 +136,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0706']
             ])."            
             </div>
@@ -149,7 +149,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0705']
             ]).
             form_text('news_photo_h', '', $news_settings['news_photo_h'], [
@@ -157,7 +157,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0706']
             ])."
             </div>
@@ -170,7 +170,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0705']
             ]).
             form_text('news_photo_max_h', '', $news_settings['news_photo_max_h'], [
@@ -178,7 +178,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'max_length'    => 4,
                 'type'          => 'number',
                 'width'         => '150px',
-                'prepend'       => true,
+                'prepend'       => TRUE,
                 'prepend_value' => $locale['news_0706']
             ])."            
             </div>
@@ -211,10 +211,10 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "</div>\n<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-4 col-md-offset-0 col-lg-4'>\n";
 
         echo openside('');
-        echo form_select('news_image_link', $locale['951'], $news_settings['news_image_link'], array('options' => $opts, 'width' => '100%', 'inner_width' => '100%'));
-        echo form_select('news_image_frontpage', $locale['957'], $news_settings['news_image_frontpage'], array('options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%'));
-        echo form_select('news_image_readmore', $locale['958'], $news_settings['news_image_readmore'], array('options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%'));
-        echo form_select('news_thumb_ratio', $locale['954'], $news_settings['news_thumb_ratio'], array('options' => $thumb_opts, 'width' => '100%', 'inner_width' => '100%'));
+        echo form_select('news_image_link', $locale['951'], $news_settings['news_image_link'], ['options' => $opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_image_frontpage', $locale['957'], $news_settings['news_image_frontpage'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_image_readmore', $locale['958'], $news_settings['news_image_readmore'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_select('news_thumb_ratio', $locale['954'], $news_settings['news_thumb_ratio'], ['options' => $thumb_opts, 'width' => '100%', 'inner_width' => '100%']);
 
         $mime = mimeTypes();
         $mime_opts = [];

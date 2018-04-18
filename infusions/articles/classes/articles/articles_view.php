@@ -22,6 +22,7 @@ use PHPFusion\OpenGraphArticles;
 /**
  * Controller package for if/else
  * Class ArticlesView
+ *
  * @package PHPFusion\Articles
  */
 class ArticlesView extends Articles {

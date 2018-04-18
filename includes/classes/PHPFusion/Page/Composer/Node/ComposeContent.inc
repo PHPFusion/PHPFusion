@@ -100,13 +100,13 @@ class ComposeContent extends PageAdmin {
                                 'inline'      => FALSE,
                             ], DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);
 
-                            if (fusion_get_settings('tinymce_enabled') != 1) {
-                                echo form_checkbox('page_breaks', self::$locale['page_0308a'], self::$data['page_breaks'], [
-                                    'value'         => 'y',
-                                    'class'         => 'm-b-5',
-                                    'reverse_label' => TRUE
-                                ]);
-                            }
+                        if (fusion_get_settings('tinymce_enabled') != 1) {
+                            echo form_checkbox('page_breaks', self::$locale['page_0308a'], self::$data['page_breaks'], [
+                                'value'         => 'y',
+                                'class'         => 'm-b-5',
+                                'reverse_label' => TRUE
+                            ]);
+                        }
                         ?>
 
                     </div>

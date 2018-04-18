@@ -22,7 +22,9 @@ class Functions {
 
     /**
      * Appends increment integer on multiple files on same post
+     *
      * @param $file
+     *
      * @return string
      */
     public static function attach_exists($file) {
@@ -40,7 +42,9 @@ class Functions {
 
     /**
      * Display an image
+     *
      * @param $file
+     *
      * @return string
      */
     public static function display_image($file) {
@@ -71,10 +75,12 @@ class Functions {
 
     /**
      * Display attached image with a certain given width and height.
+     *
      * @param        $file
      * @param int    $width
      * @param int    $height
      * @param string $rel
+     *
      * @return string
      */
     public static function display_image_attach($file, $width = 50, $height = 50, $rel = "") {

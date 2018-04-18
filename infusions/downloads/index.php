@@ -22,7 +22,7 @@ if (!db_exists(DB_DOWNLOADS)) {
 
 $request = pathinfo($_SERVER['REQUEST_URI']);
 $result = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE ".groupaccess('download_visibility')." AND download_file='".form_sanitizer($request['basename'],
-                                                                                                                                               '')."' ");
+        '')."' ");
 if (dbrows($result) > 0) {
     $data = dbarray($result);
     require_once INCLUDES."class.httpdownload.php";

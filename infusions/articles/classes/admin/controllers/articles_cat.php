@@ -451,6 +451,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
     /**
      * Recursive function to display administration table
+     *
      * @param     $data
      * @param int $id
      * @param int $level

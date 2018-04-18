@@ -171,7 +171,8 @@ if (!function_exists('display_comments_form')) {
 
 if (!function_exists('display_comments_ratings')) {
     function display_comments_ratings($info = []) {
-        ?><div class="ratings overflow-hide m-b-10">
+        ?>
+        <div class="ratings overflow-hide m-b-10">
             <div class="well">
                 <div class="row">
                     <div class="col-xs-12 col-xs-6">

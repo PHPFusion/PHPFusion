@@ -61,8 +61,10 @@ function get_thread($thread_id) {
 
 /**
  * Cast Question Votes
+ *
  * @param     $info
  * @param int $points
+ *
  * @todo: move and improvise the voting system
  */
 

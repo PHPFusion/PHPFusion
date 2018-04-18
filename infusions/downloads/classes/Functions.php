@@ -26,6 +26,7 @@ if (!defined("IN_FUSION")) {
 class Functions {
     /**
      * Download Category Hierarchy Full Data
+     *
      * @return array
      */
     public static function get_downloadCats() {
@@ -35,7 +36,9 @@ class Functions {
 
     /**
      * Get Single Download Category Data
+     *
      * @param $id
+     *
      * @return array|bool
      */
     public static function get_downloadCatData($id) {
@@ -48,7 +51,9 @@ class Functions {
 
     /**
      * Validate Download Cat
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_downloadCat($id) {
@@ -65,6 +70,7 @@ class Functions {
 
     /**
      * Get Download Category Hierarchy Index
+     *
      * @return array
      */
     public static function get_downloadCatsIndex() {
@@ -74,6 +80,7 @@ class Functions {
 
     /**
      * Format Download Category Listing
+     *
      * @return array
      */
     public static function get_downloadCatsData() {
@@ -89,7 +96,9 @@ class Functions {
 
     /**
      * Validate Download
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_download($id) {
@@ -102,6 +111,7 @@ class Functions {
 
     /**
      * Download Category Breadcrumbs Generator
+     *
      * @param $index
      */
     public static function downloadCats_breadcrumbs($index) {
@@ -152,9 +162,11 @@ class Functions {
 
     /**
      * Get the best available paths for image and thumbnail
+     *
      * @param            $download_image
      * @param            $download_image_thumb
      * @param bool|FALSE $hiRes
+     *
      * @return bool|string
      */
     public static function get_download_image_path($download_image, $download_image_thumb, $hiRes = FALSE) {

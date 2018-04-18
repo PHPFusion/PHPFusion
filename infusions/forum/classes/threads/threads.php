@@ -423,14 +423,14 @@ class ForumThreads extends ForumServer {
                     ".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], ['class' => 'btn-default'])."
                     <div class='pull-right'>
                         ".form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default pull-right m-l-10'])
-                        .form_select('step', '', '', [
-                            'options'     => $this->thread_info['mod_options'],
-                            'placeholder' => $locale['forum_0200'],
-                            'width'       => '250px',
-                            'allowclear'  => TRUE,
-                            'class'       => 'pull-right m-b-0 m-t-5',
-                            'inline'      => TRUE
-                        ])."
+                    .form_select('step', '', '', [
+                        'options'     => $this->thread_info['mod_options'],
+                        'placeholder' => $locale['forum_0200'],
+                        'width'       => '250px',
+                        'allowclear'  => TRUE,
+                        'class'       => 'pull-right m-b-0 m-t-5',
+                        'inline'      => TRUE
+                    ])."
                     </div>\n";
                 $this->thread_info['mod_form'] .= closeform();
                 add_to_jquery("

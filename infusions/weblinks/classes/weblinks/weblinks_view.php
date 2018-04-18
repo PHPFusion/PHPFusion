@@ -20,6 +20,7 @@ namespace PHPFusion\Weblinks;
 /**
  * Controller package for if/else
  * Class WeblinksView
+ *
  * @package PHPFusion\Weblinks
  */
 class WeblinksView extends Weblinks {

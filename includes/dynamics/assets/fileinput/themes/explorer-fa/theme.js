@@ -1,5 +1,5 @@
 /*!
- * bootstrap-fileinput v4.4.4
+ * bootstrap-fileinput v4.4.8
  * http://plugins.krajee.com/file-input
  *
  * Krajee Explorer Font Awesome theme configuration for bootstrap-fileinput. 
@@ -7,7 +7,7 @@
  * font awesome assets and CSS are loaded on the page as well.
  *
  * Author: Kartik Visweswaran
- * Copyright: 2014 - 2017, Kartik Visweswaran, Krajee.com
+ * Copyright: 2014 - 2018, Kartik Visweswaran, Krajee.com
  *
  * Licensed under the BSD 3-Clause
  * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
@@ -61,6 +61,7 @@
             removeIcon: '<i class="fa fa-trash"></i>',
             uploadIcon: '<i class="fa fa-upload"></i>',
             uploadRetryIcon: '<i class="fa fa-repeat"></i>',
+            downloadIcon: '<i class="fa fa-download"></i>',
             zoomIcon: '<i class="fa fa-search-plus"></i>',
             dragIcon: '<i class="fa fa-arrows"></i>',
             indicatorNew: '<i class="fa fa-plus-circle text-warning"></i>',
@@ -71,10 +72,10 @@
         previewZoomButtonIcons: {
             prev: '<i class="fa fa-caret-left fa-lg"></i>',
             next: '<i class="fa fa-caret-right fa-lg"></i>',
-            toggleheader: '<i class="fa fa-arrows-v"></i>',
-            fullscreen: '<i class="fa fa-arrows-alt"></i>',
-            borderless: '<i class="fa fa-external-link"></i>',
-            close: '<i class="fa fa-remove"></i>'
+            toggleheader: '<i class="fa fa-fw fa-arrows-v"></i>',
+            fullscreen: '<i class="fa fa-fw fa-arrows-alt"></i>',
+            borderless: '<i class="fa fa-fw fa-external-link"></i>',
+            close: '<i class="fa fa-fw fa-remove"></i>'
         },
         previewFileIcon: '<i class="fa fa-file"></i>',
         browseIcon: '<i class="fa fa-folder-open"></i>',

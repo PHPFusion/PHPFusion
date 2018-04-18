@@ -138,8 +138,10 @@ closetable();
 require_once THEMES."templates/footer.php";
 /**
  * Gallery Photo Listing UI
+ *
  * @param $id
  * @param $type
+ *
  * @return int
  */
 function rating_vote($id, $type) {

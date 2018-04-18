@@ -88,8 +88,10 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Delete all forum posts
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
@@ -98,6 +100,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Get forum rank images
+     *
      * @return array
      */
     protected static function get_rank_images() {
@@ -113,7 +116,9 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Get a forum full data
+     *
      * @param $forum_id
+     *
      * @return array|bool
      */
     protected static function get_forum($forum_id) {
@@ -125,8 +130,10 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Return a valid forum name without duplicate
+     *
      * @param     $forum_name
      * @param int $forum_id
+     *
      * @return mixed
      */
     protected static function check_validForumName($forum_name, $forum_id = 0) {
@@ -148,8 +155,10 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Delete all forum attachments
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     protected static function prune_attachment($forum_id, $time = FALSE) {
@@ -176,6 +185,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Delete all forum threads
+     *
      * @param      $forum_id
      * @param bool $time
      */
@@ -193,7 +203,9 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Recalculate a forum post count
+     *
      * @param $forum_id
+     *
      * @return string
      */
     protected static function recalculate_post($forum_id) {
@@ -232,6 +244,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Remove the entire forum branch, image and order updated
+     *
      * @param bool $index
      * @param bool $time
      */
@@ -289,6 +302,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Get forum index for hierarchy traversal
+     *
      * @return array
      */
     protected static function get_forum_index() {
