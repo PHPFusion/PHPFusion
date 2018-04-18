@@ -3,8 +3,8 @@
     <td class="min">
         {%checkbox_input%}
     </td>
-    <td>
-        <div class="clearfix" style="white-space: nowrap">
+    <td style="width:200px; max-width:200px;">
+        <div class="clearfix" style="white-space:nowrap">
             <div class="pull-left m-r-10">
                 <div class="icon-xs">{%avatar%}</div>
             </div>
@@ -12,11 +12,9 @@
         </div>
     </td>
     <td>
-        <a class='text-dark text-normal display-block' href="{%message_link%}">{%message_title%}</a>
+        <a class="text-dark text-normal display-block no-break" href="{%message_link%}">{%message_title%}</a>
     </td>
-    <td class="text-right">{%datestamp%}
-        <small>{%timer%}</small>
-    </td>
+    <td class="text-right">{%datestamp%}</td>
 </tr>
 }}
 

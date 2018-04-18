@@ -16,13 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once(__DIR__.'/maincore.php');
-if (!iMEMBER) {
-    redirect(BASEDIR.'index.php');
-}
 require_once THEMES."templates/header.php";
 include THEMES."templates/global/messages.php";
-$message = new \PHPFusion\PrivateMessages();
-$message->locale = fusion_get_locale('', LOCALE.LOCALESET.'messages.php');
-$message->display_inbox();
-echo display_inbox($message->getInfo());
+echo \PHPFusion\PrivateMessages::getInstance()->Server()->View();
 require_once THEMES."templates/footer.php";

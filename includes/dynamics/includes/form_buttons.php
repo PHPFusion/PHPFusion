@@ -77,6 +77,7 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
         'options'        => [$locale['disable'], $locale['enable']],
         'input_id'       => $input_name,
         'class'          => "btn-default",
+        'type'           => 'button',
         'icon'           => "",
         'multiple'       => FALSE,
         'delimiter'      => ",",
@@ -107,17 +108,25 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
     $html .= "<div class='btn-group' id='".$options['input_id']."'>";
-    $i = 1;
+
     if (!empty($options['options']) && is_array($options['options'])) {
+        $i = 1;
+        $option_count = count($options['options']);
+
         foreach ($options['options'] as $arr => $v) {
-            $active = '';
-            if ($input_value == $arr) {
-                $active = "active";
+            $child_class = ($option_count == $i ? ' last-child ' : '');
+            $active_class = ($input_value == $arr ? ' active' : '');
+
+            if ($options['type'] == 'submit') {
+                $html .= "<button name='$arr' type='submit' data-value='$arr' value='$arr' class='btn".$options['class'].$child_class.$active_class."'>$v</button>\n";
+            } else {
+                $html .= "<button type='button' data-value='$arr' class='btn".$options['class'].$child_class.$active_class."'>$v</button>\n";
             }
-            $html .= "<button type='button' data-value='$arr' class='btn ".$options['class']." ".((count($options['options']) == $i ? 'last-child' : ''))." $active'>".$v."</button>\n";
+
             $i++;
         }
     }
+
     $html .= "</div>\n";
     $html .= "<input name='$input_name' type='hidden' id='".$options['input_id']."-text' value='$input_value' />\n";
 
@@ -128,7 +137,7 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
 
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
-    \defender::getInstance()->add_field_session([
+    \defender::add_field_session([
         'input_name'     => $input_name,
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],

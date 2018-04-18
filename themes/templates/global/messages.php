@@ -34,6 +34,7 @@ if (!function_exists('display_inbox')) {
         $tpl->set_block('compose_button', $info['button']['new']);
         $tpl->set_tag('opentable', fusion_get_function('opentable', $locale['400']));
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
+        $tpl->set_tag('pagenav', $info['pagenav']);
 
         $folder_icons = array(
             'inbox'   => 'fas fa-inbox',
@@ -62,6 +63,7 @@ if (!function_exists('display_inbox')) {
             } else {
 
                 if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
+
                     $data = $info['items'][$_GET['msg_read']];
                     $tpl->set_block('actions', array('form' => $info['actions_form']));
 
@@ -106,7 +108,7 @@ if (!function_exists('display_inbox')) {
                                 'profile_link'   => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
                                 'message_link'   => $message['message']['link'],
                                 'message_title'  => $message['message']['name'],
-                                'datestamp'      => showdate('newsdate', $message['message_datestamp']),
+                                'datestamp'      => $message['message_datestamp'] > TIME - 86400 ? timer($message['message_datestamp']) : showdate($locale['date_day'], $message['message_datestamp']),
                                 'timer'          => timer($message['message_datestamp']),
                             );
 
