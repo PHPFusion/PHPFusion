@@ -191,9 +191,8 @@ class PrivateMessages {
                 'archive' => $this->info['archive_count']
             );
 
-
+            // The mail forms
             if ($totals[$_GET['folder']] > 0) {
-
                 // Message Actions
                 if (isset($_POST['archive_pm'])) {
                     $this->archive_pm();
@@ -205,39 +204,19 @@ class PrivateMessages {
                     $this->mark_pm();
                 } else {
 
-                    // view data
-                    $sql_table = DB_MESSAGES." m INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)";
-                    $sql_condition = "message_to=:uid AND ".$query[$_GET['folder']][1];
-                    // filter
-                    $sql_param = [':uid' => fusion_get_userdata('user_id')];
+                    if (!empty($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 
-                    if ($this->info['max_rows'] = dbcount("(message_id)", $sql_table, $sql_condition, $sql_param)) {
-
-                        $sql_param += [
-                            ':rowstart' => (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->info['max_rows'] ? intval($_GET['rowstart']) : 0),
-                            ':limiter'  => 20
-                        ];
-
-                        $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, MAX(m.message_id) AS last_message
+                        $sql_table = DB_MESSAGES." m INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)";
+                        $sql_condition = "message_to=:uid AND message_id=:mid AND ".$query[$_GET['folder']][1];
+                        $sql_param = [':uid' => fusion_get_userdata('user_id'), ':mid' => intval($_GET['msg_read'])];
+                        $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level
                         FROM $sql_table
-                        WHERE $sql_condition GROUP BY message_id ORDER BY m.message_datestamp DESC LIMIT :rowstart,:limiter",
+                        WHERE $sql_condition GROUP BY message_id ORDER BY m.message_datestamp DESC",
                             $sql_param
                         );
+                        if ($this->info['rows'] = dbrows($result)) {
+                            $data = dbarray($result);
 
-                        $this->info['rows'] = dbrows($result);
-
-                        if ($this->info['max_rows'] > $this->info['rows']) {
-                            $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + [
-                                    'path'  => '',
-                                    'query' => ''
-                                ];
-                            if ($url['query']) {
-                                parse_str($url['query'], $fusion_query); // this is original.
-                            }
-                            $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $this->info['rows'], $this->info['max_rows'], 3, FUSION_REQUEST.(!empty($fusion_query) ? "&amp;" : ""));
-                        }
-
-                        while ($data = dbarray($result)) {
                             $data['contact_user'] = [
                                 'user_id'     => $data['user_id'],
                                 'user_name'   => $data['user_name'],
@@ -245,29 +224,81 @@ class PrivateMessages {
                                 'user_avatar' => $data['user_avatar'],
                                 'user_level'  => $data['user_level']
                             ];
+
                             $data['message'] = [
                                 'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                                 'name'           => $data['message_subject'],
                                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
                                 'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
                             ];
-                            $this->info['items'][$data['message_id']] = $data;
-                        }
 
-                        // set read
-                        if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
-                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
+                            $this->info['items'][$data['message_id']] = $data;
+
+                            // set read
+                            if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
+                                dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
+                            }
+
+                        } else {
+                            redirect(BASEDIR.'messages.php');
                         }
 
                     } else {
-                        $this->info['no_item'] = $this->locale['471'];
+
+                        // list messages
+                        $sql_table = DB_MESSAGES." m INNER JOIN ".DB_USERS." u ON (m.message_from=u.user_id)";
+                        $sql_condition = "message_to=:uid AND ".$query[$_GET['folder']][1];
+                        $sql_limit = ":rowstart, :limit";
+                        // filter
+                        $sql_param = [':uid' => fusion_get_userdata('user_id')];
+                        if ($this->info['max_rows'] = dbcount("(message_id)", $sql_table, $sql_condition, $sql_param)) {
+
+                            $sql_param += [
+                                ':rowstart' => (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->info['max_rows'] ? intval($_GET['rowstart']) : 0),
+                                ':limit'    => 20
+                            ];
+                            $result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, MAX(m.message_id) AS last_message
+                                FROM $sql_table
+                                WHERE $sql_condition GROUP BY message_id ORDER BY m.message_datestamp DESC LIMIT $sql_limit",
+                                $sql_param
+                            );
+                            $this->info['rows'] = dbrows($result);
+                            if ($this->info['max_rows'] > $this->info['rows']) {
+                                $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + [
+                                        'path'  => '',
+                                        'query' => ''
+                                    ];
+                                if ($url['query']) {
+                                    parse_str($url['query'], $fusion_query); // this is original.
+                                }
+                                $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $this->info['rows'], $this->info['max_rows'], 3, FUSION_REQUEST.(!empty($fusion_query) ? "&amp;" : ""));
+                            }
+                            while ($data = dbarray($result)) {
+                                $data['contact_user'] = [
+                                    'user_id'     => $data['user_id'],
+                                    'user_name'   => $data['user_name'],
+                                    'user_status' => $data['user_status'],
+                                    'user_avatar' => $data['user_avatar'],
+                                    'user_level'  => $data['user_level']
+                                ];
+                                $data['message'] = [
+                                    'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
+                                    'name'           => $data['message_subject'],
+                                    'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
+                                    'message_text'   => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
+                                ];
+                                $this->info['items'][$data['message_id']] = $data;
+                            }
+
+                        } else {
+                            $this->info['no_item'] = $this->locale['471'];
+                        }
                     }
                 }
             } else {
                 $this->info['no_item'] = $this->locale['471'];
             }
 
-            // The mail forms
             if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
                 if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
                     $this->send_message();

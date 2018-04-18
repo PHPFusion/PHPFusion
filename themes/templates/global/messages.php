@@ -57,9 +57,11 @@ if (!function_exists('display_inbox')) {
         }
 
         if (isset($_GET['folder'])) {
+
             if ($_GET['folder'] === 'options') {
                 // Configuration Page
                 $tpl->set_block('settings', ['content' => $info['options_form']]);
+
             } else {
 
                 if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
@@ -146,6 +148,5 @@ if (!function_exists('display_inbox')) {
 
         return $tpl->get_output();
 
-        //_inbox($info);
     }
 }
