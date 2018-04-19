@@ -18,6 +18,7 @@
 namespace PHPFusion\Page;
 
 use PHPFusion\BreadCrumbs;
+use PHPFusion\OpenGraph;
 use PHPFusion\Panels;
 
 /**
@@ -27,6 +28,7 @@ use PHPFusion\Panels;
  * @package PHPFusion\Page
  */
 class PageController extends PageModel {
+
     protected static $info = [
         'title'       => '',
         'error'       => '',
@@ -39,7 +41,9 @@ class PageController extends PageModel {
     public static function display_Widget($colData) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."custom_pages.php");
         if ($colData['page_widget'] == 'content' || empty($colData['page_widget'])) {
+
             return self::displayContentHTML($colData);
+
         } else {
             // throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
             try {
@@ -64,9 +68,10 @@ class PageController extends PageModel {
      * @return string
      */
     public static function displayContentHTML($colData) {
-        require_once THEMES."templates/global/custompage.php";
-        $htmlArray = [];
 
+        require_once THEMES."templates/global/custompage.php";
+
+        $htmlArray = [];
         ob_start();
         if (fusion_get_settings("allow_php_exe")) {
             eval("?>".stripslashes($colData['page_content'])."<?php ");
@@ -88,6 +93,7 @@ class PageController extends PageModel {
             $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1, BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
         }
         ob_start();
+
         display_page_content($htmlArray);
 
         return ob_get_clean();
@@ -105,14 +111,19 @@ class PageController extends PageModel {
 
         self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
-        $page_query = "SELECT * FROM ".DB_CUSTOM_PAGES."
-        WHERE page_id='$page_id' AND page_status='1' AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+        OpenGraph::ogCustomPage($page_id);
 
-        $cp_result = dbquery($page_query);
+        $query = "SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id=:page_id AND page_status=:page_status AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+        $parameters = [
+            ':page_id'     => $page_id,
+            ':page_status' => 1,
+        ];
+        $cp_result = dbquery($query, $parameters);
 
         self::$data['page_rows'] = dbrows($cp_result);
 
         if (self::$data['page_rows'] > 0) {
+
             self::$data = dbarray($cp_result);
 
             if (empty(self::$data['page_left_panel'])) {
@@ -133,8 +144,10 @@ class PageController extends PageModel {
             if (empty(self::$data['page_bottom_panel'])) {
                 Panels::getInstance()->hide_panel('L_CENTER');
             }
+
             self::load_ComposerData();
             self::cache_widget();
+
             // Construct Meta
             add_to_title($locale['global_200'].self::$data['page_title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
@@ -144,6 +157,7 @@ class PageController extends PageModel {
             self::$info['title'] = self::$data['page_title'];
             self::$info['line_breaks'] = self::$data['page_breaks'];
             self::$info['body'] = PageView::display_Composer();
+
         } else {
             add_to_title($locale['global_200'].$locale['page_401']);
             self::$info['title'] = $locale['page_401'];

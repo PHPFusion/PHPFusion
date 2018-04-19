@@ -81,7 +81,7 @@ class PageModel {
     /**
      * Return page composer object
      *
-     * @return null|static
+     * @return static
      */
     public static function getInstance() {
         if (empty(self::$page_instance)) {

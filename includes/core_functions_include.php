@@ -522,10 +522,8 @@ function displaysmileys($textarea, $form = "inputform") {
  */
 function fusion_parse_user($user_name, $tooltip = "") {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#i", function ($user_name) use ($tooltip) {
-        $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
-        $user_name[1] = $tooltip;
-        return render_user_tags($user_name);
+    $text = preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
+        return render_user_tags($user_name, $tooltip);
     }, $user_name);
 
     return $text;

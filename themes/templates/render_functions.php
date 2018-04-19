@@ -94,28 +94,34 @@ if (!function_exists('render_favicons')) {
 }
 
 if (!function_exists('render_user_tags')) {
+
     /**
      * The callback function for fusion_parse_user()
      *
-     * @global array $locale
-     *
-     * @param string $m The message
+     * @param string $m       The message
+     * @param        $tooltip The tooltip string
      *
      * @return string
      */
-    function render_user_tags($m) {
+    function render_user_tags($m, $tooltip) {
         $locale = fusion_get_locale();
         add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
-        $user = str_replace('@', '', $m[0]);
+        $user = preg_replace('/[^A-Za-z0-9\-]/', '', $m[0]);
+        $user = str_replace('@', '', $user);
         $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar
         		FROM ".DB_USERS."
-        		WHERE user_name='".$user."' OR user_name='".ucwords($user)."' OR user_name='".strtolower($user)."' AND user_status='0'
+        		WHERE (user_name=:user_00 OR user_name=:user_01 OR user_name=:user_02 OR user_name=:user_03) AND user_status='0'
         		LIMIT 1
-        	");
+        	", [
+            ':user_00' => $user,
+            ':user_01' => ucwords($user),
+            ':user_02' => strtoupper($user),
+            ':user_03' => strtolower($user)
+        ]);
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $title = "<div class='user-tooltip'><div class='pull-left m-r-10'>".display_avatar($data, '50px', '', FALSE, '')."</div><div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/><span class='user_level'>".getuserlevel($data['user_level'])."</span></div>";
-            $content = $m[1]."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
+            $content = $tooltip."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
             $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>\n";
