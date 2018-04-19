@@ -828,7 +828,7 @@ class PrivateMessages {
                 'error_text'  => $this->locale['error_input_username'],
                 'placeholder' => $this->locale['421']
             ]);
-            $input_header .= form_text('chk_sendtoall', '', $this->data['chk_sendtoall']);
+            $input_header .= form_hidden('chk_sendtoall', '', $this->data['chk_sendtoall']);
             $input_header .= "<div id='msg_to_group-field' class='display-none'>\n";
             $user_groups = fusion_get_groups();
             unset($user_groups[0]);
