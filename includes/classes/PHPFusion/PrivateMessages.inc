@@ -300,7 +300,7 @@ class PrivateMessages {
      * Set Message Listing for inbox, outbox and archive*
      * @todo: expand to longpoll or implement node.js
      */
-    private function list_messages() {
+    private function set_list_messages() {
         // list messages
         $query = [
             'inbox'   => [$this->info['inbox_total'], "message_folder='0'"],
