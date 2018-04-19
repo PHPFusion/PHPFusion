@@ -31,7 +31,6 @@ if (!function_exists('display_inbox')) {
         $tpl = \PHPFusion\Template::getInstance('inbox');
         $tpl->set_template(__DIR__.'/tpl/messages.html');
         $tpl->set_locale(fusion_get_locale());
-        $tpl->set_block('compose_button', $info['button']['new']);
         $tpl->set_tag('opentable', fusion_get_function('opentable', $locale['400']));
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
         $tpl->set_tag('pagenav', $info['pagenav']);
@@ -65,6 +64,7 @@ if (!function_exists('display_inbox')) {
             } else {
 
                 if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) { // read view
+                    $tpl->set_block('compose_button', $info['button']['new']);
 
                     $data = $info['items'][$_GET['msg_read']];
                     $tpl->set_block('actions', ['form' => $info['actions_form']]);
@@ -82,10 +82,11 @@ if (!function_exists('display_inbox')) {
 
                 } else if (isset($_GET['msg_send'])) { // send new message form
 
-                    echo $info['reply_form'];
+                    $tpl->set_block('send_form', ['content' => $info['reply_form']]);
 
                 } else { // display view
 
+                    $tpl->set_block('compose_button', $info['button']['new']);
                     // keep injecting new item
                     //send_pm(fusion_get_userdata('user_id'), 3, 'Test Message', lorem_ipsum(1000));
 

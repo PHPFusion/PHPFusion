@@ -301,13 +301,19 @@ class PrivateMessages {
             }
 
             if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
-                if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
-                    $this->send_message();
-                }
+
+                // Send message action
+                $this->send_message();
+
                 if (isset($_GET['msg_read'])) {
-                    $this->pm_form();
+                    $this->info['button'] += [
+                        'back' => ['link' => BASEDIR."messages.php?folder=".$_GET['folder'], 'title' => $this->locale['back']],
+                    ];
+                    $this->info['reply_form'] = $this->pm_form();
+
                 } else if (isset($_GET['msg_send'])) {
-                    $this->pm_mainForm();
+                    $this->info['reply_form'] = $this->pm_mainForm();
+
                 }
             }
 
@@ -561,41 +567,51 @@ class PrivateMessages {
      * Reply and send
      * SQL send pm
      */
+    private $data = [
+        'chk_sendtoall'  => 0,
+        'msg_group_send' => 0,
+        'to_group'       => 0,
+        'to'             => 0,
+        'msg_send'       => 0,
+        'from'           => 0,
+        'subject'        => '',
+        'message'        => '',
+        'smileys'        => 'y',
+    ];
+
     private function send_message() {
 
-        $userdata = fusion_get_userdata();
+        if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
 
-        $inputData = [];
-        if (iADMIN && isset($_POST['chk_sendtoall'])) {
-            $inputData += [
-                'to_group' => isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0,
+            $userdata = fusion_get_userdata();
+
+            $this->data = [
+                'msg_group_send' => 0,
+                'chk_sendtoall'  => 0,
+                'to'             => 0,
+                'from'           => $userdata['user_id'],
+                'subject'        => form_sanitizer($_POST['subject'], '', 'subject'),
+                'message'        => form_sanitizer($_POST['message'], '', 'message'),
+                'smileys'        => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y"
             ];
-        } else {
-            $inputData += [
-                'to' => form_sanitizer($_POST['msg_send'], 0, 'msg_send'),
-            ];
-        }
 
-        $inputData += [
-            'from'     => $userdata['user_id'],
-            'subject'  => form_sanitizer($_POST['subject'], '', 'subject'),
-            'message'  => form_sanitizer($_POST['message'], '', 'message'),
-            'smileys'  => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
-            'to_group' => 0
-        ];
-
-        if (\defender::safe()) {
-
-            if (iADMIN && isset($_POST['chk_sendtoall']) && $inputData['to_group']) {
-                self::send_pm($inputData['to_group'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], TRUE);
+            if (iADMIN && isset($_POST['chk_sendtoall'])) {
+                $this->data['chk_sendtoall'] = isset($_POST['chk_sendtoall']) ? 1 : 0;
+                $this->data['msg_group_send'] = isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0;
             } else {
-                self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], FALSE);
+                $this->data['to'] = form_sanitizer($_POST['msg_send'], 0, 'msg_send');
             }
 
             if (\defender::safe()) {
+                if (iADMIN && isset($_POST['chk_sendtoall']) && $this->data['msg_group_send']) {
+                    self::send_pm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
+                } else {
+                    self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], FALSE);
+                }
                 addNotice('success', $this->locale['491']);
                 redirect(BASEDIR."messages.php");
             }
+
         }
     }
 
@@ -754,10 +770,7 @@ class PrivateMessages {
      */
     public function pm_form() {
 
-        $this->info['button'] += [
-            'back' => ['link' => BASEDIR."messages.php?folder=".$_GET['folder'], 'title' => $this->locale['back']],
-        ];
-        $this->info['reply_form'] = openform('inputform', 'post', FUSION_REQUEST)
+        return openform('inputform', 'post', FUSION_REQUEST)
             .form_hidden('msg_send', '', $this->info['items'][$_GET['msg_read']]['message_from'])
             .form_hidden('subject', '', $this->info['items'][$_GET['msg_read']]['message_subject'])
             .form_textarea('message', '', '', [
@@ -777,30 +790,28 @@ class PrivateMessages {
      */
     public function pm_mainForm() {
 
-        $_GET['msg_send'] = isset($_GET['msg_send']) ? $_GET['msg_send'] : "";
+        $this->data['msg_send'] = isset($_GET['msg_send']) ? $_GET['msg_send'] : 0;
 
         if (iADMIN) {
-            $input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$this->locale['434']."</a><br/>";
-            $input_header .= form_user_select('msg_send', $this->locale['420a'], $_GET['msg_send'], [
+            $input_header = "<div class='clearfix text-right'><a class='pointer' id='mass_send'><i class='fa fa-user-circle-o m-r-5'></i>".$this->locale['434']."</a></div>";
+            $input_header .= form_user_select('msg_send', $this->locale['420a'], $this->data['msg_send'], [
                 'required'    => TRUE,
                 'inner_width' => '100%',
                 'width'       => '100%',
                 'error_text'  => $this->locale['error_input_username'],
                 'placeholder' => $this->locale['421']
             ]);
-            $input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
-            $input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$this->locale['434']."
-                            <input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
-                           style='margin-right:10px !important;'/></label>\n";
-            $input_header .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+            $input_header .= "<div id='msg_to_group-field' class='display-none'>\n";
+            $input_header .= form_hidden('chk_sendtoall', '', $this->data['chk_sendtoall']);
             $user_groups = fusion_get_groups();
             unset($user_groups[0]);
-            $input_header .= form_select('msg_group_send', "", "", [
+            $input_header .= form_select('msg_group_send', $this->locale['420a'], $this->data['msg_group_send'], [
                 'options'     => $user_groups,
                 'inner_width' => '300px',
                 'width'       => "100%",
             ]);
-            $input_header .= "</div>\n</div>\n";
+            $input_header .= "</div>\n";
+
             // Toggle "Send to All" link
             add_to_jquery("
             $('#mass_send').bind('click', function() {
@@ -814,8 +825,9 @@ class PrivateMessages {
             }
             });
             ");
+
         } else {
-            $input_header = form_user_select('msg_send', $this->locale['420a'], $_GET['msg_send'], [
+            $input_header = form_user_select('msg_send', $this->locale['420a'], $this->data['msg_send'], [
                 'required'    => TRUE,
                 'input_id'    => 'msgsend2',
                 'inline'      => TRUE,
@@ -825,17 +837,17 @@ class PrivateMessages {
                 'placeholder' => $this->locale['421']
             ]);
         }
-        $this->info['reply_form'] = openform('inputform', 'post', FUSION_REQUEST)
-            .$input_header.form_text('subject', '', '', [
-                'placeholder'      => $this->locale['405'],
-                'inner_class'      => 'input-lg',
-                'required'         => TRUE,
-                'inline'           => TRUE,
-                'max_length'       => 100,
-                'autocomplete_off' => TRUE,
-                'width'            => '100%',
-                'error_text'       => $this->locale['error_input_default'],
-            ]).form_textarea('message', '', '', [
+
+        return openform('inputform', 'post', FUSION_REQUEST).$input_header."<hr/>".
+            form_text('subject', '', $this->data['subject'], [
+                'placeholder' => $this->locale['405'],
+                'class'       => 'form-group-lg display-block',
+                'inline'      => FALSE,
+                'required'    => TRUE,
+                'max_length'  => 100,
+                'width'       => '100%',
+                'error_text'  => $this->locale['error_input_default'],
+            ]).form_textarea('message', '', $this->data['message'], [
                 'placeholder' => $this->locale['422'],
                 'required'    => TRUE,
                 'autosize'    => TRUE,
@@ -849,4 +861,5 @@ class PrivateMessages {
                 'class' => 'btn m-l-10 btn-primary'
             ]).closeform();
     }
+
 }
