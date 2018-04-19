@@ -771,7 +771,7 @@ class PrivateMessages {
                 'smileys'        => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y"
             ];
 
-            if (iADMIN && isset($_POST['chk_sendtoall'])) {
+            if (iADMIN && !empty($_POST['chk_sendtoall'])) {
                 $this->data['chk_sendtoall'] = isset($_POST['chk_sendtoall']) ? 1 : 0;
                 $this->data['msg_group_send'] = isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0;
             } else {
@@ -828,8 +828,8 @@ class PrivateMessages {
                 'error_text'  => $this->locale['error_input_username'],
                 'placeholder' => $this->locale['421']
             ]);
+            $input_header .= form_text('chk_sendtoall', '', $this->data['chk_sendtoall']);
             $input_header .= "<div id='msg_to_group-field' class='display-none'>\n";
-            $input_header .= form_hidden('chk_sendtoall', '', $this->data['chk_sendtoall']);
             $user_groups = fusion_get_groups();
             unset($user_groups[0]);
             $input_header .= form_select('msg_group_send', $this->locale['420a'], $this->data['msg_group_send'], [
@@ -846,9 +846,9 @@ class PrivateMessages {
             $('#msg_send-field').toggleClass('display-none');
             var invisible = $('#msg_to_group-field').hasClass('display-none');
             if (invisible) {
-                $('#all_check').prop('checked', false);
+                $('#chk_sendtoall').val(0);
             } else {
-                $('#all_check').prop('checked', true);
+                $('#chk_sendtoall').val(1);
             }
             });
             ");
