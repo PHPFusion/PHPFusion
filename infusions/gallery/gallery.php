@@ -29,6 +29,8 @@ if (!defined('SAFEMODE')) {
     define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 }
 
+$gallery_settings['gallery_pagination'] = !empty($gallery_settings['gallery_pagination']) ? $gallery_settings['gallery_pagination'] : 24;
+
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     include INCLUDES."comments_include.php";

@@ -176,7 +176,7 @@ abstract class News extends NewsServer {
                 ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
                 GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
                 ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
-                LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
+                LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12));
 
         return $query;
     }
