@@ -46,6 +46,8 @@ if ($settings['tinymce_enabled'] == 1) {
 
 $blog_settings = get_settings("blog");
 
+$blog_settings['blog_pagination'] = !empty($blog_settings['blog_pagination']) ? $blog_settings['blog_pagination'] : 12;
+
 if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php')) {
     add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('blog_1000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_blog.php"/>');
 }

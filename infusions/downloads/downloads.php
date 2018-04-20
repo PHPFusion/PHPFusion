@@ -31,6 +31,9 @@ require_once INFUSIONS."downloads/classes/Functions.php";
 require_once INFUSIONS."downloads/classes/OpenGraphDownloads.php";
 
 $dl_settings = get_settings("downloads");
+
+$dl_settings['download_pagination'] = !empty($dl_settings['download_pagination']) ? $dl_settings['download_pagination'] : 15;
+
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
     'link'  => INFUSIONS.'downloads/downloads.php',
     'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name")

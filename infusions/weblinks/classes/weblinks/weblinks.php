@@ -188,7 +188,7 @@ abstract class Weblinks extends WeblinksServer {
             $max_weblink_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess("weblink_visibility").(multilang_table("WL") ? " AND weblink_language='".LANGUAGE."'" : "")." AND weblink_status='1'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_weblink_rows ? intval($_GET['rowstart']) : 0;
-            $info['pagenav'] = makepagenav($_GET['rowstart'], $weblink_settings['links_per_page'], $max_weblink_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id'].(isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;");
+            $info['pagenav'] = makepagenav($_GET['rowstart'], (!empty($weblink_settings['links_per_page']) ? $weblink_settings['links_per_page'] : 15), $max_weblink_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id'].(isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '')."&amp;");
 
             $this->weblink_cat_breadcrumbs($weblink_cat_index);
 
@@ -230,7 +230,7 @@ abstract class Weblinks extends WeblinksServer {
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY w.weblink_id
             ORDER BY ".self::check_WeblinksFilter()."
-            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$weblink_settings['links_per_page'])."
+            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($weblink_settings['links_per_page']) ? $weblink_settings['links_per_page'] : 15))."
         ";
 
     }

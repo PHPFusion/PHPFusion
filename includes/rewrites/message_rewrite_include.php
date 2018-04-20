@@ -27,7 +27,7 @@ $regex = [
     "%folder_inbox%"   => "(inbox)",
     "%folder_outbox%"  => "(outbox)",
     "%folder_archive%" => "(archive)",
-    "%user_name%"      => "([a-zA-Z._]+)"
+    "%user_name%"      => "([0-9a-zA-Z._\W]+)"
 ];
 
 $pattern = [

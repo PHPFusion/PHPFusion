@@ -169,7 +169,7 @@ abstract class Articles extends ArticlesServer {
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY a.article_id
             ORDER BY ".self::check_ArticlesFilter()."
-            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".$article_settings['article_pagination']."")."
+            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".(!empty($article_settings['article_pagination']) ? $article_settings['article_pagination'] : 15)."")."
         ";
     }
 

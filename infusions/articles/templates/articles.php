@@ -119,7 +119,7 @@ if (!function_exists("display_main_articles")) {
             $articleColumn = $active == 2 ? 12 : 4;
             if (!empty($info['article_items'])) {
                 ?>
-                <div class="row">
+                <div class="row equal-height">
                     <?php foreach ($info['article_items'] as $i => $article_info) { ?>
                         <div class="col-xs-12 col-sm-<?php echo $articleColumn; ?> col-md-<?php echo $articleColumn; ?> col-lg-<?php echo $articleColumn; ?>">
                             <?php echo (isset($_GET['cat_id'])) ? "<!--pre_articles_cat_idx-->\n" : "<!--articles_prepost_".$i."-->\n"; ?>
