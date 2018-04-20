@@ -27,7 +27,7 @@ class ViewThread extends ForumServer {
 
     public function display_thread() {
 
-        $info = $this->thread()->get_threadInfo();
+        $info = self::thread()->get_threadInfo();
 
         if (isset($_GET['action'])) {
 
@@ -35,7 +35,7 @@ class ViewThread extends ForumServer {
                 case 'editpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll->render_poll_form(TRUE);
+                    $poll::render_poll_form(TRUE);
                     break;
                 case 'deletepoll':
                     // Action
@@ -45,7 +45,7 @@ class ViewThread extends ForumServer {
                 case 'newpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll->render_poll_form();
+                    $poll::render_poll_form();
                     break;
                 case 'edit':
                     // Template
@@ -76,10 +76,10 @@ class ViewThread extends ForumServer {
         } else {
             self::check_download_request();
             // +1 threadviews
-            $this->increment_thread_views($info['thread']['thread_id']);
+            self::increment_thread_views($info['thread']['thread_id']);
 
             // +1 see who is viewing thread
-            $this->thread()->set_thread_visitor();
+            self::thread()->set_thread_visitor();
 
             if ($info['thread']['forum_users'] == TRUE) {
                 $info['thread_users'] = $this->get_participated_users($info);

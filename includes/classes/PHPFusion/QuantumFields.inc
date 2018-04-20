@@ -1352,9 +1352,10 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'select':
                 if ($method == 'input') {
-                    $options['options'] = $option_list;
+                    $options += ['options' => $option_list];
 
                     return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
+
                 } else if ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
 
@@ -1366,7 +1367,7 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'tags':
                 if ($method == 'input') {
-                    $options += ['options' => $option_list, 'tags' => 1, 'multiple' => 1, 'width' => '100%'];
+                    $options += ['options' => $option_list, 'tags' => TRUE, 'multiple' => TRUE, 'width' => '100%', 'inner_width' => '100%'];
 
                     return form_select($data['field_name'],
                         $options['show_title'] ? self::parse_label($data['field_title']) : '',
@@ -1533,11 +1534,6 @@ class QuantumFields extends \SqlHandler {
 
         $tabs = new \FusionTabs();
 
-        /*$tabs->set_remember(TRUE);
-        if (!empty($_POST)) {
-            $tabs->set_remember(FALSE);
-        }*/
-
         echo $tabs->opentab($tab_title, $tab_active, 'amd', FALSE, FALSE, 'action', []);
         echo $tabs->opentabbody($tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
@@ -1551,8 +1547,7 @@ class QuantumFields extends \SqlHandler {
             $field_type = $this->get_dynamics_type();
             unset($field_type['file']);
             foreach ($field_type as $type => $name) {
-                echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type,
-                        ['class' => 'btn-block btn-sm btn-default'])."</div>\n";
+                echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type, ['class' => 'btn-block btn-sm btn-default'])."</div>\n";
             }
             echo "</div>\n";
         }
@@ -2079,7 +2074,7 @@ class QuantumFields extends \SqlHandler {
         }
         // ok the value generated needs to be parsed by quantum
         echo form_select_tree('field_cat', $this->locale['fields_0450'], $this->field_data['field_cat'], [
-            'no_root'      => 1,
+            'no_root'      => TRUE,
             'width'        => '100%',
             'disable_opts' => $disable_opts
         ], $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
@@ -2089,16 +2084,18 @@ class QuantumFields extends \SqlHandler {
         echo form_text('field_name', $this->locale['fields_0453'], $this->field_data['field_name'],
             [
                 'placeholder' => $this->locale['fields_0454'],
-                'required'    => 1
+                'required'    => TRUE
             ]
         );
 
         if ($this->field_data['field_type'] == 'select') {
             echo form_select('field_options', $this->locale['fields_0455'], $this->field_data['field_options'],
                 [
-                    'required' => 1,
-                    'tags'     => 1,
-                    'multiple' => 1
+                    'required'    => TRUE,
+                    'tags'        => TRUE,
+                    'multiple'    => TRUE,
+                    'width'       => '100%',
+                    'inner_width' => '100%'
                 ]
             );
         }
@@ -2131,7 +2128,7 @@ class QuantumFields extends \SqlHandler {
             echo form_text('field_upload_path', $this->locale['fields_0458'], $this->field_data['field_config']['field_upload_path'],
                 [
                     'placeholder' => $this->locale['fields_0459'],
-                    'required'    => 1
+                    'required'    => TRUE
                 ]
             );
             echo "<label for='field_max_b'>".$this->locale['fields_0460']."</label>\n<br/>";
@@ -2139,8 +2136,8 @@ class QuantumFields extends \SqlHandler {
             echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
             echo form_text('field_max_b', '', $calc_b, [
                 'class'    => 'm-b-0',
-                'number'   => 1,
-                'required' => 1
+                'type'     => 'number',
+                'required' => TRUE
             ]);
             echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
             echo form_select('field_calc', '', $calc_c, ['options' => $calc_opts, 'width' => '100%']);
