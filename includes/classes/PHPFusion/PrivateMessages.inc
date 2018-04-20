@@ -201,6 +201,7 @@ class PrivateMessages {
                                     $inputData['message_user'] = $userdata['user_id'];
                                     $inputData['message_folder'] = 1;
                                     $inputData['message_from'] = $to;
+                                    $inputData['message_read'] = 1;
                                     $inputData['message_to'] = $userdata['user_id'];
                                     dbquery_insert(DB_MESSAGES, $inputData, 'save');
                                 }
