@@ -682,7 +682,7 @@ class ViewThread extends ForumServer {
                         // happens only in EDIT
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], ['placeholder' => '', 'class' => 'm-t-20 m-b-20']),
-                        'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
+                        'attachment_field' => $thread->getThreadPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]', $locale['forum_0557'], "",
                                 ['input_id'    => 'file_attachments',
                                  'upload_path' => FORUM.'attachments/',
@@ -690,13 +690,14 @@ class ViewThread extends ForumServer {
                                  'preview_off' => TRUE,
                                  'multiple'    => TRUE,
                                  'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
+                                 'max_byte'    => $forum_settings['forum_attachmax'],
                                  'valid_ext'   => $forum_settings['forum_attachtypes']])."
                                                          <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                             : "",
                         // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
-                        "poll_form"         => "",
-                        'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
-                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        "poll_form"        => '',
+                        'smileys_field'    => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                        'signature_field'  => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         //sticky only in new thread or edit first post
                         'sticky_field'      => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
