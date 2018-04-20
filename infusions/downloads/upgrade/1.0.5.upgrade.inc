@@ -67,7 +67,7 @@ $array_check = [
     'download_pagination'          => 15,
     'download_extended_required'   => 1,
     'download_screenshot_required' => 1,
-    'download_allow_submissions'   => 1
+    'download_allow_submission'    => 1
 ];
 
 $settings = get_settings('downloads');
