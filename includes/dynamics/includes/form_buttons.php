@@ -118,9 +118,9 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
             $active_class = ($input_value == $arr ? ' active' : '');
 
             if ($options['type'] == 'submit') {
-                $html .= "<button name='$arr' type='submit' data-value='$arr' value='$arr' class='btn".$options['class'].$child_class.$active_class."'>$v</button>\n";
+                $html .= "<button name='$arr' type='submit' data-value='$arr' value='$arr' class='btn ".$options['class'].$child_class.$active_class."'>$v</button>\n";
             } else {
-                $html .= "<button type='button' data-value='$arr' class='btn".$options['class'].$child_class.$active_class."'>$v</button>\n";
+                $html .= "<button type='button' data-value='$arr' class='btn ".$options['class'].$child_class.$active_class."'>$v</button>\n";
             }
 
             $i++;

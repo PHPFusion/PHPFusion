@@ -395,7 +395,8 @@ class ViewThread extends ForumServer {
                          "inline"      => FALSE,
                          'max_count'   => $forum_settings['forum_attachmax_count'],
                          'valid_ext'   => $forum_settings['forum_attachtypes'],
-                         "class"       => "m-b-0",
+                         'max_byte'    => $forum_settings['forum_attachmax'],
+                         'class'       => 'm-b-0',
                         ])."
                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                     : "",

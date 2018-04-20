@@ -60,12 +60,14 @@ class NewThread extends ForumServer {
 				"));
 
                 if ($forum_data['forum_type'] == 1 or $forum_data['forum_lock']) {
-                    redirect(INFUSIONS."forum/index.php");
+                    redirect(INFUSIONS.'forum/index.php');
                 }
 
                 $forum_data['lock_edit'] = $forum_settings['forum_edit_lock'];
+
                 self::setPermission($forum_data);
-                if (self::getPermission("can_post") && self::getPermission("can_access")) {
+
+                if (self::getPermission('can_post') && self::getPermission('can_access')) {
                     BreadCrumbs::getInstance()->addBreadCrumb([
                         'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
@@ -78,29 +80,25 @@ class NewThread extends ForumServer {
                     /**
                      * Generate a poll form
                      */
-                    $poll_form = "";
-                    if (self::getPermission("can_create_poll")) {
+                    $poll_form = '';
+                    if (self::getPermission('can_create_poll')) {
                         // initial data to push downwards
                         $pollData = [
                             'thread_id'         => 0,
-                            'forum_poll_title'  => !empty($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'],
-                                '',
-                                'forum_poll_title') : '',
-                            'forum_poll_start'  => time(), // time poll started
+                            'forum_poll_title'  => (!empty($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : ''),
+                            'forum_poll_start'  => TIME, // time poll started
                             'forum_poll_length' => 2, // how many poll options we have
                             'forum_poll_votes'  => 0, // how many vote this poll has
                         ];
                         // counter of lengths
-                        $option_data[1] = "";
-                        $option_data[2] = "";
+                        $option_data[1] = '';
+                        $option_data[2] = '';
                         // Do a validation if checked add_poll
                         if (isset($_POST['add_poll'])) {
                             $pollData = [
                                 'thread_id'         => 0,
-                                'forum_poll_title'  => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'],
-                                    '',
-                                    'forum_poll_title') : '',
-                                'forum_poll_start'  => time(), // time poll started
+                                'forum_poll_title'  => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
+                                'forum_poll_start'  => TIME, // time poll started
                                 'forum_poll_length' => count($option_data), // how many poll options we have
                                 'forum_poll_votes'  => 0, // how many vote this poll has
                             ];
@@ -152,18 +150,13 @@ class NewThread extends ForumServer {
                             'description' => self::$locale['forum_0630'],
                             'field'       => $poll_field
                         ];
-
-                        ob_start();
-                        echo form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE, ['reverse_label' => TRUE]);
-                        echo "<div id='poll_form' class='poll-form' style='display:none;'>\n";
-                        echo "<div class='well clearfix'>\n";
-                        echo "<!--pre_form-->\n";
-                        echo $info['field']['poll_field'];
-                        echo "</div>\n";
-                        echo "</div>\n";
-                        $poll_form = ob_get_contents();
-                        ob_end_clean();
-
+                        $poll_form = form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE, ['reverse_label' => TRUE]);
+                        $poll_form .= "<div id='poll_form' class='poll-form' style='display:none;'>\n";
+                        $poll_form .= "<div class='well clearfix'>\n";
+                        $poll_form .= "<!--pre_form-->\n";
+                        $poll_form .= $info['field']['poll_field'];
+                        $poll_form .= "</div>\n";
+                        $poll_form .= "</div>\n";
                     }
 
                     $thread_data = [
@@ -341,7 +334,7 @@ class NewThread extends ForumServer {
                             ]),
                         'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                             [
-                                'options'     => $this->tag()->get_TagOpts(TRUE),
+                                'options'     => parent::tag()->get_TagOpts(TRUE),
                                 'inner_width' => '100%',
                                 'multiple'    => TRUE,
                                 'delimiter'   => '.',
@@ -360,15 +353,17 @@ class NewThread extends ForumServer {
                             form_fileinput('file_attachments[]',
                                 self::$locale['forum_0557'],
                                 '', [
-                                    'input_id'    => 'file_attachments',
-                                    'upload_path' => INFUSIONS.'forum/attachments/',
-                                    'type'        => 'object',
-                                    'preview_off' => TRUE,
-                                    "multiple"    => TRUE,
-                                    "inline"      => FALSE,
-                                    'max_count'   => $forum_settings['forum_attachmax_count'],
-                                    'valid_ext'   => $forum_settings['forum_attachtypes'],
-                                    "class"       => "m-b-0",
+                                    'input_id'       => 'file_attachments',
+                                    'upload_path'    => INFUSIONS.'forum/attachments/',
+                                    'type'           => 'object',
+                                    'preview_off'    => TRUE,
+                                    'multiple'       => TRUE,
+                                    'inline'         => FALSE,
+                                    'max_count'      => $forum_settings['forum_attachmax_count'],
+                                    'valid_ext'      => $forum_settings['forum_attachtypes'],
+                                    'class'          => 'm-b-0',
+                                    'replace_upload' => TRUE,
+                                    'max_byte'       => $forum_settings['forum_attachmax'],
                                 ]
                             )." <div class='m-b-20'>\n<small>
                             ".sprintf(self::$locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : '',
@@ -458,21 +453,21 @@ class NewThread extends ForumServer {
 
                 if (isset($_POST['post_newthread']) && \defender::safe()) {
 
-                    require_once INCLUDES."flood_include.php";
+                    require_once INCLUDES.'flood_include.php';
 
-                    if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
+                    if (!flood_control('post_datestamp', DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
                         if (ForumServer::verify_forum($thread_data['forum_id'])) {
 
                             $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                             FROM ".DB_FORUMS." f
                             LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-                            WHERE f.forum_id='".intval($thread_data['forum_id'])."'
+                            WHERE f.forum_id=:forum_id
                             AND ".groupaccess('f.forum_access')."
-                            "));
+                            ", [':forum_id' => intval($thread_data['forum_id'])]));
 
                             if ($forum_data['forum_type'] == 1) {
-                                redirect(INFUSIONS."forum/index.php");
+                                redirect(INFUSIONS.'forum/index.php');
                             }
 
                             // Use the new permission settings
@@ -609,10 +604,7 @@ class NewThread extends ForumServer {
 
                 //Disable all parents
                 $disabled_opts = [];
-                $disable_query = "
-                SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type='1'
-                ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : "")."
-                ";
+                $disable_query = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : '');
                 $disable_query = dbquery(" $disable_query ");
                 if (dbrows($disable_query) > 0) {
                     while ($d_forum = dbarray($disable_query)) {
@@ -621,37 +613,37 @@ class NewThread extends ForumServer {
                 }
 
                 $this->info = [
-                    'title'             => self::$locale['forum_0057'],
-                    'description'       => '',
-                    'openform'          => openform('input_form', 'post', FORUM.'newthread.php', ['enctype' => FALSE]),
-                    'closeform'         => closeform(),
-                    'forum_id_field'    => '',
-                    'thread_id_field'   => '',
+                    'title'            => self::$locale['forum_0057'],
+                    'description'      => '',
+                    'openform'         => openform('input_form', 'post', FORUM.'newthread.php', ['enctype' => FALSE]),
+                    'closeform'        => closeform(),
+                    'forum_id_field'   => '',
+                    'thread_id_field'  => '',
                     // need to disable all parents
-                    'forum_field'       => form_select_tree("forum_id", self::$locale['forum_0395'], $thread_data['forum_id'],
+                    'forum_field'      => form_select_tree('forum_id', self::$locale['forum_0395'], $thread_data['forum_id'],
                         [
-                            "required"     => TRUE,
-                            "width"        => "320px",
-                            "no_root"      => TRUE,
-                            "disable_opts" => $disabled_opts,
-                            "query"        => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ""),
+                            'required'     => TRUE,
+                            'width'        => '320px',
+                            'no_root'      => TRUE,
+                            'disable_opts' => $disabled_opts,
+                            'query'        => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ''),
                         ],
-                        DB_FORUMS, "forum_name", "forum_id", "forum_cat"),
-                    'subject_field'     => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'], [
+                        DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat'),
+                    'subject_field'    => form_text('thread_subject', self::$locale['forum_0051'], $thread_data['thread_subject'], [
                         'required'    => 1,
                         'placeholder' => self::$locale['forum_2001'],
                         'error_text'  => '',
                         'class'       => 'm-t-20 m-b-20'
                     ]),
-                    'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
+                    'tags_field'       => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                         [
-                            'options'     => $this->tag()->get_TagOpts(),
+                            'options'     => parent::tag()->get_TagOpts(),
                             'inner_width' => '100%',
                             'multiple'    => TRUE,
                             'delimiter'   => '.',
                             'max_select'  => 3, // to do settings on this
                         ]),
-                    'message_field'     => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'], [
+                    'message_field'    => form_textarea('post_message', self::$locale['forum_0601'], $post_data['post_message'], [
                         'required'  => 1,
                         'autosize'  => 1,
                         'no_resize' => 1,
@@ -671,8 +663,8 @@ class NewThread extends ForumServer {
                     'hide_edit_field'   => '',
                     'post_locked_field' => '',
                     'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', self::$locale['forum_0171'], $post_data['notify_me'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
-                    'post_buttons'      => form_button('post_newthread', self::$locale['forum_0057'], self::$locale['forum_0057'], ['class' => 'btn-primary']).form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-l-10']),
-                    'last_posts_reply'  => '',
+                    'post_buttons'     => form_button('post_newthread', self::$locale['forum_0057'], self::$locale['forum_0057'], ['class' => 'btn-primary']).form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-l-10']),
+                    'last_posts_reply' => '',
                 ];
             }
         } else {
@@ -682,7 +674,9 @@ class NewThread extends ForumServer {
 
     private function setPermission($forum_data) {
         // Generate iMOD Constant
-        $this->moderator()->define_forum_mods($forum_data);
+        $mods = $this->moderator();
+        $mods::define_forum_mods($forum_data);
+        unset($mods);
         // Access the forum
         self::$permissions['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
         // Create new thread -- whether user has permission to create a thread

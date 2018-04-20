@@ -435,7 +435,6 @@ class ForumAdminSettings extends ForumAdminInterface {
                     ],
                     'max_length' => 2,
                     'width'      => '100px',
-                    'required'   => TRUE,
                     'error_text' => self::$locale['error_value'],
                     'ext_tip'    => self::$locale['537'],
                     'inline'     => TRUE
