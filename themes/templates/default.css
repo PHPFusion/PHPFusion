@@ -1367,13 +1367,12 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .forum.label > .detail {
     background: rgba(0, 0, 0, .1);
-    margin: -5px -10px;
-    padding: 6px 12px;
+    margin: 0 -10px 0 10px;
+    padding: 7px 12px;
     -webkit-border-radius: 0 .28571429rem .28571429rem 0;
     -moz-border-radius: 0 .28571429rem .28571429rem 0;
     border-radius: 0 .28571429rem .28571429rem 0;
     display: inline-block;
-    vertical-align: top;
     font-weight: 700;
     opacity: .8;
 }
