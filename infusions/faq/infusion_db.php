@@ -42,11 +42,15 @@ if (!defined('DB_FAQ_CATS')) {
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType("FQ", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitData('q', [
-    'infusion_name' => 'faq',
-    'link'          => INFUSIONS."faq/faq_submit.php",
-    'submit_link'   => "submit.php?stype=q",
-    'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
-    'title'         => fusion_get_locale('submit_0006', LOCALE.LOCALESET."submissions.php"),
-    'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-]);
+
+$inf_settings = get_settings('faq');
+if ($inf_settings['faq_allow_submission']) {
+    \PHPFusion\Admins::getInstance()->setSubmitData('q', [
+        'infusion_name' => 'faq',
+        'link'          => INFUSIONS."faq/faq_submit.php",
+        'submit_link'   => "submit.php?stype=q",
+        'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('submit_0006', LOCALE.LOCALESET."submissions.php"),
+        'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+    ]);
+}

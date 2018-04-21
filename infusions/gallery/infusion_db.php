@@ -59,14 +59,19 @@ if (!defined("GALLERY_ADMIN_LOCALE")) {
 \PHPFusion\Admins::getInstance()->setCommentType('PH', fusion_get_locale('261', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('PH', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
-\PHPFusion\Admins::getInstance()->setSubmitData('p', [
-    'infusion_name' => 'gallery',
-    'link'          => INFUSIONS."gallery/photo_submit.php",
-    'submit_link'   => "submit.php?stype=p",
-    'submit_locale' => fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"),
-    'title'         => fusion_get_locale('submit_0003', LOCALE.LOCALESET."submissions.php"),
-    'admin_link'    => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-]);
+
+$inf_settings = get_settings('gallery');
+if ($inf_settings['gallery_allow_submission']) {
+    \PHPFusion\Admins::getInstance()->setSubmitData('p', [
+        'infusion_name' => 'gallery',
+        'link'          => INFUSIONS."gallery/photo_submit.php",
+        'submit_link'   => "submit.php?stype=p",
+        'submit_locale' => fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('submit_0003', LOCALE.LOCALESET."submissions.php"),
+        'admin_link'    => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+    ]);
+}
+
 \PHPFusion\Admins::getInstance()->setFolderPermissions('gallery', [
     'infusions/gallery/photos/'             => TRUE,
     'infusions/gallery/photos/thumbs/'      => TRUE,

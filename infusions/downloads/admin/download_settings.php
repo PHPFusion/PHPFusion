@@ -30,7 +30,7 @@ if (isset($_POST['savesettings'])) {
         "download_screenshot"          => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
         "download_stats"               => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
         "download_pagination"          => form_sanitizer($_POST['download_pagination'], 15, 'download_pagination'),
-        "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 1, "download_allow_submission"),
+        "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 0, "download_allow_submission"),
         "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
         "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
     ];

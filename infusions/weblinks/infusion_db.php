@@ -51,11 +51,15 @@ if (!defined("DB_WEBLINKS")) {
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-link'></i>");
-\PHPFusion\Admins::getInstance()->setSubmitData('l', [
-    'infusion_name' => 'weblinks',
-    'link'          => INFUSIONS."weblinks/weblink_submit.php",
-    'submit_link'   => "submit.php?stype=l",
-    'submit_locale' => fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"),
-    'title'         => fusion_get_locale('submit_0004', LOCALE.LOCALESET."submissions.php"),
-    'admin_link'    => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
-]);
+
+$inf_settings = get_settings('weblinks');
+if ($inf_settings['links_allow_submission']) {
+    \PHPFusion\Admins::getInstance()->setSubmitData('l', [
+        'infusion_name' => 'weblinks',
+        'link'          => INFUSIONS."weblinks/weblink_submit.php",
+        'submit_link'   => "submit.php?stype=l",
+        'submit_locale' => fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('submit_0004', LOCALE.LOCALESET."submissions.php"),
+        'admin_link'    => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+    ]);
+}
