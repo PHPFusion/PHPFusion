@@ -257,7 +257,7 @@ if (column_exists('forum_ranks', 'rank_apply')) {
 }
 // Add multilingual support to ranks
 if (!column_exists('forum_ranks', 'rank_language')) {
-    $inf_altertable[] = $db_prefix."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('localeset')."' AFTER rank_apply";
+    $inf_altertable[] = $db_prefix."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER rank_apply";
 }
 // Modify All Rank Levels
 $result = dbquery("SELECT rank_id, rank_apply FROM ".$db_prefix."forum_ranks");

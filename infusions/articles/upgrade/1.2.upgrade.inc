@@ -18,38 +18,31 @@
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
-// Upgrade 1.2
-if (column_exists(DB_ARTICLE_CATS, "article_cat_sorting", FALSE)) {
-    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP article_cat_sorting");
+$check_array = [
+    // Add support for keywords in article cats items
+    'article_cat_visibility' => " ADD article_cat_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_cat_name",
+    'article_cat_status'     => " ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER article_cat_visibility",
+    'article_cat_parent'     => " ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id",
+    'article_cat_language'   => " ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_cat_name"
+];
+
+foreach ($check_array as $key => $value) {
+    if (!column_exists(DB_ARTICLE_CATS, $key)) {
+        $inf_altertable[] = DB_ARTICLE_CATS.$value;
+    }
 }
 
-if (!column_exists(DB_ARTICLE_CATS, "article_cat_visibility", FALSE)) {
-    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_cat_name");
-}
+$check_array = [
+    // Add support for keywords in article items
+    'article_keywords'   => " ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article",
+    'article_visibility' => " ADD article_visibility TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER article_datestamp",
+    'article_language'   => " ADD article_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_visibility"
+];
 
-if (!column_exists(DB_ARTICLE_CATS, "article_cat_status", FALSE)) {
-    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER article_cat_visibility");
-}
-
-// Upgrade 1.0.5
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language', FALSE)) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_cat_name";
-}
-
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_parent', FALSE)) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id";
-}
-
-if (!column_exists(DB_ARTICLES, 'article_keywords', FALSE)) {
-    $inf_altertable[] = DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article";
-}
-
-if (!column_exists(DB_ARTICLES, 'article_visibility', FALSE)) {
-    $inf_altertable[] = DB_ARTICLES." ADD article_visibility TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER article_datestamp";
-}
-
-if (!column_exists(DB_ARTICLES, 'article_language', FALSE)) {
-    $inf_altertable[] = DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_visibility";
+foreach ($check_array as $key => $value) {
+    if (!column_exists(DB_ARTICLES, $key)) {
+        $inf_altertable[] = DB_ARTICLES.$value;
+    }
 }
 
 if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
@@ -86,8 +79,15 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '20', '1', '".LANGUAGE."')";
 }
 
-if (column_exists(DB_ARTICLE_CATS, 'article_cat_access', FALSE)) {
-    $inf_altertable[] = DB_ARTICLE_CATS." DROP COLUMN article_cat_access";
+$check_array = [
+    'article_cat_sorting' => " DROP article_cat_sorting",
+    'article_cat_access'  => " DROP COLUMN article_cat_access"
+];
+
+foreach ($check_array as $key => $value) {
+    if (column_exists(DB_ARTICLE_CATS, $key, FALSE)) {
+        $inf_altertable[] = DB_ARTICLE_CATS.$value;
+    }
 }
 
 // Insert new and old settings tables to Infusions table
