@@ -1353,12 +1353,11 @@ class QuantumFields extends \SqlHandler {
             case 'select':
                 if ($method == 'input') {
                     $options += ['options' => $option_list];
-
+                    $options['keyflip'] = TRUE;
                     return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
 
                 } else if ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
-
                     return [
                         'title' => self::parse_label($data['field_title']),
                         'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
