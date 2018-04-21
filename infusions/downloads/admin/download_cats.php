@@ -179,7 +179,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo closetabbody();
     echo opentabbody($tab_cats['title'][1], $tab_cats['id'][1], $tab_cats_active);
     $row_num = 0;
+    echo "<div class='row m-t-15'>";
     showcatlist();
+    echo "</div>";
     if ($row_num == 0) {
         echo "<div class='well text-center'>".$locale['download_0251']."</div>\n";
     }
@@ -208,7 +210,6 @@ function showcatlist($parent = 0, $level = 0) {
     ORDER BY d.download_cat_name
     ");
     if (dbrows($result) != 0) {
-        echo "<div class='row m-t-15'>";
         while ($data = dbarray($result)) {
             echo "<div class='col-xs-12 col-sm-6'>";
             echo "<div class='well clearfix'>\n";
@@ -233,6 +234,5 @@ function showcatlist($parent = 0, $level = 0) {
             $row_num++;
             showcatlist($data['download_cat_id'], $level + 1);
         }
-        echo "</div>";
     }
 }
