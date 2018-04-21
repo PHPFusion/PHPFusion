@@ -49,7 +49,7 @@ if (iMEMBER) {
         $pm_progress = progress_bar($inbox_percent, $locale['UM098'],
             FALSE, // class
             FALSE,  // height
-            FALSE,  // reverse
+            TRUE,  // reverse
             TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
@@ -59,7 +59,7 @@ if (iMEMBER) {
         $pm_progress .= progress_bar($outbox_percent, $locale['UM099'],
             FALSE, // class
             FALSE,  // height
-            FALSE,  // reverse
+            TRUE,  // reverse
             TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
@@ -69,7 +69,7 @@ if (iMEMBER) {
         $pm_progress .= progress_bar($archive_percent, $locale['UM100'],
             FALSE, // class
             FALSE,  // height
-            FALSE,  // reverse
+            TRUE,  // reverse
             TRUE,  // as percent
             ($inbox_cfg == 0 ? TRUE : FALSE)
         );
