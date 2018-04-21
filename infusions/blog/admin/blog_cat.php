@@ -130,7 +130,7 @@ echo "</div>";
 $result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 $rows = dbrows($result);
 if ($rows != 0) {
-    echo "<div class='row'>";
+    echo "<div class='row equal-height'>";
     while ($data = dbarray($result)) {
         echo "<div class='col-xs-12 col-sm-3'>";
         echo "<div class='well clearfix'>\n";
