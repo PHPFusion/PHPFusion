@@ -76,7 +76,7 @@ if (!function_exists('display_inbox')) {
                         'user_level'   => getgroupname($data['user_level']),
                         'date'         => showdate($locale['date_day'], $data['message_datestamp']),
                         'timer'        => timer($data['message_datestamp']),
-                        'message'      => parse_textarea($data['message']['message_text'], TRUE, TRUE, FALSE, TRUE),
+                        'message'      => parse_textarea($data['message']['message_text'], TRUE, TRUE, FALSE),
                         'reply_form'   => $info['reply_form']
                     ]);
 
