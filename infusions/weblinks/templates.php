@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('display_main_weblinks')) {
     function display_main_weblinks($info) {
         $html = \PHPFusion\Template::getInstance('main_weblinks');
-        $html->set_template(INFUSIONS.'weblinks/templates/main_weblinks.html');
+        $html->set_template(__DIR__.'/templates/main_weblinks.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['weblink_tablename']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -36,7 +36,6 @@ if (!function_exists('display_main_weblinks')) {
                     'cat_count'       => $cat_data['count'],
                     'cat_description' => $cat_data['description']
                 ]);
-
             }
         } else {
             $html->set_block('no_item', ['message' => fusion_get_locale('web_0062')]);
@@ -49,7 +48,7 @@ if (!function_exists('display_main_weblinks')) {
 if (!function_exists('display_weblinks_item')) {
     function display_weblinks_item($info) {
         $html = \PHPFusion\Template::getInstance('weblinks_item');
-        $html->set_template(INFUSIONS.'weblinks/templates/weblinks_info.html');
+        $html->set_template(__DIR__.'/templates/weblinks_info.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['weblink_tablename']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -70,7 +69,6 @@ if (!function_exists('display_weblinks_item')) {
             $html->set_block('navbar_item', [
                 'links' => $navbar_link['links']
             ]);
-
         }
 
         $html->set_tag('weblinks_span', $info['span']);

@@ -18,10 +18,10 @@
 namespace PHPFusion\Weblinks;
 
 class WeblinksSubmissions extends WeblinksServer {
-    public $info = [];
     private static $instance = NULL;
-    private $locale = [];
     private static $weblink_settings = [];
+    private $locale = [];
+    public $info = [];
 
     protected function __construct() {
     }
@@ -54,11 +54,11 @@ class WeblinksSubmissions extends WeblinksServer {
     private function display_submission_form() {
 
         $criteriaArray = [
-            "weblink_name"        => "",
-            "weblink_cat"         => 0,
-            "weblink_url"         => "",
-            "weblink_description" => "",
-            "weblink_language"    => LANGUAGE,
+            'weblink_name'        => '',
+            'weblink_cat'         => 0,
+            'weblink_url'         => '',
+            'weblink_description' => '',
+            'weblink_language'    => LANGUAGE,
         ];
 
         // Cancel Form
@@ -74,24 +74,24 @@ class WeblinksSubmissions extends WeblinksServer {
                 $submit_info['weblink_description'] = nl2br(parseubb(stripinput($_POST['weblink_description'])));
 
                 $criteriaArray = [
-                    "weblink_cat"         => form_sanitizer($_POST['weblink_cat'], 0, "weblink_cat"),
-                    "weblink_name"        => form_sanitizer($_POST['weblink_name'], "", "weblink_name"),
-                    "weblink_description" => form_sanitizer($submit_info['weblink_description'], "", "weblink_description"),
-                    "weblink_url"         => form_sanitizer($_POST['weblink_url'], "", "weblink_url"),
-                    "weblink_language"    => form_sanitizer($_POST['weblink_language'], LANGUAGE, "weblink_language"),
+                    'weblink_cat'         => form_sanitizer($_POST['weblink_cat'], 0, 'weblink_cat'),
+                    'weblink_name'        => form_sanitizer($_POST['weblink_name'], '', 'weblink_name'),
+                    'weblink_description' => form_sanitizer($submit_info['weblink_description'], '', 'weblink_description'),
+                    'weblink_url'         => form_sanitizer($_POST['weblink_url'], '', 'weblink_url'),
+                    'weblink_language'    => form_sanitizer($_POST['weblink_language'], LANGUAGE, 'weblink_language'),
                 ];
 
                 // Save
                 if (\defender::safe() && isset($_POST['submit_link'])) {
                     $inputArray = [
-                        "submit_type"      => "l",
-                        "submit_user"      => fusion_get_userdata('user_id'),
-                        "submit_datestamp" => time(),
-                        "submit_criteria"  => \defender::encode($criteriaArray)
+                        'submit_type'      => 'l',
+                        'submit_user'      => fusion_get_userdata('user_id'),
+                        'submit_datestamp' => TIME,
+                        'submit_criteria'  => \defender::encode($criteriaArray)
                     ];
-                    dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-                    addNotice("success", $this->locale['WLS_0910']);
-                    redirect(clean_request("submitted=l", ["stype"], TRUE));
+                    dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
+                    addNotice('success', $this->locale['WLS_0910']);
+                    redirect(clean_request('submitted=l', ['stype'], TRUE));
                 }
 
             }
