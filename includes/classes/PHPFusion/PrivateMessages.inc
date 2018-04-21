@@ -344,7 +344,7 @@ class PrivateMessages {
                     if ($url['query']) {
                         parse_str($url['query'], $fusion_query); // this is original.
                     }
-                    $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $this->info['rows'], $this->info['max_rows'], 3, FUSION_REQUEST.(!empty($fusion_query) ? "&amp;" : "?"));
+                    $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $sql_param[':limit'], $this->info['max_rows'], 3, FUSION_REQUEST.(!empty($fusion_query) ? "&amp;" : "?"));
                 }
                 while ($data = dbarray($result)) {
                     $data['contact_user'] = [
