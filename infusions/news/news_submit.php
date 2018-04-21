@@ -38,12 +38,13 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 
     if (isset($_POST['submit_news'])) {
         $criteriaArray = [
-            'news_subject'  => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
-            'news_cat'      => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
-            'news_news'     => form_sanitizer($_POST['news_news'], '', 'news_news'),
-            'news_extended' => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
-            'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
-            'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+            'news_subject'     => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+            'news_cat'         => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
+            'news_news'        => form_sanitizer($_POST['news_news'], '', 'news_news'),
+            'news_extended'    => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
+            'news_language'    => form_sanitizer($_POST['news_language'], '', 'news_language'),
+            'news_keywords'    => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+            'news_image_align' => form_sanitizer($_POST['news_image_align'], '', 'news_image_align')
         ];
 
         if (!empty($_FILES['news_image']) && $news_settings['news_allow_submission_files']) {
@@ -58,7 +59,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                         'news_image_t2'        => $upload['thumb2_name'],
                         'news_image_datestamp' => TIME
                     ];
-                    $criteriaArray['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
 
                     $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
                     $criteriaArray['news_image_full_default'] = $photo_id;
