@@ -33,17 +33,14 @@ class FaqSubmissions extends FaqServer {
     public function displayFaq() {
         $this->locale = fusion_get_locale("", FAQ_LOCALE);
         add_to_title($this->locale['faq_0900']);
-        opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['faq_0900']);
-        if (self::$faq_settings['faq_allow_submission']) {
-            if (iMEMBER) {
-                $this->display_submission_form();
-            } else {
-                echo "<div class='well text-center'>".$this->locale['faq_0921']."</div>\n";
-            }
+        $this->info['faq_tablename'] = $this->locale['faq_0900'];
+        if (iMEMBER && self::$faq_settings['faq_allow_submission']) {
+            display_faq_submissions($this->display_submission_form());
         } else {
-            echo "<div class='well text-center'>".$this->locale['faq_0922']."</div>\n";
+            $info['no_submissions'] = $this->locale['faq_0922'];
+            $info += $this->info;
+            display_faq_submissions($info);
         }
-        closetable();
     }
 
     private function display_submission_form() {
@@ -55,10 +52,7 @@ class FaqSubmissions extends FaqServer {
             'faq_language' => LANGUAGE,
             'faq_status'   => 1
         ];
-        // Cancel Form
-        if (isset($_POST['cancel'])) {
-            redirect(FUSION_REQUEST);
-        }
+
         if (dbcount("(faq_cat_id)", DB_FAQ_CATS, (multilang_table("FQ") ? "faq_cat_language='".LANGUAGE."'" : ""))) {
             // Save
             if (isset($_POST['submit_link'])) {
@@ -85,25 +79,14 @@ class FaqSubmissions extends FaqServer {
             }
 
             if (isset($_GET['submitted']) && $_GET['submitted'] == "q") {
-                echo "<div class='well text-center text-strong'><p>".$this->locale['faq_0911']."</p>";
-                echo "<p><a href='".BASEDIR."submit.php?stype=q' title=".$this->locale['faq_0912'].">".$this->locale['faq_0912']."</a></p>";
-                echo "<p><a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0913'])."</a></p>\n";
-                echo "</div>\n";
+            	$info['confirm'] = [
+            	    'title'       => $this->locale['faq_0911'],
+            	    'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
+            	    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0913'])."</a>"
+            	];
+            	$info += $this->info;
+                return (array)$info;
             } else {
-                echo "<div class='alert alert-info m-b-20 submission-guidelines text-center'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920'])."</div>\n";
-                echo openform('submit_form', 'post', BASEDIR."submit.php?stype=q");
-                echo form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'], [
-                    "error_text" => $this->locale['faq_0271'],
-                    'required'   => TRUE
-                ]);
-                $textArea_opts = [
-                    'required'  => TRUE,
-                    'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                    'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
-                    'autosize'  => TRUE,
-                    'form_name' => 'submit_form',
-                ];
-                echo form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'], $textArea_opts);
                 $options = [];
                 $faq_data = [];
                 $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
@@ -113,28 +96,49 @@ class FaqSubmissions extends FaqServer {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $faq_data['faq_cat_id'], [
-                    'inner_width' => '100%',
-                    'inline'      => TRUE,
-                    'options'     => $options,
-                ]);
 
-                if (multilang_table('FQ')) {
-                    echo form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'], [
-                        'options'     => fusion_get_enabled_languages(),
-                        'inline'      => TRUE,
-                        'placeholder' => $this->locale['choose'],
-                        'inner_width' => '100%',
-                    ]);
-                } else {
-                    echo form_hidden('faq_language', '', $criteriaArray['faq_language']);
-                }
-                echo form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
-                echo form_button('cancel_link', $this->locale['cancel'], $this->locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-times']);
-                echo closeform();
+            	$info['item'] = [
+                    'guidelines'     => str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920']),
+                    'openform'       => openform('submit_form', 'post', BASEDIR."submit.php?stype=q", ['enctype' => self::$faq_settings['faq_allow_submission'] ? TRUE : FALSE]),
+                    'faq_question'   => form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'],
+                        [
+                            'error_text' => $this->locale['faq_0271'],
+                            'required'   => TRUE
+                        ]),
+                    'faq_answer'     => form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'],
+                        [
+                            'required'  => TRUE,
+                            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'autosize'  => TRUE,
+                            'form_name' => 'submit_form'
+                        ]),
+                    'faq_cat_id'     => form_select('faq_cat_id', $this->locale['faq_0252'], $faq_data['faq_cat_id'],
+                        [
+                            'inner_width' => '250px',
+                            'inline'      => TRUE,
+                            'options'     => $options
+                        ]),
+                    'faq_language'   => (multilang_table('FQ') ? form_select('faq_language', $this->locale['language'], $criteriaArray['faq_language'],
+                        [
+                            'options'     => fusion_get_enabled_languages(),
+                            'placeholder' => $this->locale['choose'],
+                            'width'       => '250px',
+                            'inline'      => TRUE,
+                        ]) : form_hidden('faq_language', '', $criteriaArray['faq_language'])),
+                    'faq_submit'     => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']),
+                    'criteria_array' => $criteriaArray
+
+            	];
+            	$info += $this->info;
+                return (array)$info;
             }
         } else {
-            echo "<div class='well text-center'><p>".$this->locale['faq_0923']."</p></div>\n";
+            $info['no_submissions'] = [
+                'text'  => $this->locale['faq_0923']
+            ];
+            $info += $this->info;
+            return (array)$info;
         }
     }
 }
