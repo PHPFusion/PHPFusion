@@ -201,7 +201,7 @@ if (!function_exists('render_news_item')) {
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $data = $info['news_item'];
 
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/html/news.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
         add_to_footer('<script type="text/javascript">'.jsminify('
