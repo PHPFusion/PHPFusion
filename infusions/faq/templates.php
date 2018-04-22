@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('display_main_faq')) {
     function display_main_faq($info) {
         $html = \PHPFusion\Template::getInstance('main_faq');
-        $html->set_template(INFUSIONS.'faq/templates/main_faq.html');
+        $html->set_template(__DIR__.'/templates/main_faq.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['faq_tablename']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -47,7 +47,7 @@ if (!function_exists('display_main_faq')) {
 if (!function_exists('render_faq_item')) {
     function render_faq_item($info) {
         $html = \PHPFusion\Template::getInstance('faq_item');
-        $html->set_template(INFUSIONS.'faq/templates/faq_info.html');
+        $html->set_template(__DIR__.'/templates/faq_info.html');
         $html->set_tag('breadcrumb', render_breadcrumbs());
         $html->set_tag('opentable', fusion_get_function('opentable', $info['faq_tablename']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
@@ -69,6 +69,41 @@ if (!function_exists('render_faq_item')) {
             }
         } else {
             $html->set_block('no_item', ['message' => fusion_get_locale('faq_0112')]);
+        }
+
+        echo $html->get_output();
+    }
+}
+
+if (!function_exists('display_faq_submissions')) {
+    function display_faq_submissions($info) {
+        $html = \PHPFusion\Template::getInstance('faq_submissions');
+        $html->set_template(__DIR__.'/templates/faq_submissions.html');
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['faq_tablename']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        if (!empty($info['item'])) {
+            $html->set_block('faq_submit', [
+                'guidelines'   => $info['item']['guidelines'],
+                'openform'     => $info['item']['openform'],
+                'closeform'    => closeform(),
+                'faq_question' => $info['item']['faq_question'],
+                'faq_answer'   => $info['item']['faq_answer'],
+                'faq_cat_id'   => $info['item']['faq_cat_id'],
+                'faq_language' => $info['item']['faq_language'],
+                'faq_submit'   => $info['item']['faq_submit']
+            ]);
+        }
+
+        if (!empty($info['confirm'])) {
+            $html->set_block('faq_confirm_submit', [
+                'title'       => $info['confirm']['title'],
+                'submit_link' => $info['confirm']['submit_link'],
+                'index_link'  => $info['confirm']['index_link']
+            ]);
+        }
+
+        if (!empty($info['no_submissions'])) {
+            $html->set_block('faq_no_submit', ['text' => $info['no_submissions']]);
         }
 
         echo $html->get_output();
