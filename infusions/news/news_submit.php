@@ -118,7 +118,11 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 
         $info = [
             'guidelines'             => str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['news_0703']),
-            'news_subject_field'     => form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'], ['required' => TRUE, 'inline' => TRUE]),
+            'news_subject_field'     => form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'],
+                [
+                    'required' => TRUE,
+                    'inline'   => TRUE
+                ]),
             'news_language_field'    => (multilang_table('NS') ? form_select('news_language', $locale['global_ML100'], $criteriaArray['news_language'],
                 [
                     'options'     => fusion_get_enabled_languages(),
@@ -126,10 +130,21 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'width'       => '250px',
                     'inline'      => TRUE,
                 ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
-            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], ['max_length' => 320, 'inline' => TRUE, 'placeholder' => $locale['news_0205a'], 'width' => '100%', 'inner_width' => '100%', 'error_text' => $locale['news_0255'], 'tags' => TRUE, 'multiple' => TRUE]),
+            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'],
+                [
+                    'max_length'  => 320,
+                    'inline'      => TRUE,
+                    'placeholder' => $locale['news_0205a'],
+                    'width'       => '100%',
+                    'inner_width' => '100%',
+                    'error_text'  => $locale['news_0255'],
+                    'tags'        => TRUE,
+                    'multiple'    => TRUE
+                ]),
             'news_cat_field'         => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'],
                 [
-                    'width'        => '250px', 'inline' => TRUE,
+                    'width'        => '250px',
+                    'inline'       => TRUE,
                     'parent_value' => $locale['news_0202'],
                     "query"        => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
                 ],
@@ -142,13 +157,13 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
                     'max_height'       => $news_settings['news_photo_max_h'],
                     'max_byte'         => $news_settings['news_photo_max_b'],
                     // set thumbnail
-                    'thumbnail'        => 1,
+                    'thumbnail'        => TRUE,
                     'thumbnail_w'      => $news_settings['news_thumb_w'],
                     'thumbnail_h'      => $news_settings['news_thumb_h'],
                     'thumbnail_folder' => 'thumbs',
-                    'delete_original'  => 0,
+                    'delete_original'  => FALSE,
                     // set thumbnail 2 settings
-                    'thumbnail2'       => 1,
+                    'thumbnail2'       => TRUE,
                     'thumbnail2_w'     => $news_settings['news_photo_w'],
                     'thumbnail2_h'     => $news_settings['news_photo_h'],
                     'type'             => 'image',
