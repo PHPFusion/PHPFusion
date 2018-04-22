@@ -65,12 +65,12 @@ class FaqSubmissions extends FaqServer {
                     'faq_status'   => 1
                 ];
                 // Save
-                if (\defender::safe() && isset($_POST['submit_link'])) {
+                if (\defender::safe()) {
                     $inputArray = [
                         'submit_type'      => 'q',
                         'submit_user'      => fusion_get_userdata('user_id'),
-                        'submit_datestamp' => time(),
-                        'submit_criteria'  => addslashes(serialize($criteriaArray))
+                        'submit_datestamp' => TIME,
+                        'submit_criteria'  => \defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                     addNotice('success', $this->locale['faq_0910']);
@@ -89,7 +89,7 @@ class FaqSubmissions extends FaqServer {
             } else {
                 $options = [];
                 $faq_data = [];
-                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];
                     while ($faq_data = dbarray($faq_result)) {

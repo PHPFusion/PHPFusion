@@ -22,9 +22,9 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     private $locale = [];
     private $inputArray = [];
     private static $defArray = [
-        "faq_breaks"     => "y",
-        "faq_visibility" => 0,
-        "faq_status"     => 1,
+        'faq_breaks'     => 'y',
+        'faq_visibility' => 0,
+        'faq_status'     => 1,
     ];
 
     public static function getInstance() {
@@ -39,7 +39,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             // Check posted Informations
             $faq_answer = "";
             if ($_POST['faq_answer']) {
-                $faq_answer = (fusion_get_settings("allow_php_exe") ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']));
+                $faq_answer = (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['faq_answer']) : stripslashes($_POST['faq_answer']));
             }
 
             $SaveinputArray = [
@@ -64,10 +64,10 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
-                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."' AND submit_type='q'");
-                    dbquery_insert(DB_FAQS, $SaveinputArray, "save");
-                    addNotice("success", ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
-                    redirect(clean_request("", ["submit_id"], FALSE));
+                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
+                    dbquery_insert(DB_FAQS, $SaveinputArray, 'save');
+                    addNotice('success', ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
+                    redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
                 // Preview Submission
@@ -91,20 +91,31 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = [
-                "required"   => TRUE, "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $this->locale['faq_0253'],
-                "error_text" => $this->locale['faq_0270'], "form_name" => "articleform", "wordcount" => TRUE
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $this->locale['faq_0253'],
+                'error_text'  => $this->locale['faq_0270'],
+                'form_name'   => 'faqform',
+                'wordcount'   => TRUE
             ];
         } else {
-            $faqExtendedSettings = ["required" => TRUE, "type" => "tinymce", "tinymce" => "advanced", "error_text" => $this->locale['faq_0270']];
+            $faqExtendedSettings = [
+                'required'   => TRUE,
+                'type'       => 'tinymce',
+                'tinymce'    => 'advanced',
+                'error_text' => $this->locale['faq_0270']
+            ];
         }
 
         // Start Form
-        echo openform("submissionform", "post", FUSION_REQUEST);
-        echo form_hidden("faq_name", "", $this->inputArray['user_id']);
+        echo openform('submissionform', 'post', FUSION_REQUEST);
+        echo form_hidden('faq_name', '', $this->inputArray['user_id']);
         ?>
         <div class="well clearfix m-t-15">
             <div class="pull-left">
-                <?php echo display_avatar($this->inputArray, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
+                <?php echo display_avatar($this->inputArray, '30px', '', FALSE, 'img-rounded m-t-5 m-r-5'); ?>
             </div>
             <div class="overflow-hide">
                 <?php
@@ -119,7 +130,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 ?>
             </div>
         </div>
-        <?php self::displayFormButtons("formstart", TRUE); ?>
+        <?php self::displayFormButtons('formstart', TRUE); ?>
 
         <!-- Display Form -->
         <div class="row">
@@ -127,11 +138,14 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text("faq_question", $this->locale['faq_0100'], $this->inputArray['faq_question'], [
-                    "required" => TRUE, "max_lenght" => 200, "error_text" => $this->locale['faq_0270']
-                ]);
+                echo form_text('faq_question', $this->locale['faq_0100'], $this->inputArray['faq_question'],
+                    [
+                        'required'   => TRUE,
+                        'max_lenght' => 200,
+                        'error_text' => $this->locale['faq_0270']
+                    ]);
 
-                echo form_textarea("faq_answer", $this->locale['faq_0251'], $this->inputArray['faq_answer'], $faqExtendedSettings);
+                echo form_textarea('faq_answer', $this->locale['faq_0251'], $this->inputArray['faq_answer'], $faqExtendedSettings);
                 ?>
             </div>
 
@@ -141,46 +155,62 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
                 openside($this->locale['faq_0259']);
                 $options = [];
-                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ORDER BY faq_cat_name ASC");
+                $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name ASC");
                 if (dbrows($faq_result)) {
                     $options[0] = $this->locale['faq_0010'];
                     while ($faq_data = dbarray($faq_result)) {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->inputArray['faq_cat_id'], [
-                    'inner_width' => '100%',
-                    'inline'      => TRUE,
-                    'options'     => $options,
-                ]);
-                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->inputArray['faq_visibility'], [
-                    'options' => fusion_get_groups(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%', 'inline' => TRUE,
-                ]);
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->inputArray['faq_cat_id'],
+                    [
+                        'inner_width' => '100%',
+                        'inline'      => TRUE,
+                        'options'     => $options
+                    ]);
+                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->inputArray['faq_visibility'],
+                    [
+                        'inline'      => TRUE,
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
+                        'options'     => fusion_get_groups()
+                    ]);
 
                 if (multilang_table('FQ')) {
-                    echo form_select('faq_language', $this->locale['language'], $this->inputArray['faq_language'], [
-                        'options' => fusion_get_enabled_languages(), 'placeholder' => $this->locale['choose'], 'inner_width' => '100%', 'inline' => TRUE,
-                    ]);
+                    echo form_select('faq_language', $this->locale['language'], $this->inputArray['faq_language'],
+                        [
+                            'inline'      => TRUE,
+                            'placeholder' => $this->locale['choose'],
+                            'inner_width' => '100%',
+                            'options'     => fusion_get_enabled_languages()
+                        ]);
                 } else {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
                 }
 
-                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'], [
-                    'inline' => TRUE, 'inner_width' => '100%'
-                ]);
+                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'],
+                    [
+                        'inline'      => TRUE,
+                        'inner_width' => '100%'
+                    ]);
 
                 closeside();
 
                 openside($this->locale['faq_0259']);
 
-                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->inputArray['faq_status'], [
-                    'class' => 'm-b-5', 'reverse_label' => TRUE
-                ]);
+                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->inputArray['faq_status'],
+                    [
+                        'class'         => 'm-b-5',
+                        'reverse_label' => TRUE
+                    ]);
 
                 if (fusion_get_settings('tinymce_enabled') != 1) {
-                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->inputArray['faq_breaks'], [
-                        'value' => 'y', 'class' => 'm-b-5', 'reverse_label' => TRUE
-                    ]);
+                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->inputArray['faq_breaks'],
+                        [
+                            'value'         => 'y',
+                            'class'         => 'm-b-5',
+                            'reverse_label' => TRUE
+                        ]);
                 }
 
                 closeside();
@@ -189,7 +219,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             </div>
         </div>
         <?php
-        self::displayFormButtons("formend", FALSE);
+        self::displayFormButtons('formend', FALSE);
         echo closeform();
     }
 
@@ -202,9 +232,9 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     private function displayFormButtons($unique_id, $breaker = TRUE) {
         ?>
         <div class="m-t-20">
-            <?php echo form_button("preview_submission", $this->locale['preview'], $this->locale['preview'], ["class" => "btn-default", "icon" => "fa fa-fw fa-eye", "input-id" => "preview_submission-".$unique_id.""]); ?>
-            <?php echo form_button("publish_submission", $this->locale['publish'], $this->locale['publish'], ["class" => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o", "input-id" => "publish_submission-".$unique_id.""]); ?>
-            <?php echo form_button("delete_submission", $this->locale['delete'], $this->locale['delete'], ["class" => "btn-danger", "icon" => "fa fa-fw fa-trash", "input-id" => "delete_submission-".$unique_id.""]); ?>
+            <?php echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-eye', 'input-id' => 'preview_submission-'.$unique_id.'']); ?>
+            <?php echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o', 'input-id' => 'publish_submission-'.$unique_id.'']); ?>
+            <?php echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger', 'icon' => 'fa fa-fw fa-trash', 'input-id' => 'delete_submission-'.$unique_id.'']); ?>
         </div>
         <?php if ($breaker) { ?>
             <hr/><?php } ?>
@@ -247,48 +277,43 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         ];
         $data = self::submitData($criteria);
 
-        echo "<div class='table-responsive m-t-10'><table class='table table-striped'>\n";
-        echo "<thead>\n";
-        echo "<tr>\n";
-        echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
-        echo "<td class='strong col-xs-5'>".$this->locale['faq_0100']."</td>\n";
-        echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
-        echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
-        echo "<td class='strong'>".$this->locale['faq_0204']."</td>\n";
-        echo "</tr>\n";
-        echo "</thead>\n";
-        echo "<tbody>\n";
-
         if (!empty($data)) {
-            foreach ($data as $key => $info) {
-                $submitData = unserialize($info['submit_criteria']);
-                $submitUser = $this->locale['user_na'];
-                if ($info['user_name']) {
-                    $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
-                    $submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
+            echo "<div class='well m-t-15'>".sprintf($this->locale['faq_0064'], format_word(count($data), $this->locale['fmt_submission']))."</div>\n";
+            echo "<div class='table-responsive m-t-10'><table class='table table-striped'>\n";
+            echo "<thead>\n";
+            echo "<tr>\n";
+            echo "<td class='strong'>".$this->locale['faq_0200']."</td>\n";
+            echo "<td class='strong col-xs-5'>".$this->locale['faq_0100']."</td>\n";
+            echo "<td class='strong'>".$this->locale['faq_0202']."</td>\n";
+            echo "<td class='strong'>".$this->locale['faq_0203']."</td>\n";
+            echo "</tr>\n";
+            echo "</thead>\n";
+            echo "<tbody>\n";
+
+                foreach ($data as $key => $info) {
+                    $submitData = \defender::decode($info['submit_criteria']);
+                    $submitUser = $this->locale['user_na'];
+                    if ($info['user_name']) {
+                        $submitUser = display_avatar($info, '20px', '', TRUE, 'img-rounded m-r-5');
+                        $submitUser .= profile_link($info['user_id'], $info['user_name'], $info['user_status']);
+                    }
+
+                    $reviewLink = clean_request('section=submissions&submit_id='.$info['submit_id'], ['section', 'ref', 'action', 'submit_id'], FALSE);
+
+                    echo "<tr>\n";
+                    echo "<td>".$info['submit_id']."</td>\n";
+                    echo "<td><a href='".$reviewLink."'>".$submitData['faq_question']."</a></td>\n";
+                    echo "<td>".$submitUser."</td>\n";
+                    echo "<td>".timer($info['submit_datestamp'])."</td>\n";
+                    echo "</tr>\n";
                 }
 
-                $reviewLink = clean_request("section=submissions&submit_id=".$info['submit_id'], ["section", "ref", "action", "submit_id"], FALSE);
-
-                echo "<tr>\n";
-                echo "<td>".$info['submit_id']."</td>\n";
-                echo "<td><span class='text-dark'>".$submitData['faq_question']."</span></td>\n";
-                echo "<td>".$submitUser."</td>\n";
-                echo "<td>".timer($info['submit_datestamp'])."</td>\n";
-                echo "<td>\n";
-                echo "<a href=".$reviewLink." title=".$this->locale['faq_0205']." class='btn btn-default btn-sm'><i class='fa fa-fw fa-eye'></i> ".$this->locale['faq_0205']."</a>\n";
-                echo "</td>\n";
-                echo "</tr>\n";
-
-            }
+            echo "</tbody>\n";
+            echo "</table>\n</div>";
         } else {
-            echo "<tr>\n";
-            echo "<td colspan='5' class='text-center'>".$this->locale['faq_0063']."</td>\n";
-            echo "</tr>\n";
+            echo "<div class='well text-center m-t-20'>".$this->locale['faq_0063']."</div>\n";
         }
 
-        echo "</tbody>\n";
-        echo "</table>\n</div>";
     }
 
     /**
@@ -299,8 +324,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
         $this->locale = self::get_faqAdminLocale();
         // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id='".$_GET['submit_id']."' AND submit_type='q'")) {
-            //$this->inputArray = self::unserializeData();
+        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q'])) {
             $criteria = [
                 'criteria'  => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
                 'join'      => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
@@ -312,7 +336,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             ];
             $data = self::submitData($criteria);
             $data[0] += self::$defArray;
-            $data[0] += unserialize($data[0]['submit_criteria']);
+            $data[0] += \defender::decode($data[0]['submit_criteria']);
             $this->inputArray = $data[0];
             // Delete, Publish, Preview
 
@@ -330,9 +354,9 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
     private function handleDeleteSubmission() {
         if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."' AND submit_type='q'");
-            addNotice("success", $this->locale['faq_0062']);
-            redirect(clean_request("", ["submit_id"], FALSE));
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
+            addNotice('success', $this->locale['faq_0062']);
+            redirect(clean_request('', ['submit_id'], FALSE));
         }
     }
 }

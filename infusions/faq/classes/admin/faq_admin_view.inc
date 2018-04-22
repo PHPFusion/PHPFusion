@@ -39,6 +39,10 @@ class FaqAdminView extends FaqAdminModel {
         $faqTitle = $this->locale['faq_0000'];
         BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
 
+        if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'")) {
+            addNotice("info", sprintf($this->locale['faq_0064'], format_word($submissions, $this->locale['fmt_submission'])));
+        }
+
         if (!empty($_GET['section'])) {
             switch ($_GET['section']) {
                 case "settings":
@@ -77,7 +81,7 @@ class FaqAdminView extends FaqAdminModel {
         $tab['id'][] = 'faq';
         $tab['icon'][] = 'fa fa-question-circle';
 
-        $tab['title'][] = $this->locale['faq_0005'].'&nbsp;<span class=\'badge\'>'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'").'</span>';
+        $tab['title'][] = $this->locale['faq_0005'];
         $tab['id'][] = 'submissions';
         $tab['icon'][] = 'fa fa-inbox';
 
