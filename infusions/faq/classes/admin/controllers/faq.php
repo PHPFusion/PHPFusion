@@ -138,19 +138,19 @@ class FaqAdmin extends FaqAdminModel {
                 // Update
                 if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
                     $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
-                    dbquery_insert(DB_FAQS, $this->faq_data, "update");
-                    addNotice("success", $this->locale['faq_0031']);
+                    dbquery_insert(DB_FAQS, $this->faq_data, 'update');
+                    addNotice('success', $this->locale['faq_0031']);
 
                     // Create
                 } else {
-                    $this->faq_data['faq_name'] = fusion_get_userdata("user_id");
-                    $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, "save");
-                    addNotice("success", $this->locale['faq_0030']);
+                    $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
+                    $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
+                    addNotice('success', $this->locale['faq_0030']);
                 }
 
                 // Redirect
                 if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request("", ["ref", "action", "faq_id"], FALSE));
+                    redirect(clean_request('', ['ref', 'action', 'faq_id'], FALSE));
                 } else {
                     redirect(FUSION_REQUEST);
                 }
@@ -193,12 +193,12 @@ class FaqAdmin extends FaqAdminModel {
             <!-- Display Left Column -->
             <div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>
                 <?php
-                echo form_text("faq_question", $this->locale['faq_0100'], $this->faq_data['faq_question'], [
+                echo form_text('faq_question', $this->locale['faq_0100'], $this->faq_data['faq_question'], [
                     'required'   => TRUE,
                     'max_length' => 200,
                     'error_text' => $this->locale['faq_0271']
                 ]);
-                echo form_textarea("faq_answer", $this->locale['faq_0251'], $this->faq_data['faq_answer'], $faqExtendedSettings);
+                echo form_textarea('faq_answer', $this->locale['faq_0251'], $this->faq_data['faq_answer'], $faqExtendedSettings);
                 ?>
             </div>
             <!-- Display Right Column -->
@@ -246,7 +246,7 @@ class FaqAdmin extends FaqAdminModel {
                 ]);
 
                 if (fusion_get_settings("tinymce_enabled") != 1) {
-                    echo form_checkbox("faq_breaks", $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
+                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
                         'value'         => 'y',
                         'class'         => 'm-b-5',
                         'reverse_label' => TRUE
@@ -353,23 +353,23 @@ class FaqAdmin extends FaqAdminModel {
             if (!empty($input)) {
                 foreach ($input as $faq_id) {
                     // check input table
-                    if (dbcount("('faq_id')", DB_FAQS, "faq_id='".intval($faq_id)."'") && \defender::safe()) {
+                    if (dbcount("('faq_id')", DB_FAQS, "faq_id=:faqid", [':faqid' => intval($faq_id)]) && \defender::safe()) {
                         switch ($_POST['table_action']) {
                             case 'publish':
-                                dbquery("UPDATE ".DB_FAQS." SET faq_status='1' WHERE faq_id='".intval($faq_id)."'");
+                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '1', ':faqid' => intval($faq_id)]);
                                 addNotice("success", $this->locale['faq_0037']);
                                 break;
                             case 'unpublish':
-                                dbquery("UPDATE ".DB_FAQS." SET faq_status='0' WHERE faq_id='".intval($faq_id)."'");
+                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '0', ':faqid' => intval($faq_id)]);
                                 addNotice("warning", $this->locale['faq_0038']);
                                 break;
                             case 'delete':
-                                if (!dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$faq_id."'")) {
-                                    dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id='".intval($faq_id)."'");
-                                    addNotice("warning", $this->locale['faq_0032']);
+                                if (!dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
+                                    dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+                                    addNotice('warning', $this->locale['faq_0032']);
                                 } else {
-                                    addNotice("warning", $this->locale['faq_0035']);
-                                    addNotice("warning", $this->locale['faq_0036']);
+                                    addNotice('warning', $this->locale['faq_0035']);
+                                    addNotice('warning', $this->locale['faq_0036']);
                                 }
                                 break;
                             default:
@@ -379,7 +379,7 @@ class FaqAdmin extends FaqAdminModel {
                 }
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", $this->locale['faq_0034']);
+            addNotice('warning', $this->locale['faq_0034']);
             redirect(FUSION_REQUEST);
         }
 
@@ -493,9 +493,9 @@ class FaqAdmin extends FaqAdminModel {
                         <i class='fa fa-fw fa-plus'></i>".$this->locale['faq_0003']."</a>\n";
         }
         echo "<a class='btn btn-primary btn-sm m-r-10' href='".clean_request('ref=faq_cat_form', ['ref'], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".$this->locale['faq_0119']."</a>
-            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin(' publish');\"><i class='fa fa-fw fa-check'></i>".$this->locale['publish']."</a>
-            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin(' unpublish');\"><i class='fa fa-fw fa-ban'></i>".$this->locale['unpublish']."</a>
-            <a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin(' delete');\"><i class='fa fa-fw fa-trash-o'></i>".$this->locale['delete']."</a>
+            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-check'></i>".$this->locale['publish']."</a>
+            <a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-ban'></i>".$this->locale['unpublish']."</a>
+            <a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#faq_table');\"><i class='fa fa-fw fa-trash-o'></i>".$this->locale['delete']."</a>
         </div><div class='display-inline-block pull-left m-r-10' style='width: 300px;'>
         ".form_text('faq_answer', '', $filter_values['faq_answer'], [
                 'placeholder'       => $this->locale['faq_0120'],
@@ -660,29 +660,20 @@ class FaqAdmin extends FaqAdminModel {
             });
         ");
 
-        // Javascript
-        add_to_footer("
-            <script type='text/javascript'>
-                function run_admin(action) {
-                    $('#table_action').val(action);
-                    $('#faq_table').submit();
-                }
-            </script>
-        ");
     }
 
     // Delete Function
     private function execute_Delete() {
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['faq_id']) && isnum($_GET['faq_id'])) {
             $faq_id = intval($_GET['faq_id']);
-            if (dbcount("(faq_id)", DB_FAQS, "faq_id='$faq_id'") && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$faq_id."'")) {
-                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id='".intval($faq_id)."'");
-                addNotice("success", $this->locale['faq_0032']);
+            if (dbcount("(faq_id)", DB_FAQS, "faq_id=:faqid", [':faqid' => $faq_id]) && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
+                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+                addNotice('success', $this->locale['faq_0032']);
             } else {
-                addNotice("warning", $this->locale['faq_0035']);
-                addNotice("warning", $this->locale['faq_0036']);
+                addNotice('warning', $this->locale['faq_0035']);
+                addNotice('warning', $this->locale['faq_0036']);
             }
-            redirect(clean_request("", ["ref", "action", "cat_id"], FALSE));
+            redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
     }
 

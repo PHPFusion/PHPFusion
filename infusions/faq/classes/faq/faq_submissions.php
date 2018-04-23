@@ -134,9 +134,7 @@ class FaqSubmissions extends FaqServer {
                 return (array)$info;
             }
         } else {
-            $info['no_submissions'] = [
-                'text'  => $this->locale['faq_0923']
-            ];
+            $info['no_submissions'] = $this->locale['faq_0923'];
             $info += $this->info;
             return (array)$info;
         }

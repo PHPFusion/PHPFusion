@@ -49,7 +49,7 @@ abstract class Faq extends FaqServer {
         $info = [
             'faq_categories' => [],
             'faq_items'      => [],
-            "faq_tablename"  => self::$locale['faq_0000'],
+            'faq_tablename'  => self::$locale['faq_0000'],
             'faq_get'        => 0
         ];
 

@@ -36,32 +36,35 @@ class FaqSettingsAdmin extends FaqAdminModel {
         // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                "faq_allow_submission" => form_sanitizer($_POST['faq_allow_submission'], 0, "faq_allow_submission"),
+                'faq_allow_submission' => form_sanitizer($_POST['faq_allow_submission'], 0, 'faq_allow_submission'),
             ];
             // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "faq",
+                        'settings_name'  => $settings_name,
+                        'settings_value' => $settings_value,
+                        'settings_inf'   => 'faq',
                     ];
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice("success", $this->locale['900']);
+                addNotice('success', $this->locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("danger", $this->locale['901']);
+                addNotice('danger', $this->locale['901']);
                 self::$faq_settings = $inputArray;
             }
         }
 
-        echo openform("settingsform", "post", FUSION_REQUEST);
+        echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n";
 
         echo form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
-            'inline' => TRUE, 'options' => [$this->locale['disable'], $this->locale['enable']]
+            'inline' => TRUE,
+            'options' => [$this->locale['disable'], $this->locale['enable']]
         ]);
 
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], ["class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"]);
+        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
     }
 }
