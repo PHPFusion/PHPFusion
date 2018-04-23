@@ -85,6 +85,7 @@ if (!empty($enabled_languages)) {
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/faq.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=q' AND link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_FAQ_CATS." WHERE faq_cat_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_FAQS." WHERE faq_language='".$language."'";
     }
 } else {
