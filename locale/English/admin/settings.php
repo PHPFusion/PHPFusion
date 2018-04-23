@@ -309,4 +309,4 @@ $locale['security_003'] = "Sessions Type";
 $locale['security_004'] = "Database System";
 $locale['security_005'] = "File System";
 $locale['security_006'] = "Clear System Session Cache";
-$locale['security_007'] = "All system sessions has been cleared succesfully";
+$locale['security_007'] = "All system sessions has been cleared successfully";

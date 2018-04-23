@@ -65,6 +65,6 @@ if (!check_admin_pass('')) {
     if (empty($user_id)) {
         redirect(BASEDIR."index.php");
     }
-    require_once ___DIR__.'/footer.php';
+    require_once __DIR__.'/footer.php';
     exit;
 }

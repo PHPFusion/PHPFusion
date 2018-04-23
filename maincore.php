@@ -53,7 +53,7 @@ ini_set('session.cookie_lifetime', 172800); // 48 hours
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
 // Start DB session.
-if ($settings['database_sessions']) {
+if (!empty($settings['database_sessions'])) {
     // Establish secondary mySQL database connection for session caches
     $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name);
     session_set_save_handler(
