@@ -222,7 +222,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * @return string
      */
     public function quote($value) {
-        $type = $this->getParameterType($value);
+        $type = self::getParameterType($value);
 
         if (self::PARAM_NULL === $type) {
             return 'NULL';

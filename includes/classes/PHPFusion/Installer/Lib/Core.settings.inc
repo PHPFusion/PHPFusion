@@ -498,6 +498,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'user_name_ban',
                 'settings_value' => ''
+            ],
+            [
+                'settings_name'  => 'database_sessions',
+                'settings_value' => 1
             ]
         ]
     ];

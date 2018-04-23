@@ -40,6 +40,7 @@ define("DB_PERMALINK_REWRITE", DB_PREFIX."permalinks_rewrites");
 define("DB_PERMALINK_METHOD", DB_PREFIX."permalinks_method");
 define("DB_PERMALINK_ALIAS", DB_PREFIX."permalinks_alias");
 define("DB_RATINGS", DB_PREFIX."ratings");
+define("DB_SESSIONS", DB_PREFIX."sessions");
 define("DB_SETTINGS", DB_PREFIX."settings");
 define("DB_SETTINGS_INF", DB_PREFIX."settings_inf");
 define("DB_SETTINGS_THEME", DB_PREFIX."settings_theme");

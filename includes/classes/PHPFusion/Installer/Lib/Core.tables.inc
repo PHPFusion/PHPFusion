@@ -880,6 +880,29 @@ function get_core_tables($localeset) {
             'length' => 50,
         ]
     ];
+    $table_package['sessions'] = [
+        'session_id'    => [
+            'type'   => 'VARCHAR',
+            'length' => 32,
+            'key'    => 1, //PRIMARY KEY (session_id),
+        ], //session_id VARCHAR(32) NOT NULL,
+        'session_start' => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'key'      => 1,
+            'unsigned' => TRUE,
+            'default'  => 0,
+        ], // session_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        'session_key'   => [
+            'type'    => 'VARCHAR',
+            'length'  => 100,
+            'default' => '',
+            'key'     => 2, //KEY session_key (session_key)
+        ], // session_key VARCHAR(100) NOT NULL DEFAULT '',
+        'session_data'  => [
+            'type' => 'TEXT',
+        ], //  session_data TEXT NOT NULL,
+    ];
     $table_package['settings'] = [
         'settings_name'  => [
             'type'   => 'VARCHAR',
@@ -946,7 +969,7 @@ function get_core_tables($localeset) {
         'link_visibility' => [
             'type'    => 'TINYINT',
             'length'  => 4,
-            'default' => '0'
+            'default' => 0
         ], //link_visibility TINYINT(4) NOT NULL DEFAULT '0',
         'link_position'   => [
             'type'     => 'TINYINT',
