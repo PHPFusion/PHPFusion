@@ -99,3 +99,69 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".LANGUAGE."')";
 }
+
+// Alter the paths
+
+// Move download files to new infusions folder
+if (file_exists(BASEDIR.'downloads/')) {
+    $files = makefilelist(BASEDIR.'downloads/');
+    if (!empty($files)) {
+        foreach ($files as $filename) {
+            rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
+        }
+    }
+    unset($files);
+
+    if (file_exists(BASEDIR.'downloads/images/')) {
+        // Images folder
+        $files = makefilelist(BASEDIR.'downloads/images/');
+        if (!empty($files)) {
+            foreach ($files as $filename) {
+                rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
+            }
+        }
+        unset($files);
+    }
+
+    if (file_exists(BASEDIR.'downloads/submissions/')) {
+        // Images folder
+        $files = makefilelist(BASEDIR.'downloads/submissions/');
+        if (!empty($files)) {
+            foreach ($files as $filename) {
+                rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
+            }
+            unset($files);
+        }
+        if (file_exists(BASEDIR.'downloads/submissions/images/')) {
+            // Images folder
+            $files = makefilelist(BASEDIR.'downloads/submissions/images/');
+            if (!empty($files)) {
+                foreach ($files as $filename) {
+                    rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
+                }
+            }
+            unset($files);
+        }
+    }
+
+    // Change download path to new path
+    $result = dbquery("SELECT download_id, download_url FROM ".DB_DOWNLOADS." WHERE download_url!=''");
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $url = strtr(fusion_get_settings('siteurl'), [
+                'http://'  => '',
+                'https://' => '',
+            ]);
+            if (stristr($data['download_url'], $url)) {
+                if (stristr($data['download_url'], 'downloads/images/')) {
+                    $data['download_url'] = str_replace('downloads/images/', 'infusions/downloads/images/', $data['download_url']); // change to download file path
+                } else {
+                    $data['download_url'] = str_replace('downloads/', 'infusions/downloads/files/', $data['download_url']); // change to download file path
+                }
+                $inf_updatedbrow = DB_DOWNLOADS." SET (`download_url`='".$data['download_url']."') WHERE `download_id` = ".$data['download_id']." ";
+            }
+        }
+    }
+
+}
+
