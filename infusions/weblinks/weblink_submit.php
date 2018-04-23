@@ -18,5 +18,6 @@
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/header.php";
 require_once WEBLINKS_CLASS."autoloader.php";
+require_once INFUSIONS."weblinks/templates.php";
 PHPFusion\Weblinks\WeblinksServer::WeblinksSubmit()->displayWeblinks();
 require_once THEMES."templates/footer.php";

@@ -95,3 +95,39 @@ if (!function_exists('display_weblinks_item')) {
         echo $html->get_output();
     }
 }
+
+if (!function_exists('display_weblink_submissions')) {
+    function display_weblink_submissions($info) {
+        $html = \PHPFusion\Template::getInstance('weblink_submissions');
+        $html->set_template(__DIR__.'/templates/weblinks_submissions.html');
+        $html->set_tag('opentable', fusion_get_function('opentable', $info['weblink_tablename']));
+        $html->set_tag('closetable', fusion_get_function('closetable'));
+        if (!empty($info['item'])) {
+            $html->set_block('weblink_submit', [
+                'guidelines'          => $info['item']['guidelines'],
+                'openform'            => $info['item']['openform'],
+                'closeform'           => closeform(),
+                'weblink_cat'         => $info['item']['weblink_cat'],
+                'weblink_name'        => $info['item']['weblink_name'],
+                'weblink_url'         => $info['item']['weblink_url'],
+                'weblink_language'    => $info['item']['weblink_language'],
+                'weblink_description' => $info['item']['weblink_description'],
+                'weblink_submit'      => $info['item']['weblink_submit']
+            ]);
+        }
+
+        if (!empty($info['confirm'])) {
+            $html->set_block('weblink_confirm_submit', [
+                'title'       => $info['confirm']['title'],
+                'submit_link' => $info['confirm']['submit_link'],
+                'index_link'  => $info['confirm']['index_link']
+            ]);
+        }
+
+        if (!empty($info['no_submissions'])) {
+            $html->set_block('weblink_no_submit', ['text' => $info['no_submissions']]);
+        }
+
+        echo $html->get_output();
+    }
+}

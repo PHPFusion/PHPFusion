@@ -40,15 +40,15 @@ class WeblinksSubmissions extends WeblinksServer {
 
         add_to_title($this->locale['WLS_0900']);
 
-        opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$this->locale['WLS_0900']);
+        $this->info['weblink_tablename'] = $this->locale['WLS_0900'];
 
         if (iMEMBER && self::$weblink_settings['links_allow_submission']) {
-            $this->display_submission_form();
+            display_weblink_submissions($this->display_submission_form());
         } else {
-            echo "<div class='well text-center'>".$this->locale['WLS_0922']."</div>\n";
+            $info['no_submissions'] = $this->locale['WLS_0922'];
+            $info += $this->info;
+            display_weblink_submissions($info);
         }
-
-        closetable();
     }
 
     private function display_submission_form() {
@@ -60,11 +60,6 @@ class WeblinksSubmissions extends WeblinksServer {
             'weblink_description' => '',
             'weblink_language'    => LANGUAGE,
         ];
-
-        // Cancel Form
-        if (isset($_POST['cancel'])) {
-            redirect(FUSION_REQUEST);
-        }
 
         if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, (multilang_table("WL") ? "weblink_cat_language='".LANGUAGE."' AND " : "")."weblink_cat_status=1 AND ".groupaccess("weblink_cat_visibility")."")) {
 
@@ -82,7 +77,7 @@ class WeblinksSubmissions extends WeblinksServer {
                 ];
 
                 // Save
-                if (\defender::safe() && isset($_POST['submit_link'])) {
+                if (\defender::safe()) {
                     $inputArray = [
                         'submit_type'      => 'l',
                         'submit_user'      => fusion_get_userdata('user_id'),
@@ -93,69 +88,65 @@ class WeblinksSubmissions extends WeblinksServer {
                     addNotice('success', $this->locale['WLS_0910']);
                     redirect(clean_request('submitted=l', ['stype'], TRUE));
                 }
-
             }
 
             if (isset($_GET['submitted']) && $_GET['submitted'] == "l") {
-
-                echo "<div class='well text-center text-strong'><p>".$this->locale['WLS_0911']."</p>";
-                echo "<p><a href='".BASEDIR."submit.php?stype=l' title=".$this->locale['WLS_0912'].">".$this->locale['WLS_0912']."</a></p>";
-                echo "<p><a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0913'])."</a></p>\n";
-                echo "</div>\n";
-
+            	$info['confirm'] = [
+            	    'title'       => $this->locale['WLS_0911'],
+            	    'submit_link' => "<a href='".BASEDIR."submit.php?stype=l'>".$this->locale['WLS_0912']."</a>",
+            	    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0913'])."</a>"
+            	];
+            	$info += $this->info;
+                return (array)$info;
             } else {
+            	$info['item'] = [
+                    'guidelines'          => str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['WLS_0920']),
+                    'openform'            => openform('submit_form', 'post', BASEDIR."submit.php?stype=l", ['enctype' => self::$weblink_settings['links_allow_submission'] ? TRUE : FALSE]),
+                    'weblink_cat'         => form_select_tree('weblink_cat', $this->locale['WLS_0101'], $criteriaArray['weblink_cat'],
+                        [
+                            'no_root'     => TRUE,
+                            'placeholder' => $this->locale['choose'],
+                            'query'       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
+                        ], DB_WEBLINK_CATS, 'weblink_cat_name', 'weblink_cat_id', 'weblink_cat_parent'),
+                    'weblink_name'        => form_text('weblink_name', $this->locale['WLS_0201'], $criteriaArray['weblink_name'],
+                        [
+                            'required'    => TRUE,
+                            'placeholder' => $this->locale['WLS_0201'],
+                            'error_text'  => $this->locale['WLS_0252']
+                        ]),
+                    'weblink_url'         => form_text('weblink_url', $this->locale['WLS_0253'], $criteriaArray['weblink_url'],
+                        [
+                            'required'    => TRUE,
+                            'type'        => "url",
+                            'placeholder' => "http://"
+                        ]),
+                    'weblink_language'    => (multilang_table('WL') ? form_select('weblink_language', $this->locale['language'], $criteriaArray['weblink_language'],
+                        [
+                            'options'     => fusion_get_enabled_languages(),
+                            'placeholder' => $this->locale['choose'],
+                            'width'       => '250px',
+                            'inline'      => TRUE,
+                        ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
+            	    'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
+            	        [
+                            'required'  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
+                            'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                            'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'autosize'  => TRUE,
+                            'form_name' => 'submit_form',
+            	        ]),
+                    'weblink_submit'      => form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o'])
 
+            	];
 
-                echo "<div class='alert alert-info m-b-20 submission-guidelines text-center'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
-                        $this->locale['WLS_0920'])."</div>\n";
-
-                echo openform('submit_form', 'post', BASEDIR."submit.php?stype=l");
-
-                echo form_select_tree("weblink_cat", $this->locale['WLS_0101'], $criteriaArray['weblink_cat'], [
-                    "no_root"     => TRUE,
-                    "placeholder" => $this->locale['choose'],
-                    "query"       => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
-                ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-
-                echo form_text('weblink_name', $this->locale['WLS_0201'], $criteriaArray['weblink_name'], [
-                    "placeholder" => $this->locale['WLS_0201'],
-                    "error_text"  => $this->locale['WLS_0252'],
-                    'required'    => TRUE
-                ]);
-
-                echo form_text('weblink_url', $this->locale['WLS_0253'], $criteriaArray['weblink_url'], [
-                    "type"        => "url",
-                    "placeholder" => "http://",
-                    "required"    => TRUE,
-                ]);
-
-                if (multilang_table("WL")) {
-                    echo form_select("weblink_language", $this->locale['language'], $criteriaArray['weblink_language'], [
-                        "options" => fusion_get_enabled_languages(), "placeholder" => $this->locale['choose'], "inner_width" => "100%",
-                    ]);
-                } else {
-                    echo form_hidden("weblink_language", "", $criteriaArray['weblink_language']);
-                }
-
-                $textArea_opts = [
-                    "required"  => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
-                    "type"      => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-                    "tinymce"   => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
-                    "autosize"  => TRUE,
-                    "form_name" => "submit_form",
-                ];
-
-                echo form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'], $textArea_opts);
-
-                echo form_button('submit_link', $this->locale['submit'], $this->locale['submit'], ['class' => "btn-success m-r-10", "icon" => "fa fa-fw fa-hdd-o"]);
-                echo form_button("cancel_link", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default m-r-10", "icon" => "fa fa-fw fa-times"]);
-
-                echo closeform();
+            	$info += $this->info;
+                return (array)$info;
             }
 
         } else {
-            echo "<div class='well text-center'><p>".$this->locale['WLS_0923']."</p></div>\n";
+            $info['no_submissions'] = $this->locale['WLS_0923'];
+            $info += $this->info;
+            return (array)$info;
         }
     }
-
 }
