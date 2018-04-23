@@ -70,10 +70,13 @@ spl_autoload_register(function ($className) {
 // @todo: then remove all infusions autoloader and complete check the file structure.
 spl_autoload_register(function ($className) {
     if (stristr($className, 'PHPFusion\\Infusions')) {
+        //print_p($className);
         $className = str_replace('PHPFusion\\Infusions\\', '', $className);
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
         $className = strtolower($className);
-        $fullPath = dirname(__FILE__).'/../infusions/'.$className.'.php';
+        //print_P($className);
+        $fullPath = BASEDIR.'infusions/'.$className.'.php';
+        //print_p($fullPath);
         if (is_file($fullPath)) {
             require $fullPath;
         }

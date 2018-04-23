@@ -134,6 +134,11 @@ class Batch_Core extends Install_Core {
     private static $upgrade_runtime = [];
     private $js = [];
 
+    /**
+     * Return the instance for the Batcher
+     *
+     * @return static
+     */
     public static function getInstance() {
 
         if (self::$batch === NULL) {
@@ -465,6 +470,10 @@ class Batch_Core extends Install_Core {
         return NULL;
     }
 
+    /**
+     * Checks for Upgrade Files
+     * @return array
+     */
     public function check_upgrades() {
 
         if (empty(self::$upgrade_runtime)) {

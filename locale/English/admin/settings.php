@@ -301,3 +301,12 @@ $locale['user_settings'] = "User Management Settings";
 $locale['theme_settings'] = "Theme Settings";
 
 $locale['securimage3'] = "Secure Image v.3";
+
+// Security Settings
+$locale['security_001'] = "System Sessions";
+$locale['security_002'] = "Configuration to the website sessions";
+$locale['security_003'] = "Sessions Type";
+$locale['security_004'] = "Database System";
+$locale['security_005'] = "File System";
+$locale['security_006'] = "Clear System Session Cache";
+$locale['security_007'] = "All system sessions has been cleared succesfully";

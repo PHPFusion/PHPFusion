@@ -37,19 +37,8 @@ if (stripget($_GET)) {
 
 // Establish mySQL database connection
 dbconnect($db_host, $db_user, $db_pass, $db_name);
-unset($db_host, $db_user, $db_pass);
-
 // Fetch the settings from the database
 $settings = fusion_get_settings();
-if (empty($settings)) {
-    if (file_exists(BASEDIR.'install.php')) {
-        if (file_exists(BASEDIR.'config.php')) {
-            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.TIME.'.php');
-        }
-        redirect(BASEDIR.'install.php');
-    }
-    die("Website configurations do not exist, please check your config.php file or run install.php again.");
-}
 
 // Settings dependent functions
 date_default_timezone_set('UTC');
@@ -60,11 +49,36 @@ ini_set('session.gc_divisor', 100);
 ini_set('session.gc_maxlifetime', 172800); // 48 hours
 // Session cookie life time
 ini_set('session.cookie_lifetime', 172800); // 48 hours
-
 // Prevent document expiry when user hits Back in browser
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
+// Start DB session.
+if ($settings['database_sessions']) {
+    // Establish secondary mySQL database connection for session caches
+    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name);
+    session_set_save_handler(
+        array($handler, '_open'),
+        array($handler, '_close'),
+        array($handler, '_read'),
+        array($handler, '_write'),
+        array($handler, '_destroy'),
+        array($handler, '_clean')
+    );
+}
+unset($db_host, $db_user, $db_pass);
 @session_start();
+
+if (empty($settings)) {
+    if (file_exists(BASEDIR.'install.php')) {
+        if (file_exists(BASEDIR.'config.php')) {
+            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.TIME.'.php');
+        }
+        redirect(BASEDIR.'install.php');
+    }
+    die("Website configurations do not exist, please check your config.php file or run install.php again.");
+}
+
+
 //ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
 //ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Uncomment to compress and minify PHP-Fusion
 ob_start();

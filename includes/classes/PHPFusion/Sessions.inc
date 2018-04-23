@@ -121,7 +121,6 @@ class Sessions {
         $this->_sess_db = $this->connection();
         if ($this->_sess_db['dbselection_success'] && $this->_sess_db['connection_success']) {
             DatabaseFactory::getConnection(self::$_sess_key);
-
             return TRUE;
         }
 
@@ -131,7 +130,7 @@ class Sessions {
     public function _close() {
         DatabaseFactory::getConnection(self::$_sess_key)->close();
 
-        return NULL;
+        return TRUE;
     }
 
     /**
@@ -155,7 +154,6 @@ class Sessions {
         $result = DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
         if (DatabaseFactory::getConnection(self::$_sess_key)->countRows($result)) {
             $rows = DatabaseFactory::getConnection(self::$_sess_key)->fetchAssoc($result);
-
             return $rows['session_data'];
         }
 
@@ -183,8 +181,11 @@ class Sessions {
             ':data'   => $data,
         );
         $query = "REPLACE INTO ".DB_SESSIONS." VALUES (:name, :access, :data)";
+        if (DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters)) {
+            return TRUE;
+        }
 
-        return DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        return FALSE;
     }
 
     /**
@@ -202,12 +203,20 @@ class Sessions {
             ':name' => $name,
         );
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_id=:name";
+        DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
 
-        return DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        return TRUE;
+    }
+
+    public function _purge() {
+        $query = "DELETE FROM ".DB_SESSIONS;
+        DatabaseFactory::getConnection(self::$_sess_key)->query($query);
+
+        return TRUE;
     }
 
     /**
-     * Clear the session
+     * Clear the session gc
      *
      * The _clean() function is called every once in a while in order to clean out (delete) old records in the session data store.
      * More specifically, the frequency in which this function is called is determined by two configuration directives,
@@ -232,7 +241,9 @@ class Sessions {
         );
         $query = "DELETE FROM ".DB_SESSIONS." WHERE access < :old";
 
-        return DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+        DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
+
+        return TRUE;
     }
 
     public function remote_cache($path) {
