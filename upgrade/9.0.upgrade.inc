@@ -151,8 +151,7 @@ if (db_exists(DB_SETTINGS)) {
         'logoposition_xs'   => 'logo-xs-left',
         'logoposition_sm'   => 'logo-sm-left',
         'logoposition_md'   => 'logo-md-left',
-        'logoposition_lg'   => 'logo-lg-left',
-        'user_name_ban'     => '',
+        'logoposition_lg'   => 'logo-lg-left'
     ];
 
     foreach ($insert_settings_tbl as $key => $value) {

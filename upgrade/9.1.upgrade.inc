@@ -64,7 +64,6 @@ if (db_exists(DB_PREFIX.'sessions')) {
     $inf_newtable[] = DB_SESSIONS." (
         session_id VARCHAR(32) COLLATE utf8_unicode_ci NOT NULL,
         session_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
-        session_key VARCHAR(100) NOT NULL DEFAULT '',
         session_data TEXT COLLATE utf8_unicode_ci NOT NULL,
         PRIMARY KEY (session_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
