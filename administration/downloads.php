@@ -398,7 +398,7 @@ if (!empty($result)) {
 	if (!empty($download_file)) {
 		echo "<a href='".DOWNLOADS.$download_file."'>".DOWNLOADS.$download_file."</a><br />\n";
 		echo "<label><input type='checkbox' name='del_upload' value='1' /> ".$locale['431']."</label>\n";
-		echo "<input type='hidden' name='download_file' value='".$download_file."' />";
+		echo "<input type='hidden' name='download_file' value='".$download_file."' /><br>";
 	} else {
 		// to do later.
 		//echo form_fileinput('', 'download_file', 'download_file', DOWNLOADS, array('max_size'=>$settings['download_max_b'])); // all file types.
