@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__).'/maincore.php';
+require_once(__DIR__.'/maincore.php');
+require_once INCLUDES.'theme_functions_include.php';
+require_once THEMES.'templates/render_functions.php';
+
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET."print.php");
 
@@ -173,7 +176,7 @@ if (isset($_GET['type'])) {
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
                         echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
-                        echo nl2br(parseubb(parsesmileys($data['post_message'])));
+                        echo parse_textarea($data['post_message']);
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
                             echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
@@ -213,7 +216,7 @@ if (isset($_GET['type'])) {
                             }
                             echo "<div style='margin-left:20px'>\n";
                             echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
-                            echo nl2br(parseubb(parsesmileys($data['post_message'])));
+                            echo parse_textarea($data['post_message']);
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
                                 echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
