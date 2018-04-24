@@ -332,14 +332,14 @@ class Install_Core extends Infusion_Core {
     private function get_InstallerContent() {
 
         OutputHandler::addToJQuery("
-			$('form').change(function() {
-				window.onbeforeunload = function() {
-					return true;
-				}
-				$(':button').bind('click', function() {
-					window.onbeforeunload = null;
-				});
-			});
+            $('form').change(function() {
+                window.onbeforeunload = function() {
+                    return true;
+                }
+                $(':button').bind('click', function() {
+                    window.onbeforeunload = null;
+                });
+            });
         ");
         // Instead of using INSTALLATION STEP, we let the each file control
         switch (INSTALLATION_STEP) {

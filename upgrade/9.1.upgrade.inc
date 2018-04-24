@@ -28,7 +28,8 @@ foreach ($update_settings_tbl as $key => $value) {
 }
 
 $insert_settings_tbl = [
-    'user_name_ban' => '',
+    'user_name_ban'     => '',
+    'database_sessions' => 1,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
@@ -52,9 +53,18 @@ if (db_exists(DB_PREFIX.'polls')) {
 }
 
 if (db_exists(DB_PREFIX.'shoutbox')) {
-    $new_icon_array = ['S' => '../infusions/shoutbox/shouts.svg'];
+    $new_icon_array = ['S' => '../infusions/shoutbox_panel/shouts.svg'];
 }
 
 foreach ($new_icon_array as $admin_rights => $icon_file) {
     $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
+}
+
+if (db_exists(DB_PREFIX.'sessions')) {
+    $inf_newtable[] = DB_SESSIONS." (
+        session_id VARCHAR(32) COLLATE utf8_unicode_ci NOT NULL,
+        session_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        session_data TEXT COLLATE utf8_unicode_ci NOT NULL,
+        PRIMARY KEY (session_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }
