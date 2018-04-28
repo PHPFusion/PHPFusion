@@ -99,7 +99,7 @@ if (!function_exists('render_user_tags')) {
      * The callback function for fusion_parse_user()
      *
      * @param string $m       The message
-     * @param        $tooltip The tooltip string
+     * @param string $tooltip The tooltip string
      *
      * @return string
      */
