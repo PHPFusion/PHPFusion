@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 // Settings
-$articleSettings = get_settings("article");
+$articleSettings = get_settings("articles");
 
 // Locale
 $locale = fusion_get_locale('', ARTICLE_ADMIN_LOCALE);

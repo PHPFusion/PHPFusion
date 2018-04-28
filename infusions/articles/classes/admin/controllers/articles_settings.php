@@ -46,7 +46,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "article",
+                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "articles",
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
