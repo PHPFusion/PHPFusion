@@ -98,7 +98,7 @@ class Gallery {
 
     public static function render_photo(array $info = []) {
         $locale = fusion_get_locale();
-        $html = opentable('opentable', $locale['450']);
+        $html = opentable($locale['450']);
         $html .= render_breadcrumbs();
         self::$gallery_settings = get_settings('gallery');
         $html .= "<!--pre_photo-->";
