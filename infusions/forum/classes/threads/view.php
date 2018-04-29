@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\BreadCrumbs;
@@ -352,7 +353,7 @@ class ViewThread extends ForumServer {
                 $quote_result = dbquery("SELECT a.post_message, b.user_name
                                         FROM ".DB_FORUM_POSTS." a
                                         INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-                                        WHERE thread_id='".intval($thread_data['thread_id'])."' and post_id='".intval($_GET['quote'])."'");
+                                        WHERE thread_id='".intval($thread_data['thread_id'])."' AND post_id='".intval($_GET['quote'])."'");
 
                 if (dbrows($quote_result) > 0) {
                     require_once INCLUDES.'bbcode_include.php';
@@ -390,7 +391,7 @@ class ViewThread extends ForumServer {
                         ['input_id'    => 'file_attachments',
                          'upload_path' => INFUSIONS.'forum/attachments/',
                          'type'        => 'object',
-                         'preview_off' => TRUE,
+                         'template'    => 'modern',
                          "multiple"    => TRUE,
                          "inline"      => FALSE,
                          'max_count'   => $forum_settings['forum_attachmax_count'],
@@ -500,8 +501,8 @@ class ViewThread extends ForumServer {
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
                 FROM ".DB_FORUM_POSTS." tp
-                INNER JOIN ".DB_FORUM_THREADS." tt on tp.thread_id=tt.thread_id
-                INNER JOIN ".DB_FORUM_POSTS." tp2 on tp.thread_id=tp2.thread_id
+                INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
+                INNER JOIN ".DB_FORUM_POSTS." tp2 ON tp.thread_id=tp2.thread_id
                 WHERE tp.post_id='".intval($_GET['post_id'])."' AND tp.thread_id='".intval($thread_data['thread_id'])."' AND tp.forum_id='".intval($thread_data['forum_id'])."'
                 GROUP BY tp2.post_id
                 ");
@@ -682,12 +683,12 @@ class ViewThread extends ForumServer {
                         // happens only in EDIT
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], ['placeholder' => '', 'class' => 'm-t-20 m-b-20']),
-                        'attachment_field' => $thread->getThreadPermission("can_upload_attach") ?
+                        'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]', $locale['forum_0557'], "",
                                 ['input_id'    => 'file_attachments',
                                  'upload_path' => FORUM.'attachments/',
                                  'type'        => 'object',
-                                 'preview_off' => TRUE,
+                                 'template'    => 'modern',
                                  'multiple'    => TRUE,
                                  'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
                                  'max_byte'    => $forum_settings['forum_attachmax'],
@@ -695,9 +696,9 @@ class ViewThread extends ForumServer {
                                                          <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                             : "",
                         // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
-                        "poll_form"        => '',
-                        'smileys_field'    => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
-                        'signature_field'  => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        "poll_form"         => '',
+                        'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         //sticky only in new thread or edit first post
                         'sticky_field'      => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
@@ -798,8 +799,8 @@ class ViewThread extends ForumServer {
         $user = [];
         $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
-                INNER JOIN ".DB_USERS." u on (u.user_id=p.post_author)
-                WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' group by user_id");
+                INNER JOIN ".DB_USERS." u ON (u.user_id=p.post_author)
+                WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' GROUP BY user_id");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $user[$data['user_id']] = $data;
