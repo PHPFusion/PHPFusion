@@ -413,6 +413,10 @@ class NewThread extends ForumServer {
                 if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) {
                     redirect(FORUM.'index.php');
                 }
+				if (isset($_GET['forum_id']) && !isnum($_GET['forum_id'])) {
+                    redirect(FORUM.'index.php');
+				}
+				
                 BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
                 $thread_data = [
                     'forum_id'          => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,
