@@ -276,12 +276,12 @@ if (function_exists('gd_info')) {
 	echo form_select($locale['442'], 'album_access', 'album_access', $access_opts, $album_access, array('placeholder' => 1, 'class' => 'pull-left m-r-10'));
 	echo form_text($locale['443'], 'album_order', 'album_order', $album_order, array('number' => 1, 'width' => '100px'));
 
-	if (!isset($_GET['action'])) {
+//	if (!isset($_GET['action'])) {
 		echo "<div class='form-group m-b-10'>\n";
 		echo "<label class='control-label p-l-0 col-xs-12 col-sm-12 col-md-12 col-lg-12'>".$locale['444']."</label><br/>\n";
 		echo "<input type='file' name='album_pic_file' class='textbox' style='width:250px;' />";
 		echo "</div>\n";
-	}
+//	}
 
 	echo form_button($locale['445'], 'save_album', 'save_album', $locale['445'], array('class' => 'btn-primary m-t-10'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
