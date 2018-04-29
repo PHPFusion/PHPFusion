@@ -21,7 +21,7 @@ $locale['419a'] = "Onbekende fout";
 // Downloads form
 $locale['420'] = "Titel:";
 $locale['421'] = "Beschrijving:";
-$locale['421b'] = "Korte beschrijving:";
+$locale['421b'] = "Korte beschrijving: <span style='color:#ff0000'>*</span>";
 $locale['422'] = "URL:";
 $locale['423'] = "Categorie:";
 $locale['424'] = "Licentie:";
