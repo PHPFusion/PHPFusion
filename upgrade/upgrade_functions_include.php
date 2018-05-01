@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 /*
  * Remove all files, subdirs and ultimately the directory in a given dir
  */

@@ -16,25 +16,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-pageAccess('S1');
+require_once __DIR__.'/../maincore.php';
+pageAccess('TS');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/theme.php');
 $theme_admin = new \PHPFusion\Atom\Admin();
-/**
- * Auto Upgrade Script -- remove after beta period
- */
-if (!db_exists(DB_SETTINGS_THEME)) {
-    $result = dbquery(
-        "CREATE TABLE ".DB_SETTINGS_THEME."
-		(settings_name VARCHAR(200) NOT NULL DEFAULT '',
-		settings_value TEXT NOT NULL,
-		settings_theme VARCHAR(200) NOT NULL DEFAULT '',
-		PRIMARY KEY (settings_name)
-		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
-	");
-    addNotice('success', "Theme Engine has been upgraded");
-}
 
 opentable($locale['theme_1000']);
 switch ($_GET['action']) {
@@ -46,8 +32,8 @@ switch ($_GET['action']) {
         }
         break;
     default:
-        $tab_title['title'] = array($locale['theme_1010'], $locale['theme_1011']);
-        $tab_title['id'] = array("list", "upload");
+        $tab_title['title'] = [$locale['theme_1010'], $locale['theme_1011']];
+        $tab_title['id'] = ["list", "upload"];
         $active_set = isset($_POST['upload']) ? 1 : 0;
         $active_tab = tab_active($tab_title, $active_set);
         echo opentab($tab_title, $active_tab, 'theme_tab');

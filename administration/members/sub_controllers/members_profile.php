@@ -50,7 +50,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postName = "add_new_user";
         $userFields->postValue = self::$locale['ME_450'];
         $userFields->displayValidation = fusion_get_settings("display_validation");
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
@@ -69,7 +69,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postValue = self::$locale['u101'];
         $userFields->displayValidation = $settings['display_validation'];
         $userFields->displayTerms = $settings['enable_terms'];
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
@@ -100,7 +100,7 @@ class Members_Profile extends Members_Admin {
         $userFields->postValue = self::$locale['ME_437'];
         $userFields->displayValidation = 0;
         $userFields->displayTerms = FALSE;
-        $userFields->plugin_folder = INCLUDES."user_fields/";
+        $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
@@ -114,10 +114,10 @@ class Members_Profile extends Members_Admin {
 
         if (isset($_POST['delete_user'])) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
-                array(
+                [
                     ':user_id'    => self::$user_id,
                     ':user_level' => USER_LEVEL_SUPER_ADMIN
-                )
+                ]
             );
             $rows = dbrows($result);
             if ($rows != '0') {
@@ -132,7 +132,7 @@ class Members_Profile extends Members_Admin {
                 /**
                  * @todo: Need to store user content reference column in a table for each infusions
                  */
-                if (db_exists(DB_PHOTOS)) {
+                if (infusion_exists('gallery')) {
                     // Delete photos
                     $result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
                     if (dbrows($result)) {
@@ -173,9 +173,9 @@ class Members_Profile extends Members_Admin {
                             $last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
                             dbquery("UPDATE ".DB_FORUM_THREADS." SET
                             thread_lastpost='".$last_thread_post['post_datestamp']."',
-							thread_lastpostid='".$last_thread_post['post_id']."',
-							thread_lastuser='".$last_thread_post['post_author']."'
-							WHERE thread_id='".$thread['thread_id']."'"
+                            thread_lastpostid='".$last_thread_post['post_id']."',
+                            thread_lastuser='".$last_thread_post['post_author']."'
+                            WHERE thread_id='".$thread['thread_id']."'"
                             );
                             // Update thread posts count
                             $posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$thread['thread_id']."'");
@@ -229,7 +229,26 @@ class Members_Profile extends Members_Admin {
         echo "<p>".nl2br(sprintf(self::$locale['ME_455'], "<strong>".self::$user_data['user_name']."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;ref=delete&amp;lookup=".self::$user_id."");
         echo "<div class='spacer-sm'>\n";
-        echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], array('class' => 'btn-danger m-r-10'));
+        echo form_button('delete_user', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
+        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
+        echo "</div>\n";
+        echo closeform();
+        echo "</div>\n";
+    }
+
+    public static function delete_unactivated_user() {
+        if (isset($_POST['delete_newuser'])) {
+            dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name='".$_GET['lookup']."'");
+            redirect(clean_request('', ['ref', 'lookup', 'newuser'], FALSE));
+
+        }
+
+        echo "<div class='well'>\n";
+        echo "<h4>".self::$locale['ME_454']."</h4>";
+        echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
+        echo openform('mod_form', 'post', FUSION_REQUEST);
+        echo "<div class='spacer-sm'>\n";
+        echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
         echo "</div>\n";
         echo closeform();

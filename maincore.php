@@ -17,9 +17,6 @@
 +--------------------------------------------------------*/
 use PHPFusion\Authenticate;
 
-// Uncomment to compress and minify PHP-Fusion
-//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Minify PHP output
-
 // Uncomment to see server errors without modifying php.ini
 ini_set('display_errors', '1');
 
@@ -35,15 +32,42 @@ require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
-    die("Prevented a XSS attack through a GET variable!");
+    die("Prevented an XSS attack through a GET variable!");
 }
 
 // Establish mySQL database connection
 dbconnect($db_host, $db_user, $db_pass, $db_name);
-unset($db_host, $db_user, $db_pass);
-
 // Fetch the settings from the database
 $settings = fusion_get_settings();
+
+// Settings dependent functions
+date_default_timezone_set('UTC');
+//date_default_timezone_set($settings['default_timezone']);
+ini_set('session.gc_probability', 1);
+ini_set('session.gc_divisor', 100);
+// Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
+ini_set('session.gc_maxlifetime', 172800); // 48 hours
+// Session cookie life time
+ini_set('session.cookie_lifetime', 172800); // 48 hours
+// Prevent document expiry when user hits Back in browser
+session_cache_limiter('private, must-revalidate');
+session_name(COOKIE_PREFIX.'session');
+// Start DB session.
+if (!empty($settings['database_sessions'])) {
+    // Establish secondary mySQL database connection for session caches
+    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name);
+    session_set_save_handler(
+        array($handler, '_open'),
+        array($handler, '_close'),
+        array($handler, '_read'),
+        array($handler, '_write'),
+        array($handler, '_destroy'),
+        array($handler, '_clean')
+    );
+}
+unset($db_host, $db_user, $db_pass);
+@session_start();
+
 if (empty($settings)) {
     if (file_exists(BASEDIR.'install.php')) {
         if (file_exists(BASEDIR.'config.php')) {
@@ -54,23 +78,9 @@ if (empty($settings)) {
     die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
-// Settings dependent functions
-date_default_timezone_set('UTC');
-//date_default_timezone_set($settings['default_timezone']);
-ini_set('session.gc_probability', 1);
-ini_set('session.gc_divisor', 100);
 
-// Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
-ini_set('session.gc_maxlifetime', 172800); // 48 hours
-
-// Session cookie life time
-ini_set('session.cookie_lifetime', 172800); // 48 hours
-
-// Prevent document expiry when user hits Back in browser
-session_cache_limiter('private, must-revalidate');
-session_name(COOKIE_PREFIX.'session');
-session_start();
-//ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
+//ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
+//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Uncomment to compress and minify PHP-Fusion
 ob_start();
 
 // Sanitise $_SERVER globals
@@ -84,14 +94,30 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
     redirect($settings['siteurl']);
 }
 
+// Force protocol change if https turned on main settings
+if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
+    $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + [
+            'path'  => '',
+            'query' => ''
+        ];
+    $fusion_query = array();
+    if ($url['query']) {
+        parse_str($url['query'], $fusion_query); // this is original.
+    }
+    $prefix = !empty($fusion_query ? '?' : '');
+    $site_path = str_replace($settings['site_path'], '', $url['path']);
+    $site_path = $settings['siteurl'].$site_path.$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
+    redirect($site_path);
+}
+
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
 // Variables initializing
 $mysql_queries_count = 0;
-$mysql_queries_time = array();
-$locale = array();
+$mysql_queries_time = [];
+$locale = [];
 
 // Calculate ROOT path for Permalinks
 $current_path = html_entity_decode($_SERVER['REQUEST_URI']);
@@ -146,23 +172,24 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-    $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
-    $userdata = $auth->getUserData();
-    unset($auth, $_POST['user_name'], $_POST['user_pass']);
-    redirect(FUSION_REQUEST);
-} elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+    if (\defender::safe()) {
+        $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+        $userdata = $auth->getUserData();
+        unset($auth, $_POST['user_name'], $_POST['user_pass']);
+        redirect(FUSION_REQUEST);
+    }
+} else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-
     redirect(BASEDIR.$settings['opening_page']);
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
 
 // User level, Admin Rights & User Group definitions
-define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
-define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);
-define("iADMIN", $userdata['user_level'] <= -102 ? 1 : 0);
-define("iSUPERADMIN", $userdata['user_level'] == -103 ? 1 : 0);
+define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
+define("iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0);
+define("iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0);
+define("iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0);
 define("iUSER", $userdata['user_level']);
 define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
@@ -179,10 +206,9 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if (isset($_GET['lang'])) {
+if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
     $current_user_language = stripinput($_GET['lang']);
     set_language($current_user_language);
-    //redirect(clean_request('', ['lang'], FALSE));
 } else {
     if (count($enabled_languages) > 1) {
         require __DIR__.'/includes/core_mlang_hub_include.php';
@@ -194,20 +220,20 @@ if (!defined('LANGUAGE') && !defined('LOCALESET')) {
     define('LOCALESET', $current_user_language.'/');
 }
 
+\PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
+
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-// Load the Global language file
-include LOCALE.LOCALESET."global.php";
-
 $defender = defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new \Defender\Token();
 }
+
 \Defender\ImageValidation::ValidateExtensions();
 
 // Define aidlink
@@ -216,7 +242,7 @@ if (iADMIN) {
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
-    $token_time = time();
+    $token_time = TIME;
     $algo = fusion_get_settings('password_algorithm');
     $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
     $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
@@ -229,14 +255,13 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
     setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
 }
 
-$lastvisited = Authenticate::setLastVisitCookie();
-
+//$lastvisited = Authenticate::setLastVisitCookie();
+//define('LASTVISITED', Authenticate::setLastVisitCookie());
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-new Dynamics();
-
+$fusion_dynamics = Dynamics::getInstance();
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
@@ -244,13 +269,17 @@ $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 // Set theme using $_GET as well.
 // Set theme
 if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) && theme_exists($_GET['themes'])) {
-    $newUserTheme = array(
-        "user_id" => $userdata['user_id'],
+    $newUserTheme = [
+        "user_id"    => $userdata['user_id'],
         "user_theme" => stripinput($_GET['themes']),
-    );
+    ];
     dbquery_insert(DB_USERS, $newUserTheme, "update");
-    redirect(clean_request("", array("themes"), FALSE));
+    redirect(clean_request("", ["themes"], FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
+/**
+ * Reduction of 0.04 seconds in performance.
+ * We can use manually include the configuration if needed.
+ */
 \PHPFusion\Installer\Infusion_core::load_Configuration();

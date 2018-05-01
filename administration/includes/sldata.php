@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once "../../maincore.php";
 
 $aid = isset($_GET['token']) ? explode('=', $_GET['token']) : '';
@@ -23,6 +22,7 @@ $aid = isset($_GET['token']) ? explode('=', $_GET['token']) : '';
 if (!empty($aid)) {
     $aid = $aid[1];
 }
+
 $q = isset($_GET['q']) && isnum($_GET['q']) ? $_GET['q'] : 0;
 
 if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
@@ -31,10 +31,13 @@ if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
     if (dbrows($result) > 0) {
         $data = dbarray($result);
         // parse for custom navigational ID
-        if ($data['link_position']>3) {
+        if ($data['link_position'] > 3) {
             $data['link_position_id'] = $data['link_position'];
             $data['link_position'] = 4;
         }
+
+        header('Content-Type: application/json');
+
         echo json_encode($data);
     }
 }

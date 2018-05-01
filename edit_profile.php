@@ -26,8 +26,8 @@ if (!iMEMBER) {
 
 add_to_title($locale['global_200'].$locale['u102']);
 
-$info = array();
-$errors = array();
+$info = [];
+$errors = [];
 $_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
 if (isset($_POST['update_profile'])) {
@@ -36,10 +36,10 @@ if (isset($_POST['update_profile'])) {
     $userInput->verifyNewEmail = TRUE;
     $userInput->userData = fusion_get_userdata();
     $userInput->saveUpdate();
-    if (defender::safe()) {
+    if (\defender::safe()) {
         redirect(FUSION_REQUEST);
     }
-} elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
+} else if (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->verifyCode($_GET['code']);
     redirect(FUSION_REQUEST);
@@ -56,7 +56,7 @@ $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
 $userFields->postValue = $locale['u105'];
 $userFields->userData = fusion_get_userdata();
-$userFields->plugin_folder = INCLUDES."user_fields/";
+$userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;

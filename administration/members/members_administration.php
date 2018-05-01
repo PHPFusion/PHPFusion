@@ -17,28 +17,26 @@
 +--------------------------------------------------------*/
 namespace Administration\Members;
 
-use Administration\Members\Sub_Controllers\Display_Members;
 use Administration\Members\Sub_Controllers\Members_Action;
 use Administration\Members\Sub_Controllers\Members_Display;
 use Administration\Members\Sub_Controllers\Members_Profile;
 use PHPFusion\BreadCrumbs;
 
 class Members_Admin {
-
     private static $instance = NULL;
-    protected static $locale = array();
-    protected static $settings = array();
+    protected static $locale = [];
+    protected static $settings = [];
     protected static $rowstart = 0;
     protected static $sortby = 'all';
     protected static $status = 0;
     protected static $usr_mysql_status = 0;
     protected static $user_id = 0;
-    protected static $user_data = array();
+    protected static $user_data = [];
 
     /*
      * Status filter links
      */
-    protected static $status_uri = array();
+    protected static $status_uri = [];
     protected static $exit_link = '';
     protected static $is_admin = FALSE;
     protected static $time_overdue = 0;
@@ -79,14 +77,14 @@ class Members_Admin {
         self::$usr_mysql_status = (isset($_GET['usr_mysql_status']) && isnum($_GET['usr_mysql_status'] && $_GET['usr_mysql_status'] < 9) ? $_GET['usr_mysql_status'] : 0);
         if (self::$status == 0 && fusion_get_settings('enable_deactivation') == 1) {
             self::$usr_mysql_status = "0' AND user_lastvisit>'".self::$time_overdue."' AND user_actiontime='0";
-        } elseif (self::$status == 8 && fusion_get_settings('enable_deactivation') == 1) {
+        } else if (self::$status == 8 && fusion_get_settings('enable_deactivation') == 1) {
             self::$usr_mysql_status = "0' AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0";
         }
 
         self::$exit_link = FUSION_SELF.fusion_get_aidlink()."&sortby=".self::$sortby."&status=".self::$status."&rowstart=".self::$rowstart;
 
         $base_url = FUSION_SELF.fusion_get_aidlink();
-        self::$status_uri = array(
+        self::$status_uri = [
             self::USER_MEMBER       => $base_url."&amp;status=".self::USER_MEMBER,
             self::USER_UNACTIVATED  => $base_url."&amp;status=".self::USER_UNACTIVATED,
             self::USER_BAN          => $base_url."&amp;status=".self::USER_BAN,
@@ -100,14 +98,14 @@ class Members_Admin {
             'edit'                  => $base_url.'&amp;ref=edit&amp;lookup=',
             'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
             'inactive'              => $base_url.'&amp;ref=inactive',
-        );
+        ];
 
         self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
 
-        if (dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", array(
+        if (dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", [
                 ':user_id'    => self::$user_id,
                 ':user_level' => USER_LEVEL_MEMBER,
-            )) > 0
+            ]) > 0
         ) {
             self::$is_admin = TRUE;
         } else {
@@ -154,22 +152,22 @@ class Members_Admin {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
 
-                        if (isset($_POST['deactivate_users']) && defender::safe()) {
+                        if (isset($_POST['deactivate_users']) && \defender::safe()) {
                             require_once INCLUDES."sendmail_include.php";
                             $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
                                         WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'
-		                                LIMIT 0,50
-		                                ");
+                                        LIMIT 0,50
+                                        ");
                             $rows = dbrows($result);
                             if ($rows != '0') {
                                 while ($data = dbarray($result)) {
-                                    $message = strtr(self::$locale['email_deactivate_message'], array(
+                                    $message = strtr(self::$locale['email_deactivate_message'], [
                                             '[CODE]'         => md5(self::$response_required.$data['user_password']),
                                             '[SITENAME]'     => self::$settings['sitename'],
                                             '[SITEUSERNAME]' => self::$settings['siteusername'],
                                             '[USER_NAME]'    => $data['user_name'],
                                             '[USER_ID]'      => $data['user_id'],
-                                        )
+                                        ]
                                     );
                                     if (sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], self::$locale['email_deactivate_subject'], $message)) {
                                         dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".self::$response_required."' WHERE user_id='".$data['user_id']."'");
@@ -190,7 +188,7 @@ class Members_Admin {
                         echo "<div>";
                         $action = fusion_get_settings('deactivation_action') == 0 ? self::$locale['ME_556'] : self::$locale['ME_557'];
                         $text = sprintf(self::$locale['ME_464'], $inactive, self::$settings['deactivation_period'], self::$settings['deactivation_response'], $action);
-                        echo str_replace(array("[strong]", "[/strong]"), array("<strong>", "</strong>"),
+                        echo str_replace(["[strong]", "[/strong]"], ["<strong>", "</strong>"],
                             $text
                         );
                         if (self::$settings['deactivation_action'] == 1) {
@@ -202,7 +200,7 @@ class Members_Admin {
                         }
                         echo "</div>\n<div class='text-center'>\n";
                         echo openform('member_form', 'post', self::$status_uri['inactive']);
-                        echo form_button('deactivate_users', $button, $button, array('class' => 'btn-primary m-r-10'));
+                        echo form_button('deactivate_users', $button, $button, ['class' => 'btn-primary m-r-10']);
                         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel']);
                         echo closeform();
                         echo "</div>\n";
@@ -223,9 +221,9 @@ class Members_Admin {
                                 WHERE u.user_id=:user_id GROUP BY u.user_id
                                 ORDER BY s.suspend_date DESC
                                 ";
-                        $bind = array(
+                        $bind = [
                             ':user_id' => self::$user_id
-                        );
+                        ];
                         self::$user_data = dbarray(dbquery($query, $bind));
                         $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
                         BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
@@ -252,7 +250,12 @@ class Members_Admin {
                     }
                     break;
                 case 'delete':
-                    if (!empty(self::$user_id)) {
+                    if (!empty($_GET['newuser'])) {
+                        opentable(sprintf(self::$locale['ME_453'], $_GET['lookup']));
+                        Members_Profile::delete_unactivated_user();
+                        closetable();
+
+                    } else if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
                         if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
                             redirect(FUSION_SELF.fusion_get_aidlink());
@@ -266,10 +269,13 @@ class Members_Admin {
                     break;
             }
         } else {
-            if (isset($_POST['action']) && isset($_POST['user_id']) && is_array($_POST['user_id'])) {
+            if (isset($_REQUEST['action']) && isset($_REQUEST['user_id'])) {
                 $user_action = new Members_Action();
-                $user_action->set_userID((array)$_POST['user_id']);
-                $user_action->set_action((string)$_POST['action']);
+                if (!is_array($_REQUEST['user_id'])) {
+                    $_REQUEST['user_id'] = [$_REQUEST['user_id']];
+                }
+                $user_action->set_userID((array)$_REQUEST['user_id']);
+                $user_action->set_action((string)$_REQUEST['action']);
                 $user_action->execute();
             }
             opentable(self::$locale['ME_400']);

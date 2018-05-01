@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Path Definitions
-$widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+$lang = file_exists(WIDGETS."slider/locale/".LANGUAGE.".php") ? WIDGETS."slider/locale/".LANGUAGE.".php" : WIDGETS."slider/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
 /**
  * Widget SDK
  * $widget_title - The title of the widget

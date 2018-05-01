@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 require_once THEMES."templates/admin_header.php";
 
 /**
@@ -24,18 +24,18 @@ require_once THEMES."templates/admin_header.php";
  */
 class UserGroups {
     private static $instance = NULL;
-    private static $locale = array();
+    private static $locale = [];
     private static $limit = 20;
-    private static $Group = array();
-    private static $DefaultGroup = array();
-    private static $GroupUser = array();
+    private static $Group = [];
+    private static $DefaultGroup = [];
+    private static $GroupUser = [];
 
-    private $data = array(
+    private $data = [
         'group_id'          => 0,
         'group_name'        => '',
         'group_description' => '',
         'group_icon'        => '',
-    );
+    ];
 
     public function __construct() {
         pageAccess("UG");
@@ -52,12 +52,12 @@ class UserGroups {
                 if (isset($_GET['group_id'])) {
                     foreach (self::$Group as $groups) {
                         if ($_GET['group_id'] == $groups[0]) {
-                            $this->data = array(
+                            $this->data = [
                                 'group_id'          => $groups[0],
                                 'group_name'        => $groups[1],
                                 'group_description' => $groups[2],
                                 'group_icon'        => $groups[3],
-                            );
+                            ];
                         }
                     }
                 }
@@ -66,7 +66,7 @@ class UserGroups {
                 if (isset($_POST['user_send']) && empty($_POST['user_send'])) {
                     \defender::stop();
                     addNotice('danger', self::$locale['GRP_403']);
-                    redirect(clean_request("section=user_group", array("", "aid"), TRUE));
+                    redirect(clean_request("section=user_group", ["", "aid"], TRUE));
                 }
                 if (isset($_POST['user_send']) && !empty($_POST['user_send'])) {
                     $group_userSend = form_sanitizer($_POST['user_send'], '', 'user_send');
@@ -80,14 +80,14 @@ class UserGroups {
                 if (empty($_POST['groups_add']) or empty($_GET['group_id'])) {
                     \defender::stop();
                     addNotice('danger', self::$locale['GRP_408']);
-                    redirect(clean_request("", array("section=user_form", "aid"), TRUE));
+                    redirect(clean_request("", ["section=user_form", "aid"], TRUE));
                 }
                 break;
             case 'user_del':
                 if (empty($_POST['group']) or empty($_GET['group_id'])) {
                     \defender::stop();
                     addNotice('danger', self::$locale['GRP_408']);
-                    redirect(clean_request("", array("section=user_form", "aid"), TRUE));
+                    redirect(clean_request("", ["section=user_form", "aid"], TRUE));
                 }
                 break;
             default:
@@ -96,7 +96,7 @@ class UserGroups {
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'user_groups.php'.fusion_get_aidlink(), "title" => self::$locale['GRP_420']]);
     }
 
-    public static function getInstance($key = TRUE) {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
             self::$instance->update_group();
@@ -109,16 +109,16 @@ class UserGroups {
      */
     private function update_group() {
         if (isset($_POST['save_group'])) {
-            $this->data = array(
+            $this->data = [
                 'group_id'          => form_sanitizer($_POST['group_id'], 0, "group_id"),
                 'group_name'        => form_sanitizer($_POST['group_name'], '', 'group_name'),
                 'group_description' => form_sanitizer($_POST['group_description'], '', 'group_description'),
                 'group_icon'        => form_sanitizer($_POST['group_icon'], '', "group_icon"),
-            );
+            ];
             if (\defender::safe()) {
                 dbquery_insert(DB_USER_GROUPS, $this->data, empty($this->data['group_id']) ? "save" : "update");
                 addNotice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
-                redirect(clean_request("section=usergroup", array("", "aid"), TRUE));
+                redirect(clean_request("section=usergroup", ["", "aid"], TRUE));
             }
         }
         if (isset($_POST['add_sel'])) {
@@ -128,7 +128,7 @@ class UserGroups {
             if (isnum($_GET['group_id'])) {
                 $group = getgroupname($_GET['group_id']);
                 if ($group) {
-                    $added_user = array();
+                    $added_user = [];
                     foreach ($group_userSender as $grp) {
                         $groupadduser = fusion_get_user($grp);
                         if (!in_array($_GET['group_id'], explode(".", $groupadduser['user_groups']))) {
@@ -151,7 +151,7 @@ class UserGroups {
             if (isnum($_GET['group_id'])) {
                 $group = getgroupname($_GET['group_id']);
                 if ($group) {
-                    $rem_user = array();
+                    $rem_user = [];
                     foreach ($group_userSender as $grp) {
                         $groupadduser = fusion_get_user($grp);
                         if (in_array($_GET['group_id'], explode(".", $groupadduser['user_groups']))) {
@@ -189,15 +189,15 @@ class UserGroups {
     }
 
     static function Addusergroup($group_id, $groups) {
-        return $user_groups = preg_replace(array(
+        return $user_groups = preg_replace([
             "(^\.{$group_id}$)",
             "(\.{$group_id}\.)",
             "(\.{$group_id}$)"
-        ), array(
+        ], [
             "",
             ".",
             ""
-        ), $groups);
+        ], $groups);
     }
 
     static function count_usergroup($id) {
@@ -224,26 +224,26 @@ class UserGroups {
         if (self::verify_group($id)) {
             dbquery("DELETE FROM ".DB_USER_GROUPS." WHERE group_id='".intval($id)."'");
             addNotice('warning', self::$locale['GRP_407']);
-            redirect(clean_request("", array("section=usergroup", "aid"), TRUE));
+            redirect(clean_request("", ["section=usergroup", "aid"], TRUE));
         } else {
             addNotice('warning', self::$locale['GRP_405']." ".self::$locale['GRP_406']);
-            redirect(clean_request("", array("section=usergroup", "aid"), TRUE));
+            redirect(clean_request("", ["section=usergroup", "aid"], TRUE));
         }
     }
 
     public function _selectDB($rows, $min) {
         $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
-			FROM ".DB_USERS."
-			WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
-			ORDER BY user_level DESC, user_name
-			LIMIT ".intval($rows).", ".$min
+            FROM ".DB_USERS."
+            WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
+            ORDER BY user_level DESC, user_name
+            LIMIT ".intval($rows).", ".$min
         );
 
         return $result;
     }
 
     public function display_admin() {
-        $allowed_section = array("usergroup", "usergroup_form", "user_form");
+        $allowed_section = ["usergroup", "usergroup_form", "user_form"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'usergroup';
         $_GET['group_id'] = isset($_GET['group_id']) && isnum($_GET['group_id']) ? $_GET['group_id'] : 0;
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['group_id']) ? TRUE : FALSE;
@@ -261,6 +261,8 @@ class UserGroups {
             $master_tab_title['id'][] = "user_form";
             $master_tab_title['icon'][] = "";
         }
+
+        $view = '';
 
         switch ($_GET['section']) {
             case "usergroup_form":
@@ -281,7 +283,7 @@ class UserGroups {
                 break;
         }
 
-        opentable(self::$locale['GRP_400']);
+        opentable(self::$locale['GRP_420']);
         echo opentab($master_tab_title, $_GET['section'], "usergroup", TRUE, FALSE, 'section', ['action']).$view.closetab();
         closetable();
     }
@@ -297,7 +299,7 @@ class UserGroups {
         $html .= "<div class='pull-right'><a class='btn btn-success' href='".FUSION_SELF.$aidlink."&amp;section=usergroup_form'><i class='fa fa-plus fa-fw'></i> ".self::$locale['GRP_428']."</a>\n</div>\n";
         $html .= "<div class='overflow-hide'>".sprintf(self::$locale['GRP_424'], $total_rows)."</div>\n";
         $html .= "</div>\n";
-        $html .= "<table class='table table-responsive table-striped'>\n";
+        $html .= "<div class='table-responsive'><table class='table table-striped'>\n";
         $html .= "<thead>\n";
         $html .= "<tr>\n";
 
@@ -340,7 +342,7 @@ class UserGroups {
             $html .= "</tr>\n";
         }
         $html .= "</tfoot>\n";
-        $html .= "</table>\n";
+        $html .= "</table>\n</div>";
 
         return $html;
     }
@@ -377,23 +379,24 @@ class UserGroups {
         $html .= openform('searchuserform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id'],
             ['class' => 'list-group-item p-10 m-t-0 m-b-20'
             ]);
-        $html .= form_user_select("user_send", self::$locale['GRP_440'], '', array('max_select'  => 10,
-                                                                                   'inline'      => FALSE,
-                                                                                   'inner_width' => '100%',
-                                                                                   'width'       => '100%',
-                                                                                   'required'    => TRUE,
-                                                                                   'allow_self'  => TRUE,
-                                                                                   'placeholder' => self::$locale['GRP_451'],
-                                                                                   'ext_tip'     => self::$locale['GRP_441']."<br />".self::$locale['GRP_442']
-        ));
-        $html .= form_button('search_users', self::$locale['confirm'], self::$locale['confirm'], array('class' => 'btn-primary'));
+        $html .= form_user_select("user_send", self::$locale['GRP_440'], '', ['max_select'  => 10,
+                                                                              'inline'      => FALSE,
+                                                                              'inner_width' => '100%',
+                                                                              'width'       => '100%',
+                                                                              'required'    => TRUE,
+                                                                              'allow_self'  => TRUE,
+                                                                              'placeholder' => self::$locale['GRP_451'],
+                                                                              'ext_tip'     => self::$locale['GRP_441']."<br />".self::$locale['GRP_442']
+        ]);
+        $html .= form_button('search_users', self::$locale['confirm'], self::$locale['confirm'], ['class' => 'btn-primary']);
         $html .= closeform();
         if (!empty(self::$GroupUser)) {
             $html .= openform('add_users_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);
-            $html .= "<table class='table table-striped table-hover table-responsive'>\n";
+            $html .= "<div class='table-responsive'><table class='table table-striped table-hover'>\n";
             $html .= "<thead>\n";
             $html .= "<tr>\n";
             echo "<th>".self::$locale['GRP_446']."</th>\n";
+            $html .= "<th></th>\n";
             $html .= "<th>".self::$locale['GRP_447']."</th>\n";
             $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<tr>\n";
@@ -401,17 +404,17 @@ class UserGroups {
             $html .= "<tbody>\n";
             foreach (self::$GroupUser as $groupusers) {
                 $html .= "<tr>\n";
+                $html .= "<td>".form_checkbox("groups_add[]", '', '', ["inline" => FALSE, 'value' => $groupusers['user_id']])."</td>\n";
                 $html .= "<td>".$groupusers['user_name']."</td>\n";
                 $html .= "<td>".getuserlevel($groupusers['user_level'])."</td>\n";
-                $html .= "<td>".form_checkbox("groups_add[]", '', '', array("inline" => FALSE, 'value' => $groupusers['user_id']))."</td>\n";
                 $html .= "</tr>\n";
             }
             $html .= "</tbody>\n";
-            $html .= "</table>\n";
+            $html .= "</table>\n</div>";
             $html .= "<div class='spacer-xs'>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('add_users_form','groups_add[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('add_users_form','groups_add[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
-            $html .= form_button('add_sel', self::$locale['GRP_450'], self::$locale['GRP_450'], array('class' => 'btn-primary'));
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('add_users_form','groups_add[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('add_users_form','groups_add[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
+            $html .= form_button('add_sel', self::$locale['GRP_450'], self::$locale['GRP_450'], ['class' => 'btn-primary']);
             $html .= "</div>\n";
             $html .= closeform();
         }
@@ -419,38 +422,38 @@ class UserGroups {
         $html .= "<div class='col-xs-12 col-sm-8'>\n";
 
         if ($rows > 0) {
-            $html .= open_side(self::$locale['GRP_460']);
+            $html .= fusion_get_function('openside', self::$locale['GRP_460']);
             $html .= "<div class='clearfix spacer-xs'>\n";
-            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;")."</div>\n" : "");
+            $html .= ($total_rows > $rows ? "<div class='pull-right'>\n".makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ['rowstart'], FALSE)."&amp;")."</div>\n" : "");
             $html .= "<div class='overflow-hide'>".sprintf(self::$locale['GRP_427'], $rows, $total_rows)."</div>\n";
             $html .= "</div>\n";
             $html .= openform('rem_users_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);
             $html .= "<table class='table table-striped table-hover table-responsive'>\n";
             $html .= "<thead>\n";
             $html .= "<tr>\n";
+            $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<th>".self::$locale['GRP_446']."</th>\n";
             $html .= "<th>".self::$locale['GRP_447']."</th>\n";
-            $html .= "<th>".self::$locale['GRP_437']."</th>\n";
             $html .= "<tr>\n";
             $html .= "</thead>\n";
             $html .= "<tbody>\n";
             while ($data = dbarray($result)) {
                 $html .= "<tr>\n";
+                $html .= "<td>".form_checkbox("group[]", '', '', ["inline" => FALSE, 'value' => $data['user_id']])."</td>\n";
                 $html .= "<td>".$data['user_name']."</td>\n";
                 $html .= "<td>".getuserlevel($data['user_level'])."</td>\n";
-                $html .= "<td>".form_checkbox("group[]", '', '', array("inline" => FALSE, 'value' => $data['user_id']))."</td>\n";
                 $html .= "</tr>\n";
             }
             $html .= "</tbody></table>\n";
             $html .= "<div class='spacer-xs pull-right m-t-10'>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('rem_users_form','group[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
-            $html .= "<a class='btn btn-default' href='#' onclick=\"javascript:setChecked('rem_users_form','group[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
-            $html .= form_button('remove_sel', self::$locale['GRP_461'], self::$locale['GRP_461'], array('class' => 'btn-danger'));
-            $html .= form_button('remove_all', self::$locale['GRP_462'], self::$locale['GRP_462'], array('class' => 'btn-danger'));
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('rem_users_form','group[]',1);return false;\">".self::$locale['GRP_448']."</a>\n";
+            $html .= "<a class='btn btn-default' href='#' onclick=\"setChecked('rem_users_form','group[]',0);return false;\">".self::$locale['GRP_449']."</a>\n";
+            $html .= form_button('remove_sel', self::$locale['GRP_461'], self::$locale['GRP_461'], ['class' => 'btn-danger']);
+            $html .= form_button('remove_all', self::$locale['GRP_462'], self::$locale['GRP_462'], ['class' => 'btn-danger']);
             $html .= "</div>\n";
             $html .= "</div>\n";
             $html .= closeform();
-            $html .= close_side();
+            $html .= fusion_get_function('closeside', '');
         } else {
             $html .= "<div class='well text-center'>".self::$locale['GRP_463']."</div>\n";
         }
@@ -458,18 +461,16 @@ class UserGroups {
         $html .= "</div>\n";
         $html .= "</div>\n";
 
-        add_to_footer("<script type='text/javascript'>\n/* <![CDATA[ */\n
-        function setChecked(frmName,chkName,val) {"."\n
-        dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n
-        if(dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
-        }\n}\n}\n
-        /* ]]>*/\n
-        </script>\n
-        ");
+        add_to_footer("<script type='text/javascript'>\n
+        function setChecked(frmName, chkName, val) {"."\n
+            dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n
+            if (dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
+        }}}
+        </script>\n");
 
         return $html;
     }
 }
 
-UserGroups::getInstance(TRUE)->display_admin();
+UserGroups::getInstance()->display_admin();
 require_once THEMES."templates/footer.php";

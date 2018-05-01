@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/login.php";
 $locale = fusion_get_locale();
 add_to_title($locale['global_200'].$locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
-$info = array();
+$info = [];
 if (!iMEMBER) {
     if (isset($_GET['error']) && isnum($_GET['error'])) {
         if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
@@ -43,22 +43,25 @@ if (!iMEMBER) {
                 break;
             case 4:
                 if (isset($_GET['status']) && isnum($_GET['status'])) {
-                    $id = ((isset($_GET['id']) && isnum($_GET['id'])) ? $_GET['id'] : "0");
+                    $id = (filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: "0");
+
                     switch ($_GET['status']) {
                         case 1:
-                            $data = dbarray(dbquery("SELECT suspend_reason FROM ".DB_SUSPENDS."
-								WHERE suspended_user='".$id."'
-								ORDER BY suspend_date DESC  LIMIT 1"));
+                            $data = dbarray(dbquery("SELECT suspend_reason
+                                FROM ".DB_SUSPENDS."
+                                WHERE suspended_user=:suser
+                                ORDER BY suspend_date DESC  LIMIT 1", [':suser' => $id]));
                             addNotice("danger", $locale['global_406']." ".$data['suspend_reason']);
                             break;
                         case 2:
                             addNotice("danger", $locale['global_195']);
                             break;
                         case 3:
-                            $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason FROM ".DB_SUSPENDS." s
-								LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
-								WHERE s.suspended_user='".$id."'
-								ORDER BY s.suspend_date DESC LIMIT 1"));
+                            $data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason
+                                FROM ".DB_SUSPENDS." s
+                                LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
+                                WHERE s.suspended_user=:suser
+                                ORDER BY s.suspend_date DESC LIMIT 1", [':suser' => $id]));
                             addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
                             break;
                         case 4:
@@ -88,7 +91,15 @@ if (!iMEMBER) {
         default:
             $placeholder = $locale['global_101a'];
     }
-    $info = array(
+
+    // new include
+    $login = NULL;
+    if (file_exists(INFUSIONS.'login/login.php')) {
+        $login = new \PHPFusion\Infusions\Login\Login();
+    }
+    $connectors = (method_exists($login, 'get_login_connectors') ? $login->get_login_connectors() : ''); // get the buttons
+
+    $info = [
         'open_form'            => openform('loginpageform', 'POST', fusion_get_settings('opening_page')),
         'user_name'            => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : '', ['placeholder' => $placeholder]),
         'user_pass'            => form_text('user_pass', $locale['global_102'], '', ['placeholder' => $locale['global_102'], 'type' => 'password']),
@@ -97,8 +108,9 @@ if (!iMEMBER) {
         'signup_button'        => "<a class='btn btn-default btn-register' href='".BASEDIR."register.php'>".$locale['global_109']."</a>\n",
         'registration_link'    => (fusion_get_settings('enable_registration')) ? strtr($locale['global_105'], ['[LINK]' => "<a href='".BASEDIR."register.php'>\n", '[/LINK]' => "</a>\n"]) : '',
         'forgot_password_link' => strtr($locale['global_106'], ['[LINK]' => "<a href='".BASEDIR."lostpassword.php'>\n", '[/LINK]' => "</a>\n",]),
-        'close_form'           => closeform()
-    );
+        'close_form'           => closeform(),
+        'connect_buttons'      => $connectors
+    ];
 }
 display_loginform($info);
 require_once THEMES."templates/footer.php";

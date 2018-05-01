@@ -77,7 +77,7 @@ if ($error == "") {
         $avatarext = strrchr($newavatar['name'], ".");
         $avatarname = substr($newavatar['name'], 0, strrpos($newavatar['name'], "."));
         if (preg_check("/^[-0-9A-Z_\[\]]+$/i", $avatarname) && preg_check("/(\.gif|\.GIF|\.jpg|\.JPG|\.jpeg|\.JPEG|\.png|\.PNG)$/",
-                                                                          $avatarext) && $newavatar['size'] <= 30720
+                $avatarext) && $newavatar['size'] <= 30720
         ) {
             $avatarname = $avatarname."[".$userdata['user_id']."]".$avatarext;
             move_uploaded_file($newavatar['tmp_name'], IMAGES."avatars/".$avatarname);
@@ -87,7 +87,7 @@ if ($error == "") {
                 if ($size['0'] > 100 || $size['1'] > 100) {
                     @unlink(IMAGES."avatars/".$avatarname);
                     $set_avatar = "";
-                } elseif (!verify_image(IMAGES."avatars/".$avatarname)) {
+                } else if (!verify_image(IMAGES."avatars/".$avatarname)) {
                     @unlink(IMAGES."avatars/".$avatarname);
                     $set_avatar = "";
                     \defender::stop();
@@ -106,8 +106,8 @@ if ($error == "") {
         $set_avatar = ", user_avatar=''";
     }
     $result = dbquery("SELECT * FROM ".DB_USER_FIELDS." tuf
-		INNER JOIN ".DB_USER_FIELD_CATS." tufc ON tuf.field_cat = tufc.field_cat_id
-		ORDER BY field_cat_order, field_order");
+        INNER JOIN ".DB_USER_FIELD_CATS." tufc ON tuf.field_cat = tufc.field_cat_id
+        ORDER BY field_cat_order, field_order");
     if (dbrows($result)) {
         $profile_method = "validate_update";
         while ($data = dbarray($result)) {

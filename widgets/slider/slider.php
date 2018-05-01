@@ -22,21 +22,21 @@
  */
 class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    private static $sliderData = array();
-    private static $sliderOptions = array();
+    private static $sliderData = [];
+    private static $sliderOptions = [];
 
     public function display_widget($colData) {
         if (!empty($colData['page_content'])) {
 
             self::$sliderData = \defender::unserialize($colData['page_content']);
 
-            $default_slider_options = array(
-                'slider_id' => '',
-                'slider_height' => 300,
+            $default_slider_options = [
+                'slider_id'         => '',
+                'slider_height'     => 300,
                 'slider_navigation' => FALSE,
-                'slider_indicator' => FALSE,
-                'slider_interval' => 0,
-            );
+                'slider_indicator'  => FALSE,
+                'slider_interval'   => 0,
+            ];
 
             $slider_options = \defender::unserialize($colData['page_options']);
             if (!empty($slider_options)) {
@@ -67,7 +67,8 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
 
         ob_start();
         ?>
-        <div id="<?php echo self::$sliderOptions['slider_id'] ?>" class="carousel slide carousel-fade" data-ride="carousel" data-interval="false">
+        <div id="<?php echo self::$sliderOptions['slider_id'] ?>" class="carousel slide carousel-fade"
+             data-ride="carousel" data-interval="false">
             <?php if (self::$sliderOptions['slider_indicator'] == TRUE) : ?>
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
@@ -87,9 +88,10 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                     ?>
                     <div class="item <?php echo($slider_counter == 0 ? 'active' : '') ?>">
                         <img
-                            src="<?php echo IMAGES.(!empty(self::$sliderOptions['slider_path']) ? self::$sliderOptions['slider_path']."/" : '').$slides['slider_image_src'] ?>"
-                            alt="<?php echo $slides['slider_title'] ?>">
-                        <div class="carousel-caption" style="display:block; top:0; padding-top:<?php echo $slides['slider_caption_offset'] ?>px;">
+                                src="<?php echo IMAGES.(!empty(self::$sliderOptions['slider_path']) ? self::$sliderOptions['slider_path']."/" : '').$slides['slider_image_src'] ?>"
+                                alt="<?php echo $slides['slider_title'] ?>">
+                        <div class="carousel-caption"
+                             style="display:block; top:0; padding-top:<?php echo $slides['slider_caption_offset'] ?>px;">
                             <?php echo(!empty($slides['slider_title']) ? "<h3 class='".$slides['slider_caption_align']."'  style='font-size: ".$slides['slider_title_size']."px'>".$slides['slider_title']."</h3>" : '') ?>
                             <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."' style='font-size: ".$slides['slider_desc_size']."px'>".self::get_sliderDescription($slides['slider_description'])."</p>" : '') ?>
                             <?php echo(!empty($slides['slider_link']) ? "<div class='display-block ".$slides['slider_caption_align']."'>
@@ -101,11 +103,13 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
             <!-- //Wrapper for slides -->
             <?php if (self::$sliderOptions['slider_navigation'] == TRUE) : ?>
                 <!-- Navigation for slides -->
-                <a class="left carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button" data-slide="prev">
+                <a class="left carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button"
+                   data-slide="prev">
                     <span class="icon-prev" aria-hidden="true"></span>
                     <span class="sr-only"><?php echo fusion_get_locale('previous') ?></span>
                 </a>
-                <a class="right carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button" data-slide="next">
+                <a class="right carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button"
+                   data-slide="next">
                     <span class="icon-next" aria-hidden="true"></span>
                     <span class="sr-only"><?php echo fusion_get_locale('next') ?></span>
                 </a>
@@ -130,7 +134,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
      */
     private static function get_sliderDescription($description) {
         if (fusion_get_settings('allow_php_exe') && stristr(html_entity_decode($description), '{eval}')) {
-            $description = stripslashes(html_entity_decode(str_replace(array('{eval}', '{/eval}'), array('', ''), $description)));
+            $description = stripslashes(html_entity_decode(str_replace(['{eval}', '{/eval}'], ['', ''], $description)));
             $html = "<div class='carousel_code overflow-hide'>\n";
             $html .= eval($description);
             $html .= "</div>\n";

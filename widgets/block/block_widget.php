@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Path Definitions
-$widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
+$lang = file_exists(WIDGETS."block/locale/".LANGUAGE.".php") ? WIDGETS."block/locale/".LANGUAGE.".php" : WIDGETS."block/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
 
 $widget_title = $widget_locale['BLKW_0100'];
 $widget_icon = 'block.svg';

@@ -21,7 +21,7 @@
  */
 class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
-    private static $widget_data = array();
+    private static $widget_data = [];
 
     private static $instance = NULL;
 
@@ -40,9 +40,9 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
     }
 
     public function validate_input() {
-        self::$widget_data = array(
+        self::$widget_data = [
             'panel_include' => form_sanitizer($_POST['panel_include'], '', 'panel_include')
-        );
+        ];
         if (\defender::safe()) {
             return \defender::serialize(self::$widget_data);
         }
@@ -52,11 +52,12 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
     }
 
     public function display_form_input() {
+        $lang = file_exists(WIDGETS."panel/locale/".LANGUAGE.".php") ? WIDGETS."panel/locale/".LANGUAGE.".php" : WIDGETS."panel/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
 
-        $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
-        self::$widget_data = array(
+        self::$widget_data = [
             'panel_include' => '',
-        );
+        ];
         if (!empty(self::$colData['page_content'])) {
             self::$widget_data = \defender::unserialize(self::$colData['page_content']);
         }
@@ -68,19 +69,19 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         $panel_opts = \PHPFusion\Panels::get_available_panels();
         unset($panel_opts['none']);
         echo form_select('panel_include', $widget_locale['PW_0200'], self::$widget_data['panel_include'],
-                         array(
-                             'class'   => 'm-b-0',
-                             'inline'  => TRUE,
-                             'options' => $panel_opts,
-                             'ext_tip' => $panel_alt,
-                         )
+            [
+                'class'   => 'm-b-0',
+                'inline'  => TRUE,
+                'options' => $panel_opts,
+                'ext_tip' => $panel_alt,
+            ]
         );
     }
 
     public function display_form_button() {
         $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['PW_0220'], 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', array('class' => 'btn-success'));
+        echo form_button('save_widget', $widget_locale['PW_0220'], 'widget', ['class' => 'btn-primary']);
+        echo form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', ['class' => 'btn-success']);
     }
 
 }

@@ -15,14 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
-if (!iMEMBER) {
-    redirect("index.php");
-}
+require_once(__DIR__.'/maincore.php');
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
-$message = new \PHPFusion\PrivateMessages();
-$message->display_inbox();
-display_inbox($message->getInfo());
+echo \PHPFusion\PrivateMessages::getInstance()->Server()->View();
 require_once THEMES."templates/footer.php";
