@@ -15,7 +15,7 @@ function menuToggle(locale) {
         // close menu
         $('.admin-menu-icon').show();
         $('.admin-menu-item').hide();
-        menu_header.html('<h4 class=\"php-fusion text-white text-center fa fa-lg\"></h4>');
+        menu_header.html('<h4 class=\"php-fusion text-white text-center\"></h4>');
         $('.menu-action').html('<i class=\"fa fa-chevron-circle-right hidden-xs\"></i>');
         Cookies.set('acpState', 0);
     } else {
@@ -46,6 +46,7 @@ $('a[data-load]').bind('click', function (e) {
     if (ca != cl) {
         if (!body.hasClass('open')) {
             body.addClass('open');
+            $('.app_menu').show();
         }
     } else {
         body.toggleClass('open');
@@ -55,6 +56,7 @@ $('a[data-load]').bind('click', function (e) {
     $(this).closest('li').addClass('active');
     $('.app_page_list').hide();
     $('#ap-' + ca).show();
+
     e.preventDefault();
 });
 

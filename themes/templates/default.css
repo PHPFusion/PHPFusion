@@ -10,6 +10,10 @@
     top: 0 !important;
 }
 
+.top-5 {
+    top: 5px !important;
+}
+
 .top-10 {
     top: 10px !important;
 }
@@ -32,6 +36,10 @@
 
 .bottom-0 {
     bottom: 0 !important;
+}
+
+.bottom-5 {
+    bottom: 5px !important;
 }
 
 .bottom-10 {
@@ -120,16 +128,49 @@ Grids
  */
 /** adding .flexbox class to .row will equalize all child column height */
 .row.flexbox {
-    display: -webkit-flex;
     display: -ms-flexbox;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
     display: flex;
     overflow: hidden;
 }
 
 /** adding .flexbox and .auto_width to .row will euqalize all child column height AND clumn width **/
 .row.flexbox.auto_width > div {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
     flex: 1;
 }
+
+.row.equal-height {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.row.equal-height > [class*='col-'] {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    -moz-box-orient: vertical;
+    -moz-box-direction: normal;
+    flex-direction: column;
+}
+
 /** Need to used inside a block type div and height width specify **/
 .center-y {
     position: relative;
@@ -137,12 +178,17 @@ Grids
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
     transform: translateY(-50%);
 }
 
 .center-x {
     position: relative;
     left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
@@ -150,6 +196,10 @@ Grids
     position: relative;
     left: 50%;
     top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 
@@ -371,6 +421,10 @@ Grids
     padding-top: 0 !important;
 }
 
+.p-t-5 {
+    padding-top: 5px !important;
+}
+
 .p-t-10 {
     padding-top: 10px !important;
 }
@@ -385,6 +439,10 @@ Grids
 
 .p-l-0 {
     padding-left: 0 !important;
+}
+
+.p-l-5 {
+    padding-left: 5px !important;
 }
 
 .p-l-10 {
@@ -441,47 +499,50 @@ Grids
 
 /* display family */
 .overflow-hide {
-    overflow: hidden !important;
+    overflow: hidden;
 }
 
 .display-none {
-    display: none !important;
+    display: none;
 }
 
 .display-block {
-    display: block !important;
+    display: block;
     width: 100%;
 }
 
 .display-inline {
-    display: inline !important;
+    display: inline;
 }
 
 .display-inline-block {
-    display: inline-block !important;
+    display: inline-block;
 }
 
 .display-table {
-    display: table !important;
+    display: table;
+}
+
+.display-table-row {
+    display: table-row;
 }
 
 .display-table-cell {
-    display: table-cell !important;
+    display: table-cell;
 }
 
 .position-relative {
-    position: relative !important;
+    position: relative;
 }
 
 .position-absolute {
-    position: absolute !important;
+    position: absolute;
 }
 
 .transition {
     -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -ms-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
 
@@ -493,6 +554,8 @@ Grids
 
 /* borders */
 .bbr-0 {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
     border-radius: 0 !important;
 }
 
@@ -667,14 +730,21 @@ ul {
 
 /* resets panelfor accordion */
 li.panel {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
     box-shadow: none !important;
     margin-bottom: 0 !important;
     background: none;
     border: 0;
 }
 
+.list-style-none > li {
+    list-style: none;
+}
+
 ul > li {
     padding: 0;
+    list-style-position: inside;
 }
 
 ul:not(.navbar-nav) > li a:not(.btn) {
@@ -694,22 +764,27 @@ a .entypo, a .entypo-social {
 
 .icon-xs {
     font-size: 16px !important;
+    width: 16px;
 }
 
 .icon-sm {
     font-size: 32px !important;
+    width: 32px;
 }
 
 .icon-md {
     font-size: 48px !important;
+    width: 48px;
 }
 
 .icon-lg {
     font-size: 128px !important;
+    width: 128px;
 }
 
 .icon-xl {
     font-size: 256px !important;
+    width: 256px;
 }
 
 /* clearfix */
@@ -852,9 +927,8 @@ a .entypo, a .entypo-social {
     font-size: 14px;
     color: rgb(51, 153, 255);
     -webkit-transition: 0.3s ease-in-out;
-    -moz-transition: 0.3s ease-in-out;
-    -ms-transition: 0.3s ease-in-out;
     -o-transition: 0.3s ease-in-out;
+    -moz-transition: 0.3s ease-in-out;
     transition: 0.3s ease-in-out;
 }
 
@@ -872,6 +946,7 @@ a .entypo, a .entypo-social {
 
 .mobile-text {
     white-space: normal;
+    font-size: 16px;
     font-size: 1rem;
 }
 
@@ -925,9 +1000,8 @@ dl, dt, dd {
 
 .animated-height {
     -webkit-transition: height 0.2s;
-    -moz-transition: height 0.2s;
-    -ms-transition: height 0.2s;
     -o-transition: height 0.2s;
+    -moz-transition: height 0.2s;
     transition: height 0.2s;
 }
 
@@ -948,7 +1022,7 @@ dl, dt, dd {
 
 /* List group item */
 .list-group-item.active {
-    background-color: rgba(204, 204, 204, 0.35);
+    background-color: rgba(204, 204, 204, .35);
 }
 
 /* Parse Users */
@@ -967,6 +1041,8 @@ table {
 
 /* Modal */
 .modal {
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
     cursor: zoom-out;
     text-align: center;
     padding: 0 !important;
@@ -1142,6 +1218,10 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 .icon-stack > .icon::before {
     position: absolute;
     top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 100%;
     text-align: center;
@@ -1173,7 +1253,6 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .file-preview-image {
-    display: table;
     width: 100%;
     height: 200px;
 }
@@ -1217,7 +1296,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .comments-form-header, .comments-header {
     position: relative;
-    padding: 10px 15px;
+    padding: 10px 0;
 }
 
 .comments-form-header:after, .comments-form-header:before, .comments-header:after, .comments-header:before {
@@ -1270,13 +1349,11 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .comment-actions > .btn-group {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+    display: -moz-inline-box;
     display: inline-flex;
-}
-
-.comments-reply {
-    width: 65px;
-    display: block;
-    margin-top: 10px;
 }
 
 .comments_reply_form {
@@ -1290,11 +1367,12 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .forum.label > .detail {
     background: rgba(0, 0, 0, .1);
-    margin: -5px -10px;
-    padding: 6px 12px;
+    margin: 0 -10px 0 10px;
+    padding: 7px 12px;
+    -webkit-border-radius: 0 .28571429rem .28571429rem 0;
+    -moz-border-radius: 0 .28571429rem .28571429rem 0;
     border-radius: 0 .28571429rem .28571429rem 0;
     display: inline-block;
-    vertical-align: top;
     font-weight: 700;
     opacity: .8;
 }
@@ -1343,6 +1421,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 /** Shoutbox */
 .shoutboxwrapper {
     margin-top: 20px;
+    word-wrap: break-word;
 }
 
 /** Css navigational **/
@@ -1436,5 +1515,95 @@ label image
  */
 label img, .control-label > img {
     margin-right: 5px;
-    width: 24px;
+    max-width: 24px;
+}
+
+.text-overflow-hide {
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+/**
+table class ordering
+ */
+.order-caret-up-current:after, .order-caret-down-current:hover:after, .order-caret-up:hover:after {
+    /*down*/
+    font-family: 'FontAwesome';
+    content: '\f0d8';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.order-caret-down-current:after, .order-caret-up-current:hover:after, .order-caret-down:hover:after {
+    font-family: 'FontAwesome';
+    content: '\f0d7';
+    display: inline-block;
+    color: #23282d;
+    margin-left: 10px;
+}
+
+.tbl_actions {
+    display: none;
+}
+
+tr:hover > td .tbl_actions {
+    display: block;
+}
+
+.tbl_actions > span:after {
+    content: "|";
+    display: inline-block;
+    padding: 0 5px;
+    color: #ccc;
+}
+
+.tbl_actions > span:last-child:after {
+    content: "";
+}
+
+.text-normal label {
+    font-weight: 400;
+}
+
+.thumb > img {
+    display: block;
+    width: 100%;
+}
+
+html[dir="rtl"] body {
+    direction: rtl;
+}
+
+html[dir="rtl"] .select2-search-hidden {
+    display: none;
+}
+
+html[dir="rtl"] .pull-left {
+    float: right !important;
+}
+
+html[dir="rtl"] .pull-right {
+    float: left !important;
+}
+
+html[dir="rtl"] .center-x {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -moz-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    -o-transform: translateX(50%);
+    transform: translateX(50%);
+}
+
+html[dir="rtl"] .center-xy {
+    left: inherit;
+    right: 50%;
+    -webkit-transform: translate(50%, -50%);
+    -moz-transform: translate(50%, -50%);
+    -ms-transform: translate(50%, -50%);
+    -o-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
 }

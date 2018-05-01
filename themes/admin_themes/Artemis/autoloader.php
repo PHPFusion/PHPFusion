@@ -4,20 +4,20 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Artemis Interface
-| The Artemis Project - 2014 - 2016 (c)
-| Network Data Model Development
-| Filename: Artemis_ACP/acp_request.php
-| Author: Guidlsquare , enVision Sdn Bhd
-| Copyright patent 0517721 IPO
-| Author's all rights reserved.
+| Filename: autoloader.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
-| Released under PHP-Fusion EPAL
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
 +--------------------------------------------------------*/
-
+require_once INCLUDES.'theme_functions_include.php';
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
+    $autoload_register_paths = [
         "Artemis\\Viewer\\adminPanel"      => THEMES."admin_themes/Artemis/Drivers/Viewer/adminPanel.php",
         "Artemis\\Viewer\\adminDashboard"  => THEMES."admin_themes/Artemis/Drivers/Viewer/adminDashboard.php",
         "Artemis\\Viewer\\loginPanel"      => THEMES."admin_themes/Artemis/Drivers/Viewer/loginPanel.php",
@@ -25,7 +25,7 @@ spl_autoload_register(function ($className) {
         "Artemis\\Model\\resource"         => THEMES."admin_themes/Artemis/Drivers/Model/resource.php",
         "Artemis\\Controller"              => THEMES."admin_themes/Artemis/Drivers/controller.php",
         "Artemis\\Subcontroller\\get_apps" => THEMES."admin_themes/Artemis/Drivers/Subcontroller/get_apps.php"
-    );
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];

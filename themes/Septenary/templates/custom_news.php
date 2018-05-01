@@ -19,13 +19,13 @@
 if (!function_exists('render_main_news')) {
     /**
      * News Page Template
+     *
      * @param $info
      */
     function display_main_news($info) {
 
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $locale = fusion_get_locale();
-
 
         /* Slideshow */
         $carousel_indicators = '';
@@ -43,8 +43,9 @@ if (!function_exists('render_main_news')) {
                 if (!empty($news_slides)) {
 
                     $item_count = 1;
-                    $small_items = array();
-                    $small_items_image = array();
+                    $small_items = [];
+                    $small_items_image = [];
+                    $big_item_image = [];
 
                     $carousel_active = $carousel_count == 0 ? 'active' : '';
 
@@ -52,6 +53,7 @@ if (!function_exists('render_main_news')) {
                     //$carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$carousel_count' class='".$carousel_active."'></li>\n";
 
                     $carousel_count++;
+                    $big_item = '';
 
                     foreach ($news_slides as $news_item) {
 
@@ -67,18 +69,19 @@ if (!function_exists('render_main_news')) {
                                 <i class="fa fa-clock-o fa-fw m-r-5"></i>
                                 <?php echo showdate('newsdate', $news_item['news_date']) ?>
                             </span>
-                            <a class='text-white' href='<?php echo INFUSIONS."news/news.php?readmore=".$news_item['news_id'] ?>'>
+                            <a class='text-white'
+                               href='<?php echo INFUSIONS."news/news.php?readmore=".$news_item['news_id'] ?>'>
                                 <h4 class='text-white m-t-10'><?php echo $news_item['news_subject'] ?></h4>
                             </a>
                             <?php if ($news_item['news_allow_comments']) : ?>
                                 <span class='m-r-10'><?php echo display_comments($news_item['news_comments'],
-                                                                                 INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments"); ?></span>
+                                        INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments"); ?></span>
                             <?php endif; ?>
 
                             <?php if ($news_item['news_allow_ratings']) : ?>
                                 <span class='m-r-10'><?php echo display_ratings($news_item['news_sum_rating'],
-                                                                                $news_item['news_count_votes'],
-                                                                                INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating"); ?></span>
+                                        $news_item['news_count_votes'],
+                                        INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating"); ?></span>
                             <?php endif; ?>
                         </div>
                         <?php
@@ -101,7 +104,6 @@ if (!function_exists('render_main_news')) {
                             $item_count = 1;
                         }
                     }
-
 
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
                     $carousel_item .= "<div class='col-xs-12 col-sm-6 item-lg' style='height: ".$carousel_height."px; background-image: url($big_item_image); background-size: cover;'>";
@@ -144,15 +146,15 @@ if (!function_exists('render_main_news')) {
 
             if ($carousel_count > 1) {
                 $carousel_html .= "
-				<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
-					<span class='fa fa-chevron-left' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['previous']."</span>
-			  	</a>
-			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
-					<span class='fa fa-chevron-right' aria-hidden='true'></span>
-					<span class='sr-only'>".$locale['next']."</span>
-			  	</a>\n
-				";
+                <a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
+                    <span class='fa fa-chevron-left' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['previous']."</span>
+                </a>
+                <a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
+                    <span class='fa fa-chevron-right' aria-hidden='true'></span>
+                    <span class='sr-only'>".$locale['next']."</span>
+                </a>\n
+                ";
             }
 
             $carousel_html .= "</div>\n";
@@ -166,14 +168,25 @@ if (!function_exists('render_main_news')) {
         openside($locale['news_0009']);
         ?>
         <ul>
-            <?php if (!empty($info['news_categories'])) :
-                foreach ($info['news_categories'][0] as $cat_id => $cat_data) {
-                    echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."'>".$cat_data['name']."</a>\n</li>\n";
+            <?php if (!empty($info['news_categories'])) {
+                foreach ($info['news_categories'][0] as $id => $data) {
+                    $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' class="text-dark"' : '';
+                    echo '<li><a'.$active.' href="'.INFUSIONS.'news/news.php?cat_id='.$id.'">'.$data['name'].'</a></li>';
+
+                    if ($id != 0 && $info['news_categories'] != 0) {
+                        foreach ($info['news_categories'] as $sub_cats_id => $sub_cats) {
+                            foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                                if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
+                                    $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $sub_cat_id ? ' class="active"' : '';
+                                    echo '<li'.$active.'><a class="p-l-10" href="'.INFUSIONS.'news/news.php?cat_id='.$sub_cat_id.'">'.$sub_cat_data['name'].'</a></li>';
+                                }
+                            }
+                        }
+                    }
                 }
+            } else {
                 echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
-            else:
-                echo "<li>\n<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>\n</li>\n";
-            endif;
+            }
             ?>
         </ul>
         <?php
@@ -186,6 +199,7 @@ if (!function_exists('render_main_news')) {
 
         // Build filters
         $i = 0;
+        $tab_title = [];
         foreach ($info['news_filter'] as $link => $title) {
             $tab_title['title'][] = $title;
             $tab_title['id'][] = $i;
@@ -201,7 +215,7 @@ if (!function_exists('render_main_news')) {
                 foreach ($info['news_items'] as $i => $news_info) {
                     echo "<div class='col-xs-12 col-sm-6'>\n";
                     echo (isset($_GET['cat_id'])) ? "<!--pre_news_cat_idx-->\n" : "<!--news_prepost_".$i."-->\n";
-                    render_news($news_info['news_subject'], $news_info['news_news'], $news_info, FALSE);
+                    render_news($news_info);
                     echo (isset($_GET['cat_id'])) ? "<!--sub_news_cat_idx-->" : "<!--sub_news_idx-->\n";
                     echo "</div>\n";
                 }
@@ -211,9 +225,9 @@ if (!function_exists('render_main_news')) {
                     $type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
                     $cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
                     echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'],
-                                                                               $news_settings['news_pagination'],
-                                                                               $info['news_total_rows'], 3,
-                                                                               INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
+                            $news_settings['news_pagination'],
+                            $info['news_total_rows'], 3,
+                            INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
                 }
             } else {
                 echo "<div class='well text-center'>".$locale['news_0005']."</div>\n";
@@ -227,24 +241,26 @@ if (!function_exists('render_main_news')) {
 if (!function_exists('render_news')) {
     /**
      * News Item Container
-     * @param      $info
+     *
+     * @param $info
      */
-    function render_news($subject, $news, $info) {
+    function render_news($info) {
         $locale = fusion_get_locale();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         add_to_jquery("
-			$('.news-img-header').hover(
-				function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 1, 'height': ".$news_settings['news_thumb_h']." }); },
-				function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 0}); }
-			);
-			");
+            $('.news-img-header').hover(
+                function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 1, 'height': ".$news_settings['news_thumb_h']." }); },
+                function() { $(this).closest('.news-article').find('.news-snippet').css({'opacity': 0}); }
+            );
+            ");
         ?>
         <!--news_prepost_<?php echo $info['news_id'] ?>-->
         <article class="news-article">
-            <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px">
+            <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px;">
                 <?php echo $info['news_image']; ?>
                 <div class="news-box-overlay">
-                    <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>" rel="bookmark">
+                    <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>"
+                       rel="bookmark">
                         <h4><?php echo $info['news_subject'] ?></h4>
                         <?php echo trim_text(strip_tags($info['news_news']), 120); ?>
                     </a>
@@ -253,14 +269,14 @@ if (!function_exists('render_news')) {
 
             <h4 class="news-title-info">
                 <a class="strong text-dark" href="<?php echo $info['news_url'] ?>">
-                    <?php ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '' ?>
+                    <?php echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '' ?>
                     <?php echo $info['news_subject'] ?>
                 </a>
             </h4>
 
             <div class="news-poster-info">
                 <div class="pull-left">
-                    <?php echo display_avatar($info, '30px', '', FALSE, 'img-circle') ?>
+                    <?php echo display_avatar($info, '30px', '', FALSE, 'img-circle m-r-5') ?>
                 </div>
                 <div class="overflow-hide">
                     <span class="news-author">
@@ -270,10 +286,12 @@ if (!function_exists('render_news')) {
                         <i class="fa fa-calendar fa-fw"></i> <?php echo showdate("newsdate", $info['news_date']) ?>
                     </span>
                     <?php if (fusion_get_settings('comments_enabled') && $info['news_display_comments']) : ?>
-                        <span class="news-comments"><i class="fa fa-comment-o"></i> <?php echo $info['news_display_comments'] ?></span>
+                        <span class="news-comments"><i
+                                    class="fa fa-comment-o"></i> <?php echo $info['news_display_comments'] ?></span>
                     <?php endif; ?>
                     <?php if (fusion_get_settings('ratings_enabled') && $info['news_display_ratings']) : ?>
-                        <span class="news-ratings"><i class="fa fa-star-o fa-fw"></i> <?php echo $info['news_display_ratings'] ?></span>
+                        <span class="news-ratings"><i
+                                    class="fa fa-star-o fa-fw"></i> <?php echo $info['news_display_ratings'] ?></span>
                     <?php endif; ?>
                     <span class="news-read">
                         <i class="fa fa-eye fa-fw"></i> <?php echo number_format($info['news_reads']) ?>

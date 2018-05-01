@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
 echo "<!DOCTYPE html>\n";
-echo "<html lang='".fusion_get_locale('xml_lang')."'".(fusion_get_settings('create_og_tags') ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
+echo "<html lang='".fusion_get_locale('xml_lang')."' dir='".fusion_get_locale('text-direction')."'".(fusion_get_settings('create_og_tags') ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings('sitename')."</title>\n";
 echo "<meta charset='".fusion_get_locale('charset')."' />\n";
@@ -29,12 +29,37 @@ if (fusion_get_enabled_languages() > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".fusion_get_settings('siteurl')."' />\n";
 }
 // Load bootstrap stylesheets
-if (fusion_get_settings('bootstrap') == TRUE) {
-    define('BOOTSTRAPPED', TRUE);
+if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
     echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+
+    if (fusion_get_locale('text-direction') == 'rtl') {
+        echo "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+    }
+}
+if (fusion_get_settings('entypo') || defined('ENTYPO')) {
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-embedded.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
+}
+
+if (defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+    }
+}
+
+if (!defined('NO_DEFAULT_CSS')) {
+    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
+}
+echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
+
+if (fusion_get_settings('bootstrap') == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -44,32 +69,12 @@ if (fusion_get_settings('bootstrap') == TRUE) {
     }
 }
 
-if (fusion_get_settings('entypo')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-embedded.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
-}
-
-if (fusion_get_settings('fontawesome')) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
-}
-
-if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.min.css' rel='stylesheet' type='text/css' media='screen' />\n";
-}
-
-echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-echo render_favicons(IMAGES);
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-if (!file_exists(INCLUDES.'jquery/jquery.min.js')) {
-    echo "<script type='text/javascript' src='https://code.jquery.com/jquery-2.2.4.min.js'></script>\n";
-}
+
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo "</head>\n";
@@ -87,14 +92,14 @@ if (!defined("THEME_BODY")) {
 }
 
 if (iADMIN) {
-    if (iSUPERADMIN && file_exists(BASEDIR.'install.php')) {
+    if (iSUPERADMIN && file_exists(BASEDIR.'install.php') && !defined("DEVMODE")) {
         addNotice("danger", fusion_get_locale('global_198'), 'all');
     }
     if (fusion_get_settings('maintenance')) {
-        addNotice("warning", fusion_get_locale('global_190'), 'all');
+        addNotice("warning maintenance-alert", fusion_get_locale('global_190'), 'all');
     }
     if (!fusion_get_userdata('user_admin_password')) {
-        addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."edit_profile.php'>", "</a>"), fusion_get_locale('global_199')), 'all');
+        addNotice("warning", str_replace(["[LINK]", "[/LINK]"], ["<a href='".BASEDIR."edit_profile.php'>", "</a>"], fusion_get_locale('global_199')), 'all');
     }
 }
 
@@ -107,7 +112,7 @@ if (!empty($footerError)) {
     echo "<div class='admin-message container'>".$footerError."</div>\n";
 }
 
-echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
 // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
@@ -117,20 +122,26 @@ if (!empty($fusion_jquery_tags)) {
     $jquery_tags .= $fusion_jquery_tags;
 }
 
-$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, array('flaggedComments' => FALSE));
-echo "<script type='text/javascript'>\n";
-echo "$(function() { $jquery_tags });";
-echo "</script>\n";
+$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, ['flaggedComments' => FALSE]);
+echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
 
 // Load bootstrap javascript
-if (fusion_get_settings('bootstrap')) {
+if (fusion_get_settings('bootstrap') || defined('BOOTSTRAP')) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>\n";
 }
 
-//Uncomment to guide your theme development
+if (!defined('FONTAWESOME-V4')) {
+    if (fusion_get_settings('fontawesome') || defined('FONTAWESOME')) {
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fontawesome-all.min.js'></script>\n";
+        echo "<script defer src='".INCLUDES."fonts/font-awesome-5/js/fa-v4-shims.min.js'></script>\n";
+        // echo "<script type='text/javascript'>window.FontAwesomeConfig = {searchPseudoElements: true}</script>\n";
+    }
+}
+
+// Uncomment to guide your theme development
 //echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/holder/holder.min.js'></script>\n";
 echo "</body>\n";
 echo "</html>";
 

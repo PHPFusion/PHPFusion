@@ -6,6 +6,7 @@
 .fullform input[type=text] {
     border: 0;
     outline: none;
+    -webkit-box-shadow: none;
     box-shadow: none;
     font-size: 32px;
     padding: 0;
@@ -14,6 +15,7 @@
 .fullform textarea {
     border: 0;
     outline: none;
+    -webkit-box-shadow: none;
     box-shadow: none;
     padding: 0 !important;
     font-size: 17px;
@@ -116,6 +118,8 @@
     background-image: linear, to bottom, #F7F7F7, #E4E4E4;
     background-repeat: repeat-x;
     height: 40px;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     left: 50%;
     border-radius: 6px 6px 0 0;

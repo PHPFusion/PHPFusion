@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemePack\Nebula\Templates;
 
 use PHPFusion\Panels;
@@ -44,5 +43,5 @@ class Page extends Core {
         else:
             echo $info['body'];
         endif;
-        }
+    }
 }

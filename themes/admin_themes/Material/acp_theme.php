@@ -20,8 +20,17 @@ if (!defined('IN_FUSION')) {
 }
 
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once INCLUDES.'theme_functions_include.php';
-require_once MATERIAL.'theme_autoloader.php';
+require_once MATERIAL.'acp_autoloader.php';
+
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
+$toggled = (isset($_COOKIE['sidebar-toggled']) && $_COOKIE['sidebar-toggled'] == 1) ?' sidebar-toggled' : '';
+$sm = (isset($_COOKIE['sidebar-sm']) && $_COOKIE['sidebar-sm'] == 1) ? ' sidebar-sm' : '';
+
+if (isset($_COOKIE['sidebar-toggled']) || isset($_COOKIE['sidebar-sm'])) {
+    define('THEME_BODY', '<body class="'.$toggled.$sm.'">');
+}
 
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
@@ -53,8 +62,8 @@ function closetable() {
     Material\Components::CloseTable();
 }
 
-function replace_meta($output = '') {
-    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#243447"/>', $output);
-}
+\PHPFusion\OutputHandler::addHandler(function ($output = '') {
+    $color = !check_admin_pass('') ? '2c3e50' : '243447';
 
-add_handler('replace_meta');
+    return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);
+});

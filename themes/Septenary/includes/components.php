@@ -20,22 +20,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
+
 use PHPFusion\Rewrite\Router;
 
 /**
  * Class SeptenaryComponents
  * Collections of 'functions_include.php'
+ *
  * @package Septenary
  */
 class SeptenaryComponents {
-
-    protected static $locale = array();
+    protected static $locale = [];
     private static $custom_header_html = "";
 
     /**
      * Legacy opentable function
+     *
      * @param $title
      */
     public static function opentable($title) {
@@ -51,6 +52,7 @@ class SeptenaryComponents {
 
     /**
      * Legacy Openside Function
+     *
      * @param            $title
      * @param bool|FALSE $collapse
      * @param string     $state
@@ -85,11 +87,12 @@ class SeptenaryComponents {
 
     /**
      * Set current theme locale
+     *
      * @return array
      */
     public static function set_locale() {
         if (empty(self::$locale)) {
-            $locale = array();
+            $locale = [];
             if (file_exists(THEME."locale/".LANGUAGE.".php")) {
                 include THEME."locale/".LANGUAGE.".php";
             } else {
@@ -103,6 +106,7 @@ class SeptenaryComponents {
 
     /**
      * Sets custom header html
+     *
      * @param $html
      */
     public static function set_header_html($html) {
@@ -111,9 +115,11 @@ class SeptenaryComponents {
 
     /**
      * Calculation of Bootstrap Grid Span
+     *
      * @param int $sm_default
      * @param int $md_default
      * @param int $lg_default
+     *
      * @return string
      */
     public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
@@ -128,19 +134,19 @@ class SeptenaryComponents {
         }
 
         if ($how_many_sides_are_visible > 0) {
-            $span = array(
+            $span = [
                 'col-xs-' => 12,
                 'col-sm-' => 12 - ($how_many_sides_are_visible * $default_side_span_sm),
                 'col-md-' => 12 - ($how_many_sides_are_visible * $default_side_span_md),
                 'col-lg-' => 12 - ($how_many_sides_are_visible * $default_side_span_lg),
-            );
+            ];
         } else {
-            $span = array(
+            $span = [
                 'col-xs-' => 12,
                 'col-sm-' => 12,
                 'col-md-' => 12,
                 'col-lg-' => 12,
-            );
+            ];
         }
         $css = '';
         foreach ($span as $css_class => $css_value) {
@@ -152,21 +158,23 @@ class SeptenaryComponents {
 
     /**
      * Theme Output Replacement
+     *
      * @param $output
+     *
      * @return array
      */
     public static function theme_output($output) {
 
-        $search = array(
-            "@><img src='reply' alt='(.*?)' style='border:0px' />@si",
-            "@><img src='newthread' alt='(.*?)' style='border:0px;?' />@si",
-            "@><img src='web' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-            "@><img src='pm' alt='(.*?)' style='border:0;vertical-align:middle' />@si",
-            "@><img src='quote' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
-            "@><img src='forum_edit' alt='(.*?)' style='border:0px;vertical-align:middle' />@si",
+        $search = [
+            "@><img src='reply' alt='(.*?)' style='border:none' />@si",
+            "@><img src='newthread' alt='(.*?)' style='border:none;?' />@si",
+            "@><img src='web' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='pm' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='quote' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
+            "@><img src='forum_edit' alt='(.*?)' style='border:none;vertical-align:middle' />@si",
             "@<a href='".ADMIN."comments.php(.*?)&amp;ctype=(.*?)&amp;cid=(.*?)'>(.*?)</a>@si"
-        );
-        $replace = array(
+        ];
+        $replace = [
             ' class="big button"><span class="reply-button icon"></span>$1',
             ' class="big button"><span class="newthread-button icon"></span>$1',
             ' class="button" rel="nofollow" title="$1"><span class="web-button icon"></span>Web',
@@ -174,7 +182,7 @@ class SeptenaryComponents {
             ' class="button" title="$1"><span class="quote-button icon"></span>$1',
             ' class="negative button" title="$1"><span class="edit-button icon"></span>$1',
             '<a href="'.ADMIN.'comments.php$1&amp;ctype=$2&amp;cid=$3" class="big button"><span class="settings-button icon"></span>$4</a>'
-        );
+        ];
         $output = preg_replace($search, $replace, $output);
 
         return $output;
@@ -188,8 +196,9 @@ class SeptenaryComponents {
         $userdata = fusion_get_userdata();
         $locale = self::$locale;
 
-        echo "<header id='top'>";
+        echo "<header id='top-header'>";
         echo "<div class='overlay'>\n";
+
         $this->open_grid('section-1', 1);
         echo "<div class='row hidden-xs'>\n";
         echo "<div id='logo' class='hidden-xs hidden-md col-lg-3 p-t-5 text-smaller'>\n</div>\n";
@@ -197,20 +206,20 @@ class SeptenaryComponents {
 
         echo "<div class='display-inline-block' style='width:30%; float:right;'>\n";
         echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                      array(
-                          'class' => 'm-b-10',
-                          'remote_url' => fusion_get_settings('site_path')."search.php"
-                      )
+            [
+                'class'      => 'm-b-10',
+                'remote_url' => fusion_get_settings('site_path')."search.php"
+            ]
         );
-        echo form_text('stext', '', '', array(
-            'placeholder' => $locale['sept_006'],
-            'append_button' => TRUE,
-            'append_type' => "submit",
-            "append_form_value" => $locale['sept_006'],
-            "append_value" => "<i class='fa fa-search'></i> ".$locale['sept_006'],
+        echo form_text('stext', '', '', [
+            'placeholder'        => $locale['sept_006'],
+            'append_button'      => TRUE,
+            'append_type'        => "submit",
+            "append_form_value"  => $locale['sept_006'],
+            "append_value"       => "<i class='fa fa-search'></i> ".$locale['sept_006'],
             "append_button_name" => "search",
-            'class' => 'no-border m-b-0',
-        ));
+            'class'              => 'no-border m-b-0',
+        ]);
         echo closeform();
         echo "</div>\n";
 
@@ -259,7 +268,8 @@ class SeptenaryComponents {
         echo "<div class='header-nav'>\n";
         echo showsublinks('', 'navbar-default', ['show_header' => TRUE])."\n";
         echo "</div>\n";
-        $this->close_grid();
+        $this->close_grid(1);
+
         echo "</div>\n";
 
         $this->display_Showcase();
@@ -268,6 +278,7 @@ class SeptenaryComponents {
 
     /**
      * Open Section
+     *
      * @param            $class
      * @param bool|FALSE $box
      */
@@ -278,6 +289,7 @@ class SeptenaryComponents {
 
     /**
      * Close Section
+     *
      * @param bool|FALSE $box
      */
     public static function close_grid($box = FALSE) {
@@ -303,7 +315,7 @@ class SeptenaryComponents {
 
         } else {
 
-            $file_path = str_replace(ltrim(fusion_get_settings('site_path'),'/'), '', preg_replace('/^\//', '', FUSION_REQUEST));
+            $file_path = str_replace(ltrim(fusion_get_settings('site_path'), '/'), '', preg_replace('/^\//', '', FUSION_REQUEST));
             if ($settings['site_seo'] && defined('IN_PERMALINK')) {
                 require_once CLASSES.'PHPFusion/Rewrite/Router.inc';
                 $file_path = Router::getRouterInstance()->getCurrentURL();
@@ -319,12 +331,12 @@ class SeptenaryComponents {
                 echo "</div>\n";
                 echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
                 //echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
-                $modules = array(
-                    DB_PREFIX.'news' => db_exists(DB_PREFIX.'news'),
-                    DB_PREFIX.'photos' => db_exists(DB_PREFIX.'photos'),
-                    DB_PREFIX.'forums' => db_exists(DB_PREFIX.'forums'),
-                    DB_PREFIX.'downloads' => db_exists(DB_PREFIX.'downloads')
-                );
+                $modules = [
+                    DB_PREFIX.'news'      => infusion_exists('news'),
+                    DB_PREFIX.'photos'    => infusion_exists('gallery'),
+                    DB_PREFIX.'forums'    => infusion_exists('forum'),
+                    DB_PREFIX.'downloads' => infusion_exists('downloads')
+                ];
                 $sum = array_sum($modules);
                 if ($sum) {
                     $size = 12 / $sum;
@@ -367,7 +379,7 @@ class SeptenaryComponents {
             } else {
 
                 // use SQL search for page title.
-                $result = dbquery("SELECT link_name FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")."  link_url='".FUSION_SELF."'");
+                $result = dbquery("SELECT link_name FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")."  link_url='".$file_path."'");
                 if (dbrows($result) > 0) {
                     $data = dbarray($result);
                     $link_name = $data['link_name'];
@@ -375,14 +387,14 @@ class SeptenaryComponents {
                     $link_name = $settings['sitename'];
                 }
                 echo "<h2 class='septenary_showcase_title'>$link_name</h2>\n";
-                add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;} .section-showcase { height:150px; }</style>');
+                add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0;} .section-showcase { height:150px; }</style>');
             }
 
         }
 
         if (FUSION_SELF == 'login.php') {
             /* Custom Overrides CSS just for login */
-            add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;} .section-showcase { height:594px; }</style>');
+            add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0;} .section-showcase { height:594px; }</style>');
             echo CONTENT;
         }
 
@@ -401,21 +413,21 @@ class SeptenaryComponents {
         $this->open_grid('footer', TRUE);
 
         echo "<div class='row m-b-20'>\n";
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER1') && USER1 ? USER1 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER1') && USER1 ? USER1 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER2') && USER2 ? USER2 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER2') && USER2 ? USER2 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER3') && USER3 ? USER3 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER3') && USER3 ? USER3 : '';
+        echo "</div>\n";
 
-            echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-                echo defined('USER4') && USER4 ? USER4 : '';
-            echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo defined('USER4') && USER4 ? USER4 : '';
+        echo "</div>\n";
         echo "</div>\n";
 
         echo "<div class='footer-row row'>\n";
@@ -424,12 +436,13 @@ class SeptenaryComponents {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
         echo "<div class='pull-right'>\n";
-        echo "<a href='#top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
+        echo "<a href='#' id='top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
+        add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
-        echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
-	    <p>".showcopyright()."</p>
-	    <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
-	    <p>";
+        echo "<p class='text-left'>".stripslashes($settings['footer'])."</p>
+        <p>".showcopyright().showprivacypolicy()."</p>
+        <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
+        <p>";
         if ($settings['visitorcounter_enabled']) {
             echo "<p>".showcounter()."</p>\n";
         }
@@ -438,15 +451,13 @@ class SeptenaryComponents {
             echo showrendertime();
             echo showMemoryUsage();
         }
-        $footer_errors = showFooterErrors();
-        if (!empty($footer_errors)) {
-            echo "<div>\n".showFooterErrors()."</div>\n";
-        }
+
+        echo showFooterErrors();
 
         echo "</p>\n";
         echo "</div>\n";
         echo "</div>\n";
-        $this->close_grid(1);
+        $this->close_grid(TRUE);
     }
 
 }

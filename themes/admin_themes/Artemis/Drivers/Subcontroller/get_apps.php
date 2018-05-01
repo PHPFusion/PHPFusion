@@ -27,21 +27,21 @@ use Artemis\Viewer\adminApps;
 
 class get_apps extends resource {
 
-    private $result_message = array(
-                                200 => "OK",
-                                100 => "Failed system validation",
-                                101 => "Failed system security measures",
-                                102 => "System apps failed to load",
-                                103 => "Search string is too short",
-                                104 => "There are no results found",
-                                );
+    private $result_message = [
+        200 => "OK",
+        100 => "Failed system validation",
+        101 => "Failed system security measures",
+        102 => "System apps failed to load",
+        103 => "Search string is too short",
+        104 => "There are no results found",
+    ];
 
-    private $result = array(
-                          "data" => array(),
-                          "count" => 0,
-                          "status" => 200,
-                          "message" => ""
-                        );
+    private $result = [
+        "data"    => [],
+        "count"   => 0,
+        "status"  => 200,
+        "message" => ""
+    ];
 
     public function __construct() {
 

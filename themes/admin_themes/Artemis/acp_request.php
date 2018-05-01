@@ -4,15 +4,16 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Artemis Interface
-| The Artemis Project - 2014 - 2016 (c)
-| Network Data Model Development
-| Filename: Artemis/acp_request.php
-| Author: Guidlsquare , enVision Sdn Bhd
-| Copyright patent 0517721 IPO
-| Author's all rights reserved.
+| Filename: acp_request.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
-| Released under PHP-Fusion EPAL
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
 +--------------------------------------------------------*/
 
 // For PHP-Fusion

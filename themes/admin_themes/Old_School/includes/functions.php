@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Old_School/includes/functions.php
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -53,7 +53,7 @@ function render_admin_dashboard() {
 
 function render_dashboard() {
     global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments,
-        $global_ratings, $global_submissions, $link_type, $submit_type, $submit_link,
+        $global_ratings, $global_submissions, $link_type, $submit_data,
         $comments_type, $infusions_count, $global_infusions;
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
@@ -73,7 +73,7 @@ function render_dashboard() {
         );
 
         echo "<!--Start Members-->\n";
-        echo "<div class='row'>\n";
+        echo "<div class='row' id='members'>\n";
             foreach ($panels as $panel => $block) {
                 $block['link'] = empty($block['link']) ? $block['link'] : '&amp;'.$block['link'];
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
@@ -92,7 +92,7 @@ function render_dashboard() {
 
         $desktop = '4';
         echo "<div class='row'>\n";
-            if (db_exists(DB_PREFIX.'forums')) {
+            if (infusion_exists('forum')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['265']." ".$locale['258']."</strong>\n";
@@ -119,7 +119,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_PREFIX.'downloads')) {
+            if (infusion_exists('downloads')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['268']." ".$locale['258']."</strong>\n";
@@ -142,7 +142,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_PREFIX.'news')) {
+            if (infusion_exists('news')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['269']." ".$locale['258']."</strong>\n";
@@ -165,7 +165,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_PREFIX.'articles')) {
+            if (infusion_exists('articles')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['270']." ".$locale['258']."</strong>\n";
@@ -188,7 +188,7 @@ function render_dashboard() {
                 echo "</div>\n";
             }
 
-            if (db_exists(DB_PREFIX.'weblinks')) {
+            if (infusion_exists('weblinks')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                  openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['271']." ".$locale['258']."</strong>\n";
@@ -211,14 +211,14 @@ function render_dashboard() {
                 echo "</div>";
             }
 
-            if (db_exists(DB_PREFIX.'photos')) {
+            if (infusion_exists('gallery')) {
                 echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
                 openside("", "well");
                     echo "<strong class='text-smaller text-uppercase'>".$locale['272']." ".$locale['258']."</strong>\n";
                     echo "<div class='clearfix m-t-10'>\n";
                         echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_PH")."'/>\n";
                         echo "<div class='pull-left display-inline-block m-r-10'>\n";
-                            echo "<span class='text-smaller'>".$locale['272']."</span>\n<br/>\n";
+                            echo "<span class='text-smaller'>".$locale['261']."</span>\n<br/>\n";
                             echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";
                         echo "</div>\n";
                         echo "<div class='pull-left display-inline-block m-r-10'>\n";
@@ -247,7 +247,7 @@ function render_dashboard() {
                         }
                     }
                     echo "</div>\n";
-                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='fa fa-angle-right'></i></div>\n" : '';
+                    $content = checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a> <i class='fa fa-angle-right'></i></div>\n" : '';
                 } else {
                     echo "<div class='text-center'>".$locale['284']."</div>\n";
                 }
@@ -260,12 +260,12 @@ function render_dashboard() {
                     foreach ($global_comments['data'] as $i => $comment_data) {
                         echo "<!--Start Comment Item-->\n";
                         echo "<div data-id='$i' class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($comment_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<div id='comment_action-$i' class='btn-group pull-right display-none' style='position:absolute; right: 30px; margin-top:25px;'>\n
                             <a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-eye'></i></a>
                             <a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-pencil'></i></a>
                             <a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='fa fa-trash'></i></a></div>\n";
-                        echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
+                        echo "<strong>".(!empty($comment_data['user_id']) ? profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status']) : $comment_data['comment_name'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
                         echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
                         $comment = trimlink(parse_textarea($comment_data['comment_message'], FALSE, FALSE), 70);
@@ -290,7 +290,7 @@ function render_dashboard() {
                     foreach ($global_ratings['data'] as $i => $ratings_data) {
                         echo "<!--Start Rating Item-->\n";
                         echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
                         echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
                         echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
                         echo "<a href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
@@ -313,14 +313,14 @@ function render_dashboard() {
             echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
                 openside("<strong class='text-smaller text-uppercase'>".$locale['279']."</strong><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
                 if (count($global_submissions['data']) > 0) {
-                    foreach ($global_submissions['data'] as $i => $submit_data) {
-                        $review_link = sprintf($submit_link[$submit_data['submit_type']], $submit_data['submit_id']);
+                    foreach ($global_submissions['data'] as $i => $submit_date) {
+                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
                         echo "<!--Start Submissions Item-->\n";
                         echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
-                        echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
-                        echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])." </strong>\n";
-                        echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span><br/>\n";
-                        echo timer($submit_data['submit_datestamp'])."<br/>\n";
+                        echo "<div class='pull-left display-inline-block' style='margin-top:5px; margin-bottom:10px;'>".display_avatar($submit_date, "25px", "", FALSE, "img-rounded m-r-5")."</div>\n";
+                        echo "<strong>".profile_link($submit_data['user_id'], $submit_date['user_name'], $submit_date['user_status'])." </strong>\n";
+                        echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_data[$submit_date['submit_type']]['submit_locale']."</strong></span><br/>\n";
+                        echo timer($submit_date['submit_datestamp'])."<br/>\n";
                         if (!empty($review_link)) {
                             echo "<a class='btn btn-xs btn-default m-t-5' title='".$locale['286']."' href='".$review_link."'>".$locale['286']."</a>\n";
                         }
@@ -353,7 +353,6 @@ function render_dashboard() {
         });
     ");
 }
-
 
 function render_admin_icon() {
     global $admin_icons, $admin_images;

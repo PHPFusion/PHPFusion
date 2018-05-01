@@ -28,6 +28,7 @@ class adminPanel extends resource {
         parent::__construct();
 
         $locale = parent::get_locale();
+
         $this->do_interface_js();
 
         $notices = getNotices();
@@ -35,9 +36,11 @@ class adminPanel extends resource {
         if (!empty($notices)) {
             echo renderNotices($notices);
         }
+
+        $collapsed = isset($_COOKIE['acpState']) && $_COOKIE['acpState'] == 0 ? ' collapsed' : '';
         ?>
         <section id="devlpr" class="adminPanel">
-            <div class="left_menu">
+            <div class="left_menu<?php echo $collapsed; ?>">
                 <header>
                     <h2>Artemis</h2>
                 </header>
@@ -45,16 +48,16 @@ class adminPanel extends resource {
                     <?php $this->left_nav(); ?>
                 </div>
             </div>
-            <div class="app_menu">
+            <div class="app_menu<?php echo $collapsed; ?>" style="display:none;">
                 <header class="affix">
                     <h3><?php echo $locale['spotlight'] ?></h3>
-                    <?php echo form_text("search_app", "", "", array("placeholder" => $locale['spotlight_search'])); ?>
+                    <?php echo form_text("search_app", "", "", ["placeholder" => $locale['spotlight_search']]); ?>
                 </header>
                 <div class="app_list">
                     <?php $this->app_nav() ?>
                 </div>
             </div>
-            <div id="main_content" class="content">
+            <div id="main_content" class="content<?php echo $collapsed; ?>">
                 <header class="header affix" data-spy="affix" data-offset-top="10">
                     <?php $this->adminHeader() ?>
                 </header>
@@ -82,9 +85,9 @@ class adminPanel extends resource {
                 if (fusion_get_settings("rendertime_enabled")) : ?>
                     <li><?php echo showrendertime() ?></li>
                     <li><?php echo showMemoryUsage() ?></li>
-                    <li><?php fusion_get_locale('copyright').showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
+                    <li><?php echo self::$locale['copyright'].showdate("%Y", time())." - ".fusion_get_settings("sitename") ?></li>
                 <?php endif; ?>
-                <li class="pull-right"><strong>Artemis <?php echo fusion_get_locale('render_engine') ?> 3.2</strong></li>
+                <li class="pull-right"><strong>Artemis <?php echo self::$locale['render_engine'] ?> 3.2</strong></li>
             </ul>
         </footer>
         <?php
@@ -97,11 +100,11 @@ class adminPanel extends resource {
         add_to_jquery("
         menuToggle('".self::$locale['admin_collapse']."');
         $('.menu-action').bind('click', function (e) {
+            e.preventDefault();
             menu_wrap.toggleClass('collapsed');
             body_wrap.toggleClass('collapsed');
             app_wrap.toggleClass('collapsed');
-            menuToggle('".self::$locale['admin_collapse']."');
-            e.preventDefault();
+            menuToggle('".self::$locale['admin_collapse']."');            
         });
         $('#search_app').bind('keyup', function(e) {
             var data = {
@@ -152,19 +155,21 @@ class adminPanel extends resource {
                 $href_src = "";
                 if ($has_page) {
                     $href_src = "data-load=\"$i\"";
-                } elseif (!$is_menu_action) {
+                } else if (!$is_menu_action) {
                     $href_src = "href=\"".ADMIN.$aidlink."&amp;pagenum=$i\"";
                 }
                 ?>
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
-                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
+                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
                     </a>
-                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>"
+                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
                         <?php echo Admins::getInstance()->get_admin_section_icons($i) ?>
                     </a>
                 </li>
-                <?php
+            <?php
             endforeach;
             ?>
         </ul>
@@ -214,14 +219,15 @@ class adminPanel extends resource {
                         <li <?php echo $secondary_active ?>>
                             <a href="<?php echo $link ?>">
                                 <div class="app_icon">
-                                    <img class="img-responsive" alt="<?php echo $title ?>" src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
+                                    <img class="img-responsive" alt="<?php echo $title ?>"
+                                         src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
                                 </div>
                                 <div class="apps">
                                     <h4><?php echo $title ?></h4>
                                 </div>
                             </a>
                         </li>
-                        <?php
+                    <?php
                     endif;
 
                 endforeach;
@@ -242,7 +248,6 @@ class adminPanel extends resource {
         $aidlink = self::get_aidlink();
 
         $page_title = self::get_title();
-
         ?>
         <div class="app_icon">
             <?php echo $page_title['icon'] ?>
@@ -258,7 +263,7 @@ class adminPanel extends resource {
                         <?php echo display_avatar($userdata, "30px", "m-r-10", "", "img-rounded") ?>
                         <span class="hidden-xs hidden-sm hidden-md">
                             <?php echo $locale['welcome'].", <strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n";
-                        ?>
+                            ?>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php
@@ -276,7 +281,8 @@ class adminPanel extends resource {
                     </ul>
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".$aidlink ?>">
+                    <a title="<?php echo $locale['settings'] ?>"
+                       href="<?php echo ADMIN."settings_main.php".$aidlink ?>">
                         <?php echo $locale['settings'] ?>
                     </a>
                 </li>
@@ -320,17 +326,17 @@ class adminPanel extends resource {
 
                 while ($data = dbarray($msg_result)) {
 
-                    $messages[] = array(
-                        "link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
-                        "title" => $data['message_subject'],
-                        "sender" => array(
-                            "user_id" => $data['sender_id'],
-                            "user_name" => $data['sender_name'],
+                    $messages[] = [
+                        "link"      => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+                        "title"     => $data['message_subject'],
+                        "sender"    => [
+                            "user_id"     => $data['sender_id'],
+                            "user_name"   => $data['sender_name'],
                             "user_avatar" => $data['sender_avatar'],
                             "user_status" => $data['sender_status'],
-                        ),
+                        ],
                         "datestamp" => timer($data['message_datestamp']),
-                    );
+                    ];
 
                 }
 
@@ -402,17 +408,14 @@ class adminPanel extends resource {
             echo render_breadcrumbs();
             self::$breadcrumb_shown = TRUE;
         endif;
-        ?>
-        <div class="app_table">
-        <?php
+        echo '<div class="app_table '.$class.'">';
     }
 
     public static function closetable($title = FALSE, $class = NULL) {
-        ?>
-        </div>
-        <?php
+        echo '</div>';
+
         if (!empty($title)) {
-            echo "<footer><h3>$title</h3></footer>";
+            echo "<footer".($class ? " class=\"$class\"": '')."><h3>$title</h3></footer>";
         }
     }
 
@@ -432,6 +435,4 @@ class adminPanel extends resource {
             echo "<footer ".($class ? "class='$class'" : "")."><h3>$title</h3></footer>";
         }
     }
-
-
 }

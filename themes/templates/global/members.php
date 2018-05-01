@@ -41,7 +41,7 @@ if (!function_exists('render_members')) {
 
         if (!empty($info['rows'])) {
 
-            echo "<table class='table table-responsive table-hover table-striped'>\n";
+            echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
             echo "<th class='col-xs-1'>".$locale['MEMB_001']."</th>\n";
@@ -68,14 +68,14 @@ if (!function_exists('render_members')) {
 
                     echo "<td class='col-xs-1'>".$members['user_avatar']."</td>\n";
                     echo "<td class='col-xs-2'><span class='side'>".profile_link($members['user_id'], $members['user_name'],
-                                                                                 $members['user_status'])."</span></td>\n";
+                            $members['user_status'])."</span></td>\n";
                     echo "<td class='col-xs-3'>\n".($groups ? $groups : $members['default_group'])."</td>\n";
                     echo "<td class='col-xs-2'>".getuserlevel($members['user_level'])."</td>\n";
                     echo "<td class='col-xs-2'>".translate_lang_names($members['user_language'])."</td>\n";
                     echo "<td class='col-xs-1'>".getuserstatus($members['user_status'])."</td>\n</tr>\n";
                 }
             }
-            echo "</table>\n";
+            echo "</table>\n</div>";
 
             echo "<table class='m-b-20' style='width:100%;'>\n";
             echo "<tr>\n";

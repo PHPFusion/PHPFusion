@@ -42,6 +42,8 @@ figure img {
     overflow: hidden;
     padding: 14px 11% 20px 7%;
     margin: 0;
+    -webkit-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
 }
 
@@ -139,6 +141,7 @@ figure img {
 
 .panel.panel-home > .panel-footer:hover,
 .panel.panel-home > .panel-footer:focus {
+    -webkit-box-shadow: none;
     box-shadow: none;
     color: rgb(248, 243, 240);
     background: rgb(37, 38, 39);

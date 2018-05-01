@@ -1,13 +1,6 @@
-.profile_text {
-    color: rgb(0, 0, 0);
+.social-icons {
+    display: inline;
 }
-
-.profile_link_nav > li > a {
-    font-size: 110%;
-    padding-bottom: 5px;
-    display: inline-block;
-}
-
-.profile_link_nav .active {
-    font-weight: 600;
+.social-icons > img {
+    max-width: 25px;
 }

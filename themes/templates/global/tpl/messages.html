@@ -1,0 +1,94 @@
+<!---start_inbox_idx-->
+<div class="pm spacer-sm">
+    <h4 class="strong m-t-15">{[400]}</h4>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                    <ul class="block nav p-5">
+                        {folders.{
+                        <li {%class%}>
+                            <a href="{%link%}">
+                                <h5 class="m-0">
+                                    <i class="{%icon%} m-r-10"></i><strong>{%title%}</strong>
+                                    {%total%}
+                                </h5>
+                            </a>
+                        </li>
+                        }}
+                    </ul>
+                    <hr/>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <div class="clearfix">
+                        {compose_button.{
+                        <div class="pull-right">
+                            <a class="btn btn-primary btn-block m-t-15" href="{%link%}">{%title%}</a>
+                        </div>
+                        }}
+                        {actions.{
+                        <div class="spacer-xs">{%form%}</div>
+                        <hr/>
+                        }}
+                        <div class="text-right">{%pagenav%}</div>
+                    </div>
+
+                    <div class="clearfix">
+                        {settings.{
+                        <hr/>
+                        <div class="m-b-20">
+                            {%content%}
+                        </div>
+                        }}
+
+                        {mail_read.{
+                        <div class="clearfix">
+                            <div class="pull-right">{%timer%}</div>
+                            <h4 class="overflow-hide">
+                                {%title%}
+                            </h4>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-left m-r-10">
+                                {%avatar%}
+                            </div>
+                            <div class="overflow-hide">
+                                {%profile_link%}
+                                <br/>{%user_level%}
+                            </div>
+                        </div>
+                        <div class="spacer-md">{%message%}</div>
+                        <hr/>
+                        {%reply_form%}
+                        }}
+
+                        {send_form.{
+                        {%content%}
+                        }}
+
+                        {mailbox.{
+                        <h4 class="m-b-0">
+                            <a data-target="#unread-inbox" class="pointer text-dark text-normal" data-toggle="collapse">
+                                <span class="caret m-r-10"></span>{[446]}
+                            </a>
+                        </h4>
+                        <div id="unread-inbox" class="collapse in">
+                            <table id="unread_tbl" class="table table-hover">
+                                {%unread_content%}
+                            </table>
+                        </div>
+                        <h4 class="m-b-0"><a data-target="#read-inbox" class="pointer text-dark text-normal"
+                                             data-toggle="collapse"><span class="caret m-r-10"></span>{[447]}</a></h4>
+                        <div id="read-inbox" class="collapse in">
+                            <table id="read_tbl" class="table table-hover">
+                                {%read_content%}
+                            </table>
+                        </div>
+                        }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end_inbox_idx--->

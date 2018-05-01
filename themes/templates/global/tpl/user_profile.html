@@ -1,0 +1,86 @@
+<!--userprofile_pre_idx-->
+{%opentable%}
+<section id='user-profile' class='overflow-hide'>
+    <div class="row">
+        <div class="col-xs-12 col-sm-2">
+            {%user_avatar%}
+            {buttons.{
+            <a class="btn btn-success btn-block spacer-sm" href="{%user_pm_link%}">{[send_message]}</a>
+            }}
+        </div>
+        <div class="col-xs-12 col-sm-10">
+            {user_admin.{
+            <div class="pull-right btn-group">
+                <a class="btn btn-sm btn-default" href="{%user_susp_link%}">{%user_susp_title%}</a>
+                <a class="btn btn-sm btn-default" href="{%user_edit_link%}">{%user_edit_title%}</a>
+                <a class="btn btn-sm btn-default" href="{%user_ban_link%}">{%user_ban_title%}</a>
+                <a class="btn btn-sm btn-default" href="{%user_suspend_link%}">{%user_suspend_title%}</a>
+                <a class="btn btn-sm btn-danger" href="{%user_delete_link%}">{%user_delete_title%}</a>
+            </div>
+            }}
+            <h2 class="m-0">{%user_name%}</h2>
+            {%user_level%}
+            {social_icons.{
+            <a class="social-icons" href="{%link%}">{%icon%}</a>
+            }}
+            <hr/>
+            <ul class="block">
+                {user_core_fields.{
+                <li>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">
+                            <strong>{%title%}</strong>
+                        </div>
+                        <div class="col-xs-12 col-sm-9">
+                            {%value%}
+                        </div>
+                    </div>
+                </li>
+                }}
+            </ul>
+        </div>
+    </div>
+
+    <div class="spacer-sm">
+        {%tab_header%}
+    </div>
+
+    <div class="spacer-md">
+        <div class="row">
+            <div class="col-xs-12 col-sm-9">
+                <div class="clearfix">
+                    {fields_block.{
+                        {%fields%}
+                        <hr/>
+                    }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h5 class="text-uppercase m-t-0">{[u057]}</h5>
+                        <hr/>
+                        {user_groups.{
+                        <a href="{%group_url%}">{%group_name%}</a>
+                        }}
+                        {user_group_na.{
+                        {[u117]}
+                        }}
+                    </div>
+                    {group_admin.{
+                    <div class="panel-footer">
+                        {%ug_openform%}
+                        <div class="strong">{%ug_title%}</div>
+                        <div class="spacer-xs">{%ug_dropdown_input%}</div>
+                        <div>{%ug_button%}</div>
+                        {%ug_closeform%}
+                    </div>
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {%tab_footer%}
+</section>
+{%closetable%}
+<!--userprofile_sub_idx-->

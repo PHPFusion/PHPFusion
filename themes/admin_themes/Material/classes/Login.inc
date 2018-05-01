@@ -17,12 +17,16 @@
 +--------------------------------------------------------*/
 namespace Material;
 
+/**
+ * Class Login
+ * @package Material
+ */
 class Login extends Components {
     public function __construct() {
         $locale   = fusion_get_locale();
         $userdata = fusion_get_userdata();
 
-        add_to_head('<style type="text/css">body{background: #2c3e50!important;}</style>');
+        add_to_head('<style type="text/css">body{background: #2c3e50 !important;}</style>');
         add_to_jquery('$("#admin_password").focus();');
 
         echo '<div class="login-container">';
@@ -38,7 +42,7 @@ class Login extends Components {
 
                 echo '<div class="clearfix m-b-20">';
                     echo '<div class="pull-left m-r-10">';
-                        echo  display_avatar($userdata, '90px', '', FALSE, 'avatar');
+                        echo display_avatar($userdata, '90px', '', FALSE, 'avatar');
                     echo '</div>';
                     echo '<div class="text-left">';
                         echo '<h3><strong>'.$locale['welcome'].', '.$userdata['user_name'].'</strong></h3>';
@@ -54,7 +58,7 @@ class Login extends Components {
             echo '</div>';
 
             echo '<div class="copyright clearfix m-t-10 text-left">';
-                echo 'Material Admin Theme &copy; '.date('Y').' '.self::SetLocale('013').' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a>.<br/>';
+                echo 'Material Admin Theme &copy; '.date('Y').' '.$this->SetLocale('013').' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a>.<br/>';
                 echo showcopyright();
             echo '</div>';
         echo'</div>';

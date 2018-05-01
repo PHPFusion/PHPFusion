@@ -19,6 +19,10 @@ namespace Material;
 
 use PHPFusion\Admins;
 
+/**
+ * Class Search
+ * @package Material
+ */
 class Search {
     private $result = [
         'data'   => [],
@@ -30,7 +34,7 @@ class Search {
         if ($this->AuthorizeAid()) {
             if (\defender::safe()) {
                 $this->SearchPages();
-                $message = !empty($this->result['status']) ? self::SetLocale($this->result['status']) : '';
+                $message = !empty($this->result['status']) ? $this->SetLocale($this->result['status']) : '';
 
                 if (!empty($message)) {
                     echo '<li><span>'.$message.'</span></li>';
@@ -57,31 +61,33 @@ class Search {
     }
 
     private function SearchPages() {
-        $available_pages = Admins::getInstance()->getAdminPages();
-        $search_string   = $_GET['pagestring'];
+        if (isset($_GET['pagestring'])) {
+            $available_pages = Admins::getInstance()->getAdminPages();
+            $search_string = $_GET['pagestring'];
 
-        if (strlen($search_string) >= 2) {
-            $pages = flatten_array($available_pages);
-            $result_rows = 0;
+            if (strlen($search_string) >= 2) {
+                $pages = flatten_array($available_pages);
+                $result_rows = 0;
 
-            if (!empty($pages)) {
-                foreach ($pages as $page) {
-                    if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
-                        $this->result['data'][] = $page;
-                        $result_rows++;
+                if (!empty($pages)) {
+                    foreach ($pages as $page) {
+                        if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
+                            $this->result['data'][] = $page;
+                            $result_rows++;
+                        }
                     }
+                } else {
+                    $this->result['status'] = 102;
+                }
+
+                if ($result_rows > 0) {
+                    $this->result['count'] = $result_rows;
+                } else {
+                    $this->result['status'] = 104;
                 }
             } else {
-                $this->result['status'] = 102;
+                $this->result['status'] = 103;
             }
-
-            if ($result_rows > 0) {
-                $this->result['count'] = $result_rows;
-            } else {
-                $this->result['status'] = 104;
-            }
-        } else {
-            $this->result['status'] = 103;
         }
     }
 
@@ -90,6 +96,8 @@ class Search {
     }
 
     private function DisplayResult() {
+        $locale = fusion_get_locale();
+
         if (!empty($this->result['data'])) {
             foreach ($this->result['data'] as $data) {
                 if (stristr($data['admin_link'], '/infusions/')) {
@@ -106,9 +114,9 @@ class Search {
                     $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
                 }
 
-                $icon = strtr(get_image("ac_".$data['admin_rights']), [
+                $icon = strtr(get_image('ac_'.$data['admin_rights']), [
                     INFUSIONS => fusion_get_settings('siteurl').'infusions/',
-                    ADMIN => fusion_get_settings('siteurl').'administration/'
+                    ADMIN     => fusion_get_settings('siteurl').'administration/'
                 ]);
 
                 if (checkrights($data['admin_rights'])) {
@@ -121,10 +129,10 @@ class Search {
     private function SetLocale($lc = NULL) {
         $locale = [];
 
-        if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
-            include MATERIAL."locale/".LANGUAGE.".php";
+        if (file_exists(MATERIAL.'locale/'.LANGUAGE.'.php')) {
+            include MATERIAL.'locale/'.LANGUAGE.'.php';
         } else {
-            include MATERIAL."locale/English.php";
+            include MATERIAL.'locale/English.php';
         }
 
         return $locale['material_'.$lc];

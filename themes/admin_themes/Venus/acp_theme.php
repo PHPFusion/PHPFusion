@@ -19,17 +19,18 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_themes/Venus/includes/functions.php";
 
-$settings['bootstrap'] = 1;
-add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
 \PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 function render_admin_login() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
+
     echo "<section class='login-bg'>\n";
     echo "<aside class='block-container'>\n";
     echo "<div class='block'>\n";
@@ -55,8 +56,6 @@ function render_admin_login() {
     echo "</div>\n";
     echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
     echo "<div class='clearfix'>\n";
-
-    add_to_head('<style>#admin_password-field .required {display:none}</style>');
 
     echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
 
@@ -88,7 +87,7 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $userdata = fusion_get_userdata();
     $languages = fusion_get_enabled_languages();
 
@@ -121,11 +120,11 @@ function render_admin_panel() {
                         <a id="toggle-canvas" class="pointer"><i class="fa fa-fw fa-bars"></i></a>
                     </li>
                 </ul>
-                <?php echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE); ?>
+                <div class="hidden-md"><?php echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE); ?></div>
                 <ul class="top-right-menu pull-right m-r-15">
                     <li class="dropdown">
                         <a class="dropdown-toggle pointer" data-toggle="dropdown">
-                            <?php echo display_avatar($userdata, '25px', '', FALSE, 'img-circle')." ".$locale['logged']." <strong>".$userdata['user_name']."</strong>"; ?>
+                            <?php echo display_avatar($userdata, '25px', '', FALSE, 'img-circle')." <span class='hidden-xs'>".$locale['logged']." <strong>".$userdata['user_name']."</strong></span>"; ?>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -137,7 +136,6 @@ function render_admin_panel() {
                         </ul>
                     </li>
                     <li><a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".fusion_get_aidlink() ?>"><i class="fa fa-fw fa-cog"></i></a></li>
-                    <li><a title="<?php echo fusion_get_settings('sitename') ?>" href="<?php echo BASEDIR."index.php" ?> "><i class="fa fa-fw fa-home"></i></a></li>
                     <li><a title="<?php echo $locale['message'] ?>" href="<?php echo BASEDIR."messages.php" ?>"><i class="fa fa-fw fa-envelope-o"></i></a></li>
                     <?php
                     if (count($languages) > 1) :
@@ -151,6 +149,7 @@ function render_admin_panel() {
                         echo "</li>\n";
                     endif;
                     ?>
+                    <li><a title="<?php echo fusion_get_settings('sitename') ?>" href="<?php echo BASEDIR."index.php" ?> "><i class="fa fa-fw fa-home"></i></a></li>
                 </ul>
             </nav>
         </header>
@@ -192,15 +191,15 @@ function render_admin_panel() {
         $('#toggle-canvas').on('click', function(e) {
             if ($('#admin-panel').hasClass('in')) {
                 $('#admin-panel').removeClass('in');
-                Cookies.set('".COOKIE_PREFIX."acp_sidemenu', 0);
+                localStorage.setItem('".COOKIE_PREFIX."acp_sidemenu', 0);
             } else {
                 $('#admin-panel').addClass('in');
-                Cookies.set('".COOKIE_PREFIX."acp_sidemenu', 1);
+                localStorage.setItem('".COOKIE_PREFIX."acp_sidemenu', 1);
             }
         });
 
-        if (Cookies.get('".COOKIE_PREFIX."acp_sidemenu') !== undefined) {
-            if (Cookies.get('".COOKIE_PREFIX."acp_sidemenu') == 1) {
+        if (localStorage.getItem('".COOKIE_PREFIX."acp_sidemenu') !== undefined) {
+            if (localStorage.getItem('".COOKIE_PREFIX."acp_sidemenu') == 1) {
                 $('#admin-panel').addClass('in');
             }
         }

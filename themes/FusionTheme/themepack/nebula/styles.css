@@ -3,7 +3,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Nebula/styles.css
+| Filename: nebula/styles.css
 | Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -42,13 +42,9 @@ a, h4 a:hover, a:hover h5, h5 > a:hover, a:hover h6, h6 > a:hover {
     outline: 0;
 }
 
-ul > li {
-    list-style: none;
-}
-
 .headerBg {
     background: #22498E;
-    min-height: 400px;
+    min-height: 300px;
 }
 
 .nebulaBg.full {
@@ -146,11 +142,13 @@ header .navbar-default .navbar-nav > li > a {
     display: -moz-flex;
     display: -ms-flexbox;
     display: -ms-flex;
+    display: -webkit-box;
     display: flex;
     -webkit-align-items: center;
     -moz-align-items: center;
     -ms-align-items: center;
     -ms-flex-align: center;
+    -webkit-box-align: center;
     align-items: center;
     -webkit-align-content: center;
     -moz-align-content: center;
@@ -173,6 +171,8 @@ header .navbar-default .navbar-nav > li > a:before {
     height: 3px;
     bottom: 5px;
     left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
@@ -189,6 +189,7 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
     background: #23262D;
     border-radius: 0;
     top: 66px;
+    -webkit-box-shadow: none;
     box-shadow: none;
     border-radius: 0;
 }
@@ -270,7 +271,7 @@ header h1 {
 }
 
 .nebulaBody > .container {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .nebulaBody > .container > .row {
@@ -333,6 +334,7 @@ header h1 {
 
 .nebulaFooter .form-control:focus, .nebulaFooter .form-control:active {
     border: 2px solid #4268A7;
+    -webkit-box-shadow: none;
     box-shadow: none;
 }
 
@@ -361,6 +363,8 @@ header h1 {
     left: 0;
     background: #fff;
     z-index: 21;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
 
@@ -506,6 +510,8 @@ Compo
 Buttons
 ********************/
 .btn {
+    -webkit-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
 }
 
@@ -539,6 +545,7 @@ Buttons
     display: block;
     font-size: 13px;
     border-radius: 0;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-appearance: none;
     border: 1px solid #CCC;
@@ -644,7 +651,7 @@ textarea.form-control {
 
 /* btn-default */
 .btn-primary, .btn.btn-default.active {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255) !important;
     background: #2854A1;
 }
 
@@ -695,6 +702,7 @@ Alert
     background: -webkit-linear-gradient(top, #dd5959 0%, #c15252 100%);
     background: -moz-linear-gradient(top, #dd5959 0%, #c15252 100%);
     background: -o-linear-gradient(top, #dd5959 0%, #c15252 100%);
+    background: -webkit-gradient(linear, left top, left bottom, from(#dd5959), to(#c15252));
     background: linear-gradient(top, #dd5959 0%, #c15252 100%);
     -webkit-box-shadow: 0 0 0 1px #c15252, 0 1px 2px rgba(0, 0, 0, 0.45);
     -moz-box-shadow: 0 0 0 1px #c15252, 0 1px 2px rgba(0, 0, 0, 0.45);
@@ -765,8 +773,8 @@ News
 }
 
 .news_item > article {
-    margin-bottom: 55px;
-    padding-bottom: 55px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #dfe5e8;
 }
 
@@ -797,12 +805,14 @@ News
     width: 100%;
     height: 100%;
     opacity: 0;
+    -o-transition: all .3s linear;
     transition: all .3s linear;
     -webkit-transition: all .3s linear;
 }
 
 .news_item .post-image:hover > a:before {
     opacity: 1;
+    -o-transition: all .3s linear;
     transition: all .3s linear;
     -webkit-transition: all .3s linear;
     background: rgba(255, 255, 255, 0.7);
@@ -826,9 +836,13 @@ News
     opacity: 0;
     text-align: center;
     -webkit-transform: scale(0);
+    -ms-transform: scale(0);
     transform: scale(0);
     -webkit-transition: top .4s, opacity .4s, -webkit-transform 0s .4s;
+    transition: top .4s, opacity .4s, -webkit-transform 0s .4s;
+    -o-transition: top .4s, opacity .4s, transform 0s .4s;
     transition: top .4s, opacity .4s, transform 0s .4s;
+    transition: top .4s, opacity .4s, transform 0s .4s, -webkit-transform 0s .4s;
     z-index: 10;
 }
 
@@ -836,9 +850,13 @@ News
     opacity: 1;
     top: 50%;
     -webkit-transform: scale(1);
+    -ms-transform: scale(1);
     transform: scale(1);
     -webkit-transition: top 0s, opacity .4s, -webkit-transform .4s;
+    transition: top 0s, opacity .4s, -webkit-transform .4s;
+    -o-transition: top 0s, opacity .4s, transform .4s;
     transition: top 0s, opacity .4s, transform .4s;
+    transition: top 0s, opacity .4s, transform .4s, -webkit-transform .4s;
 }
 
 .news_item .post-image img {
@@ -984,7 +1002,7 @@ Well
 *******************/
 .well {
     background-color: #f4f6f7;
-    padding: 33px 40px 45px;
+    padding: 33px 40px;
     border: 0;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
@@ -1017,11 +1035,11 @@ Comments
 }
 
 .comments-header:before {
-    content: '\f036';
+    content: "\e111";
 }
 
 .comments-header:before, .comments-form-header i {
-    font-family: 'FontAwesome';
+    font-family: "Glyphicons Halflings";
     left: -15px;
     top: 0;
     font-weight: normal;
@@ -1136,6 +1154,8 @@ Editor Navs
     user-select: none;
     background-color: #eee;
     background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#eee));
+    background-image: -o-linear-gradient(#fcfcfc, #eee);
     background-image: linear-gradient(#fcfcfc, #eee);
     border: 1px solid #d5d5d5;
     border-radius: 3px;
@@ -1150,6 +1170,8 @@ Editor Navs
     text-decoration: none;
     background-color: #ddd;
     background-image: -webkit-linear-gradient(#eee, #ddd);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd));
+    background-image: -o-linear-gradient(#eee, #ddd);
     background-image: linear-gradient(#eee, #ddd);
     border-color: #ccc;
 }
@@ -1159,6 +1181,7 @@ Editor Navs
     background-color: #dcdcdc;
     background-image: none;
     border-color: #b5b5b5;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
@@ -1192,11 +1215,6 @@ Forum
     margin-top: -3px;
 }
 
-.dropdown-menu.forum-post-options li > span {
-    padding: 3px 20px;
-    display: block;
-}
-
 .emulated-legend {
     font-size: 14px !important;
 }
@@ -1212,7 +1230,6 @@ Media queries for navbar-collapse
 Cellphones
  */
 @media only screen and (max-width: 767px) {
-
     .canvas-toggle {
         top: 85%;
     }
@@ -1237,12 +1254,16 @@ Cellphones
         visibility: hidden;
     }
 
+    .headerBg {
+        min-height: 00px;
+    }
+
     .nebulaCopyright {
         padding: 35px 60px;
     }
 
     .nebulaFooter {
-        padding: 5% 80px;
+        padding: 5%;
     }
 
     #top {
@@ -1250,8 +1271,8 @@ Cellphones
         margin-right: 30px;
         border-radius: 50%;
         background: #fff;
-        padding: 2.3% 3% 3% 3%;
-        margin-bottom: -70px;
+        padding: 1% 2.8% 3.5%;
+        margin-bottom: -50px;
         border: 1px solid #ccc;
     }
 
@@ -1311,4 +1332,143 @@ Cellphones
 
 #navigation-user {
     margin: 35px 0;
+}
+
+html[dir="rtl"] header .fa.fa-angle-down {
+    margin-left: inherit !important;
+    margin-right: 5px;
+}
+html[dir="rtl"] header .navbar-default .navbar-nav > li > a:before {
+    left: inherit !important;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+html[dir="rtl"] header .headerContent {
+    text-align: right;
+}
+html[dir="rtl"] header .navbar.affix {
+    left: inherit !important;
+    right: 0;
+}
+html[dir="rtl"] .nebulaCanvas {
+    left: inherit !important;
+    border-right: inherit !important;
+    border-left: 1px solid #ccc;
+}
+html[dir="rtl"] .canvas-toggle {
+    margin-left: inherit !important;
+    margin-right: 100%;
+}
+html[dir="rtl"] .nebulaCanvas.off {
+    left: inherit !important;
+    right: -300px;
+}
+html[dir="rtl"] .nebulaCanvas > .canvas-toggle {
+    border-left: inherit !important;
+    border-right: none;
+}
+html[dir="rtl"] .control-label > img {
+    margin-right: inherit !important;
+    margin-left: 5px;
+}
+html[dir="rtl"] .news_item .post-image > a:after {
+    left: inherit !important;
+    margin-left: inherit !important;
+    right: 50%;
+    margin-right: -50px;
+}
+html[dir="rtl"] .news_item .post-meta > ul.meta-left > li {
+    border-right: inherit !important;
+    margin-right: inherit !important;
+    padding-right: inherit !important;
+    border-left: 1px solid #d4dee1;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+html[dir="rtl"] .news_item .post-meta > ul.meta-left > li:last-child {
+    border-right: inherit !important;
+    border-left: 0;
+}
+html[dir="rtl"] .news_item .post-meta > ul.meta-right {
+    float: left;
+}
+html[dir="rtl"] .news_item .post-meta > ul.meta-right > li {
+    border-left: inherit !important;
+    margin-left: inherit !important;
+    padding-left: inherit !important;
+    border-right: 1px solid #d4dee1;
+    margin-right: 10px;
+    padding-right: 10px;
+}
+html[dir="rtl"] .news_item .post-meta > ul.meta-right > li:first-child {
+    border-left: inherit !important;
+    border-right: 0;
+}
+html[dir="rtl"] #article_search {
+    margin-right: inherit !important;
+    margin-left: 0;
+}
+html[dir="rtl"] .article_search_header .search-addon {
+    margin-left: inherit !important;
+    margin-right: -23px;
+}
+html[dir="rtl"] .article_search_header #stype-field {
+    text-align: right;
+}
+html[dir="rtl"] .article_search_header #search-article-btn {
+    margin-left: inherit !important;
+    margin-right: -9px;
+    border-radius: 6px 0 0 6px;
+}
+html[dir="rtl"] .comments-form-header {
+    padding-left: inherit !important;
+    padding-right: 0;
+}
+html[dir="rtl"] .comments-header:before,
+html[dir="rtl"] .comments-form-header i {
+    left: inherit !important;
+    right: -15px;
+}
+html[dir="rtl"] .comment-head > .comment-head-action {
+    text-align: left;
+}
+html[dir="rtl"] .sub-comments {
+    margin-left: inherit !important;
+    margin-right: 45px;
+}
+html[dir="rtl"] .sub-comments:before {
+    margin-left: inherit !important;
+    left: inherit !important;
+    border-right: 1px solid #dfe5e8;
+    right: -45px;
+}
+html[dir="rtl"] .sub-comment-item.well:before {
+    left: inherit !important;
+    right: -45px;
+}
+html[dir="rtl"] .bbcode_input > div input[type=image] {
+    margin-right: inherit !important;
+    margin-left: 8px;
+}
+html[dir="rtl"] .sub_comments {
+    border-left: inherit !important;
+    padding-left: inherit !important;
+    border-right: 1px solid #ccc;
+    padding-right: 15px;
+}
+@media only screen and (max-width: 767px) {
+    html[dir="rtl"] header .navbar-default {
+        margin: 0;
+        background: #fff;
+    }
+    html[dir="rtl"] header .navbar-default .navbar-brand {
+        margin-left: inherit !important;
+        margin-right: 15px;
+    }
+    html[dir="rtl"] #top {
+        margin-right: inherit !important;
+        margin-left: 30px;
+    }
 }

@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemePack\Nebula\Templates;
 
 use PHPFusion\Panels;
@@ -27,7 +26,7 @@ use ThemeFactory\Core;
 class Login {
 
     public static function login_form($info) {
-        echo renderNotices(getNotices(array('all', FUSION_SELF)));
+        echo renderNotices(getNotices(['all', FUSION_SELF]));
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
@@ -63,20 +62,21 @@ class Login {
                     <div class="login-panel center-x" style="height:100vh; overflow: hidden;">
                         <div class="center-y">
                             <a href="<?php echo BASEDIR."index.php" ?>">
-                                <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>" alt="<?php echo fusion_get_settings("sitename") ?>">
+                                <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>"
+                                     alt="<?php echo fusion_get_settings("sitename") ?>">
                             </a>
                             <h2><?php echo fusion_get_settings("sitename") ?></h2>
-                        <?php
-                        echo $info['open_form'];
-                        echo $info['user_name'];
-                        echo $info['user_pass'];
-                        echo $info['remember_me'];
-                        echo $info['login_button'];
-                        echo $info['registration_link']."<br/><br/>";
-                        echo $info['forgot_password_link']."<br/><br/>";
-                        echo $info['close_form'];
-                        echo showcopyright();
-                        ?>
+                            <?php
+                            echo $info['open_form'];
+                            echo $info['user_name'];
+                            echo $info['user_pass'];
+                            echo $info['remember_me'];
+                            echo $info['login_button'];
+                            echo $info['registration_link']."<br/><br/>";
+                            echo $info['forgot_password_link']."<br/><br/>";
+                            echo $info['close_form'];
+                            echo showcopyright();
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -96,21 +96,25 @@ class Login {
 
         $banner = fusion_get_settings("sitebanner") ? "<img class='m-t-0 m-b-15 m-l-15' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>" : fusion_get_settings("sitename");
         ?>
-        <section id="registerForm" class="login-bg" style="left: 0; top: 0; right: 0; bottom: 0; position: fixed; overflow-y:auto">
+        <section id="registerForm" class="login-bg"
+                 style="left: 0; top: 0; right: 0; bottom: 0; position: fixed; overflow-y:auto">
             <div class="container">
                 <div class="col-xs-12 text-center">
                     <div class="text-center display-block"><?php echo $banner ?></div>
-               			<?php $notices = getNotices();
-                        if ($notices) {
-                             echo renderNotices($notices);
-                        }?>
-                    <div class="panel panel-default" style="text-align:left;">
+                    <?php $notices = getNotices();
+                    if ($notices) {
+                        echo renderNotices($notices);
+                    } ?>
+                    <div class="panel panel-default"
+                         style="text-align:left;background-color: rgba(255, 255, 255, 0.93);">
                         <div class="panel-body p-20">
                             <h3 class="text-bigger text-uppercase text-dark"><?php echo $locale['u101'] ?></h3>
                             <h4><?php echo fusion_get_settings('sitename') ?></h4>
                             <?php
                             $open = "";
                             $close = "";
+                            $tab_title = [];
+
                             if (isset($info['section']) && count($info['section']) > 1) {
                                 foreach ($info['section'] as $page_section) {
                                     $tab_title['title'][$page_section['id']] = $page_section['name'];
@@ -192,4 +196,3 @@ class Login {
         <?php
     }
 }
-

@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace ThemePack\Nebula\Templates;
 
 use ThemeFactory\Core;
@@ -32,6 +31,7 @@ class News extends Core {
      * @param $info
      */
     public static function display_news($info) {
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
 
         /*
          * FusionTheme Controller
@@ -42,9 +42,10 @@ class News extends Core {
 
         ob_start();
         ?>
-        <ul class='list-group-item'>
+        <ul class='list-group-item list-style-none p-b-15'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
+                <a href='<?php echo INFUSIONS.'news/news.php' ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5>
+                </a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -68,6 +69,15 @@ class News extends Core {
             echo "<div class='well text-center'>".fusion_get_locale('news_0005')."</div>\n";
         }
 
+        if ($info['news_total_rows'] > $news_settings['news_pagination']) {
+            $type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
+            $cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
+            echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'],
+                    $news_settings['news_pagination'],
+                    $info['news_total_rows'], 3,
+                    INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
+        }
+
 
         // Send categories to the right panel
         ob_start();
@@ -75,14 +85,27 @@ class News extends Core {
         ?>
         <ul>
             <?php foreach ($info['news_categories'][0] as $category_id => $category) : ?>
-                <li class='list-group-item'>
+                <li class='list-group-item p-t-5 p-b-5'>
                     <a href='<?php echo $category['link'] ?>'>
-                        <h5 class='text-uppercase m-0 p-t-10 p-b-5'>
+                        <h5 class='text-uppercase'>
                             <strong><?php echo $category['name'] ?></strong>
                         </h5>
                     </a>
                 </li>
             <?php endforeach; ?>
+
+            <?php
+            if (!empty($info['news_categories'][1]) && is_array($info['news_categories'][1])) {
+                foreach ($info['news_categories'][1] as $category_id => $category) : ?>
+                    <li class='list-group-item p-t-5 p-b-5'>
+                        <a href='<?php echo $category['link'] ?>'>
+                            <h5 class='text-uppercase'>
+                                <strong><?php echo $category['name'] ?></strong>
+                            </h5>
+                        </a>
+                    </li>
+                <?php endforeach;
+            } ?>
         </ul>
         <?php
         closeside();
@@ -100,25 +123,28 @@ class News extends Core {
                 <div class='post-image'>
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg') == FALSE) : ?>
                         <a href='<?php echo $info['news_link'] ?>'>
-                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
+                            <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'
+                                 alt='<?php echo $info['news_subject']; ?>'>
                         </a>
                     <?php endif; ?>
                 </div>
                 <div class='post-title'>
                     <h3>
                         <a href='<?php echo $info['news_url'] ?>' rel='bookmark'>
-                            <strong class='m-r-10'><?php echo date('M d', $info['news_datestamp']) ?>:</strong><?php echo $info['news_subject'] ?>
+                            <strong class='m-r-10'><?php echo showdate(fusion_get_locale('date_day'), $info['news_datestamp']) ?>
+                                :</strong><?php echo $info['news_subject'] ?>
                         </a>
                     </h3>
                 </div>
                 <?php
-                $start_nc_url = ($info['news_cat_url'] ? "<a href='".$info['news_cat_url']."' title='".$info['news_cat_name']."'>" : '');
-                $end_nc_url = ($info['news_cat_url'] ? "</a>" : '');
+                $start_nc_url = ($info['news_cat_link'] ? "<a href='".$info['news_cat_link']."' title='".$info['news_cat_name']."'>" : '');
+                $end_nc_url = ($info['news_cat_link'] ? "</a>" : '');
                 ?>
                 <div class='post-meta'>
                     <ul class="meta-left">
                         <li><?php echo showdate('newsdate', $info['news_datestamp']) ?></li>
-                        <li><?php echo fusion_get_locale('NB_200') ?> <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?> / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
+                        <li><?php echo fusion_get_locale('NB_200') ?> <?php echo profile_link($info['user_id'], $info['user_name'], $info['user_status']) ?>
+                            / <?php echo $start_nc_url.$info['news_cat_name'].$end_nc_url ?></li>
 
                     </ul>
                     <ul class='meta-right'>
@@ -139,14 +165,17 @@ class News extends Core {
                     <?php if (!empty($info['news_image_src']) && strpos($info['news_image_src'], '.svg')) : ?>
                         <div class='pull-left m-r-15' style='width: 100px;'>
                             <a href='<?php echo $info['news_link'] ?>'>
-                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'>
+                                <img class='img-responsive' src='<?php echo $info['news_image_src']; ?>'
+                                     alt='<?php echo $info['news_subject']; ?>'>
                             </a>
-                </div>
+                        </div>
                     <?php endif; ?>
                     <p>
                         <?php echo $info['news_news'] ?>
                         <?php if ($info['news_ext'] == 'y') : ?>
-                            ... <a class='text-uppercase text-smaller' href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?> +</a>
+                            ... <a class='text-uppercase text-smaller'
+                                   href='<?php echo $info['news_url'] ?>'><?php echo fusion_get_locale('news_0001') ?>
+                                +</a>
                         <?php endif; ?>
                     </p>
                 </div>
@@ -176,9 +205,10 @@ class News extends Core {
 
         ob_start();
         ?>
-        <ul class='list-group-item'>
+        <ul class='list-group-item list-style-none p-b-15'>
             <li class='pull-right m-b-0'>
-                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5></a>
+                <a href='<?php echo INFUSIONS.'news/news.php'; ?>'><h5><?php echo fusion_get_locale('news_0018') ?></h5>
+                </a>
             </li>
             <li class='display-inline-block m-r-10'>
                 <?php echo fusion_get_locale('news_0017') ?>
@@ -203,8 +233,8 @@ class News extends Core {
                 <ul class='meta-left'>
                     <li><?php echo self::$locale['NB_200'].' '.profile_link($news['user_id'], $news['user_name'], $news['user_status']) ?></li>
                     <?php
-                    $start_nc_url = ($news['news_cat_url'] ? "<a href='".$news['news_cat_url']."' title='".$news['news_cat_name']."'>" : '');
-                    $end_nc_url = ($news['news_cat_url'] ? "</a>" : '');
+                    $start_nc_url = ($news['news_cat_link'] ? "<a href='".$news['news_cat_link']."' title='".$news['news_cat_name']."'>" : '');
+                    $end_nc_url = ($news['news_cat_link'] ? "</a>" : '');
                     ?>
                     <li><?php echo $start_nc_url.$news['news_cat_name'].$end_nc_url ?></li>
                     <li><?php echo showdate('newsdate', $news['news_datestamp']).', '.timer($news['news_datestamp']); ?></li>
@@ -212,7 +242,8 @@ class News extends Core {
                 <ul class='meta-right'>
                     <li><i class='fa fa-eye'></i> <?php echo number_format($news['news_reads']) ?></li>
                     <li>
-                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>' href='<?php echo $news['print_link'] ?>' target='_blank'>
+                        <a class='btn btn-default btn-bordered' title='<?php echo fusion_get_locale('news_0002') ?>'
+                           href='<?php echo $news['print_link'] ?>' target='_blank'>
                             <i class='fa fa-print'></i>
                             <?php echo fusion_get_locale('news_0002') ?>
                         </a>
@@ -249,18 +280,16 @@ class News extends Core {
         </article>
 
         <?php if (!empty($news['news_gallery'])) :
-            $thumb_height = \PHPFusion\News\News::get_news_settings('news_thumb_h');
-            $thumb_width = \PHPFusion\News\News::get_news_settings('news_thumb_w');
             ?>
             <hr/>
             <?php openside(fusion_get_locale('news_0019')) ?>
             <div class='post-gallery'>
                 <?php $animate_delay = 200; ?>
                 <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
-                    <div class='post-gallery-item wow overflow-hide fadeInUp' style='margin: -1px; width: 33%; max-height: <?php echo $thumb_height ?>px' data-wow-duration='700ms' data-wow-delay='<?php echo $animate_delay ?>ms'>
-                        <div class='center-xy'>
-                            <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
-                        </div>
+                    <div class='post-gallery-item wow overflow-hide fadeInUp'
+                         style='margin: -1px; width: 270px; height: 200px;' data-wow-duration='700ms'
+                         data-wow-delay='<?php echo $animate_delay ?>ms'>
+                        <?php echo colorbox(IMAGES_N.$news_image['news_image'], '', FALSE, 'pull-left') ?>
                     </div>
                     <?php $animate_delay = $animate_delay + 150; ?>
                 <?php endforeach; ?>

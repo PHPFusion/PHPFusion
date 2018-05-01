@@ -1,0 +1,25 @@
+{message.{
+<tr {%class%}>
+    <td class="min">
+        {%checkbox_input%}
+    </td>
+    <td style="width:200px; max-width:200px;">
+        <div class="clearfix" style="white-space:nowrap">
+            <div class="pull-left m-r-10">
+                <div class="icon-xs">{%avatar%}</div>
+            </div>
+            <div class="overflow-hide">{%profile_link%}</div>
+        </div>
+    </td>
+    <td>
+        <a class="text-dark text-normal display-block no-break" href="{%message_link%}">{%message_title%}</a>
+    </td>
+    <td class="text-right">{%datestamp%}</td>
+</tr>
+}}
+
+{no_item.{
+<tr>
+    <td class="strong text-center">{%text%}</td>
+</tr>
+}}

@@ -60,6 +60,13 @@ if (!function_exists("display_loginform")) {
             echo $info['registration_link']."<br/><br/>";
             echo $info['forgot_password_link']."<br/><br/>";
             echo $info['close_form'];
+            // Facebook, Google Auth, etc.
+            if (!empty($info['connect_buttons'])) {
+                echo "<hr/>";
+                foreach ($info['connect_buttons'] as $mhtml) {
+                    echo $mhtml;
+                }
+            }
             echo "</div>\n";
             echo "</div>\n";
         }

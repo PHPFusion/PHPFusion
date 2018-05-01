@@ -23,6 +23,9 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+
 // Load Septenary Parts
 include THEME."theme_autoloader.php";
 
@@ -39,14 +42,14 @@ if (!defined("THEME_BULLET")) {
 
 /**
  * Legacy Render Page Function
- * @param bool|FALSE $license
  */
-function render_page($license = FALSE) {
-    \PHPFusion\SeptenaryTheme::Factory()->render_page($license);
+function render_page() {
+    \PHPFusion\SeptenaryTheme::Factory()->render_page();
 }
 
 /**
  * Legacy openside function
+ *
  * @param bool|FALSE $title
  * @param string     $state
  */
@@ -63,10 +66,11 @@ function closeside() {
 
 /**
  * Legacy opentable function
+ *
  * @param bool|FALSE $title
  */
 function opentable($title = FALSE) {
-    \PHPFusion\SeptenaryTheme::opentable($title = FALSE);
+    \PHPFusion\SeptenaryTheme::opentable($title);
 }
 
 /**
@@ -78,7 +82,9 @@ function closetable() {
 
 /**
  * Legacy output replacement function
+ *
  * @param $output
+ *
  * @return array
  */
 function theme_output($output) {

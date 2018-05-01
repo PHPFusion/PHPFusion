@@ -29,7 +29,8 @@ use ThemeFactory\Lib\Installer\HomeInstall;
  */
 class MainFrame extends Core {
 
-    public function __construct($license = FALSE) {
+    public function __construct() {
+        parent::__construct();
         self::set_body_span();
         /**
          * First time installation on default install.
@@ -38,7 +39,13 @@ class MainFrame extends Core {
         if (iSUPERADMIN) {
             $theme_settings = get_theme_settings('FusionTheme');
             if (!isset($theme_settings['home_installed'])) {
-                $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
+
+                if (file_exists(THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php')) {
+                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/'.LANGUAGE.'.php');
+                } else {
+                    $qLocale = fusion_get_locale('', THEME.'themefactory/lib/installer/locale/English.php');
+                }
+
                 if (isset($_POST['install_default_homepage'])) {
                     $val = stripinput($_POST['install_default_homepage']);
                     if ($val == 'yes') {
@@ -88,7 +95,7 @@ class MainFrame extends Core {
     }
 
     private function NebulaHeader() {
-        echo renderNotices(getNotices(array('all', FUSION_SELF)));
+        echo renderNotices(getNotices(['all', FUSION_SELF]));
         $defaultBg = ($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "");
         $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
         echo "<header ".$headerBg.">\n";
@@ -100,7 +107,7 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
         echo "<div class='navbar-header navbar-right'>\n";
-        echo "<ul class='navbar-nav'>\n";
+        echo "<ul class='navbar-nav list-style-none'>\n";
         if (iMEMBER) :
             $msg_count = dbcount("('message_id')", DB_MESSAGES, "message_to=:my_id AND message_read=:unread AND message_folder=:inbox", [':inbox' => 0, ':my_id' => fusion_get_userdata('user_id'), ':unread' => 0]);
             echo "<li><a href='".BASEDIR."messages.php'>".fusion_get_locale('global_121').($msg_count ? "<span class='badge m-l-5'>$msg_count</span>" : "")."</a></li>";
@@ -123,7 +130,7 @@ class MainFrame extends Core {
             'navbar_class'      => ($this->getParam('navbar_class') ?: 'navbar-default'),
             'language_switcher' => ($this->getParam('navbar_language_switch') ?: FALSE),
             'searchbar'         => ($this->getParam('navbar_searchbar') ?: FALSE),
-            'caret_icon'        => 'fa fa-angle-down',
+            'caret_icon'        => 'fa fa-angle-down m-l-5',
             'show_banner'       => FALSE,
             'grouping'          => fusion_get_settings('links_grouping'),
             'links_per_page'    => fusion_get_settings('links_per_page'),
@@ -133,7 +140,7 @@ class MainFrame extends Core {
         add_to_jquery("
             $('#".SiteLinks::MenuDefaultID."').affix({
                 offset: {
-                    top: '".$this->getParam('nav_offset')."',
+                    top: $('#DefaultMenu').offset().top,
                     bottom: function () {
                         return (this.bottom = $('.footer').outerHeight(true))
                     }
@@ -182,7 +189,6 @@ class MainFrame extends Core {
             endif;
             echo "</section>\n";
         endif;
-        echo showbanners(1);
         $side_span = 3;
         $main_span = 12;
         if (defined('RIGHT') && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) {
@@ -214,6 +220,7 @@ class MainFrame extends Core {
         endif;
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
+        echo showbanners(1);
         // U_CENTER
         if (defined('U_CENTER') && U_CENTER && $this->getParam('u_center')) :
             echo U_CENTER;
@@ -312,8 +319,8 @@ class MainFrame extends Core {
         echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
-        echo "</div>\n";
         echo showbanners(2);
+        echo "</div>\n";
         echo "</section>\n";
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";

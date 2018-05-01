@@ -21,7 +21,7 @@ class Core {
     /*
      * readme.md
      */
-    private static $options = array(
+    private static $options = [
         'header'                 => TRUE, // has header
         'header_content'         => '', // content in the header
         'header_container'       => TRUE,
@@ -87,15 +87,19 @@ class Core {
         'right_is_affix'         => FALSE, // @todo: auto affix
         'right_pre_content'      => '', // right side top content
         'right_post_content'     => '', // right side bottom content
-    );
+    ];
 
     private static $instance = NULL;
     private static $module_instance = NULL;
-    private static $module_list = array();
-    public static $locale = array();
+    private static $module_list = [];
+    public static $locale = [];
 
-    private function __construct() {
-        self::$locale = fusion_get_locale('', THEME.'locale/'.LANGUAGE.'.php');
+    public function __construct() {
+        if (file_exists(THEME.'locale/'.LANGUAGE.'.php')) {
+            self::$locale = fusion_get_locale('', THEME.'locale/'.LANGUAGE.'.php');
+        } else {
+            self::$locale = fusion_get_locale('', THEME.'locale/English.php');
+        }
 
         if (empty(self::$module_list)) {
             // Get Theme Factory Modules
@@ -143,13 +147,13 @@ class Core {
         self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
     }
 
-    protected static function getParam($prop = FALSE) {
+    public static function getParam($prop = FALSE) {
         if (isset(self::$options[$prop])) { // will return an error if $prop is not available
             return self::$options[$prop];
-        } else {
-            //print_p($prop);
-            //debug_print_backtrace();
-        }
+        } /*else {
+            print_p($prop);
+            debug_print_backtrace();
+        }*/
 
         return NULL;
     }

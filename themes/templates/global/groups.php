@@ -25,10 +25,11 @@ if (!function_exists('render_user_group')) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
         opentable($locale['u057']);
         echo "<div class='text-center well'>";
-        echo "<h4>".(!empty($info['group_icon']) ? "<i class='".$info['group_icon']."'></i> " : "").(!empty($info['group_name']) ? $info['group_name'] : '')." ".format_word($info['total_rows'], $locale['fmt_member'])."</h4>\n";
+        echo "<h4>".(!empty($info['group_icon']) ? "<i class='".$info['group_icon']."'></i> " : "").(!empty($info['group_name']) ? $info['group_name'] : '')." (".format_word($info['total_rows'], $locale['fmt_user']).")</h4>\n";
+        echo '<p>'.$info['group_description'].'</p>';
         echo "</div>\n";
         $sort_plugin = fusion_sort_table('groupTbl');
-        echo "<table id='groupTbl' class='table table-responsive table-hover $sort_plugin'>\n";
+        echo "<div class='table-responsive'><table id='groupTbl' class='table table-hover $sort_plugin'>\n";
         echo "<tr>\n";
         echo "<th class='col-xs-1'>".$locale['u062']."</th>\n";
         echo "<th class='col-xs-1'>".$locale['u113']."</th>\n";
@@ -37,7 +38,7 @@ if (!function_exists('render_user_group')) {
         echo "<th class='col-xs-1'>".$locale['status']."</th>\n";
         echo "</tr>\n";
         if (!empty($info['group_members'])) {
-            foreach($info['group_members'] as $member_id => $mData) {
+            foreach ($info['group_members'] as $member_id => $mData) {
                 echo "<tr>\n";
                 echo "<td class='col-xs-1'>".display_avatar($mData, '50px', '', FALSE, 'img-rounded')."</td>\n";
                 echo "<td>".profile_link($mData['user_id'], $mData['user_name'], $mData['user_status'])."</td>\n";
@@ -51,7 +52,7 @@ if (!function_exists('render_user_group')) {
             echo "<td colspan='5'>".$locale['u116']."</td>\n";
             echo "</tr>\n";
         }
-        echo "</table>\n";
+        echo "</table>\n</div>";
         echo $info['total_rows'] > $info['rows'] ? "<div class='pull-right m-r-10'>".makepagenav($_GET['rowstart'], $info['rows'], $info['total_rows'], 3, FUSION_SELF."?group_id=".$info['group_id']."&amp;")."</div>\n" : "";
         closetable();
     }

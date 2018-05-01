@@ -20,11 +20,12 @@ if (!defined("IN_FUSION")) {
 }
 
 define("THEME_BULLET", "&middot;");
-require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
 
-function render_page($license = FALSE) {
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
 
+function render_page() {
     $locale = fusion_get_locale();
     $userdata = fusion_get_userdata();
     $aidlink = fusion_get_aidlink();
@@ -36,12 +37,12 @@ function render_page($license = FALSE) {
     $brand .= "</a>\n";
 
     // set size - max of 12 min of 0
-    $side_grid_settings = array(
+    $side_grid_settings = [
         'desktop_size' => 2,
-        'laptop_size' => 3,
-        'tablet_size' => 3,
-        'phone_size' => 12,
-    );
+        'laptop_size'  => 3,
+        'tablet_size'  => 3,
+        'phone_size'   => 12,
+    ];
 
     // Render Theme
     echo "<div class='container p-t-20 p-b-20'>\n";
@@ -58,12 +59,12 @@ function render_page($license = FALSE) {
             <?php
             echo "<div class='display-inline-block pull-right m-l-10' style='width:30%;'>\n";
             echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                array(
+                [
                     'class'      => 'm-b-10',
                     'remote_url' => fusion_get_settings('site_path')."search.php"
-                )
+                ]
             );
-            echo form_text('stext', '', '', array(
+            echo form_text('stext', '', '', [
                 'placeholder'        => $locale['search'],
                 'append_button'      => TRUE,
                 'append_type'        => "submit",
@@ -71,7 +72,7 @@ function render_page($license = FALSE) {
                 "append_value"       => "<i class='fa fa-search'></i> ".$locale['search'],
                 "append_button_name" => "search",
                 'class'              => 'no-border m-b-0',
-            ));
+            ]);
             echo closeform();
             echo "</div>\n";
             echo "<ul class='display-inline-block m-t-10'>\n";
@@ -113,7 +114,7 @@ function render_page($license = FALSE) {
     </div>
     <?php
 
-    echo showsublinks('', 'navbar-default', array('logo' => $brand, 'show_header' => TRUE))."\n";
+    echo showsublinks('', 'navbar-default', ['logo' => $brand, 'show_header' => TRUE])."\n";
     echo showbanners(1);
     // row 1 - go for max width
     if (defined('AU_CENTER') && AU_CENTER) {
@@ -125,8 +126,11 @@ function render_page($license = FALSE) {
         echo "<div class='".html_prefix($side_grid_settings)." hidden-xs'>\n".LEFT."</div>\n";
     } // column left
     echo "<div class='".html_prefix(center_grid_settings($side_grid_settings))."'>\n";
-    echo renderNotices(getNotices(array('all', FUSION_SELF)));
-    echo U_CENTER.CONTENT.L_CENTER."</div>\n"; // column center
+    echo renderNotices(getNotices(['all', FUSION_SELF]));
+    echo defined("U_CENTER") && U_CENTER ? U_CENTER : '';
+    echo CONTENT; // column center
+    echo defined("L_CENTER") && L_CENTER ? L_CENTER : '';
+    echo "</div>\n";
     if (defined('RIGHT') && RIGHT) {
         echo "<div class='".html_prefix($side_grid_settings)."'>\n".RIGHT."</div>\n";
     } // column right
@@ -140,29 +144,29 @@ function render_page($license = FALSE) {
     }
 
     echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER1') && USER1 ? USER1 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER1') && USER1 ? USER1 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER2') && USER2 ? USER2 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER2') && USER2 ? USER2 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER3') && USER3 ? USER3 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER3') && USER3 ? USER3 : '';
+    echo "</div>\n";
 
-        echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-            echo defined('USER4') && USER4 ? USER4 : '';
-        echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+    echo defined('USER4') && USER4 ? USER4 : '';
+    echo "</div>\n";
     echo "</div>\n";
 
     // footer
     echo "<hr>\n";
     echo showbanners(2);
     echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
-    echo "<span>".stripslashes(strip_tags($settings['footer']))."</span><br/>\n";
-    echo "<span>".showcopyright()."</span><br/>\n";
+    echo "<span>".stripslashes($settings['footer'])."</span><br/>\n";
+    echo "<span>".showcopyright().showprivacypolicy()."</span><br/>\n";
     echo "<span>Bootstrap Theme by <a href='http://www.php-fusion.co.uk' target='_blank'>PHP-Fusion Inc</a></span><br/>\n";
     echo "<span>";
     if ($settings['visitorcounter_enabled']) {
@@ -173,7 +177,9 @@ function render_page($license = FALSE) {
             echo " | ";
         }
         echo showrendertime();
+        echo showMemoryUsage();
     }
+    echo showFooterErrors();
     echo "</span>\n";
     echo "</div>\n</div>\n";
     echo "</div>\n";
