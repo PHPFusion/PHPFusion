@@ -442,10 +442,14 @@ if (!function_exists("progress_bar")) {
 if (!function_exists("check_panel_status")) {
     function check_panel_status($side) {
         $settings = fusion_get_settings();
+
         $exclude_list = "";
         if ($side == "left") {
             if ($settings['exclude_left'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
+            }
+            if (defined("LEFT_OFF")) {
+                $exclude_list = FUSION_SELF;
             }
         } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
@@ -486,20 +490,25 @@ if (!function_exists("check_panel_status")) {
         }
 
         if (is_array($exclude_list)) {
-            $script_url = explode("/", $_SERVER['PHP_SELF']);
+            if (fusion_get_settings('site_seo')) {
+                $params = http_build_query(PHPFusion\Rewrite\Router::getRouterInstance()->get_FileParams());
+                $file_path = '/'.PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $script_url = explode("/", $file_path);
+            } else {
+                $script_url = explode("/", $_SERVER['PHP_SELF']);
+            }
+
             $url_count = count($script_url);
-            $base_url_count = substr_count(BASEDIR, "/") + 1;
+            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
+
             $match_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;
                 $match_url .= "/".$script_url[$current];
                 $base_url_count--;
             }
-            if (!in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list)) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+
+            return (in_array($match_url, $exclude_list)) ? FALSE : TRUE;
         } else {
             return TRUE;
         }

@@ -291,7 +291,7 @@ class PrivateMessages {
      */
     public static function getInstance($key = 'default') {
         if (!isset(self::$instances[$key])) {
-            self::$instances[$key] = new Static();
+            self::$instances[$key] = new static();
         }
 
         return self::$instances[$key];

@@ -357,7 +357,6 @@ class Panels {
      * @return bool
      */
     private static function check_panel_status($side) {
-
         $settings = fusion_get_settings();
 
         $exclude_list = "";

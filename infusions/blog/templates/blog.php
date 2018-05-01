@@ -57,29 +57,27 @@ if (!function_exists('display_blog_item')) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-        add_to_footer('<script type="text/javascript">'.jsminify('
-            $(document).ready(function() {
-                $(".blog-image-overlay").colorbox({
-                    transition: "elasic",
-                    height:"100%",
-                    width:"100%",
-                    maxWidth:"98%",
-                    maxHeight:"98%",
-                    scrolling:false,
-                    overlayClose:true,
-                    close:false,
-                    photo:true,
-                    onComplete: function(result) {
-                        $("#colorbox").live("click", function(){
-                        $(this).unbind("click");
-                        $.fn.colorbox.close();
-                        });
-                    },
-                    onLoad: function () {
-                    }
-               });
+        add_to_jquery('
+            $(".blog-image-overlay").colorbox({
+                transition: "elasic",
+                height:"100%",
+                width:"100%",
+                maxWidth:"98%",
+                maxHeight:"98%",
+                scrolling:false,
+                overlayClose:true,
+                close:false,
+                photo:true,
+                onComplete: function(result) {
+                    $("#colorbox").live("click", function(){
+                    $(this).unbind("click");
+                    $.fn.colorbox.close();
+                    });
+                },
+                onLoad: function () {
+                }
             });
-            ').'</script>');
+        ');
         ob_start();
 
         $data = $info['blog_item'];
@@ -187,8 +185,8 @@ if (!function_exists('display_blog_menu')) {
         }
 
         ob_start();
-        echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['blog_1003']."</div>\n";
-        echo "<ul class='block spacer-sm'>\n";
+        openside('<i class="fa fa-list"></i> '.$locale['blog_1003']);
+        echo "<ul class='block'>\n";
         $blog_cat_menu = find_cat_menu($info['blog_categories']);
         if (!empty($blog_cat_menu)) {
             echo $blog_cat_menu;
@@ -196,8 +194,9 @@ if (!function_exists('display_blog_menu')) {
             echo "<li>".$locale['blog_3001']."</li>\n";
         }
         echo "</ul>\n";
-        echo "<div class='text-bigger strong text-dark m-t-20 m-b-20'><i class='fa fa-calendar m-r-10'></i> ".$locale['blog_1004']."</div>\n";
-        echo "<ul class='block spacer-sm'>\n";
+        closeside();
+        openside('<i class="fa fa-calendar"></i> '.$locale['blog_1004']);
+        echo "<ul class='block'>\n";
         if (!empty($info['blog_archive'])) {
             $current_year = 0;
             foreach ($info['blog_archive'] as $year => $archive_data) {
@@ -217,8 +216,9 @@ if (!function_exists('display_blog_menu')) {
             echo "<li>".$locale['blog_3002']."</li>\n";
         }
         echo "</ul>\n";
-        echo "<div class='text-bigger strong text-dark m-t-20 m-b-20'><i class='fa fa-users m-r-10'></i> ".$locale['blog_1005']."</div>\n";
-        echo "<ul class='block spacer-sm'>\n";
+        closeside();
+        openside('<i class="fa fa-users"></i> '.$locale['blog_1005']);
+        echo "<ul class='block'>\n";
         if (!empty($info['blog_author'])) {
             foreach ($info['blog_author'] as $author_id => $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
@@ -229,6 +229,7 @@ if (!function_exists('display_blog_menu')) {
             echo "<li>".$locale['blog_3003']."</li>\n";
         }
         echo "</ul>\n";
+        closeside();
         $str = ob_get_contents();
         ob_end_clean();
 

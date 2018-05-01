@@ -167,7 +167,7 @@ if (!function_exists("render_article")) {
                         <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>"
                            class="text-dark strong"><?php echo $subject; ?></a>
                     </h4>
-                    <div class="article-text m-t-10">
+                    <div class="article-text overflow-hide m-t-10">
                         <?php echo trim_text(parse_textarea($article, TRUE, TRUE, FALSE, '', TRUE), 250); ?>
                     </div>
                     <hr/>
@@ -213,7 +213,7 @@ if (!function_exists("render_article")) {
                            class="text-dark strong"><?php echo $subject; ?></a>
                     </h4>
 
-                    <div class="article-text m-t-5" style="height: 200px;">
+                    <div class="article-text overflow-hide m-t-5" style="height: 200px;">
                         <?php echo trim_text(parse_textarea($article, TRUE, TRUE, FALSE, '', TRUE), 250); ?>
                     </div>
 

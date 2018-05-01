@@ -75,7 +75,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'media'             => FALSE,
         'placeholder'       => '',
         'form_id'           => '',
-        'hide_upload'       => TRUE,
+        'hide_upload'       => FALSE,
         'hide_remove'       => FALSE,
         'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
     ];

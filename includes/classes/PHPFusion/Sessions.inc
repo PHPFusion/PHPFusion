@@ -51,7 +51,7 @@ class Sessions {
      *
      * @return static
      */
-    public static function getInstance($handler) {
+    public static function getInstance(string $handler) {
         // this one can use a token.
         if (empty(self::$_sess[$handler])) {
             self::$_sess[$handler] = new static();
@@ -121,7 +121,6 @@ class Sessions {
         $this->_sess_db = $this->connection();
         if ($this->_sess_db['dbselection_success'] && $this->_sess_db['connection_success']) {
             DatabaseFactory::getConnection(self::$_sess_key);
-
             return TRUE;
         }
 
@@ -149,13 +148,12 @@ class Sessions {
      *
      * @return string
      */
-    public function _read($name) {
+    public function _read(string $name) {
         $query = "SELECT session_data FROM ".DB_SESSIONS." WHERE session_id = :name";
         $parameters = array(':name' => $name);
         $result = DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
         if (DatabaseFactory::getConnection(self::$_sess_key)->countRows($result)) {
             $rows = DatabaseFactory::getConnection(self::$_sess_key)->fetchAssoc($result);
-
             return $rows['session_data'];
         }
 

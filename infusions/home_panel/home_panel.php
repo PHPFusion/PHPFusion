@@ -203,9 +203,10 @@ foreach ($configs as $table => $config) {
                     if ($row['image'] || $row['cat_image']) {
                         if ($row['cat_image']) {
                             $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
-                        }
-                        if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
+                        } else if ($row['image'] && file_exists(INFUSIONS."news/images/".$row['image'])) {
                             $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
+                        } else {
+                            $data[$count]['image'] = get_image('imagenotfound');
                         }
                     } else {
                         $data[$count]['image'] = get_image('imagenotfound');
@@ -216,9 +217,10 @@ foreach ($configs as $table => $config) {
                 if ($row['image'] || $row['cat_image']) {
                     if ($row['cat_image']) {
                         $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
-                    }
-                    if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
+                    } else if ($row['image'] && file_exists(INFUSIONS."blog/images/".$row['image'])) {
                         $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
+                    } else {
+                        $data[$count]['image'] = get_image('imagenotfound');
                     }
                 } else {
                     $data[$count]['image'] = get_image('imagenotfound');

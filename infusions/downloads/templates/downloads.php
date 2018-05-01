@@ -206,8 +206,8 @@ if (!function_exists('display_download_menu')) {
             echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
         }
         echo "</ul>\n";
-        echo "<h4>".$locale['download_1003']."</h4>\n";
-        echo "<ul class='block spacer-sm'>\n";
+        openside($locale['download_1003']);
+        echo "<ul class='block'>\n";
         $download_cat_menu = display_DownloadCats($info['download_categories']);
         if (!empty($download_cat_menu)) {
             echo $download_cat_menu;
@@ -215,8 +215,9 @@ if (!function_exists('display_download_menu')) {
             echo "<li>".$locale['download_3001']."</li>\n";
         }
         echo "</ul>\n";
-        echo "<h4>".$locale['download_1004']."</h4>\n";
-        echo "<ul class='block spacer-sm'>\n";
+        closeside();
+        openside($locale['download_1004']);
+        echo "<ul class='block'>\n";
         if (!empty($info['download_author'])) {
             foreach ($info['download_author'] as $author_id => $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
@@ -227,6 +228,7 @@ if (!function_exists('display_download_menu')) {
             echo "<li>".$locale['download_3002']."</li>\n";
         }
         echo "</ul>\n";
+        closeside();
 
         return ob_get_clean();
     }
