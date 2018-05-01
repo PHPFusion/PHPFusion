@@ -63,9 +63,9 @@ $locale['news_0212'] = "Automatic Line-Breaks";
 $locale['news_0213'] = "Enable Comments";
 $locale['news_0214'] = "Enable Ratings";
 $locale['news_0215'] = "Draft";
-$locale['news_0217'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
+$locale['news_0217'] = "Max. file size %s / Allowed file types GIF, JPEG or PNG.";
 $locale['news_0218'] = "Image Align";
-$locale['news_0219'] = "Pagebreak";
+$locale['news_0219'] = "Page break";
 $locale['news_0241'] = "Save News";
 $locale['news_0242'] = "Search Options";
 $locale['news_0243'] = "Clear";
@@ -87,12 +87,12 @@ $locale['news_0268'] = "%d photos have been added";
 $locale['news_0269'] = "%d photos was not uploaded due to errors";
 $locale['news_0270'] = "Please choose Image";
 $locale['news_0271'] = "Allowed file types:";
-$locale['news_0280'] = "Please specify a new subject"; // 250
-$locale['news_0281'] = "Delete this News?"; // 251
-$locale['news_0282'] = "Delete this news category?"; // 252
-$locale['news_0283'] = "%s are disabled for all items.<br/>\rThis setting will only take effect when they are enabled again."; //253
-$locale['news_0284'] = "There are no news in this category."; // 254
-$locale['news_0285'] = "Please specify keywords"; // 255
+$locale['news_0280'] = "Please specify a new subject";
+$locale['news_0281'] = "Delete this News?";
+$locale['news_0282'] = "Delete this news category?";
+$locale['news_0283'] = "%s are disabled for all items.<br/>This setting will only take effect when they are enabled again.";
+$locale['news_0284'] = "There are no news in this category.";
+$locale['news_0285'] = "Please specify keywords";
 $locale['news_0300'] = "Category Name";
 $locale['news_0301'] = "Category Image";
 $locale['news_0302'] = "Save Category";
@@ -113,6 +113,15 @@ $locale['news_0703'] = "Use the following form to submit News. Your submission w
 Administrator. [SITENAME] reserves the right to amend or edit any submission. News
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['news_0704'] = "Return to [SITENAME]";
+
+// New locale requried to update
+$locale['news_0705'] = "Width";
+$locale['news_0706'] = "Height";
+$locale['news_0707'] = "Main Settings";
+$locale['news_0708'] = "Configuration for News System";
+$locale['news_0709'] = "Photo Settings";
+$locale['news_0710'] = "Configuration for News Photos";
+
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";
@@ -127,3 +136,4 @@ $locale['956'] = "Square";
 $locale['957'] = "Image on Front-page";
 $locale['958'] = "Image on Read-more";
 $locale['959'] = "Uploaded Photo";
+

@@ -15,14 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
+
 if (!db_exists(DB_SHOUTBOX)) {
-    redirect(BASEDIR."error.php?code=404");
+    redirect(BASEDIR.'error.php?code=404');
 }
-require_once THEMES."templates/header.php";
 
-include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
+require_once THEMES.'templates/header.php';
+require_once INFUSIONS.'shoutbox_panel/shoutbox.inc';
 
-Shoutbox::getInstance(TRUE)->get_archiveshout();
+ShoutBox::getInstance()->ArchiveListing();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

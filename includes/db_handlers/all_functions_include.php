@@ -86,15 +86,15 @@ register_shutdown_function(function () {
         $html .= "</div>\n";
         $html .= "<style>.queries-log code {white-space: normal} .queries-log hr {border-color: #ccc}</style>\n";
         $html .= "<script>
-		$('.query-more-btn').click(function(e){
-			e.preventDefault();
-			$(this).next('table').toggle();
-		});
-		$('.queries-btn').click(function(){
-			$(this).hide();
-			$('.queries-log').toggle();
-		})
-		</script>";
+        $('.query-more-btn').click(function(e){
+            e.preventDefault();
+            $(this).next('table').toggle();
+        });
+        $('.queries-btn').click(function(){
+            $(this).hide();
+            $('.queries-log').toggle();
+        })
+        </script>";
 
         echo $html;
     }
@@ -104,10 +104,11 @@ register_shutdown_function(function () {
  * Send a database query
  *
  * @param string $query SQL
- * @param array $parameters
+ * @param array  $parameters
+ *
  * @return mixed The result of query or FALSE on error
  */
-function dbquery($query, array $parameters = array()) {
+function dbquery($query, array $parameters = []) {
     // Temporary check to detect the bug in installer
     return DatabaseFactory::getConnection('default')->query($query, $parameters);
 }
@@ -118,10 +119,11 @@ function dbquery($query, array $parameters = array()) {
  * @param string $field Parenthesized field name
  * @param string $table Table name
  * @param string $conditions conditions after "where"
- * @param array $parameters
+ * @param array  $parameters
+ *
  * @return boolean
  */
-function dbcount($field, $table, $conditions = "", array $parameters = array()) {
+function dbcount($field, $table, $conditions = "", array $parameters = []) {
     return DatabaseFactory::getConnection('default')->count($field, $table, $conditions, $parameters);
 }
 
@@ -130,6 +132,7 @@ function dbcount($field, $table, $conditions = "", array $parameters = array()) 
  *
  * @param mixed $result
  * @param int   $row
+ *
  * @return mixed
  */
 function dbresult($result, $row) {
@@ -140,6 +143,7 @@ function dbresult($result, $row) {
  * Count the number of affected rows by the given query
  *
  * @param mixed $result
+ *
  * @return int
  */
 function dbrows($result) {
@@ -150,6 +154,7 @@ function dbrows($result) {
  * Fetch one row as an associative array
  *
  * @param mixed $result
+ *
  * @return array Associative array
  */
 function dbarray($result) {
@@ -160,6 +165,7 @@ function dbarray($result) {
  * Fetch one row as a numeric array
  *
  * @param mixed $result
+ *
  * @return array Numeric array
  */
 function dbarraynum($result) {
@@ -169,35 +175,36 @@ function dbarraynum($result) {
 /**
  * Connect to the database
  *
- * @param string $db_host
- * @param string $db_user
- * @param string $db_pass
- * @param string $db_name
+ * @param string  $db_host
+ * @param string  $db_user
+ * @param string  $db_pass
+ * @param string  $db_name
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
+ *
  * @return array
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = FALSE) {
     $connection_success = TRUE;
     $dbselection_success = TRUE;
     try {
-        DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name, array(
+        DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name, [
             'debug' => DatabaseFactory::isDebug('default')
-        ));
+        ]);
     } catch (\Exception $e) {
         $connection_success = $e instanceof SelectionException;
         $dbselection_success = FALSE;
         if ($halt_on_error and !$connection_success) {
             die("<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage());
-        } elseif ($halt_on_error) {
+        } else if ($halt_on_error) {
             die("<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage());
         }
 
     }
 
-    return array(
-        'connection_success' => $connection_success,
+    return [
+        'connection_success'  => $connection_success,
         'dbselection_success' => $dbselection_success
-    );
+    ];
 }
 
 /**
@@ -208,6 +215,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = FALS
  * get just a potential id.
  *
  * @param string $table
+ *
  * @return int|false
  */
 function dbnextid($table) {

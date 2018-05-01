@@ -33,6 +33,7 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch_Core extends Install_Core {
+
     const PROGRESS = "setTimeout(
                     function(){
                         $('.progress-bar').animate({
@@ -105,14 +106,14 @@ class Batch_Core extends Install_Core {
      */
     private static $batch = NULL;
     private static $table_name = '';
-    private static $table_cols = '';
+    private static $table_cols = [];
 
 
     /*
      * Generate the statements required
      */
 
-    private static $required_default = array();
+    private static $required_default = [];
 
     /*
      * The batch runtime will generate two kinds of results.
@@ -131,8 +132,13 @@ class Batch_Core extends Install_Core {
      * Use Infusions Core installer to perform upgrades
      */
     private static $upgrade_runtime = [];
-    private $js = "";
+    private $js = [];
 
+    /**
+     * Return the instance for the Batcher
+     *
+     * @return static
+     */
     public static function getInstance() {
 
         if (self::$batch === NULL) {
@@ -147,15 +153,16 @@ class Batch_Core extends Install_Core {
 
     /**
      * Get the runtime results
+     *
      * @param null $key
+     *
      * @return null
      */
     public function batch_runtime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
 
-            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
-                          TRUE)) {
+            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
 
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
@@ -214,7 +221,7 @@ class Batch_Core extends Install_Core {
                         }
 
                         self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
-                            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
+                            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
                             '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
                         ]);
                     }
@@ -222,8 +229,8 @@ class Batch_Core extends Install_Core {
                 } else {
 
                     self::$runtime_results['add_column'][self::$table_name][$col_name] = strtr(self::ADD_COLUMN_STATEMENT, [
-                        '{%table%}' => self::$connection['db_prefix'].self::$table_name,
-                        '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr),
+                        '{%table%}'         => self::$connection['db_prefix'].self::$table_name,
+                        '{%table_attr%}'    => $this->get_table_attr($col_name, $col_attr),
                         '{%column_before%}' => $last_column_name
                     ]);
 
@@ -236,7 +243,9 @@ class Batch_Core extends Install_Core {
 
     /**
      * Fetches Existing Database Table Schema for comparisons
+     *
      * @param $table_name
+     *
      * @return null
      */
     private function get_table_schema($table_name) {
@@ -301,8 +310,10 @@ class Batch_Core extends Install_Core {
 
     /**
      * Get table column data-type attributes
+     *
      * @param $col_name
      * @param $col_attr
+     *
      * @return string
      */
     private function get_table_attr($col_name, $col_attr) {
@@ -332,12 +343,12 @@ class Batch_Core extends Install_Core {
 
         // Generate lines
         return trim(strtr(self::TABLE_ATTR_STATEMENT, [
-            '{%col_name%}' => $col_name." ",
-            '{%type%}' => $col_attr['type'],
-            '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-            '{%default%}' => $default_create." ",
-            '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-            '{%unsigned%}' => $unsigned,
+            '{%col_name%}'       => $col_name." ",
+            '{%type%}'           => $col_attr['type'],
+            '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+            '{%default%}'        => $default_create." ",
+            '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+            '{%unsigned%}'       => $unsigned,
             '{%auto_increment%}' => $auto_increment,
         ]));
     }
@@ -348,7 +359,7 @@ class Batch_Core extends Install_Core {
     private function create_new_table() {
         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
         // Will only set and create on current locale only
-        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$localeset);
+        $batch_inserts = self::batch_insert_rows(self::$table_name, self::$localeset);
         if (!empty($batch_inserts)) {
             self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
         }
@@ -356,12 +367,13 @@ class Batch_Core extends Install_Core {
 
     /**
      * Create codes generation
+     *
      * @return string
      */
     private function batch_create_table() {
         // No table found, just create the table as new
-        $line = array();
-        $keys = array();
+        $line = [];
+        $keys = [];
         $statement_type = self::TABLE_ATTR_STATEMENT;
 
         if (!empty(self::$table_cols)) {
@@ -371,6 +383,10 @@ class Batch_Core extends Install_Core {
                 // Register column primary_keys and keys
                 if (isset($col_attr['key'])) {
                     $keys[$col_attr['key']] = $col_name;
+                }
+                // Register column full text
+                if (!empty($col_attr['full_text'])) {
+                    $full_texts[] = $col_name;
                 }
 
                 // Default Attr
@@ -393,12 +409,12 @@ class Batch_Core extends Install_Core {
 
                 // Generate lines
                 $line[] = trim(strtr($statement_type, [
-                    '{%col_name%}' => $col_name." ",
-                    '{%type%}' => $col_attr['type'],
-                    '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-                    '{%default%}' => $default_create." ",
-                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-                    '{%unsigned%}' => $unsigned,
+                    '{%col_name%}'       => $col_name." ",
+                    '{%type%}'           => $col_attr['type'],
+                    '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+                    '{%default%}'        => $default_create." ",
+                    '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+                    '{%unsigned%}'       => $unsigned,
                     '{%auto_increment%}' => $auto_increment,
                 ]));
             }
@@ -408,26 +424,34 @@ class Batch_Core extends Install_Core {
                     $line[] = $key_type > 1 ? "KEY $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
                 }
             }
+
+            if (!empty($full_texts)) {
+                $line[] = "FULLTEXT(".implode(',', $full_texts).")";
+            }
+
         }
 
         return strtr(self::CREATE_TABLE_STATEMENT, [
-            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
-            '{%table_attr%}' => implode(',', $line),
-            '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
+            '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
+            '{%table_attr%}' => implode(', ', $line),
+            '{%collation%}'  => Batch_Core::FUSION_TABLE_COLLATION
         ]);
 
     }
 
     /**
      * Add default row records
+     *
      * @param $table_name
      * @param $localeset
+     *
      * @return null|string
      */
     public static function batch_insert_rows($table_name, $localeset) {
 
         if ($table_rows = get_table_rows($table_name, $localeset)) {
             if (isset($table_rows['insert'])) {
+                $values = [];
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
                 foreach ($table_rows['insert'] as $count => $inserts) {
@@ -436,8 +460,8 @@ class Batch_Core extends Install_Core {
 
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
-                    '{%table%}' => DB_PREFIX.$table_name,
-                    '{%key%}' => "($key)",
+                    '{%table%}'  => DB_PREFIX.$table_name,
+                    '{%key%}'    => "($key)",
                     '{%values%}' => implode(",\n", array_values($values))
                 ]);
             }
@@ -446,6 +470,10 @@ class Batch_Core extends Install_Core {
         return NULL;
     }
 
+    /**
+     * Checks for Upgrade Files
+     * @return array
+     */
     public function check_upgrades() {
 
         if (empty(self::$upgrade_runtime)) {
@@ -462,7 +490,9 @@ class Batch_Core extends Install_Core {
                     if (!empty($upgrade_files) && is_array($upgrade_files)) {
 
                         foreach ($upgrade_files as $upgrade_file) {
+
                             $filename = rtrim($upgrade_file, 'upgrade.inc');
+
                             if (version_compare($filename, fusion_get_settings('version'), ">=")) {
                                 /*
                                  * Use Infusions Core to load upgrade statements

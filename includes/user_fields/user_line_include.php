@@ -19,10 +19,10 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/line.svg'>\n";
+$icon = "<img src='".IMAGES."user_fields/social/line.svg' title='Line' alt='Line'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'max_length'       => 16,
             'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
@@ -30,9 +30,13 @@ if ($profile_method == "input") {
             'regex_error_text' => $locale['uf_line_error_1'],
             'placeholder'      => $locale['uf_line'],
             'label_icon'       => $icon
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_line', $locale['uf_line'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_line'], 'value' => $field_value ?: '');
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_line'],
+        'value' => $field_value ?: ''
+    ];
 }

@@ -1,0 +1,14 @@
+{%openside%}
+    <ul style="margin-left: 25px;">
+        {article.{
+            <li style="list-style-position: inside;text-indent: -1.5em;">
+                <a class="overflow-hide" data-trim-text="30" href="{%article_url%}">{%article_title%}</a>
+                <br/><span>{%author%}</span>
+            </li>
+        }}
+    </ul>
+
+    {no_item.{
+        <div>{%message%}</div>
+    }}
+{%closeside%}

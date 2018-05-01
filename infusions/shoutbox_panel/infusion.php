@@ -26,25 +26,26 @@ $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
 $inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
-$inf_image = "shouts.png";
+$inf_image = "shouts.svg";
 
 //Administration panel
-$inf_adminpanel[] = array(
-    "title" => $locale['SB_admin1'],
-    "image" => $inf_image,
-    "panel" => "shoutbox_admin.php",
+$inf_adminpanel[] = [
+    "title"  => $locale['SB_admin1'],
+    "image"  => $inf_image,
+    "panel"  => "shoutbox_admin.php",
     "rights" => "S",
-    "page" => 5
-);
+    "page"   => 5
+];
 
 //Multilanguage table for Administration
-$inf_mlt[] = array(
-    "title" => $inf_title,
+$inf_mlt[] = [
+    "title"  => $inf_title,
     "rights" => "SB"
-);
+];
+
 // Delete any items not required below.
 $inf_newtable[] = DB_SHOUTBOX." (
     shout_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -57,7 +58,7 @@ $inf_newtable[] = DB_SHOUTBOX." (
     shout_language VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY (shout_id),
     KEY shout_datestamp (shout_datestamp)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // shoutbox deletion of MLT shouts
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
@@ -69,11 +70,17 @@ if (!empty($enabled_languages)) {
 }
 
 //Infuse insertations
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title",
-                                                                                                                                                                                                                            SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('guest_shouts', '0', '".$inf_folder."')";
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('hidden_shouts', '0', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', '".$inf_folder."', '', '4', '3', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
+
+$settings = [
+    'visible_shouts' => 5,
+    'guest_shouts'   => 0,
+    'hidden_shouts'  => 0
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 //Defuse cleaning
 $inf_droptable[] = DB_SHOUTBOX;

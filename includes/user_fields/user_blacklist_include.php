@@ -41,24 +41,24 @@ if (!function_exists('show_blacklist')) {
         }
 
         add_to_jquery("
-	$('.unblock').bind('click', function(e) {
-	var user_id = $(this).val();
-	$.ajax({
-		type: 'POST',
-		url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
-		data: { user_id : user_id },
-		dataType: 'html',
-		success: function(data) {
-			alert(data);
-			$('#'+user_id+'-user-list').addClass('display-none');
-			$('#ignore-message').html(data).removeClass('display-none');
-		},
-		error: function() {
-			alert('".$locale['uf_blacklist_desc']."');
-		}
-		});
-	});
-	");
+            $('.unblock').bind('click', function(e) {
+            var user_id = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
+                data: { user_id : user_id },
+                dataType: 'html',
+                success: function(data) {
+                    alert(data);
+                    $('#'+user_id+'-user-list').addClass('display-none');
+                    $('#ignore-message').html(data).removeClass('display-none');
+                },
+                error: function() {
+                    alert('".$locale['uf_blacklist_desc']."');
+                }
+                });
+            });
+        ");
     }
 }
 
@@ -70,19 +70,19 @@ if ($profile_method == "input") {
         $user_blacklist = "";
     }
 
-// Display in profile 
-} elseif ($profile_method == "display") {
-//Are we not missing something here?
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
+    // Display in profile
+} else if ($profile_method == "display") {
+    //Are we not missing something here?
+} else if ($profile_method == "validate_insert" || $profile_method == "validate_update") {
     $user_blacklist = '';
     $userdata = $this->userData;
-    $userdata_blacklist = isset($userdata) && array_key_exists('user_blacklist', $userdata) ? explode('.', $userdata['user_blacklist']) : array();
+    $userdata_blacklist = isset($userdata) && array_key_exists('user_blacklist', $userdata) ? explode('.', $userdata['user_blacklist']) : [];
     if (count($userdata_blacklist) && isset($_POST['user_blacklist']) && isnum($_POST['user_blacklist']) && !in_array($_POST['user_blacklist'],
             $userdata_blacklist)
     ) {
         $userdata_blacklist[] = $_POST['user_blacklist'];
         $userdata_blacklist = implode('.', $userdata_blacklist);
-    } elseif (isset($_POST['user_blacklist']) && isnum($_POST['user_blacklist'])) {
+    } else if (isset($_POST['user_blacklist']) && isnum($_POST['user_blacklist'])) {
         $userdata_blacklist = $userdata['user_blacklist'];
     }
     if ($userdata_blacklist != 0 || $this->_isNotRequired("user_blacklist")) {

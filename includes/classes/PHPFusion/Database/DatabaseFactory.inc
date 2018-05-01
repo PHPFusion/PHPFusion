@@ -51,21 +51,21 @@ class DatabaseFactory {
     /**
      * @var bool|array Array of connection IDs or TRUE to debug all connections
      */
-    private static $debug = array();
+    private static $debug = [];
 
     /**
      * @var string[]
      */
-    private static $driverClasses = array(
-        self::DRIVER_MYSQL => '\PHPFusion\Database\Driver\MySQL',
-        self::DRIVER_MYSQLi => '\PHPFusion\Database\Driver\MySQLi',
+    private static $driverClasses = [
+        self::DRIVER_MYSQL     => '\PHPFusion\Database\Driver\MySQL',
+        self::DRIVER_MYSQLi    => '\PHPFusion\Database\Driver\MySQLi',
         self::DRIVER_PDO_MYSQL => '\PHPFusion\Database\Driver\PDOMySQL'
-    );
+    ];
 
     /**
      * @var Configuration[]
      */
-    private static $configurations = array();
+    private static $configurations = [];
 
     /**
      * @var string
@@ -75,7 +75,7 @@ class DatabaseFactory {
     /**
      * @var AbstractDatabaseDriver[]
      */
-    private static $connections = array();
+    private static $connections = [];
 
     /**
      * @param string $id
@@ -119,13 +119,14 @@ class DatabaseFactory {
     public static function registerConfiguration($id, array $configuration) {
         $lowerCaseID = strtolower($id);
         if (!isset(self::$configurations[$lowerCaseID])) {
-            $configuration += array('debug' => self::isDebug($id));
+            $configuration += ['debug' => self::isDebug($id)];
             self::$configurations[$lowerCaseID] = new Configuration($configuration);
         }
     }
 
     /**
      * @param string $connectionid
+     *
      * @return bool
      */
     public static function isDebug($connectionid = NULL) {
@@ -136,8 +137,8 @@ class DatabaseFactory {
                     or (is_array(self::$debug) and in_array($connectionid, self::$debug))));
         }
         $connectionids = array_unique(array_merge(
-                                          is_array(self::$debug)
-                                              ? self::$debug : array(), array_keys(self::$connections)));
+            is_array(self::$debug)
+                ? self::$debug : [], array_keys(self::$connections)));
 
         /**@var $connections AbstractDatabaseDriver */
         foreach ($connectionids as $k => $id) {
@@ -160,6 +161,7 @@ class DatabaseFactory {
      * Get the database connection object
      *
      * @param string $id
+     *
      * @throws UndefinedConfigurationException
      * @return AbstractDatabaseDriver
      */
@@ -172,11 +174,11 @@ class DatabaseFactory {
             return self::$connections[$id];
         }
         $conf = self::$configurations[$id];
-        self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), array(
-            'driver' => $conf->getDriver(),
+        self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), [
+            'driver'       => $conf->getDriver(),
             'connectionid' => $id,
-            'debug' => $conf->isDebug()
-        ));
+            'debug'        => $conf->isDebug()
+        ]);
 
         return self::$connections[$id];
     }
@@ -196,18 +198,19 @@ class DatabaseFactory {
      * @param string $password
      * @param string $db
      * @param array  $options
+     *
      * @return AbstractDatabaseDriver
      * @throws Exception\SelectionException
      * @throws Exception\ConnectionException
      */
-    public static function connect($host, $user, $password, $db, array $options = array()) {
+    public static function connect($host, $user, $password, $db, array $options = []) {
         $configuration = new Configuration();
-        $options += array(
-            'charset' => $configuration->getCharset(),
-            'driver' => $configuration->getDriver(),
+        $options += [
+            'charset'      => $configuration->getCharset(),
+            'driver'       => $configuration->getDriver(),
             'connectionid' => self::getDefaultConnectionID(),
-            'debug' => $configuration->isDebug()
-        );
+            'debug'        => $configuration->isDebug()
+        ];
         $id = strtolower($options['connectionid']);
         if (empty(self::$connections[$id])) {
             if (!isset(self::$configurations[$id])) {
@@ -227,6 +230,7 @@ class DatabaseFactory {
 
     /**
      * @param string $id
+     *
      * @return null|string
      */
     public static function getDriverClass($id = NULL) {

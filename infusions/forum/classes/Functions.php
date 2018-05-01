@@ -22,7 +22,9 @@ class Functions {
 
     /**
      * Appends increment integer on multiple files on same post
+     *
      * @param $file
+     *
      * @return string
      */
     public static function attach_exists($file) {
@@ -40,7 +42,9 @@ class Functions {
 
     /**
      * Display an image
+     *
      * @param $file
+     *
      * @return string
      */
     public static function display_image($file) {
@@ -49,7 +53,7 @@ class Functions {
             if ($size[0] <= $size[1]) {
                 $img_w = round(($size[0] * 200) / $size[1]);
                 $img_h = 200;
-            } elseif ($size[0] > $size[1]) {
+            } else if ($size[0] > $size[1]) {
                 $img_w = 300;
                 $img_h = round(($size[1] * 300) / $size[0]);
             } else {
@@ -71,10 +75,12 @@ class Functions {
 
     /**
      * Display attached image with a certain given width and height.
+     *
      * @param        $file
      * @param int    $width
      * @param int    $height
      * @param string $rel
+     *
      * @return string
      */
     public static function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
@@ -84,7 +90,7 @@ class Functions {
                 if ($size [0] < $size [1]) {
                     $img_w = round(($size [0] * $width) / $size [1]);
                     $img_h = $width;
-                } elseif ($size [0] > $size [1]) {
+                } else if ($size [0] > $size [1]) {
                     $img_w = $height;
                     $img_h = round(($size [1] * $height) / $size [0]);
                 } else {
@@ -95,7 +101,7 @@ class Functions {
                 $img_w = $size [0];
                 $img_h = $size [1];
             }
-            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+            $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
         } else {
             $res = fusion_get_locale('forum_0188');
         }

@@ -15,16 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Weblinks;
 
 class WeblinksServer {
-
-    protected static $weblink_settings = array();
+    private static $weblink_settings = [];
     private static $weblink_instance = NULL;
     private static $weblink_submit_instance = NULL;
     private static $weblink_admin_instance = NULL;
-    private static $locale = array();
 
     public static function Weblinks() {
         if (self::$weblink_instance === NULL) {
@@ -50,11 +47,11 @@ class WeblinksServer {
         return self::$weblink_admin_instance;
     }
 
-    public static function get_weblink_settings() {
+    public static function get_weblink_settings($key = NULL) {
         if (empty(self::$weblink_settings)) {
             self::$weblink_settings = get_settings("weblinks");
         }
-        return self::$weblink_settings;
+        return $key === NULL ? self::$weblink_settings : (isset(self::$weblink_settings[$key]) ? self::$weblink_settings[$key] : NULL);
     }
 
 }

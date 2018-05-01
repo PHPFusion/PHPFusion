@@ -22,7 +22,7 @@ if (!function_exists('display_comments_ui')) {
         <div id='comments'>
             <div id='{%comment_form_container_id%}' class='comments-header'>{%comment_count%}</div>
             {%comments_form%}
-            <div id='{%comment_container_id%}' name='comments'>
+            <div id='{%comment_container_id%}'>
                 {%comments_listing%}
             </div>
         </div>
@@ -32,17 +32,15 @@ if (!function_exists('display_comments_ui')) {
 /**
  * Comments UI
  */
-if (!function_exists("display_comments_section")) {
+if (!function_exists('display_comments_section')) {
     /**
      * Show comments
      *
      * @param       $c_data
      * @param       $c_info
      * @param array $options
-     *
-     * @return string
      */
-    function display_comments_section($c_data, $c_info, array $options = array()) {
+    function display_comments_section($c_data, $c_info, array $options = []) {
         ?>
         <!---comments-->
         <div class='comments-panel'>
@@ -61,7 +59,7 @@ if (!function_exists("display_comments_section")) {
 if (!function_exists('display_comments_listing')) {
     function display_comments_listing() {
         ?>
-        <ul class='comments clearfix'>
+        <ul class='comments clearfix list-style-none'>
             {%comments_list%}
         </ul>
         <div class='clearfix'>
@@ -73,12 +71,23 @@ if (!function_exists('display_comments_listing')) {
         <?php
     }
 }
-
+/**
+ * No comments text container
+ */
+if (!function_exists('display_no_comments')) {
+    function display_no_comments() {
+        ?>
+        <li>
+            {%comments_undefined_text%}
+        </li>
+        <?php
+    }
+}
 /**
  * Single Comment List {%comments_lists%}
  */
 if (!function_exists('display_comments_list')) {
-    function display_comments_list($info) {
+    function display_comments_list($info = []) {
         ?>
         <li id='{%comment_list_id%}' class='m-b-15'>
             <?php if (fusion_get_settings('comments_avatar')) : ?>
@@ -89,13 +98,18 @@ if (!function_exists('display_comments_list')) {
                 </div>
                 <?php if ($info['comment_ratings']) : ?>{%comment_ratings%}<?php endif; ?>
                 <?php if ($info['comment_subject']) : ?>
-                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}<!--//comment_subject--></div><?php endif; ?>
+                    <div class='comment_title'><!--comment_subject-->{%comment_subject%}
+                        <!--//comment_subject--></div><?php endif; ?>
                 <div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
                 <div>
-                    <small>{%comment_reply_link%} &middot; {%comment_edit_link%} &middot; {%comment_delete_link%} - <span class='comment_date'>{%comment_date%}</span></small>
+                    <small><?php
+                        echo !empty($info['show_reply_link']) ? '{%comment_reply_link%}' : '';
+                        echo !empty($info['edit_link']) ? ' &middot; {%comment_edit_link%}' : '';
+                        echo !empty($info['delete_link']) ? ' &middot; {%comment_delete_link%}' : ''; ?>
+                        - <span class='comment_date'>{%comment_date%}</span></small>
                 </div>
                 {%comment_reply_form%}
-                <ul class='sub_comments'>
+                <ul class='sub_comments list-style-none'>
                     {%comment_sub_comments%}
                 </ul>
             </div>
@@ -120,7 +134,7 @@ if (!function_exists('display_comments_reply_form')) {
     }
 }
 
-if (!function_exists("display_comments_form")) {
+if (!function_exists('display_comments_form')) {
     /**
      * Comment Form
      *
@@ -129,16 +143,14 @@ if (!function_exists("display_comments_form")) {
      * @param       $comment_item_id
      * @param       $_CAPTCHA_HIDE_INPUT
      * @param array $options
-     *
-     * @return string
      */
-    function display_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = array()) {
+    function display_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = []) {
         ?>
         <div class='comments-form-panel'>
             <div class='comments-form-header'><h4>{%comment_form_title%}</h4></div>
             <div class='comments-form'>
                 <?php if (fusion_get_settings('comments_avatar')) : ?>
-                    <div class='pull-left m-r-15'>
+                    <div class='pull-left m-r-15 m-t-5'>
                         {%user_avatar%}
                     </div>
                 <?php endif; ?>
@@ -154,5 +166,24 @@ if (!function_exists("display_comments_form")) {
             </div>
         </div>
         <?php
+    }
+}
+
+if (!function_exists('display_comments_ratings')) {
+    function display_comments_ratings($info = []) {
+        ?>
+        <div class="ratings overflow-hide m-b-10">
+            <div class="well">
+                <div class="row">
+                    <div class="col-xs-12 col-xs-6">
+                        {%stars%}
+                        <span class='text-lighter m-l-5'>{%reviews%}</span>
+                    </div>
+
+                    <div class="col-xs-12 col-xs-6">{%ratings%}</div>
+                </div>
+            </div>
+            {%ratings_remove_button%}
+        </div><?php
     }
 }

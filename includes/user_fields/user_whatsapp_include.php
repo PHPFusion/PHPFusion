@@ -19,19 +19,23 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg'>\n";
+$icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg' title='Whatsapp' alt='Whatsapp'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'      => TRUE,
             'max_length'  => 16,
             'error_text'  => $locale['uf_whatsapp_error'],
             'placeholder' => $locale['uf_whatsapp'],
             'label_icon'  => $icon,
             'type'        => 'number'
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_whatsapp', $locale['uf_whatsapp'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_whatsapp'], 'value' => $field_value ?: '');
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_whatsapp'],
+        'value' => $field_value ?: ''
+    ];
 }

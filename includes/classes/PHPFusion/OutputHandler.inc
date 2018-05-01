@@ -47,13 +47,13 @@ class OutputHandler {
      *
      * @var string[]
      */
-    private static $pageMeta = array();
+    private static $pageMeta = [];
     /**
      * PHP code to execute using eval replace anything in the output
      *
      * @var callback[]
      */
-    private static $outputHandlers = array();
+    private static $outputHandlers = [];
 
     /**
      * Set the new title of the page
@@ -70,7 +70,7 @@ class OutputHandler {
      * @param string $addition
      */
     public static function addToTitle($addition = "") {
-        self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", ' ', $addition, 1);
+        self::$pageTitle .= preg_replace("/".fusion_get_locale('global_200')."/", ' ', $addition, 1);
     }
 
     /**
@@ -92,10 +92,10 @@ class OutputHandler {
     public static function addToMeta($name, $addition = "") {
         $settings = \fusion_get_settings();
         if (empty(self::$pageMeta)) {
-            self::$pageMeta = array(
-                "description" => $settings['description'],
-                "keywords" => $settings['keywords']
-            );
+            self::$pageMeta = [
+                'description' => $settings['description'],
+                'keywords'    => $settings['keywords']
+            ];
         }
         if (isset(self::$pageMeta[$name])) {
             self::$pageMeta[$name] .= ",".$addition;
@@ -173,31 +173,29 @@ class OutputHandler {
      * Execute the output handlers
      *
      * @global array $locale
+     *
      * @param string $output
+     *
      * @return string
      */
     public static function handleOutput($output) {
 
-        $settings = \fusion_get_settings();
+        $settings = fusion_get_settings();
 
         if (!empty(self::$pageHeadTags)) {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
         }
 
-        if (self::$pageTitle) {
-
-        }
-
         if (self::$pageTitle != $settings['sitename']) {
             $output = preg_replace("#<title>.*</title>#i",
-                                   "<title>".self::$pageTitle.(self::$pageTitle ? $GLOBALS['locale']['global_200'] : '').$settings['sitename']."</title>",
-                                   $output, 1);
+                "<title>".self::$pageTitle.(self::$pageTitle ? fusion_get_locale('global_200') : '').$settings['sitename']."</title>",
+                $output, 1);
         }
 
         if (!empty(self::$pageMeta)) {
             foreach (self::$pageMeta as $name => $content) {
                 $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />",
-                                       $output, 1);
+                    $output, 1);
             }
         }
 

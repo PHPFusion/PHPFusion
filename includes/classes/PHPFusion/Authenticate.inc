@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
+
+use PHPFusion\Infusions\Login\Login;
 
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
@@ -29,7 +32,12 @@ define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 class Authenticate {
 
     private static $authenticate_url = "";
-    private $_userData = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => "Default");
+    private $_userData = [
+        "user_level"  => 0,
+        "user_rights" => "",
+        "user_groups" => "",
+        "user_theme"  => "Default"
+    ];
 
     public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = FALSE) {
 
@@ -43,7 +51,7 @@ class Authenticate {
     private function _authenticate($inputUserName, $inputPassword, $remember) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
-        $inputUserName = preg_replace(array("/\=/", "/\#/", "/\sOR\s/"), "", stripinput($inputUserName));
+        $inputUserName = preg_replace(["/\=/", "/\#/", "/\sOR\s/"], "", stripinput($inputUserName));
         $where = "user_name";
         switch ($settings['login_method']) {
             case 1:
@@ -68,19 +76,27 @@ class Authenticate {
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
                     $user['user_password'] = $passAuth->getNewHash();
-                    $result = dbquery("UPDATE ".DB_USERS."
-						SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
-						WHERE user_id='".$user['user_id']."'");
+                    dbquery("UPDATE ".DB_USERS."
+                        SET user_algo='".$user['user_algo']."', user_salt='".$user['user_salt']."', user_password='".$user['user_password']."'
+                        WHERE user_id='".$user['user_id']."'");
                 }
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
-                    Authenticate::_setUserTheme($user);
-                    $this->_userData = $user;
+                    // Implement new login class
+                    $login = NULL;
+                    if (file_exists(INFUSIONS.'login/login.php')) {
+                        $login = new Login();
+                    }
+                    $authenticate_methods = (method_exists($login, 'authenticate') ? $login->authenticate($user) : '');
+                    if (empty($authenticate_methods)) {
+                        Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
+                        Authenticate::_setUserTheme($user);
+                        $this->_userData = $user;
+                    }
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
                     if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
-                        $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
+                        dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
                         if ($user['user_status'] == 3) {
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
                             $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
@@ -119,7 +135,7 @@ class Authenticate {
         if (!$userCookie) {
             $cookiePath = COOKIE_PATH; // also allow infusions admin.
             $cookieName = COOKIE_ADMIN;
-            $cookieExpiration = time() + 172800; // 48 hours
+            $cookieExpiration = TIME + 172800; // 48 hours
         }
         $key = hash_hmac($algo, $userID.$cookieExpiration, $salt);
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
@@ -145,10 +161,13 @@ class Authenticate {
     /**
      * Get the redirection url
      * If there is a new authentication url, error request will not valid
+     *
      * @todo: use addNotice('') instead of going for errorId
+     *
      * @param        $errorId
      * @param string $userStatus
      * @param string $userId
+     *
      * @return string
      */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
@@ -176,12 +195,17 @@ class Authenticate {
 
     // Validate authenticated user
 
-    private static function _setUserTheme($user) {
+    public static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
         }
-        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
+
+        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < USER_LEVEL_ADMIN && $user['user_theme'] != "Default") {
             $user['user_theme'] = "Default";
+
+            return NULL;
+        } else {
+            return NULL;
         }
     }
 
@@ -232,8 +256,8 @@ class Authenticate {
                     list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
                     if ($cookieExpiration > time() && $userID == $userdata['user_id']) {
                         $result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."
-							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
-							LIMIT 1");
+                            WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
+                            LIMIT 1");
                         if (dbrows($result) == 1) {
                             $user = dbarray($result);
                             $key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
@@ -261,10 +285,10 @@ class Authenticate {
                                         if ($tuser_id != $user_id) {
                                             $error = $locale['token_error_4'];
                                             // make sure the token datestamp is a number
-                                        } elseif (!isnum($token_time)) {
+                                        } else if (!isnum($token_time)) {
                                             $error = $locale['token_error_5'];
                                             // check if the hash is valid
-                                        } elseif ($hash != hash_hmac($algo, $key, $salt)) {
+                                        } else if ($hash != hash_hmac($algo, $key, $salt)) {
                                             $error = $locale['token_error_7'];
                                             // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
                                         }
@@ -287,17 +311,13 @@ class Authenticate {
                     }
                 }
                 // Validate a provided password
-            } elseif ($pass != "") {
+            } else if ($pass != "") {
                 $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-					WHERE user_id='".$userdata['user_id']."' AND user_level < '-".USER_LEVEL_MEMBER."' AND  user_status='0' AND user_actiontime='0'
-					LIMIT 1");
+                    WHERE user_id='".$userdata['user_id']."' AND user_level < ".USER_LEVEL_MEMBER." AND  user_status='0' AND user_actiontime='0'
+                    LIMIT 1");
                 if (dbrows($result) == 1) {
                     $user = dbarray($result);
-                    if ($user['user_admin_algo'] != "md5") {
-                        $inputHash = hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']);
-                    } else {
-                        $inputHash = md5(md5($pass));
-                    }
+                    $inputHash = ($user['user_admin_algo'] != 'md5' ? hash_hmac($user['user_admin_algo'], $pass, $user['user_admin_salt']) : md5(md5($pass)));
                     if ($inputHash == $user['user_admin_password']) {
                         return TRUE;
                     }
@@ -324,10 +344,11 @@ class Authenticate {
                     $userdata['user_admin_salt'] = $passAuth->getNewSalt();
                     $userdata['user_admin_password'] = $passAuth->getNewHash();
                     dbquery("UPDATE ".DB_USERS."
-					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
-					WHERE user_id='".$userdata['user_id']."'");
+                    SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
+                    WHERE user_id='".$userdata['user_id']."'");
                 }
                 Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
+
                 return TRUE;
             }
         }
@@ -336,18 +357,18 @@ class Authenticate {
     }
 
     // Checks and sets the admin last visit cookie
-    public static function validateAuthUser($userCookie = TRUE) {
+    public static function validateAuthUser() {
         if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
                 list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-                if ($cookieExpiration > time()) {
-                    $result = dbquery("SELECT * FROM ".DB_USERS."
-						WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0'
-						LIMIT 1");
+                if ($cookieExpiration > TIME) {
+                    // must update user_salt
+                    $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
                     if (dbrows($result) == 1) {
                         $user = dbarray($result);
                         Authenticate::_setUserTheme($user);
+                        // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
                         if ($cookieHash == $hash) {
@@ -364,11 +385,15 @@ class Authenticate {
                     // Cookie expired
                     Authenticate::logOut();
                     redirect(Authenticate::getRedirectUrl(2));
+
+                    return NULL;
                 }
             } else {
                 // Missing arguments in cookie
                 Authenticate::logOut();
                 redirect(Authenticate::getRedirectUrl(2));
+
+                return NULL;
             }
         } else {
             return Authenticate::getEmptyUserData();
@@ -377,7 +402,7 @@ class Authenticate {
 
     // Get Loging Redirect Url
     public static function logOut() {
-        $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
+        dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
         Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
@@ -386,15 +411,11 @@ class Authenticate {
         return Authenticate::getEmptyUserData();
     }
 
-    // Get Empty User Data
-
     public static function getEmptyUserData() {
         global $settings;
 
-        return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']);
+        return ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']];
     }
-
-    // Set user theme
 
     public static function setLastVisitCookie() {
         global $userdata;

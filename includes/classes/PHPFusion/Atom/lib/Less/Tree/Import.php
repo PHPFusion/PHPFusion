@@ -35,7 +35,7 @@ class Less_Tree_Import extends Less_Tree {
         $this->currentFileInfo = $currentFileInfo;
 
         if (is_array($options)) {
-            $this->options += array('inline' => FALSE);
+            $this->options += ['inline' => FALSE];
 
             if (isset($this->options['less']) || $this->options['inline']) {
                 $this->css = !isset($this->options['less']) || !$this->options['less'] || $this->options['inline'];
@@ -48,15 +48,15 @@ class Less_Tree_Import extends Less_Tree {
         }
     }
 
-//
-// The actual import node doesn't return anything, when converted to CSS.
-// The reason is that it's used at the evaluation stage, so that the rules
-// it imports can be treated like any other rules.
-//
-// In `eval`, we make sure all Import nodes get evaluated, recursively, so
-// we end up with a flat structure, which can easily be imported in the parent
-// ruleset.
-//
+    //
+    // The actual import node doesn't return anything, when converted to CSS.
+    // The reason is that it's used at the evaluation stage, so that the rules
+    // it imports can be treated like any other rules.
+    //
+    // In `eval`, we make sure all Import nodes get evaluated, recursively, so
+    // we end up with a flat structure, which can easily be imported in the parent
+    // ruleset.
+    //
 
     /**
      * @return string
@@ -139,7 +139,7 @@ class Less_Tree_Import extends Less_Tree {
 
         //import once
         if ($evald->skip($full_path, $env)) {
-            return array();
+            return [];
         }
 
         if ($this->options['inline']) {
@@ -147,13 +147,13 @@ class Less_Tree_Import extends Less_Tree {
             //$contents = new Less_Tree_Anonymous($this->root, 0, array('filename'=>$this->importedFilename), true );
 
             Less_Parser::AddParsedFile($full_path);
-            $contents = new Less_Tree_Anonymous(file_get_contents($full_path), 0, array(), TRUE);
+            $contents = new Less_Tree_Anonymous(file_get_contents($full_path), 0, [], TRUE);
 
             if ($this->features) {
-                return new Less_Tree_Media(array($contents), $this->features->value);
+                return new Less_Tree_Media([$contents], $this->features->value);
             }
 
-            return array($contents);
+            return [$contents];
         }
 
 
@@ -183,7 +183,7 @@ class Less_Tree_Import extends Less_Tree {
 
         if ($evald_path) {
 
-            $import_dirs = array();
+            $import_dirs = [];
 
             if (Less_Environment::isPathRelative($evald_path)) {
                 //if the path is relative, the file should be in the current directory
@@ -208,7 +208,7 @@ class Less_Tree_Import extends Less_Tree {
                     if (is_string($path)) {
                         $full_path = $path;
 
-                        return array($full_path, $uri);
+                        return [$full_path, $uri];
                     }
                 } else {
                     $path = rtrim($rootpath, '/\\').'/'.ltrim($evald_path, '/\\');
@@ -217,7 +217,7 @@ class Less_Tree_Import extends Less_Tree {
                         $full_path = Less_Environment::normalizePath($path);
                         $uri = Less_Environment::normalizePath(dirname($rooturi.$evald_path));
 
-                        return array($full_path, $uri);
+                        return [$full_path, $uri];
                     }
                 }
             }
@@ -287,7 +287,7 @@ class Less_Tree_Import extends Less_Tree {
         $root = $parser->parseFile($full_path, $uri, TRUE);
 
 
-        $ruleset = new Less_Tree_Ruleset(array(), $root->rules);
+        $ruleset = new Less_Tree_Ruleset([], $root->rules);
         $ruleset->evalImports($import_env);
 
         return $this->features ? new Less_Tree_Media($ruleset->rules, $this->features->value) : $ruleset->rules;

@@ -1,8 +1,10 @@
 <?php
 $locale['error-DP001'] = "No posts to be removed.";
 $locale['error-MP000'] = "Move posts - error";
-$locale['error-MP001'] = "New thread doesn&#039;t exist.";
-$locale['error-MP002'] = "Posts which you&#039;re marked to move do not exists or someone else already moved them.";
+$locale['error-MP001'] = "New thread doesn't exist.";
+$locale['error-MP002'] = "Posts which you're marked to move do not exists or someone else already moved them.";
+
+
 $locale['forum_0000'] = "Discussion Forum";
 $locale['forum_0001'] = "Forum";
 $locale['forum_0002'] = "Threads";
@@ -18,6 +20,19 @@ $locale['forum_0011'] = "My Posts";
 $locale['forum_0012'] = "Latest Threads";
 $locale['forum_0013'] = "Forum Categories";
 $locale['forum_0014'] = "Reputation";
+$locale['forum_0015'] = "Forum Overview";
+$locale['forum_0016'] = "Activity";
+$locale['forum_0017'] = "People";
+$locale['forum_0018'] = "Person";
+$locale['forum_0019'] = "There are no sub-forums available";
+
+$locale['forum_0020'] = "Last Activity";
+$locale['forum_0021'] = "on %s by %s";
+$locale['forum_0022'] = "Responded in";
+$locale['forum_0023'] = "Re:";
+$locale['forum_0024'] = "See the full discussion posts";
+
+
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";
 $locale['forum_0052'] = "Author";
@@ -25,7 +40,9 @@ $locale['forum_0053'] = "Views";
 $locale['forum_0054'] = "Replies";
 $locale['forum_0055'] = "Page:";
 $locale['forum_0056'] = "No Threads have been started";
-$locale['forum_0057'] = "Start a New Thread";
+$locale['forum_0057'] = "Start New Thread";
+$locale['forum_0058'] = "Ask a Question";
+
 $locale['forum_0080'] = "Check All";
 $locale['forum_0081'] = "Uncheck All";
 $locale['forum_0082'] = "Delete threads";
@@ -95,7 +112,7 @@ $locale['forum_0223'] = "Attachments";
 $locale['forum_0224'] = "Polls";
 $locale['forum_0225'] = "Sort by";
 $locale['forum_0226'] = "Date - last update";
-$locale['forum_0228'] = "Title";
+$locale['forum_0228'] = "Topic Title";
 $locale['forum_0229'] = "Order";
 $locale['forum_0230'] = "Descending";
 $locale['forum_0231'] = "Ascending";
@@ -106,17 +123,24 @@ $locale['forum_0260'] = "New Posts";
 $locale['forum_0261'] = "No New Posts";
 $locale['forum_0262'] = "Sticky Thread";
 $locale['forum_0263'] = "Locked Thread";
-$locale['forum_0264'] = "Start New Thread";
+
 $locale['forum_0265'] = "Edit";
 $locale['forum_0266'] = "Quote";
 $locale['forum_0267'] = "wrote";
 $locale['forum_0268'] = "User IP";
 $locale['forum_0269'] = "No threads found.";
 $locale['forum_0270'] = "No post found.";
-$locale['forum_0271'] = "There are no post in this thread anymore. Please return to the &lt;a href=&#039;../../infusions/forum/index.php&#039;&gt;Forum Index&lt;/a&gt;";
+$locale['forum_0271'] = "There are no post in this thread anymore. Please return to the <a href=\"../../infusions/forum/index.php\">Forum Index</a>";
+$locale['forum_0272'] = "Filter by Tags";
+$locale['forum_0273'] = "Popular Threads This Week";
+$locale['forum_0274'] = "There are no thread tags";
+$locale['forum_0275'] = "There are no threads found";
+$locale['forum_0276'] = "There are no tags defined";
+
+$locale['forum_0300'] = "Move to a new thread";
 $locale['forum_0301'] = "Select new forum";
 $locale['forum_0302'] = "Next";
-$locale['forum_0303'] = "Select new thread";
+$locale['forum_0303'] = "Move to existing thread";
 $locale['forum_0305'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will not be moved[/STRONG] and has been removed from list because there are still posts left in the thread.";
 $locale['forum_0306'] = "You are trying to move the first post in this thread!<br/>The first post [STRONG]will be moved[/STRONG] and thread will be deleted.";
 $locale['forum_0307'] = "No posts to move.";
@@ -134,10 +158,10 @@ $locale['forum_0327'] = "There are no forums defined under this category";
 $locale['forum_0328'] = "There are no forums defined.";
 $locale['forum_0340'] = "Questions";
 $locale['forum_0350'] = "Forum Rules:";
-$locale['forum_0351'] = "Subforums";
+$locale['forum_0351'] = "Sub-forums";
 $locale['forum_0352'] = "Announcements";
 $locale['forum_0360'] = "Reply to Thread";
-$locale['forum_0361'] = "&amp;middot; Page";
+$locale['forum_0361'] = "&amp;&middot; Page";
 $locale['forum_0362'] = "posts";
 $locale['forum_0363'] = "Last updated on";
 $locale['forum_0364'] = "User Website";
@@ -145,7 +169,7 @@ $locale['forum_0365'] = "Responses";
 $locale['forum_0366'] = "Add Poll";
 $locale['forum_0372'] = "Ratings";
 $locale['forum_0373'] = "Last replied by:";
-$locale['forum_0374'] = "Any Topics";
+$locale['forum_0374'] = "All Content";
 $locale['forum_0378'] = "Solved";
 $locale['forum_0379'] = "Unsolved";
 $locale['forum_0381'] = "Post Time";
@@ -157,7 +181,9 @@ $locale['forum_0396'] = "Confirm Forum Selection";
 $locale['forum_0397'] = "There are no forum defined.";
 $locale['forum_0398'] = "Unable to download file";
 $locale['forum_0399'] = "Add Bounty";
+
 $locale['forum_0400'] = "Thread bounty has been updated. Please be sure to select the answer to be awarded with the bounty";
+
 $locale['forum_0500'] = "Preview Thread";
 $locale['forum_0501'] = "Post Thread";
 $locale['forum_0505'] = "Preview Changes";
@@ -170,10 +196,10 @@ $locale['forum_0511'] = "Down Vote";
 $locale['forum_0512'] = "Accept as Answer";
 $locale['forum_0513'] = "Remove this Answer";
 $locale['forum_0514'] = "Answered";
-$locale['forum_0515'] = "You have removed your upvote";
-$locale['forum_0516'] = "You have upvoted";
-$locale['forum_0517'] = "You have removed your downvote";
-$locale['forum_0518'] = "You have downvoted";
+$locale['forum_0515'] = "You have removed your up-vote";
+$locale['forum_0516'] = "You have up-voted";
+$locale['forum_0517'] = "You have removed your down-vote";
+$locale['forum_0518'] = "You have down-voted";
 $locale['forum_0519'] = "You do not have not earned enough privileges to {%action%}. You need to earn at least {%points%}";
 $locale['forum_0520'] = "No Message, Post will be rejected if you do not include a Message";
 $locale['forum_0521'] = "Posts:";
@@ -186,7 +212,7 @@ $locale['forum_0529'] = "reacted";
 $locale['forum_0529a'] = "You do not have sufficient permissions to vote";
 $locale['forum_0530'] = "others";
 $locale['forum_0540'] = "Attachment file type not allowed.";
-$locale['forum_0541'] = "Invalid attachment filename or filesize.";
+$locale['forum_0541'] = "Invalid attachment filename or file size.";
 $locale['forum_0542'] = "Error: You did not specify a Subject and/or Message";
 $locale['forum_0543'] = "Your Thread has been Posted";
 $locale['forum_0544'] = "Your Reply has been Posted";
@@ -196,7 +222,7 @@ $locale['forum_0547'] = "Your Post has been updated";
 $locale['forum_0548'] = "Return to Thread";
 $locale['forum_0549'] = "Return to Forum";
 $locale['forum_0550'] = "Return to Forum Index";
-$locale['forum_0551'] = "Error: Your cookie session has expired, please login and repost";
+$locale['forum_0551'] = "Error: Your cookie session has expired, please login and re-post";
 $locale['forum_0552'] = "Track Thread";
 $locale['forum_0553'] = "You are now tracking this thread";
 $locale['forum_0554'] = "You are no longer tracking this thread";
@@ -204,7 +230,7 @@ $locale['forum_0555'] = "This post is locked. Contact the moderator for further 
 $locale['forum_0556'] = "You may only edit a post for %d minute(s) after initial submission.";
 $locale['forum_0557'] = "Attachment";
 $locale['forum_0558'] = "(Optional)";
-$locale['forum_0559'] = "Max. filesize: %s / Allowed filetypes: %s / Max. number of attachments: %s";
+$locale['forum_0559'] = "Max. file size: %s / Allowed file types: %s / Max. number of attachments: %s";
 $locale['forum_0570'] = "Photo Max size exceeded. You can only upload up to";
 $locale['forum_0571'] = "Image not uploaded";
 $locale['forum_0572'] = "Posts deleted";
@@ -224,6 +250,9 @@ $locale['forum_0591'] = "Flush Post";
 $locale['forum_0592'] = "Flush Threads";
 $locale['forum_0593'] = "Flush Attachments";
 $locale['forum_0595'] = "Flush Poll";
+$locale['forum_0596'] = "Question";
+$locale['forum_0597'] = "Question|Questions";
+
 $locale['forum_0601'] = "Message";
 $locale['forum_0602'] = "Options";
 $locale['forum_0603'] = "Edit Poll";
@@ -258,6 +287,12 @@ $locale['forum_0661'] = "Hello {USERNAME},A reply has been posted in the forum t
 If you no longer wish to watch this thread you can click the \"Stop tracking this thread\" link located at the top of the thread.
 Regards,
 {SITEUSERNAME}";
+
+$locale['forum_0662'] = "User Options";
+$locale['forum_0663'] = "Edit User";
+$locale['forum_0664'] = "Ban User";
+$locale['forum_0665'] = "Delete User";
+
 $locale['forum_0701'] = "The Thread has been deleted.";
 $locale['forum_0704'] = "Are you sure you want to delete this Thread?";
 $locale['forum_0705'] = "Unable to remove thread because thread does not exist";
@@ -310,6 +345,8 @@ $locale['forum_4108'] = "The bounty has been awarded as requested.";
 $locale['forum_4109'] = "Thread bounty not awarded";
 $locale['forum_4110'] = "Thread bounty cannot be given to yourself.";
 $locale['forum_4120'] = "There are no forum ID or thread id defined. Please define either one.";
+$locale['forum_4121'] = "There are no activity in this forum.";
+
 $locale['forum_p001'] = "1 Day";
 $locale['forum_p002'] = "2 Days";
 $locale['forum_p007'] = "1 Week";
@@ -325,9 +362,10 @@ $locale['forum_perm_create_poll'] = "You %s start on a poll in this forum.";
 $locale['forum_perm_download'] = "You %s download attachments in this forum.";
 $locale['forum_perm_edit_poll'] = "You %s edit the poll in this discussion thread.";
 $locale['forum_perm_post'] = "You %s start a new discussion thread in this forum.";
-$locale['forum_perm_rate'] = "You %s up or downvote on the post in this discussion thread.";
+$locale['forum_perm_rate'] = "You %s up or down-vote on the post in this discussion thread.";
 $locale['forum_perm_reply'] = "You %s reply in this discussion thread.";
 $locale['forum_perm_upload'] = "You %s upload attachments in this forum.";
 $locale['forum_perm_vote_poll'] = "You %s vote on the poll in this discussion thread.";
+
 $locale['success-DP001'] = "Post removed successfully";
 $locale['success-DP002'] = "All Post deleted. Forum threads have been removed because it no longer contains any post.";

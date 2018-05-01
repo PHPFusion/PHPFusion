@@ -22,7 +22,7 @@ use PHPFusion\Page\PageAdmin;
 class ComposeEngine extends PageAdmin {
 
     // Base request section, action, cpid, composer_tab,
-    private static $composer_exclude = array('compose', 'row_id', 'col_id', 'widget_type', 'widgetKey', 'widgetAction');
+    private static $composer_exclude = ['compose', 'row_id', 'col_id', 'widget_type', 'widgetKey', 'widgetAction'];
 
     /**
      * Get the page composer exclude string
@@ -104,7 +104,8 @@ class ComposeEngine extends PageAdmin {
         }
         ?>
         <div class='composerAction m-b-20'>
-            <a class='btn btn-primary m-r-10' href='<?php echo clean_request('compose=add_row', self::$composer_exclude, FALSE) ?>'>
+            <a class='btn btn-primary m-r-10'
+               href='<?php echo clean_request('compose=add_row', self::$composer_exclude, FALSE) ?>'>
                 <?php echo self::$locale['page_0350'] ?>
             </a>
         </div>
@@ -133,7 +134,8 @@ class ComposeEngine extends PageAdmin {
                 ?>
                 <div class='well'>
                     <div class='btn-group btn-group-sm m-b-10'>
-                        <a class='btn btn-default' href='<?php echo $add_col_url ?>' title='<?php echo self::$locale['page_0351'] ?>'>
+                        <a class='btn btn-default' href='<?php echo $add_col_url ?>'
+                           title='<?php echo self::$locale['page_0351'] ?>'>
                             <i class='fa fa-plus-circle'></i>
                         </a>
                     </div>
@@ -146,13 +148,16 @@ class ComposeEngine extends PageAdmin {
                         <?php endif; ?>
                     </div>
                     <div class='btn-group btn-group-sm m-b-10'>
-                        <a class='btn btn-default' href='<?php echo $edit_row_url ?>' title='<?php echo self::$locale['page_0352'] ?>'>
+                        <a class='btn btn-default' href='<?php echo $edit_row_url ?>'
+                           title='<?php echo self::$locale['page_0352'] ?>'>
                             <i class='fa fa-cog'></i>
                         </a>
-                        <a class='btn btn-default' href='<?php echo $copy_row_url ?>' title='<?php echo self::$locale['page_0353'] ?>'>
+                        <a class='btn btn-default' href='<?php echo $copy_row_url ?>'
+                           title='<?php echo self::$locale['page_0353'] ?>'>
                             <i class='fa fa-copy'></i>
                         </a>
-                        <a class='btn btn-danger' href='<?php echo $del_row_url ?>' title='<?php echo self::$locale['page_0354'] ?>'>
+                        <a class='btn btn-danger' href='<?php echo $del_row_url ?>'
+                           title='<?php echo self::$locale['page_0354'] ?>'>
                             <i class='fa fa-trash'></i>
                         </a>
                     </div>
@@ -244,7 +249,7 @@ class ComposeEngine extends PageAdmin {
 
     protected static function validate_RowData() {
 
-        self::$rowData = array(
+        self::$rowData = [
             'page_grid_id'           => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
             'page_id'                => self::$data['page_id'],
             'page_grid_column_count' => form_sanitizer($_POST['page_grid_column_count'], 1, 'page_grid_column_count'),
@@ -252,7 +257,7 @@ class ComposeEngine extends PageAdmin {
             'page_grid_container'    => form_sanitizer($_POST['page_grid_container'], '', 'page_grid_container'),
             'page_grid_class'        => form_sanitizer($_POST['page_grid_class'], '', 'page_grid_class'),
             'page_grid_order'        => form_sanitizer($_POST['page_grid_order'], 0, 'page_grid_order')
-        );
+        ];
 
         if (empty(self::$rowData['page_grid_order'])) {
             self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$data['page_id']),
@@ -271,7 +276,7 @@ class ComposeEngine extends PageAdmin {
                     self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'save');
                 dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'save');
             }
-            redirect(clean_request('', array('compose'), FALSE));
+            redirect(clean_request('', ['compose'], FALSE));
         }
     }
 
@@ -279,35 +284,35 @@ class ComposeEngine extends PageAdmin {
         ob_start();
         echo openmodal('addRowfrm',
                 (isset($_GET['compose']) && $_GET['compose'] == 'edit_row' ? self::$locale['page_0352'] : self::$locale['page_0350']),
-                array('static' => TRUE)).
+                ['static' => TRUE]).
             openform('rowform', 'post', FUSION_REQUEST).
             form_hidden('page_grid_id', '', self::$rowData['page_grid_id']).
             form_btngroup('page_grid_column_count', self::$locale['page_0380'], self::$rowData['page_grid_column_count'],
-                array(
-                    'options' => array(
+                [
+                    'options' => [
                         1  => format_word(1, self::$locale['page_0381']),
                         2  => format_word(2, self::$locale['page_0381']),
                         3  => format_word(3, self::$locale['page_0381']),
                         4  => format_word(4, self::$locale['page_0381']),
                         6  => format_word(6, self::$locale['page_0381']),
                         12 => format_word(12, self::$locale['page_0381']),
-                    ),
+                    ],
                     'inline'  => TRUE,
-                )
+                ]
             ).
             form_btngroup('page_grid_container', self::$locale['page_0359'], self::$rowData['page_grid_container'],
-                array(
-                    'options' => array(0 => self::$locale['disable'], 1 => self::$locale['enable']),
+                [
+                    'options' => [0 => self::$locale['disable'], 1 => self::$locale['enable']],
                     'inline'  => TRUE,
-                )
+                ]
             ).
             form_text('page_grid_html_id', self::$locale['page_0382'], self::$rowData['page_grid_html_id'],
-                array('placeholder' => 'HTML Id', 'inline' => TRUE,)).
+                ['placeholder' => 'HTML Id', 'inline' => TRUE,]).
             form_text('page_grid_class', self::$locale['page_0383'], self::$rowData['page_grid_class'],
-                array('placeholder' => 'HTML Class', 'inline' => TRUE,)).
+                ['placeholder' => 'HTML Class', 'inline' => TRUE,]).
             form_text('page_grid_order', self::$locale['page_0384'], self::$rowData['page_grid_order'],
-                array('type' => 'number', 'inline' => TRUE, 'width' => '150px')).
-            form_button('save_row', self::$locale['save'], 'save_row', array('class' => 'btn-primary m-r-10')).
+                ['type' => 'number', 'inline' => TRUE, 'width' => '150px']).
+            form_button('save_row', self::$locale['save'], 'save_row', ['class' => 'btn-primary m-r-10']).
             form_button('cancel_row', self::$locale['cancel'], 'cancel_row').
             closeform();
         echo closemodal();
@@ -319,7 +324,7 @@ class ComposeEngine extends PageAdmin {
         $widget_cache = self::cache_widget();
         ob_start();
         if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['compose']) && $_GET['compose'] == 'add_col') :
-            echo openmodal('addColfrm', self::$locale['page_0390'], array('static' => TRUE)); ?>
+            echo openmodal('addColfrm', self::$locale['page_0390'], ['static' => TRUE]); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
                 if (!empty($widget_cache)) : ?>
@@ -329,12 +334,14 @@ class ComposeEngine extends PageAdmin {
                             <div class='col-xs-4 col-sm-3 text-center'>
                                 <div class='panel panel-default'>
                                     <div class='panel-body'>
-                                        <img style='width:40px; margin:15px;' src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>'/>
+                                        <img style='width:40px; margin:15px;'
+                                             src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>'/>
                                         <h5 class='m-t-0 m-b-0'><?php echo $widget['widget_title'] ?></h5>
                                         <?php echo $widget['widget_description'] ?>
                                     </div>
                                     <div class='panel-footer'>
-                                        <a class='btn btn-primary' href='<?php echo clean_request('compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'], self::$composer_exclude, FALSE) ?>'>
+                                        <a class='btn btn-primary'
+                                           href='<?php echo clean_request('compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'], self::$composer_exclude, FALSE) ?>'>
                                             <?php echo self::$locale['page_0391'] ?>
                                         </a>
                                     </div>
@@ -383,14 +390,15 @@ class ComposeEngine extends PageAdmin {
              * Validation
              */
             if (isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])) {
+                $button_val = '';
 
                 if (isset($_POST['save_widget'])) {
                     $button_val = stripinput($_POST['save_widget']);
-                } elseif (isset($_POST['save_and_close_widget'])) {
+                } else if (isset($_POST['save_and_close_widget'])) {
                     $button_val = stripinput($_POST['save_and_close_widget']);
                 }
 
-                self::$colData = array(
+                self::$colData = [
                     'page_id'            => self::$data['page_id'],
                     'page_grid_id'       => self::$rowData['page_grid_id'],
                     'page_content_id'    => self::$colData['page_content_id'],
@@ -401,7 +409,7 @@ class ComposeEngine extends PageAdmin {
                         self::$colData['page_content_order'],
                     'page_content'       => self::$colData['page_content'],
                     'page_options'       => self::$colData['page_options']
-                );
+                ];
 
                 if (self::$colData['page_content_order'] < 1) {
                     self::$colData['page_content_order'] = dbresult(dbquery("SELECT COUNT(page_content_id) 'content_count' FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id']),
@@ -416,7 +424,7 @@ class ComposeEngine extends PageAdmin {
                             self::$colData['page_content'] = $input;
                         }
                     }
-                } elseif ($button_val == 'settings') {
+                } else if ($button_val == 'settings') {
                     if (method_exists($object, 'validate_settings')) {
                         $input = $object->validate_settings();
                         if ($input && \defender::unserialize($input)) {
@@ -458,14 +466,14 @@ class ComposeEngine extends PageAdmin {
                             FALSE));
                     } else {
 
-                        redirect(clean_request('col_id='.self::$colData['page_content_id'], array('col_id'), FALSE));
+                        redirect(clean_request('col_id='.self::$colData['page_content_id'], ['col_id'], FALSE));
 
                     }
 
                 }
             }
 
-            $object_button = form_button('save_widget', self::$locale['page_0355'], 'save_widget', array('class' => 'btn btn-primary'));
+            $object_button = form_button('save_widget', self::$locale['page_0355'], 'save_widget', ['class' => 'btn btn-primary']);
             if (method_exists($object, 'display_form_button')) {
                 ob_start();
                 $object->display_form_button();
@@ -474,9 +482,9 @@ class ComposeEngine extends PageAdmin {
             }
 
             ob_start();
-            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
+            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], ['static' => TRUE]); ?>
 
-            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
+            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, ["enctype" => TRUE]); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
                 if (method_exists($object, 'display_form_input')) {
@@ -551,19 +559,13 @@ class ComposeEngine extends PageAdmin {
                 <div class='list-group-item m-t-5 m-b-5' style='border:1px solid #ddd; background: #fff;'>
                     <?php if (!empty($colData['page_widget'])) : ?>
                         <div class='pull-left m-r-10' style='width:40px;'>
-                            <img class='img-responsive' src='<?php echo $widget_img_path ?>'/>
+                            <img class='img-responsive' alt='widget' src='<?php echo $widget_img_path ?>'/>
                         </div>
                         <div class='pull-right m-l-10'>
                             <div class='btn-group btn-group-sm'>
-                                <a class='btn btn-default' href='<?php echo $edit_link ?>' title='<?php echo self::$locale['page_0356'] ?>'>
-                                    <i class='fa fa-cog'></i>
-                                </a>
-                                <a class='btn btn-default' href='<?php echo $copy_link ?>' title='<?php echo self::$locale['page_0357'] ?>'>
-                                    <i class='fa fa-copy'></i>
-                                </a>
-                                <a class='btn btn-default' href='<?php echo $delete_link ?>' title='<?php echo self::$locale['page_0358'] ?>'>
-                                    <i class='fa fa-minus-circle'></i>
-                                </a>
+                                <a class='btn btn-default' href='<?php echo $edit_link ?>' title='<?php echo self::$locale['page_0356'] ?>'><i class='fa fa-cog'></i></a>
+                                <a class='btn btn-default' href='<?php echo $copy_link ?>' title='<?php echo self::$locale['page_0357'] ?>'><i class='fa fa-copy'></i></a>
+                                <a class='btn btn-default' href='<?php echo $delete_link ?>' title='<?php echo self::$locale['page_0358'] ?>'><i class='fa fa-minus-circle'></i></a>
                             </div>
                         </div>
                         <div class='overflow-hide'>

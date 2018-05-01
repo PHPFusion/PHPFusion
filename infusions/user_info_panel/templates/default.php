@@ -24,7 +24,7 @@ if (!function_exists('display_user_info_panel')) {
      *
      * @param array $info
      */
-    function display_user_info_panel(array $info = array()) {
+    function display_user_info_panel(array $info = []) {
         if (iMEMBER) : ?>
 
             {%openside%}
@@ -35,12 +35,12 @@ if (!function_exists('display_user_info_panel')) {
                 </div>
                 <h4 class='uip_username'><strong>{%user_name%}</strong></h4>
                 <span>{%user_level%}</span><br/>
-                <span>{%user_reputation_icon%}{%user_reputation%}</span>
+                <?php if ($info['show_reputation'] == 1) : ?><span>{%user_reputation_icon%}{%user_reputation%}</span><?php endif; ?>
             </div>
             <div class='user_pm_notice'>{%user_pm_notice%}</div>
             <div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>
-            <div class='submissions m-t-10'>{%submit%}</div>
-            <div id='navigation-user'>
+            <!-- <div class='submissions m-t-10'>{%submit%}</div> -->
+            <div id='navigation-user' class="m-t-10">
                 <strong>{%user_nav_title%}</strong><br/>
                 <ul class='block'>
                     <li><a href='{%edit_profile_link%}'>{%edit_profile_title%} <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a></li>
@@ -52,25 +52,26 @@ if (!function_exists('display_user_info_panel')) {
                     <?php if (iADMIN) : ?>
                         <li><a href='{%acp_link%}'>{%acp_title%} <i class='fa fa-dashboard fa-pull-right'></i></a></li>
                     <?php endif; ?>
-                </ul>
-                <?php if (!empty($info['submissions'])) : ?>
-                <ul class='block'>
-                    <li>
-                        <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
-                            <ul id='collapse' class='panel-collapse collapse block'>
-                                <?php
-                                foreach ($info['submissions'] as $modules) {
-                                    ?>
-                                    <li>
-                                        <a class='side pl-l-15' href='<?php echo $modules['link'] ?>'><?php echo $modules['title'] ?></a>
-                                    </li>
+
+                    <?php if (!empty($info['submissions'])) : ?>
+
+                        <li>
+                            <a data-toggle='collapse' data-parent='#navigation-user' href='#collapse'><?php echo fusion_get_locale('UM089') ?> <i class='fa fa-cloud-upload pull-right'></i></a>
+                                <ul id='collapse' class='panel-collapse collapse block m-l-10'>
                                     <?php
-                                }
-                                ?>
-                            </ul>
-                    </li>
+                                    foreach ($info['submissions'] as $modules) {
+                                        ?>
+                                        <li>
+                                            <a class='side pl-l-15' href='<?php echo $modules['link'] ?>'><?php echo $modules['title'] ?></a>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                </ul>
+                        </li>
+
+                    <?php endif; ?>
                 </ul>
-                <?php endif; ?>
             </div>
             <div class='spacer-xs'><a class='btn btn-block btn-primary' href='{%logout_link%}'>{%logout_title%}</a></div>
             {%closeside%}

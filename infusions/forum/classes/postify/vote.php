@@ -76,7 +76,7 @@ class Postify_Vote extends Forum_Postify {
                                 if (fusion_get_userdata('user_reputation') >= self::$forum_settings['points_to_upvote']) {
                                     $vote_result = dbquery($vote_query, $vote_bind);
                                     if (dbrows($vote_result)) {
-                                    	$vote = dbarray($vote_result);
+                                        $vote = dbarray($vote_result);
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points
@@ -104,7 +104,7 @@ class Postify_Vote extends Forum_Postify {
                                 if (fusion_get_userdata('user_reputation') >= self::$forum_settings['points_to_downvote'] && $thread_data['post_author'] !== fusion_get_userdata('user_id')) {
                                     $vote_result = dbquery($vote_query, $vote_bind);
                                     if (dbrows($vote_result)) {
-                                    	$vote = dbarray($vote_result);
+                                        $vote = dbarray($vote_result);
                                         // I have voted, I'm removing my vote
                                         dbquery("DELETE FROM ".DB_FORUM_VOTES." WHERE vote_id=:vote_id", [':vote_id' => $vote['vote_id']]);
                                         // Remove log points

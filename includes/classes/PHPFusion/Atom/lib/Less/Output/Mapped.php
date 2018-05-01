@@ -34,7 +34,7 @@ class Less_Output_Mapped extends Less_Output {
      *
      * @var array
      */
-    protected $contentsMap = array();
+    protected $contentsMap = [];
 
     /**
      * Constructor
@@ -64,7 +64,7 @@ class Less_Output_Mapped extends Less_Output {
         }
 
 
-        $sourceLines = array();
+        $sourceLines = [];
         $sourceColumns = ' ';
 
 

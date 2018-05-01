@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
-require_once THEMES."templates/admin_header.php";
-include INFUSIONS."shoutbox_panel/shoutbox.inc";
-pageAccess("S");
+require_once __DIR__.'/../../maincore.php';
+require_once THEMES.'templates/admin_header.php';
 
-Shoutbox::getInstance(TRUE)->display_admin();
+require_once INFUSIONS.'shoutbox_panel/shoutbox.inc';
+pageAccess('S');
 
-require_once THEMES."templates/footer.php";
+ShoutBox::getInstance()->DisplayAdmin();
+
+require_once THEMES.'templates/footer.php';

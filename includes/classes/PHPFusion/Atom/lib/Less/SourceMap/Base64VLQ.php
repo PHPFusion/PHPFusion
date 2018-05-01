@@ -34,7 +34,7 @@ class Less_SourceMap_Base64VLQ {
      *
      * @var array
      */
-    private $charToIntMap = array(
+    private $charToIntMap = [
         'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3, 'E' => 4, 'F' => 5, 'G' => 6,
         'H' => 7, 'I' => 8, 'J' => 9, 'K' => 10, 'L' => 11, 'M' => 12, 'N' => 13,
         'O' => 14, 'P' => 15, 'Q' => 16, 'R' => 17, 'S' => 18, 'T' => 19, 'U' => 20,
@@ -43,17 +43,17 @@ class Less_SourceMap_Base64VLQ {
         'j' => 35, 'k' => 36, 'l' => 37, 'm' => 38, 'n' => 39, 'o' => 40, 'p' => 41,
         'q' => 42, 'r' => 43, 's' => 44, 't' => 45, 'u' => 46, 'v' => 47, 'w' => 48,
         'x' => 49, 'y' => 50, 'z' => 51, 0 => 52, 1 => 53, 2 => 54, 3 => 55, 4 => 56,
-        5 => 57, 6 => 58, 7 => 59, 8 => 60, 9 => 61, '+' => 62, '/' => 63,
-    );
+        5   => 57, 6 => 58, 7 => 59, 8 => 60, 9 => 61, '+' => 62, '/' => 63,
+    ];
 
     /**
      * Integer to char map
      *
      * @var array
      */
-    private $intToCharMap = array(
-        0 => 'A', 1 => 'B', 2 => 'C', 3 => 'D', 4 => 'E', 5 => 'F', 6 => 'G',
-        7 => 'H', 8 => 'I', 9 => 'J', 10 => 'K', 11 => 'L', 12 => 'M', 13 => 'N',
+    private $intToCharMap = [
+        0  => 'A', 1 => 'B', 2 => 'C', 3 => 'D', 4 => 'E', 5 => 'F', 6 => 'G',
+        7  => 'H', 8 => 'I', 9 => 'J', 10 => 'K', 11 => 'L', 12 => 'M', 13 => 'N',
         14 => 'O', 15 => 'P', 16 => 'Q', 17 => 'R', 18 => 'S', 19 => 'T', 20 => 'U',
         21 => 'V', 22 => 'W', 23 => 'X', 24 => 'Y', 25 => 'Z', 26 => 'a', 27 => 'b',
         28 => 'c', 29 => 'd', 30 => 'e', 31 => 'f', 32 => 'g', 33 => 'h', 34 => 'i',
@@ -62,7 +62,7 @@ class Less_SourceMap_Base64VLQ {
         49 => 'x', 50 => 'y', 51 => 'z', 52 => '0', 53 => '1', 54 => '2', 55 => '3',
         56 => '4', 57 => '5', 58 => '6', 59 => '7', 60 => '8', 61 => '9', 62 => '+',
         63 => '/',
-    );
+    ];
 
     /**
      * Constructor
@@ -80,6 +80,7 @@ class Less_SourceMap_Base64VLQ {
      * Return the base 64 VLQ encoded value.
      *
      * @param string $aValue The value to encode
+     *
      * @return string The encoded value
      */
     public function encode($aValue) {
@@ -104,6 +105,7 @@ class Less_SourceMap_Base64VLQ {
      *     2 becomes 4 (100 binary), -2 becomes 5 (101 binary)
      * We generate the value for 32 bit machines, hence -2147483648 becomes 1, not 4294967297,
      * even on a 64 bit machine.
+     *
      * @param string $aValue
      */
     public function toVLQSigned($aValue) {
@@ -115,6 +117,7 @@ class Less_SourceMap_Base64VLQ {
      *
      * @param integer $a number to shift
      * @param integer $b number of bits to shift
+     *
      * @return integer
      */
     public function zeroFill($a, $b) {
@@ -125,6 +128,7 @@ class Less_SourceMap_Base64VLQ {
      * Encode single 6-bit digit as base64.
      *
      * @param integer $number
+     *
      * @return string
      * @throws Exception If the number is invalid
      */
@@ -140,6 +144,7 @@ class Less_SourceMap_Base64VLQ {
      * Return the value decoded from base 64 VLQ.
      *
      * @param string $encoded The encoded value to decode
+     *
      * @return integer The decoded value
      */
     public function decode($encoded) {
@@ -158,6 +163,7 @@ class Less_SourceMap_Base64VLQ {
      * Decode single 6-bit digit from base64
      *
      * @param string $char
+     *
      * @return number
      * @throws Exception If the number is invalid
      */
@@ -178,6 +184,7 @@ class Less_SourceMap_Base64VLQ {
      * Hence
      *     1 becomes -2147483648
      * even on a 64 bit machine.
+     *
      * @param integer $aValue
      */
     public function fromVLQSigned($aValue) {

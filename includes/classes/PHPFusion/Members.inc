@@ -23,20 +23,20 @@ namespace PHPFusion;
  * @package PHPFusion
  */
 class Members {
-    protected static $filters = array();
+    protected static $filters = [];
     private static $instance = NULL;
     private static $default_condition = '';
 
-    private static $locale = array();
+    private static $locale = [];
 
     private static $rows = 0;
-    private $default_info = array(
+    private $default_info = [
         'search_filter' => '',
-        'member' => array(),
-        'page_nav' => '',
-        'page_result' => '',
-        'search_table' => '',
-    );
+        'member'        => [],
+        'page_nav'      => '',
+        'page_result'   => '',
+        'search_table'  => '',
+    ];
 
     private function __construct() {
         if (!isset($_GET['sortby']) || !ctype_alnum($_GET['sortby'])) {
@@ -44,7 +44,7 @@ class Members {
         }
         $_GET['orderby'] = isset($_GET['orderby']) ? $_GET['orderby'] : 'active';
         $_GET['sort_order'] = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
-        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : ($_GET['sortby'] != "all" ? $_GET['sortby'] : '');
+        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby'];
     }
 
     public static function getInstance($set_info = TRUE) {
@@ -65,13 +65,9 @@ class Members {
     }
 
     private function getMemberRows() {
-
         $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
-
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
-
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
-
         $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
 
         $result = dbquery("
@@ -88,8 +84,8 @@ class Members {
     private static function getFilters() {
         // alpha select condition
         $default_condition = ($_GET['sortby'] == "all" ? "" : " AND user_name LIKE '".stripinput($_GET['sortby'])."%'");
-        return ((isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i",
-                                                           $_GET['search_text'])) ? ' AND user_name LIKE "'.stripinput($_GET['search_text']).'%"' : $default_condition);
+        return ((isset($_GET['search_text']) && $_GET['search_text'] != 'all' && preg_check("/^[-0-9A-Z_@\s]+$/i",
+                $_GET['search_text'])) ? ' AND user_name LIKE "'.stripinput($_GET['search_text']).'%"' : $default_condition);
     }
 
     // condition filters
@@ -98,43 +94,43 @@ class Members {
 
         if (iMEMBER) {
 
-            $search_form = openform('searchform', 'get', FUSION_SELF);
+            $search_form = openform('searchform', 'get', BASEDIR."members.php?");
             $search_form .= "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
             $search_form .= form_text('search_text', '', $_GET['search_text'],
-                                      array(
-                                          'inline' => TRUE,
-                                          'placeholder' => self::$locale['MEMB_005'],
-                                          'append_button' => TRUE,
-                                          'append_type' => "submit",
-                                          "append_form_value" => self::$locale['MEMB_006'],
-                                          "append_value" => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
-                                          "append_button_name" => self::$locale['MEMB_006'],
-                                          "width" => "260px",
-                                          'class' => 'no-border m-b-0'
-                                      )
+                [
+                    'inline'             => TRUE,
+                    'placeholder'        => self::$locale['MEMB_005'],
+                    'append_button'      => TRUE,
+                    'append_type'        => "submit",
+                    "append_form_value"  => 'search',
+                    "append_value"       => "<i class='fa fa-search'></i> ".self::$locale['MEMB_006'],
+                    "append_button_name" => 'search',
+                    "width"              => "260px",
+                    'class'              => 'no-border m-b-0'
+                ]
             );
             $search_form .= "</div>\n";
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
             $search_form .= form_select('orderby', self::$locale['MEMB_007'], $_GET['orderby'],
-                                                                              array(
-                                                                                  'options' => array(
-                                                                                      'active' => self::$locale['MEMB_008'],
-                                                                                      'registered' => self::$locale['MEMB_009'],
-                                                                                      'name' => self::$locale['MEMB_010']
-                                                                                  ),
-                                                                                  'inline' => TRUE,
-                                                                                  'inner_width' => '150px',
-                                                                                  'class' => 'm-0 p-0'
-                                                                              )
-                );
+                [
+                    'options'     => [
+                        'active'     => self::$locale['MEMB_008'],
+                        'registered' => self::$locale['MEMB_009'],
+                        'name'       => self::$locale['MEMB_010']
+                    ],
+                    'inline'      => TRUE,
+                    'inner_width' => '150px',
+                    'class'       => 'm-0 p-0'
+                ]
+            );
             $search_form .= "</div>\n";
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
-            $search_form .= form_select("sort_order", "", $_GET['sort_order'], array(
-                "allowclear" => TRUE, 'inner_width' => "150px", "options" => array(
-                    'ASC' => self::$locale['MEMB_012'],
+            $search_form .= form_select("sort_order", "", $_GET['sort_order'], [
+                "allowclear" => TRUE, 'inner_width' => "150px", "options" => [
+                    'ASC'  => self::$locale['MEMB_012'],
                     'DESC' => self::$locale['MEMB_013'],
-                )
-            ));
+                ]
+            ]);
             $search_form .= "</div>\n";
             $search_form .= closeform();
             add_to_jquery("
@@ -146,19 +142,19 @@ class Members {
             });
             ");
 
-            $info = array(
+            $info = [
                 'search_filter' => array_merge(range("A", "Z"), range(0, 9)),
-                'rows' => self::$rows,
-                'search_form' => $search_form,
-            );
+                'rows'          => self::$rows,
+                'search_form'   => $search_form,
+            ];
 
-            $info['search_table'] = "<table class='table table-responsive table-striped center alphabet-table'>\n<tr>\n";
-            $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
+            $info['search_table'] = "<div class='table-responsive'><table class='table table-striped center alphabet-table'>\n<tr>\n";
+            $info['search_table'] .= "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
             for ($i = 0; $i < count($info['search_filter']) != ""; $i++) {
-                $info['search_table'] .= "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF."?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";
-                $info['search_table'] .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
+                $info['search_table'] .= "<td class='tbl1 text-center'><div class='small'><a href='".BASEDIR."members.php?sortby=".$info['search_filter'][$i]."'>".$info['search_filter'][$i]."</a></div></td>";
+                $info['search_table'] .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
             }
-            $info['search_table'] .= "</tr>\n</table>\n";
+            $info['search_table'] .= "</tr>\n</table>\n</div>";
 
             if (self::$rows > 0) {
 
@@ -168,7 +164,7 @@ class Members {
 
                 if ($current_rows) {
 
-                    $info['page_nav'] = makepagenav($_GET['rowstart'], 24, self::$rows, 3, FUSION_SELF."?sortby=".$_GET['sortby']."&amp;");
+                    $info['page_nav'] = makepagenav($_GET['rowstart'], 24, self::$rows, 3, BASEDIR."members.php?sortby=".$_GET['sortby']."&amp;");
 
                     while ($data = dbarray($result)) {
 
@@ -180,10 +176,10 @@ class Members {
                         if (!empty($user_groups)) {
                             foreach ($user_groups as $key => $value) {
                                 if ($value) {
-                                    $info['member'][$data['user_id']]['groups'][$key] = array(
+                                    $info['member'][$data['user_id']]['groups'][$key] = [
                                         'title' => getgroupname($value, FALSE, TRUE),
-                                        'link' => BASEDIR."profile.php?group_id=".$value
-                                    );
+                                        'link'  => BASEDIR."profile.php?group_id=".$value
+                                    ];
                                 }
                             }
                         }
@@ -192,16 +188,16 @@ class Members {
                     $end_rows = isset($_GET['rowstart']) && $_GET['rowstart'] > 0 ? $current_rows + $_GET['rowstart'] : $current_rows;
 
                     $info['page_result'] = strtr(self::$locale['MEMB_017'],
-                                                 array(
-                                                     "{%start_row%}" => ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']),
-                                                     "{%end_row%}" => $end_rows,
-                                                     "{%max_row%}" => $info['rows'],
-                                                     "{%member%}" => Locale::format_word($info['rows'], self::$locale['fmt_member'],
-                                                                                         array(
-                                                                                             'add_count' => FALSE,
-                                                                                         )
-                                                     )
-                                                 )
+                        [
+                            "{%start_row%}" => ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']),
+                            "{%end_row%}"   => $end_rows,
+                            "{%max_row%}"   => $info['rows'],
+                            "{%member%}"    => Locale::format_word($info['rows'], self::$locale['fmt_member'],
+                                [
+                                    'add_count' => FALSE,
+                                ]
+                            )
+                        ]
                     );
 
                 }
@@ -217,24 +213,18 @@ class Members {
 
         } else {
             redirect(BASEDIR."index.php");
+            return NULL;
         }
 
     }
 
     protected static function get_MembersQuery() {
-
         $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
-
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
-
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
-
         $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
-
         $limit = isset(self::$filters['limit']) ? self::$filters['limit'] : 24;
-
         $default_sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
-
         $default_sorting = "u.user_level DESC, u.user_language DESC, u.user_name $default_sort_order";
 
         if (isset($_GET['orderby'])) {
@@ -265,15 +255,15 @@ class Members {
 
     /**
      * Set custom filters
+     *
      * @param array $filters
      *      Indexes:    'select' - query selection,
      *                  'condition', - query condition
      *                  'order', - order
      *                  'limit', - limitations
      *                  'join' - join statements
-     * @return string
      */
-    public function setFilters(array $filters = array()) {
+    public function setFilters(array $filters = []) {
         self::$filters = $filters;
     }
 

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Uri
  * Validates URL Input
@@ -38,14 +39,14 @@ class Uri extends \Defender\Validation {
                 $remote_url = 'http://'.self::$inputValue;
                 if (self::validateURL($internal_url) !== FALSE) {
                     return $internal_url;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
+                } else if (self::validateURL($remote_url) !== FALSE) {
                     return $remote_url;
                 }
             } else {
                 $remote_url = self::$inputValue;
                 if (self::validateURL($internal_url) !== FALSE) {
                     return self::$inputValue;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
+                } else if (self::validateURL($remote_url) !== FALSE) {
                     return self::$inputValue;
                 }
             }
@@ -57,7 +58,9 @@ class Uri extends \Defender\Validation {
 
     /**
      * Validate URL
+     *
      * @param $url
+     *
      * @return bool
      */
     protected static function validateURL($url) {
@@ -77,7 +80,7 @@ class Uri extends \Defender\Validation {
                 curl_close($fp);
                 return $url;
             }
-        } elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
+        } else if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
             return FALSE;
         }
 
@@ -87,6 +90,7 @@ class Uri extends \Defender\Validation {
 
     /**
      * Verify Paths within CMS
+     *
      * @return bool|string
      */
     public function verify_path() {
@@ -100,5 +104,4 @@ class Uri extends \Defender\Validation {
 
         return FALSE;
     }
-
 }

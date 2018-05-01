@@ -20,24 +20,24 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
+$regex = [
     "%faq_cat_id%"   => "([0-9]+)",
     "%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%type%"         => "(FQ)",
-    "%stype%"        => "(q)",
-);
+    "%stype%"        => "(q)"
+];
 
-$pattern = array(
-    "print/%type%/%cat_id%"                                             => "print.php?type=%type%&amp;item_id=%cat_id%",
-    "submit/%stype%/frequently-asked-questions"                         => "submit.php?stype=%stype%",
-    "submit/%stype%/frequently-asked-questions/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=FQ",
-    "frequently-asked-questions"                                        => "infusions/faq/faq.php",
-    "frequently-asked-questions/category/%faq_cat_id%"                  => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
-);
+$pattern = [
+    "print/%type%/%cat_id%/%faq_cat_name%"             => "print.php?type=%type%&amp;item_id=%cat_id%",
+    "submit-%stype%/faq"                               => "submit.php?stype=%stype%",
+    "submit-%stype%/faq/submitted-and-thank-you"       => "submit.php?stype=%stype%&amp;submitted=q",
+    "frequently-asked-questions"                       => "infusions/faq/faq.php",
+    "frequently-asked-questions/category/%faq_cat_id%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%"
+];
 
-$pattern_tables["%cat_id%"] = array(
+$pattern_tables["%cat_id%"] = [
     "table"       => DB_FAQS,
     "primary_key" => "faq_id",
-    "id"          => array("%faq_id%" => "cat_id"),
-    "columns"     => array()
-);
+    "id"          => ["%faq_id%" => "cat_id"],
+    "columns"     => []
+];

@@ -18,14 +18,56 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-define("DOWNLOADS", INFUSIONS."downloads/");
-define("IMAGES_D", INFUSIONS."downloads/images/");
-define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
-define("DB_DOWNLOADS", DB_PREFIX."downloads");
+
+if (!defined("DOWNLOAD_LOCALE")) {
+    if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
+        define("DOWNLOAD_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads.php");
+    } else {
+        define("DOWNLOAD_LOCALE", INFUSIONS."downloads/locale/English/downloads.php");
+    }
+}
+
+if (!defined("DOWNLOAD_ADMIN_LOCALE")) {
+    if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
+        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
+    } else {
+        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/English/downloads_admin.php");
+    }
+}
+
+if (!defined("DOWNLOADS")) {
+    define("DOWNLOADS", INFUSIONS."downloads/");
+}
+if (!defined("IMAGES_D")) {
+    define("IMAGES_D", INFUSIONS."downloads/images/");
+}
+if (!defined("DB_DOWNLOAD_CATS")) {
+    define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
+}
+if (!defined("DB_DOWNLOADS")) {
+    define("DB_DOWNLOADS", DB_PREFIX."downloads");
+}
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitType('d', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitLink('d', INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
 \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
+
+$inf_settings = get_settings('downloads');
+if ($inf_settings['download_allow_submission']) {
+    \PHPFusion\Admins::getInstance()->setSubmitData('d', [
+        'infusion_name' => 'downloads',
+        'link'          => INFUSIONS."downloads/download_submit.php",
+        'submit_link'   => "submit.php?stype=d",
+        'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('submit_0002', LOCALE.LOCALESET."submissions.php"),
+        'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+    ]);
+}
+
+\PHPFusion\Admins::getInstance()->setFolderPermissions('downloads', [
+    'infusions/downloads/files/'              => TRUE,
+    'infusions/downloads/images/'             => TRUE,
+    'infusions/downloads/submissions/'        => TRUE,
+    'infusions/downloads/submissions/images/' => TRUE
+]);

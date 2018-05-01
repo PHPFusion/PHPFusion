@@ -50,9 +50,10 @@ class MySQL extends AbstractDatabaseDriver {
      * @param string $table Table name
      * @param string $conditions conditions after "where"
      * @param array  $parameters
+     *
      * @return int
      */
-    public function count($field, $table, $conditions = "", array $parameters = array()) {
+    public function count($field, $table, $conditions = "", array $parameters = []) {
         $cond = ($conditions ? " WHERE ".$conditions : "");
         $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
         $result = $this->query($sql, $parameters);
@@ -65,6 +66,7 @@ class MySQL extends AbstractDatabaseDriver {
      *
      * @param mixed $result The result of a query
      * @param int   $row
+     *
      * @return mixed
      */
     public function fetchFirstColumn($result, $row = 0) {
@@ -77,6 +79,7 @@ class MySQL extends AbstractDatabaseDriver {
      * Count the number of selected rows by the given query
      *
      * @param mixed $result The result of a query
+     *
      * @return int
      */
     public function countRows($result) {
@@ -84,9 +87,21 @@ class MySQL extends AbstractDatabaseDriver {
     }
 
     /**
+     * Count the number of selected columns by the given query
+     *
+     * @param mixed $result The result of a query
+     *
+     * @return int
+     */
+    public function countColumns($result) {
+        return @mysql_num_fields($result);
+    }
+
+    /**
      * Fetch one row as an associative array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Associative array
      */
     public function fetchAssoc($result) {
@@ -99,6 +114,7 @@ class MySQL extends AbstractDatabaseDriver {
      * Fetch one row as a numeric array
      *
      * @param mixed $result The result of a query
+     *
      * @return array Numeric array
      */
     public function fetchRow($result) {
@@ -133,13 +149,14 @@ class MySQL extends AbstractDatabaseDriver {
      * @param string $pass Password
      * @param string $db The name of the database
      * @param array  $options Currently only one option exists: charset
+     *
      * @throws SelectionException When the selection of the database was unsuccessful
      * @throws ConnectionException When the connection could not be established
      */
-    protected function connect($host, $user, $pass, $db, array $options = array()) {
-        $options += array(
+    protected function connect($host, $user, $pass, $db, array $options = []) {
+        $options += [
             'charset' => 'utf8',
-        );
+        ];
         $this->connection = @mysql_connect($host, $user, $pass);
         if (!$this->connection) {
             throw new ConnectionException(mysql_error(), mysql_errno());
@@ -160,9 +177,10 @@ class MySQL extends AbstractDatabaseDriver {
      *
      * @param string $query SQL
      * @param array  $parameters
+     *
      * @return mixed The result of the query or FALSE on error
      */
-    protected function _query($query, array $parameters = array()) {
+    protected function _query($query, array $parameters = []) {
         if ($parameters) {
             foreach ($parameters as $k => $parameter) {
                 $parameters[$k] = $this->quote($parameter);
@@ -183,15 +201,16 @@ class MySQL extends AbstractDatabaseDriver {
      * @see http://php.net/manual/en/pdo.quote.php
      *
      * @param $value
+     *
      * @return string
      */
     public function quote($value) {
         $type = $this->getParameterType($value);
         if (self::PARAM_NULL === $type) {
             return 'NULL';
-        } elseif (self::PARAM_BOOL === $type) {
+        } else if (self::PARAM_BOOL === $type) {
             return $value ? 'TRUE' : 'FALSE';
-        } elseif (self::PARAM_INT === $type) {
+        } else if (self::PARAM_INT === $type) {
             return $value;
         }
 

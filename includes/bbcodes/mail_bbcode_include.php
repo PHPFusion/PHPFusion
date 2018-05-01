@@ -33,14 +33,14 @@ $mail_regex = '[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}';
 $text = preg_replace_callback('
 ~\[mail
 (=
-	(?P<mail>'.$mail_regex.')
-	(;(?P<subject>.*?))?
+    (?P<mail>'.$mail_regex.')
+    (;(?P<subject>.*?))?
 )?
 \]
 (?(?='.$mail_regex.') # if followed by
-	(?P<mail2>'.$mail_regex.') # then
-	|
-	(?P<title>.*?)? # else
+    (?P<mail2>'.$mail_regex.') # then
+    |
+    (?P<title>.*?)? # else
 )
 \[\/mail\]
 ~ix'

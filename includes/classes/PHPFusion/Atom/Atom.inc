@@ -25,13 +25,13 @@ class Atom {
     public $compress = FALSE;
     public $debug = FALSE;
     public $Compiler = TRUE; // turn off compiler here.
-    private $font_decoration_options = array();
-    private $fills = array();
+    private $font_decoration_options = [];
+    private $fills = [];
     /**
      * For internals CSS compilers - These are actual css properties. Do not translate.
      */
-    private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
-    private $text_decoration = array(
+    private $text_weight = ['400', '600', '400', '400', '600', '600', '400', '600'];
+    private $text_decoration = [
         'none',
         'none',
         'none',
@@ -40,14 +40,14 @@ class Atom {
         'none',
         'underline',
         'underline'
-    );
-    private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
+    ];
+    private $text_style = ['normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic'];
     /**
      * Initialize Data
      *
      * @var array
      */
-    private $data = array(
+    private $data = [
         'theme_id'                      => 0,
         'theme_title'                   => '',
         'sans_serif_fonts'              => 'Helvetica Neue, Helvetica, Arial, sans-serif',
@@ -172,9 +172,9 @@ class Atom {
         'navbar_link_decoration_hover'  => 0,
         'navbar_link_color_active'      => '#555',
         'navbar_link_decoration_active' => 0,
-    );
-    private $less_var = array();
-    private $theme_data = array();
+    ];
+    private $less_var = [];
+    private $theme_data = [];
 
     public function infuse_theme() {
         if (!empty($this->theme_data)) {
@@ -205,7 +205,7 @@ class Atom {
 
         if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
             include THEMES.$this->theme_name.$theme_dbfile;
-            $data = array(
+            $data = [
                 'theme_name'        => !empty($theme_title) ? $theme_title : $data['theme_name'],
                 'theme_screenshot'  => isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
                 'theme_author'      => !empty($theme_author) ? $theme_author : $data['theme_author'],
@@ -214,7 +214,7 @@ class Atom {
                 'theme_version'     => !empty($theme_version) ? $theme_version : $data['theme_version'],
                 'theme_description' => !empty($theme_description) ? $theme_description : $data['theme_description'],
                 'theme_widgets'     => file_exists(THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE
-            );
+            ];
         }
 
         echo "<div class='list-group-item p-20'>\n";
@@ -246,39 +246,38 @@ class Atom {
         echo "</div>\n";
 
 
-
         if (dbrows($result) > 0) {
             echo "<div class='m-b-20 p-b-20 m-t-20'>\n";
-            echo openform('preset-form', 'post', FUSION_REQUEST, array('notice' => 0, 'max_tokens' => 1));
+            echo openform('preset-form', 'post', FUSION_REQUEST, ['notice' => 0, 'max_tokens' => 1]);
             while ($preset = dbarray($result)) {
                 // @to fix: set as active, edit, delete options.
                 echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($data['theme_screenshot'], '150px')."
-				<div class='display-block strong m-t-10 m-b-20'>".trimlink($preset['theme_title'], 30)."</div>";
+                <div class='display-block strong m-t-10 m-b-20'>".trimlink($preset['theme_title'], 30)."</div>";
                 echo "<div class='btn-group m-t-10 m-b-10'>\n";
                 if ($preset['theme_active'] == 1) {
-                    echo form_button('active', $locale['theme_1003'], 'active', array(
+                    echo form_button('active', $locale['theme_1003'], 'active', [
                         'class'      => 'btn-sm btn-default active',
                         'deactivate' => 1
-                    ));
+                    ]);
                 } else {
-                    echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array(
+                    echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], [
                         'class' => 'btn-sm btn-default',
                         'icon'  => 'fa fa-upload'
-                    ));
+                    ]);
                 }
                 // dropdown
                 echo "<a data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i class='fa fa-cog fa-fw'></i><span class='caret'></span></a>\n";
                 echo "<ul class='dropdown-menu'>\n";
-                echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], array(
+                echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], [
                         "aid",
                         "action",
                         "theme"
-                    ), TRUE)."'>".$locale['edit']."</a></li>\n";
-                echo "<li><a href='".clean_request("delete_preset=".$preset['theme_id'], array(
+                    ], TRUE)."'>".$locale['edit']."</a></li>\n";
+                echo "<li><a href='".clean_request("delete_preset=".$preset['theme_id'], [
                         "aid",
                         "action",
                         "theme"
-                    ), TRUE)."'>".$locale['delete']."</a></li>\n";
+                    ], TRUE)."'>".$locale['delete']."</a></li>\n";
                 echo "</ul>\n";
                 echo form_hidden('theme', '', $preset['theme_name']);
                 echo "</div>\n";
@@ -324,11 +323,11 @@ class Atom {
                         }
                     }
                 }
-                $widgetData = array(
+                $widgetData = [
                     "settings_theme" => $this->theme_name,
                     "settings_name"  => $this->theme_name,
                     "settings_value" => 1
-                );
+                ];
                 dbquery_insert(DB_SETTINGS_THEME, $widgetData, "save");
                 addNotice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
                 redirect(FUSION_REQUEST);
@@ -363,21 +362,21 @@ class Atom {
             if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
                 echo openform("widget_infuse", "post", FUSION_REQUEST);
                 echo "<div>".$locale['theme_1032']."</div>";
-                echo form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class" => "btn-primary m-t-10"));
+                echo form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, ["class" => "btn-primary m-t-10"]);
                 echo closeform();
             } else {
-                $html = openform("widget_defuse", "post", FUSION_REQUEST, array("class" => "text-right"));
-                $html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class" => "btn-danger"));
+                $html = openform("widget_defuse", "post", FUSION_REQUEST, ["class" => "text-right"]);
+                $html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, ["class" => "btn-danger"]);
                 $html .= closeform();
                 $html .= "<hr/>\n";
                 add_to_jquery("
-				$('#defuse_widget').bind('click', function(e) {
-					var val = confirm('".$locale['theme_1033']."');
-					if (val == false) {
-						e.preventDefault();
-					}
-				});
-				");
+                $('#defuse_widget').bind('click', function(e) {
+                    var val = confirm('".$locale['theme_1033']."');
+                    if (val == false) {
+                        e.preventDefault();
+                    }
+                });
+                ");
                 echo $html;
                 echo "<!---start widget form--->\n";
                 include THEMES.$this->theme_name."/widget.php";
@@ -407,7 +406,7 @@ class Atom {
             }
         }
         self::save_theme();
-        $this->font_decoration_options = array(
+        $this->font_decoration_options = [
             $locale['theme_5000'],
             $locale['theme_5001'],
             $locale['theme_5002'],
@@ -416,14 +415,14 @@ class Atom {
             $locale['theme_5005'],
             $locale['theme_5006'],
             $locale['theme_5007'],
-        );
-        $this->fills = array(
+        ];
+        $this->fills = [
             $locale['theme_5008'],
             $locale['theme_5009'],
             $locale['theme_5010'],
             $locale['theme_5011'],
             $locale['theme_5012'],
-        );
+        ];
         $tab_title['title'][] = $locale['theme_2001'];
         $tab_title['id'][] = 'font';
         $tab_title['icon'][] = 'fa fa-text-width m-r-10';
@@ -438,23 +437,23 @@ class Atom {
             print_p($_POST);
         }
         // how come my multiple preset missing now?
-        echo openform('theme_edit', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
+        echo openform('theme_edit', 'post', FUSION_REQUEST, ["class" => "m-t-20"]);
         echo "<div class='list-group-item m-b-20 clearfix'>\n";
         echo "<div class='pull-right m-l-10'>\n";
-        echo form_button('save_theme', $locale['theme_5013'], 'save_theme', array('class' => 'btn-primary m-r-10'));
-        echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default'));
+        echo form_button('save_theme', $locale['theme_5013'], 'save_theme', ['class' => 'btn-primary m-r-10']);
+        echo form_button('close_theme', $locale['close'], 'close_theme', ['class' => 'btn-default']);
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo form_hidden('theme_id', '', $this->data['theme_id']);
         echo form_hidden("theme_datestamp", '', time());
-        echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array(
+        echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], [
             'inline'   => 1,
             'required' => TRUE
-        ));
-        echo form_hidden('theme_name', $locale['theme_2008'], $this->theme_name, array(
+        ]);
+        echo form_hidden('theme_name', $locale['theme_2008'], $this->theme_name, [
             'inline'     => 1,
             'deactivate' => 1
-        ));
+        ]);
         echo "</div>\n";
         echo "</div>\n";
         echo opentab($tab_title, $tab_active, 'atom');
@@ -483,20 +482,20 @@ class Atom {
 
         if (isset($_POST['save_theme'])) {
 
-            $modal = openmodal('dbi', sprintf($locale['theme_2005'], ucwords($this->theme_name)), array(
+            /*$modal = openmodal('dbi', sprintf($locale['theme_2005'], ucwords($this->theme_name)), [
                 'class'     => 'zindex-boost modal-center',
                 'button_id' => 'save_theme',
                 'static'    => 1
-            ));
+            ]);
             $modal .= "<div class='overflow-hide'>".$locale['theme_2006']."</div>\n";
             $modal .= closemodal();
-            //add_to_footer($modal);
+            add_to_footer($modal);*/
 
             $fieldArrays = $this->data;
             foreach ($fieldArrays as $fieldNames => $fieldDefaults) {
                 $this->data[$fieldNames] = isset($_POST[$fieldNames]) ? form_sanitizer($_POST[$fieldNames], $fieldDefaults, $fieldNames) : "";
             }
-            $old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
+            $old_file = !empty($this->data['theme_file']) ? $this->data['theme_file'] : '';
             if (isset($this->data['theme_config'])) {
                 unset($this->data['theme_config']);
             } // will need to rebuild. unset it.
@@ -505,13 +504,13 @@ class Atom {
             } // important to unset.
 
             // rebuild entire structure
-            $data = array(
+            $data = [
                 "theme_name"      => $this->theme_name,
                 "theme_title"     => form_sanitizer($_POST['theme_title'], '', 'theme_title'),
                 "theme_id"        => form_sanitizer($_POST['theme_id'], '0', 'theme_id'),
                 "theme_user"      => $userdata['user_id'],
                 "theme_datestamp" => time()
-            );
+            ];
 
             if (\defender::safe()) {
 
@@ -528,7 +527,7 @@ class Atom {
                             dbquery_insert(DB_THEME, $data, 'update');
                             if (\defender::safe()) {
                                 addNotice('success', $locale['theme_success_003']);
-                                redirect(clean_request("", array("aid", "action", "theme"), TRUE));
+                                redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                             }
                         } else {
                             // debug messages
@@ -544,7 +543,7 @@ class Atom {
                         dbquery_insert(DB_THEME, $data, 'save');
                         if (\defender::safe()) {
                             addNotice('success', $locale['theme_success_004']);
-                            redirect(clean_request("", array("aid", "action", "theme"), TRUE));
+                            redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                         }
                     } else {
                         // debug messages
@@ -561,7 +560,6 @@ class Atom {
     /* Handling Posts and Feedback. Watch out for Unsets */
 
     protected function buildCss() {
-
         $this->debug = FALSE;
 
         $locale = fusion_get_locale();
@@ -569,8 +567,7 @@ class Atom {
         $outputFolder = THEMES.$this->target_folder."/";
         $outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
         $returnFile = str_replace(THEMES, '', $outputFile);
-        $directories = array(INCLUDES."atom/less/" => 'includes/atom/less/');
-        $options = array('output' => $outputFile, 'compress' => $this->compress,);
+        $options = ['output' => $outputFile, 'compress' => $this->compress,];
         $this->set_less_variables();
 
         if (!empty($this->less_var) && \defender::safe() && $this->Compiler) {
@@ -702,7 +699,7 @@ class Atom {
     /* Administration Menus - Part I - Font Settings */
 
     static function parse_fonts($font) {
-        $_parsedFonts = array();
+        $_parsedFonts = [];
         if ($font) {
             $font = explode(',', $font);
             if (count($font)) {
@@ -711,18 +708,22 @@ class Atom {
                 }
 
                 return implode(', ', $_parsedFonts);
+            } else {
+                return NULL;
             }
+        } else {
+            return NULL;
         }
     }
 
     /* Administration Menus - Part II - Components & Layout Settings */
 
     static function parse_font_set($font) {
-        $fonts_family_opts = array(
+        $fonts_family_opts = [
             '0' => '@font-family-sans-serif',
             '1' => '@font-family-monospace',
             '2' => '@font-family-serif'
-        );
+        ];
 
         return $fonts_family_opts[$font];
     }
@@ -771,29 +772,28 @@ class Atom {
         $base_font = array_values(array_flip($this->base_font()));
         $web_font = array_values(array_flip($this->google_font()));
         $font_list = array_merge($base_font, $web_font);
-        $color_options = array("placeholder" => $locale['theme_2009'], 'width' => '100%', "format" => "hex");
-        $font_options = array(
+        $color_options = ["placeholder" => $locale['theme_2009'], 'width' => '100%', "format" => "hex"];
+        $font_options = [
             'width'       => '100%',
             'placeholder' => $locale['theme_2010'],
             'tags'        => TRUE,
             'multiple'    => TRUE,
             'max_select'  => 6,
             'inline'      => TRUE,
-            'inner_width' => '100%',
-            'width'       => '100%'
-        );
-        $font_type_options = array('placeholder' => $locale['theme_2011'], 'width' => '280px', 'inline' => 1);
-        $font_size_options = array(
+            'inner_width' => '100%'
+        ];
+        $font_type_options = ['placeholder' => $locale['theme_2011'], 'width' => '280px', 'inline' => 1];
+        $font_size_options = [
             'placeholder' => '(px)',
             'width'       => '100%',
             'number'      => 1,
             'class'       => 'pull-left display-inline m-r-10'
-        );
-        $fonts_family_opts = array(
+        ];
+        $fonts_family_opts = [
             '0' => $locale['theme_2012'],
             '1' => $locale['theme_2013'],
             '2' => $locale['theme_2014'],
-        );
+        ];
         echo form_hidden('theme', '', $this->theme_name);
         openside('');
         $font_options['options'] = $font_list;
@@ -945,7 +945,7 @@ class Atom {
 
     static function base_font() {
         // OS Font Defaults
-        return array(
+        return [
             "Arial"               => "Arial",
             "Avant Garde"         => "Avant+Garde",
             "Cambria"             => "Cambria",
@@ -963,14 +963,14 @@ class Atom {
             "Verdana"             => "Verdana",
             "sans-serif"          => "sans-serif",
             "serif"               => "serif"
-        );
+        ];
         //print_p($os_faces);
     }
 
     /* parse font-weight */
 
     static function google_font() {
-        $google_font = array(
+        $google_font = [
             "ABeeZee"                  => "ABeeZee",
             "Abel"                     => "Abel",
             "Abril Fatface"            => "Abril+Fatface",
@@ -1616,7 +1616,7 @@ class Atom {
             "Yeseva One"               => "Yeseva+One",
             "Yesteryear"               => "Yesteryear",
             "Zeyada"                   => "Zeyada"
-        );
+        ];
 
         //api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
         return $google_font;
@@ -1626,8 +1626,8 @@ class Atom {
 
     private function layout_admin() {
         $locale = fusion_get_locale();
-        $width_options = array("width" => "100%", 'placeholder' => 'px');
-        $color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
+        $width_options = ["width" => "100%", 'placeholder' => 'px'];
+        $color_options = ["placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex"];
         // max widths
         openside('');
         echo "<div class='row'>\n";
@@ -1664,11 +1664,11 @@ class Atom {
         echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo form_para($locale['theme_3011'], 'btneff');
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-        echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], array(
+        echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], [
             "placeholder" => $locale['theme_2033'],
             "width"       => "100%",
             "options"     => $this->fills
-        ));
+        ]);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo form_text("btn_border", $locale['theme_3013'], $this->data['btn_border'], $width_options);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1840,9 +1840,9 @@ class Atom {
 
     private function nav_admin() {
         $locale = fusion_get_locale();
-        $width_options = array("width" => "100%", 'placeholder' => 'px');
-        $color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
-        $fill_options = array("placeholder" => $locale['theme_2033'], "width" => "280px");
+        $width_options = ["width" => "100%", 'placeholder' => 'px'];
+        $color_options = ["placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex"];
+        $fill_options = ["placeholder" => $locale['theme_2033'], "width" => "280px"];
         openside('');
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1889,14 +1889,14 @@ class Atom {
         echo form_colorpicker("navbar_brand_color", $locale['theme_4012'], $this->data['navbar_brand_color'], $color_options);
         echo form_colorpicker("navbar_font_color", $locale['theme_4013'], $this->data['navbar_font_color'], $color_options);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-        echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], array(
+        echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], [
             "width"   => "100%",
             "options" => $this->font_decoration_options
-        ));
-        echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], array(
+        ]);
+        echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], [
             "width"   => "100%",
             "options" => $this->font_decoration_options
-        ));
+        ]);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo "</div>\n</div>\n";
         echo "<div class='row'>\n";
@@ -1904,29 +1904,28 @@ class Atom {
         echo form_para($locale['theme_4015'], 'navbar-h4');
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo form_colorpicker("navbar_link_color", $locale['theme_4013'], $this->data['navbar_link_color'], $color_options);
-        echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], array(
+        echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], [
             "width"   => "100%",
             "options" => $this->font_decoration_options
-        ));
+        ]);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo form_colorpicker("navbar_link_color_hover", $locale['theme_2028'], $this->data['navbar_link_color_hover'], $color_options);
-        echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], array(
+        echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], [
             "width"   => "100%",
             "options" => $this->font_decoration_options
-        ));
+        ]);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo form_colorpicker("navbar_link_color_active", $locale['theme_2034'], $this->data['navbar_link_color_active'], $color_options);
-        echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], array(
+        echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], [
             "width"   => "100%",
             "options" => $this->font_decoration_options
-        ));
+        ]);
         echo "</div>\n</div>\n";
         closeside();
     }
 
     /* Outputs adjusted colors */
-
-    private function parse_background($hex, $fill_type) {
+    /*private function parse_background($hex, $fill_type) {
         // possible fill types in atom
         // darken or lighten functions via steps of 255 max.
         $hex_value = str_replace('#', '', $hex);
@@ -1937,59 +1936,58 @@ class Atom {
                 break;
             case 1: // horizontal
                 return "
-					background: ".$hex.";
-				  	background: -moz-linear-gradient(left, ".$hex." 0%, ".$stop_hex." 100%);
-				  	background: -webkit-gradient(linear, left top, right top, color-stop(0%, ".$hex."), color-stop(100%, ".$stop_hex."));
-				  	background: -webkit-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -o-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -ms-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: linear-gradient(to right, ".$hex." 0%,".$stop_hex." 100%);
-				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
-				";
+                    background: ".$hex.";
+                    background: -moz-linear-gradient(left, ".$hex." 0%, ".$stop_hex." 100%);
+                    background: -webkit-gradient(linear, left top, right top, color-stop(0%, ".$hex."), color-stop(100%, ".$stop_hex."));
+                    background: -webkit-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -o-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -ms-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+                    background: linear-gradient(to right, ".$hex." 0%,".$stop_hex." 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
+                ";
                 break;
             case 2: // vertical
                 return "
-					background: ".$hex.";
-				  	background: -moz-linear-gradient(top, ".$hex." 0%, ".$stop_hex." 100%);
-				  	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-				  	background: -webkit-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -o-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -ms-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: linear-gradient(to bottom, ".$hex." 0%,".$stop_hex." 100%);
-				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=0 );
-				";
+                    background: ".$hex.";
+                    background: -moz-linear-gradient(top, ".$hex." 0%, ".$stop_hex." 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+                    background: -webkit-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -o-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -ms-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+                    background: linear-gradient(to bottom, ".$hex." 0%,".$stop_hex." 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=0 );
+                ";
                 break;
             case 3: //radial
                 return "
-					background: ".$hex.";
-				  	background: -moz-radial-gradient(center, ellipse cover, ".$hex." 0%, ".$stop_hex." 100%);
-				  	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-				  	background: -webkit-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -o-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: -ms-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-				  	background: radial-gradient(ellipse at center, ".$hex." 0%,".$stop_hex." 100%);
-				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
-				";
+                    background: ".$hex.";
+                    background: -moz-radial-gradient(center, ellipse cover, ".$hex." 0%, ".$stop_hex." 100%);
+                    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+                    background: -webkit-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -o-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -ms-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+                    background: radial-gradient(ellipse at center, ".$hex." 0%,".$stop_hex." 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
+                ";
                 break;
             case 4: // diagonal
                 return "
-					background: ".$hex.";
-  					background: -moz-linear-gradient(-45deg, ".$hex." 0%, ".$stop_hex." 100%);
-  					background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-  					background: -webkit-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-  					background: -o-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-  					background: -ms-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-  					background: linear-gradient(135deg, ".$hex." 0%,".$stop_hex." 100%);
-  					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1);
-				";
+                    background: ".$hex.";
+                    background: -moz-linear-gradient(-45deg, ".$hex." 0%, ".$stop_hex." 100%);
+                    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+                    background: -webkit-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -o-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+                    background: -ms-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+                    background: linear-gradient(135deg, ".$hex." 0%,".$stop_hex." 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1);
+                ";
                 break;
             default:
                 return $hex;
         }
-    }
+    }*/
 
     /* Background parser */
-
     static function adjustBrightness($hex, $percent) {
         /* Function by Torkill Johnsen */
         // Steps should be between -255 and 255. Negative = darker, positive = lighter

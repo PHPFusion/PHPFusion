@@ -19,27 +19,27 @@ require_once INCLUDES."mimetypes_include.php";
 $locale = fusion_get_locale();
 if (isset($_POST['savesettings'])) {
     // redo this part
-    $StoreArray = array(
-        "download_max_b" => form_sanitizer($_POST['calc_b'], 1, "calc_b") * form_sanitizer($_POST['calc_c'], 1500000, "calc_c"),
-        "download_types" => form_sanitizer($_POST['download_types'], "", "download_types"),
-        "download_screen_max_w" => form_sanitizer($_POST['download_screen_max_w'], 500, "download_screen_max_w"),
-        "download_screen_max_h" => form_sanitizer($_POST['download_screen_max_h'], 500, "download_screen_max_h"),
-        "download_screen_max_b" => form_sanitizer($_POST['calc_bb'], 1, "calc_bb") * form_sanitizer($_POST['calc_cc'], 1500000, "calc_cc"),
-        "download_thumb_max_h" => form_sanitizer($_POST['download_thumb_max_h'], 500, 'download_thumb_max_h'),
-        "download_thumb_max_w" => form_sanitizer($_POST['download_thumb_max_w'], 500, 'download_thumb_max_w'),
-        "download_screenshot" => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
-        "download_stats" => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
-        "download_pagination" => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
-        "download_allow_submission" => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
-        "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? TRUE : FALSE,
-        "download_extended_required" => isset($_POST['download_extended_required']) ? TRUE : FALSE,
-    );
-    if ($defender->safe()) {
+    $StoreArray = [
+        "download_max_b"               => form_sanitizer($_POST['calc_b'], 512000, "calc_b") * form_sanitizer($_POST['calc_c'], 1, "calc_c"),
+        "download_types"               => form_sanitizer($_POST['download_types'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', "download_types"),
+        "download_screen_max_w"        => form_sanitizer($_POST['download_screen_max_w'], 1024, "download_screen_max_w"),
+        "download_screen_max_h"        => form_sanitizer($_POST['download_screen_max_h'], 768, "download_screen_max_h"),
+        "download_screen_max_b"        => form_sanitizer($_POST['calc_bb'], 153600, "calc_bb") * form_sanitizer($_POST['calc_cc'], 1, "calc_cc"),
+        "download_thumb_max_h"         => form_sanitizer($_POST['download_thumb_max_h'], 100, 'download_thumb_max_h'),
+        "download_thumb_max_w"         => form_sanitizer($_POST['download_thumb_max_w'], 100, 'download_thumb_max_w'),
+        "download_screenshot"          => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
+        "download_stats"               => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
+        "download_pagination"          => form_sanitizer($_POST['download_pagination'], 15, 'download_pagination'),
+        "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 0, "download_allow_submission"),
+        "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
+        "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
+    ];
+    if (\defender::safe()) {
         foreach ($StoreArray as $key => $value) {
             $result = NULL;
-            if ($defender->safe()) {
-                $Array = array("settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads");
-                dbquery_insert(DB_SETTINGS_INF, $Array, 'update', array("primary_key" => "settings_name"));
+            if (\defender::safe()) {
+                $Array = ["settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads"];
+                dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }
         }
         addNotice('success', $locale['900']);
@@ -59,12 +59,12 @@ $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
 $calc_bb = $dl_settings['download_screen_max_b'] / $calc_cc;
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $mime = mimeTypes();
-$mime_opts = array();
+$mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;
 }
-echo "<div class='well'>".$locale['download_description']."</div>";
+echo "<div class='well m-t-10'>".$locale['download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");
@@ -80,45 +80,45 @@ openside('');
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['934']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
+    ".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
         <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
-	".form_text('download_screen_max_h', '', $dl_settings['download_screen_max_h'], [
+    ".form_text('download_screen_max_h', '', $dl_settings['download_screen_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
         <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
-	</div>\n</div>";
+    </div>\n</div>";
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['937']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
+    ".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
         <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
-	".form_text('download_thumb_max_h', '', $dl_settings['download_thumb_max_h'], [
+    ".form_text('download_thumb_max_h', '', $dl_settings['download_thumb_max_h'], [
         'class'      => 'pull-left',
         'max_length' => 4,
         'type'       => 'number',
         'width'      => '150px'
     ])."
         <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
-	</div>
+    </div>
 </div>";
 
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['930']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('calc_b', '', $calc_b, [
+    ".form_text('calc_b', '', $calc_b, [
         'required'   => TRUE,
         'type'       => 'number',
         'inline'     => TRUE,
@@ -127,21 +127,21 @@ echo "<div class='display-block overflow-hide'>
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
-	".form_select('calc_c', '', $calc_c, [
+    ".form_select('calc_c', '', $calc_c, [
         'options'     => $calc_opts,
         'placeholder' => $locale['choose'],
         'class'       => 'pull-left',
         'inner_width' => '100%',
         'width'       => '180px'
     ])."
-	</div>
+    </div>
 </div>
 ";
 
 echo "<div class='display-block overflow-hide'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_bb'>".$locale['936']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-	".form_text('calc_bb', '', $calc_bb, [
+    ".form_text('calc_bb', '', $calc_bb, [
         'required'   => TRUE,
         'type'       => 'number',
         'error_text' => $locale['error_rate'],
@@ -149,14 +149,14 @@ echo "<div class='display-block overflow-hide'>
         'max_length' => 4,
         'class'      => 'pull-left m-r-10'
     ])."
-	".form_select('calc_cc', '', $calc_cc, [
+    ".form_select('calc_cc', '', $calc_cc, [
         'options'     => $calc_opts,
         'placeholder' => $locale['choose'],
         'class'       => 'pull-left',
         'inner_width' => '100%',
         'width'       => '180px'
     ])."
-	</div>
+    </div>
 </div>";
 closeside();
 openside('');
@@ -192,11 +192,11 @@ echo closeform();
 add_to_jquery("
 $('#shortdesc_display').show();
 $('#calc_upload').bind('click', function() {
-	if ($('#calc_upload').attr('checked')) {
-		$('#download_filesize').attr('readonly', 'readonly');
-		$('#download_filesize').val('');
-	} else {
-	   $('#download_filesize').removeAttr('readonly');
-	}
+    if ($('#calc_upload').attr('checked')) {
+        $('#download_filesize').attr('readonly', 'readonly');
+        $('#download_filesize').val('');
+    } else {
+       $('#download_filesize').removeAttr('readonly');
+    }
 });
 ");

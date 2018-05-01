@@ -24,9 +24,9 @@ if ($profile_method == "input") {
     if (defined('ADMIN_PANEL')) {
         $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_comments-stat']."</div>";
     }
-} elseif ($profile_method == "display") {
-    $user_fields = array(
+} else if ($profile_method == "display") {
+    $user_fields = [
         'title' => $locale['uf_comments-stat'],
         'value' => number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".intval($_GET['lookup'])."'")).""
-    );
+    ];
 }

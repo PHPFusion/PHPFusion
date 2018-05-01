@@ -33,9 +33,9 @@ if (!function_exists('filename_exists')) {
     /**
      * Creates an unique filename if file already exists
      *
-     * @param string $file       path of file if basename is empty. Otherwise path of parent directory
-     * @param string $basename   The name of file if $file is a directory. Otherwise leave it empty.
-     * @param string $dateFormat If you want date in directory path
+     * @param        $directory
+     * @param string $file path of file if basename is empty. Otherwise path of parent directory
+     * @param bool   $options
      *
      * @return string  New unique filepath
      * @options array -
@@ -43,12 +43,12 @@ if (!function_exists('filename_exists')) {
      *                           $options['hash'] '0' by default, '1' to add hash string
      */
     function filename_exists($directory, $file = '', $options = FALSE) {
-        $parts = pathinfo($directory.$file) + array(
+        $parts = pathinfo($directory.$file) + [
                 'dirname'   => '',
                 'basename'  => '',
                 'extension' => '',
                 'filename'  => ''
-            );
+            ];
         if ($parts['extension']) {
             //check if filename starts with dot
             if ($parts['filename']) {
@@ -96,15 +96,32 @@ if (!function_exists('filename_exists')) {
 if (!function_exists('set_setting')) {
     // Sets the value of a setting in the settings_inf table
     function set_setting($setting_name, $setting_value, $setting_inf) {
-        $set_result = dbquery("SELECT settings_name FROM ".DB_SETTINGS_INF." WHERE settings_name='".$setting_name."' AND settings_inf='".$setting_inf."'");
         $return = TRUE;
-        if (dbrows($set_result)) {
-            $up_result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".$setting_value."' WHERE settings_name='".$setting_name."' AND settings_inf='".$setting_inf."'");
+
+        $bind = [
+            ':settings_name' => $setting_name,
+            ':settings_inf'  => $setting_inf
+        ];
+
+        $resultQuery = "SELECT settings_name
+            FROM ".DB_SETTINGS_INF."
+            WHERE settings_name=:settings_name AND settings_inf=:settings_inf
+            ";
+
+        $result = dbquery($resultQuery, $bind);
+
+        $binds = [
+            ':settings_name'  => $setting_name,
+            ':settings_value' => $setting_value,
+            ':settings_inf'   => $setting_inf
+        ];
+        if (dbrows($result)) {
+            $up_result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:settings_value WHERE settings_name=:settings_name AND settings_inf=:settings_inf", $binds);
             if (!$up_result) {
                 $return = FALSE;
             }
         } else {
-            $in_result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$setting_name."', '".$setting_value."', '".$setting_inf."')");
+            $in_result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES (:settings_name, :settings_value, :settings_inf)", $binds);
             if (!$in_result) {
                 $return = FALSE;
             }
@@ -114,32 +131,65 @@ if (!function_exists('set_setting')) {
     }
 }
 
-// Get the settings for the infusion from the settings_inf table
-if (!function_exists('get_settings')) {
-    function get_settings($setting_inf) {
-        $settings_arr = array();
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_INF." WHERE settings_inf='".$setting_inf."'");
-        if (dbrows($set_result)) {
-            while ($set_data = dbarray($set_result)) {
-                $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
+if (!function_exists('infusion_exists')) {
+    /**
+     * Check whether an infusion is installed or not from the infusions table
+     *
+     * @param $infusion_folder
+     *
+     * @return bool
+     */
+    function infusion_exists($infusion_folder) {
+        // get the whole thing is faster maybe
+        static $infusions_installed = array();
+        if (empty($infusions_installed)) {
+            $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
+            if (dbrows($result)) {
+                while ($data = dbarray($result)) {
+                    $infusions_installed[$data['inf_folder']] = TRUE;
+                }
             }
-
-            return $settings_arr;
-        } else {
-            return FALSE;
         }
+
+        return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
+
     }
 }
+
+/**
+ * Get the settings for the infusion from the settings_inf table
+ *
+ * @param      $settings_inf
+ * @param null $key
+ *
+ * @return mixed|null
+ */
+if (!function_exists('get_settings')) {
+    function get_settings($settings_inf, $key = NULL) {
+        static $settings_arr = [];
+        if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
+            $result = dbquery("SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
+            while ($data = dbarray($result)) {
+                $settings_arr[$data['settings_inf']][$data['settings_name']] = $data['settings_value'];
+            }
+        }
+        if (empty($settings_arr[$settings_inf]))
+            return NULL;
+
+        return $key === NULL ? $settings_arr[$settings_inf] : (isset($settings_arr[$settings_inf][$key]) ? $settings_arr[$settings_inf][$key] : NULL);
+    }
+}
+
 
 if (!function_exists('send_pm')) {
     /**
      * Send PM to a user or group
      *
-     * @param        $to       - Recepient Either group_id or user_id
-     * @param        $from     - Sender's user id
-     * @param        $subject  - Message subject
-     * @param        $message  - Message body
-     * @param string $smileys  - use smileys or not
+     * @param        $to - Recepient Either group_id or user_id
+     * @param        $from - Sender's user id
+     * @param        $subject - Message subject
+     * @param        $message - Message body
+     * @param string $smileys - use smileys or not
      * @param bool   $to_group - set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
@@ -150,17 +200,15 @@ if (!function_exists('send_pm')) {
 // Upload file function
 if (!function_exists('upload_file')) {
 
-    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
-        global $defender;
-
+    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "", $replace_upload = FALSE) {
         if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
 
             if (stristr($valid_ext, ',')) {
                 $valid_ext = explode(",", $valid_ext);
-            } elseif (stristr($valid_ext, '|')) {
+            } else if (stristr($valid_ext, '|')) {
                 $valid_ext = explode("|", $valid_ext);
             } else {
-                $defender->stop();
+                \defender::stop();
                 addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
             }
 
@@ -169,8 +217,8 @@ if (!function_exists('upload_file')) {
                 $target_file = stripfilename(substr($file['name'], 0, strrpos($file['name'], ".")));
             }
             $file_ext = strtolower(strrchr($file['name'], "."));
-            $file_dest = $target_folder;
-            $upload_file = array(
+            //$file_dest = $target_folder;
+            $upload_file = [
                 "source_file"   => $source_file,
                 "source_size"   => $file['size'],
                 "source_ext"    => $file_ext,
@@ -180,17 +228,17 @@ if (!function_exists('upload_file')) {
                 "max_size"      => $max_size,
                 "query"         => $query,
                 "error"         => 0
-            );
+            ];
             if ($file['size'] > $max_size) {
                 // Maximum file size exceeded
                 $upload_file['error'] = 1;
-            } elseif (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
+            } else if (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
-            } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+            } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
-                $target_file = filename_exists($target_folder, $target_file.$file_ext);
+                $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
                 $upload_file['target_file'] = $target_file;
                 move_uploaded_file($file['tmp_name'], $target_folder.$target_file);
                 if (function_exists("chmod")) {
@@ -206,7 +254,7 @@ if (!function_exists('upload_file')) {
             }
         } else {
             // File not uploaded
-            $upload_file = array("error" => 4);
+            $upload_file = ["error" => 4];
         }
 
         return $upload_file;
@@ -216,7 +264,7 @@ if (!function_exists('upload_file')) {
 // Upload image function
 if (!function_exists('upload_image')) {
 
-    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = array('.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp')) {
+    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'], $replace_upload = FALSE) {
 
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
             $target_folder .= '/';
@@ -230,49 +278,60 @@ if (!function_exists('upload_image')) {
                 $image_name = stripfilename(substr($image['name'], 0, strrpos($image['name'], ".")));
             }
             $image_ext = strtolower(strrchr($image['name'], "."));
+            switch ($image_ext) {
+                case '.gif':
+                    $filetype = 1;
+                    break;
+                case '.jpg':
+                    $filetype = 2;
+                    break;
+                case '.png':
+                    $filetype = 3;
+                    break;
+                default:
+                    $filetype = FALSE;
+            }
+
             // need to run file_exist. @ supress will not work anymore.
             if ($image['size']) {
+
                 $image_res = @getimagesize($image['tmp_name']);
-                $image_info = array(
-                    'image'        => FALSE,
-                    'image_name'   => $image_name.$image_ext,
-                    'image_ext'    => $image_ext,
-                    'image_size'   => $image['size'],
-                    'image_width'  => $image_res[0],
-                    'image_height' => $image_res[1],
-                    'thumb1'       => FALSE,
-                    'thumb1_name'  => '',
-                    'thumb2'       => FALSE,
-                    'thumb2_name'  => '',
-                    'error'        => 0,
-                    'query'        => $query
-                );
-                if ($image_ext == ".gif") {
-                    $filetype = 1;
-                } elseif ($image_ext == ".jpg") {
-                    $filetype = 2;
-                } elseif ($image_ext == ".png") {
-                    $filetype = 3;
-                } else {
-                    $filetype = FALSE;
-                }
+
+                $image_info = [
+                    'image'         => FALSE,
+                    "target_folder" => $target_folder,
+                    "valid_ext"     => $allowed_extensions,
+                    "max_size"      => $max_size,
+                    'image_name'    => $image_name.$image_ext,
+                    'image_ext'     => $image_ext,
+                    'image_size'    => $image['size'],
+                    'image_width'   => $image_res[0],
+                    'image_height'  => $image_res[1],
+                    'thumb1'        => FALSE,
+                    'thumb1_name'   => '',
+                    'thumb2'        => FALSE,
+                    'thumb2_name'   => '',
+                    'error'         => 0,
+                    'query'         => $query,
+                ];
+
                 if ($image['size'] > $max_size) {
                     // Invalid file size
                     $image_info['error'] = 1;
-                } elseif (!verify_image($image['tmp_name'])) {
+                } else if (!verify_image($image['tmp_name'])) {
                     // Failed payload scan
                     $image_info['error'] = 2;
-                } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === FALSE) {
+                } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === FALSE) {
                     // Failed extension checks
                     $image_info['error'] = 5;
-                } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
+                } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                     // Invalid image resolution
                     $image_info['error'] = 3;
                 } else {
                     if (!file_exists($target_folder)) {
                         mkdir($target_folder, 0755);
                     }
-                    $image_name_full = filename_exists($target_folder, $image_name.$image_ext);
+                    $image_name_full = ($replace_upload ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
                     $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
                     $image_info['image_name'] = $image_name_full;
                     $image_info['image'] = TRUE;
@@ -284,7 +343,7 @@ if (!function_exists('upload_image')) {
                         // Invalid query string
                         $image_info['error'] = 4;
                         unlink($target_folder.$image_name_full);
-                    } elseif ($thumb1 || $thumb2) {
+                    } else if ($thumb1 || $thumb2) {
                         require_once INCLUDES."photo_functions_include.php";
                         $noThumb = FALSE;
                         if ($thumb1) {
@@ -316,7 +375,7 @@ if (!function_exists('upload_image')) {
                                 if (!file_exists($thumb2_folder)) {
                                     mkdir($thumb2_folder, 0755, TRUE);
                                 }
-                                $image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
+                                $image_name_t2 = ($replace_upload ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
                                 $image_info['thumb2_name'] = $image_name_t2;
                                 $image_info['thumb2'] = TRUE;
                                 if ($thumb2_ratio == 0) {
@@ -337,11 +396,11 @@ if (!function_exists('upload_image')) {
                 }
             } else {
                 // The image is invalid
-                $image_info = array("error" => 2);
+                $image_info = ["error" => 2];
             }
         } else {
             // Image not uploaded
-            $image_info = array("error" => 5);
+            $image_info = ["error" => 5];
         }
 
         return $image_info;

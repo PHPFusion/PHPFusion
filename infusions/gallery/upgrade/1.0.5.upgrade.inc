@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /gallery/upgrade/1.0.5.upgrade.inc
-| Upgrade Gallery to Version 9.0.2 (RC5)
+| Filename: gallery/upgrade/1.0.5.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -44,24 +43,8 @@ if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
 // Update new access levels for album access
 $result = dbquery("SELECT album_id, album_access, album_language FROM ".DB_PHOTO_ALBUMS);
 if (dbrows($result)) {
-    $localeset = fusion_get_settings('localeset');
     while ($data = dbarray($result)) {
-        $update = array();
-        if ($data['album_access']) { // access > 1 (i.e. 100, 101, 102, 103)
-            $update['album_access'] = '-'.$data['album_access'];
-        }
-        if (!$data['album_language']) {
-            $update['album_language'] = $localeset;
-        }
-        if (!empty($update)) {
-            $update = array_map(function ($key) use ($update) {
-                return "`$key` = '".$update[$key]."'";
-            }, array_keys($update));
-        }
-        $upgrade = implode(', ', $update);
-        if (!empty($update)) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET $upgrade WHERE album_id='".$data['album_id']."'";
-        }
+        $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_access='-".$data['album_access']."' WHERE album_id='".$data['album_id']."' AND album_access != 0";
     }
 }
 
@@ -118,7 +101,7 @@ if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".$language."')";
 
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p' AND link_language='".$language."'";
@@ -126,5 +109,5 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$enabled_languages[$i]."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".LANGUAGE."')";
 }

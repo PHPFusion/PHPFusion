@@ -20,9 +20,11 @@ if (!defined("IN_FUSION")) {
 }
 
 if ($profile_method == "input") {
-    $options += array('inline' => TRUE, "type" => "number", 'max_length' => 20);
+    $options += ['inline' => TRUE, "type" => "number", 'max_length' => 20];
     $user_fields = form_text('user_phone_home', $locale['uf_phone_home'], $field_value, $options);
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_phone_home'], 'value' => $field_value ?: "");
-
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'title' => $locale['uf_phone_home'],
+        'value' => $field_value ?: ''
+    ];
 }

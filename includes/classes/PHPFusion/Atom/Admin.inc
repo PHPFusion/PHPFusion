@@ -18,9 +18,11 @@
 namespace PHPFusion\Atom;
 
 use PHPFusion\BreadCrumbs;
+
 /**
  * Administration Page for Theme Settings
  * Class Admin
+ *
  * @package PHPFusion\Atom
  */
 class Admin {
@@ -37,7 +39,9 @@ class Admin {
 
     /**
      * Check if a theme widget file exist
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     static function theme_widget_exists($theme_name) {
@@ -55,14 +59,14 @@ class Admin {
         // sanitize theme exist
         $theme_name = self::verify_theme($theme_name) ? $theme_name : "";
         if (!$theme_name) {
-            redirect(clean_request("", array("aid"), TRUE));
+            redirect(clean_request("", ["aid"], TRUE));
         }
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
-        $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
-        $tab['id'] = array("dashboard", "widgets", "css");
-        $tab['icon'] = array("fa fa-edit fa-fw", "fa fa-cube fa-fw", "fa fa-css3 fa-fw");
+        $tab['title'] = [$locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']];
+        $tab['id'] = ["dashboard", "widgets", "css"];
+        $tab['icon'] = ["fa fa-edit fa-fw", "fa fa-cube fa-fw", "fa fa-css3 fa-fw"];
         if (isset($_GET['action'])) {
             $tab['title'][] = $locale['theme_1029'];
             $tab['id'][] = "close";
@@ -76,7 +80,7 @@ class Admin {
         $atom = new Atom();
         $atom->target_folder = $theme_name;
         $atom->theme_name = $theme_name;
-        echo opentab($tab, $tab_active, "theme_admin", TRUE);
+        echo opentab($tab, $tab_active, "theme_admin", TRUE, 'nav-tabs m-b-10');
         // now include the thing as necessary
         switch ($_GET['section']) {
             case "dashboard":
@@ -87,15 +91,16 @@ class Admin {
                     if (empty($_GET['theme'])) {
                         redirect(FUSION_SELF.$aidlink);
                     }
+
                     $theme_name = stripinput($_GET['theme']);
-                    $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."'
-					and theme_id='".intval($_GET['delete_preset'])."'"));
-                    if (file_exists(THEMES.$theme_name."/".$file['theme_file'])) {
-                        unlink(THEMES.$theme_name."/".$file['theme_file']);
+                    $file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_id='".intval($_GET['delete_preset'])."'"));
+                    if (file_exists(THEMES.$file['theme_file'])) {
+                        unlink(THEMES.$file['theme_file']);
                     }
+
                     dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
                     addNotice('success', $locale['theme_success_002']);
-                    redirect(clean_request("", array("section", "aid", "action", "theme"), TRUE));
+                    redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
                 }
                 /**
                  * Set active presets
@@ -104,18 +109,18 @@ class Admin {
                     $result = dbquery("select theme_id FROM ".DB_THEME." WHERE theme_active='1'");
                     if (dbrows($result) > 0) {
                         $data = dbarray($result);
-                        $data = array(
-                            "theme_id" => $data['theme_id'],
+                        $data = [
+                            "theme_id"     => $data['theme_id'],
                             "theme_active" => 0,
-                        );
+                        ];
                         dbquery_insert(DB_THEME, $data, "update");
                     }
-                    $data = array(
-                        "theme_id" => $_POST['load_preset'],
+                    $data = [
+                        "theme_id"     => $_POST['load_preset'],
                         "theme_active" => 1,
-                    );
+                    ];
                     dbquery_insert(DB_THEME, $data, "update");
-                    redirect(clean_request("", array("section", "aid", "action", "theme"), TRUE));
+                    redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
                 }
                 $atom->display_theme_overview();
                 break;
@@ -136,7 +141,9 @@ class Admin {
 
     /**
      * Verify theme exist
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     public static function verify_theme($theme_name) {
@@ -156,7 +163,7 @@ class Admin {
                 }
             }
         }
-        $data = array();
+        $data = [];
         $_dir = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
         foreach ($_dir as $folder) {
             $theme_dbfile = '/theme_db.php';
@@ -165,54 +172,48 @@ class Admin {
                 // 9.00 compatible theme.
                 $theme_folder = '';
                 include_once THEMES.$folder.$theme_dbfile;
-                $data[$status][$folder] = array(
-                    'readme' => !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '',
-                    'folder' => isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '',
-                    'screenshot' => isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
-                    'title' => isset($theme_title) ? $theme_title : '',
-                    'web' => isset($theme_web) ? $theme_web : '',
-                    'author' => isset($theme_author) ? $theme_author : '',
-                    'license' => isset($theme_license) ? $theme_license : '',
-                    'version' => isset($theme_version) ? $theme_version : '',
+                $data[$status][$folder] = [
+                    'readme'      => !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '',
+                    'folder'      => isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '',
+                    'screenshot'  => isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                    'title'       => isset($theme_title) ? $theme_title : '',
+                    'web'         => isset($theme_web) ? $theme_web : '',
+                    'author'      => isset($theme_author) ? $theme_author : '',
+                    'license'     => isset($theme_license) ? $theme_license : '',
+                    'version'     => isset($theme_version) ? $theme_version : '',
                     'description' => isset($theme_description) ? $theme_description : '',
-                    'widgets' => file_exists(THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
-                );
+                    'widgets'     => file_exists(THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
+                ];
             } else {
                 // older legacy theme.
                 if (file_exists(THEMES.$folder.'/theme.php')) {
                     $theme_screenshot = '/screenshot.jpg';
-                    $data[$status][$folder] = array(
-                        'readme' => '',
-                        'folder' => THEMES.$folder,
-                        'title' => $folder,
-                        'screenshot' => file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
-                        'author' => '',
-                        'license' => '',
-                        'version' => '',
+                    $data[$status][$folder] = [
+                        'readme'      => '',
+                        'folder'      => THEMES.$folder,
+                        'title'       => $folder,
+                        'screenshot'  => file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                        'author'      => '',
+                        'license'     => '',
+                        'version'     => '',
                         'description' => $locale['theme_1035']
-                    );
+                    ];
                 }
             }
         }
         krsort($data);
         foreach ($data as $status => $themes) {
             foreach ($themes as $theme_name => $theme_data) {
-                echo "<div class='panel panel-default'>\n";
-                echo "<div class='panel-body'>\n";
-                // Links
+                echo "<div class='panel panel-default'>\n<div class='panel-body'>\n<div class='row'>\n";
+
+                echo '<div class="col-xs-12 col-sm-10">';
                 echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-                echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
-                if ($status == TRUE) {
-                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
-                } else {
-                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
-                }
-                echo "</div>\n";
+
                 echo "<div class='overflow-hide'>\n";
                 echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
                 echo "<div>\n";
                 if (!empty($theme_data['description'])) {
-                    echo "<div class='display-block spacer-sm'>".$theme_data['description']."</div>";
+                    echo "<div class='display-block m-t-10 m-b-10'>".$theme_data['description']."</div>";
                 }
                 if (!empty($theme_data['license'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
@@ -239,7 +240,19 @@ class Admin {
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "</div>\n";
-                echo "</div>\n</div>\n";
+                echo '</div>';
+
+                echo '<div class="col-xs-12 col-sm-2">';
+                echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
+                if ($status == TRUE) {
+                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+                } else {
+                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
+                }
+                echo "</div>\n";
+                echo '</div>';
+
+                echo "</div>\n</div>\n</div>\n";
                 unset($theme_data);
             }
         }
@@ -247,7 +260,9 @@ class Admin {
 
     /**
      * Verify that theme exist and not active
+     *
      * @param $theme_name
+     *
      * @return bool
      */
     static function theme_installable($theme_name) {
@@ -315,9 +330,9 @@ class Admin {
                 }
             }
         }
-        echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('enctype' => 1, 'max_tokens' => 1));
-        echo form_fileinput('theme_files', $locale['theme_1007'], '', array('type' => 'object','preview_off' => TRUE,));
-        echo form_button('upload', $locale['theme_1007'], 'upload theme', array('class' => 'btn btn-primary'));
+        echo openform('inputform', 'post', FUSION_SELF.$aidlink, ['enctype' => 1, 'max_tokens' => 1]);
+        echo form_fileinput('theme_files', $locale['theme_1007'], '', ['type' => 'object', 'preview_off' => TRUE,]);
+        echo form_button('upload', $locale['theme_1007'], 'upload theme', ['class' => 'btn btn-primary']);
         echo closeform();
     }
 }

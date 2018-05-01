@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -20,20 +19,20 @@
 +--------------------------------------------------------*/
 
 class defender {
-
-    public static $input_errors = array();
+    public static $input_errors = [];
     private static $debug = FALSE;
     private static $defender_instance = NULL;
     private static $remote_file = '';
-    public $ref = array();
+    public $ref = [];
     public $error_title = '';
-    public $field = array();
+    public $field = [];
+    private static $inputName;
 
     // Declared by Form Sanitizer
     public $field_name = '';
     public $field_value = '';
     public $field_default = '';
-    public $field_config = array(
+    public $field_config = [
         'type'        => '',
         'value'       => '',
         //'default' => '',
@@ -43,8 +42,8 @@ class defender {
         'path'        => '',
         'thumbnail_1' => '',
         'thumbnail_2' => '',
-    );
-    private static $input_error_text = array();
+    ];
+    private static $input_error_text = [];
 
     private function __construct() {
     }
@@ -88,7 +87,7 @@ class defender {
      *
      * @return string
      */
-    public static function serialize(array $array = array()) {
+    public static function serialize(array $array = []) {
         $return_default = "";
         if (is_array($array)) {
             return base64_encode(serialize($array));
@@ -113,7 +112,7 @@ class defender {
      * @return array|mixed
      */
     public static function unserialize($string) {
-        $return_default = array();
+        $return_default = [];
         if (!empty($string)) {
             $array = unserialize(base64_decode($string));
             if (!empty($array)) {
@@ -142,21 +141,23 @@ class defender {
             $hash = $encrypt ? md5('administration') : 'administration';
         } else {
             $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
-            if (!empty($file)) {
-                // file needs to take out the request string.
-                if (stristr($file, '?')) {
-                    $file_arr = explode('?', $file);
-                    $file = $file_arr[0];
-                }
-                $hash = $encrypt ? md5($file) : $file;
-            } elseif (!empty($_POST['file'])) {
-                if (stristr($_POST['file'], '?')) {
-                    $file_arr = explode('?', $_POST['file']);
-                    $file = $file_arr[0];
-                }
-                $hash = $encrypt ? md5($file) : $file;
-            }
         }
+
+        if (!empty($file)) {
+            // file needs to take out the request string.
+            if (stristr($file, '?')) {
+                $file_arr = explode('?', $file);
+                $file = $file_arr[0];
+            }
+            $hash = $encrypt ? md5($file) : $file;
+        } else if (!empty($_POST['file'])) {
+            if (stristr($_POST['file'], '?')) {
+                $file_arr = explode('?', $_POST['file']);
+                $file = $file_arr[0];
+            }
+            $hash = $encrypt ? md5($file) : $file;
+        }
+
         return (string)$hash;
     }
 
@@ -274,7 +275,7 @@ class defender {
      */
     public function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
 
-        $val = array();
+        $val = [];
 
         if ($input_name) {
 
@@ -295,9 +296,9 @@ class defender {
 
                 if ($this->field_config['required'] && (!$value[LANGUAGE])) {
 
-                    $this->stop();
+                    self::stop();
                     $iname = $input_name."[".LANGUAGE."]";
-                    $this->setInputError($iname);
+                    self::setInputError($iname);
 
                     return $default;
 
@@ -332,20 +333,20 @@ class defender {
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
-                        $this->stop();
+                        self::stop();
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            $this->stop();
+                            self::stop();
                             addNotice("danger", sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                             unset($locale);
                         } else {
-                            $this->setInputError($input_name);
+                            self::setInputError($input_name);
                         }
                         // Add a notice
                         if (self::$debug) {
-                            addNotice('warning',
-                                '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                            addNotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
+
                         // Return user's input for correction
                         return $this->field_value;
                     } else {
@@ -365,15 +366,15 @@ class defender {
                     if (intval($value)) {
                         return stripinput($value); // numbers
                     } else {
-                        return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
+                        return censorwords(stripinput(trim(preg_replace("/ +/i", " ", $value))));
                     }
                 } else {
-                    $secured = array();
+                    $secured = [];
                     foreach ($value as $arr => $unsecured) {
                         if (intval($unsecured)) {
                             $secured[] = stripinput($unsecured); // numbers
                         } else {
-                            $secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
+                            $secured[] = censorwords(stripinput(trim(preg_replace("/ +/i", " ", $unsecured))));
                         }
                     }
 
@@ -418,12 +419,12 @@ class defender {
 
                 return \Defender\Validation::getValidated();
             } else {
-                $this->stop();
+                self::stop();
                 $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
                 addNotice('danger', sprintf($locale['type_unknown'], self::$inputName));
             }
         } catch (Exception $e) {
-            $this->stop();
+            self::stop();
             addNotice('danger', $e->getMessage());
         }
     }
@@ -459,6 +460,87 @@ class defender {
         self::$input_errors[$input_name] = TRUE;
     }
 
+    /**
+     * Generate a key
+     *
+     * @param $private_key
+     *
+     * @return string
+     */
+    public static function get_encrypt_key($private_key) {
+        return $encryption_key = openssl_random_pseudo_bytes(32, $private_key); // 256 bits
+    }
+
+    private static function pkcs7_pad($data, $size) {
+        $length = $size - strlen($data) % $size;
+
+        return $data.str_repeat(chr($length), $length);
+    }
+
+    private static function pkcs7_unpad($data) {
+        return substr($data, 0, -ord($data[strlen($data) - 1]));
+    }
+
+    /**
+     * Encrypts a string securely with a private key
+     *
+     * @param        $string        The text to encrypt
+     * @param string $private_key For better security use \defender::get_encrypt_key to generate your private key
+     *
+     * Does not support array encrypt.
+     *
+     * @return string
+     */
+    public static function encrypt_string($string, $private_key = 'php-fusion') {
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
+        $string = self::pkcs7_pad($string, 16);
+        $ciphertext_raw = openssl_encrypt($string, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
+
+        return base64_encode($iv.$hmac.$ciphertext_raw);
+    }
+
+    /**
+     * Decrypts a string securely with a private key
+     *
+     * @param $string - The string to decrypt
+     * @param $private_key - For better security use \defender::get_encrypt_key to generate your private key
+     *
+     * @return null|string
+     */
+    public static function decrypt_string($string, $private_key = 'php-fusion') {
+        $c = base64_decode($string);
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len = 32);
+        $ciphertext_raw = substr($c, $ivlen + $sha2len);
+        $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
+        $string = self::pkcs7_unpad($string);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
+        if (!function_exists('hash_equals')) {
+            function hash_equals($str1, $str2) {
+                if (strlen($str1) != strlen($str2)) {
+                    return FALSE;
+                } else {
+                    $res = $str1 ^ $str2;
+                    $ret = 0;
+                    for ($i = strlen($res) - 1; $i >= 0; $i--) {
+                        $ret |= ord($res[$i]);
+                    }
+
+                    return !$ret;
+                }
+            }
+        }
+        if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+        {
+            return $string;
+        }
+
+        return NULL;
+    }
+
 }
 
 /**
@@ -470,6 +552,7 @@ class defender {
  * @param bool|FALSE $is_multiLang
  *
  * @return mixed
+ * @throws Exception
  */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);

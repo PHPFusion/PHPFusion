@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 use PHPFusion\Rewrite\Router;
@@ -32,23 +31,23 @@ class Panels {
     const PANEL_USER3 = 9;
     const PANEL_USER4 = 10;
     private static $panel_instance = NULL;
-    private static $panel_name = array(
-        array('name' => 'LEFT', 'side' => 'left'),
-        array('name' => 'U_CENTER', 'side' => 'upper'),
-        array('name' => 'L_CENTER', 'side' => 'lower'),
-        array('name' => 'RIGHT', 'side' => 'right'),
-        array('name' => 'AU_CENTER', 'side' => 'aupper'),
-        array('name' => 'BL_CENTER', 'side' => 'blower'),
-        array('name' => 'USER1', 'side' => 'user1'),
-        array('name' => 'USER2', 'side' => 'user2'),
-        array('name' => 'USER3', 'side' => 'user3'),
-        array('name' => 'USER4', 'side' => 'user4')
-    );
+    private static $panel_name = [
+        ['name' => 'LEFT', 'side' => 'left'],
+        ['name' => 'U_CENTER', 'side' => 'upper'],
+        ['name' => 'L_CENTER', 'side' => 'lower'],
+        ['name' => 'RIGHT', 'side' => 'right'],
+        ['name' => 'AU_CENTER', 'side' => 'aupper'],
+        ['name' => 'BL_CENTER', 'side' => 'blower'],
+        ['name' => 'USER1', 'side' => 'user1'],
+        ['name' => 'USER2', 'side' => 'user2'],
+        ['name' => 'USER3', 'side' => 'user3'],
+        ['name' => 'USER4', 'side' => 'user4']
+    ];
 
-    private static $panel_excluded = array();
-    private static $panels_cache = array();
+    private static $panel_excluded = [];
+    private static $panels_cache = [];
     private static $panel_id = 0;
-    private static $available_panels = array();
+    private static $available_panels = [];
 
     public static function getInstance($set_info = TRUE, $panel_id = 0) {
         if (self::$panel_instance === NULL) {
@@ -57,6 +56,7 @@ class Panels {
                 self::cachePanels();
             }
         }
+
         if ($panel_id) {
             self::$panel_id = 1;
         }
@@ -70,12 +70,12 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
-	
-		$panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
+        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
         $param = [
             ':panel_status' => 1,
         ];
         $p_result = dbquery($panel_query, $param);
+
         if (dbrows($p_result)) {
             $panel_side = 0;
             $panel_order = 0;
@@ -177,20 +177,20 @@ class Panels {
     /**
      * Get all available panels
      *
-     * @param string $excluded_panels
+     * @param array $excluded_panels
      *
      * @return array
      */
-    public static function get_available_panels($excluded_panels = '') {
+    public static function get_available_panels($excluded_panels = []) {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
             self::$available_panels['none'] = fusion_get_locale('469');
             while ($folder = readdir($temp)) {
-                if (!in_array($folder, array(
+                if (!in_array($folder, [
                         ".",
                         ".."
-                    )) && strstr($folder, "_panel")
+                    ]) && strstr($folder, "_panel")
                 ) {
 
                     if (is_dir(INFUSIONS.$folder)) {
@@ -229,19 +229,21 @@ class Panels {
             self::cachePanels();
         }
 
-        $settings = \fusion_get_settings();
-        $locale = \fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
 
-        $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
-            global $filepath;
-            $site['path'] = $filepath;
+            $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+            $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+            $site['path'] = $file_path;
+        } else {
+            $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
         }
 
         // Add admin message
         $admin_mess = '';
         $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
-        add_to_footer($admin_mess);
+        add_to_head($admin_mess);
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
 
@@ -257,7 +259,7 @@ class Panels {
                             $show_panel = FALSE;
 
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
-                            $url = array();
+                            $url = [];
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
                             }
@@ -364,41 +366,41 @@ class Panels {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
             }
             if (defined("LEFT_OFF")) {
-                $exclude_list[] = FUSION_SELF;
+                $exclude_list = FUSION_SELF;
             }
-        } elseif ($side == "upper") {
+        } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_upper']);
             }
-        } elseif ($side == "aupper") {
+        } else if ($side == "aupper") {
             if ($settings['exclude_aupper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_aupper']);
             }
-        } elseif ($side == "lower") {
+        } else if ($side == "lower") {
             if ($settings['exclude_lower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_lower']);
             }
-        } elseif ($side == "blower") {
+        } else if ($side == "blower") {
             if ($settings['exclude_blower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_blower']);
             }
-        } elseif ($side == "right") {
+        } else if ($side == "right") {
             if ($settings['exclude_right'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
-        } elseif ($side == "user1") {
+        } else if ($side == "user1") {
             if ($settings['exclude_user1'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user1']);
             }
-        } elseif ($side == "user2") {
+        } else if ($side == "user2") {
             if ($settings['exclude_user2'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user2']);
             }
-        } elseif ($side == "user3") {
+        } else if ($side == "user3") {
             if ($settings['exclude_user3'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user3']);
             }
-        } elseif ($side == "user4") {
+        } else if ($side == "user4") {
             if ($settings['exclude_user4'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user4']);
             }
@@ -407,13 +409,15 @@ class Panels {
         if (is_array($exclude_list)) {
             if (fusion_get_settings('site_seo')) {
                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
-                $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $file_path = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
                 $script_url = explode("/", $file_path);
             } else {
-                $script_url = explode("/", FUSION_REQUEST);
+                $script_url = explode("/", $_SERVER['PHP_SELF']);
             }
+
             $url_count = count($script_url);
-            $base_url_count = substr_count(BASEDIR, "/") + 1;
+            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
+
             $match_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;

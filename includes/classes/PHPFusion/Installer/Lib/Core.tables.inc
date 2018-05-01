@@ -241,6 +241,10 @@ function get_core_tables($localeset) {
             'type'   => 'SMALLINT',
             'length' => 1,
         ], //page_status SMALLINT(1) NOT NULL DEFAULT '0',
+        'page_breaks'       => [
+            'type'   => 'CHAR',
+            'length' => 1,
+        ], //page_breaks CHAR(1) NOT NULL DEFAULT '',
         'page_user'         => [
             'type'     => 'MEDIUMINT',
             'length'   => 9,
@@ -541,7 +545,7 @@ function get_core_tables($localeset) {
             'type' => 'TEXT'
         ], //message_message TEXT NOT NULL,
         'message_smileys'   => [
-            'type'   => 'SMALLINT',
+            'type'   => 'CHAR',
             'length' => 1,
         ], //message_smileys CHAR(1) NOT NULL DEFAULT '', @note: changed
         'message_read'      => [
@@ -876,6 +880,29 @@ function get_core_tables($localeset) {
             'length' => 50,
         ]
     ];
+    $table_package['sessions'] = [
+        'session_id'    => [
+            'type'   => 'VARCHAR',
+            'length' => 32,
+            'key'    => 1, //PRIMARY KEY (session_id),
+        ], //session_id VARCHAR(32) NOT NULL,
+        'session_start' => [
+            'type'     => 'INT',
+            'length'   => 10,
+            'key'      => 1,
+            'unsigned' => TRUE,
+            'default'  => 0,
+        ], // session_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        'session_key'   => [
+            'type'    => 'VARCHAR',
+            'length'  => 100,
+            'default' => '',
+            'key'     => 2, //KEY session_key (session_key)
+        ], // session_key VARCHAR(100) NOT NULL DEFAULT '',
+        'session_data'  => [
+            'type' => 'TEXT',
+        ], //  session_data TEXT NOT NULL,
+    ];
     $table_package['settings'] = [
         'settings_name'  => [
             'type'   => 'VARCHAR',
@@ -942,7 +969,7 @@ function get_core_tables($localeset) {
         'link_visibility' => [
             'type'    => 'TINYINT',
             'length'  => 4,
-            'default' => '0'
+            'default' => 0
         ], //link_visibility TINYINT(4) NOT NULL DEFAULT '0',
         'link_position'   => [
             'type'     => 'TINYINT',
@@ -1244,9 +1271,10 @@ function get_core_tables($localeset) {
             'unsigned'       => TRUE,
         ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'user_name'            => [
-            'type'   => 'VARCHAR',
-            'length' => 30,
-            'key'    => 2 //KEY user_name (user_name),
+            'type'      => 'VARCHAR',
+            'length'    => 30,
+            'key'       => 2, //KEY user_name (user_name),
+            'full_text' => TRUE, // FULLTEXT (user_name ASC)
         ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
         'user_algo'            => [
             'type'    => 'VARCHAR',

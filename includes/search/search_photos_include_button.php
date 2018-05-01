@@ -16,32 +16,34 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_PHOTOS)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $form_elements += array(
-        'photos' => array(
-            'enabled' => array(
+    $form_elements += [
+        'photos' => [
+            'enabled'   => [
                 '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
                 '7' => 'chars'
-            ),
-            'disabled' => array(),
-            'display' => array(),
-            'nodisplay' => array(),
-        )
-    );
-    $radio_button += array(
+            ],
+            'disabled'  => [],
+            'display'   => [],
+            'nodisplay' => [],
+        ]
+    ];
+    $radio_button += [
         'photos' => form_checkbox('stype', fusion_get_locale('p400', LOCALE.LOCALESET."search/photos.php"), Search_Engine::get_param('stype'),
-                                  array(
-                                      'type' => 'radio',
-                                      'value' => 'photos',
-                                      'reverse_label' => TRUE,
-                                      'onclick' => 'display(this.value)',
-                                      'input_id' => 'photos'
-                                  )
+            [
+                'type'          => 'radio',
+                'value'         => 'photos',
+                'reverse_label' => TRUE,
+                'onclick'       => 'display(this.value)',
+                'input_id'      => 'photos',
+                'class'         => 'm-b-0'
+            ]
         )
-    );
+    ];
 }

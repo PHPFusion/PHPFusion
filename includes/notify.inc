@@ -20,6 +20,7 @@
  * Formats and renders notices
  *
  * @param array $notices the array contaning notices
+ *
  * @return string the notices formatted as HTML
  */
 function renderNotices($notices) {
@@ -47,6 +48,7 @@ function renderNotices($notices) {
  * Checks whether a group identified by the key provided has any notices
  *
  * @param string $key the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
+ *
  * @return bool TRUE if the group has any notices, FALSE otherwise
  */
 function hasNotice($key = FUSION_SELF) {
@@ -68,18 +70,20 @@ function hasNotice($key = FUSION_SELF) {
  * @param string|array $key the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
  * @param boolean      $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
  * was set or added while having $removeAfterAccess set to FALSE
+ *
  * @return array the notices for the group identified by the provided key
  */
 function getNotices($key = FUSION_SELF, $delete = TRUE) {
-    $key = is_array($key) ? $key : array($key); // key can be arrays or a string
-    $notices = array();
+    $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
+    $notices = [];
     if (!empty($_SESSION['notices'])) {
         foreach ($_SESSION['notices'] as $type => $keys) {
             foreach ($key as $thiskey) {
                 if (isset($keys[$thiskey])) {
                     $notices = array_merge_recursive($notices, $keys[$thiskey]);
                     if (!fusion_get_settings('site_seo') && !defined('IN_PERMALINK')) {
-                        if ($delete) $_SESSION['notices'][$type][$thiskey] = array();
+                        if ($delete)
+                            $_SESSION['notices'][$type][$thiskey] = [];
                     }
                 }
             }
@@ -90,13 +94,13 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
 }
 
 
-function remove_notice($key = array('all', FUSION_SELF, FUSION_REQUEST)) {
-    $key = is_array($key) ? $key : array($key); // key can be arrays or a string
+function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
+    $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
     if (!empty($_SESSION['notices'])) {
         foreach ($_SESSION['notices'] as $type => $keys) {
             foreach ($key as $thiskey) {
                 if (isset($keys[$thiskey]) && !empty($_SESSION['notices'][$type][$thiskey])) {
-                    $_SESSION['notices'][$type][$thiskey] = array();
+                    $_SESSION['notices'][$type][$thiskey] = [];
                 }
             }
         }
@@ -125,7 +129,7 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
     }
 
     if (!isset($_SESSION['notices'][$type][$key][$status])) {
-        $_SESSION['notices'][$type][$key][$status] = array();
+        $_SESSION['notices'][$type][$key][$status] = [];
     }
     if (array_search($value, $_SESSION['notices'][$type][$key][$status]) === FALSE) {
         $_SESSION['notices'][$type][$key][$status][] = $value;
@@ -145,5 +149,5 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
  */
 function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';
-    $_SESSION['notices'][$type][$key] = array($status => array($value));
+    $_SESSION['notices'][$type][$key] = [$status => [$value]];
 }

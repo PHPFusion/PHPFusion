@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /member_poll/upgrade/1.0.5.upgrade.inc
-| Upgrade Member Poll to Version 9.0.2 (RC5)
+| Filename: 1.0.5.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -36,7 +35,7 @@ if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
 }
 
 // update new path for admin link
-$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.png', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='polls.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/member_poll_panel/polls.svg', admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='polls.php'";
 
 // Poll Entries Upgrade to Serialized Fields
 $result = dbquery("SELECT * FROM ".DB_POLLS." ORDER BY poll_id ASC");
@@ -49,9 +48,9 @@ if (dbrows($result)) {
             $poll_title[$language] = $pollData['poll_title'];
             for ($x = 0; $x <= 10; $x++) {
                 $opts_column = 'poll_opt_'.$x;
-				
+
                 if (!empty($pollData[$opts_column])) {
-					$poll_opts[$x][$language] = $pollData[$opts_column];
+                    $poll_opts[$x][$language] = $pollData[$opts_column];
                 }
             }
         }

@@ -8,7 +8,7 @@
  */
 class Less_Visitor_joinSelector extends Less_Visitor {
 
-    public $contexts = array(array());
+    public $contexts = [[]];
 
     /**
      * @param Less_Tree_Ruleset $root
@@ -27,10 +27,10 @@ class Less_Visitor_joinSelector extends Less_Visitor {
 
     public function visitRuleset($rulesetNode) {
 
-        $paths = array();
+        $paths = [];
 
         if (!$rulesetNode->root) {
-            $selectors = array();
+            $selectors = [];
 
             if ($rulesetNode->selectors && $rulesetNode->selectors) {
                 foreach ($rulesetNode->selectors as $selector) {

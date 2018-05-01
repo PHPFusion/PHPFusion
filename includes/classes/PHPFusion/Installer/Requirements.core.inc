@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Installer;
 
 use PHPFusion\Database\DatabaseFactory;
@@ -30,16 +29,17 @@ class Requirements extends Install_Core {
 
     /**
      * Get System Requirements for PHP-Fusion 9
+     *
      * @return array
      */
     public static function get_system_requirements() {
         // Web server information.
         $software = $_SERVER['SERVER_SOFTWARE'];
 
-        $requirements['webserver'] = array(
+        $requirements['webserver'] = [
             'title' => self::$locale['setup_0050'],
             'value' => $software,
-        );
+        ];
 
         // Tests clean URL support.
         // $requirements['apache'] output if rewrite server is bad.
@@ -50,52 +50,52 @@ class Requirements extends Install_Core {
                 $apache_version_string = $matches[0];
                 // Major version number
                 if ($matches[1] < 2) {
-                    $requirements['apache_version'] = array(
+                    $requirements['apache_version'] = [
                         'title'        => 'Apache',
                         'version'      => $apache_version_string,
                         'description'  => self::$locale['setup_0109'],
                         'severability' => -10
-                    );
-                } elseif ($matches[1] == 2) {
+                    ];
+                } else if ($matches[1] == 2) {
                     if (!isset($matches[2])) {
-                        $requirements['apache_version'] = array(
+                        $requirements['apache_version'] = [
                             'title'        => 'Apache',
                             'version'      => $apache_version_string,
                             'description'  => self::$locale['setup_0120'],
                             'severability' => -10
-                        );
-                    } elseif ($matches[2] < 2) {
-                        $requirements['apache_version'] = array(
+                        ];
+                    } else if ($matches[2] < 2) {
+                        $requirements['apache_version'] = [
                             'title'        => 'Apache',
                             'version'      => $apache_version_string,
                             'description'  => self::$locale['setup_0109'],
                             'severability' => -10
-                        );
-                    } elseif ($matches[2] == 2) {
+                        ];
+                    } else if ($matches[2] == 2) {
                         if (!isset($matches[3])) {
-                            $requirements['apache_version'] = array(
+                            $requirements['apache_version'] = [
                                 'title'        => 'Apache',
                                 'version'      => $apache_version_string,
                                 'description'  => self::$locale['setup_0110'],
                                 'severability' => -10
-                            );
-                        } elseif ($matches[3] < 16) {
-                            $requirements['apache_version'] = array(
+                            ];
+                        } else if ($matches[3] < 16) {
+                            $requirements['apache_version'] = [
                                 'title'        => 'Apache',
                                 'version'      => $apache_version_string,
                                 'description'  => self::$locale['setup_0109'],
                                 'severability' => -10
-                            );
+                            ];
                         }
                     }
                 }
             } else {
-                $requirements['apache_version'] = array(
+                $requirements['apache_version'] = [
                     'title'        => 'Apache',
                     'version'      => $apache_version_string,
                     'description'  => self::$locale['setup_0110'],
                     'severability' => -10
-                );
+                ];
             }
         }
 
@@ -103,17 +103,17 @@ class Requirements extends Install_Core {
         // $requirements['php'] output
         $phpversion = $phpversion_label = phpversion();
         if (function_exists('phpinfo')) {
-            $requirements['php'] = array(
+            $requirements['php'] = [
                 'title' => self::$locale['setup_0051'],
                 'value' => $phpversion_label,
-            );
+            ];
         } else {
-            $requirements['php'] = array(
+            $requirements['php'] = [
                 'title'        => self::$locale['setup_0051'],
                 'value'        => $phpversion_label,
                 'description'  => self::$locale['setup_0112'],
                 'severability' => -5
-            );
+            ];
         }
         if (version_compare($phpversion, '5.5.21') < 0) {
             $requirements['php']['title'] = 'PHP';
@@ -123,9 +123,8 @@ class Requirements extends Install_Core {
 
         // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple statements.
         // $requirements['php_extensions'] output
-        $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
-        $missing_extensions = array();
-        $required_extensions = array(
+        $missing_extensions = [];
+        $required_extensions = [
             'date',
             'dom',
             'filter',
@@ -139,31 +138,33 @@ class Requirements extends Install_Core {
             'SPL',
             'tokenizer',
             'xml',
-        );
+        ];
         foreach ($required_extensions as $extension) {
             if (!extension_loaded($extension)) {
                 $missing_extensions[] = $extension;
             }
         }
         if (!empty($missing_extensions)) {
-            $requirements['php_extensions'] = array(
+            $requirements['php_extensions'] = [
                 'description'  => self::$locale['setup_0114'],
                 'value'        => implode(', ', $missing_extensions),
                 'severability' => -10,
-            );
+            ];
         } else {
             $requirements['php_extensions']['description'] = self::$locale['setup_0115'];
         }
+
+        $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
 
         // Check to see if OPcache is installed.
         // $requirements['php_opcache']
         $opcache_enabled = (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled']);
         if (!$opcache_enabled) {
-            $requirements['php_opcache'] = array(
+            $requirements['php_opcache'] = [
                 'value'        => self::$locale['setup_0115a'],
                 'description'  => self::$locale['setup_0116'],
                 'severability' => -1,
-            );
+            ];
         } else {
             $requirements['php_opcache']['value'] = self::$locale['setup_0115'];
         }
@@ -173,11 +174,11 @@ class Requirements extends Install_Core {
         // $requirements['database_extensions']
         $database_ok = extension_loaded('pdo');
         if (!$database_ok) {
-            $requirements['database_extensions'] = array(
+            $requirements['database_extensions'] = [
                 'value'        => self::$locale['setup_0115a'],
                 'description'  => self::$locale['setup_0118'],
                 'severability' => -1,
-            );
+            ];
         } else {
             $requirements['database_extensions']['value'] = self::$locale['setup_0115'];
         }
@@ -190,6 +191,7 @@ class Requirements extends Install_Core {
             'title' => self::$locale['setup_0055'],
             'value' => $memory_limit == -1 ? '-1 (Unlimited)' : $memory_limit,
         ];
+        $memory_limit_value = '';
         if (strpos($memory_limit, 'M')) {
             $memory_limit_value = intval(rtrim($memory_limit, 'M'));
         }
@@ -227,13 +229,13 @@ class Requirements extends Install_Core {
 
         // Check system core files and folders
         // $requirements['files_check']
-        $check_arr = array(
+        $check_arr = [
             "administration/db_backups" => FALSE,
             "images"                    => FALSE,
             "images/imagelist.js"       => FALSE,
             "images/avatars"            => FALSE,
             "robots.txt"                => FALSE,
-        );
+        ];
         // $key is filename
         // $value - boolean false
         foreach ($check_arr as $key => $value) {
@@ -241,7 +243,7 @@ class Requirements extends Install_Core {
             $check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) ? TRUE : FALSE;
             if (!$check_arr[$key]) {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
-                $requirements['files_check']['sub'][$key]['severability'] = -10;
+                $requirements['files_check']['severability'] = -10;
             } else {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
             }
@@ -257,6 +259,7 @@ class Requirements extends Install_Core {
 
     /**
      * Validates the system for consistency
+     *
      * @return array
      */
     public static function get_system_validation() {
@@ -388,8 +391,12 @@ class Requirements extends Install_Core {
 }
 
 function test_table($db_prefix) {
+
     $table_name = uniqid($db_prefix, FALSE);
-    $result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    $sql = "CREATE TABLE $table_name (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+    $result = dbquery($sql);
     if (!$result) {
         return FALSE;
     }
@@ -407,11 +414,12 @@ function check_table($db_prefix) {
 
 /**
  * Write htaccess file based on the configuration
+ *
  * @param array $system
  *
  * @return bool
  */
-function write_config(array $system = array()) {
+function write_config(array $system = []) {
     // Force underscore between prefix and cookie name
     if (!empty($system['cookie_prefix'])) {
         $cookie_prefix_last = $system['cookie_prefix'][strlen($system['cookie_prefix']) - 1];

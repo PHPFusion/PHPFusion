@@ -1,0 +1,19 @@
+<div class='panel panel-default'>
+    <a href='{%news_link%}' style='min-width:100%; min-height:240px; height:240px; display:block;' class='display-block overflow-hide'>
+        <img class='center-xy display-block' src='{%news_image_url%}'>
+    </a>
+    <div class='panel-body clearfix'>
+        <h3><a class='news_title' href='{%news_link%}'>{%news_title%}</a></h3>
+        <p>
+            {%news_snippet%}
+        </p>
+        <div class='display-block bottom'>
+            {admin_actions.{<div class='pull-right btn-group'>
+                <a class='btn btn-default' href='{%edit_link%}'>{%edit_title%}</a>
+                <a class='btn btn-default' href='{%delete_link%}'>{%delete_title%}</a>
+            </div>
+            }}
+            <a class='news_more' href='{%news_link%}'>Learn more</a>
+        </div>
+    </div>
+</div>

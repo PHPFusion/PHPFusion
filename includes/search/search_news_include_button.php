@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -23,26 +24,27 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_NEWS)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $form_elements += array(
-        'news' => array(
-            'enabled' => array(
+    $form_elements += [
+        'news' => [
+            'enabled'   => [
                 '0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2',
                 '7' => 'chars'
-            ),
-            'disabled' => array(),
-            'display' => array(),
-            'nodisplay' => array(),
-        )
-    );
-    $radio_button += array(
+            ],
+            'disabled'  => [],
+            'display'   => [],
+            'nodisplay' => [],
+        ]
+    ];
+    $radio_button += [
         'news' => form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/news.php"), Search_Engine::get_param('stype'),
-                                array(
-                                    'type' => 'radio',
-                                    'value' => 'news',
-                                    'reverse_label' => TRUE,
-                                    'onclick' => 'display(this.value)',
-                                    'input_id' => 'news'
-                                )
+            [
+                'type'          => 'radio',
+                'value'         => 'news',
+                'reverse_label' => TRUE,
+                'onclick'       => 'display(this.value)',
+                'input_id'      => 'news',
+                'class'         => 'm-b-0'
+            ]
         )
-    );
+    ];
 }

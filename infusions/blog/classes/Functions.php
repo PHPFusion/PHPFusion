@@ -26,11 +26,13 @@ if (!defined("IN_FUSION")) {
 /**
  * Functions for Blog System
  * Class Functions
+ *
  * @package PHPFusion\Blog
  */
 class Functions {
     /**
      * Blog Category Hierarchy Full Data
+     *
      * @return array
      */
     public static function get_blogCat() {
@@ -39,7 +41,9 @@ class Functions {
 
     /**
      * Get Single Blog Category Data
+     *
      * @param $id
+     *
      * @return array|bool
      */
     public static function get_blogCatData($id) {
@@ -52,11 +56,13 @@ class Functions {
 
     /**
      * Validate Blog Cat
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_blogCat($id) {
-        if (is_numeric($id)) {
+        if (isnum($id)) {
             if ($id < 1) {
                 return 1;
             } else {
@@ -69,6 +75,7 @@ class Functions {
 
     /**
      * Get Blog Category Hierarchy Index
+     *
      * @return array
      */
     public static function get_blogCatsIndex() {
@@ -77,6 +84,7 @@ class Functions {
 
     /**
      * Format Blog Category Listing
+     *
      * @return array
      */
     public static function get_blogCatsData() {
@@ -93,11 +101,13 @@ class Functions {
 
     /**
      * Validate blog
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_blog($id) {
-        if (isnum($id)) {
+        if (!empty($id) && isnum($id)) {
             return (int)dbcount("('blog_id')", DB_BLOG, "blog_id='".intval($id)."'");
         }
 
@@ -107,6 +117,7 @@ class Functions {
     /**
      * Session based blog reads updater
      * Not used at this moment
+     *
      * @param $blog_id
      */
     public static function update_blogReads($blog_id) {
@@ -126,10 +137,12 @@ class Functions {
 
     /**
      * Get the best available paths for image and thumbnail
+     *
      * @param      $blog_image
      * @param      $blog_image_t1
      * @param      $blog_image_t2
      * @param bool $hiRes -- true for image, false for thumb
+     *
      * @return bool|string
      */
     public static function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {
@@ -174,7 +187,7 @@ class Functions {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
             $html = Comments::getInstance(
-                array(
+                [
                     'comment_item_type'     => 'B',
                     'comment_db'            => DB_BLOG,
                     'comment_col'           => 'blog_id',
@@ -186,7 +199,7 @@ class Functions {
                     'comment_allow_post'    => TRUE,
                     'comment_once'          => FALSE,
                     'comment_allow_ratings' => FALSE,
-                ), 'blog_comments'
+                ], 'blog_comments'
             )->showComments();
         }
 

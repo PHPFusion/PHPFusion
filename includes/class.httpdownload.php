@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author    Nguyen Quoc Bao <quocbao.coder@gmail.com>
  * @version   1.3
@@ -31,6 +30,7 @@
  * $object->download_ex($size);
  * //output your data here , remember to use $this->seek_start and $this->seek_end value :)
  **/
+
 namespace PHPFusion;
 
 class httpdownload {
@@ -40,9 +40,9 @@ class httpdownload {
     var $data_type = 0;
     var $data_section = 0; //section download
     /**
-     * @var ObjectHandler
+     * @var array ObjectHandler
      **/
-    var $handler = array('auth' => NULL);
+    var $handler = ['auth' => NULL];
     var $use_resume = TRUE;
     var $use_autoexit = FALSE;
     var $use_auth = FALSE;
@@ -53,11 +53,13 @@ class httpdownload {
     var $seek_end = -1;
     /**
      * Total bandwidth has been used for this download
+     *
      * @var int
      */
     var $bandwidth = 0;
     /**
      * Speed limit
+     *
      * @var float
      */
     var $speed = 0;
@@ -67,6 +69,7 @@ class httpdownload {
     -------------------*/
 
     function download_ex($size) {
+        $seek = '';
         if (!$this->initialize()) {
             return FALSE;
         }
@@ -86,6 +89,7 @@ class httpdownload {
 
     /**
      * Check authentication and get seek position
+     *
      * @return bool
      **/
     function initialize() {
@@ -141,6 +145,7 @@ class httpdownload {
 
     /**
      * Check authentication
+     *
      * @return bool
      **/
     function _auth() {
@@ -156,7 +161,11 @@ class httpdownload {
 
     /**
      * Send download information header
-     **/
+     *
+     * @param      $size
+     * @param null $seek_start
+     * @param null $seek_end
+     */
     function header($size, $seek_start = NULL, $seek_end = NULL) {
         header('Content-type: '.$this->mime);
         header('Content-Disposition: attachment; filename="'.$this->filename.'"');
@@ -174,6 +183,7 @@ class httpdownload {
 
     /**
      * Start download
+     *
      * @return bool
      **/
     function download() {
@@ -228,7 +238,7 @@ class httpdownload {
                 }
             }
             fclose($res);
-        } elseif ($this->data_type == 1) //download from a string
+        } else if ($this->data_type == 1) //download from a string
         {
             if ($seek > ($size - 1)) {
                 $seek = 0;
@@ -324,4 +334,3 @@ class httpdownload {
         $this->data_mod = $time;
     }
 }
-

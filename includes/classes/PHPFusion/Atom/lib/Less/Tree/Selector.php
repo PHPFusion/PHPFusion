@@ -10,12 +10,12 @@ class Less_Tree_Selector extends Less_Tree {
 
     public $elements;
     public $condition;
-    public $extendList = array();
+    public $extendList = [];
     public $_css;
     public $index;
     public $evaldCondition = FALSE;
     public $type = 'Selector';
-    public $currentFileInfo = array();
+    public $currentFileInfo = [];
     public $isReferenced;
     public $mediaEmpty;
 
@@ -28,7 +28,7 @@ class Less_Tree_Selector extends Less_Tree {
     /**
      * @param boolean $isReferenced
      */
-    public function __construct($elements, $extendList = array(), $condition = NULL, $index = NULL, $currentFileInfo = NULL, $isReferenced = NULL) {
+    public function __construct($elements, $extendList = [], $condition = NULL, $index = NULL, $currentFileInfo = NULL, $isReferenced = NULL) {
 
         $this->elements = $elements;
         $this->elements_len = count($elements);
@@ -47,7 +47,7 @@ class Less_Tree_Selector extends Less_Tree {
 
     public function CacheElements() {
 
-        $this->_oelements = array();
+        $this->_oelements = [];
         $css = '';
 
         foreach ($this->elements as $v) {
@@ -106,19 +106,19 @@ class Less_Tree_Selector extends Less_Tree {
 
     public function isJustParentSelector() {
         return !$this->mediaEmpty &&
-        count($this->elements) === 1 &&
-        $this->elements[0]->value === '&' &&
-        ($this->elements[0]->combinator === ' ' || $this->elements[0]->combinator === '');
+            count($this->elements) === 1 &&
+            $this->elements[0]->value === '&' &&
+            ($this->elements[0]->combinator === ' ' || $this->elements[0]->combinator === '');
     }
 
     public function compile($env) {
 
-        $elements = array();
+        $elements = [];
         foreach ($this->elements as $el) {
             $elements[] = $el->compile($env);
         }
 
-        $extendList = array();
+        $extendList = [];
         foreach ($this->extendList as $el) {
             $extendList[] = $el->compile($el);
         }
@@ -133,7 +133,7 @@ class Less_Tree_Selector extends Less_Tree {
 
     public function createDerived($elements, $extendList = NULL, $evaldCondition = NULL) {
         $newSelector = new Less_Tree_Selector($elements, ($extendList ? $extendList : $this->extendList), NULL, $this->index, $this->currentFileInfo,
-                                              $this->isReferenced);
+            $this->isReferenced);
         $newSelector->evaldCondition = $evaldCondition ? $evaldCondition : $this->evaldCondition;
 
         return $newSelector;

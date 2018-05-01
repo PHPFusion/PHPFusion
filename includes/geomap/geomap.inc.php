@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: geomap.inc.php
-| Author : Frederick MC Chan
+| Author: Frederick MC Chan
 +--------------------------------------------------------+
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+
@@ -31,7 +31,7 @@ if (!defined("IN_FUSION")) {
 
 // Official Cut Off List : Bouvet Island, Christmas Island, Cocos-Keeling-Islands, French Metropolitan, French Guiana, French-Southern-Territories, Guadeloupe, Heard and Mc Donald Islands, Mayotte, "St. Helena","St. Pierre and Miquelon", Svalbard and Jan Mayen Islands,
 // Tokelau, United States Minor Outlying Islands, Western Sahara,
-$countries = array(
+$countries = [
     "Afghanistan", "Albania", "Algeria", "American-Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
     "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin",
     "Bermuda", "Bhutan", "Bolivia", "Bosnia", "Botswana", "Brazil", "British Indian Ocean", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
@@ -52,7 +52,7 @@ $countries = array(
     "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands",
     "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "USA", "Uruguay", "Uzbekistan", "Vatican City", "Vanuatu", "Venezuela",
     "Vietnam", "Virgin Islands", "Wallis and Futuna", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe"
-);
+];
 // The states
 $states['Afghanistan'] = construct_array("Badakhshan,Badghis,Baghlan,Balkh,Bamian,Daikondi,Farah,Faryab,Ghazni,Ghowr,Helmand,Herat,Jowzjan,Kabul,Kandahar,Kapisa,Khowst,Konar,Kondoz,Laghman,Lowgar,Nangarhar,Nimruz,Nurestan,Oruzgan,Paktia,Paktika,Panjshir,Parvan,Samangam,Sar-e Pol,Takhar,Vardak,Zabol");
 $states['Albania'] = construct_array("Berat,Dibër,Durrës,Elbasan,Fier,Gjirokastër,Korçë,Kukës,Lezhë,Shkodër,Tiranë,Vlorë");
@@ -154,7 +154,7 @@ $states['Hungary'] = construct_array("Bács-Kiskun,Baranya,Békés,Borsod-Abaúj
 $states['Iceland'] = construct_array("Reykjavik,Keflavík,Borgarnes,Ísafjörður,Sauðárkrókur,Akureyri,Egilsstaðir,Selfoss");
 $states['India'] = construct_array("Andaman and Nicobar Islands,Andhra Pradesh,Arunachal Pradesh,Assam,Bihar,Chandigarh,Chhattisgarh,Dadra and Nagar Haveli,Daman and Diu,Delhi,Goa,Gujarat,Haryana,Himachal Pradesh,Jammu and Kashmir,Jharkhand,Karnataka,Kerala,Lakshadweep,Madhya Pradesh,Maharashtra,Manipur,Meghalaya,Mizoram,Nagaland,Odisha,Puducherry,Punjab,Rajasthan,Sikkim,Tamil Nadu,Tripura,Uttarakhand,Uttar Pradesh,West Bengal");
 $states['Indonesia'] = construct_array("Aceh,Bali,Bangka-Belitung,Banten,Bengkulu,Gorontalo,Jakarta Raya,Jambi,Jawa Barat,Jawa Tengah,Jawa Timur,Kalimantan Barat,Kalimantan Selatan,Kalimantan Tengah,Kalimantan Timur,Kalimantan Utara,Kepulauan Riau,Lampung,Maluku,Maluku Utara,Nusa Tenggara Barat,Nusa Tenggara Timur,Papua,Papua Barat,Riau,Sulawesi Barat,Sulawesi Selatan,Sulawesi Tengah,Sulawesi Tenggara,Sulawesi Utara,Sumatera Barat,Sumatera Selatan,Sumatera Utara,Yogyakarta");
-$states['Iran'] = array("Iran");
+$states['Iran'] = ["Iran"];
 $states['Iraq'] = construct_array("Albor,Ardebil,Bushehr,Chahar Mahall and Bakhtiari,East Azarbaijan,Esfahan,Fars,Gilan,GOlestan,Hamadan,Hormozgan,Ilam,Kerman,Kermanshah,Khuzestan,Kohgiluyeh and Buyer Ahmad,Kordestan,Lerestan,Markazi,Mazandaran,North Khorasan,Qazvin,Qom,Razavi,Khorasan,Semnan,Sistan and Baluchestan,South Khorasan,Tehran,West Azarbajian,Yazd,Zanjan");
 $states['Israel'] = construct_array("HaDarom,Haifa,HaMeraz,HaZafon,Jerusalem,Tel Aviv");
 $states['Italy'] = construct_array("Agrigento,Alessandria,Ancona,Aosta,Arezzo,Ascoli Piceno,Asti,Avellino,Bari,Barletta-Andria-Trani,Belluno,Benevento,Bergamo,Biella,Bologna,Bolzano,Brescia,Brindisi,Cagliari,Caltanissetta,ampobasso,Carbonia-Iglesias,Caserta,Catania,Catanzaro,Chieti,Como,Cosenza,Cremona,Crotone,Cuneo,Enna,Fermo,Ferrara,Florence,Foggia,Forlì-Cesena,Foresinone,Genoa,Gorizia,Grosseto,Imperia,Isernia,L'Aquila,La Spezia,Latina,Lecce,Lecco,Livorno,Lodi,Lucca,Macerata,Mantua,Massa-Carrara,Matera,Medio Campidano,Messina,Milan,Modena, Monza e Brianza,Naples,Novara,Nouro, Ogliastra,Olbia-Tempio,Oristano,Padua,Palermo,Parma,Pavia,Perugia,Pesaro e Urbino,Pescara,Piacenza,Pisa,Pistoia,Prodenone,Potenza,Prato,Ragusa,Revenna,Reggio di Calabria,Reggio nell'Emillia,Rieti,Rimini,Rome,Rovigo,Salerno,Sassari,Savona,Siena,Sondrio,Syracuse,Taranto,Teramo,Terni,Trapani,Trento,Treviso,Trieste,Turin,Udine,Varese,Venice,Verbano-Cusio-Ossola,Vercelli,Verona,Vibo,Valentia,Vicenza,Viterbo");

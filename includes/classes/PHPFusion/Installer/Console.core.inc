@@ -23,7 +23,10 @@ class Console_Core extends Install_Core {
 
     private static $console_instance = NULL;
 
-    public static function getInstance() {
+    /**
+     * @return null|static
+     */
+    public static function getConsoleInstance() {
         if (self::$console_instance == NULL) {
             self::$console_instance = new static();
         }
@@ -31,15 +34,15 @@ class Console_Core extends Install_Core {
         return self::$console_instance;
     }
 
-    public static function getView($content) {
-        $steps = array(
+    public function getView($content) {
+        $steps = [
             '1' => self::$locale['setup_0101'],
             '2' => self::$locale['setup_0102'],
             '3' => self::$locale['setup_0103'],
             '4' => self::$locale['setup_0104'],
             '5' => self::$locale['setup_0106'],
             '6' => self::$locale['setup_0105'],
-        );
+        ];
         $html = "<div class='block-container center-x'>\n";
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
         $html .= "<div class='block'>\n";
@@ -54,7 +57,7 @@ class Console_Core extends Install_Core {
         foreach ($steps as $key => $value) {
             if ($key !== 4) {
                 $active = intval(INSTALLATION_STEP) === $key;
-                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+                $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:none;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'], $key, $value) : $value)."</div>\n";
             }
         }
         $html .= "</div>\n";
@@ -69,9 +72,9 @@ class Console_Core extends Install_Core {
                 $default_class['class'] = "btn-primary";
                 $button_prop += $default_class;
                 $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'],
-                                     array(
-                                         'class' => $button_prop['class'],
-                                     ));
+                    [
+                        'class' => $button_prop['class'],
+                    ]);
             }
         }
         $html .= "</div>\n</div>\n"; // end col-8 & row
@@ -88,9 +91,9 @@ class Console_Core extends Install_Core {
      *
      * @return string
      */
-    public static function getLayout() {
+    public function getLayout() {
         $html = "<!DOCTYPE html>\n";
-        $html .= "<html lang='".self::$locale['setup_0011']."'>\n";
+        $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
         $html .= "<head>\n";
         $html .= "<title>".self::$locale['setup_0000']."</title>\n";
         $html .= "<meta charset='".self::$locale['setup_0012']."' />";
@@ -108,26 +111,29 @@ class Console_Core extends Install_Core {
         $html .= "<meta name='msapplication-TileImage' content='".IMAGES."favicons/mstile-144x144.png'/>\n";
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-        $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+        $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.min.js'></script>\n";
         $html .= "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
-        $html .= "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
-        $html .= "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
+        $html .= "<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />\n";
+        $html .= "<link href='".THEMES."templates/default.min.css' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
+        if (self::$locale['setup_0012a'] == 'rtl') {
+            $html .= "<link href='".INCLUDES."bootstrap/bootstrap-rtl.min.css' rel='stylesheet' media='screen' />";
+        }
         $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
-        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.css' rel='stylesheet' />";
+        $html .= "<link href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' rel='stylesheet' />";
         $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body".(!isset($_GET['upgrade']) ? " class='install'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
-            $html .= "<script type=\"text/javascript\">\n$(function() {\n";
-            $html .= "var diff_height = $('.block-container').height() - $('body').height();
+            $html .= "<script type=\"text/javascript\">$(function() {
+            var container = $('.block-container');
+            var diff_height = container.height() - $('body').height();
             if (diff_height > 1) {
-            $('.block-container').css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
+            container.css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
             }
-            ";
-            $html .= $fusion_jquery_tags;
-            $html .= "});\n</script>\n";
+            ".$fusion_jquery_tags."
+            });\n</script>\n";
         }
         $html .= OutputHandler::$pageFooterTags;
         $html .= "</body>\n";

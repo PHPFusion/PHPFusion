@@ -1,0 +1,21 @@
+{%openside%}
+<div class="side-label"><strong>{%label%}</strong></div>
+<ul class="side">
+    {latest.{
+        <li><a href="{%link_url%}">{%link_title%}</a></li>
+    }}
+    {latest_no_item.{
+        <li><span class="text-center">{%message%}</span></li>
+    }}
+</ul>
+<div class="side-label"><strong>{%label2%}</strong></div>
+<ul class="side">
+    {hottest.{
+        {%badge%}
+        <li><a href="{%link_url%}">{%link_title%}</a></li>
+    }}
+    {hottest_no_item.{
+        <li><span class="text-center">{%message%}</span></li>
+    }}
+</ul>
+{%closeside%}

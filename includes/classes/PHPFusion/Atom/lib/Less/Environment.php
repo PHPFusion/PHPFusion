@@ -27,19 +27,19 @@ class Less_Environment {
     /**
      * @var array
      */
-    public $frames = array();
+    public $frames = [];
     /**
      * @var array
      */
-    public $mediaBlocks = array();
+    public $mediaBlocks = [];
     /**
      * @var array
      */
-    public $mediaPath = array();
+    public $mediaPath = [];
     /**
      * @var array
      */
-    public $functions = array();
+    public $functions = [];
 
     public static function isMathOn() {
         return !Less_Parser::$options['strictMath'] || Less_Environment::$parensStack;
@@ -52,7 +52,9 @@ class Less_Environment {
     /**
      * Canonicalize a path by resolving references to '/./', '/../'
      * Does not remove leading "../"
+     *
      * @param string path or url
+     *
      * @return string Canonicalized path
      *
      */
@@ -61,7 +63,7 @@ class Less_Environment {
         $segments = explode('/', $path);
         $segments = array_reverse($segments);
 
-        $path = array();
+        $path = [];
         $path_len = 0;
 
         while ($segments) {
@@ -100,40 +102,40 @@ class Less_Environment {
 
         if (Less_Parser::$options['compress']) {
 
-            Less_Environment::$_outputMap = array(
-                ',' => ',',
+            Less_Environment::$_outputMap = [
+                ','  => ',',
                 ': ' => ':',
-                '' => '',
-                ' ' => ' ',
-                ':' => ' :',
-                '+' => '+',
-                '~' => '~',
-                '>' => '>',
-                '|' => '|',
-                '^' => '^',
+                ''   => '',
+                ' '  => ' ',
+                ':'  => ' :',
+                '+'  => '+',
+                '~'  => '~',
+                '>'  => '>',
+                '|'  => '|',
+                '^'  => '^',
                 '^^' => '^^'
-            );
+            ];
 
         } else {
 
-            Less_Environment::$_outputMap = array(
-                ',' => ', ',
+            Less_Environment::$_outputMap = [
+                ','  => ', ',
                 ': ' => ': ',
-                '' => '',
-                ' ' => ' ',
-                ':' => ' :',
-                '+' => ' + ',
-                '~' => ' ~ ',
-                '>' => ' > ',
-                '|' => '|',
-                '^' => ' ^ ',
+                ''   => '',
+                ' '  => ' ',
+                ':'  => ' :',
+                '+'  => ' + ',
+                '~'  => ' ~ ',
+                '>'  => ' > ',
+                '|'  => '|',
+                '^'  => ' ^ ',
                 '^^' => ' ^^ '
-            );
+            ];
 
         }
     }
 
-    public function copyEvalEnv($frames = array()) {
+    public function copyEvalEnv($frames = []) {
         $new_env = new Less_Environment();
         $new_env->frames = $frames;
 

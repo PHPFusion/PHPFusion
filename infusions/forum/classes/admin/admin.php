@@ -22,14 +22,13 @@ use PHPFusion\Forums\ForumServer;
 // This is being extended by viewer
 // A model file
 abstract class ForumAdminInterface extends ForumServer {
-
     public static $admin_instance = NULL;
     public static $admin_rank_instance = NULL;
     public static $admin_tag_instance = NULL;
     public static $admin_settings_instance = NULL;
     public static $mood_instance = NULL;
 
-    protected static $locale = array();
+    protected static $locale = [];
 
     public static function view() {
         if (empty(self::$admin_instance)) {
@@ -41,10 +40,12 @@ abstract class ForumAdminInterface extends ForumServer {
     }
 
     private static function setLocale() {
-        self::$locale = fusion_get_locale("", FORUM_ADMIN_LOCALE);
-        self::$locale += fusion_get_locale("", SETTINGS_LOCALE);
-        self::$locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
-        self::$locale += fusion_get_locale("", FORUM_RANKS_LOCALE);
+        self::$locale = fusion_get_locale("", [FORUM_ADMIN_LOCALE,
+                                               SETTINGS_LOCALE,
+                                               FORUM_TAGS_LOCALE,
+                                               FORUM_RANKS_LOCALE
+        ]);
+
     }
 
     public static function viewRank() {
@@ -87,22 +88,23 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Delete all forum posts
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
-
         dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
-
     }
 
     /**
      * Get forum rank images
+     *
      * @return array
      */
     protected static function get_rank_images() {
-        $opts = array();
+        $opts = [];
         $image_files = makefilelist(RANKS."", ".|..|index.php|.svn|.DS_Store", TRUE);
         if (!empty($image_files)) {
             foreach ($image_files as $value) {
@@ -114,20 +116,24 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Get a forum full data
+     *
      * @param $forum_id
+     *
      * @return array|bool
      */
     protected static function get_forum($forum_id) {
         if (self::verify_forum($forum_id)) {
             return dbarray(dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".intval($forum_id)."' AND ".groupaccess('forum_access')." "));
         }
-        return array();
+        return [];
     }
 
     /**
      * Return a valid forum name without duplicate
+     *
      * @param     $forum_name
      * @param int $forum_id
+     *
      * @return mixed
      */
     protected static function check_validForumName($forum_name, $forum_id = 0) {
@@ -149,14 +155,16 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Delete all forum attachments
+     *
      * @param      $forum_id
      * @param bool $time
+     *
      * @return string
      */
     protected static function prune_attachment($forum_id, $time = FALSE) {
 
         // delete attachments.
-        $result    = dbquery("
+        $result = dbquery("
                     SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS."
                     WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."
                     ");
@@ -173,11 +181,11 @@ abstract class ForumAdminInterface extends ForumServer {
                 }
             }
         }
-
     }
 
     /**
      * Delete all forum threads
+     *
      * @param      $forum_id
      * @param bool $time
      */
@@ -195,7 +203,9 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Recalculate a forum post count
+     *
      * @param $forum_id
+     *
      * @return string
      */
     protected static function recalculate_post($forum_id) {
@@ -203,7 +213,7 @@ abstract class ForumAdminInterface extends ForumServer {
         // update last post
         $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
         if (dbrows($result)) {
-            $data   = dbarray($result);
+            $data = dbarray($result);
             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$forum_id."'");
         } else {
             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$forum_id."'");
@@ -217,7 +227,7 @@ abstract class ForumAdminInterface extends ForumServer {
         }
         // calculate and update total combined postcount on all threads to forum
         $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-		WHERE forum_id='".$forum_id."' GROUP BY forum_id");
+        WHERE forum_id='".$forum_id."' GROUP BY forum_id");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -234,7 +244,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Remove the entire forum branch, image and order updated
-     * @param bool $branch_data -- now as entire $this->index
+     *
      * @param bool $index
      * @param bool $time
      */
@@ -253,9 +263,9 @@ abstract class ForumAdminInterface extends ForumServer {
         // check if there is a sub for this node.
 
         if (isset($branch_data[$index])) {
+            $data = [];
 
             foreach ($branch_data[$index] as $forum_id) {
-
                 $data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."'"));
 
                 if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
@@ -267,7 +277,7 @@ abstract class ForumAdminInterface extends ForumServer {
                 dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
 
                 if (isset($branch_data[$data['forum_id']])) {
-                    self::prune_forums($branch_data, $data['forum_id'], $time);
+                    self::prune_forums($branch_data, $time);
                 }
                 // end foreach
             }
@@ -292,11 +302,10 @@ abstract class ForumAdminInterface extends ForumServer {
 
     /**
      * Get forum index for hierarchy traversal
+     *
      * @return array
      */
     protected static function get_forum_index() {
         return dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
     }
-
-
 }

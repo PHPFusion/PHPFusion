@@ -15,13 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FAQS)) {
+require_once __DIR__.'/../../maincore.php';
+if (!infusion_exists('faq')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";
-require_once INCLUDES."infusions_include.php";
 require_once FAQ_CLASS."autoloader.php";
-require_once INFUSIONS."faq/templates/faq.php";
+require_once INFUSIONS."faq/templates.php";
 \PHPFusion\FAQ\FaqServer::Faq()->display_faq();
 require_once THEMES."templates/footer.php";

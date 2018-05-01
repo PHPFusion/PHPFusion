@@ -26,6 +26,7 @@ if (!defined("IN_FUSION")) {
 class Functions {
     /**
      * Download Category Hierarchy Full Data
+     *
      * @return array
      */
     public static function get_downloadCats() {
@@ -35,7 +36,9 @@ class Functions {
 
     /**
      * Get Single Download Category Data
+     *
      * @param $id
+     *
      * @return array|bool
      */
     public static function get_downloadCatData($id) {
@@ -48,7 +51,9 @@ class Functions {
 
     /**
      * Validate Download Cat
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_downloadCat($id) {
@@ -65,6 +70,7 @@ class Functions {
 
     /**
      * Get Download Category Hierarchy Index
+     *
      * @return array
      */
     public static function get_downloadCatsIndex() {
@@ -74,6 +80,7 @@ class Functions {
 
     /**
      * Format Download Category Listing
+     *
      * @return array
      */
     public static function get_downloadCatsData() {
@@ -89,7 +96,9 @@ class Functions {
 
     /**
      * Validate Download
+     *
      * @param $id
+     *
      * @return bool|string
      */
     public static function validate_download($id) {
@@ -102,19 +111,20 @@ class Functions {
 
     /**
      * Download Category Breadcrumbs Generator
+     *
      * @param $index
      */
     public static function downloadCats_breadcrumbs($index) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
+            $crumb = [];
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE download_cat_language='".LANGUAGE."' AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
-                $crumb = array(
+                $crumb = [
                     'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
                     'title' => $_name['download_cat_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -129,20 +139,21 @@ class Functions {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($index, $_GET['cat_id']);
+        $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
-        if (count($crumb['title']) > 1) {
+        if ($title_count) {
             krsort($crumb['title']);
             krsort($crumb['link']);
         }
-        if (count($crumb['title']) > 1) {
+        if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                     add_to_meta($value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             add_to_meta($crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
@@ -151,21 +162,20 @@ class Functions {
 
     /**
      * Get the best available paths for image and thumbnail
+     *
      * @param            $download_image
      * @param            $download_image_thumb
      * @param bool|FALSE $hiRes
+     *
      * @return bool|string
      */
     public static function get_download_image_path($download_image, $download_image_thumb, $hiRes = FALSE) {
         if (!$hiRes) {
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
-            }
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
-            }
             if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
                 return DOWNLOADS.'images/'.$download_image;
+            }
+            if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
+                return DOWNLOADS.'images/'.$download_image_thumb;
             }
         } else {
             if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
@@ -173,9 +183,6 @@ class Functions {
             }
             if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
                 return DOWNLOADS.'images/'.$download_image_thumb;
-            }
-            if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) {
-                return DOWNLOADS.'images/thumbs/'.$download_image_thumb;
             }
         }
 

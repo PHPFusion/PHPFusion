@@ -20,25 +20,25 @@
  * @param string $label
  * @param string $input_value
  * @param array  $options
+ *
  * @return string
  */
-function form_hidden($input_name, $label = "", $input_value = "", array $options = array()) {
-    $defender = \defender::getInstance();
+function form_hidden($input_name, $label = "", $input_value = "", array $options = []) {
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $html = '';
-    $default_options = array(
-        "input_id" => $input_name,
-        "show_title" => FALSE,
-        "width" => "100%",
-        "class" => "",
-        "inline" => FALSE,
-        "required" => FALSE,
-        "placeholder" => "",
-        "deactivate" => FALSE,
-        "delimiter" => ",",
-        "error_text" => "",
-    );
+    $default_options = [
+        'input_id'    => $input_name,
+        'show_title'  => FALSE,
+        'width'       => '100%',
+        'class'       => '',
+        'inline'      => FALSE,
+        'required'    => FALSE,
+        'placeholder' => '',
+        'deactivate'  => FALSE,
+        'delimiter'   => ',',
+        'error_text'  => '',
+    ];
     $options += $default_options;
 
     if ($options['show_title']) {
@@ -52,16 +52,16 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
         $html .= ($options['inline']) ? "</div>\n" : "";
         $html .= "</div>\n";
     }
-    $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'title' => trim($title, '[]'),
-                                     'type' => 'textbox',
-                                     'id' => $options['input_id'],
-                                     'required' => $options['required'],
-                                     'safemode' => '0',
-                                     "delimiter" => $options['delimiter'],
-                                     'error_text' => $options['error_text']
-                                 ));
+    \defender::add_field_session([
+        'input_name' => $input_name,
+        'title'      => trim($title, '[]'),
+        'type'       => 'textbox',
+        'id'         => $options['input_id'],
+        'required'   => $options['required'],
+        'safemode'   => '0',
+        "delimiter"  => $options['delimiter'],
+        'error_text' => $options['error_text']
+    ]);
 
     return $html;
 }

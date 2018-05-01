@@ -15,12 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\News;
 
 class NewsServer {
-
-    protected static $news_settings = array();
+    protected static $news_settings = [];
     private static $news_instance = NULL;
     private static $news_admin_instance = NULL;
 
@@ -47,6 +45,4 @@ class NewsServer {
 
         return $key === NULL ? self::$news_settings : (isset(self::$news_settings[$key]) ? self::$news_settings[$key] : NULL);
     }
-
-
 }

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: latest_comments_panel.php
-| Author: gh0st2k
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,116 +18,146 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
+include_once INFUSIONS."latest_comments_panel/templates.php";
 $displayComments = 10;
-openside($locale['global_025']);
-$result = dbquery("	SELECT comment_id, comment_item_id, comment_type, comment_message
-					FROM ".DB_COMMENTS."
-					WHERE comment_hidden='0'
-					ORDER BY comment_datestamp DESC
-					");
+$comments_per_page = fusion_get_settings('comments_per_page');
+
+$result = dbquery("SELECT c.comment_id, c.comment_item_id, c.comment_type, c.comment_message, u.user_id, u.user_name, u.user_status, u.user_avatar
+    FROM ".DB_COMMENTS." c
+    LEFT JOIN ".DB_USERS." u ON u.user_id = c.comment_name
+    WHERE c.comment_hidden='0'
+    ORDER BY c.comment_datestamp DESC
+");
+
+$info = [];
+
+$info['title'] = $locale['global_025'];
+$info['theme_bullet'] = THEME_BULLET;
+
 if (dbrows($result)) {
-    $output = "";
     $i = 0;
+
     while ($data = dbarray($result)) {
         if ($i == $displayComments) {
             break;
         }
+
         switch ($data['comment_type']) {
-            case "N":
-                $access = dbcount("(news_id)", DB_NEWS, "news_id='".$data['comment_item_id']."' AND
-									".groupaccess('news_visibility')." AND
-									(news_start='0'||news_start<=".time().") AND
-									(news_end='0'||news_end>=".time().") AND
-									news_draft='0'
-									");
-                if ($access > 0) {
-                    $comment = trimlink($data['comment_message'], 23);
-                    $commentStart = dbcount("(comment_id)", DB_COMMENTS,
-                                            "comment_item_id='".$data['comment_item_id']."' AND comment_type='N' AND comment_id<=".$data['comment_id']);
-                    if ($commentStart > $settings['comments_per_page']) {
-                        $commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
-                    } else {
-                        $commentStart = "";
-                    }
-                    $output .= THEME_BULLET." <a href='".INFUSIONS."news/news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
-                    $i++;
+            case 'A':
+                $result_a = dbquery("SELECT ar.article_subject
+                    FROM ".DB_ARTICLES." AS ar
+                    INNER JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id=ar.article_cat
+                    WHERE ar.article_id=:id AND ar.article_draft=0
+                    AND ".groupaccess('ar.article_visibility')."
+                    ".(multilang_table('AR') ? " AND ar.article_language='".LANGUAGE."'" : '')."
+                    ORDER BY ar.article_datestamp DESC
+                ", [':id' => $data['comment_item_id']]);
+
+                if (dbrows($result_a)) {
+                    $article_data = dbarray($result_a);
+                    $comment_start = dbcount('(comment_id)', DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='A' AND comment_id<=".$data['comment_id']);
+                    $comment_start = $comment_start > $comments_per_page ? '&amp;c_start_news_comments='.((floor($comment_start / $comments_per_page) * $comments_per_page) - $comments_per_page) : '';
+                    $info['item'][] = [
+                        'data'  => $data,
+                        'url'   => INFUSIONS.'articles/articles.php?article_id='.$data['comment_item_id'],
+                        'title' => $article_data['article_subject'],
+                        'c_url' => INFUSIONS.'articles/articles.php?article_id='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
+                    ];
                 }
                 continue;
-            case "A":
-                $access = dbquery("	SELECT article_id FROM ".DB_ARTICLES." a, ".DB_ARTICLE_CATS." c WHERE
-									a.article_id='".$data['comment_item_id']."' AND
-									a.article_cat=c.article_cat_id AND
-									".groupaccess('a.article_visibility')." AND
-									a.article_draft='0'
-									");
-                if (dbrows($access) > 0) {
-                    $comment = trimlink($data['comment_message'], 23);
-                    $commentStart = dbcount("(comment_id)", DB_COMMENTS,
-                                            "comment_item_id='".$data['comment_item_id']."' AND comment_type='A' AND comment_id<=".$data['comment_id']);
-                    if ($commentStart > $settings['comments_per_page']) {
-                        $commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
-                    } else {
-                        $commentStart = "";
-                    }
-                    $output .= THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
-                    $i++;
+            case 'B':
+                $result_b = dbquery("SELECT d.blog_subject
+                    FROM ".DB_BLOG." AS d
+                    INNER JOIN ".DB_BLOG_CATS." AS c ON c.blog_cat_id=d.blog_cat
+                    WHERE d.blog_id=:id AND ".groupaccess('d.blog_visibility')."
+                    ".(multilang_table('BL') ? " AND d.blog_language='".LANGUAGE."'" : '')."
+                    ORDER BY d.blog_datestamp DESC
+                ", [':id' => $data['comment_item_id']]);
+
+                if (dbrows($result_b)) {
+                    $blog_data = dbarray($result_b);
+                    $comment_start = dbcount('(comment_id)', DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='B' AND comment_id<=".$data['comment_id']);
+                    $comment_start = $comment_start > $comments_per_page ? '&amp;c_start_news_comments='.((floor($comment_start / $comments_per_page) * $comments_per_page) - $comments_per_page) : '';
+                    $info['item'][] = [
+                        'data'  => $data,
+                        'url'   => INFUSIONS.'blog/blog.php?readmore='.$data['comment_item_id'],
+                        'title' => $blog_data['blog_subject'],
+                        'c_url' => INFUSIONS.'blog/blog.php?readmore='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
+                    ];
                 }
                 continue;
-            case "P":
-                $access = dbquery("	SELECT photo_id FROM ".DB_PHOTOS." p, ".DB_PHOTO_ALBUMS." a WHERE
-									p.photo_id='".$data['comment_item_id']."' AND
-									p.album_id=a.album_id AND
-									".groupaccess('a.album_access'));
-                if (dbrows($access) > 0) {
-                    $comment = trimlink($data['comment_message'], 23);
-                    $commentStart = dbcount("(comment_id)", DB_COMMENTS,
-                                            "comment_item_id='".$data['comment_item_id']."' AND comment_type='P' AND comment_id<=".$data['comment_id']);
-                    if ($commentStart > $settings['comments_per_page']) {
-                        $commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
-                    } else {
-                        $commentStart = "";
-                    }
-                    $output .= THEME_BULLET." <a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
-                    $i++;
+            case 'N':
+                $result_n = dbquery("SELECT ns.news_subject
+                    FROM ".DB_NEWS." AS ns
+                    LEFT JOIN ".DB_NEWS_CATS." AS nc ON nc.news_cat_id=ns.news_cat
+                    WHERE ns.news_id=:id AND (ns.news_start=0 OR ns.news_start<='".TIME."')
+                    AND (ns.news_end=0 OR ns.news_end>='".TIME."') AND ns.news_draft=0
+                    AND ".groupaccess('ns.news_visibility')."
+                    ".(multilang_table('NS') ? "AND ns.news_language='".LANGUAGE."'" : '')."
+                    ORDER BY ns.news_datestamp DESC
+                ", [':id' => $data['comment_item_id']]);
+
+                if (dbrows($result_n)) {
+                    $news_data = dbarray($result_n);
+                    $comment_start = dbcount('(comment_id)', DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='N' AND comment_id<=".$data['comment_id']);
+                    $comment_start = $comment_start > $comments_per_page ? '&amp;c_start_news_comments='.((floor($comment_start / $comments_per_page) * $comments_per_page) - $comments_per_page) : '';
+                    $info['item'][] = [
+                        'data'  => $data,
+                        'url'   => INFUSIONS.'news/news.php?readmore='.$data['comment_item_id'],
+                        'title' => $news_data['news_subject'],
+                        'c_url' => INFUSIONS.'news/news.php?readmore='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
+                    ];
                 }
                 continue;
-            case "C":
-                $access = dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".$data['comment_item_id']."' AND ".groupaccess('page_access'));
-                if ($access > 0) {
-                    $comment = trimlink($data['comment_message'], 23);
-                    $commentStart = dbcount("(comment_id)", DB_COMMENTS,
-                                            "comment_item_id='".$data['comment_item_id']."' AND comment_type='C' AND comment_id<=".$data['comment_id']);
-                    if ($commentStart > $settings['comments_per_page']) {
-                        $commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
-                    } else {
-                        $commentStart = "";
-                    }
-                    $output .= THEME_BULLET." <a href='".BASEDIR."viewpage.php?page_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
-                    $i++;
+            case 'P':
+                $result_p = dbquery("SELECT p.photo_title
+                    FROM ".DB_PHOTOS." AS p
+                    INNER JOIN ".DB_PHOTO_ALBUMS." AS a ON p.album_id=a.album_id
+                    WHERE p.photo_id=:id AND ".groupaccess('a.album_access')."
+                    ".(multilang_table('PG') ? " AND a.album_language='".LANGUAGE."'" : '')."
+                    ORDER BY p.photo_datestamp DESC
+                ", [':id' => $data['comment_item_id']]);
+
+                if (dbrows($result_p)) {
+                    $photo_data = dbarray($result_p);
+                    $comment_start = dbcount('(comment_id)', DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='P' AND comment_id<=".$data['comment_id']);
+                    $comment_start = $comment_start > $comments_per_page ? '&amp;c_start_news_comments='.((floor($comment_start / $comments_per_page) * $comments_per_page) - $comments_per_page) : '';
+                    $info['item'][] = [
+                        'data'  => $data,
+                        'url'   => INFUSIONS.'gallery/gallery.php?photo_id='.$data['comment_item_id'],
+                        'title' => $photo_data['photo_title'],
+                        'c_url' => INFUSIONS.'gallery/gallery.php?photo_id='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
+                    ];
                 }
                 continue;
-            case "D":
-                $access = dbquery("	SELECT download_id FROM ".DB_DOWNLOADS." d, ".DB_DOWNLOAD_CATS." c WHERE
-									d.download_id='".$data['comment_item_id']."' AND
-									d.download_cat=c.download_cat_id AND
-									".groupaccess('d.download_visibility'));
-                if (dbrows($access) > 0) {
-                    $comment = trimlink($data['comment_message'], 23);
-                    $commentStart = dbcount("(comment_id)", DB_COMMENTS,
-                                            "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);
-                    if ($commentStart > $settings['comments_per_page']) {
-                        $commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
-                    } else {
-                        $commentStart = "";
-                    }
-                    $output .= THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
-                    $i++;
+            case 'D':
+                $result_d = dbquery("SELECT d.download_title
+                    FROM ".DB_DOWNLOADS." AS d
+                    INNER JOIN ".DB_DOWNLOAD_CATS." AS c ON c.download_cat_id=d.download_cat
+                    WHERE d.download_id=:id AND ".groupaccess('d.download_visibility')."
+                    ".(multilang_table("DL") ? " AND c.download_cat_language='".LANGUAGE."'" : '')."
+                    ORDER BY d.download_datestamp DESC
+                ", [':id' => $data['comment_item_id']]);
+
+                if (dbrows($result_d)) {
+                    $download_data = dbarray($result_d);
+                    $comment_start = dbcount('(comment_id)', DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);
+                    $comment_start = $comment_start > $comments_per_page ? '&amp;c_start_news_comments='.((floor($comment_start / $comments_per_page) * $comments_per_page) - $comments_per_page) : '';
+                    $info['item'][] = [
+                        'data'  => $data,
+                        'url'   => INFUSIONS.'downloads/downloads.php?download_id='.$data['comment_item_id'],
+                        'title' => $download_data['download_title'],
+                        'c_url' => INFUSIONS.'downloads/downloads.php?download_id='.$data['comment_item_id'].$comment_start.'#c'.$data['comment_id']
+                    ];
                 }
-                continue;
+                break;
         }
+
+        $i++;
     }
-    echo $output;
 } else {
-    echo "<div style='text-align:center'>".$locale['global_026']."</div>\n";
+    $info['no_rows'] = $locale['global_026'];
 }
-closeside();
+
+render_latest_comments($info);

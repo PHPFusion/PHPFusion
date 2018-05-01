@@ -20,5 +20,4 @@
  * UserFieldsInput class for compatibility reason
  */
 class UserFieldsInput extends PHPFusion\UserFieldsInput {
-
 }

@@ -19,5 +19,5 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 $text = preg_replace('#\[yandex\](.*?)\[/yandex\]#si',
-                     '<img src=\'https://yastatic.net/www/_/x/Q/xk8YidkhGjIGOrFm_dL5781YA.svg\' width=\'28\' height=\'20\' alt=\'Yandex Search\' border=\'0\' style=\'vertical-align:middle;\'> <a href=\'https://yandex.ru/search/?lr=2&amp;noreask=1&amp;text=\1\' target=\'_blank\'>\1</a>',
-                     $text);
+    '<img src=\'https://yastatic.net/www/_/x/Q/xk8YidkhGjIGOrFm_dL5781YA.svg\' width=\'28\' height=\'20\' alt=\'Yandex Search\' border=\'0\' style=\'vertical-align:middle;\'> <a href=\'https://yandex.ru/search/?lr=2&amp;noreask=1&amp;text=\1\' target=\'_blank\'>\1</a>',
+    $text);

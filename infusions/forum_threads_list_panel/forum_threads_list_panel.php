@@ -19,9 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include INCLUDES."infusions_include.php";
+include_once INCLUDES."infusions_include.php";
 
-require_once INFUSIONS."forum/infusion_db.php";
 $inf_settings = get_settings('forum');
 $userdata = fusion_get_userdata();
 $locale = fusion_get_locale('', FORUM_LOCALE);
@@ -31,31 +30,27 @@ if (!$inf_settings) {
     return;
 }
 
-global $lastvisited;
+$lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 
-if (!isset($lastvisited) || !isnum($lastvisited)) {
-    $lastvisited = TIME;
-}
 $result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_lastpost, f.forum_postcount,
     f.forum_threadcount, f.forum_lastuser, f.forum_access,
-    t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
+    t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll,
     u.user_id, u.user_name, u.user_status, u.user_avatar
     FROM ".DB_FORUMS." f
     LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
     LEFT JOIN ".DB_USERS." u ON t.thread_lastuser = u.user_id
-    ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
+    ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
     GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']);
 
 if (dbrows($result)) {
-    $i = 0;
     opentable($locale['global_040']);
-        echo "<table class='table table-responsive table-striped'>";
+        echo "<div class='table-responsive'><table class='table table-striped'>";
             echo "<thead><tr>";
-    echo "<td class='min'>&nbsp;</td>\n";
-                echo "<td><strong>".$locale['global_044']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_045']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_046']."</strong></td>\n";
-                echo "<td><strong>".$locale['global_047']."</strong></td>\n";
+                echo "<th class='min'>&nbsp;</th>\n";
+                echo "<th><strong>".$locale['global_044']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_045']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_046']."</strong></th>\n";
+                echo "<th><strong>".$locale['global_047']."</strong></th>\n";
             echo "</thead></tr>";
             echo "<tbody>";
                 while ($data = dbarray($result)) {
@@ -64,10 +59,12 @@ if (dbrows($result)) {
                         if ($data['thread_lastpost'] > $lastvisited) {
                             $thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
                             if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
-                                echo '<i class="fa fa-folder fa-3"></i>';
+                                echo "<i class='fa fa-folder-o fa-2x'></i>";
+                            } else {
+                                echo "<i class='fa fa-folder fa-2x text-danger'></i>";
                             }
                         } else {
-                            echo '<i class="fa fa-folder fa-3"></i>';
+                            echo "<i class='fa fa-folder fa-2x'></i>";
                         }
                         if ($data['thread_poll']) {
                             $thread_poll = "<span class='small' style='font-weight:bold'>[".$locale['global_051']."]</span> ";
@@ -82,10 +79,9 @@ if (dbrows($result)) {
                         echo "<td>".($data['thread_postcount'] - 1)."</td>\n";
                         echo "<td>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
                     echo "</tr>\n";
-                    $i++;
                 }
             echo "</tbody>";
-        echo "</table>\n";
+        echo "</table>\n</div>";
 
         if (iMEMBER) {
             echo "<div class='text-center'>\n";

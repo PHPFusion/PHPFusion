@@ -36,7 +36,7 @@ class Less_Tree_Operation extends Less_Tree {
             if ($a instanceof Less_Tree_Dimension && $b instanceof Less_Tree_Color) {
                 $a = $a->toColor();
 
-            } elseif ($b instanceof Less_Tree_Dimension && $a instanceof Less_Tree_Color) {
+            } else if ($b instanceof Less_Tree_Dimension && $a instanceof Less_Tree_Color) {
                 $b = $b->toColor();
 
             }
@@ -48,7 +48,7 @@ class Less_Tree_Operation extends Less_Tree {
             return $a->operate($this->op, $b);
         }
 
-        return new Less_Tree_Operation($this->op, array($a, $b), $this->isSpaced);
+        return new Less_Tree_Operation($this->op, [$a, $b], $this->isSpaced);
     }
 
 

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Upload
  * Handles file or image uploads validation
@@ -32,14 +33,14 @@ class Upload extends \Defender\Validation {
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
     protected function verify_file_upload() {
-        global $locale;
+        $locale = fusion_get_locale();
         require_once INCLUDES."infusions_include.php";
         if (self::$inputConfig['multiple']) {
             if (!empty($_FILES[self::$inputConfig['input_name']]['name'])) {
-                $upload = array('error' => 0);
+                $upload = ['error' => 0];
                 if (self::$inputConfig['max_count'] < count($_FILES[self::$inputConfig['input_name']]['name'])) {
                     \defender::stop();
-                    $upload = array('error' => 1);
+                    $upload = ['error' => 1];
                     addNotice('danger', $locale['df_424']);
                     \defender::setInputError(self::$inputName);
                 } else {
@@ -63,7 +64,7 @@ class Upload extends \Defender\Validation {
                              */
                             if (stristr($valid_ext, ',')) {
                                 $valid_ext = explode(",", $valid_ext);
-                            } elseif (stristr($valid_ext, '|')) {
+                            } else if (stristr($valid_ext, '|')) {
                                 $valid_ext = explode("|", $valid_ext);
                             } else {
                                 \defender::stop();
@@ -77,28 +78,29 @@ class Upload extends \Defender\Validation {
                             }
                             $file_ext = strtolower(strrchr($file['name'][$i], "."));
                             $file_dest = rtrim($target_folder, '/').'/';
-                            $upload_file = array(
-                                "source_file" => $source_file,
-                                "source_size" => $file['size'][$i],
-                                "source_ext" => $file_ext,
-                                "target_file" => $target_file.$file_ext,
-                                "target_folder" => $target_folder,
-                                "valid_ext" => $valid_ext,
-                                "max_size" => $max_size,
-                                "query" => $query,
-                                "error" => 0
-                            );
+                            $upload_file = [
+                                "source_file"    => $source_file,
+                                "source_size"    => $file['size'][$i],
+                                "source_ext"     => $file_ext,
+                                "target_file"    => $target_file.$file_ext,
+                                "target_folder"  => $target_folder,
+                                "valid_ext"      => $valid_ext,
+                                "max_size"       => $max_size,
+                                "query"          => $query,
+                                "error"          => 0,
+                                "replace_upload" => self::$inputConfig['replace_upload']
+                            ];
 
                             if ($file['size'][$i] > $max_size) {
                                 // Maximum file size exceeded
                                 $upload['error'] = 1;
-                            } elseif (!$this->in_array_insensitive($file_ext, $valid_ext)) {
+                            } else if (!$this->in_array_insensitive($file_ext, $valid_ext)) {
                                 // Invalid file extension or mimetypes
                                 $upload['error'] = 2;
-                            } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'][$i], $file_ext, $valid_ext) === FALSE) {
+                            } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'][$i], $file_ext, $valid_ext) === FALSE) {
                                 $upload['error'] = 4;
                             } else {
-                                $target_file = filename_exists($file_dest, $target_file.$file_ext);
+                                $target_file = (self::$inputConfig['replace_upload'] ? $target_file.$file_ext : filename_exists($file_dest, $target_file.$file_ext));
                                 $upload_file['target_file'] = $target_file;
                                 move_uploaded_file($file['tmp_name'][$i], $file_dest.$target_file);
                                 if (function_exists("chmod")) {
@@ -128,7 +130,7 @@ class Upload extends \Defender\Validation {
                             $upload['type'][$i] = $file_type;
                         } else {
                             // File not uploaded
-                            $upload['error'] = array("error" => 4);
+                            $upload['error'] = ["error" => 4];
                         }
                         if ($upload['error'] !== 0) {
                             \defender::stop();
@@ -155,19 +157,16 @@ class Upload extends \Defender\Validation {
                 }
                 return $upload;
             } else {
-                return array();
+                return [];
             }
         } else {
-
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name']) && \defender::safe()) {
-
-                $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
+                $upload = upload_file(self::$inputConfig['input_name'], $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'], self::$inputConfig['valid_ext'], self::$inputConfig['max_byte'], "", self::$inputConfig['replace_upload']);
                 if ($upload['error'] != 0) {
                     \defender::stop(); // return FALSE
                     switch ($upload['error']) {
                         case 1: // Maximum file size exceeded
-                            addNotice('danger',
-                                sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
+                            addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
                             \defender::setInputError(self::$inputName);
                             break;
                         case 2: // Invalid File extensions
@@ -194,11 +193,10 @@ class Upload extends \Defender\Validation {
 
     /**
      * Verify Image Upload
+     *
      * @return array
      */
     protected function verify_image_upload() {
-
-        $locale = fusion_get_locale();
 
         if (self::$inputConfig['multiple']) {
 
@@ -222,7 +220,7 @@ class Upload extends \Defender\Validation {
             $query = '';
 
             if (!empty($_FILES[self::$inputConfig['input_name']]['name']) && is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][0]) && \defender::safe()) {
-                $result = array();
+                $result = [];
                 for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
                     if (is_uploaded_file($_FILES[self::$inputConfig['input_name']]['tmp_name'][$i])) {
                         $image = $_FILES[self::$inputConfig['input_name']];
@@ -234,28 +232,31 @@ class Upload extends \Defender\Validation {
                         }
 
                         $image_ext = strtolower(strrchr($image['name'][$i], "."));
-                        $image_res = array();
+                        $image_res = [];
                         if (filesize($image['tmp_name'][$i]) > 10 && @getimagesize($image['tmp_name'][$i])) {
                             $image_res = @getimagesize($image['tmp_name'][$i]);
                         }
-                        $image_info = array(
-                            "image"        => FALSE,
-                            "image_name"   => $image_name.$image_ext,
-                            "image_ext"    => $image_ext,
-                            "image_size"   => $image['size'],
-                            "image_width"  => !empty($image_res[0]) ? $image_res[0] : '',
-                            "image_height" => !empty($image_res[1]) ? $image_res[1] : '',
-                            "thumb1"       => FALSE,
-                            "thumb1_name"  => "",
-                            "thumb2"       => FALSE,
-                            "thumb2_name"  => "",
-                            "error"        => 0,
-                        );
+                        $image_info = [
+                            "image"         => FALSE,
+                            "target_folder" => $target_folder,
+                            "valid_ext"     => self::$inputConfig['valid_ext'],
+                            "max_size"      => $max_size,
+                            "image_name"    => $image_name.$image_ext,
+                            "image_ext"     => $image_ext,
+                            "image_size"    => $image['size'],
+                            "image_width"   => !empty($image_res[0]) ? $image_res[0] : '',
+                            "image_height"  => !empty($image_res[1]) ? $image_res[1] : '',
+                            "thumb1"        => FALSE,
+                            "thumb1_name"   => "",
+                            "thumb2"        => FALSE,
+                            "thumb2_name"   => "",
+                            "error"         => 0,
+                        ];
                         if ($image_ext == ".gif") {
                             $filetype = 1;
-                        } elseif ($image_ext == ".jpg") {
+                        } else if ($image_ext == ".jpg") {
                             $filetype = 2;
-                        } elseif ($image_ext == ".png") {
+                        } else if ($image_ext == ".png") {
                             $filetype = 3;
                         } else {
                             $filetype = FALSE;
@@ -263,19 +264,19 @@ class Upload extends \Defender\Validation {
                         if ($image['size'][$i] > $max_size) {
                             // Invalid file size
                             $image_info['error'] = 1;
-                        } elseif (!$filetype || !verify_image($image['tmp_name'][$i])) {
+                        } else if (!$filetype || !verify_image($image['tmp_name'][$i])) {
                             // Unsupported image type
                             $image_info['error'] = 2;
-                        } elseif (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'][$i], $image_ext, array('.jpg', '.jpeg', '.png','.png','.svg','.gif','.bmp')) === FALSE) {
+                        } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($image['tmp_name'][$i], $image_ext, ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp']) === FALSE) {
                             $image_info['error'] = 5;
-                        } elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
+                        } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                             // Invalid image resolution
                             $image_info['error'] = 3;
                         } else {
                             if (!file_exists($target_folder)) {
                                 mkdir($target_folder, 0755);
                             }
-                            $image_name_full = filename_exists($target_folder, $image_name.$image_ext);
+                            $image_name_full = (self::$inputConfig['replace_upload'] ? $image_name.$image_ext : filename_exists($target_folder, $image_name.$image_ext));
                             $image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
                             $image_info['image_name'] = $image_name_full;
                             $image_info['image'] = TRUE;
@@ -289,7 +290,7 @@ class Upload extends \Defender\Validation {
                                 if (file_exists($target_folder.$image_name_full)) {
                                     @unlink($target_folder.$image_name_full);
                                 }
-                            } elseif ($thumb1 || $thumb2) {
+                            } else if ($thumb1 || $thumb2) {
                                 require_once INCLUDES."photo_functions_include.php";
                                 $noThumb = FALSE;
                                 if ($thumb1) {
@@ -301,7 +302,7 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb1_folder)) {
                                             mkdir($thumb1_folder, 0755, TRUE);
                                         }
-                                        $image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
+                                        $image_name_t1 = (self::$inputConfig['replace_upload'] ? $image_name.$thumb1_suffix.$image_ext : filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext));
                                         $image_info['thumb1_name'] = $image_name_t1;
                                         $image_info['thumb1'] = TRUE;
                                         if ($thumb1_ratio == 0) {
@@ -320,7 +321,7 @@ class Upload extends \Defender\Validation {
                                         if (!file_exists($thumb2_folder)) {
                                             mkdir($thumb2_folder, 0755, TRUE);
                                         }
-                                        $image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
+                                        $image_name_t2 = (self::$inputConfig['replace_upload'] ? $image_name.$thumb2_suffix.$image_ext : filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext));
                                         $image_info['thumb2_name'] = $image_name_t2;
                                         $image_info['thumb2'] = TRUE;
                                         if ($thumb2_ratio == 0) {
@@ -337,7 +338,7 @@ class Upload extends \Defender\Validation {
                             }
                         }
                     } else {
-                        $image_info = array("error" => 5);
+                        $image_info = ["error" => 5];
                     }
                     if ($image_info['error'] != 0) {
                         $this->set_error_notice($image_info['error']);
@@ -348,7 +349,7 @@ class Upload extends \Defender\Validation {
                 } // end for
                 return $result;
             } else {
-                return array();
+                return [];
             }
         } else {
 
@@ -375,7 +376,9 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['thumbnail2_w'], // thumb2 width
                     self::$inputConfig['thumbnail2_h'], // thumb2 height
                     FALSE,
-                    explode(',', self::$inputConfig['valid_ext'])
+                    explode(',', self::$inputConfig['valid_ext']),
+                    "", // query
+                    self::$inputConfig['replace_upload']
                 );
 
                 if ($upload['error'] != 0) {
@@ -386,7 +389,7 @@ class Upload extends \Defender\Validation {
                     return $upload;
                 }
             } else {
-                return array();
+                return [];
             }
         }
     }

@@ -26,30 +26,33 @@ if ($profile_method == "input") {
     } else {
         $user_birthDate = date('Y-m-d', strtotime('today'));
     }
-    $options += array(
+    $options += [
         'inline'          => TRUE,
         'type'            => 'date',
-        'inner_width'     => '250px',
+        'width'           => '250px',
         'showTime'        => FALSE,
         'date_format_js'  => 'YYYY-M-DD',
         'date_format_php' => 'Y-m-d',
-    );
+    ];
     $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthDate, $options);
 
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
     if ($field_value != "1900-01-01") {
-        $months = explode("|", fusion_get_locale('months', LOCALE.LOCALESET."global.php"));
+        //$months = explode("|", fusion_get_locale('months'));
         $user_birthDate = explode("-", $field_value);
         $lastday = mktime(0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0]);
-        $month_name = $months[number_format($user_birthDate[1])];
-        $fmt = array('0' => "%Y $month_name %d", '1' => "%d $month_name %Y");
-        $fmt_lg = array("hu", "eo", "eu", "ko", "it", "si", "zh-cn", "zh-tw");
-        $user_fields = array(
+        //$month_name = $months[number_format($user_birthDate[1])];
+        $fmt = ['0' => '%Y %B %d', '1' => '%d %B %Y'];
+        $fmt_lg = ["hu", "eo", "eu", "ko", "it", "si", "zh-cn", "zh-tw"];
+        $user_fields = [
             'title' => $locale['uf_birthdate'],
             'value' => showdate($fmt[(in_array(fusion_get_locale('datepicker', LOCALE.LOCALESET.'global.php'), $fmt_lg) ? 0 : 1)], $lastday)
-        );
+        ];
     } else {
-        $user_fields = array('title' => $locale['uf_birthdate'], 'value' => $locale['na']);
+        $user_fields = [
+            'title' => $locale['uf_birthdate'],
+            'value' => $locale['na']
+        ];
     }
 }

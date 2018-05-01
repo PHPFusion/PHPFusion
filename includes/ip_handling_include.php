@@ -66,8 +66,8 @@ if (strpos(FUSION_IP, ".")) {
     }
 } else {
     // IPv6
-    !defined('USER_IP_TYPE') ? define("USER_IP_TYPE", 6) : '';
-    !defined('USER_IP') ? define("USER_IP", uncompressIPv6(FUSION_IP, 7)) : '';
+    if (!defined('USER_IP_TYPE')) define("USER_IP_TYPE", 6) ;
+    if (!defined('USER_IP')) define("USER_IP", uncompressIPv6(FUSION_IP, 7));
     $check_value = "blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
     $check_value .= str_replace(":", "(:", USER_IP, $i);
     $check_value .= str_repeat(")?", $i);
@@ -77,4 +77,3 @@ if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
     redirect("http://www.google.com/");
 }
 unset($check_value);
-

@@ -16,30 +16,38 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once dirname(__FILE__).'../../../../../maincore.php';
-if (!defined("IN_FUSION")) {die("Access Denied");}
 
-$q = stripinput($_GET['q']);
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+
+$user_opts = [];
+
+$q = isset($_GET['q']) ? stripinput($_GET['q']) : '';
 // since search is on user_name.
-$result = dbquery("SELECT user_id, user_name, user_avatar, user_level 
+$result = dbquery("SELECT user_id, user_name, user_avatar, user_level, MATCH(user_name) AGAINST (:Q1) 'score'
     FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status=:status AND
     user_name LIKE :Q ".(!isset($_GET['allow_self']) ? "AND user_id !='".fusion_get_userdata('user_id')."'" : "")."
-    ORDER BY user_level DESC, user_name ASC", [
+    ORDER BY score DESC, user_name ASC, user_level DESC", [
     ':status' => 0,
-    ':Q'      => "$q%"
+    ':Q'      => "$q%",
+    ':Q1'     => "$q%"
 ]);
 
 if (dbrows($result)) {
-	while ($udata = dbarray($result)) {
-		$user_id = $udata['user_id'];
-		$user_text = $udata['user_name'];
-		$user_avatar = ($udata['user_avatar'] && file_exists(IMAGES."avatars/".$udata['user_avatar'])) ? $udata['user_avatar'] : "noavatar50.png";
-		$user_name = $udata['user_name'];
-		$user_level = getuserlevel($udata['user_level']);
-		$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level");
-	}
+    while ($udata = dbarray($result)) {
+        $user_id = $udata['user_id'];
+        $user_text = $udata['user_name'];
+        $user_avatar = ($udata['user_avatar'] && file_exists(IMAGES."avatars/".$udata['user_avatar'])) ? $udata['user_avatar'] : "noavatar50.png";
+        $user_name = $udata['user_name'];
+        $user_level = getuserlevel($udata['user_level']);
+        $user_opts[] = ['id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level"];
+    }
 } else {
-	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');
+    $user_opts[] = ['id' => '', 'text' => fusion_get_locale("500", LOCALE.LOCALESET."search.php"), 'avatar' => '', 'level' => ''];
 }
+
+header('Content-Type: application/json');
+
 echo json_encode($user_opts);

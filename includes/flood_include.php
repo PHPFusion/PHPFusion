@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
 function flood_control($field, $table, $where, $debug = FALSE) {
     $userdata = fusion_get_userdata('user_id');
     $settings = fusion_get_settings();
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $flood = FALSE;
     if ((!iSUPERADMIN && !iADMIN && (!defined('iMOD') || !iMOD)) || $debug) {
         $result = dbquery("SELECT MAX(".$field.") 'last_post' FROM ".$table." WHERE ".$where);
@@ -44,13 +44,13 @@ function flood_control($field, $table, $where, $debug = FALSE) {
                             suspend_log($userdata['user_id'], 4, $locale['global_440'], TRUE);
                             $message = str_replace("[USER_NAME]", $userdata['user_name'], $locale['global_442']);
                             $message = str_replace("[USER_IP]", USER_IP, $message);
-                            $message = str_replace("[USER_IP]", USER_IP, $message);
+                            $message = str_replace("[SITENAME]", $settings['sitename'], $message);
                             $message = str_replace("[SITE_EMAIL]", $settings['siteemail'], $message);
                             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
                             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_441']);
                             sendemail($userdata['user_name'], $userdata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject,
-                                      $message);
-                        } elseif (!iMEMBER) {
+                                $message);
+                        } else if (!iMEMBER) {
                             dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
                         }
                     } else {

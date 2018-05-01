@@ -18,20 +18,25 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-define("IMAGES_N", INFUSIONS."news/images/");
-define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
-define("IMAGES_NC", INFUSIONS."news/news_cats/");
-define("DB_NEWS", DB_PREFIX."news");
-define("DB_NEWS_CATS", DB_PREFIX."news_cats");
-define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
 
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitType('n', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitLink('n', INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
-\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+if (!defined("IMAGES_N")) {
+    define("IMAGES_N", INFUSIONS."news/images/");
+}
+if (!defined("IMAGES_N_T")) {
+    define("IMAGES_N_T", INFUSIONS."news/images/thumbs/");
+}
+if (!defined("IMAGES_NC")) {
+    define("IMAGES_NC", INFUSIONS."news/news_cats/");
+}
+if (!defined("DB_NEWS")) {
+    define("DB_NEWS", DB_PREFIX."news");
+}
+if (!defined("DB_NEWS_CATS")) {
+    define("DB_NEWS_CATS", DB_PREFIX."news_cats");
+}
+if (!defined("DB_NEWS_IMAGES")) {
+    define("DB_NEWS_IMAGES", DB_PREFIX."news_gallery");
+}
 
 if (!defined("NEWS_LOCALE")) {
     if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
@@ -52,3 +57,26 @@ if (!defined("NEWS_ADMIN_LOCALE")) {
 if (!defined("NEWS_CLASS")) {
     define("NEWS_CLASS", INFUSIONS."news/classes/");
 }
+
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
+\PHPFusion\Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+
+$inf_settings = get_settings('news');
+if ($inf_settings['news_allow_submission']) {
+    \PHPFusion\Admins::getInstance()->setSubmitData('n', [
+        'infusion_name' => 'news',
+        'link'          => INFUSIONS."news/news_submit.php",
+        'submit_link'   => "submit.php?stype=n",
+        'submit_locale' => fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('submit_0000', LOCALE.LOCALESET."submissions.php"),
+        'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+    ]);
+}
+
+\PHPFusion\Admins::getInstance()->setFolderPermissions('news', [
+    'infusions/news/images/'        => TRUE,
+    'infusions/news/images/thumbs/' => TRUE
+]);

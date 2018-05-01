@@ -15,12 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_WEBLINKS)) {
+require_once __DIR__.'/../../maincore.php';
+if (!infusion_exists('weblinks')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES."templates/header.php";
 require_once WEBLINKS_CLASS."autoloader.php";
-require_once INFUSIONS."weblinks/templates/weblinks.php";
+require_once INFUSIONS."weblinks/templates.php";
 PHPFusion\Weblinks\WeblinksServer::Weblinks()->display_weblink();
 require_once THEMES."templates/footer.php";

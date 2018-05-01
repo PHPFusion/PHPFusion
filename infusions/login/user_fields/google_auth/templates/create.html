@@ -1,0 +1,70 @@
+<h4>{%title%}</h4>
+{%description%}
+<br/><br/>
+
+{current_block.{
+<h4>{%title%}.</h4>
+<div class="alert alert-warning">
+    <div class="pull-left m-r-10">
+        <i class="fas fa-exclamation-triangle fa-lg"></i>
+    </div>
+    <div class="overflow-hide">
+        {%description%}
+    </div>
+</div>
+<div class="well">
+    <p>{%detail%}</p>
+    {%text_input%}
+    {%button%}
+</div>
+}}
+
+{new_block.{
+{%radio%}
+<div id="gauth_setup_form" class="list-group-item no-shadow spacer-sm p-15" style="display:none;">
+    <h3>{%title%}</h3>
+    <div class="alert alert-warning">
+        <div class="pull-left m-r-10">
+            <i class="fas fa-exclamation-triangle fa-lg"></i>
+        </div>
+        <div class="overflow-hide">
+            {%subtitle%}
+        </div>
+    </div>
+    <p class="strong">{%i_title%}</p>
+    <div class="row m-0">
+        <div class="col-xs-12 col-sm-8">
+            <p>{%i_subtitle%}</p>
+            <div class="well">
+                <p class="strong">{%d_name%}</p>
+                <p>{%account_name%}</p>
+                <p class="strong">{%d_key%}</p>
+                <h2 class="m-t-0"><code>{%key%}</code></h2>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 p-r-20">
+            <img src="{%image_src%}"/><br/>
+            {%i_detail%}
+        </div>
+    </div>
+    <div class="clearfix">
+        <p>{%i_text%}</p>
+        {%text_input%}
+        {%button%}
+    </div>
+</div>
+<div class="well">
+    <p>{%m_title%}</p>
+    <ul class="spacer-sm">
+        <li>
+            {%m_text_1%}<br/>{%m_text_2%}
+        </li>
+        <li>
+            {%m_text_3%}<br/>{%m_text_4%}
+        </li>
+        <li>
+            {%m_text_5%}<br/>{%m_text_6%}
+        </li>
+    </ul>
+</div>
+}}

@@ -118,17 +118,17 @@ if (!function_exists('sendemail_template')) {
         $template_format = $data['template_format'];
         $sender_name = ($sender != "" ? $sender : $data['template_sender_name']);
         $sender_email = ($fromemail != "" ? $fromemail : $data['template_sender_email']);
-        $subject_search_replace = array(
+        $subject_search_replace = [
             "[SUBJECT]"  => $subject, "[SITENAME]" => $settings['sitename'],
             "[SITEURL]"  => $settings['siteurl'], "[USER]" => $user, "[SENDER]" => $sender_name,
             "[RECEIVER]" => $receiver
-        );
-        $message_search_replace = array(
+        ];
+        $message_search_replace = [
             "[SUBJECT]"    => $subject, "[SITENAME]" => $settings['sitename'],
             "[SITEURL]"    => $settings['siteurl'], "[MESSAGE]" => $message, "[USER]" => $user,
             "[SENDER]"     => $sender_name, "[RECEIVER]" => $receiver,
             "[THREAD_URL]" => $thread_url
-        );
+        ];
         foreach ($subject_search_replace as $search => $replace) {
             $message_subject = str_replace($search, $replace, $message_subject);
         }

@@ -20,8 +20,8 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists('render_contact_panel')) {
-    function render_contact_panel(array $info = array()) {
-        echo openside('{%tablename%}');
+    function render_contact_panel(array $info = []) {
+        openside('{%tablename%}');
             echo '<div class="text-center well">{%prmessages%}</div>';
             echo '{%open_form%}';
             echo '{%mail_name_field%}';
@@ -30,10 +30,16 @@ if (!function_exists('render_contact_panel')) {
             echo '{%message_field%}';
             if (!iADMIN) {
                 include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+
+                echo display_captcha([
+                    'captcha_id' => 'captcha_contact_panel',
+                    'input_id'   => 'captcha_code_contact_panel',
+                    'image_id'   => 'captcha_image_contact_panel'
+                ]);
             }
             echo '{%captcha%}';
             echo '{%send_button%}';
             echo '{%close_form%}';
-        echo closeside();
+        closeside();
     }
 }

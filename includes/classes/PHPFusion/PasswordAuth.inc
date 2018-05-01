@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: PasswordAuth.inc
-| Author: Hans Kristian Flaatten (Starefossen)
-| Co-Author: Takács Ákos (Rimelek)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -37,7 +36,7 @@ class PasswordAuth {
     public function isValidCurrentPassword($createNewHash = FALSE) {
         $inputPasswordHash = $this->_hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
         if ($inputPasswordHash == $this->currentPasswordHash) {
-            if ($createNewHash == TRUE) {
+            if ($createNewHash === TRUE) {
                 $this->_setNewHash($this->inputPassword);
             }
 
@@ -73,8 +72,8 @@ class PasswordAuth {
     // Get new password hash
 
     public static function getNewPassword($length = 12) {
-        $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;");
-        $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1));
+        $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
+        $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
             $length = 64;
         }

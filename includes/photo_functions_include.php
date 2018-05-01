@@ -24,9 +24,9 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         $origimage = imagecreatefromjpeg($origfile);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
     }
     $old_x = imagesx($origimage);
@@ -54,9 +54,9 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     touch($thumbfile);
     if ($filetype == 1) {
         imagegif($thumbimage, $thumbfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         imagejpeg($thumbimage, $thumbfile, 100);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         imagepng($thumbimage, $thumbfile, 9, PNG_ALL_FILTERS);
     }
     imagedestroy($origimage);
@@ -68,9 +68,9 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         $origimage = imagecreatefromjpeg($origfile);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
     }
     $old_x = imagesx($origimage);
@@ -80,7 +80,7 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     if ($old_x > $old_y) {
         $x = ceil(($old_x - $old_y) / 2);
         $old_x = $old_y;
-    } elseif ($old_y > $old_x) {
+    } else if ($old_y > $old_x) {
         $y = ceil(($old_y - $old_x) / 2);
         $old_y = $old_x;
     }
@@ -92,9 +92,9 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     imagecopyresampled($new_image, $origimage, 0, 0, $x, $y, $new_size, $new_size, $old_x, $old_y);
     if ($filetype == 1) {
         imagegif($new_image, $thumbfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         imagejpeg($new_image, $thumbfile, 100);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         imagepng($new_image, $thumbfile, 9, PNG_ALL_FILTERS);
     }
     imagedestroy($origimage);
@@ -116,7 +116,9 @@ function image_exists($dir, $image) {
 
 /**
  * Retrieve Information about a specific Image
+ *
  * @param $imagePath
+ *
  * @return array|bool
  * Courtesy of : drpain.webster.org.za @ php.net
  */
@@ -167,7 +169,7 @@ function exif($imagePath) {
         } else {
             $camIso = $notFound;
         }
-        $return = array();
+        $return = [];
         $return['width'] = $exif_base[0];
         $return['height'] = $exif_base[1];
         $return['mime'] = $exif_base['mime'];
@@ -188,8 +190,11 @@ function exif($imagePath) {
 
 /**
  * Copy a file from any source to any destination
+ *
  * @param $source -- copy file from URL
  * @param $destination -- copy file to folder
+ *
+ * @return mixed
  */
 function copy_file($source, $destination) {
     $upload['name'] = '';

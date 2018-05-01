@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Text
  * Validates Text Input
  */
-class Text extends \Defender\Validation  {
+class Text extends \Defender\Validation {
 
     /**
      * validate and sanitize a text
@@ -31,14 +32,15 @@ class Text extends \Defender\Validation  {
 
         // each configuration for text validation should have a min and max length check
         $default_length = [
-            'min_length' => 1,
-            'max_length' => '',
+            'min_length'   => 1,
+            'max_length'   => '',
+            'censor_words' => TRUE,
         ];
 
         self::$inputConfig += $default_length;
 
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 if (self::$inputConfig['max_length']) {
                     // Input max length needs a value.
@@ -48,7 +50,11 @@ class Text extends \Defender\Validation  {
                         return self::$inputDefault;
                     }
                 }
-                $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
+                $value = stripinput(trim(preg_replace("/ +/i", " ", $val)));
+                if (self::$inputConfig['censor_words']) {
+                    $value = censorwords($value);
+                }
+                $vars[] = $value;
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
@@ -61,7 +67,10 @@ class Text extends \Defender\Validation  {
                     return FALSE;
                 }
             }
-            $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords(self::$inputValue))));
+            $value = stripinput(trim(preg_replace("/ +/i", " ", self::$inputValue)));
+            if (self::$inputConfig['censor_words']) {
+                $value = censorwords($value);
+            }
         }
         if (self::$inputConfig['required'] && !$value) {
             \defender::setInputError(self::$inputName);
@@ -111,8 +120,4 @@ class Text extends \Defender\Validation  {
         }
         return FALSE;
     }
-
-
-
-
 }

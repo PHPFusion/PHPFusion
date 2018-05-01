@@ -27,7 +27,7 @@ if (!function_exists("render_gallery")) {
             echo $info['page_nav'];
         }
         if (isset($info['item'])) {
-            function render_photoAlbum(array $info = array()) {
+            function render_photoAlbum(array $info = []) {
                 // add admin edit.
                 global $gallery_settings;
                 $locale = fusion_get_locale();
@@ -35,7 +35,7 @@ if (!function_exists("render_gallery")) {
                 echo "<div class='panel-heading'>\n";
                 echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'], 18)."</strong>\n</a>\n";
                 echo "</div>\n";
-                echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
+                echo "<div class='overflow-hide album_thumbnail' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
                 echo $info['image'];
                 echo "</div>\n";
                 echo "<div class='panel-body'>\n";
@@ -46,8 +46,10 @@ if (!function_exists("render_gallery")) {
                         $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp'])."";
                 if (!empty($info['album_edit']) && !empty($info['album_delete'])) {
                     echo "</div>\n<div class='panel-footer'>\n";
+                    echo '<div class="btn-group btn-group-sm">';
                     echo "<a class='btn btn-default' href='".$info['album_edit']['link']."' title='".$info['album_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
                     echo "<a class='btn btn-danger' href='".$info['album_delete']['link']."' title='".$info['album_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a>\n";
+                    echo '</div>';
                 }
                 echo "</div></div>\n";
             }
@@ -94,11 +96,11 @@ if (!function_exists('render_photo_album')) {
         }
         echo "<!--sub_album_info-->";
         $counter = 0;
-        function render_photo_items(array $info = array()) {
+        function render_photo_items(array $info = []) {
             global $gallery_settings;
             $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
-            echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
+            echo "<div class='overflow-hide' style='height: 120px;'>\n";
             echo $info['image'];
             echo "</div>\n";
             echo "<div class='panel-body'>\n";
@@ -112,19 +114,18 @@ if (!function_exists('render_photo_album')) {
             if (isset($info['photo_ratings'])) {
                 echo "<span><i class='fa fa-star-o fa-fw'></i><a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['word']."</a>\n</span></br>\n";
             }
-            echo "</div>\n";
-            echo "<div class='panel-footer'>\n";
-            echo "<small><strong>".$locale['434']."</strong></small>\n<br/>\n";
-            echo "<div class='pull-left'>\n".display_avatar($info, "15px", "", "", "")."</div>";
-            echo "<div class='overflow-hide'>\n".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</div>\n";
-            echo "</div>\n";
-            echo "<div class='panel-footer'>\n";
-            echo "<abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
+
+            echo "<small><strong>".$locale['434']."</strong></small> ";
+            echo display_avatar($info, "15px", "m-l-5 m-r-5", "", "");
+            echo ' '.profile_link($info['user_id'], $info['user_name'], $info['user_status']);
+            echo "<br/><abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
 			<i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
             if (!empty($info['photo_edit']) && !empty($info['photo_delete'])) {
                 echo "</div>\n<div class='panel-footer'>\n";
-                echo "<a class='btn btn-default' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit fa-lg'></i></a>\n";
-                echo "<a class='btn btn-danger' href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash fa-lg'></i></a>\n";
+                echo '<div class="btn-group center-x">';
+                echo "<a class='btn btn-default btn-sm' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit'></i></a>\n";
+                echo "<a class='btn btn-danger btn-sm' href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash'></i></a>\n";
+                echo '</div>';
             }
             echo "</div></div>\n";
         }
@@ -151,7 +152,7 @@ if (!function_exists('render_photo_album')) {
 if (!function_exists('render_photo')) {
     function render_photo($info) {
         $locale = fusion_get_locale();
-        $userdata = fusion_get_userdata();
+
         opentable($locale['450']);
         echo render_breadcrumbs();
         echo "<!--pre_photo-->";
@@ -174,14 +175,14 @@ if (!function_exists('render_photo')) {
         echo "<div class='list-group-item m-b-20'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<strong>".$locale['434']."</strong>".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
-        echo "<strong>".$locale['403']."</strong><abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
-        echo "<strong>".$locale['454']."</strong>".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
-        echo "<strong>".$locale['456']."</strong>".$info['photo_byte'];
+        echo "<strong>".$locale['434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
+        echo "<strong>".$locale['403']."</strong> <abbr title='".showdate("shortdate", $info['photo_datestamp'])."'>".timer($info['photo_datestamp'])."</abbr><br/>";
+        echo "<strong>".$locale['454']."</strong> ".$info['photo_size'][0]." x ".$info['photo_size'][1]." ".$locale['455']."<br/>\n";
+        echo "<strong>".$locale['456']."</strong> ".$info['photo_byte'];
         echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-        echo "<strong>".$locale['457']."</strong>".number_format($info['photo_views'])."<br/>\n";
-        echo "<strong>".$locale['437']."</strong>".$info['photo_ratings']."<br/>\n";
-        echo "<strong>".$locale['436']."</strong>".$info['photo_comment']."<br/>\n";
+        echo "<strong>".$locale['457']."</strong> ".number_format($info['photo_views'])."<br/>\n";
+        echo "<strong>".$locale['437']."</strong> ".$info['photo_ratings']."<br/>\n";
+        echo "<strong>".$locale['436']."</strong> ".$info['photo_comment']."<br/>\n";
         echo "</div>\n</div>\n";
         echo "</div>\n</div>\n";
         echo "<!--sub_photo-->";

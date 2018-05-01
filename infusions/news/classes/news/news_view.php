@@ -15,29 +15,36 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\News;
-use PHPFusion\OpenGraph;
+
 use PHPFusion\OpenGraphNews;
 
 /**
  * Controller package for if/else
  * Class NewsView
+ *
  * @package PHPFusion\News
  */
 class NewsView extends News {
-
     public function display_news() {
-        if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
-            // Item Result
-            $info = $this->set_NewsItemInfo($_GET['readmore']);
-            render_news_item($info);
-	        OpenGraphNews::ogNews($_GET['readmore']);
-        } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
+        if (isset($_GET['readmore'])) {
+            if (isnum($_GET['readmore'])) {
+                $info = $this->set_NewsItemInfo($_GET['readmore']);
+                render_news_item($info);
+                OpenGraphNews::ogNews($_GET['readmore']);
+            } else {
+                redirect(INFUSIONS.'news/news.php');
+            }
+        } else if (isset($_GET['cat_id'])) {
             // Category Result
-            $info = $this->set_NewsCatInfo($_GET['cat_id']);
-            display_main_news($info);
-	        OpenGraphNews::ogNewsCat($_GET['cat_id']);
+            if (isnum($_GET['cat_id'])) {
+                $info = $this->set_NewsCatInfo($_GET['cat_id']);
+                display_main_news($info);
+                OpenGraphNews::ogNewsCat($_GET['cat_id']);
+            } else {
+                redirect(INFUSIONS.'news/news.php');
+            }
         } else {
             // All Results
             $info = $this->set_NewsInfo();

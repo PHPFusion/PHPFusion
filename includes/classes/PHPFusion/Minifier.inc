@@ -36,7 +36,7 @@ class Minifier {
      *
      * @var array
      */
-    protected static $defaultOptions = array('flaggedComments' => TRUE);
+    protected static $defaultOptions = ['flaggedComments' => TRUE];
     /**
      * The input javascript to be minified.
      *
@@ -80,7 +80,7 @@ class Minifier {
      *
      * @var array
      */
-    protected $locks = array();
+    protected $locks = [];
 
     /**
      * Takes a string containing javascript and removes unneeded characters in
@@ -88,10 +88,11 @@ class Minifier {
      *
      * @param  string $js The raw javascript to be minified
      * @param  array  $options Various runtime options in an associative array
+     *
      * @throws \Exception
      * @return bool|string
      */
-    public static function minify($js, $options = array()) {
+    public static function minify($js, $options = []) {
         try {
             ob_start();
 
@@ -125,13 +126,14 @@ class Minifier {
      * Replace patterns in the given string and store the replacement
      *
      * @param  string $js The string to lock
+     *
      * @return bool
      */
     protected function lock($js) {
         /* lock things like <code>"asd" + ++x;</code> */
         $lock = '"LOCK---'.crc32(time()).'"';
 
-        $matches = array();
+        $matches = [];
         preg_match('/([+-])(\s+)([+-])/S', $js, $matches);
         if (empty($matches)) {
             return $js;
@@ -206,7 +208,7 @@ class Minifier {
         if ($this->c === '/') {
             return $this->processOneLineComments($startIndex);
 
-        } elseif ($this->c === '*') {
+        } else if ($this->c === '*') {
             return $this->processMultiLineComments($startIndex);
         }
 
@@ -251,6 +253,7 @@ class Minifier {
      * conditional comments.
      *
      * @param  int $startIndex The index point where "getReal" function started
+     *
      * @return string
      */
     protected function processOneLineComments($startIndex) {
@@ -278,6 +281,7 @@ class Minifier {
      * to it's position.
      *
      * @param  string $string
+     *
      * @return string|false Returns the first character of the string or false.
      */
     protected function getNext($string) {
@@ -301,8 +305,8 @@ class Minifier {
      * Conditional comments and "license" style blocks are preserved.
      *
      * @param  int $startIndex The index point where "getReal" function started
+     *
      * @return bool|string       False if there's no character
-     * @throws \RuntimeException Unclosed comments will throw an error
      */
     protected function processMultiLineComments($startIndex) {
         $this->getChar(); // current C
@@ -343,7 +347,7 @@ class Minifier {
         }
 
         if ($char === FALSE) {
-            throw new \RuntimeException('Unclosed multiline comment at position: '.($this->index - 2));
+            setError(2, 'Unclosed multiline comment at position: '.($this->index - 2), debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
         }
 
         // if we're here c is part of the comment and therefore tossed
@@ -432,8 +436,6 @@ class Minifier {
     /**
      * When a javascript string is detected this function crawls for the end of
      * it and saves the whole string.
-     *
-     * @throws \RuntimeException Unclosed strings will throw an error
      */
     protected function saveString() {
         $startpos = $this->index;
@@ -472,7 +474,7 @@ class Minifier {
                 // character, so those will be treated just fine using the switch
                 // block below.
                 case "\n":
-                    throw new \RuntimeException('Unclosed string at position: '.$startpos);
+                    setError(2, 'Unclosed string at position: '.$startpos, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
                     break;
 
                 // Escaped characters get picked up here. If it's an escaped new line it's not really needed
@@ -505,6 +507,7 @@ class Minifier {
      * Checks to see if a character is alphanumeric.
      *
      * @param  string $char Just one character
+     *
      * @return bool
      */
     protected static function isAlphaNumeric($char) {
@@ -514,8 +517,6 @@ class Minifier {
     /**
      * When a regular expression is detected this function crawls for the end of
      * it and saves the whole regex.
-     *
-     * @throws \RuntimeException Unclosed regex will throw an error
      */
     protected function saveRegex() {
         echo $this->a.$this->b;
@@ -531,7 +532,7 @@ class Minifier {
             }
 
             if ($this->a === "\n") {
-                throw new \RuntimeException('Unclosed regex pattern at position: '.$this->index);
+                setError(2, 'Unclosed regex pattern at position: '.$this->index, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
             }
 
             echo $this->a;
@@ -556,6 +557,7 @@ class Minifier {
      * Replace "locks" with the original characters
      *
      * @param  string $js The string to unlock
+     *
      * @return bool
      */
     protected function unlock($js) {

@@ -19,17 +19,17 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/steam.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/steam.svg' title='Steam' alt='Steam'/>";
 // Display user field input
 if ($profile_method == "input") {
 
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'error_text'       => $locale['uf_steam_error'],
             'regex_error_text' => $locale['uf_steam_error_1'],
             'placeholder'      => $locale['uf_steam_desc'],
             'label_icon'       => $icon
-        ) + $options;
+        ] + $options;
 
     $user_fields = form_text('user_steam', $locale['uf_steam'], $field_value, [
         'inline'      => TRUE,
@@ -37,14 +37,18 @@ if ($profile_method == "input") {
         'error_text'  => $locale['uf_steam_error'],
         'label_icon'  => $icon,
     ]);
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
+    $link = '';
     if ($field_value) {
-        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.steamcommunity.com/id/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_steam_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.steamcommunity.com/id/".$field_value : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_steam_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array(
-        'title' => $icon.$locale['uf_steam'],
+    $user_fields = [
+        'icon'  => $icon,
+        'link'  => $link,
+        'type'  => 'social',
+        'title' => $locale['uf_steam'],
         'value' => $field_value ?: ''
-    );
+    ];
 }

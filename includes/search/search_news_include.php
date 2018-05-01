@@ -25,23 +25,23 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (db_exists(DB_NEWS)) {
+if (infusion_exists('news')) {
 
     if (Search_Engine::get_param('stype') == 'news' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'search/news.php');
         $item_count = "0 ".$locale['n402']." ".$locale['522']."<br />\n";
 
-        $sort_by = array(
+        $sort_by = [
             'datestamp' => "news_datestamp",
             'subject'   => "news_subject",
             'author'    => "news_name",
-        );
+        ];
 
-        $order_by = array(
+        $order_by = [
             '0' => ' DESC',
             '1' => ' ASC',
-        );
+        ];
 
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
@@ -62,13 +62,7 @@ if (db_exists(DB_NEWS)) {
         }
 
         if (!empty(Search_Engine::get_param('search_param'))) {
-
-            $rows = dbcount("(news_id)", DB_NEWS,
-                (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND
-                            ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW())
-                            ".$date_search,
-                Search_Engine::get_param('search_param')
-            );
+            $rows = dbcount("(news_id)", DB_NEWS, (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".Search_Engine::search_conditions('news')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".$date_search, Search_Engine::get_param('search_param'));
         } else {
             $rows = 0;
         }

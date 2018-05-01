@@ -15,21 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Weblinks;
 
 /**
  * Controller package for if/else
  * Class WeblinksView
+ *
  * @package PHPFusion\Weblinks
  */
 class WeblinksView extends Weblinks {
     public function display_weblink() {
         if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
             self::set_WeblinkCount($_GET['weblink_id']);
-        	} elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+        } else if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_WeblinkCatInfo($_GET['cat_id']);
-            render_weblinks_item($info);
+            display_weblinks_item($info);
         } else {
             $info = $this->set_WeblinksInfo();
             display_main_weblinks($info);

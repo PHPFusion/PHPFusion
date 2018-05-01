@@ -18,9 +18,8 @@
 namespace PHPFusion\Articles;
 
 class ArticlesSettingsAdmin extends ArticlesAdminModel {
-
     private static $instance = NULL;
-    private $locale = array();
+    private $locale = [];
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -31,26 +30,25 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-
         pageAccess("A");
         $this->locale = self::get_articleAdminLocale();
         $article_settings = self::get_article_settings();
 
         // Save
         if (isset($_POST['savesettings'])) {
-            $inputArray = array(
-                "article_pagination"        => form_sanitizer($_POST['article_pagination'], 1, "article_pagination"),
+            $inputArray = [
+                "article_pagination"        => form_sanitizer($_POST['article_pagination'], 15, "article_pagination"),
                 "article_allow_submission"  => form_sanitizer($_POST['article_allow_submission'], 0, "article_allow_submission"),
                 "article_extended_required" => form_sanitizer($_POST['article_extended_required'], 0, "article_extended_required")
-            );
+            ];
 
             // Update
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "article",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    $inputSettings = [
+                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "articles",
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
                 addNotice("success", $this->locale['900']);
                 redirect(FUSION_REQUEST);
@@ -62,15 +60,15 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
 
         //opentable("");
         ?>
-        <div class="well spacer-md">
+        <div class="well m-t-10">
             <?php echo $this->locale['article_0400']; ?>
         </div>
         <?php
         echo openform("settingsform", "post", FUSION_REQUEST, ['class' => 'spacer-sm']);
-        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], array('inline' => true, 'max_length' => 4, 'inner_width' => '250px', 'width' => '150px', 'type' => 'number'));
-        echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
-        echo form_select("article_extended_required", $this->locale['article_0403'], $article_settings['article_extended_required'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success"));
+        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], ['inline' => TRUE, 'max_length' => 4, 'inner_width' => '250px', 'width' => '150px', 'type' => 'number']);
+        echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], ["inline" => TRUE, "options" => [$this->locale['disable'], $this->locale['enable']]]);
+        echo form_select("article_extended_required", $this->locale['article_0403'], $article_settings['article_extended_required'], ["inline" => TRUE, "options" => [$this->locale['disable'], $this->locale['enable']]]);
+        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], ["class" => "btn-success"]);
         echo closeform();
     }
 }

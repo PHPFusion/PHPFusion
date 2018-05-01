@@ -21,12 +21,14 @@ class Attachment {
 
     /**
      * Permissions for Attachments
+     *
      * @var array
      */
-    private static $permissions = array();
+    private static $permissions = [];
 
     /**
      * Object
+     *
      * @param array $thread_info
      */
     public function __construct(array $thread_info) {
@@ -35,6 +37,7 @@ class Attachment {
 
     /**
      * Set Permissions Settings
+     *
      * @param array $thread_info
      */
     private static function set_attachment_permissions(array $thread_info) {
@@ -43,16 +46,18 @@ class Attachment {
 
     /**
      * Fetches Permissions Settings
+     *
      * @param $key
+     *
      * @return bool
      */
-    private static function get_attachment_permissions( $key ) {
+    private static function get_attachment_permissions($key) {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 
-    public static function get_attachments( array $thread_data ) {
+    public static function get_attachments(array $thread_data) {
 
-        $attachments = array();
+        $attachments = [];
 
         if (self::get_attachment_permissions("can_download_attach") == TRUE) {
             $a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($thread_data['thread_id'])."' ORDER BY post_id ASC");
@@ -65,6 +70,6 @@ class Attachment {
                 }
             }
         }
-        return (array) $attachments;
+        return (array)$attachments;
     }
 }

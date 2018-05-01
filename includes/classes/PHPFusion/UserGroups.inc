@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 /**
  * Class UserGroups
+ *
  * @package PHPFusion
  */
 class UserGroups {
@@ -28,14 +28,15 @@ class UserGroups {
 
     private $groupID = 0;
 
-    private $info = array(
-        'total_rows' => 0,
-        'rows' => 0,
-        'group_members' => array()
-    );
+    private $info = [
+        'total_rows'    => 0,
+        'rows'          => 0,
+        'group_members' => []
+    ];
 
     /**
      * Get the UserGroups Instance
+     *
      * @return null|static
      */
     public static function getInstance() {
@@ -47,7 +48,9 @@ class UserGroups {
 
     /**
      * Fetch group information
+     *
      * @param $group_id
+     *
      * @return array|bool
      */
     protected function setGroupInfo($group_id) {
@@ -56,16 +59,15 @@ class UserGroups {
 
         $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." WHERE group_id='".intval($group_id)."'");
 
-        if (dbrows($result)>0) {
-
-            $members = array();
+        if (dbrows($result) > 0) {
+            $members = [];
             $members_per_page = 20;
             $data = dbarray($result);
 
             set_title($data['group_name']);
 
             $rows = dbcount("(user_id)", DB_USERS,
-                            (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$group_id}$|\\\.{$group_id}\\\.|\\\.{$group_id}$')");
+                (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$group_id}$|\\\.{$group_id}\\\.|\\\.{$group_id}$')");
 
             $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rows ? $_GET['rowstart'] : 0);
 
@@ -83,12 +85,14 @@ class UserGroups {
                 }
             }
 
-            $this->info = array(
-                'total_rows' => $rows,
-                'rows' => $members_per_page,
+            $this->info = [
+                'total_rows'    => $rows,
+                'rows'          => $members_per_page,
                 'group_members' => $members,
-            );
+            ];
             $this->info += $data;
+        } else {
+            redirect(BASEDIR.'index.php');
         }
 
         return $this->info;
@@ -96,11 +100,13 @@ class UserGroups {
 
     /**
      * Set the group id and trigger setGroupInfo
+     *
      * @param           $group_id
      * @param bool|TRUE $set_info
+     *
      * @return null|UserGroups|static
      */
-    public function setGroup($group_id, $set_info=TRUE) {
+    public function setGroup($group_id, $set_info = TRUE) {
         $this->groupID = $group_id;
         if ($this->groupID && isnum($this->groupID) && $set_info === TRUE) {
             $this->info = $this->setGroupInfo($group_id);

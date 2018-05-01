@@ -5,7 +5,6 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: weblinks/upgrade/1.2.upgrade.inc
-| Update weblinks to Version 9.02 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -81,9 +80,9 @@ $inf_dropcol[] = ['table' => DB_WEBLINK_CATS, 'column' => 'weblink_cat_access'];
 // Insert new and old settings tables to Infusions table
 $settings = get_settings('weblinks');
 $check_array = [
-    'links_per_page' => 15,
+    'links_per_page'          => 15,
     'links_extended_required' => 1,
-    'links_allow_submission' => 1
+    'links_allow_submission'  => 1
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
@@ -103,7 +102,7 @@ if (!empty($enabled_languages)) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         // add new language records
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '26', '1', '".$language."')";
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l' AND link_language='".$language."'";
@@ -112,5 +111,5 @@ if (!empty($enabled_languages)) {
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '26', '1', '".LANGUAGE."')";
 }

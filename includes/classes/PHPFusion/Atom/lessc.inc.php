@@ -20,9 +20,9 @@ class Lessc {
     static public $VERSION = \Less_Version::less_version;
 
     public $importDir = '';
-    protected $allParsedFiles = array();
-    protected $libFunctions = array();
-    protected $registeredVars = array();
+    protected $allParsedFiles = [];
+    protected $libFunctions = [];
+    protected $registeredVars = [];
     private $formatterName;
 
     public function __construct($lessc = NULL, $sourceName = NULL) {
@@ -54,6 +54,7 @@ class Lessc {
      *
      * @param mixed $in Input
      * @param bool  $force Force rebuild?
+     *
      * @return array lessphp cache structure
      */
     public function cachedCompile($in, $force = FALSE) {
@@ -62,13 +63,13 @@ class Lessc {
 
         if (is_string($in)) {
             $root = $in;
-        } elseif (is_array($in) and isset($in['root'])) {
+        } else if (is_array($in) and isset($in['root'])) {
             if ($force or !isset($in['files'])) {
                 // If we are forcing a recompile or if for some reason the
                 // structure does not contain any file information we should
                 // specify the root to trigger a rebuild.
                 $root = $in['root'];
-            } elseif (isset($in['files']) and is_array($in['files'])) {
+            } else if (isset($in['files']) and is_array($in['files'])) {
                 foreach ($in['files'] as $fname => $ftime) {
                     if (!file_exists($fname) or filemtime($fname) > $ftime) {
                         // One of the files we knew about previously has changed
@@ -86,7 +87,7 @@ class Lessc {
 
         if ($root !== NULL) {
             // If we have a root value which means we should rebuild.
-            $out = array();
+            $out = [];
             $out['root'] = $root;
             $out['compiled'] = $this->compileFile($root);
             $out['files'] = $this->allParsedFiles();
@@ -102,7 +103,7 @@ class Lessc {
 
     public function compileFile($fname, $outFname = NULL) {
         if (!is_readable($fname)) {
-            throw new Exception('load error: failed to find '.$fname);
+            throw new \Exception('load error: failed to find '.$fname);
         }
 
         $pi = pathinfo($fname);
@@ -112,10 +113,10 @@ class Lessc {
         $this->importDir = (array)$this->importDir;
         $this->importDir[] = realpath($pi['dirname']).'/';
 
-        $this->allParsedFiles = array();
+        $this->allParsedFiles = [];
         $this->addParsedFile($fname);
 
-        $parser = new Less_Parser();
+        $parser = new \Less_Parser();
         $parser->SetImportDirs($this->getImportDirs());
         if (count($this->registeredVars)) {
             $parser->ModifyVars($this->registeredVars);
@@ -126,7 +127,7 @@ class Lessc {
         $parser->parseFile($fname);
         $out = $parser->getCss();
 
-        $parsed = Less_Parser::AllParsedFiles();
+        $parsed = \Less_Parser::AllParsedFiles();
         foreach ($parsed as $file) {
             $this->addParsedFile($file);
         }
@@ -146,7 +147,7 @@ class Lessc {
 
     protected function getImportDirs() {
         $dirs_ = (array)$this->importDir;
-        $dirs = array();
+        $dirs = [];
         foreach ($dirs_ as $dir) {
             $dirs[$dir] = '';
         }
@@ -186,8 +187,8 @@ class Lessc {
         unset($this->registeredVars[$name]);
     }
 
-    public function parse($buffer, $presets = array()) {
-        $options = array();
+    public function parse($buffer, $presets = []) {
+        $options = [];
         $this->setVariables($presets);
 
         switch ($this->formatterName) {
@@ -223,9 +224,9 @@ class Lessc {
         $oldImport = $this->importDir;
         $this->importDir = (array)$this->importDir;
 
-        $this->allParsedFiles = array();
+        $this->allParsedFiles = [];
 
-        $parser = new Less_Parser();
+        $parser = new \Less_Parser();
         $parser->SetImportDirs($this->getImportDirs());
         if (count($this->registeredVars)) {
             $parser->ModifyVars($this->registeredVars);
@@ -236,7 +237,7 @@ class Lessc {
         $parser->parse($string);
         $out = $parser->getCss();
 
-        $parsed = Less_Parser::AllParsedFiles();
+        $parsed = \Less_Parser::AllParsedFiles();
         foreach ($parsed as $file) {
             $this->addParsedFile($file);
         }

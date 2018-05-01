@@ -18,15 +18,16 @@
 
 function make_order_opts(&$result, $id_col, $cat_col, $title_col, $order_col) {
     $master_sort = sorter($result, $order_col);
+    $option = [];
     foreach ($master_sort as $data) {
         $title = $data[$title_col];
         $order = $data[$order_col];
         $cat = $data[$cat_col];
         $id = $data[$id_col];
-        $option[] = array("id" => "$id", "title" => "".$order.". ".$title."", "order" => "$order", "cat" => "$cat");
+        $option[] = ["id" => "$id", "title" => "".$order.". ".$title."", "order" => "$order", "cat" => "$cat"];
         if (array_key_exists("children", $data)) {
             $option = array_merge($option,
-                                  make_order_opts($data['children'], $id_col, $cat_col, $title_col, $order_col));
+                make_order_opts($data['children'], $id_col, $cat_col, $title_col, $order_col));
         }
     }
 
@@ -37,12 +38,12 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
     global $_POST;
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
-        add_to_footer("<script src='".TEMPLATES_LIB."select2/select2.min.js'></script>");
-        add_to_head("<link href='".TEMPLATES_LIB."select2/select2.css' rel='stylesheet' />");
+        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
     }
     if (!defined("SELECTCHAIN")) {
         define("SELECTCHAIN", TRUE);
-        add_to_head("<script type='text/javascript' src='".TEMPLATES_LIB."chainselect/jquery.chained.js'></script>");
+        add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
     }
     if (isset($title) && ($title !== "")) {
         $title = stripinput($title);
@@ -70,7 +71,7 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         $is_order = "";
     }
     if (!is_array($array)) {
-        $array = array();
+        $array = [];
         $state_validation = "";
         $required = "";
         $placeholder = "";
@@ -128,9 +129,9 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
     $html .= "</select>";
     $html .= add_to_jquery("
         $('#".$input_id."').select2({
-    	placeholder: '".$placeholder."',
-		$allowclear
-		});
+        placeholder: '".$placeholder."',
+        $allowclear
+        });
         ");
     $html .= add_to_jquery("
     $('#".$input_id."').chained('#".$chain_to_parent_id."');

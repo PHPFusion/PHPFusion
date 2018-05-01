@@ -24,7 +24,6 @@ class ImageRepo {
     // Flaws: Not having images in the theme will break the site. Even the files format are different. Developers have no options for CSS buttons.
     // If we change this now, it will break all the themes on main site repository. Only solution is to address this in a new version to force deprecate old themes.
     /**
-     *
      * @var string[]
      */
     /**
@@ -32,7 +31,7 @@ class ImageRepo {
      *
      * @var string[]
      */
-    private static $imagePaths = array();
+    private static $imagePaths = [];
 
     /**
      * The state of the cache
@@ -62,12 +61,12 @@ class ImageRepo {
         self::$cached = TRUE;
         //<editor-fold desc="imagePaths">
         // You need to + sign it, so setImage will work.
-        self::$imagePaths += array(
+        self::$imagePaths += [
             //A
             //B
             //C
             //D
-            "down" => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/down.png",
+            "down"          => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/down.png",
             //E
             //F
             //G
@@ -77,35 +76,35 @@ class ImageRepo {
             //J
             //K
             //L
-            "left" => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/left.png",
+            "left"          => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/left.png",
             //M
             //N
-            "noavatar" => IMAGES."avatars/no-avatar.jpg",
-            "noavatar50" => IMAGES."avatars/noavatar50.png",
-            "noavatar100" => IMAGES."avatars/noavatar100.png",
-            "noavatar150" => IMAGES."avatars/noavatar150.png",
+            "noavatar"      => IMAGES."avatars/no-avatar.jpg",
+            "noavatar50"    => IMAGES."avatars/noavatar50.png",
+            "noavatar100"   => IMAGES."avatars/noavatar100.png",
+            "noavatar150"   => IMAGES."avatars/noavatar150.png",
             //O
             //P
-            "panel_on" => IMAGES."panel_on.gif",
-            "panel_off" => IMAGES."panel_off.gif",
+            "panel_on"      => IMAGES."panel_on.gif",
+            "panel_off"     => IMAGES."panel_off.gif",
             //Q
             //R
-            "right" => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/right.png",
+            "right"         => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/right.png",
             //S
             //T
             //U
-            "up" => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/up.png",
+            "up"            => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/up.png",
             //V
             //W
             //X
             //Y
             //Z
-        );
+        ];
         //</editor-fold>
-        $installedTables = array(
-            'blog' => db_exists('blog'),
-            'news' => db_exists('news')
-        );
+        $installedTables = [
+            'blog' => infusion_exists('blog'),
+            'news' => infusion_exists('news')
+        ];
 
         $selects = "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN;
         $result = dbquery($selects);
@@ -131,7 +130,7 @@ class ImageRepo {
             $selects_[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
         }
 
-        if ($installedTables['news'] && column_exists(DB_NEWS_CATS, 'news_cat_language', FALSE)) {
+        if ($installedTables['news']) {
             $selects_[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? " where news_cat_language='".LANGUAGE."'" : "");
         }
 
@@ -164,6 +163,7 @@ class ImageRepo {
      * @param string $style "style" attribute of the image
      * @param string $title "title" attribute of the image
      * @param string $atts Custom attributes of the image
+     *
      * @return string The path of the image if the first argument is given,
      * but others not. Otherwise the html "img" tag
      */
@@ -207,11 +207,13 @@ class ImageRepo {
 
     /**
      * Given a path, returns an array of all files
+     *
      * @param $path
+     *
      * @return array
      */
     public static function getFileList($path) {
-        $image_list = array();
+        $image_list = [];
         if (is_dir($path)) {
             $image_files = makefilelist($path, ".|..|index.php", TRUE);
             foreach ($image_files as $image) {
@@ -221,5 +223,29 @@ class ImageRepo {
 
         return (array)$image_list;
     }
+
+    /**
+     * Cache installed smiley images from database
+     *
+     * @return array|null
+     */
+    private static $smiley_cache = NULL;
+
+    public static function cache_smileys() {
+        if (self::$smiley_cache === NULL) {
+            self::$smiley_cache = [];
+            $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
+            while ($data = dbarray($result)) {
+                self::$smiley_cache[] = [
+                    'smiley_code'  => $data['smiley_code'],
+                    'smiley_image' => $data['smiley_image'],
+                    'smiley_text'  => $data['smiley_text']
+                ];
+            }
+        }
+
+        return self::$smiley_cache;
+    }
+
 
 }

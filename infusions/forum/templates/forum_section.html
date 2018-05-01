@@ -1,0 +1,88 @@
+{%breadcrumb%}
+<div class='list-group-item'>
+    <div class='clearfix' style='height:60px;'>
+        <div class='pull-left'>{%filter_dropdown%}</div>
+        {pagenav.{
+        <div class='pull-right center-y'>{%pagenav%}</div>
+        }}
+    </div>
+    <hr/>
+    <div class="table-responsive"><table class='table clear'>
+        <thead>
+        <tr>
+            <th>
+                <small><strong>{%title1%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%title2%}</strong></small>
+            </th>
+            <th class='no-break'>
+                <small><strong>{%title3%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%title4%}</strong></small>
+            </th>
+            <th>
+                <small><i class='fa fa-comment'></i></small>
+            </th>
+            <th>
+                <small><i class='fa fa-thumbs-o-up'></i></small>
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        {sticky_threads.{
+        <tr id='thread_{%thread_id%}'>
+            <td>
+                <div class='clearfix'>
+                    <div class='pull-left m-r-10'>{%avatar%}</div>
+                    <div class='overflow-hide'>
+                        <a class='forum-link' href='{%thread_link_url%}'>{%thread_link_title%}</a>
+                        <span class='m-l-10 m-r-10 text-lighter'>{%thread_icons%}</span>
+                        {%thread_pages%}
+                    </div>
+                </div>
+            </td>
+            <td>{%author_profile_link%}</td>
+            <td class='no-break'>
+                <small>{%last_activity_time%}</small>
+            </td>
+            <td><strong>{%thread_views%}</strong></td>
+            <td><strong>{%thread_postcount%}</strong></td>
+            <td><strong>{%thread_votecount%}</strong></td>
+            <td>
+                {%track_button%}
+            </td>
+        </tr>
+        }}
+        {normal_threads.{
+        <tr id='thread_{%thread_id%}'>
+            <td>
+                <div class='clearfix'>
+                    <div class='pull-left m-r-10'>{%avatar%}</div>
+                    <div class='overflow-hide'>
+                        <a class='forum-link' href='{%thread_link_url%}'>{%thread_link_title%}</a>
+                        <span class='m-l-10 m-r-10 text-lighter'>{%thread_icons%}</span>
+                        {%thread_pages%}
+                    </div>
+                </div>
+            </td>
+            <td>{%author_profile_link%}</td>
+            <td class='no-break'>
+                <small>{%last_activity_time%}</small>
+            </td>
+            <td><strong>{%thread_views%}</strong></td>
+            <td><strong>{%thread_postcount%}</strong></td>
+            <td><strong>{%thread_votecount%}</strong></td>
+            <td>
+                {%track_button%}
+            </td>
+        </tr>
+        }}
+        {no_item.{
+        <tr>
+            <td colspan='7' class='text-center'>{%message%}</td>
+        </tr>
+        }}
+    </table></div>
+</div>

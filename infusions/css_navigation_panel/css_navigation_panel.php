@@ -21,18 +21,14 @@ if (!defined("IN_FUSION")) {
 }
 
 if (!function_exists("showsidelinks")) {
-    function showsidelinks(array $options = array(), $id = 0) {
-        $userdata = fusion_get_userdata();
-        $settings = fusion_get_settings();
-
+    function showsidelinks(array $options = [], $id = 0) {
         $pageInfo = pathinfo($_SERVER['REQUEST_URI']);
         $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
         $site_path = ltrim(fusion_get_settings("site_path"), "/");
         $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
         $start_page .= $pageInfo['basename'];
 
-        $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
-        static $data = array();
+        static $data = [];
 
         if (empty($data)) {
             $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
@@ -48,13 +44,13 @@ if (!function_exists("showsidelinks")) {
         if (!empty($data[$id])) {
             foreach ($data[$id] as $link_id => $link_data) {
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+                    $link_target = ($link_data['link_window'] == "1" ? "target='_blank'" : "");
 
                     if ($start_page == $link_data['link_url']) {
                         $link_is_active = TRUE;
-                    } elseif (fusion_get_settings('site_path').$start_page == $link_data['link_url']) {
+                    } else if (fusion_get_settings('site_path').$start_page == $link_data['link_url']) {
                         $link_is_active = TRUE;
-                    } elseif (($start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
+                    } else if (($start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
                         $link_is_active = TRUE;
                     } else {
                         $link_is_active = FALSE;
@@ -66,18 +62,20 @@ if (!function_exists("showsidelinks")) {
                         $item_link = BASEDIR.$link_data['link_url'];
                     }
 
+                    $item_link = str_replace('%aidlink%', fusion_get_aidlink(), $item_link);
+
                     $link_icon = $link_data['link_icon'] ? "<i class='".$link_data['link_icon']."'></i>" : "";
 
                     echo "<li".($link_is_active ? " class='current-link active'" : "").">";
-                        echo "<a class='display-block p-5 p-l-0 p-r-0' href='".$item_link."' ".$link_target.">";
-                            echo $link_icon.$link_data['link_name'];
-                        echo "</a>";
+                    echo "<a class='display-block p-5 p-l-0 p-r-0' href='".$item_link."' ".$link_target.">";
+                    echo $link_icon.$link_data['link_name'];
+                    echo "</a>";
 
-                        if (isset($data[$link_id])) {
-                            echo showsidelinks($options, $link_data['link_id']);
-                        }
+                    if (isset($data[$link_id])) {
+                        showsidelinks($options, $link_data['link_id']);
+                    }
                     echo "</li>\n";
-                } elseif ($link_data['link_name'] == '---' || $link_data['link_name'] == '===') {
+                } else if ($link_data['link_name'] == '---' || $link_data['link_name'] == '===') {
                     echo "<li class='divider'></li>\n";
                 }
 
@@ -103,7 +101,7 @@ if (!function_exists("showsidelinks")) {
 }
 
 openside(fusion_get_locale('global_001'));
-    echo "<div class='fusion_css_navigation_panel'>\n";
-    showsidelinks();
-    echo "</div>\n";
+echo "<div class='fusion_css_navigation_panel'>\n";
+showsidelinks();
+echo "</div>\n";
 closeside();

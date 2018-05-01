@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusion_db.php
-| Author: MarcusG
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
+
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("S", "<i class='admin-ico fa fa-fw fa-commenting'></i>");
 
 if (!defined("DB_SHOUTBOX")) {
     define("DB_SHOUTBOX", DB_PREFIX."shoutbox");

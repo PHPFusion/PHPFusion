@@ -15,19 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums;
 
 use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Post\NewThread;
 use PHPFusion\Forums\Postify\Forum_Postify;
 use PHPFusion\Forums\Threads\Forum_Mood;
-use PHPFusion\Forums\Threads\ForumMood;
 use PHPFusion\Forums\Threads\ThreadFilter;
 
 abstract class ForumServer {
 
     /**
      * Moderator object
+     *
      * @return object
      */
     public static $moderator_instance = NULL;
@@ -35,40 +36,48 @@ abstract class ForumServer {
     /* Forum icons */
     /**
      * Thread filter object
+     *
      * @return object
      */
     public static $filter_instance = NULL;
     /**
      * Forum object
+     *
      * @return object
      */
     public static $forum_instance = NULL;
     /**
      * Tag object
+     *
      * @return object
      */
     public static $tag_instance = NULL;
     /**
      * Thread object
+     *
      * @return object
      */
     public static $thread_instance = NULL;
     /**
      * Post object
+     *
      * @var null
      */
     public static $new_thread_instance = NULL;
     /**
      * Mood object
+     *
      * @return object
      */
     public static $forum_mood_instance = NULL;
 
     public static $postify_instance = NULL;
 
-    protected static $forum_settings = array();
+    protected static $forum_settings = [];
 
-    static private $forum_icons = array(
+    protected static $forum_template_paths = [];
+
+    static private $forum_icons = [
         'forum'    => 'fa fa-folder fa-fw',
         'thread'   => 'fa fa-comments-o fa-fw',
         'link'     => 'fa fa-link fa-fw',
@@ -82,9 +91,10 @@ abstract class ForumServer {
         'hot'      => 'fa fa-heartbeat fa-fw',
         'sticky'   => 'fa fa-thumb-tack fa-fw',
         'reads'    => 'fa fa-ticket fa-fw',
-    );
+    ];
     /**
      * Get records of cached forum ranks
+     *
      * @staticvar array $forum_rank_cache
      * @return array Cached forum ranks
      */
@@ -92,6 +102,7 @@ abstract class ForumServer {
 
     /**
      * @param string $type
+     *
      * @return array
      */
     public static function get_ForumIcons($type = '') {
@@ -104,11 +115,11 @@ abstract class ForumServer {
 
     /**
      * Set and Modify Forum Icons
+     *
      * @param array $icons
-     * @return array
      */
-    public static function set_forumIcons(array $icons = array()) {
-        self::$forum_icons = array(
+    public static function set_forumIcons(array $icons = []) {
+        self::$forum_icons = [
             'forum'    => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
             'thread'   => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
             'link'     => !empty($icons['link']) ? $icons['link'] : 'fa fa-link fa-fw',
@@ -122,12 +133,14 @@ abstract class ForumServer {
             'hot'      => !empty($icons['hot']) ? $icons['hot'] : 'fa fa-heartbeat fa-fw',
             'sticky'   => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
             'reads'    => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
-        );
+        ];
     }
 
     /**
      * Verify Forum ID
+     *
      * @param $forum_id
+     *
      * @return bool|string
      */
     public static function verify_forum($forum_id) {
@@ -158,6 +171,7 @@ abstract class ForumServer {
     protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
         if (iSUPERADMIN) {
             $this->forum_access = TRUE;
+
             return $this->forum_access;
         }
         if (!$forum_id or isnum($forum_id)) {
@@ -190,21 +204,24 @@ abstract class ForumServer {
                 throw new \Exception(fusion_get_locale('forum_4120'));
             }
         }
+
         return (bool)$this->forum_access;
     }
 
     /**
      * Get HTML source of forum rank images of a member
-     * @param int $posts The number of posts of the member
-     * @param int $level The level of the member
+     *
+     * @param int   $posts The number of posts of the member
+     * @param int   $level The level of the member
      * @param array $groups The groups of the member
+     *
      * @return string HTML source of forum rank images
      */
     public static function show_forum_rank($posts, $level, $groups) {
 
         $forum_settings = self::get_forum_settings();
 
-        $ranks = array();
+        $ranks = [];
 
         if (!$forum_settings['forum_ranks']) {
             return '';
@@ -214,18 +231,18 @@ abstract class ForumServer {
 
         $forum_rank_cache = self::forum_rank_cache();
 
-        $forum_rank_css_class = array(
-            '-101' => 'label-member',
-            '-102' => 'label-mod',
-            '-103' => 'label-super-admin',
-        );
+        $forum_rank_css_class = [
+            USER_LEVEL_MEMBER      => 'label-member',
+            USER_LEVEL_ADMIN       => 'label-mod',
+            USER_LEVEL_SUPER_ADMIN => 'label-super-admin',
+        ];
 
-        $forum_rank_icon_class = array(
-            '-101' => 'fa fa-legal fa-fw',
-            '-102' => 'fa fa-legal fa-fw',
-            '-103' => 'fa fa-legal fa-fw',
-            '-104' => 'fa fa-legal fa-fw',
-        );
+        $forum_rank_icon_class = [
+            USER_LEVEL_MEMBER      => 'fa fa-legal fa-fw',
+            USER_LEVEL_ADMIN       => 'fa fa-legal fa-fw',
+            USER_LEVEL_SUPER_ADMIN => 'fa fa-legal fa-fw',
+            '-104'                 => 'fa fa-legal fa-fw',
+        ];
 
         // Moderator ranks
         if (!empty($forum_rank_cache['mod'])) {
@@ -311,24 +328,25 @@ abstract class ForumServer {
 
     /**
      * Cache Forum Ranks
+     *
      * @return array
      */
     public static function forum_rank_cache() {
 
         $forum_settings = self::get_forum_settings();
 
-        $known_types = array(
+        $known_types = [
             0 => 'post',
             1 => 'mod'
-        );
+        ];
 
         if (self::$forum_rank_cache === NULL and $forum_settings['forum_ranks']) {
 
-            self::$forum_rank_cache = array(
-                'post'    => array(),
-                'mod'     => array(),
-                'special' => array(),
-            );
+            self::$forum_rank_cache = [
+                'post'    => [],
+                'mod'     => [],
+                'special' => [],
+            ];
 
             $cache_query = "
             SELECT rank_title, rank_image, rank_type, rank_posts, rank_apply, rank_language
@@ -349,7 +367,9 @@ abstract class ForumServer {
 
     /**
      * Verify Thread ID
+     *
      * @param $thread_id
+     *
      * @return bool|string
      */
     public static function verify_thread($thread_id) {
@@ -362,7 +382,9 @@ abstract class ForumServer {
 
     /**
      * Verify Post ID
+     *
      * @param $post_id
+     *
      * @return bool|string
      */
     public static function verify_post($post_id) {
@@ -375,7 +397,9 @@ abstract class ForumServer {
 
     /**
      * Get Recent Topics per forum.
+     *
      * @param int $forum_id - all if 0.
+     *
      * @return mixed
      */
     public static function get_recentTopics($forum_id = 0) {
@@ -397,9 +421,8 @@ abstract class ForumServer {
         $info['rows'] = dbrows($result);
         if ($info['rows'] > 0) {
             // need to throw moderator as an object
-
             while ($data = dbarray($result)) {
-                $data['moderators'] = self::moderator()->parse_forum_mods($data['forum_mods']);
+                $data['moderators'] = Moderator::parse_forum_mods($data['forum_mods']);
                 $info['item'][$data['thread_id']] = $data;
             }
         }
@@ -409,6 +432,7 @@ abstract class ForumServer {
 
     /**
      * Moderator Instance
+     *
      * @return null|Moderator
      */
     protected function moderator() {
@@ -421,7 +445,9 @@ abstract class ForumServer {
 
     /**
      * Thread Filter Instance
+     *
      * @param bool $set_info
+     *
      * @return null|ThreadFilter
      */
     public static function filter($set_info = TRUE) {
@@ -437,7 +463,9 @@ abstract class ForumServer {
 
     /**
      * Forum Instance
+     *
      * @param bool $set_info
+     *
      * @return null|Forum
      */
     public static function forum($set_info = TRUE) {
@@ -453,8 +481,10 @@ abstract class ForumServer {
 
     /**
      * Tag Instance
+     *
      * @param bool $set_info
      * @param bool $set_title
+     *
      * @return null|ThreadTags
      */
     public static function tag($set_info = TRUE, $set_title = FALSE) {
@@ -471,7 +501,9 @@ abstract class ForumServer {
 
     /**
      * Thread Instance
+     *
      * @param bool $set_info
+     *
      * @return null|Threads\ForumThreads
      */
     public static function thread($set_info = TRUE) {
@@ -488,7 +520,9 @@ abstract class ForumServer {
 
     /**
      * New Thread Instance
+     *
      * @param bool $set_info
+     *
      * @return null|NewThread
      */
     public static function new_thread($set_info = TRUE) {
@@ -504,12 +538,14 @@ abstract class ForumServer {
 
     /**
      * Mood Instance
-     * @return null|ForumMood
+     *
+     * @return null|\PHPFusion\Forums\Threads\Forum_Mood
      */
     public static function mood() {
         if (self::$forum_mood_instance === NULL) {
             self::$forum_mood_instance = new Forum_Mood();
         }
+
         return self::$forum_mood_instance;
     }
 
@@ -521,28 +557,28 @@ abstract class ForumServer {
         return self::$postify_instance;
     }
 
-
-
     /**
      * Forum Breadcrumbs Generator
+     *
      * @param array $forum_index - requires a dbquery_tree() output
-     * @param int $forum_id
+     * @param int   $forum_id
      */
     function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
-
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
             $forum_id = isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
         }
         /* Make an infinity traverse */
-        function forum_breadcrumb_arrays($index, $id, &$crumb = FALSE) {
+        function forum_breadcrumb_arrays(array $index, $id) {
+            $crumb = [];
+
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
-                $crumb = array(
+                $crumb = [
                     'link'  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
                     'title' => $_name['forum_name']
-                );
+                ];
                 if (isset($index[get_parent($index, $id)])) {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
@@ -559,21 +595,62 @@ abstract class ForumServer {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
+        $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
-        if (count($crumb['title']) > 1) {
+        if ($title_count) {
             krsort($crumb['title']);
             krsort($crumb['link']);
         }
-        if (count($crumb['title']) > 1) {
+        if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
                 BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
-        } elseif (isset($crumb['title'])) {
+        } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
+
+    /**
+     * Method to change template path
+     *
+     * @param $key  instance key
+     *
+     * @return mixed
+     */
+    public static function get_template($key) {
+        $default_paths = [
+            'forum'            => FORUM.'templates/index/forum_index.html',
+            'forum_section'    => FORUM.'templates/forum_section.html',
+            'forum_postify'    => FORUM.'templates/forum_postify.html',
+            'forum_postform'   => FORUM.'templates/forms/post.html',
+            'forum_pollform'   => FORUM.'templates/forms/poll.html',
+            'forum_bountyform' => FORUM.'templates/forms/bounty.html',
+            'forum_qrform'     => FORUM.'templates/forms/quick_reply.html',
+            'tags_thread'      => FORUM.'templates/tags/tag_threads.html',
+            'tags'             => FORUM.'templates/tags/tag.html',
+            'viewthreads'      => FORUM.'templates/forum_threads.html',
+            'viewforum'        => FORUM.'templates/forum_viewforum.html',
+            'forums'           => FORUM.'templates/index/forum_item.html',
+            'forum_post'       => FORUM.'templates/forum_post_item.html',
+            'forum_thread'     => FORUM.'templates/viewforum/forum_thread_item.html',
+            'forum_lastpost'   => FORUM.'templates/index/forum_item_lastpost.html',
+        ];
+
+        return (isset(self::$forum_template_paths[$key]) ? self::$forum_template_paths[$key] : $default_paths[$key]);
+    }
+
+    /**
+     * Method to set new template path
+     *
+     * @param $key          instance key
+     * @param $file_path    path relative to basedir
+     */
+    public static function set_template($key, $file_path) {
+        self::$forum_template_paths[$key] = $file_path;
+    }
+
 }

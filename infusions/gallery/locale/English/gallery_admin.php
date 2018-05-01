@@ -8,7 +8,7 @@ $locale['album_0006'] = "Hit enter after each keyword";
 $locale['album_0007'] = "Visibility";
 $locale['album_0008'] = "Language";
 $locale['album_0009'] = "Album Thumbnail";
-$locale['album_0010'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
+$locale['album_0010'] = "Max. file size: %s / Allowed file types: %s / Max width: %spx, Max. height: %spx";
 $locale['album_0011'] = "Album Order";
 $locale['album_0012'] = "Save Album";
 $locale['album_0013'] = "Photo album updated";
@@ -52,8 +52,8 @@ $locale['gallery_0100'] = "Photo Submissions";
 $locale['gallery_0101'] = "Thank you for submitting your Photo";
 $locale['gallery_0102'] = "Submit another Photo";
 $locale['gallery_0107'] = "Use the following form to submit a Photo. Your submission will be reviewed by an
-&#092;nAdministrator. [SITENAME] reserves the right to amend or edit any submission. Photos
-&#092;nshould be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
+<br/>Administrator. [SITENAME] reserves the right to amend or edit any submission. Photos
+<br/>should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
 $locale['gallery_0111'] = "Submit Photo";
 $locale['gallery_0112'] = "Sorry, we currently do not accept any photo submissions on this site.";
 $locale['gallery_0113'] = "Return to [SITENAME]";

@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\OutputHandler;
 
 if (!defined("IN_FUSION")) {
     die("Access Denied");
@@ -23,59 +25,18 @@ if (!defined("IN_FUSION")) {
 
 /**
  * Show PHP-Fusion Performance
+ *
  * @param bool $queries
+ *
  * @return string
  */
 function showrendertime($queries = TRUE) {
-    global $mysql_queries_count;
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $db = DatabaseFactory::getConnection();
-    if ($db) {
-        $mysql_queries_count = $db->getGlobalQueryCount();
-    }
+    $locale = fusion_get_locale();
+    $db_connection = DatabaseFactory::getConnection('default');
+    $mysql_queries_count = $db_connection::getGlobalQueryCount();
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
-        $render_time = substr((microtime(TRUE) - START_TIME), 0, 7);
-        $_SESSION['performance'][] = $render_time;
-        if (count($_SESSION['performance']) > 5) {
-            array_shift($_SESSION['performance']);
-        }
-        $average_speed = $render_time;
-        $diff = 0;
-        if (isset($_SESSION['performance'])) {
-            $average_speed = substr(array_sum($_SESSION['performance']) / count($_SESSION['performance']), 0, 7);
-            $previous_render = array_values(array_slice($_SESSION['performance'], -2, 1, TRUE));
-            $diff = (float)$render_time - (!empty($previous_render) ? (float)$previous_render[0] : 0);
-        }
-
-        $res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
+        $res = showBenchmark();
         $res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : '');
-
-        /*
-         * Turn this on if you want to see all the SQL.
-         * This debugging is for core engineers only. No need for translations.
-         */
-        $sql_log = FALSE;
-        if ($sql_log) {
-            $query_log = $db->getQueryLog();
-            $modal = openmodal('querylogsModal', 'SQL Run Time Analysis');
-            $modal_body = '';
-            $i = 0;
-            if (!empty($query_log)) {
-                foreach ($query_log as $connectionID => $sql) {
-                    $modal_body .= "<div class='spacer-xs'>\n";
-                    $modal_body .= "<h5>SQL#$i : ".$sql[0]." seconds</h5>\n\r";
-                    $modal_body .= "[code]".trim($sql[1]).trim($sql[2])."[/code]\n\r";
-                    $modal_body .= "<div>\n";
-                    $modal_body .= "<kbd>".$sql[3][2]['file']."</kbd><span class='badge pull-right'>Line #".$sql[3][2]['line'].", ".$sql[3][2]['function']."</span>\n\r";
-                    $modal_body .= "</div>\n";
-                    $modal_body .= "</div>\n";
-                    $i++;
-                }
-            }
-            $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
-            $modal .= closemodal();
-            add_to_footer($modal);
-        }
 
         return $res;
     } else {
@@ -83,8 +44,94 @@ function showrendertime($queries = TRUE) {
     }
 }
 
+/**
+ * Developer tools only (Translations not Required)
+ *
+ * @param bool   $show_sql_performance  - true to pop up SQL analysis modal
+ * @param string $performance_threshold - results that is slower than this will be highlighted
+ *
+ * @return string
+ */
+function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
+    $locale = fusion_get_locale();
+    if ($show_sql_performance) {
+        $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
+        $modal = openmodal('querylogsModal', "<h4><strong>Database Query Performance Logs</strong></h4>");
+        $modal_body = '';
+        $i = 0;
+        $time = 0;
+        if (!empty($query_log)) {
+            foreach ($query_log as $connectionID => $sql) {
+                $current_time = $sql[0];
+                $highlighted = $current_time > $performance_threshold ? TRUE : FALSE;
+                $modal_body .= "<div class='spacer-xs m-10".($highlighted ? " alert alert-warning" : "")."'>\n";
+                $modal_body .= "<h5><strong>SQL run#$i : ".($highlighted ? "<span class='text-danger'>".$sql[0]."</span>" : "<span class='text-success'>".$sql[0]."</span>")." seconds</strong></h5>\n\r";
+                $modal_body .= "[code]".$sql[1].($sql[2] ? " [Parameters -- ".implode(',', $sql[2])." ]" : '')."[/code]\n\r";
+                $modal_body .= "<div>\n";
+                $end_sql = end($sql[3]);
+                $modal_body .= "<kbd>".$end_sql['file']."</kbd><span class='badge pull-right'>Line #".$end_sql['line'].", ".$end_sql['function']."</span> - <a href='#' data-toggle='collapse' data-target='#trace_$connectionID'>Toggle Backtrace</a>\n";
+                if (is_array($sql[3])) {
+                    $modal_body .= "<div id='trace_$connectionID' class='alert alert-info collapse spacer-sm'>";
+                    foreach ($sql[3] as $id => $debug_backtrace) {
+                        $modal_body .= "<kbd>Stack Trace #$id - ".$debug_backtrace['file']." @ Line ".$debug_backtrace['line']."</kbd><br/>";
+                        if (!empty($debug_backtrace['args'][0])) {
+                            $debug_line = $debug_backtrace['args'][0];
+                            if (is_array($debug_backtrace['args'][0])) {
+                                $debug_line = "";
+                                foreach ($debug_backtrace['args'][0] as $line) {
+                                    if (!is_array($line)) {
+                                        $debug_line .= "<br/>".$line;
+                                    }
+                                }
+                            }
+
+                            $debug_param = "";
+                            if (!empty($debug_backtrace['args'][1])) {
+                                if (is_array($debug_backtrace['args'][1])) {
+                                    $debug_param .= "<br/>array(";
+                                    foreach ($debug_backtrace['args'][1] as $key => $value) {
+                                        $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
+                                    }
+                                    $debug_param .= "<br/>);";
+                                } else {
+                                    $debug_param .= $debug_backtrace['args'][1];
+                                }
+                            }
+                            $modal_body .= "Statement::: <code>$debug_line</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
+                        }
+
+                    }
+                    $modal_body .= "</div>\n";
+                }
+                $modal_body .= "</div>\n";
+                $modal_body .= "</div>\n";
+                $i++;
+                $time = $current_time + $time;
+            }
+        }
+        $modal .= parse_textarea($modal_body, FALSE, TRUE, FALSE);
+        $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>", FALSE);
+        $modal .= closemodal();
+        add_to_footer($modal);
+    }
+    $render_time = substr((microtime(TRUE) - START_TIME), 0, 7);
+    $_SESSION['performance'][] = $render_time;
+    if (count($_SESSION['performance']) > 5) {
+        array_shift($_SESSION['performance']);
+    }
+    $average_speed = $render_time;
+    $diff = 0;
+    if (isset($_SESSION['performance'])) {
+        $average_speed = substr(array_sum($_SESSION['performance']) / count($_SESSION['performance']), 0, 7);
+        $previous_render = array_values(array_slice($_SESSION['performance'], -2, 1, TRUE));
+        $diff = (float)$render_time - (!empty($previous_render) ? (float)$previous_render[0] : 0);
+    }
+
+    return sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
+}
+
 function showMemoryUsage() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
     $memory_used = parsebytesize(memory_get_peak_usage(FALSE));
 
@@ -95,13 +142,13 @@ function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
     $res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
-    $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
+    $res .= "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 
     return $res;
 }
 
 function showcounter() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
         return "<!--counter-->".number_format($settings['counter'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
@@ -112,10 +159,9 @@ function showcounter() {
 
 function showprivacypolicy() {
     $html = '';
-
     if (!empty(fusion_get_settings('privacy_policy'))) {
-        $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176', LOCALE.LOCALESET."global.php")."</a>";
-        $modal = openmodal('privacy_policy', $locale = fusion_get_locale('global_176', LOCALE.LOCALESET."global.php"), ['button_id' => 'privacy_policy']);
+        $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
+        $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
         $modal .= parse_textarea(fusion_get_settings('privacy_policy'));
         $modal .= closemodal();
         add_to_footer($modal);
@@ -126,17 +172,19 @@ function showprivacypolicy() {
 
 /**
  * Creates an alert bar
+ *
  * @param        $title
  * @param string $text
  * @param array  $options
+ *
  * @return string
  */
 if (!function_exists("alert")) {
-    function alert($title, array $options = array()) {
-        $options += array(
+    function alert($title, array $options = []) {
+        $options += [
             "class"   => !empty($options['class']) ? $options['class'] : 'alert-danger',
             "dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
-        );
+        ];
         if ($options['dismiss'] == TRUE) {
             $html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>$title</div>";
         } else {
@@ -151,8 +199,8 @@ if (!function_exists("alert")) {
 // Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
     function get_theme_settings($theme_folder) {
-        $settings_arr = array();
-        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'");
+        $settings_arr = [];
+        $set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme=:themeset", [':themeset' => $theme_folder]);
         if (dbrows($set_result)) {
             while ($set_data = dbarray($set_result)) {
                 $settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
@@ -167,34 +215,36 @@ if (!function_exists('get_theme_settings')) {
 
 /**
  * Java script that transform html table sortable
+ *
  * @param $table_id - table ID
+ *
  * @return string
  */
 function fusion_sort_table($table_id) {
     add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
     add_to_jquery("
-	$('#".$table_id."').tablesorter();
-	");
+    $('#".$table_id."').tablesorter();
+    ");
 
     return "tablesorter";
 }
 
 if (!function_exists("label")) {
-    function label($label, array $options = array()) {
-        $options += array(
+    function label($label, array $options = []) {
+        $options += [
             "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        );
+            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        ];
 
         return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
     }
 }
 if (!function_exists("badge")) {
-    function badge($label, array $options = array()) {
-        $options += array(
+    function badge($label, array $options = []) {
+        $options += [
             "class" => !empty($array['class']) ? $array['class'] : "",
-            "icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
-        );
+            "icon"  => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",
+        ];
 
         return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
     }
@@ -210,42 +260,47 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Generate modal
+     *
      * @param       $id - unique CSS id
      * @param       $title - modal title
      * @param array $options
+     *
      * @return string
      */
-    function openmodal($id, $title, $options = array()) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $options += array(
-            'class' => !empty($options['class']) ?: 'modal-lg',
-            'button_id' => "",
-            "button_class" => "",
-            'static' => FALSE,
-        );
+    function openmodal($id, $title, $options = []) {
+        $locale = fusion_get_locale();
+        $options += [
+            'class'        => !empty($options['class']) ?: 'modal-lg',
+            'button_id'    => '',
+            'button_class' => '',
+            'static'       => FALSE,
+            'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
+        ];
 
-        $modal_trigger = "";
+        $modal_trigger = '';
         if (!empty($options['button_id']) || !empty($options['button_class'])) {
             $modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
-        } elseif ($options['static'] && empty($options['button_id'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-        } elseif ($modal_trigger && empty($options['static'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+        } else if ($options['static'] && empty($options['button_id'])) {
+            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+        } else if ($modal_trigger && empty($options['static'])) {
+            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
-            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            if (!$options['hidden']) {
+                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            }
         }
         $html = '';
         $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-        $html .= "<div class='modal-dialog ".$options['class']."'>\n";
+        $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
         $html .= "<div class='modal-content'>\n";
         if ($title) {
             $html .= "<div class='modal-header'>";
-            $html .= "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n";
-            $html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
+            $html .= ($options['static'] ? '' : "<button type='button' class='btn pull-right btn-default' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n");
+            $html .= "<div class='modal-title' id='$id-title'>$title</div>\n";
             $html .= "</div>\n";
         }
         $html .= "<div class='modal-body'>\n";
@@ -255,8 +310,10 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Adds a modal footer in between openmodal and closemodal.
+     *
      * @param            $content
      * @param bool|FALSE $dismiss
+     *
      * @return string
      */
     function modalfooter($content, $dismiss = FALSE) {
@@ -271,6 +328,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 
     /**
      * Close the modal
+     *
      * @return string
      */
     function closemodal() {
@@ -281,13 +339,17 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 if (!function_exists("progress_bar")) {
     /**
      * Render a progress bar
-     * @param      $num - str or array
-     * @param bool $title - str or array
-     * @param bool $class
-     * @param bool $height
-     * @param bool $reverse
-     * @param bool $as_percent
-     * @param bool $disabled
+     *
+     * @param        $num - str or array
+     * @param bool   $title - str or array
+     * @param bool   $class
+     * @param bool   $height
+     * @param bool   $reverse
+     * @param bool   $as_percent
+     * @param bool   $disabled
+     * @param bool   $hide_info
+     * @param string $class_
+     *
      * @return string
      */
     function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
@@ -297,24 +359,24 @@ if (!function_exists("progress_bar")) {
                 $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
                 if ($num > 71) {
                     $auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-                } elseif ($num > 55) {
+                } else if ($num > 55) {
                     $auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-                } elseif ($num > 25) {
+                } else if ($num > 25) {
                     $auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-                } elseif ($num < 25) {
+                } else if ($num < 25) {
                     $auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
                 }
 
                 return $auto_class;
             }
         }
-        $_barcolor = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
-        $_barcolor_reverse = array(
+        $_barcolor = ['progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger'];
+        $_barcolor_reverse = [
             'progress-bar-success',
             'progress-bar-info',
             'progress-bar-warning',
             'progress-bar-danger'
-        );
+        ];
         $html = '';
         if (is_array($num)) {
             $i = 0;
@@ -385,39 +447,39 @@ if (!function_exists("check_panel_status")) {
             if ($settings['exclude_left'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
             }
-        } elseif ($side == "upper") {
+        } else if ($side == "upper") {
             if ($settings['exclude_upper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_upper']);
             }
-        } elseif ($side == "aupper") {
+        } else if ($side == "aupper") {
             if ($settings['exclude_aupper'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_aupper']);
             }
-        } elseif ($side == "lower") {
+        } else if ($side == "lower") {
             if ($settings['exclude_lower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_lower']);
             }
-        } elseif ($side == "blower") {
+        } else if ($side == "blower") {
             if ($settings['exclude_blower'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_blower']);
             }
-        } elseif ($side == "right") {
+        } else if ($side == "right") {
             if ($settings['exclude_right'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_right']);
             }
-        } elseif ($side == "user1") {
+        } else if ($side == "user1") {
             if ($settings['exclude_user1'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user1']);
             }
-        } elseif ($side == "user2") {
+        } else if ($side == "user2") {
             if ($settings['exclude_user2'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user2']);
             }
-        } elseif ($side == "user3") {
+        } else if ($side == "user3") {
             if ($settings['exclude_user3'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user3']);
             }
-        } elseif ($side == "user4") {
+        } else if ($side == "user4") {
             if ($settings['exclude_user4'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_user4']);
             }
@@ -476,18 +538,20 @@ if (!function_exists("showsublinks")) {
 
     /**
      * Displays Site Links Navigation Bar
+     *
      * @param string $sep - Custom seperator text
      * @param string $class - Class
-     * @param array $options
+     * @param array  $options
      *
      * Notice: There is a more powerful method now that offers more powerful manipulation methods
      * that non oo approach cannot ever achieve using cache and the new mutator method
      * SiteLinks::setSubLinks($sep, $class, $options)->showsublinks(); for normal usage
+     *
      * @return string
      */
-    function showsublinks($sep = "", $class = "navbar-default", array $options = array()) {
+    function showsublinks($sep = "", $class = "navbar-default", array $options = []) {
         $options += [
-            'seperator' => $sep,
+            'seperator'    => $sep,
             'navbar_class' => $class,
         ];
         return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
@@ -505,8 +569,7 @@ if (!function_exists("showsubdate")) {
 
 if (!function_exists("newsposter")) {
     function newsposter($info, $sep = "", $class = "") {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $res = "";
+        $locale = fusion_get_locale();
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
         $res .= $locale['global_071'].showdate("newsdate", $info['news_date']);
@@ -518,14 +581,14 @@ if (!function_exists("newsposter")) {
 
 if (!function_exists("newsopts")) {
     function newsopts($info, $sep, $class = "") {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         if (!isset($_GET['readmore']) && $info['news_ext'] == "y") {
-            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
+            $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' ".$link_class.">".$locale['global_072']."</a> ".$sep." ";
         }
         if ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
-            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
+            $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments' ".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
         }
         if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1")) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
@@ -538,14 +601,14 @@ if (!function_exists("newsopts")) {
 
 if (!function_exists("newscat")) {
     function newscat($info, $sep = "", $class = "") {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."'$link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='news_cats.php?cat_id=0'$link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='news_cats.php?cat_id=0'  $link_class>".$locale['global_080']."</a>";
         }
 
         return "<!--news_cat-->".$res." $sep ";
@@ -554,8 +617,7 @@ if (!function_exists("newscat")) {
 
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-        $res = "";
+        $locale = fusion_get_locale();
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
@@ -567,7 +629,7 @@ if (!function_exists("articleposter")) {
 
 if (!function_exists("articleopts")) {
     function articleopts($info, $sep) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $res = "";
         if ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
             $res = "<a href='articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments'].($info['article_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep."\n";
@@ -581,14 +643,14 @@ if (!function_exists("articleopts")) {
 
 if (!function_exists("articlecat")) {
     function articlecat($info, $sep = "", $class = "") {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
         if ($info['cat_id']) {
-            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."'$link_class>".$info['cat_name']."</a>";
+            $res .= "<a href='articles.php?cat_id=".$info['cat_id']."' $link_class>".$info['cat_name']."</a>";
         } else {
-            $res .= "<a href='articles.php?cat_id=0'$link_class>".$locale['global_080']."</a>";
+            $res .= "<a href='articles.php?cat_id=0' $link_class>".$locale['global_080']."</a>";
         }
 
         return "<!--article_cat-->".$res." $sep ";
@@ -597,13 +659,13 @@ if (!function_exists("articlecat")) {
 
 if (!function_exists("itemoptions")) {
     function itemoptions($item_type, $item_id) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $res = "";
         if ($item_type == "N") {
             if (iADMIN && checkrights($item_type)) {
                 $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
-        } elseif ($item_type == "A") {
+        } else if ($item_type == "A") {
             if (iADMIN && checkrights($item_type)) {
                 $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
@@ -671,19 +733,21 @@ if (!function_exists('tablebreak')) {
  * @param string $class Classes for the link
  * @param bool   $link FALSE if you want to display the avatar without link. TRUE by default.
  * @param string $img_class Classes for the image
+ * @param string $custom_avatar Custom default avatar
+ *
  * @return string
  */
 if (!function_exists('display_avatar')) {
-    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
+    function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail', $custom_avatar = '') {
         if (empty($userdata)) {
-            $userdata = array();
+            $userdata = [];
         }
-        $userdata += array(
-            'user_id' => 0,
-            'user_name' => '',
+        $userdata += [
+            'user_id'     => 0,
+            'user_name'   => '',
             'user_avatar' => '',
             'user_status' => ''
-        );
+        ];
 
         if (!$userdata['user_id']) {
             $userdata['user_id'] = 1;
@@ -691,45 +755,44 @@ if (!function_exists('display_avatar')) {
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $class = ($class) ? "class='$class'" : '';
         // Need a full path - or else Jquery script cannot use this function.
-        //$default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
-        $default_avatar = fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
-        //$default_avatar = IMAGES.'avatars/no-avatar.jpg';
+        $default_avatar = !empty($custom_avatar) ? $custom_avatar : fusion_get_settings('siteurl')."images/avatars/no-avatar.jpg";
         $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
-        //$user_avatar = IMAGES.'avatars/'.$userdata['user_avatar'];
-        //$user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-        $imgTpl = "<img class='img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
+        $imgTpl = "<img class='avatar img-responsive $img_class' alt='".(!empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest')."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
         $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
         return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }
 }
 
 if (!function_exists('colorbox')) {
-    function colorbox($img_path, $img_title, $responsive = TRUE, $class = '') {
+    function colorbox($img_path, $img_title, $responsive = TRUE, $class = '', $as_text = FALSE) {
         if (!defined('COLORBOX')) {
             define('COLORBOX', TRUE);
-            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+            $colorbox_css = file_exists(THEME.'colorbox/colorbox.css') ? THEME.'colorbox/colorbox.css' : INCLUDES.'jquery/colorbox/colorbox.css';
+            add_to_head("<link rel='stylesheet' href='$colorbox_css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
             add_to_jquery("$('a[rel^=\"colorbox\"]').colorbox({ current: '',width:'80%',height:'80%'});");
         }
         $class = ($class ? " $class" : '');
         if ($responsive) {
-            $class = " class='img-responsive $class";
+            $class = " class='img-responsive $class' ";
         } else {
-            $class = (!empty($class) ? " class='$class'" : '');
+            $class = (!empty($class) ? " class='$class' " : '');
         }
 
-        return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'><img src='$img_path'".$class."alt='$img_title'/></a>";
+        return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>".($as_text ? $img_title : "<img src='$img_path'".$class."alt='$img_title'/>")."</a>";
     }
 }
 
 /**
  * Thumbnail function
+ *
  * @param      $src
  * @param      $size
  * @param bool $url
  * @param bool $colorbox
  * @param bool $responsive
+ *
  * @return string
  */
 if (!function_exists("thumbnail")) {
@@ -752,10 +815,10 @@ if (!function_exists("thumbnail")) {
         $html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
         $html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
         if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
-            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
+            $html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
-            $html .= "<img src='holder.js/".$size."x".$size."/text:'/>\n";
+            $html .= "<img src='holder.js/".$size."x".$size."/text:' alt='thumbnail'/>\n";
         }
         $html .= $url || $colorbox ? "</a>" : '';
         $html .= "</div>\n";
@@ -763,7 +826,7 @@ if (!function_exists("thumbnail")) {
             define('colorbox', TRUE);
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-            add_to_jquery("$('.colorbox').colorbox();");
+            add_to_jquery("$('.colorbox').colorbox({width: '75%', height: '75%'});");
         }
 
         return $html;
@@ -773,10 +836,10 @@ if (!function_exists("thumbnail")) {
 if (!function_exists("lorem_ipsum")) {
     function lorem_ipsum($length) {
         $text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>\n";
-		$text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
-		$text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
-		$text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
-		$text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
+        $text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
+        $text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
+        $text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
+        $text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
 
         return trim_text($text, $length);
     }
@@ -784,7 +847,7 @@ if (!function_exists("lorem_ipsum")) {
 
 if (!function_exists("timer")) {
     function timer($updated = FALSE) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         if (!$updated) {
             $updated = time();
         }
@@ -802,21 +865,20 @@ if (!function_exists("timer")) {
         }
         //	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
         //	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
-        $timer = array(
-            $year => $locale['fmt_year'],
-            $month => $locale['fmt_month'],
-            $day => $locale['fmt_day'],
-            $hour => $locale['fmt_hour'],
+        $timer = [
+            $year   => $locale['fmt_year'],
+            $month  => $locale['fmt_month'],
+            $day    => $locale['fmt_day'],
+            $hour   => $locale['fmt_hour'],
             $minute => $locale['fmt_minute'],
             $second => $locale['fmt_second']
-        );
+        ];
         foreach ($timer as $arr => $unit) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
-                $string = \PHPFusion\Locale::format_word($answer, $unit, array('add_count' => FALSE));
-
+                $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
@@ -836,7 +898,7 @@ if (!function_exists("days_current_month")) {
 
 if (!function_exists("countdown")) {
     function countdown($time) {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $updated = stripinput($time);
         $second = 1;
         $minute = $second * 60;
@@ -844,22 +906,22 @@ if (!function_exists("countdown")) {
         $day = 24 * $hour;
         $month = days_current_month() * $day;
         $year = (date("L", $updated) > 0) ? 366 * $day : 365 * $day;
-        $timer = array(
-            $year => $locale['year'],
-            $month => $locale['month'],
-            $day => $locale['day'],
-            $hour => $locale['hour'],
+        $timer = [
+            $year   => $locale['year'],
+            $month  => $locale['month'],
+            $day    => $locale['day'],
+            $hour   => $locale['hour'],
             $minute => $locale['minute'],
             $second => $locale['second']
-        );
-        $timer_b = array(
-            $year => $locale['year_a'],
-            $month => $locale['month_a'],
-            $day => $locale['day_a'],
-            $hour => $locale['hour_a'],
+        ];
+        $timer_b = [
+            $year   => $locale['year_a'],
+            $month  => $locale['month_a'],
+            $day    => $locale['day_a'],
+            $hour   => $locale['hour_a'],
             $minute => $locale['minute_a'],
             $second => $locale['second_a']
-        );
+        ];
         foreach ($timer as $arr => $unit) {
             $calc = $updated / $arr;
             if ($calc >= 1) {
@@ -870,7 +932,7 @@ if (!function_exists("countdown")) {
             }
         }
         if (!isset($answer)) {
-            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>now</abbr>";
+            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>".$locale['now']."</abbr>";
         }
     }
 }
@@ -884,7 +946,9 @@ if (!function_exists("opencollapse")
 ) {
     /**
      * Accordion template
+     *
      * @param $id - unique accordion id name
+     *
      * @return string
      */
     function opencollapse($id) {
@@ -975,7 +1039,7 @@ if (!function_exists("tab_active")
             $this->tab_info = $tab_title;
             $this->link_mode = $link;
 
-            $getArray = array($getname);
+            $getArray = [$getname];
             if (!empty($cleanup_GET)) {
                 $getArray = array_merge_recursive($cleanup_GET, $getArray);
             }
@@ -987,14 +1051,14 @@ if (!function_exists("tab_active")
             $html = "<div class='nav-wrapper'>\n";
             $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
-                $v_title = str_replace("-", " ", $v);
+                $v_title = $v;
                 $tab_id = $tab_title['id'][$arr];
                 $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
                 $link_url = '#';
                 if ($link) {
                     $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                     if ($link === TRUE) {
-                        $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
+                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, FALSE);
                     }
                     $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
                 } else {
@@ -1006,7 +1070,11 @@ if (!function_exists("tab_active")
             $html .= "</ul>\n";
             $html .= "<div id='tab-content-$id' class='tab-content'>\n";
             if (empty($link) && $this->remember) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                if (!defined('JS_COOKIES')) {
+                    define('JS_COOKIES', TRUE);
+                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                }
+                OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
@@ -1051,23 +1119,23 @@ if (!function_exists("tab_active")
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
-        public function closetab(array $options = array()) {
-            $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-            $default_options = array(
+        public function closetab(array $options = []) {
+            $locale = fusion_get_locale();
+            $default_options = [
                 "tab_nav" => FALSE,
-            );
+            ];
             $options += $default_options;
             if ($options['tab_nav'] == TRUE) {
                 $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
                 $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-                add_to_jquery("
-				$('.btnNext').click(function(){
-				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
-				});
-				$('.btnPrevious').click(function(){
-				  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-				});
-			");
+                OutputHandler::addToJQuery("
+                $('.btnNext').click(function(){
+                  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                });
+                $('.btnPrevious').click(function(){
+                  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+                });
+            ");
                 echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
             }
 
@@ -1084,9 +1152,9 @@ if (!function_exists("tab_active")
     /**
      * Current Tab Active Selector
      *
-     * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
+     * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
      * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-     * @param bool $getname        - set getname and turn tabs into link that listens to getname
+     * @param bool $getname - set getname and turn tabs into link that listens to getname
      *
      * @return string
      * @todo: options base
@@ -1098,14 +1166,14 @@ if (!function_exists("tab_active")
     /**
      * Render Tab Links
      *
-     * @param               $tab_title          entire array consisting of ['title'], ['id'], ['icon']
-     * @param               $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param               $id                 unique ID
-     * @param bool|FALSE    $link               default false for jquery, true for php (will reload page)
-     * @param bool|FALSE    $class              the class for the nav
-     * @param string        $getname            the get request
-     * @param array         $cleanup_GET        the request key that needs to be deleted
-     * @param bool|FALSE    $remember           set to true to automatically remember tab using cookie.
+     * @param array      $tab_title entire array consisting of ['title'], ['id'], ['icon']
+     * @param string     $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param string     $id unique ID
+     * @param bool|FALSE $link default false for jquery, true for php (will reload page)
+     * @param bool|FALSE $class the class for the nav
+     * @param string     $getname the get request
+     * @param array      $cleanup_GET the request key that needs to be deleted
+     * @param bool|FALSE $remember set to true to automatically remember tab using cookie.
      *                                          Example:
      *                                          $tab_title['title'][] = "Tab 1";
      *                                          $tab_title['id'][] = "tab1";
@@ -1124,34 +1192,37 @@ if (!function_exists("tab_active")
      * @return string
      */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $cleanup_GET = [], $remember = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
+        if ($remember) {
+            $fusion_tabs->set_remember(TRUE);
+        }
 
         return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET, $remember);
     }
 
     /**
-     * @param      $tab_title               deprecated, however this function is replaceable, and the params are accessible.
-     * @param      $tab_id
-     * @param bool $link_active_arrkey
-     * @param bool $link                    deprecated, however this function is replaceable, and the params are accessible.
-     * @param bool $key
+     * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
+     * @param        $tab_id
+     * @param bool   $link_active_arrkey
+     * @param bool   $link deprecated, however this function is replaceable, and the params are accessible.
+     * @param bool   $key
      *
      * @return mixed
      */
     function opentabbody($tab_title, $tab_id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->opentabbody($tab_id, $link_active_arrkey, $key);
     }
 
     function closetabbody() {
-        global $fusion_tabs;
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetabbody();
     }
 
-    function closetab(array $options = array()) {
-        global $fusion_tabs;
+    function closetab(array $options = []) {
+        $fusion_tabs = new FusionTabs();
 
         return $fusion_tabs->closetab($options);
     }
@@ -1160,7 +1231,7 @@ if (!function_exists("tab_active")
 if (!function_exists("display_ratings")) {
     /* Standard ratings display */
     function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
         $end_link = $link ? "</a>\n" : '';
         $average = $total_votes > 0 ? number_format($total_sum / $total_votes, 2) : 0;
@@ -1168,7 +1239,7 @@ if (!function_exists("display_ratings")) {
         if ($total_votes > 0) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
         } else {
-            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
+            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-o high-opacity m-l-0'></i> ".$str.$end_link;
         }
 
         return $answer;
@@ -1178,7 +1249,7 @@ if (!function_exists("display_ratings")) {
 if (!function_exists("display_comments")) {
     /* Standard comment display */
     function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
-    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+        $locale = fusion_get_locale();
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
         $end_link = $link ? "</a>\n" : '';
         $str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;
@@ -1195,15 +1266,15 @@ if (!function_exists("display_comments")) {
 if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
-        PHPFusion\OutputHandler::addToJQuery("
-			$('form').change(function() {
-				window.onbeforeunload = function() {
-					return true;
-				}
-				$(':button').bind('click', function() {
-					window.onbeforeunload = null;
-				});
-			});
-		");
+        OutputHandler::addToJQuery("
+            $('form').change(function() {
+                window.onbeforeunload = function() {
+                    return true;
+                }
+                $(':button').bind('click', function() {
+                    window.onbeforeunload = null;
+                });
+            });
+        ");
     }
 }

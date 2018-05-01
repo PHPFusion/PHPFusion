@@ -15,34 +15,37 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
+
+use Defender\Token;
 
 /**
  * Class Admin
  * This class is called in templates/admin_header.php
  * Determine how to we set variables on 3rd party script
- *
  */
 class Admins {
 
     private static $instance = NULL;
+
     /**
      * @var array - default section icons
      */
-    public $admin_section_icons = array(
+    public $admin_section_icons = [
         '0' => "<i class='fa fa-fw fa-dashboard'></i>",
         '1' => "<i class='fa fa-fw fa-microphone'></i>",
         '2' => "<i class='fa fa-fw fa-users'></i>",
         '3' => "<i class='fa fa-fw fa-cog'></i>",
         '4' => "<i class='fa fa-fw fa-wrench'></i>",
         '5' => "<i class='fa fa-fw fa-cubes'></i>"
-    );
+    ];
     /**
      * Default core administration pages
      *
      * @var array
      */
-    public $admin_page_icons = array(
+    public $admin_page_icons = [
         'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
         'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'PM'   => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
@@ -79,51 +82,235 @@ class Admins {
         'S9'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
         'S10'  => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
         'S12'  => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
-    );
+    ];
     /**
      * @var array
      */
-    private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
-    private static $admin_pages = array();
+    private $admin_sections = [1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE];
+    private static $admin_pages = [];
     /**
      * @var array
      */
-    private $admin_page_link = array();
+    private $admin_page_link = [];
     /**
      *    Constructor class. No Params
      */
     private $current_page = '';
-    private static $locale = '';
-    private $comment_type = array();
-    private $submit_type = array();
-    private $submit_link = array();
-    private $link_type = array();
+    private static $locale = [];
+    private $comment_type = [];
+    private $submit_type = [];
+    private $submit_link = [];
+    private $link_type = [];
+    private $submit_data = [];
+    private $folder_permissions = [];
 
-    private function __construct() {}
+    public function __construct() {
+        self::$locale = self::getAdminLocale();
+    }
 
     /**
-     * @return object
+     * Add instance
+     *
+     * @return static
      */
     public static function getInstance() {
-        if (self::$instance === NULL) {
+        if (empty(self::$instance)) {
             self::$instance = new static();
-            self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
 
-        return (object)self::$instance;
+        return self::$instance;
+    }
+
+    public function setCache($form_id, $form_type, $cache_time = 36000) {
+        // set one instance of cache
+        echo "<script>
+
+        </script>";
+    }
+
+    /**
+     * @param       $form_id
+     * @param       $form_type
+     * @param       $item_id
+     * @param array $field_names - format as (array('field_name' => 'Locale'));
+     *
+     * @return string
+     */
+    public function renderCache($form_id, $form_type, $item_id, array $field_names) {
+        $html = "";
+
+        return $html;
+    }
+
+    /**
+     * Cache the Current Field Inputs within Login session.
+     *
+     * @param       $form_id
+     * @param       $form_type
+     * @param       $item_id
+     * @param array $callback_fields
+     * @param int   $cache_time
+     *
+     * @return string
+     */
+    public function requestCache($form_id, $form_type, $item_id, array $callback_fields = [], $cache_time = 30000) {
+        /*
+        add_to_footer("<script src='".INCLUDES."jquery/confirm/jquery-confirm.min.js'></script>");
+        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/confirm/jquery-confirm.min.css'>");
+        add_to_jquery("
+            var input_fields = $('#$form_id').serialize();
+            $.confirm({
+            title: 'Restore Editing Session',
+            content: 'There is a draft found for your previous editing session. Do you wish to restore?',
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        url: '$remote',
+                        type: 'post',
+                        data: {
+                        'fusion_token': '$token',
+                        'aidlink': '".fusion_get_aidlink()."',
+                        'fields': input_fields,
+                        'form_id' : '$form_id',
+                        'item_id':'$item_id',
+                        'form_type':'$form_type',
+                        'callback':'read_cache'
+                        },
+                        dataType: 'json',
+                        success: function (e) {
+                            if (e.response == 200) {
+                                $.each(e.data, function(key, value) {
+                                    $('#'+key).val( value );
+                                });
+                                setTimeout(function(e) {
+                                    //$.alert('Your editing session has been restored');
+                                    setTimeout( function(e) {UpdateAdminCache() }, $cache_time);
+                                }, 100);
+                            }
+                        },
+                        error: function(e) {
+                        }
+                   });
+                },
+                cancel: function () {
+                    //$.alert('Canceled!');
+                }
+                /*somethingElse: {
+                    text: 'Something else',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        $.alert('Something else?');
+                    }
+                }
+            }
+        });
+        ");*/
+        $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
+        $token = Token::generate_token($form_id, 5, $remote); // see i can only save about 5 times only. so i need to regen it.
+        add_to_jquery("
+        function timedCacheRequest(timeout) {
+            setTimeout(UpdateAdminCache, timeout);
+        }
+        function UpdateAdminCache(poll) {
+            var input_fields = $('#$form_id').serialize();
+            var ttl = '$cache_time';
+            $.ajax({
+            url: '$remote',
+            type: 'post',
+            dataType: 'html',
+            data: {
+                'fusion_token': '$token',
+                'aidlink': '".fusion_get_aidlink()."',
+                'fields': input_fields,
+                'form_id' : '$form_id',
+                'form_type':'$form_type',
+                'item_id': '$item_id',
+                'callback':'set_cache',
+            },
+            dataType: 'json',
+            success: function (e) {
+                console.log(e);
+                console.log(poll);
+                if (typeof poll === 'undefined') {
+                    //console.log('we are starting a long poll now');
+                    timedCacheRequest(ttl);
+                }
+            }
+            });
+        }
+        // add abort long poll once we change fields.
+        $('#".$form_id." :input').blur(function(e) {
+            UpdateAdminCache(1);
+        });
+        ");
+        if (!isset($_GET['autosave'])) {
+            // not to pass prefix xhr for security reason.
+            add_to_jquery("setTimeout( function(e) { UpdateAdminCache() }, $cache_time);");
+        }
+
+        $html = "";
+        if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
+
+            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>".self::$locale['291']."</a></label>";
+
+            if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
+
+                $html .= "<div id='rev-window'>\n";
+                $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>");
+                $session = html_entity_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
+                parse_str($session, $data);
+                unset($data['form_id']);
+                unset($data['fusion_token']);
+
+                $html .= "<dl id='restore_results' class='dl-horizontal'>\n";
+                $fill_js = "";
+                foreach ($data as $field_name => $value) {
+                    if (isset($callback_fields[$field_name])) {
+                        $html .= "<dt>".$callback_fields[$field_name]."</dt>\n";
+                        $html .= "<dd class='m-b-15'><samp>".nl2br(html_entity_decode($value))."</samp>".form_hidden('s_'.$field_name, '', $value)."</dd>\n";
+                        $fill_js .= "
+                            var c = $('#s_$field_name').val();
+                            $('#".$field_name."').val(c);
+                        ";
+                    }
+                }
+                $html .= "</dl>\n";
+                $html .= "<div class='text-right'>\n";
+                $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>".self::$locale['cancel']."</button>\n";
+                $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>".self::$locale['293']."</button>\n";
+                $html .= "</div>\n";
+                $html .= fusion_get_function('closeside');
+                $html .= "</div>\n";
+                add_to_jquery("
+                    $('button[name^=\"fill_session\"]').bind('click', function(e) {
+                        $fill_js
+                        $('#rev-window').hide();
+                        UpdateAdminCache();
+                    });
+                    $('button[name^=\"cancel_session\"]').bind('click', function(e) {
+                        $('#rev-window').hide();
+                        UpdateAdminCache();
+                    });
+            ");
+            }
+        }
+
+        return $html;
     }
 
     public function setAdmin() {
         if (!defined('IN_SETUP')) {
             self::$admin_pages = $this->getAdminPages();
-            $this->admin_sections = array(
+            $this->admin_sections = array_filter(array_merge([
                 0 => self::$locale['ac00'],
                 1 => self::$locale['ac01'],
                 2 => self::$locale['ac02'],
                 3 => self::$locale['ac03'],
                 4 => self::$locale['ac04'],
                 5 => self::$locale['ac05'],
-            );
+            ], $this->admin_sections));
+            $this->admin_sections = array_values($this->admin_sections);
             $this->current_page = $this->_currentPage();
         }
     }
@@ -132,8 +319,9 @@ class Admins {
      * @return array
      */
     public function getAdminPages() {
+        self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
+            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
             $rows = dbrows($result);
             if ($rows) {
                 while ($data = dbarray($result)) {
@@ -161,24 +349,27 @@ class Admins {
                 $path = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
             }
         }
+
         return $path;
     }
 
     /**
-     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
+     * @param $page - 0-5 is core section pages. 6 and above are free to use.
      * @param $section_title - Section title
-     * @param $icons         - Section Icons
+     * @param $icons - Section Icons
      */
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
-        self::$admin_pages[$page] = array();
+        self::$admin_pages[$page] = [];
     }
 
-    public function getAdminLocale() {
+    public static function getAdminLocale() {
         if (empty(self::$locale)) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
         }
+
+        return self::$locale;
     }
 
     public function setAdminBreadcrumbs() {
@@ -206,7 +397,7 @@ class Admins {
         self::$admin_pages = $this->getAdminPages();
         if (empty($active_key) && !empty(self::$admin_pages)) {
             foreach (self::$admin_pages as $key => $data) {
-                $link = array();
+                $link = [];
                 foreach ($data as $arr => $admin_data) {
                     $link[] = $admin_data['admin_link'];
                 }
@@ -249,6 +440,7 @@ class Admins {
 
     /**
      * Get Submit Type
+     *
      * @param null $type submit stype prefix
      *
      * @return array|mixed|null
@@ -258,7 +450,7 @@ class Admins {
     }
 
     /**
-     * @param $type  - submissions prefix
+     * @param $type - submissions prefix
      * @param $title - title
      */
     public function setSubmitType($type, $title) {
@@ -266,8 +458,20 @@ class Admins {
     }
 
     /**
-     * @param $link     Admin submission url
-     * @param $type     Submissions stype prefix
+     * @param $type - submissions prefix
+     * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
+     */
+    public function setSubmitData($type, array $options = []) {
+        infusion_exists($options['infusion_name']) ? $this->submit_data[$type] = $options : NULL;
+    }
+
+    public function getSubmitData($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
+    }
+
+    /**
+     * @param string $link Admin submission url
+     * @param string $type Submissions stype prefix
      */
     public function setSubmitLink($type, $link) {
         $this->submit_link[$type] = $link;
@@ -282,11 +486,26 @@ class Admins {
     }
 
     /**
-     * @param $type  - comment prefix
+     * @param $type - comment prefix
      * @param $title - title
      */
     public function setCommentType($type, $title) {
         $this->comment_type[$type] = $title;
+    }
+
+    /**
+     * @param $type - infusion_name
+     */
+    public function getFolderPermissions($type = NULL) {
+        return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
+    }
+
+    /**
+     * @param $type - infusion_name
+     * @param $options - array(image_folder => TRUE or FALSE)
+     */
+    public function setFolderPermissions($type, array $options = []) {
+        infusion_exists($type) ? $this->folder_permissions[$type] = $options : NULL;
     }
 
     /**
@@ -311,7 +530,6 @@ class Admins {
      * @return string
      */
     public function vertical_admin_nav($image_icon = FALSE) {
-
         $aidlink = fusion_get_aidlink();
         $admin_sections = self::getAdminSections();
         $admin_pages = self::getAdminPages();
@@ -325,9 +543,19 @@ class Admins {
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
             if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
-                add_to_jquery('$("[data-toggle=collapse]").click(function(){$(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down");});');
+                add_to_jquery('
+                    $("[data-toggle=collapse]").click(function () {
+                        $(this).find(".adl-drop i").toggleClass("fa-angle-left fa-angle-down"); // for v4
 
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
+                        if ($(this).find(".adl-drop svg").attr("data-icon") == "angle-down") {
+                            $(this).find(".adl-drop svg").attr("data-icon", "angle-left");
+                        } else {
+                            $(this).find(".adl-drop svg").attr("data-icon", "angle-down");
+                        };
+                    });
+                ');
+
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " <span class='badge'>".count($admin_pages[$i])."</span>" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
 

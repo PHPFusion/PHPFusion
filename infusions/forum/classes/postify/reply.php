@@ -48,9 +48,9 @@ class Postify_Reply extends Forum_Postify {
             if (self::$forum_settings['thread_notify'] && isnum($_GET['thread_id'])) {
                 // Find all users to notify
                 $notify_query = "SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
-				FROM ".DB_FORUM_THREAD_NOTIFY." tn
-				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
-				WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
+                FROM ".DB_FORUM_THREAD_NOTIFY." tn
+                LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
+                WHERE thread_id=:thread_id AND notify_user !=:my_id AND notify_status=:status GROUP BY tn.notify_user";
                 $notify_bind = [
                     ':thread_id' => intval($_GET['thread_id']),
                     ':my_id'     => fusion_get_userdata('user_id'),
@@ -76,13 +76,13 @@ class Postify_Reply extends Forum_Postify {
                             while ($data = dbarray($notify_result)) {
                                 if ($this->check_forum_access($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
                                     $message_subject = str_replace("{THREAD_SUBJECT}", $thread_data['thread_subject'], self::$locale['forum_0660']);
-                                    $message_content = strtr(self::$locale['forum_0661'], array(
+                                    $message_content = strtr(self::$locale['forum_0661'], [
                                         '{USERNAME}'       => $data['user_name'],
                                         '{THREAD_SUBJECT}' => $thread_data['thread_subject'],
                                         '{THREAD_URL}'     => $thread_data['thread_link'],
                                         '{SITENAME}'       => self::$settings['sitename'],
                                         '{SITEUSERNAME}'   => self::$settings['siteusername'],
-                                    ));
+                                    ]);
                                     sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], $message_subject, $message_content);
                                 }
                             }
@@ -91,13 +91,13 @@ class Postify_Reply extends Forum_Postify {
                         while ($data = dbarray($notify_result)) {
                             if ($this->check_forum_access($forum_index, '', $_GET['thread_id'], $data['user_id'])) {
                                 $message_subject = str_replace("{THREAD_SUBJECT}", $thread_data['thread_subject'], self::$locale['forum_0660']);
-                                $message_content = strtr(self::$locale['forum_0661'], array(
+                                $message_content = strtr(self::$locale['forum_0661'], [
                                     '{USERNAME}'       => $data['user_name'],
                                     '{THREAD_SUBJECT}' => $thread_data['thread_subject'],
                                     '{THREAD_URL}'     => $thread_data['thread_link'],
                                     '{SITENAME}'       => self::$settings['sitename'],
                                     '{SITEUSERNAME}'   => self::$settings['siteusername'],
-                                ));
+                                ]);
                                 sendemail($data['user_name'], $data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], $message_subject, $message_content);
                             }
                         }

@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: output_handling_include.php
@@ -99,6 +99,7 @@ function add_handler($callback) {
  * Execute the output handlers
  *
  * @param string $output
+ *
  * @return string
  */
 function handle_output($output) {

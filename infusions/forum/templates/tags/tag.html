@@ -1,0 +1,18 @@
+{%breadcrumb%}
+<div class='row m-0'>
+    {tag_block.{
+    <div class='col-xs-12 col-sm-4' style='height: 200px; max-height:200px; background-color: {%tag_color%}'>
+        <a class='text-normal spacer-sm' href='{%tag_link%}'>
+            <div class='p-15'>
+                <h4 class='text-white'><strong>{%tag_title%}</strong></h4>
+                <p class='text-white'>{%tag_description%}</p>
+            </div>
+            <hr/>
+            <span class='text-white'>{%thread_subject%} - {%thread_activity%}</span>
+        </a>
+    </div>
+    }}
+    {no_tag.{
+    <div class='well'>{%message%}</div>
+    }}
+</div>

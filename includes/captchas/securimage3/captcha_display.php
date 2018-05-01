@@ -15,9 +15,27 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "securimage.php";
+
 // Display Capthca
-?>
-<div class='clearfix m-b-15'>
-    <?php echo Securimage::getCaptchaHtml(array('show_text_input' => FALSE)); ?>
-</div>
+if (!function_exists('display_captcha')) {
+    function display_captcha($options = []) {
+        $default_options = [
+            'show_text_input' => FALSE,
+            'input_name'      => 'captcha_code'
+        ];
+
+        $options += $default_options;
+
+        require_once 'securimage.php';
+        ob_start();
+
+        echo '<div class="clearfix m-b-15">';
+        echo Securimage::getCaptchaHtml($options);
+        echo '</div>';
+
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
+    }
+}

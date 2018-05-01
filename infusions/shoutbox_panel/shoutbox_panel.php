@@ -19,5 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
-Shoutbox::getInstance(TRUE)->get_shout();
+require_once INFUSIONS.'shoutbox_panel/shoutbox.inc';
+
+ShoutBox::getInstance()->DisplayShouts();

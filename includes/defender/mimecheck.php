@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace Defender;
+
 /**
  * Class Mimecheck
  * Check file types of the uploaded file with known mime types list to
@@ -37,7 +38,7 @@ class ImageValidation {
                     if (isset($each['name']) && !empty($each['name']) && !empty($each['tmp_name'])) {
                         if (is_array($each['name'])) {
 
-                            for($i = 0; $i < count($each['name']); $i++) {
+                            for ($i = 0; $i < count($each['name']); $i++) {
                                 $file_info = pathinfo($each['name'][$i]);
                                 $extension = strtolower($file_info['extension']);
                                 if (isset($mime_types[$extension])) {
@@ -95,9 +96,11 @@ class ImageValidation {
     /**
      * Check for alteration of file extensions to prevent unwanted payload executions
      * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
+     *
      * @param $file_src - the tmp src file
      * @param $file_ext - the current tmp src file extensions
      * @param $valid_ext - all accepted file extensions
+     *
      * @return bool
      */
     public static function mime_check($file_src, $file_ext, $valid_ext) {
@@ -106,8 +109,8 @@ class ImageValidation {
             $type = $finfo->file($file_src);
             $mime_types = mimeTypes();
             // build the mime type according to the allowed extension.
-            $check_type = array();
-            foreach($valid_ext as $ext) {
+            $check_type = [];
+            foreach ($valid_ext as $ext) {
                 $ext = strtolower(ltrim($ext, '.'));
                 if (isset($mime_types[$ext])) {
                     $check_type[$ext] = $mime_types[$ext];
@@ -129,4 +132,5 @@ class ImageValidation {
         return TRUE;
     }
 }
+
 require_once(dirname(__FILE__).'/../mimetypes_include.php');

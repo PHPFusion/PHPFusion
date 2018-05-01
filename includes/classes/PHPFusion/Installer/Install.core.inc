@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
-use PHPFusion\Infusion;
 use PHPFusion\Installer\Steps\InstallerPermissions;
-use PHPFusion\Locale;
 use PHPFusion\OutputHandler;
 use PHPFusion\Steps\InstallerAdminSetup;
 use PHPFusion\Steps\InstallerDbSetup;
@@ -45,7 +43,7 @@ class Install_Core extends Infusion_Core {
     const STEP_SETUP_COMPLETE = 7;
     const STEP_EXIT = 8;
     const STEP_TRANSFER = 9;
-    const BUILD_VERSION = '9.0';
+    const BUILD_VERSION = '9.03';
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
     protected static $locale = [];
@@ -56,10 +54,10 @@ class Install_Core extends Infusion_Core {
      * back can be STEP_INTRODUCTION;
      * @var array
      */
-    protected static $step = array(
+    protected static $step = [
         //  'next' => FALSE,
         //  'previous' => FALSE,
-    );
+    ];
 
     protected static $connection = [
         'db_host'         => '',
@@ -97,7 +95,7 @@ class Install_Core extends Infusion_Core {
      * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
      * entirely.
      */
-    protected static $locale_files = array();
+    protected static $locale_files = [];
     protected static $document;
 
     /*
@@ -114,37 +112,15 @@ class Install_Core extends Infusion_Core {
     protected function __construct() {
     }
 
-    public static function getInstance() {
+    /**
+     * @return null|static
+     */
+    public static function getInstallInstance() {
+        $settings = fusion_get_settings();
 
         if (self::$setup_instance == NULL) {
 
             self::$setup_instance = new static();
-
-            session_start();
-
-            define('IN_SETUP', TRUE);
-
-            self::installer_step();
-
-            self::verify_requirements();
-
-            define('iMEMBER', FALSE);
-
-            define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
-
-            define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-
-            define("FUSION_ROOT", '');
-
-            define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-
-            self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
-
-            define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
-
-            define("LOCALESET", LANGUAGE."/");
-
-            self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
 
             // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {
@@ -152,12 +128,31 @@ class Install_Core extends Infusion_Core {
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
+            session_start();
+
+            define('IN_SETUP', TRUE);
+
+            require_once BASEDIR.'includes/dynamics.inc';
+            require_once BASEDIR.'includes/autoloader.php';
+            \Dynamics::getInstance();
+
+            self::installer_step();
+            self::verify_requirements();
+
+            define('iMEMBER', FALSE);
+            define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
+            define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
+            define("FUSION_ROOT", '');
+            define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
+
+            self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
+            define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
+            define("LOCALESET", LANGUAGE."/");
+            self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
             self::$locale_files = fusion_get_detected_language();
 
             self::detect_upgrade();
 
-            // Run dynamics API
-            new \dynamics();
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
 
@@ -181,7 +176,7 @@ class Install_Core extends Infusion_Core {
                 // current session
                 if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-                } elseif (isset($_POST['step'])) {
+                } else if (isset($_POST['step'])) {
                     $_SESSION['step'] = $_POST['step'];
                 }
                 define('INSTALLATION_STEP', $_SESSION['step']);
@@ -212,15 +207,21 @@ class Install_Core extends Infusion_Core {
             'db_user' => '',
             'db_pass' => '',
         ];
+
         if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
             self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
         }
 
         self::$connection = self::$connection + $default_init;
 
-        if (empty(self::$connection['db_prefix'])) {
+        if (!empty(self::$connection['db_prefix'])) {
+            if (substr_count(self::$connection['db_prefix'], '_') === 1) {
+                self::$connection['db_prefix'] = str_replace(self::$connection['db_prefix'], '_', '').'_';
+            }
+        } else {
             self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
         }
+
         if (empty(self::$connection['cookie_prefix'])) {
             self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
         }
@@ -230,12 +231,13 @@ class Install_Core extends Infusion_Core {
         if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
             self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
         }
+
     }
 
     public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
-            $default_path = array();
+            $default_path = [];
             if (isset($db_host)) {
                 $default_path['db_host'] = $db_host;
             }
@@ -273,8 +275,8 @@ class Install_Core extends Infusion_Core {
     }
 
     public static function createRandomPrefix($length = 5) {
-        $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
-        $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
+        $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789"];
+        $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
         $prefix = "";
         for ($i = 0; $i < $length; $i++) {
             $type = mt_rand(0, 1);
@@ -285,13 +287,22 @@ class Install_Core extends Infusion_Core {
     }
 
     private static function detect_upgrade() {
+
+        // Read the config_temp.php
+        self::set_empty_prefix();
+
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
+
             if (empty(self::$connection['pdo_enabled'])) {
                 self::$connection['pdo_enabled'] = FALSE;
             }
+
             require_once(INCLUDES.'multisite_include.php');
+
             $validation = Requirements::get_system_validation();
+
             $version = fusion_get_settings('version');
+
             if (!empty($version)) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, $version, ">")) {
@@ -303,7 +314,6 @@ class Install_Core extends Infusion_Core {
                             define('DB_PREFIX', self::$connection['DB_PREFIX']);
                         }
                         self::set_empty_prefix();
-
                         return TRUE;
                     }
                 }
@@ -315,23 +325,22 @@ class Install_Core extends Infusion_Core {
 
     public function install_phpfusion() {
         $current_content = $this->get_InstallerContent();
-        $content = Console_Core::getInstance()->getView($current_content);
-        echo strtr(Console_Core::getInstance()->getLayout(), array('{%content%}' => $content));
+        $content = Console_Core::getConsoleInstance()->getView($current_content);
+        echo strtr(Console_Core::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
     }
 
     private function get_InstallerContent() {
 
         OutputHandler::addToJQuery("
-			$('form').change(function() {
-				window.onbeforeunload = function() {
-					return true;
-				}
-				$(':button').bind('click', function() {
-					window.onbeforeunload = null;
-				});
-			});
+            $('form').change(function() {
+                window.onbeforeunload = function() {
+                    return true;
+                }
+                $(':button').bind('click', function() {
+                    window.onbeforeunload = null;
+                });
+            });
         ");
-
         // Instead of using INSTALLATION STEP, we let the each file control
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
@@ -391,6 +400,23 @@ class Install_Core extends Infusion_Core {
     }
 
     private function __clone() {
+    }
+
+    /**
+     * Installer system checks
+     * Redirect to step 1 if the database has been intentionally dropped during the installation.
+     */
+    protected function tableCheck() {
+        if (!empty(self::$connection['db_name'])) {
+            $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
+            if ($rows = dbrows($result)) {
+                return TRUE;
+            } else {
+                $_SESSION['step'] = 1;
+                redirect(FUSION_REQUEST);
+            }
+        }
+        return FALSE;
     }
 
 }

@@ -22,6 +22,7 @@ use PHPFusion\Search\Search_Engine;
 /**
  * Class Search
  * Template
+ *
  * @package PHPFusion
  */
 class Search extends Search_Engine {
@@ -33,12 +34,14 @@ class Search extends Search_Engine {
         self::display_search_form();
         if (strlen(self::get_param('stext')) >= 3) {
             self::display_results();
-        } elseif (isset($_POST['stext'])) {
+        } else if (isset($_POST['stext'])) {
             self::display_noResults();
         }
     }
+
     /**
      * Template for search form
+     *
      * @return string
      */
     public static function render_search() {
@@ -51,7 +54,7 @@ class Search extends Search_Engine {
             return (string)render_search();
         }
         // Default
-        return open_table('{%title%}')."
+        return fusion_get_function('opentable', "{%title%}")."
         <div class='spacer-sm'>
         <div class='clearfix m-b-15'>{%search_text%}</div>
         {%search_method%}
@@ -73,10 +76,12 @@ class Search extends Search_Engine {
             {%char_areas%}
             </div>
         </div></div>
-        ".close_table();
+        ".fusion_get_function('closetable');
     }
+
     /**
      * Template for search no results when stext is less than 3
+     *
      * @return string
      */
     public static function render_search_no_result() {
@@ -86,11 +91,13 @@ class Search extends Search_Engine {
         if (function_exists('render_search_no_result')) {
             return (string)render_search_no_result();
         }
-        return open_table('{%title%}')."<div class='alert alert-warning m-t-10'>{%content%}</div>\n".close_table();
+
+        return fusion_get_function('opentable', '{%title%}')."<div class='alert alert-warning m-t-10'>{%content%}</div>\n".fusion_get_function('closetable');
     }
 
     /**
      * Template for search result item counting
+     *
      * @return string
      */
     public static function render_search_count() {
@@ -116,7 +123,6 @@ class Search extends Search_Engine {
             <div class='clearfix'>
                 <div class='pull-left m-r-10'>{%item_image%}</div>
                 <div class='overflow-hide'>
-                    <span class='va' style='height:30px;'></span>
                     <a ".($new_window ? "target='_blank' " : ' ')." href='{%item_url%}'><strong>{%item_title%}</strong></a><br/>{%item_description%}
                 </div>
             </div>
@@ -124,7 +130,6 @@ class Search extends Search_Engine {
         <!---//results-->
         ";
     }
-
 
     /*
      * Template for search Full Listing Item Type
@@ -145,13 +150,14 @@ class Search extends Search_Engine {
                 {%item_search_context%}
                 {%item_search_criteria%}
                 </div>
-            </div>            
+            </div>
         </li>
         ";
     }
 
     /**
      * Template for search Image Listing Item Type
+     *
      * @return string
      */
     public static function render_search_item_image() {
@@ -168,13 +174,14 @@ class Search extends Search_Engine {
 
     /**
      * Template for each search module results
+     *
      * @return string
      */
     public static function render_search_item_wrapper() {
         if (self::$search_item_wrapper) {
             return self::$search_item_wrapper;
         }
-        if (function_exists('render_search_item')) {
+        if (function_exists('render_search_item_wrapper')) {
             return (string)render_search_item_wrapper();
         }
 

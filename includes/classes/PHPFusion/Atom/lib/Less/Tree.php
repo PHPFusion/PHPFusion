@@ -80,6 +80,7 @@ class Less_Tree {
      * Generate CSS by adding it to the output object
      *
      * @param Less_Output $output The output
+     *
      * @return void
      */
     public function genCSS($output) {

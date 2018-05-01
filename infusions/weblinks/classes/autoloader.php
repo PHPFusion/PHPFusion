@@ -19,17 +19,17 @@ require_once INCLUDES."infusions_include.php";
 
 spl_autoload_register(function ($className) {
     $autoload_register_paths = [
-        "PHPFusion\\Weblinks\\WeblinksServer"           => WEBLINKS_CLASS."/server.php",
-        "PHPFusion\\Weblinks\\WeblinksAdminModel"       => WEBLINKS_CLASS."/admin/weblinks_admin_model.php",
-        "PHPFusion\\Weblinks\\WeblinksAdminView"        => WEBLINKS_CLASS."/admin/weblinks_admin_view.php",
-        "PHPFusion\\Weblinks\\WeblinksSettingsAdmin"    => WEBLINKS_CLASS."/admin/controllers/weblinks_settings.php",
-        "PHPFusion\\Weblinks\\WeblinksSubmissionsAdmin" => WEBLINKS_CLASS."/admin/controllers/weblinks_submissions.php",
-        "PHPFusion\\Weblinks\\WeblinksCategoryAdmin"    => WEBLINKS_CLASS."/admin/controllers/weblinks_cat.php",
-        "PHPFusion\\Weblinks\\WeblinksAdmin"            => WEBLINKS_CLASS."/admin/controllers/weblinks.php",
-        "PHPFusion\\Weblinks\\WeblinksSubmissions"      => WEBLINKS_CLASS."/weblinks/weblinks_submissions.php",
-        "PHPFusion\\Weblinks\\WeblinksView"             => WEBLINKS_CLASS."/weblinks/weblinks_view.php",
-        "PHPFusion\\Weblinks\\Weblinks"                 => WEBLINKS_CLASS."/weblinks/weblinks.php"
-	];
+        "PHPFusion\\Weblinks\\WeblinksServer"           => WEBLINKS_CLASS."server.php",
+        "PHPFusion\\Weblinks\\WeblinksAdminModel"       => WEBLINKS_CLASS."admin/weblinks_admin_model.php",
+        "PHPFusion\\Weblinks\\WeblinksAdminView"        => WEBLINKS_CLASS."admin/weblinks_admin_view.php",
+        "PHPFusion\\Weblinks\\WeblinksSettingsAdmin"    => WEBLINKS_CLASS."admin/controllers/weblinks_settings.php",
+        "PHPFusion\\Weblinks\\WeblinksSubmissionsAdmin" => WEBLINKS_CLASS."admin/controllers/weblinks_submissions.php",
+        "PHPFusion\\Weblinks\\WeblinksCategoryAdmin"    => WEBLINKS_CLASS."admin/controllers/weblinks_cat.php",
+        "PHPFusion\\Weblinks\\WeblinksAdmin"            => WEBLINKS_CLASS."admin/controllers/weblinks.php",
+        "PHPFusion\\Weblinks\\WeblinksSubmissions"      => WEBLINKS_CLASS."weblinks/weblinks_submissions.php",
+        "PHPFusion\\Weblinks\\WeblinksView"             => WEBLINKS_CLASS."weblinks/weblinks_view.php",
+        "PHPFusion\\Weblinks\\Weblinks"                 => WEBLINKS_CLASS."weblinks/weblinks.php"
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];

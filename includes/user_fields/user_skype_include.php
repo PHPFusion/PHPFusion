@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_skype_include.php
-| Author: Hans Kristian Flaatten {Starefossen}
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,9 +20,9 @@ if (!defined("IN_FUSION")) {
 }
 
 // Display user field input
-$icon = "<img src='".IMAGES."user_fields/social/skype.svg'>";
+$icon = "<img src='".IMAGES."user_fields/social/skype.svg' title='Skype' alt='Skype'/>";
 if ($profile_method == 'input') {
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'max_length'       => 32,
             // TODO: Also accept MS accounts which are email addresses
@@ -31,9 +31,13 @@ if ($profile_method == 'input') {
             'error_text'       => $locale['uf_skype_error'],
             'placeholder'      => $locale['uf_skype_id'],
             'label_icon'       => $icon,
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
-// Display user field input
-} elseif ($profile_method == 'display') {
-    $user_fields = array('title' => $icon.$locale['uf_skype'], 'value' => $field_value ?: "");
+    // Display user field input
+} else if ($profile_method == 'display') {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_skype'],
+        'value' => $field_value ?: ''
+    ];
 }

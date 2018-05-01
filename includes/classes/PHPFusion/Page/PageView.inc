@@ -20,62 +20,39 @@ namespace PHPFusion\Page;
 class PageView extends PageController {
 
     /**
-     * Return page composer object
-     * @param bool|FALSE $set_info
-     * @return null|static
-     */
-    protected static $page_instance = NULL;
-
-    public static function getInstance($set_info = FALSE, $page_id = 0) {
-        if (self::$page_instance === NULL) {
-            self::$page_instance = new static();
-            if ($set_info) {
-                self::set_PageInfo($page_id);
-            }
-        }
-
-        return (object)self::$page_instance;
-    }
-
-    /**
      * Displays HTML output of Page
+     *
+     * @param int $page_id
      */
-    public static function display_Page() {
+    public function View(int $page_id = 0) {
         require_once THEMES."templates/global/custompage.php";
+        self::set_PageInfo($page_id);
         display_page(self::$info);
     }
 
     public static function display_Composer() {
-        ob_start();
-        foreach (self::$composerData as $row_id => $columns) :
-            if (!empty($columns)) :
+        $html = "";
+        foreach (self::$composerData as $row_id => $columns) {
+            if (!empty($columns)) {
                 $row_prop = flatten_array($columns);
                 $row_htmlId = ($row_prop['page_grid_html_id'] ? $row_prop['page_grid_html_id'] : "row-".$row_id);
                 $row_htmlClass = ($row_prop['page_grid_class'] ? " ".$row_prop['page_grid_class'] : "");
-                // check if there are any content in this row, if no, don't render
-                if ($row_prop['page_content'] or $row_prop['page_options']) :
-                ?>
-                <div id="<?php echo $row_htmlId ?>" class="row<?php echo $row_htmlClass ?>">
-                    <?php if ($row_prop['page_grid_container']) : ?>
-                    <div class="container">
-                        <?php endif;
-                    foreach ($columns as $column_id => $colData) :
-                        if ($colData['page_content_id']) :
-                            ?>
-                            <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
-                                <?php echo self::display_Widget($colData) ?>
-                            </div>
-                        <?php endif;
-                    endforeach;
-                        if ($row_prop['page_grid_container']) : ?>
-                    </div>
-                <?php endif; ?>
-                </div>
-                <?php endif; ?>
-            <?php endif;
-        endforeach;
-        $html = ob_get_contents();
-        ob_end_clean();
+                if ($row_prop['page_content'] or $row_prop['page_options']) {
+                    $html .= "<div id='$row_htmlId' class='row'$row_htmlClass>\n";
+                    $html .= ($row_prop['page_grid_container'] ? "<div class='container'>\n" : "");
+                    foreach ($columns as $column_id => $colData) {
+                        if ($colData['page_content_id']) {
+                            $span = self::calculateSpan($colData['page_grid_column_count'], count($columns));
+                            $html .= "<div class='$span'>\n";
+                            $html .= self::display_Widget($colData);
+                            $html .= "</div>\n";
+                        }
+                    }
+                    $html .= ($row_prop['page_grid_container'] ? "</div>\n" : "");
+                    $html .= "</div>\n";
+                }
+            }
+        }
 
         return (string)$html;
     }

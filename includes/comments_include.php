@@ -28,7 +28,7 @@ if (!defined("IN_FUSION")) {
  */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings = FALSE) {
     $html = PHPFusion\Feedback\Comments::getInstance(
-        array(
+        [
             'comment_item_type'     => $comment_type,
             'comment_db'            => $comment_db,
             'comment_col'           => $comment_col,
@@ -37,6 +37,6 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
             'comment_echo'          => FALSE,
             'comment_allow_subject' => FALSE,
             'comment_allow_ratings' => $ratings
-        ), '_'.$comment_type.$comment_item_id)->showComments();
+        ], '_'.$comment_type.$comment_item_id)->showComments();
     echo $html;
 }

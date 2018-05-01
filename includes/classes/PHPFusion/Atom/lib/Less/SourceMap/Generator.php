@@ -18,20 +18,20 @@ class Less_SourceMap_Generator extends Less_Configurable {
      *
      * @var array
      */
-    protected $defaultOptions = array(
+    protected $defaultOptions = [
         // an optional source root, useful for relocating source files
         // on a server or removing repeated values in the 'sources' entry.
         // This value is prepended to the individual entries in the 'source' field.
-        'sourceRoot' => '',
+        'sourceRoot'        => '',
 
         // an optional name of the generated code that this source map is associated with.
         'sourceMapFilename' => NULL,
 
         // url of the map
-        'sourceMapURL' => NULL,
+        'sourceMapURL'      => NULL,
 
         // absolute path to a file to write the map to
-        'sourceMapWriteTo' => NULL,
+        'sourceMapWriteTo'  => NULL,
 
         // output source contents?
         'outputSourceFiles' => FALSE,
@@ -41,7 +41,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
 
         // base path for filename normalization
         'sourceMapBasepath' => ''
-    );
+    ];
 
     /**
      * The base64 VLQ encoder
@@ -55,7 +55,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      *
      * @var array
      */
-    protected $mappings = array();
+    protected $mappings = [];
 
     /**
      * The root node
@@ -69,15 +69,15 @@ class Less_SourceMap_Generator extends Less_Configurable {
      *
      * @var array
      */
-    protected $contentsMap = array();
+    protected $contentsMap = [];
 
     /**
      * File to content map
      *
      * @var array
      */
-    protected $sources = array();
-    protected $source_keys = array();
+    protected $sources = [];
+    protected $source_keys = [];
 
     /**
      * Constructor
@@ -85,7 +85,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      * @param Less_Tree_Ruleset $root The root node
      * @param array             $options Array of options
      */
-    public function __construct(Less_Tree_Ruleset $root, $contentsMap, $options = array()) {
+    public function __construct(Less_Tree_Ruleset $root, $contentsMap, $options = []) {
         $this->root = $root;
         $this->contentsMap = $contentsMap;
         $this->encoder = new Less_SourceMap_Base64VLQ();
@@ -146,7 +146,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      */
     protected function generateJson() {
 
-        $sourceMap = array();
+        $sourceMap = [];
         $mappings = $this->generateMappings();
 
         // File version (always the first entry in the object) and must be a positive integer.
@@ -168,14 +168,14 @@ class Less_SourceMap_Generator extends Less_Configurable {
 
 
         // A list of original sources used by the 'mappings' entry.
-        $sourceMap['sources'] = array();
+        $sourceMap['sources'] = [];
         foreach ($this->sources as $source_uri => $source_filename) {
             $sourceMap['sources'][] = $this->normalizeFilename($source_filename);
         }
 
 
         // A list of symbol names used by the 'mappings' entry.
-        $sourceMap['names'] = array();
+        $sourceMap['names'] = [];
 
         // A string with the encoded mapping data.
         $sourceMap['mappings'] = $mappings;
@@ -210,7 +210,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
 
 
         // group mappings by generated line number.
-        $groupedMap = $groupedMapEncoded = array();
+        $groupedMap = $groupedMapEncoded = [];
         foreach ($this->mappings as $m) {
             $groupedMap[$m['generated_line']][] = $m;
         }
@@ -223,7 +223,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
                 $groupedMapEncoded[] = ';';
             }
 
-            $lineMapEncoded = array();
+            $lineMapEncoded = [];
             $lastGeneratedColumn = 0;
 
             foreach ($line_map as $m) {
@@ -259,6 +259,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      * Finds the index for the filename
      *
      * @param string $filename
+     *
      * @return integer|false
      */
     protected function findFileIndex($filename) {
@@ -269,6 +270,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      * Normalizes the filename
      *
      * @param string $filename
+     *
      * @return string
      */
     protected function normalizeFilename($filename) {
@@ -299,7 +301,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
         if (empty($this->sources)) {
             return;
         }
-        $content = array();
+        $content = [];
         foreach ($this->sources as $sourceFile) {
             $content[] = file_get_contents($sourceFile);
         }
@@ -312,6 +314,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
      *
      * @param string $file The absolute path to a file
      * @param string $content The content to write
+     *
      * @throws Exception If the file could not be saved
      */
     protected function saveMap($file, $content) {
@@ -340,13 +343,13 @@ class Less_SourceMap_Generator extends Less_Configurable {
      */
     public function addMapping($generatedLine, $generatedColumn, $originalLine, $originalColumn, $fileInfo) {
 
-        $this->mappings[] = array(
-            'generated_line' => $generatedLine,
+        $this->mappings[] = [
+            'generated_line'   => $generatedLine,
             'generated_column' => $generatedColumn,
-            'original_line' => $originalLine,
-            'original_column' => $originalColumn,
-            'source_file' => $fileInfo['currentUri']
-        );
+            'original_line'    => $originalLine,
+            'original_column'  => $originalColumn,
+            'source_file'      => $fileInfo['currentUri']
+        ];
 
         $this->sources[$fileInfo['currentUri']] = $fileInfo['filename'];
     }

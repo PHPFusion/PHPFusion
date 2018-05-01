@@ -16,29 +16,31 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Search;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_FAQS)) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
-    $form_elements += array(
-        'faqs' => array(
-            'enabled' => array('0' => 'fields1', '1' => 'fields2', '2' => 'fields3', '3' => 'order1', '4' => 'order2'),
-            'disabled' => array('0' => 'datelimit', '1' => 'sort', '2' => 'chars'),
-            'display' => array(),
-            'nodisplay' => array(),
-        )
-    );
-    $radio_button += array(
+    $form_elements += [
+        'faqs' => [
+            'enabled'   => ['0' => 'fields1', '1' => 'fields2', '2' => 'fields3', '3' => 'order1', '4' => 'order2'],
+            'disabled'  => ['0' => 'datelimit', '1' => 'sort', '2' => 'chars'],
+            'display'   => [],
+            'nodisplay' => [],
+        ]
+    ];
+    $radio_button += [
         'faqs' => form_checkbox('stype', fusion_get_locale('fq400', LOCALE.LOCALESET."search/faqs.php"), Search_Engine::get_param('stype'),
-                                array(
-                                    'type' => 'radio',
-                                    'value' => 'faqs',
-                                    'reverse_label' => TRUE,
-                                    'onclick' => 'display(this.value)',
-                                    'input_id' => 'faqs'
-                                )
+            [
+                'type'          => 'radio',
+                'value'         => 'faqs',
+                'reverse_label' => TRUE,
+                'onclick'       => 'display(this.value)',
+                'input_id'      => 'faqs',
+                'class'         => 'm-b-0'
+            ]
         )
-    );
+    ];
 }

@@ -30,10 +30,10 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
     $formatted_result = '';
     $item_count = "0 ".$locale['c402']." ".$locale['522']."<br />\n";
 
-    $order_by = array(
+    $order_by = [
         '0' => ' DESC',
         '1' => ' ASC',
-    );
+    ];
 
     $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY page_title".$order_by[Search_Engine::get_param('order')] : '';
     $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');

@@ -18,15 +18,14 @@
 namespace PHPFusion\Page;
 
 class PageModel {
-
-    protected static $admin_composer_opts = array();
-    protected static $composerData = array();
-    protected static $widgets = array();
+    protected static $admin_composer_opts = [];
+    protected static $composerData = [];
+    protected static $widgets = [];
     protected static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
     /**
      * @var array - default custom page data
      */
-    protected static $data = array(
+    protected static $data = [
         'page_id'           => 0,
         'page_cat'          => 0,
         'page_link_cat'     => 0,
@@ -35,6 +34,7 @@ class PageModel {
         'page_content'      => '',
         'page_keywords'     => '',
         'page_status'       => 0,
+        'page_breaks'       => '',
         'page_user'         => 0,
         'page_datestamp'    => 0,
         'page_language'     => LANGUAGE,
@@ -46,11 +46,11 @@ class PageModel {
         'page_footer_panel' => 1,
         'page_top_panel'    => 1,
         'page_bottom_panel' => 1
-    );
+    ];
     /**
      * @var array - default grid row data
      */
-    protected static $rowData = array(
+    protected static $rowData = [
         'page_grid_id'           => 0,
         'page_id'                => 0,
         'page_grid_container'    => 0,
@@ -58,11 +58,11 @@ class PageModel {
         'page_grid_html_id'      => '',
         'page_grid_class'        => '',
         'page_grid_order'        => 1,
-    );
+    ];
     /**
      * @var array - default grid column data
      */
-    protected static $colData = array(
+    protected static $colData = [
         'page_id'            => 0,
         'page_grid_id'       => 0,
         'page_content_id'    => 0,
@@ -70,7 +70,7 @@ class PageModel {
         'page_content'       => '',
         'page_content_order' => 1,
         'page_options'       => ''
-    );
+    ];
     private static $page_instance = NULL;
 
     /**
@@ -81,13 +81,11 @@ class PageModel {
     /**
      * Return page composer object
      *
-     * @param bool|FALSE $set_info
-     *
-     * @return null|static
+     * @return static
      */
-    public static function getInstance($set_info = FALSE) {
+    public static function getInstance() {
         if (empty(self::$page_instance)) {
-            self::$page_instance = new Static;
+            self::$page_instance = new static;
         }
 
         return self::$page_instance;
@@ -103,12 +101,13 @@ class PageModel {
      * @return array;
      */
     public static function load_customPage($id) {
-        $array = array();
-        if (isnum($id)) {
+        $array = [];
+        $page_id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($page_id) {
             $array = dbarray(
                 dbquery("
-                    SELECT cp.* FROM ".DB_CUSTOM_PAGES." cp WHERE page_id= '".intval($id)."'
-                    ")
+                    SELECT cp.* FROM ".DB_CUSTOM_PAGES." cp WHERE page_id=:pageid", [':pageid' => $page_id]
+                )
             );
         }
 
@@ -143,26 +142,26 @@ class PageModel {
         echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink);
         echo "<div class='pull-left m-t-0'>\n";
 
-        $edit_opts = array();
+        $edit_opts = [];
         if (dbrows($result) != 0) {
             while ($data = dbarray($result)) {
                 $edit_opts[$data['page_id']] = $data['page_title'];
             }
         }
         echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '',
-            array(
+            [
                 "options"  => $edit_opts,
                 "class"    => 'm-b-0',
                 "required" => TRUE,
-            ));
+            ]);
         echo form_hidden('section', '', 'cp2');
         echo form_hidden('aid', '', iAUTH);
         echo "</div>\n";
-        echo form_button('action', $locale['edit'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
-        echo form_button('action', $locale['delete'], 'delete', array(
+        echo form_button('action', $locale['edit'], 'edit', ['class' => 'btn-default pull-left m-l-10 m-r-10']);
+        echo form_button('action', $locale['delete'], 'delete', [
             'class' => 'btn-danger pull-left',
             'icon'  => 'fa fa-trash'
-        ));
+        ]);
         echo closeform();
         echo "</div>\n";
     }
@@ -209,6 +208,7 @@ class PageModel {
      */
     protected static function cache_widget() {
         if (empty(self::$widgets)) {
+            $list = [];
             $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
             foreach ($file_list as $folder) {
                 $widget_title = '';
@@ -240,7 +240,7 @@ class PageModel {
                         }
                     }
 
-                    $list[$folder] = array(
+                    $list[$folder] = [
                         'widget_name'        => $folder,
                         'widget_title'       => ucfirst($widget_title),
                         'widget_folder'      => $folder,
@@ -248,7 +248,7 @@ class PageModel {
                         'widget_description' => $widget_description,
                         'admin_instance'     => $adminObj,
                         'display_instance'   => $displayObj,
-                    );
+                    ];
                 }
             }
             self::$widgets = $list;
@@ -259,7 +259,7 @@ class PageModel {
 
     /**
      * @param $max_column_limit - max grid count per row
-     * @param $current_count    - current actual count if is a fluid design
+     * @param $current_count - current actual count if is a fluid design
      *
      * @return string
      */
@@ -278,13 +278,14 @@ class PageModel {
     /**
      * SQL delete page
      *
-     * @param $page_id
+     * @param $pageid
      */
-    protected function delete_customPage($page_id) {
-        if (isnum($page_id) && self::verify_customPage($page_id)) {
-            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
+    protected function delete_customPage($pageid) {
+        $page_id = filter_var($pageid, FILTER_VALIDATE_INT);
+        if ($page_id && self::verify_customPage($page_id)) {
+            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
             if ($result) {
-                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+                dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=:pageid", [':pageid' => $page_id]);
             }
         }
     }
@@ -297,8 +298,9 @@ class PageModel {
      * @return bool|string
      */
     protected static function verify_customPage($id) {
-        if (isnum($id)) {
-            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
+        $page_id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($page_id) {
+            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => $page_id]);
         }
 
         return FALSE;

@@ -37,7 +37,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
                     }
                 }
                 redirect($rating_link);
-            } elseif (isset($_POST['remove_rating'])) {
+            } else if (isset($_POST['remove_rating'])) {
                 // Unrate
                 $result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
                 if ($result) {
@@ -46,33 +46,33 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
                 redirect($rating_link);
             }
         }
-        $ratings = array(
+        $ratings = [
             5 => $locale['r120'],
             4 => $locale['r121'],
             3 => $locale['r122'],
             2 => $locale['r123'],
             1 => $locale['r124']
-        );
+        ];
         if (!iMEMBER) {
             $message = str_replace("[RATING_ACTION]", "<a href='".BASEDIR."login.php'>".$locale['login']."</a>", $locale['r104']);
             if (fusion_get_settings("enable_registration") == TRUE) {
                 $message = str_replace("[RATING_ACTION]",
-                                       "<a href='".BASEDIR."login.php'>".$locale['login']."</a> ".$locale['or']." <a href='".BASEDIR."register.php'>".$locale['register']."</a>",
-                                       $locale['r104']);
+                    "<a href='".BASEDIR."login.php'>".$locale['login']."</a> ".$locale['or']." <a href='".BASEDIR."register.php'>".$locale['register']."</a>",
+                    $locale['r104']);
             }
             echo "<div class='text-center'>".$message."</div>\n";
-        } elseif (!empty($d_rating['rating_vote'])) {
+        } else if (!empty($d_rating['rating_vote'])) {
             echo "<div class='display-block'>\n";
-            echo openform('removerating', 'post', $rating_link, array('class' => 'display-block text-center'));
+            echo openform('removerating', 'post', $rating_link, ['class' => 'display-block text-center']);
             echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
-            echo form_button('remove_rating', $locale['r102'], $locale['r102'], array('class' => 'btn-default m-b-10', 'icon' => 'fa fa-times m-r-10'));
+            echo form_button('remove_rating', $locale['r102'], $locale['r102'], ['class' => 'btn-default m-b-10', 'icon' => 'fa fa-times m-r-10']);
             echo closeform();
             echo "</div>\n";
         } else {
             echo "<div class='display-block'>\n";
-            echo openform('postrating', 'post', $rating_link, array('notice' => 0, 'class' => 'm-b-20 text-center'));
-            echo form_select('rating', $locale['r106'], '', array('options' => $ratings, 'inner_width' => '200px', 'width' => '200px'));
-            echo form_button('post_rating', $locale['r103'], $locale['r103'], array('class' => 'btn-primary btn-block'));
+            echo openform('postrating', 'post', $rating_link, ['notice' => 0, 'class' => 'm-b-20 text-center']);
+            echo form_select('rating', $locale['r106'], '', ['options' => $ratings, 'inner_width' => '200px', 'width' => '200px']);
+            echo form_button('post_rating', $locale['r103'], $locale['r103'], ['class' => 'btn-primary btn-block']);
             echo closeform();
             echo "</div>\n";
         }

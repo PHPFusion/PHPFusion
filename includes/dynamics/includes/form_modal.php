@@ -16,9 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
-    $codes = (isset($htmlcode) && ($htmlcode !== "")) ? $htmlcode : "";
+    $locale = fusion_get_locale();
     if (!is_array($array)) {
-        $array = array();
         $button_class = "btn-default";
         $button_img = "pictogram-popup pictogram-white";
         $button_text = $locale['show'];

@@ -15,32 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Articles;
+
 use PHPFusion\OpenGraphArticles;
 
 /**
  * Controller package for if/else
  * Class ArticlesView
+ *
  * @package PHPFusion\Articles
  */
 class ArticlesView extends Articles {
     public function display_articles() {
-
-		// Display Article
+        // Display Article
         if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
             $info = $this->set_ArticlesItemInfo($_GET['article_id']);
             render_article_item($info);
-	        OpenGraphArticles::ogArticle($_GET['article_id']);
+            OpenGraphArticles::ogArticle($_GET['article_id']);
 
-		// Display Category
-        } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+            // Display Category
+        } else if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
             $info = $this->set_ArticlesCatInfo($_GET['cat_id']);
             display_main_articles($info);
-	        OpenGraphArticles::ogArticleCat($_GET['cat_id']);
-
-		// Display Overview
+            OpenGraphArticles::ogArticleCat($_GET['cat_id']);
         } else {
+            // Display Overview
             $info = $this->set_ArticlesInfo();
             display_main_articles($info);
         }

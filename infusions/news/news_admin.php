@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news_admin.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/admin_header.php";
 require_once NEWS_CLASS."autoloader.php";
 PHPFusion\News\NewsServer::NewsAdmin()->display_admin();

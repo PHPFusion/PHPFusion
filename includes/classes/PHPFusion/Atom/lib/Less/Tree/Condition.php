@@ -44,7 +44,7 @@ class Less_Tree_Condition extends Less_Tree {
             default:
                 if (Less_Parser::is_method($a, 'compare')) {
                     $result = $a->compare($b);
-                } elseif (Less_Parser::is_method($b, 'compare')) {
+                } else if (Less_Parser::is_method($b, 'compare')) {
                     $result = $b->compare($a);
                 } else {
                     throw new Less_Exception_Compiler('Unable to perform comparison', NULL, $this->index);

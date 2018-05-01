@@ -31,6 +31,7 @@ spl_autoload_register(function ($className) {
         require_once $fullPath;
     }
 });
+
 /*
  * Autoloader for compatibility reason
  *
@@ -63,10 +64,30 @@ spl_autoload_register(function ($className) {
     }
 });
 
+// Load infusions autoloader.
+// @todo 9.04 --
+// @todo: Rename all infusions namespace with "PHPFusion\Infusions\{Infusion_name};
+// @todo: then remove all infusions autoloader and complete check the file structure.
+spl_autoload_register(function ($className) {
+    if (stristr($className, 'PHPFusion\\Infusions')) {
+        //print_p($className);
+        $className = str_replace('PHPFusion\\Infusions\\', '', $className);
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $className = strtolower($className);
+        //print_P($className);
+        $fullPath = BASEDIR.'infusions/'.$className.'.php';
+        //print_p($fullPath);
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
+    }
+});
 
 /**
  * Get path of config.php
+ *
  * @param int $max_level
+ *
  * @return string|null The relative path of the base directory
  * or NULL if config.php was not found
  */
@@ -92,12 +113,10 @@ if (!defined('BASEDIR')) {
 /*
  * Include core files that is required in working order
  */
-
 require_once __DIR__.'/core_functions_include.php';
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.inc";
-//require_once __DIR__.'/theme_functions_include.php';
 //require_once __DIR__.'/db_handlers/all_functions_include.php';

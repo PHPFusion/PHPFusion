@@ -27,7 +27,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
         if ($part == 1) {
             $text = str_replace("[", " &#91;", $text);
             $text = str_replace("]", "&#93; ", $text);
-        } elseif ($part == 2) {
+        } else if ($part == 2) {
             $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow">(.*?)</a>^si', '\1', $text);
             $text = str_replace(" &#91;", "&#91;", $text);
             $text = str_replace("&#93; ", "&#93;", $text);
@@ -64,16 +64,16 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
         $len = strlen($matches[2]);
 
         return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
-        .trimlink($matches[2], 20)
-        .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+            .trimlink($matches[2], 20)
+            .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
 
     function callbackURLWithoutProtocol($matches) {
         $len = strlen($matches[2]);
 
         return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
-        .trimlink($matches[2], 20)
-        .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+            .trimlink($matches[2], 20)
+            .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
 
     function callbackMail($matches) {
@@ -93,9 +93,9 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
         if ($containsPHP) {
             $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPrePHP', $text);
         }
-        $text = str_replace(array("]", "&gt;", "[", "&lt;"), array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), $text);
+        $text = str_replace(["]", "&gt;", "[", "&lt;"], ["]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"], $text);
         $text = preg_replace_callback('#(^|[\n ])((http|https|ftp|ftps)://[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si',
-                                      __NAMESPACE__.'\callbackURLWithProtocol', $text);
+            __NAMESPACE__.'\callbackURLWithProtocol', $text);
         $text = preg_replace_callback('#(^|\s)((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithoutProtocol', $text);
         $text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
         if ($containsCode) {
@@ -108,7 +108,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
             $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPostPHP', $text);
         }
 
-        return str_replace(array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), array("]", "&gt;", "[", "&lt;"), $text);
+        return str_replace(["]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"], ["]", "&gt;", "[", "&lt;"], $text);
     }
 }
 

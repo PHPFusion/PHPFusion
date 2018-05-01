@@ -19,18 +19,22 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$icon = "<img src='".IMAGES."user_fields/social/discord.svg'>\n";
+$icon = "<img src='".IMAGES."user_fields/social/discord.svg' title='Discord' alt='Discord'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'error_text'       => $locale['uf_discord_error'],
             'regex_error_text' => $locale['uf_discord_error_1'],
             'placeholder'      => $locale['uf_discord'],
             'label_icon'       => $icon
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_discord', $locale['uf_discord'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_discord'], 'value' => $field_value ?: '');
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_discord'],
+        'value' => $field_value ?: ''
+    ];
 }

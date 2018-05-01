@@ -26,16 +26,13 @@ if (!function_exists("display_main_articles")) {
      * @param $info
      */
     function display_main_articles($info) {
-
         $articles_settings = \PHPFusion\Articles\ArticlesServer::get_article_settings();
         $locale = fusion_get_locale();
-
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
         $cookie_expiry = time() + 7 * 24 * 3600;
         if (empty($_COOKIE['fusion_articles_view'])) {
             setcookie("fusion_articles_view", 1, $cookie_expiry);
-        } elseif (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
+        } else if (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
             setcookie("fusion_articles_view", intval($_POST['switchview'] == 2 ? 2 : 1), $cookie_expiry);
             redirect(FUSION_REQUEST);
         }
@@ -45,15 +42,18 @@ if (!function_exists("display_main_articles")) {
 
         if (is_array($info['article_categories']) && !empty($info['article_categories'])) {
             ?>
-
             <div class="panel panel-default panel-articles-header">
 
                 <!-- Display Informations -->
                 <div class="panel-body">
                     <div class="pull-right">
-                        <a class="btn btn-sm btn-default" href="<?php echo INFUSIONS."articles/articles.php"; ?>" title="<?php echo $locale['article_0001']; ?>"><i class="fa fa-fw fa-desktop"></i> <?php echo $locale['article_0001']; ?></a>
-                        <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#articlescat" aria-expanded="true" aria-controls="articlescat" title="<?php echo $locale['article_0002']; ?>">
-                            <i class="fa fa-fw fa-folder"></i>
+                        <a class="btn btn-sm btn-default" href="<?php echo INFUSIONS."articles/articles.php"; ?>"
+                           title="<?php echo $locale['article_0001']; ?>"><i
+                                    class="fa fa-fw fa-desktop"></i> <?php echo $locale['article_0001']; ?></a>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="collapse"
+                                data-target="#articlescat" aria-expanded="true" aria-controls="articlescat"
+                                title="<?php echo $locale['article_0002']; ?>">
+                            <i class="fa fa-fw fa-folder"></i> <?php echo $locale['article_0002']; ?>
                         </button>
                     </div>
                     <div class="overflow-hide">
@@ -92,11 +92,11 @@ if (!function_exists("display_main_articles")) {
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     <!-- Display View Options -->
-                    <?php echo openform("viewform", "post", FUSION_REQUEST, array("max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10")); ?>
+                    <?php echo openform("viewform", "post", FUSION_REQUEST, ["remote_url" => FUSION_REQUEST, "max_tokens" => 1, "class" => "pull-right display-inline-block m-l-10"]); ?>
                     <div class="btn-group">
-                        <?php $active = isset($_COOKIE['fusion_articles_view']) && isnum($_COOKIE['fusion_articles_view']) && $_COOKIE['fusion_articles_view'] == 2 ? 2 : 1; ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i>", "1", array("class" => "btn-sm btn-default nsv".($active == "1" ? " active" : ""), "alt" => $locale['article_0040'])); ?>
-                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i>", "2", array("class" => "btn-sm btn-default nsv".($active == "2" ? " active" : ""), "alt" => $locale['article_0041'])); ?>
+                        <?php $active = isset($_COOKIE['fusion_articles_view']) && isnum($_COOKIE['fusion_articles_view']) && $_COOKIE['fusion_articles_view'] == 1 ? 1 : 2; ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-th-large'></i> ".$locale['article_0040'], 1, ["input_id" => "switchview_gallery", "class" => "btn-sm btn-default nsv".($active == 1 ? " active" : ""), "alt" => $locale['article_0040']]); ?>
+                        <?php echo form_button("switchview", "<i class='fa fa-fw fa-bars'></i> ".$locale['article_0041'], 2, ["input_id" => "switchview_list", "class" => "btn-sm btn-default nsv".($active == 2 ? " active" : ""), "alt" => $locale['article_0041']]); ?>
                     </div>
                     <?php echo closeform(); ?>
 
@@ -119,11 +119,11 @@ if (!function_exists("display_main_articles")) {
             $articleColumn = $active == 2 ? 12 : 4;
             if (!empty($info['article_items'])) {
                 ?>
-                <div class="row">
+                <div class="row equal-height">
                     <?php foreach ($info['article_items'] as $i => $article_info) { ?>
                         <div class="col-xs-12 col-sm-<?php echo $articleColumn; ?> col-md-<?php echo $articleColumn; ?> col-lg-<?php echo $articleColumn; ?>">
                             <?php echo (isset($_GET['cat_id'])) ? "<!--pre_articles_cat_idx-->\n" : "<!--articles_prepost_".$i."-->\n"; ?>
-                            <?php render_article($article_info['article_subject'], $article_info['article_article'], $article_info, ($active == 2 ? true : false)); ?>
+                            <?php render_article($article_info['article_subject'], $article_info['article_article'], $article_info, ($active == 2 ? TRUE : FALSE)); ?>
                             <?php echo (isset($_GET['cat_id'])) ? "<!--sub_articles_cat_idx-->" : "<!--sub_articles_idx-->\n"; ?>
                         </div>
                     <?php } ?>
@@ -137,9 +137,8 @@ if (!function_exists("display_main_articles")) {
                     </div>
                     <?php
                 }
-            } else { ?>
-                <div class="well text-center"><?php echo(isset($_GET['cat_id']) ? $locale['article_0062'] : $locale['article_0061']); ?></div>
-                <?php
+            } else {
+                echo '<div class="well text-center">'.(isset($_GET['cat_id']) ? $locale['article_0062'] : $locale['article_0061']).'</div>';
             }
         } else {
             echo "<div class='well text-center'>".$locale['article_0060']."</div>";
@@ -165,7 +164,8 @@ if (!function_exists("render_article")) {
             <article class="panel panel-default clearfix" style="min-height: 150px;">
                 <div class="panel-body">
                     <h4 class="article-title panel-title">
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>" class="text-dark strong"><?php echo $subject; ?></a>
+                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>"
+                           class="text-dark strong"><?php echo $subject; ?></a>
                     </h4>
                     <div class="article-text m-t-10">
                         <?php echo trim_text(parse_textarea($article, TRUE, TRUE, FALSE, '', TRUE), 250); ?>
@@ -173,23 +173,29 @@ if (!function_exists("render_article")) {
                     <hr/>
                     <div class="article-footer m-t-5">
                         <i class="fa fa-fw fa-folder"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$info['article_cat_id']; ?>" title="<?php echo $info['article_cat_name']; ?>"><?php echo $info['article_cat_name']; ?></a>
+                        <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$info['article_cat_id']; ?>"
+                           title="<?php echo $info['article_cat_name']; ?>"><?php echo $info['article_cat_name']; ?></a>
                         <i class="fa fa-fw fa-eye m-l-10"></i> <?php echo format_word($info['article_reads'], $locale['fmt_read']); ?>
                         <?php if ($info['article_allow_comments']) { ?>
                             <i class="fa fa-fw fa-comments m-l-10"></i>
-                            <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>" title="<?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>">
+                            <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>"
+                               title="<?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>">
                                 <?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>
                             </a>
                         <?php } ?>
                         <?php if ($info['article_allow_ratings']) { ?>
                             <i class="fa fa-fw fa-bar-chart m-l-10"></i>
-                            <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>" title="<?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>">
+                            <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>"
+                               title="<?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>">
                                 <?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>
                             </a>
                         <?php } ?>
-                        <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
+                        <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>"
+                           target="_blank"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
                         <?php if (!empty($info['admin_actions'])) { ?>
-                            <a href="<?php echo $info['admin_actions']['edit']['link']; ?>" title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i> <?php echo $locale['edit']; ?></a>
+                            <a href="<?php echo $info['admin_actions']['edit']['link']; ?>"
+                               title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i
+                                        class="fa fa-fw fa-pencil m-l-10"></i> <?php echo $locale['edit']; ?></a>
                         <?php } ?>
                     </div>
                 </div>
@@ -203,7 +209,8 @@ if (!function_exists("render_article")) {
                 <div class="panel-body">
 
                     <h4 class="article-title panel-title">
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>" class="text-dark strong"><?php echo $subject; ?></a>
+                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>"
+                           class="text-dark strong"><?php echo $subject; ?></a>
                     </h4>
 
                     <div class="article-text m-t-5" style="height: 200px;">
@@ -212,31 +219,37 @@ if (!function_exists("render_article")) {
 
                     <div class="article-category m-t-5">
                         <i class="fa fa-fw fa-folder"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$info['article_cat_id']; ?>" title="<?php echo $info['article_cat_name']; ?>"><?php echo $info['article_cat_name']; ?></a>
+                        <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$info['article_cat_id']; ?>"
+                           title="<?php echo $info['article_cat_name']; ?>"><?php echo $info['article_cat_name']; ?></a>
                     </div>
                 </div>
 
-                <div class="article-footer panel-footer">
-                    <i class="fa fa-fw fa-eye m-l-10"></i> <?php echo $info['article_reads']; ?>
+                <div class="article-footer panel-footer text-center">
+                    <i class="fa fa-fw fa-eye"></i> <?php echo $info['article_reads']; ?>
 
                     <?php if ($info['article_allow_comments']) { ?>
                         <i class="fa fa-fw fa-comments m-l-10"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>" title="<?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>">
+                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>"
+                           title="<?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>">
                             <?php echo $info['article_comments']; ?>
                         </a>
                     <?php } ?>
 
                     <?php if ($info['article_allow_ratings']) { ?>
                         <i class="fa fa-fw fa-bar-chart m-l-10"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>" title="<?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>">
+                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>"
+                           title="<?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>">
                             <?php echo $info['article_count_votes']; ?>
                         </a>
                     <?php } ?>
 
-                    <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i></a>
+                    <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>"
+                       target="_blank"><i class="fa fa-fw fa-print m-l-10"></i></a>
 
                     <?php if (!empty($info['admin_actions'])) { ?>
-                        <a href="<?php echo $info['admin_actions']['edit']['link']; ?>" title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i></a>
+                        <a href="<?php echo $info['admin_actions']['edit']['link']; ?>"
+                           title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i
+                                    class="fa fa-fw fa-pencil m-l-10"></i></a>
                     <?php } ?>
                 </div>
             </article>
@@ -252,9 +265,7 @@ if (!function_exists("render_article_item")) {
      * @param $info
      */
     function render_article_item($info) {
-
         $locale = fusion_get_locale();
-        $articles_settings = \PHPFusion\Articles\ArticlesServer::get_article_settings();
         $data = $info['article_item'];
 
         opentable($locale['article_0000']);
@@ -287,13 +298,21 @@ if (!function_exists("render_article_item")) {
                     <i class="fa fa-fw fa-bar-chart m-l-10"></i> <?php echo format_word($data['article_count_votes'], $locale['fmt_rating']); ?>
                 <?php } ?>
 
-                <i class="fa fa-fw fa-print m-l-10"></i> <a href="<?php echo $data['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><?php echo $locale['print']; ?></a>
+                <i class="fa fa-fw fa-print m-l-10"></i> <a href="<?php echo $data['print_link']; ?>"
+                                                            title="<?php echo $locale['print']; ?>"
+                                                            target="_blank"><?php echo $locale['print']; ?></a>
 
                 <?php if (!empty($data['admin_actions'])) { ?>
                     <hr>
                     <div class="btn-group">
-                        <a href="<?php echo $data['admin_actions']['edit']['link']; ?>" title="<?php echo $locale['edit']; ?>" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i> <?php echo $data['admin_actions']['edit']['title']; ?></a>
-                        <a href="<?php echo $data['admin_actions']['delete']['link']; ?>" title="<?php echo $locale['delete']; ?>" class="btn btn-default"><i class="fa fa-fw fa-trash"></i> <?php echo $data['admin_actions']['delete']['title']; ?></a>
+                        <a href="<?php echo $data['admin_actions']['edit']['link']; ?>"
+                           title="<?php echo $locale['edit']; ?>" class="btn btn-default"><i
+                                    class="fa fa-fw fa-pencil"></i> <?php echo $data['admin_actions']['edit']['title']; ?>
+                        </a>
+                        <a href="<?php echo $data['admin_actions']['delete']['link']; ?>"
+                           title="<?php echo $locale['delete']; ?>" class="btn btn-default"><i
+                                    class="fa fa-fw fa-trash"></i> <?php echo $data['admin_actions']['delete']['title']; ?>
+                        </a>
                     </div>
                 <?php } ?>
 

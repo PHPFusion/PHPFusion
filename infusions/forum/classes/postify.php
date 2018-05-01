@@ -32,14 +32,17 @@ class Forum_Postify extends ForumServer {
 
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::$settings = fusion_get_settings();
-        self::get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
-        if (!isset($_GET['forum_id'])) throw new \Exception(self::$locale['forum_0587']);
-        if (!isset($_GET['thread_id'])) throw new \Exception(self::$locale['forum_0588']);
+        if (!isset($_GET['forum_id']))
+            throw new \Exception(self::$locale['forum_0587']);
+        if (!isset($_GET['thread_id']))
+            throw new \Exception(self::$locale['forum_0588']);
 
         self::$default_redirect_link = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? fusion_get_settings('siteurl').'infusions/forum/index.php' : FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 
-        if (!iMEMBER) redirect(self::$default_redirect_link);
+        if (!iMEMBER)
+            redirect(self::$default_redirect_link);
 
         add_to_title(self::$locale['global_204']);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
@@ -96,14 +99,6 @@ class Forum_Postify extends ForumServer {
         return (array)$link;
     }
 
-    /**
-     * @param $class_actions
-     *
-     * @return object
-     * @throws \Exception
-     */
-    private static $valid_action = ['on', 'off', 'new', 'reply', 'edit', 'newpoll', 'editpoll', 'deletepoll', 'voteup', 'votedown', 'answer'];
-
     private function load_postify($class_actions) {
         /*
          * Overrides
@@ -136,11 +131,13 @@ class Forum_Postify extends ForumServer {
             if (method_exists($postify, 'execute')) {
                 $postify->execute();
             } else {
-                if (iMOD) addNotice('danger', 'No action taken');
+                if (iMOD)
+                    addNotice('danger', 'No action taken');
                 redirect(self::$default_redirect_link);
             }
         } else {
-            if (iMOD) addNotice('danger', 'No action taken');
+            if (iMOD)
+                addNotice('danger', 'No action taken');
             redirect(self::$default_redirect_link);
         }
     }

@@ -51,7 +51,7 @@ class Postify_Track extends Forum_Postify {
                     switch ($_GET['post']) {
                         case 'on':
                             if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".fusion_get_userdata('user_id')."'")) {
-                                dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES ('".$_GET['thread_id']."', NOW(), '".fusion_get_userdata('user_id')."', '1')");
+                                dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES ('".$_GET['thread_id']."', '".TIME."', '".fusion_get_userdata('user_id')."', '1')");
                                 $description = self::$locale['forum_0553'];
                             }
                             break;

@@ -16,8 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
+    $autoload_register_paths = [
         "PHPFusion\\Forums\\Forum"                      => FORUM_CLASS."forum/forum.php",
         "PHPFusion\\Forums\\Threads\\ViewThread"        => FORUM_CLASS."threads/view.php",
         "PHPFusion\\Forums\\Threads\\ForumThreads"      => FORUM_CLASS."threads/threads.php",
@@ -40,7 +39,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Admin\\ForumAdminTags"      => FORUM_CLASS."admin/tags.php",
         "PHPFusion\\Forums\\Postify\\Forum_Postify"     => FORUM_CLASS."postify.php",
         "PHPFusion\\Forums\\Threads\\Forum_Bounty"      => FORUM_CLASS."threads/bounty.php"
-    );
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];

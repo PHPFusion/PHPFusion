@@ -17,8 +17,8 @@ class Less_Tree_Dimension extends Less_Tree {
 
         if ($unit && ($unit instanceof Less_Tree_Unit)) {
             $this->unit = $unit;
-        } elseif ($unit) {
-            $this->unit = new Less_Tree_Unit(array($unit));
+        } else if ($unit) {
+            $this->unit = new Less_Tree_Unit([$unit]);
         } else {
             $this->unit = new Less_Tree_Unit();
         }
@@ -33,7 +33,7 @@ class Less_Tree_Dimension extends Less_Tree {
     }
 
     public function toColor() {
-        return new Less_Tree_Color(array($this->value, $this->value, $this->value));
+        return new Less_Tree_Color([$this->value, $this->value, $this->value]);
     }
 
     /**
@@ -93,7 +93,7 @@ class Less_Tree_Dimension extends Less_Tree {
             if (!$unit->numerator && !$unit->denominator) {
                 $unit->numerator = $other->unit->numerator;
                 $unit->denominator = $other->unit->denominator;
-            } elseif (!$other->unit->numerator && !$other->unit->denominator) {
+            } else if (!$other->unit->numerator && !$other->unit->denominator) {
                 // do nothing
             } else {
                 $other = $other->convertTo($this->unit->usedUnits());
@@ -104,13 +104,13 @@ class Less_Tree_Dimension extends Less_Tree {
 
                 $value = Less_Functions::operate($op, $this->value, $other->value);
             }
-        } elseif ($op === '*') {
+        } else if ($op === '*') {
             $unit->numerator = array_merge($unit->numerator, $other->unit->numerator);
             $unit->denominator = array_merge($unit->denominator, $other->unit->denominator);
             sort($unit->numerator);
             sort($unit->denominator);
             $unit->cancel();
-        } elseif ($op === '/') {
+        } else if ($op === '/') {
             $unit->numerator = array_merge($unit->numerator, $other->unit->denominator);
             $unit->denominator = array_merge($unit->denominator, $other->unit->numerator);
             sort($unit->numerator);
@@ -139,7 +139,7 @@ class Less_Tree_Dimension extends Less_Tree {
 
             if ($bValue > $aValue) {
                 return -1;
-            } elseif ($bValue < $aValue) {
+            } else if ($bValue < $aValue) {
                 return 1;
             } else {
                 return 0;
@@ -150,7 +150,7 @@ class Less_Tree_Dimension extends Less_Tree {
     }
 
     public function unify() {
-        return $this->convertTo(array('length' => 'px', 'duration' => 's', 'angle' => 'rad'));
+        return $this->convertTo(['length' => 'px', 'duration' => 's', 'angle' => 'rad']);
     }
 
     public function convertTo($conversions) {
@@ -158,10 +158,10 @@ class Less_Tree_Dimension extends Less_Tree {
         $unit = clone $this->unit;
 
         if (is_string($conversions)) {
-            $derivedConversions = array();
+            $derivedConversions = [];
             foreach (Less_Tree_UnitConversions::$groups as $i) {
                 if (isset(Less_Tree_UnitConversions::${$i}[$conversions])) {
-                    $derivedConversions = array($i => $conversions);
+                    $derivedConversions = [$i => $conversions];
                 }
             }
             $conversions = $derivedConversions;

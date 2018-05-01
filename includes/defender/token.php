@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace Defender;
+
 /**
  * Class Token
  * CSRF protection layer for PHP-Fusion CMS
@@ -58,20 +59,20 @@ class Token extends \defender {
             // Check if a token is being posted and make sure is a string
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
                 $error = $locale['token_error_2'];
-            } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+            } else if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 // Cannot find any token for this form
                 $error = $locale['token_error_9'];
                 // Check if the token exists in storage
-            } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+            } else if (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
-            } elseif ($error = self::verify_token()) {
+            } /*else if ($error = self::verify_token()) {
                 //$error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
-            }
+            }*/
 
             // If you allow repost, token will be valid since it is not being consumed.
             // Bots will capture a valid token key and repost again and again.
+            $tokens_consumed = '';
             if (self::$allow_repost == FALSE && !iADMIN && !empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $tokens_consumed = '';
                 $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 if (!empty($token_rings)) {
                     foreach ($token_rings as $key => $token_storage) {
@@ -86,7 +87,7 @@ class Token extends \defender {
 
             if (self::$debug) {
                 require_once INCLUDES."theme_functions_include.php";
-                define('STOP_REDIRECT', true);
+                define('STOP_REDIRECT', TRUE);
                 $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 $html = openmodal('debug_modal', 'Debug Token');
                 $html .= alert("<strong>The Form ID Submitted is '".stripinput($_POST['form_id'])."' having the following tokens: </strong><ul class='block'><li>".implode("</li><li>", $token_ring)."</li></ul>\n", ['class' => 'alert-danger']);
@@ -111,7 +112,7 @@ class Token extends \defender {
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
      * Makes thorough checks of a posted token, and the token alone. It does not unset token.
      *
-     * @param int $post_time      The time in seconds before a posted form is accepted,
+     * @param int $post_time The time in seconds before a posted form is accepted,
      *                            this is used to prevent spamming post submissions
      *
      * @return bool
@@ -135,10 +136,10 @@ class Token extends \defender {
             if ($tuser_id != $user_id) {
                 $error = $locale['token_error_4'];
                 // make sure the token datestamp is a number
-            } elseif (!isnum($token_time)) {
+            } else if (!isnum($token_time)) {
                 $error = $locale['token_error_5'];
                 // check if the hash is valid
-            } elseif ($hash !== hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
+            } else if ($hash !== hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
                 $error = $locale['token_error_7'];
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
                 /*
@@ -155,7 +156,7 @@ class Token extends \defender {
 
         if ($error) {
             return $error;
-        } elseif (self::$debug) {
+        } else if (self::$debug) {
             addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
         }
 
@@ -178,7 +179,8 @@ class Token extends \defender {
 
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-        if ($user_id == 0) $max_tokens = 1;
+        if ($user_id == 0)
+            $max_tokens = 1;
 
         // Only generate new tokens when token is less than max allowed tokens
         if (!isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) || count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) < $max_tokens) {

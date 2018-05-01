@@ -20,37 +20,31 @@ namespace PHPFusion;
 
 /**
  * Class BreadCrumbs
- *
  * <p><strong>Get instances by keys:</strong>
  * <code>
  * <?php
  * $bcDefault = BreadCrumbs::getInstance();
  * $bcCustom = BreadCrumbs::getInstance('custom');
  * </code></p>
- *
  * <p><strong>Hide the home of $bcCustom</strong>
  * <code>
  * <?php
  * $bcCustom->hideHome();
  * </code></p>
- *
  * <p><strong>Set the last breadcrumb clickable (it is rendered as a simple text by default)</strong>
  * <code>
  * <?php
  * $bcCustom->setLastClicklable();
  * </code></p>
- *
  * <p><strong>You can override the default CSS classes of the wrapper HTML node</strong>
  * <code>
  * $bcCustom->setCssClasses('breadcrumb-custom');
  * </code></p>
- *
  * <p><strong>Be careful! If you want to add a new class, use this method</strong>
  * <code>
  * <?php
  * $bcCustom->addCssClasses('additional-class1 additional-class2');
  * </code></p>
- *
  * <p><strong>Get the items as associative arrays</strong>
  * <code>
  * <?php
@@ -65,12 +59,12 @@ class BreadCrumbs {
     /**
      * @var static[]
      */
-    private static $instances = array();
+    private static $instances = [];
 
     /**
      * @var array
      */
-    private $breadcrumbs = array();
+    private $breadcrumbs = [];
 
     /**
      * Whether to add the 'Home' link
@@ -94,11 +88,11 @@ class BreadCrumbs {
     private $cssClasses = 'breadcrumb';
 
     public function __construct() {
-        $this->addBreadCrumb(array(
-                                 'link' => BASEDIR.'index.php',
-                                 'title' => fusion_get_locale('home', LOCALE.LOCALESET."global.php"),
-                                 'class' => 'home-link crumb'
-                             ));
+        $this->addBreadCrumb([
+            'link'  => BASEDIR.'index.php',
+            'title' => fusion_get_locale('home'),
+            'class' => 'home-link crumb'
+        ]);
     }
 
     /**
@@ -109,15 +103,16 @@ class BreadCrumbs {
      * @return static
      */
     public function addBreadCrumb(array $link) {
-        $link += array(
+        $link += [
             'title' => '',
-            'link' => '',
+            'link'  => '',
             'class' => 'crumb'
-        );
-        $link['title'] = trim($link['title']);
+        ];
+        //$link['title'] = $link['title']; //trim(parse_textarea($link['title'], TRUE, TRUE, FALSE));
         if (!empty($link['title']) && !empty($link['link'])) {
             $this->breadcrumbs[] = $link;
         }
+
         return $this;
     }
 
@@ -138,6 +133,7 @@ class BreadCrumbs {
 
     /**
      * @param string $classes
+     *
      * @return static
      */
     public function addCssClasses($classes) {
@@ -155,6 +151,7 @@ class BreadCrumbs {
 
     /**
      * @param string $classes
+     *
      * @return static
      */
     public function setCssClasses($classes) {

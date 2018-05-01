@@ -11,7 +11,7 @@ class Less_Tree_Extend extends Less_Tree {
     public $selector;
     public $option;
     public $index;
-    public $selfSelectors = array();
+    public $selfSelectors = [];
     public $allowBefore;
     public $allowAfter;
     public $firstExtendOnThisSelectorPath;
@@ -20,7 +20,7 @@ class Less_Tree_Extend extends Less_Tree {
 
 
     public $object_id;
-    public $parent_ids = array();
+    public $parent_ids = [];
 
     /**
      * @param integer $index
@@ -43,7 +43,7 @@ class Less_Tree_Extend extends Less_Tree {
         }
 
         $this->object_id = $i++;
-        $this->parent_ids = array($this->object_id);
+        $this->parent_ids = [$this->object_id];
     }
 
     public function accept($visitor) {
@@ -59,7 +59,7 @@ class Less_Tree_Extend extends Less_Tree {
     }
 
     public function findSelfSelectors($selectors) {
-        $selfElements = array();
+        $selfElements = [];
 
 
         for ($i = 0, $selectors_len = count($selectors); $i < $selectors_len; $i++) {
@@ -72,7 +72,7 @@ class Less_Tree_Extend extends Less_Tree {
             $selfElements = array_merge($selfElements, $selectors[$i]->elements);
         }
 
-        $this->selfSelectors = array(new Less_Tree_Selector($selfElements));
+        $this->selfSelectors = [new Less_Tree_Selector($selfElements)];
     }
 
 }

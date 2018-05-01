@@ -1,0 +1,39 @@
+<div class='list-group-item'>
+    {pagenav.{
+    <div class='text-right'>{%pagenav%}</div>
+    <hr/>
+    }}
+    <div class="table-responsive"><table class='table table-striped clear'>
+        <thead>
+        <tr>
+            <th class='col-xs-2'>
+                <small><strong>{%person_title%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%latest_thread_title%}</strong></small>
+            </th>
+            <th>
+                <small><strong>{%activity_title%}</strong></small>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {users_list.{
+        <tr>
+            <td class='no-break'>
+                <div class='clearfix'>
+                    <div class='pull-left m-r-10'>{%avatar%}</div>
+                    {%profile_link%}
+                </div>
+            </td>
+            <td>
+                <span class='text-smaller'>{%thread_link%}</span>
+            </td>
+            <td class='no-break'>
+                <span class='text-smaller'>{%activity_date%}</span>
+            </td>
+        </tr>
+        }}
+        </tbody>
+    </table></div>
+</div>

@@ -1,0 +1,23 @@
+{%opentable%}
+<div class='spacer-sm'>{%breadcrumb%}</div>
+<h4 class='spacer-sm'>{%faq_get_name%}</h4>
+    {faq.{
+        <div id='faq-item-{%faq_id%}'>
+            <a data-toggle='collapse' href='#{%faq_id%}' aria-expanded='false' aria-controls='{%faq_id%}'>
+                <h4 class='display-inline-block'>{%faq_question%}</h4>
+                <a class='pull-right top' href='#' title='{%cat_top%}'><i class='fa fa-arrow-up'></i></a>
+            </a>
+            <div class='collapse' id='{%faq_id%}'>
+                {%faq_answer%}
+                <div>
+                    {%print_link%}
+                    &middot; {%edit_link%}
+                    &middot; {%delete_link%}
+                </div>
+            </div>
+        </div>
+    }}
+{no_item.{
+    <div class='well text-center m-t-15'>{%message%}</div>
+}}
+{%closetable%}

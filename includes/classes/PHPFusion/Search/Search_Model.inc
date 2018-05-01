@@ -23,8 +23,8 @@ namespace PHPFusion\Search;
  */
 abstract class Search_Model {
 
-    protected static $available_modules = array();
-    protected static $form_config = array();
+    protected static $available_modules = [];
+    protected static $form_config = [];
 
     protected static $search_result_array = [];
     protected static $site_search_count = 0;
@@ -37,12 +37,12 @@ abstract class Search_Model {
 
     // Query Formatting
     protected static $fields_count = 0;
-    protected static $swords  = array();
-    protected static $c_swords  = 0;
-    protected static $i_swords  = 0;
-    protected static $swords_keys_for_query = array();
-    protected static $swords_values_for_query = array();
-    protected static $conditions = array();
+    protected static $swords = [];
+    protected static $c_swords = 0;
+    protected static $i_swords = 0;
+    protected static $swords_keys_for_query = [];
+    protected static $swords_values_for_query = [];
+    protected static $conditions = [];
     protected static $fieldsvar = '';
 
     /*
@@ -58,8 +58,8 @@ abstract class Search_Model {
     protected static $search_chars = 50;
     protected static $forum_id = 0;
     protected static $search_type = 'all';
-    protected static $search_param = array();
-    public static $locale = array();
+    protected static $search_param = [];
+    public static $locale = [];
     protected static $composevars = '';
 
     protected function __construct() {
@@ -80,49 +80,49 @@ abstract class Search_Model {
             } else {
                 self::$search_text = urlencode(stripinput($_POST['stext']));
             }
-        } elseif (isset($_GET['stext']) && $_GET['stext']) {
+        } else if (isset($_GET['stext']) && $_GET['stext']) {
             self::$search_text = urlencode(stripinput($_GET['stext']));
         }
         // Formats Search Method
-        if (isset($_POST['method']) && in_array($_POST['method'], array('OR', 'AND'))) {
+        if (isset($_POST['method']) && in_array($_POST['method'], ['OR', 'AND'])) {
             self::$search_method = $_POST['method'];
-        } elseif (isset($_GET['method']) && in_array($_GET['method'], array('OR', 'AND'))) {
+        } else if (isset($_GET['method']) && in_array($_GET['method'], ['OR', 'AND'])) {
             self::$search_method = $_GET['method'];
         }
         // Formats search date limit
         if (isset($_POST['datelimit']) && isnum($_POST['datelimit'])) {
             self::$search_date_limit = $_POST['datelimit'];
-        } elseif (isset($_GET['datelimit']) && isnum($_GET['datelimit'])) {
+        } else if (isset($_GET['datelimit']) && isnum($_GET['datelimit'])) {
             self::$search_date_limit = $_GET['datelimit'];
         }
         // Fields
         if (isset($_POST['fields']) && isnum($_POST['fields'])) {
             self::$search_fields = $_POST['fields'];
-        } elseif (isset($_GET['fields']) && isnum($_GET['fields'])) {
+        } else if (isset($_GET['fields']) && isnum($_GET['fields'])) {
             self::$search_fields = $_GET['fields'];
         }
         // Sorting
-        if (isset($_POST['sort']) && in_array($_POST['sort'], array("datestamp", "subject", "author"))) {
+        if (isset($_POST['sort']) && in_array($_POST['sort'], ["datestamp", "subject", "author"])) {
             self::$search_sort = $_POST['sort'];
-        } elseif ((isset($_GET['sort']) && in_array($_GET['sort'], array('datestamp', 'subject', 'author')))) {
+        } else if ((isset($_GET['sort']) && in_array($_GET['sort'], ['datestamp', 'subject', 'author']))) {
             self::$search_sort = $_GET['sort'];
         }
         // Orders
         if (isset($_POST['order']) && isnum($_POST['order'])) {
             self::$search_order = $_POST['order'];
-        } elseif (isset($_GET['order']) && isnum($_GET['order'])) {
+        } else if (isset($_GET['order']) && isnum($_GET['order'])) {
             self::$search_order = $_GET['order'];
         }
         // Characters
         if (isset($_POST['chars']) && isnum($_POST['chars'])) {
             self::$search_chars = ($_POST['chars'] > 200 ? 200 : $_POST['chars']);
-        } elseif (isset($_GET['chars']) && isnum($_GET['chars'])) {
+        } else if (isset($_GET['chars']) && isnum($_GET['chars'])) {
             self::$search_chars = ($_GET['chars'] > 200 ? 200 : $_GET['chars']);
         }
         // Forum ID
         if (isset($_POST['forum_id']) && isnum($_POST['forum_id'])) {
             self::$forum_id = $_POST['forum_id'];
-        } elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
+        } else if (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
             self::$forum_id = $_GET['forum_id'];
         }
 
@@ -143,9 +143,9 @@ abstract class Search_Model {
         self::$memory_limit = $memory_limit - ceil($memory_limit / 4);
     }
 
-    protected function load_search_modules() {
-        $radio_button = array();
-        $form_elements = array();
+    public function load_search_modules() {
+        $radio_button = [];
+        $form_elements = [];
         if (!empty(self::$available_modules)) {
             foreach (self::$available_modules as $module_name) {
                 if ($module_name !== 'all') {
@@ -164,7 +164,7 @@ abstract class Search_Model {
 
     protected function cache_modules() {
         if (empty(self::$available_modules)) {
-            self::$available_modules = array('0' => 'all');
+            self::$available_modules = ['0' => 'all'];
             $search_dir = INCLUDES."search/";
             $search_files = makefilelist($search_dir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
             $search_files = array_flip($search_files);
@@ -193,6 +193,7 @@ abstract class Search_Model {
                 self::$memory_exhausted = TRUE;
             }
         }
+
         return self::$memory_exhausted;
     }
 
@@ -204,6 +205,7 @@ abstract class Search_Model {
     public static function search_striphtmlbbcodes($text) {
         $text = preg_replace("[\[(.*?)\]]", "", $text);
         $text = preg_replace("<\<(.*?)\>>", "", $text);
+
         return $text;
     }
 
@@ -213,6 +215,7 @@ abstract class Search_Model {
         } else {
             $text = nl2br(stripslashes($text));
         }
+
         return $text;
     }
 
@@ -222,6 +225,7 @@ abstract class Search_Model {
         for ($i = 0; $i < $c_swords; $i++) {
             $count += substr_count(strtolower($text), strtolower(self::$swords[$i]));
         }
+
         return $count;
     }
 
@@ -240,10 +244,10 @@ abstract class Search_Model {
             self::$search_index = 0;
         }
         $last_sword_index = self::$c_swords - 1;
-        for ($i = 0; $i <  self::$c_swords; $i++) {
-            if (isset(self::$swords_keys_for_query[ $i * self::$fields_count + self::$search_index ])) {
-                $sword_var = self::$swords_keys_for_query[ $i * self::$fields_count + self::$search_index ];
-                self::$conditions[$field_module][$field][] = $field ." LIKE {$sword_var}" . ($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
+        for ($i = 0; $i < self::$c_swords; $i++) {
+            if (isset(self::$swords_keys_for_query[$i * self::$fields_count + self::$search_index])) {
+                $sword_var = self::$swords_keys_for_query[$i * self::$fields_count + self::$search_index];
+                self::$conditions[$field_module][$field][] = $field." LIKE {$sword_var}".($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
             }
         }
     }
@@ -252,10 +256,13 @@ abstract class Search_Model {
     public static function search_conditions($field_module) {
         // the conditions is imposition and must reset.
         if (!empty(self::$conditions[$field_module])) {
-            return "(".implode(' || ', array_map(function($field_var){ return implode('', $field_var); }, self::$conditions[$field_module])).")";
+            return "(".implode(' || ', array_map(function ($field_var) {
+                    return implode('', $field_var);
+                }, self::$conditions[$field_module])).")";
+        } else {
+            return NULL;
         }
     }
-
 
 
     // generate search navigation

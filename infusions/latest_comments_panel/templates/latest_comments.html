@@ -1,0 +1,16 @@
+{%openside%}
+    <ul class="list-style-none">
+        {comment.{
+            <li>
+                <div class="pull-left">{%comment_user_avatar%}</div>
+                <div class="overflow-hide">
+                    <strong><a href="{%comment_subject_url%}">{%comment_subject%}</a></strong>
+                    <div class="clearfix"><a href="{%comment_url%}">{%comment_message%}</a></div>
+                </div>
+            </li>
+        }}
+    </ul>
+    {no_item.{
+        <div>{%message%}</div>
+    }}
+{%closeside%}

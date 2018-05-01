@@ -20,38 +20,44 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$regex = array(
+$regex = [
     "%weblink_name%"     => "([0-9a-zA-Z._\W]+)",
     "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%weblink_id%"       => "([0-9]+)",
     "%weblink_cat_id%"   => "([0-9]+)",
     "%rowstart%"         => "([0-9]+)",
+    "%filter_type%"      => "([0-9a-zA-Z]+)",
+    "%swithc%"           => "([0-9a-zA-Z]+)",
     "%stype%"            => "(l)"
-);
+];
 
-$pattern = array(
-    "weblinks/%weblink_cat_id%/%weblink_id%/%weblink_name%"    => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
-    "submit/%stype%/weblink"                                   => "submit.php?stype=%stype%",
-    "submit/%stype%/weblink/submitted-and-thank-you"           => "submit.php?stype=%stype%&amp;submitted=l",
-    "weblinks/%weblink_cat_id%/%weblink_cat_name%"             => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
-    "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
-    "weblinks"                                                 => "infusions/weblinks/weblinks.php",
-);
+$pattern = [
+    "submit-%stype%/weblink"                                                                => "submit.php?stype=%stype%",
+    "submit-%stype%/weblink/submitted-and-thank-you"                                        => "submit.php?stype=%stype%&amp;submitted=l",
+    "weblinks/%weblink_cat_id%/%weblink_id%/%weblink_name%"                                 => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
+    "weblinks/%weblink_cat_id%/%weblink_cat_name%"                                          => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
+    "weblinks/%weblink_cat_id%/%weblink_cat_name%/filter/%filter_type%/switchview-%swithc%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;type=%filter_type%&amp;switchview=%swithc%",
+    "weblinks/%weblink_cat_id%/%weblink_cat_name%/filter/%filter_type%"                     => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;type=%filter_type%",
+    "weblinks/%weblink_cat_id%/%weblink_cat_name%/switchview-%swithc%"                      => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;switchview=%swithc%",
+    "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%"                              => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
+    "weblinks/filter/%filter_type%"                                                         => "infusions/weblinks/weblinks.php?type=%filter_type%",
+    "weblinks"                                                                              => "infusions/weblinks/weblinks.php"
+];
 
-$pattern_tables["%weblink_id%"] = array(
+$pattern_tables["%weblink_id%"] = [
     "table"       => DB_WEBLINKS,
     "primary_key" => "weblink_id",
-    "id"          => array("%weblink_id%" => "weblink_id"),
-    "columns"     => array(
-        "%weblink_name%" => "weblink_name",
-    )
-);
+    "id"          => ["%weblink_id%" => "weblink_id"],
+    "columns"     => [
+        "%weblink_name%" => "weblink_name"
+    ]
+];
 
-$pattern_tables["%weblink_cat_id%"] = array(
+$pattern_tables["%weblink_cat_id%"] = [
     "table"       => DB_WEBLINK_CATS,
     "primary_key" => "weblink_cat_id",
-    "id"          => array("%weblink_cat_id%" => "weblink_cat_id"),
-    "columns"     => array(
+    "id"          => ["%weblink_cat_id%" => "weblink_cat_id"],
+    "columns"     => [
         "%weblink_cat_name%" => "weblink_cat_name"
-    )
-);
+    ]
+];

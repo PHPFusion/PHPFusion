@@ -19,8 +19,8 @@ namespace PHPFusion;
 
 class Geomap {
 
-    public static $country_list = array();
-    public static $currency_list = array();
+    public static $country_list = [];
+    public static $currency_list = [];
 
     static function get_Currency($currency_code = NULL) {
 
@@ -57,7 +57,9 @@ class Geomap {
 
     /**
      * Returns countries
+     *
      * @param null $country_code - ISO cca2 code / returns array if NULL
+     *
      * @return array|null
      */
     static function get_Country($country_code = NULL) {
@@ -79,10 +81,9 @@ class Geomap {
     /**
      * /* Returns a locale from a country code that is provided.
      * /* I have not think of an implementation benefits out of this yet.
-     *
-     * /* @param $country_code  ISO 3166-2-alpha 2 country code
-     * /* @param $language_code ISO 639-1-alpha 2 language code
-     * /* @returns  a locale, formatted like en_US, or null if not found
+     * /* @param string $country_code ISO 3166-2-alpha 2 country code
+     * /* @param string $language_code ISO 639-1-alpha 2 language code
+     * /* @returns string  a locale, formatted like en_US, or null if not found
      * /*
      * // country code is map->object->cca2
      * static function country_code_to_locale($country_code, $language_code = '')
@@ -298,7 +299,6 @@ class Geomap {
      * 'zh-SG',
      * 'zh-TW',
      * 'zu-ZA',);
-     *
      * foreach ($locales as $locale)
      * {
      * $locale_region = locale_get_region($locale);
@@ -322,4 +322,3 @@ class Geomap {
      * }
      */
 }
-

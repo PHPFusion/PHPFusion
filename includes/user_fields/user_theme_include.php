@@ -24,19 +24,19 @@ if ($profile_method == "input") {
     if (fusion_get_settings('userthemes') == 1 || iADMIN) {
         $theme_files = makefilelist(THEMES, ".|..|admin_themes|templates|.svn", TRUE, "folders");
         array_unshift($theme_files, "Default");
-        $theme_opts = array();
+        $theme_opts = [];
         foreach ($theme_files as $theme) {
             $theme_opts[$theme] = $theme;
         }
-        $options += array(
+        $options += [
             'options'        => $theme_opts,
             'inline'         => TRUE,
             'callback_check' => 'theme_exists',
             'error_text'     => $locale['uf_theme_error']
-        );
+        ];
         $user_fields = form_select('user_theme', $locale['uf_theme'], $field_value, $options);
     }
     // Display in profile
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
     // no to display
 }

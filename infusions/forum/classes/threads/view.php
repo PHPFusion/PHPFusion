@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\BreadCrumbs;
@@ -23,11 +24,11 @@ use PHPFusion\httpdownload;
 
 class ViewThread extends ForumServer {
 
-    private $thread_data = array();
+    private $thread_data = [];
 
     public function display_thread() {
 
-        $info = $this->thread()->get_threadInfo();
+        $info = self::thread()->get_threadInfo();
 
         if (isset($_GET['action'])) {
 
@@ -35,7 +36,7 @@ class ViewThread extends ForumServer {
                 case 'editpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll->render_poll_form(true);
+                    $poll::render_poll_form(TRUE);
                     break;
                 case 'deletepoll':
                     // Action
@@ -45,7 +46,7 @@ class ViewThread extends ForumServer {
                 case 'newpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll->render_poll_form();
+                    $poll::render_poll_form();
                     break;
                 case 'edit':
                     // Template
@@ -70,18 +71,18 @@ class ViewThread extends ForumServer {
                     $bounty->render_bounty_form(TRUE);
                     break;
                 default:
-                    redirect(clean_request('', array('action'), false));
+                    redirect(clean_request('', ['action'], FALSE));
             }
 
         } else {
             self::check_download_request();
             // +1 threadviews
-            $this->increment_thread_views($info['thread']['thread_id']);
+            self::increment_thread_views($info['thread']['thread_id']);
 
             // +1 see who is viewing thread
-            $this->thread()->set_thread_visitor();
+            self::thread()->set_thread_visitor();
 
-            if ($info['thread']['forum_users'] == true) {
+            if ($info['thread']['forum_users'] == TRUE) {
                 $info['thread_users'] = $this->get_participated_users($info);
             }
 
@@ -136,10 +137,10 @@ class ViewThread extends ForumServer {
                 $result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='$forum_id' AND forum_lastpostid='".$_GET['post_id']."'");
                 if (dbrows($result) > 0) {
                     $result = dbquery("SELECT p.post_id, p.forum_id, p.post_author, p.post_datestamp
-									FROM ".DB_FORUM_POSTS." p
-									LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-									WHERE p.forum_id='$forum_id' AND thread_hidden='0' AND post_hidden='0'
-									ORDER BY post_datestamp DESC LIMIT 1");
+                                    FROM ".DB_FORUM_POSTS." p
+                                    LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+                                    WHERE p.forum_id='$forum_id' AND thread_hidden='0' AND post_hidden='0'
+                                    ORDER BY post_datestamp DESC LIMIT 1");
                     if (dbrows($result)) {
                         $pdata2 = dbarray($result);
                         dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['post_datestamp']."', forum_lastpostid='".$pdata2['post_id']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='$forum_id'");
@@ -170,13 +171,13 @@ class ViewThread extends ForumServer {
      */
     public function render_reply_form() {
 
-        $thread = $this->thread();
+        $thread = self::thread();
 
         $thread_info = $thread->get_threadInfo();
 
         $thread_data = $thread_info['thread'];
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
@@ -184,7 +185,8 @@ class ViewThread extends ForumServer {
 
         $this->thread_data = $thread_info['thread'];
 
-        if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
+        if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked'])
+            redirect(INFUSIONS.'forum/index.php');
 
         if (isset($_POST['cancel']) && !empty($thread_data['thread_id'])) {
             if (fusion_get_settings("site_seo")) {
@@ -192,14 +194,14 @@ class ViewThread extends ForumServer {
             }
             redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id']);
 
-        } elseif ($thread->getThreadPermission("can_reply") && !empty($thread_data['thread_id'])) {
+        } else if ($thread->getThreadPermission("can_reply") && !empty($thread_data['thread_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0360']);
 
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             // field data
-            $post_data = array(
+            $post_data = [
                 'post_id'         => 0,
                 'post_cat'        => isset($_GET['post_id']) && isnum($_GET['post_id']) ? intval($_GET['post_id']) : 0,
                 'forum_id'        => $thread_info['thread']['forum_id'],
@@ -217,7 +219,7 @@ class ViewThread extends ForumServer {
                 'post_hidden'     => 0,
                 'notify_me'       => 0,
                 'post_locked'     => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0,
-            );
+            ];
 
             // execute form post actions
             if (isset($_POST['post_reply'])) {
@@ -246,12 +248,12 @@ class ViewThread extends ForumServer {
                             $post_data['post_id'] = $last_message['post_id'];
                             $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
                             $post_data['post_datestamp'] = $last_message['post_datestamp'];
-                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
+                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
 
                         } else {
 
                             $update_forum_lastpost = TRUE;
-                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id', 'keep_session' => TRUE));
+                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
                             $post_data['post_id'] = dblastid();
                             dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".intval($post_data['post_author'])."'");
 
@@ -267,14 +269,14 @@ class ViewThread extends ForumServer {
                             if ($upload['error'] == 0) {
 
                                 foreach ($upload['target_file'] as $arr => $file_name) {
-                                    $attach_data = array('thread_id'    => intval($thread_data['thread_id']),
-                                                         'post_id'      => $post_data['post_id'],
-                                                         'attach_name'  => $file_name,
-                                                         'attach_mime'  => $upload['type'][$arr],
-                                                         'attach_size'  => $upload['source_size'][$arr],
-                                                         'attach_count' => 0, // downloaded times
-                                    );
-                                    dbquery_insert(DB_FORUM_ATTACHMENTS, $attach_data, "save", array('keep_session' => TRUE));
+                                    $attach_data = ['thread_id'    => intval($thread_data['thread_id']),
+                                                    'post_id'      => $post_data['post_id'],
+                                                    'attach_name'  => $file_name,
+                                                    'attach_mime'  => $upload['type'][$arr],
+                                                    'attach_size'  => $upload['source_size'][$arr],
+                                                    'attach_count' => 0, // downloaded times
+                                    ];
+                                    dbquery_insert(DB_FORUM_ATTACHMENTS, $attach_data, "save", ['keep_session' => TRUE]);
                                 }
 
                             }
@@ -300,24 +302,24 @@ class ViewThread extends ForumServer {
 
                             // update current forum
                             dbquery("
-							UPDATE ".DB_FORUMS." SET
-							forum_lastpost='".time()."',
-							forum_postcount=forum_postcount+1,
-							forum_lastpostid='".intval($post_data['post_id'])."',
-							forum_lastuser='".intval($post_data['post_author'])."'
-							WHERE forum_id='".intval($thread_data['forum_id'])."'
-							");
+                            UPDATE ".DB_FORUMS." SET
+                            forum_lastpost='".time()."',
+                            forum_postcount=forum_postcount+1,
+                            forum_lastpostid='".intval($post_data['post_id'])."',
+                            forum_lastuser='".intval($post_data['post_author'])."'
+                            WHERE forum_id='".intval($thread_data['forum_id'])."'
+                            ");
 
                             // update current thread
                             dbquery("
-							UPDATE ".DB_FORUM_THREADS." SET
-							thread_lastpost='".time()."',
-							thread_lastpostid='".intval($post_data['post_id'])."',
-							thread_postcount=thread_postcount+1,
-							thread_lastuser='".intval($post_data['post_author'])."',
-							thread_lastpost= '".time()."'
-							WHERE thread_id='".intval($thread_data['thread_id'])."'
-							");
+                            UPDATE ".DB_FORUM_THREADS." SET
+                            thread_lastpost='".time()."',
+                            thread_lastpostid='".intval($post_data['post_id'])."',
+                            thread_postcount=thread_postcount+1,
+                            thread_lastuser='".intval($post_data['post_author'])."',
+                            thread_lastpost= '".time()."'
+                            WHERE thread_id='".intval($thread_data['thread_id'])."'
+                            ");
                         }
 
                         if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $_POST['notify_me'] == TRUE) {
@@ -326,7 +328,7 @@ class ViewThread extends ForumServer {
                                 dbquery("
                                 INSERT INTO ".DB_FORUM_THREAD_NOTIFY."
                                 (thread_id, notify_datestamp, notify_user, notify_status)
-                                VALUES ('".intval($thread_data['thread_id'])."', NOW(), '".intval($post_data['post_author'])."', 1)
+                                VALUES ('".intval($thread_data['thread_id'])."', '".TIME."', '".intval($post_data['post_author'])."', 1)
                                 ");
 
                             }
@@ -349,9 +351,9 @@ class ViewThread extends ForumServer {
             // Quote Get
             if (isset($_GET['quote']) && isnum($_GET['quote'])) {
                 $quote_result = dbquery("SELECT a.post_message, b.user_name
-										FROM ".DB_FORUM_POSTS." a
-										INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-										WHERE thread_id='".intval($thread_data['thread_id'])."' and post_id='".intval($_GET['quote'])."'");
+                                        FROM ".DB_FORUM_POSTS." a
+                                        INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
+                                        WHERE thread_id='".intval($thread_data['thread_id'])."' AND post_id='".intval($_GET['quote'])."'");
 
                 if (dbrows($quote_result) > 0) {
                     require_once INCLUDES.'bbcode_include.php';
@@ -363,52 +365,54 @@ class ViewThread extends ForumServer {
                 }
             }
 
-            $info = array(
+            $info = [
                 'title'             => $locale['forum_0360'],
                 'description'       => $locale['forum_2000'].$thread_data['thread_subject'],
-                'openform'          => openform('input_form', 'post', $form_action, array('enctype' => $thread->getThreadPermission("can_upload_attach"))),
+                'openform'          => openform('input_form', 'post', $form_action, ['enctype' => $thread->getThreadPermission("can_upload_attach")]),
                 'closeform'         => closeform(),
                 'forum_id_field'    => form_hidden('forum_id', "", $post_data['forum_id']),
                 'thread_id_field'   => form_hidden('thread_id', "", $post_data['thread_id']),
-                "forum_field"       => "",
+                "forum_field"       => '',
+                'tags_field'        => '',
                 'subject_field'     => form_hidden('thread_subject', "", $thread_data['thread_subject']),
                 'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
-                    array(
-                        'required'   => TRUE,
-                        'preview'    => TRUE,
-                        'form_name'  => 'input_form',
-                        'bbcode'     => TRUE,
-                        'height'     => '500px',
-                    )),
+                    [
+                        'required'  => TRUE,
+                        'preview'   => TRUE,
+                        'form_name' => 'input_form',
+                        'bbcode'    => TRUE,
+                        'height'    => '500px',
+                    ]),
                 // happens only in EDIT
                 'delete_field'      => '',
                 'edit_reason_field' => '',
                 'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
                     form_fileinput('file_attachments[]', $locale['forum_0557'], "",
-                        array('input_id'    => 'file_attachments',
-                              'upload_path' => INFUSIONS.'forum/attachments/',
-                              'type'        => 'object',
-                              'preview_off' => TRUE,
-                              "multiple"    => TRUE,
-                              "inline"      => FALSE,
-                              'max_count'   => $forum_settings['forum_attachmax_count'],
-                              'valid_ext'   => $forum_settings['forum_attachtypes'],
-                              "class"       => "m-b-0",
-                        ))."
+                        ['input_id'    => 'file_attachments',
+                         'upload_path' => INFUSIONS.'forum/attachments/',
+                         'type'        => 'object',
+                         'template'    => 'modern',
+                         "multiple"    => TRUE,
+                         "inline"      => FALSE,
+                         'max_count'   => $forum_settings['forum_attachmax_count'],
+                         'valid_ext'   => $forum_settings['forum_attachtypes'],
+                         'max_byte'    => $forum_settings['forum_attachmax'],
+                         'class'       => 'm-b-0',
+                        ])."
                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                     : "",
                 "poll_form"         => '',
-                'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
-                'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                 'sticky_field'      => '',
                 'lock_field'        => '',
                 'hide_edit_field'   => '',
                 'post_locked_field' => '',
                 // not available in edit mode.
-                'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0171'], $post_data['notify_me'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
-                'post_buttons'      => form_button('post_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
+                'notify_field'      => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0171'], $post_data['notify_me'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                'post_buttons'      => form_button('post_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']).form_button('cancel', $locale['cancel'], $locale['cancel'], ['class' => 'btn-default m-l-10']),
                 'last_posts_reply'  => ''
-            );
+            ];
 
             // only in reply
             if ($forum_settings['forum_last_posts_reply']) {
@@ -475,19 +479,20 @@ class ViewThread extends ForumServer {
      */
     public function render_edit_form() {
 
-        $thread = $this->thread();
+        $thread = self::thread();
 
         $thread_info = $thread->get_threadInfo();
 
         $thread_data = $thread_info['thread'];
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = self::get_forum_settings();
 
         $locale = fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 
         $userdata = fusion_get_userdata();
 
-        if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
+        if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked'])
+            redirect(INFUSIONS.'forum/index.php');
 
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
@@ -495,12 +500,12 @@ class ViewThread extends ForumServer {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
-				FROM ".DB_FORUM_POSTS." tp
-				INNER JOIN ".DB_FORUM_THREADS." tt on tp.thread_id=tt.thread_id
-				INNER JOIN ".DB_FORUM_POSTS." tp2 on tp.thread_id=tp2.thread_id
-				WHERE tp.post_id='".intval($_GET['post_id'])."' AND tp.thread_id='".intval($thread_data['thread_id'])."' AND tp.forum_id='".intval($thread_data['forum_id'])."'
-				GROUP BY tp2.post_id
-				");
+                FROM ".DB_FORUM_POSTS." tp
+                INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id=tt.thread_id
+                INNER JOIN ".DB_FORUM_POSTS." tp2 ON tp.thread_id=tp2.thread_id
+                WHERE tp.post_id='".intval($_GET['post_id'])."' AND tp.thread_id='".intval($thread_data['thread_id'])."' AND tp.forum_id='".intval($thread_data['forum_id'])."'
+                GROUP BY tp2.post_id
+                ");
 
             // Permission to edit
             if (dbrows($result) > 0) {
@@ -528,13 +533,13 @@ class ViewThread extends ForumServer {
                         }
                         redirect(FORUM.'viewthread.php?thread_id='.$thread_data['thread_id']);
 
-                    } elseif (isset($_POST['post_edit'])) {
+                    } else if (isset($_POST['post_edit'])) {
 
                         require_once INCLUDES."flood_include.php";
 
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 
-                            $post_data = array(
+                            $post_data = [
                                 'forum_id'        => $thread_data['forum_id'],
                                 'thread_id'       => $thread_data['thread_id'],
                                 'post_id'         => $post_data['post_id'],
@@ -552,7 +557,7 @@ class ViewThread extends ForumServer {
                                 'post_hidden'     => 0,
                                 'notify_me'       => 0,
                                 'post_locked'     => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0
-                            );
+                            ];
 
                             // require thread_subject if first post
                             if ($is_first_post) {
@@ -579,7 +584,7 @@ class ViewThread extends ForumServer {
 
                                 // Update thread subject
                                 if ($is_first_post) {
-                                    dbquery_insert(DB_FORUM_THREADS, $thread_data, "update", array("keep_session" => TRUE));
+                                    dbquery_insert(DB_FORUM_THREADS, $thread_data, "update", ["keep_session" => TRUE]);
                                 }
 
                                 // Prepare forum merging action
@@ -588,14 +593,15 @@ class ViewThread extends ForumServer {
                                     $last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
                                     $post_data['post_id'] = $last_message['post_id'];
                                     $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
+                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
                                 } else {
-                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
+                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
                                 }
 
                                 // Delete attachments if there is any
                                 foreach ($_POST as $key => $value) {
-                                    if (!strstr($key, "delete_attach")) continue;
+                                    if (!strstr($key, "delete_attach"))
+                                        continue;
                                     $key = str_replace("delete_attach_", "", $key);
                                     $result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
                                     if (dbrows($result) != 0 && $value) {
@@ -609,14 +615,14 @@ class ViewThread extends ForumServer {
                                     $upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
                                     if ($upload['error'] == 0) {
                                         foreach ($upload['target_file'] as $arr => $file_name) {
-                                            $attachment = array('thread_id'    => $thread_data['thread_id'],
-                                                                'post_id'      => $post_data['post_id'],
-                                                                'attach_name'  => $file_name,
-                                                                'attach_mime'  => $upload['type'][$arr],
-                                                                'attach_size'  => $upload['source_size'][$arr],
-                                                                'attach_count' => '0', // downloaded times?
-                                            );
-                                            dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session' => TRUE));
+                                            $attachment = ['thread_id'    => $thread_data['thread_id'],
+                                                           'post_id'      => $post_data['post_id'],
+                                                           'attach_name'  => $file_name,
+                                                           'attach_mime'  => $upload['type'][$arr],
+                                                           'attach_size'  => $upload['source_size'][$arr],
+                                                           'attach_count' => '0', // downloaded times?
+                                            ];
+                                            dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', ['keep_session' => TRUE]);
                                         }
                                     }
                                 }
@@ -632,7 +638,7 @@ class ViewThread extends ForumServer {
                     $form_action = FORUM."viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
 
                     // get attachment.
-                    $attachments = array();
+                    $attachments = [];
                     $attach_rows = 0;
                     if ($thread->getThreadPermission("can_upload_attach") && !empty($thread_info['post_items'][$post_data['post_id']]['post_attachments'])) { // need id
                         $a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($post_data['post_id'])."' AND thread_id='".intval($thread_data['thread_id'])."'");
@@ -644,76 +650,77 @@ class ViewThread extends ForumServer {
                         }
                     }
 
-                    $info = array(
+                    $info = [
                         'title'             => $locale['forum_0507'],
                         'description'       => $locale['forum_2000'].$thread_data['thread_subject'],
-                        'openform'          => openform('input_form', 'post', $form_action, array('enctype' => $thread->getThreadPermission("can_upload_attach") ? TRUE : FALSE)),
+                        'openform'          => openform('input_form', 'post', $form_action, ['enctype' => $thread->getThreadPermission("can_upload_attach") ? TRUE : FALSE]),
                         'closeform'         => closeform(),
                         'forum_id_field'    => form_hidden('forum_id', '', $post_data['forum_id']),
                         'thread_id_field'   => form_hidden('thread_id', '', $post_data['thread_id']),
                         'tags_field'        => $is_first_post ? form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
-                            array(
+                            [
                                 'options'     => $this->tag()->get_TagOpts(),
                                 'inner_width' => '100%',
                                 'multiple'    => TRUE,
                                 'delimiter'   => '.',
                                 'max_select'  => 3, // to do settings on this
-                            )) : '',
+                            ]) : '',
                         "forum_field"       => "",
                         'subject_field'     => $thread_info['post_firstpost'] == $_GET['post_id'] ?
                             form_text('thread_subject', $locale['forum_0051'], $thread_data['thread_subject'],
-                                array('required'    => TRUE,
-                                      'placeholder' => $locale['forum_2001'],
-                                      "class"       => 'm-t-20 m-b-20'))
+                                ['required'    => TRUE,
+                                 'placeholder' => $locale['forum_2001'],
+                                 "class"       => 'm-t-20 m-b-20'])
                             : form_hidden("thread_subject", "", $thread_data['thread_subject']),
                         'message_field'     => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
-                            array('required'  => TRUE,
-                                  'height'    => '300px',
-                                  'preview'   => TRUE,
-                                  'no_resize' => FALSE,
-                                  'form_name' => 'input_form',
-                                  'bbcode'    => TRUE
-                            )),
+                            ['required'  => TRUE,
+                             'height'    => '300px',
+                             'preview'   => TRUE,
+                             'no_resize' => FALSE,
+                             'form_name' => 'input_form',
+                             'bbcode'    => TRUE
+                            ]),
                         // happens only in EDIT
-                        'delete_field'      => form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0', 'reverse_label' => TRUE)),
-                        'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], array('placeholder' => '', 'class' => 'm-t-20 m-b-20')),
+                        'delete_field'      => form_checkbox('delete', $locale['forum_0624'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                        'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], ['placeholder' => '', 'class' => 'm-t-20 m-b-20']),
                         'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]', $locale['forum_0557'], "",
-                                array('input_id'    => 'file_attachments',
-                                      'upload_path' => FORUM.'attachments/',
-                                      'type'        => 'object',
-                                      'preview_off' => TRUE,
-                                      'multiple'    => TRUE,
-                                      'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
-                                      'valid_ext'   => $forum_settings['forum_attachtypes']))."
-														 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
+                                ['input_id'    => 'file_attachments',
+                                 'upload_path' => FORUM.'attachments/',
+                                 'type'        => 'object',
+                                 'template'    => 'modern',
+                                 'multiple'    => TRUE,
+                                 'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
+                                 'max_byte'    => $forum_settings['forum_attachmax'],
+                                 'valid_ext'   => $forum_settings['forum_attachtypes']])."
+                                                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                             : "",
                         // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
-                        "poll_form"         => "",
-                        'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0', 'reverse_label' => TRUE)),
-                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                        "poll_form"         => '',
+                        'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
+                        'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         //sticky only in new thread or edit first post
-                        'sticky_field'      => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
-                        'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
-                        'hide_edit_field'   => form_checkbox('hide_edit', $locale['forum_0627'], (!empty($post_data['post_editreason']) && empty($post_data['post_edittime']) ? 1 : 0), array('class' => 'm-b-0', 'reverse_label' => TRUE)),
+                        'sticky_field'      => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        'lock_field'        => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
+                        'hide_edit_field'   => form_checkbox('hide_edit', $locale['forum_0627'], (!empty($post_data['post_editreason']) && empty($post_data['post_edittime']) ? 1 : 0), ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         // edit mode only
-                        'post_locked_field' => (iMOD || iSUPERADMIN) ? form_checkbox('post_locked', $locale['forum_0628'], $post_data['post_locked'], array('class' => 'm-b-0', 'reverse_label' => TRUE)) : '',
+                        'post_locked_field' => (iMOD || iSUPERADMIN) ? form_checkbox('post_locked', $locale['forum_0628'], $post_data['post_locked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
                         // edit mode only
                         // not available in edit mode.
                         'notify_field'      => '',
                         //$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0171'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
-                        'post_buttons'      => form_button('post_edit', $locale['save'], $locale['save'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
+                        'post_buttons'      => form_button('post_edit', $locale['save'], $locale['save'], ['class' => 'btn-primary']).form_button('cancel', $locale['cancel'], $locale['cancel'], ['class' => 'btn-default m-l-10']),
                         'last_posts_reply'  => ''
-                    );
+                    ];
                     $a_info = '';
                     if (!empty($attachments)) {
                         foreach ($attachments as $a_data) {
                             $a_info .= form_checkbox("delete_attach_".$a_data['attach_id'],
                                 $locale['forum_0625'], 0,
-                                array(
+                                [
                                     "reverse_label" => TRUE,
                                     "ext_tip"       => "<a href='".FORUM."attachments/".$a_data['attach_name']."'>".$a_data['attach_name']."</a> [".parsebytesize($a_data['attach_size'])."]"
-                                ));
+                                ]);
                         }
 
                         $info['attachment_field'] = $a_info.$info['attachment_field'];
@@ -740,8 +747,6 @@ class ViewThread extends ForumServer {
 
     /**
      * Attachment download request
-     *
-     * @return bool
      */
     public static function check_download_request() {
         $locale = fusion_get_locale("", FORUM_LOCALE);
@@ -791,11 +796,11 @@ class ViewThread extends ForumServer {
      * @return array
      */
     public function get_participated_users($info) {
-        $user = array();
+        $user = [];
         $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
-				INNER JOIN ".DB_USERS." u on (u.user_id=p.post_author)
-				WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' group by user_id");
+                INNER JOIN ".DB_USERS." u ON (u.user_id=p.post_author)
+                WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' GROUP BY user_id");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $user[$data['user_id']] = $data;
@@ -829,13 +834,13 @@ class ViewThread extends ForumServer {
             $highlight_js .= "$('.highlight').css({backgroundColor:'#FFFF88'});"; //better via theme or settings
         }
         $edit_reason_js .= "
-			$('.reason_div').hide();
-			$('div').find('.reason_button').css({cursor: 'pointer' });
-			$('.reason_button').bind('click', function(e) {
-				var target = $(this).data('target');
-				$('#'+target).stop().slideToggle('fast');
-			});
-			";
+            $('.reason_div').hide();
+            $('div').find('.reason_button').css({cursor: 'pointer' });
+            $('.reason_button').bind('click', function(e) {
+                var target = $(this).data('target');
+                $('#'+target).stop().slideToggle('fast');
+            });
+            ";
         // viewthread javascript, moved to footer
         if (!empty($highlight_js) || !empty($colorbox_js) || !empty($edit_reason_js)) {
             $viewthread_js .= $highlight_js.$colorbox_js.$edit_reason_js;

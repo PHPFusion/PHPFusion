@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$__BBCODE__[] = array(
-    "description" => $locale['bb_icq_description'], "value" => "icq", "bbcode_start" => "[icq]",
-    "bbcode_end" => "[/icq]", "usage" => "[icq]".$locale['bb_icq_usage']."[/icq]"
-);
+$__BBCODE__[] = [
+    "description" => $locale['bb_icq_description'],
+    "value"       => "icq", "bbcode_start" => "[icq]", "bbcode_end" => "[/icq]",
+    "usage"       => "[icq]".$locale['bb_icq_usage']."[/icq]"
+];
