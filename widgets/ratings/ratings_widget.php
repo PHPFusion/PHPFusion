@@ -15,8 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$widget_locale = fusion_get_locale('', WIDGETS."ratings/locale/".LANGUAGE.".php");
 // Path Definitions
+$lang = file_exists(WIDGETS."ratings/locale/".LANGUAGE.".php") ? WIDGETS."ratings/locale/".LANGUAGE.".php" : WIDGETS."ratings/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
+
 $widget_title = $widget_locale['RTW_0100'];
 $widget_icon = 'ratings.svg';
 $widget_description = $widget_locale['RTW_0101'];

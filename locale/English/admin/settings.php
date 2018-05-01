@@ -33,7 +33,7 @@ $locale['420'] = "Exclude Left Panels:";
 $locale['421'] = "Exclude Upper Panels:";
 $locale['422'] = "Exclude Lower Panels:";
 $locale['423'] = "Exclude Right Panels:";
-$locale['424'] = "Examples:\n\r/news.php\n\r/forum/index.php";
+$locale['424'] = "Examples:<br/>/news.php<br/>/forum/index.php";
 $locale['425'] = "Site Address";
 $locale['426'] = "Site Protocol:";
 $locale['427'] = "Site Host:";
@@ -97,6 +97,7 @@ $locale['606'] = "Thumb compression method";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
 
+$locale['649'] = "Prohibited user names:";
 $locale['650'] = "Miscellaneous";
 $locale['651'] = "Bad words list:";
 $locale['652'] = "Enter one word per line.";
@@ -127,16 +128,16 @@ $locale['672ML'] = "Downloads";
 $locale['673ML'] = "FAQs";
 $locale['674ML'] = "Forums";
 $locale['675ML'] = "News";
-$locale['676ML'] = "Photogallery";
+$locale['676ML'] = "Photo gallery";
 $locale['677ML'] = "Polls";
 $locale['678ML'] = "Shoutbox";
 $locale['679ML'] = "Weblinks";
-$locale['680ML'] = "Sitelinks";
+$locale['680ML'] = "Site links";
 $locale['681ML'] = "Panels";
 $locale['682ML'] = "Language Settings";
-$locale['683ML'] = "Enable Multilingal System";
+$locale['683ML'] = "Enable Multilingual System";
 $locale['684ML'] = "Enabled Languages";
-$locale['685ML'] = "Selection of allowed languages.\n\rPLEASE NOTE: By removing a language you also remove all customized site links, categories and any other multilangual content for the specific language from the system.";
+$locale['685ML'] = "Selection of allowed languages.<br/>PLEASE NOTE: By removing a language you also remove all customized site links, categories and any other multilingual content for the specific language from the system.";
 $locale['669'] = "News";
 $locale['669b'] = "Blog items per page";
 $locale['669c'] = "News items per page";
@@ -234,7 +235,7 @@ $locale['1013'] = "Delete Users";
 $locale['1014'] = "Users can log in on different devices simultaneously?";
 $locale['1014a'] = "Disable for better security";
 
-$locale['1020'] = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$locale['1020'] = [1 => 'Bytes (bytes)', 1024 => 'KB (Kilobytes)', 1048576 => 'MB (Megabytes)'];
 
 // Social integration
 $locale['1030'] = "Create OpenGraph meta tags for Social networks";
@@ -300,3 +301,12 @@ $locale['user_settings'] = "User Management Settings";
 $locale['theme_settings'] = "Theme Settings";
 
 $locale['securimage3'] = "Secure Image v.3";
+
+// Security Settings
+$locale['security_001'] = "System Sessions";
+$locale['security_002'] = "Configuration to the website sessions";
+$locale['security_003'] = "Sessions Type";
+$locale['security_004'] = "Database System";
+$locale['security_005'] = "File System";
+$locale['security_006'] = "Clear System Session Cache";
+$locale['security_007'] = "All system sessions has been cleared successfully";

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: go.php
-| Author: Arda {SoulSmasher}
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess('SU');
 include THEME."theme.php";
 include THEMES.'templates/render_functions.php';
@@ -24,7 +24,11 @@ $urlprefix = "";
 $url = BASEDIR."index.php";
 
 if (isset($_GET['id']) && isnum($_GET['id'])) {
-    $result = dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='l' AND submit_id='".$_GET['id']."'");
+    $id = form_sanitizer($_GET['id'], '', 'id');
+    $result = dbquery("SELECT submit_criteria
+        FROM ".DB_SUBMISSIONS."
+        WHERE submit_type=:typ AND submit_id=:id", [':typ' => 'l', ':id' => $id]
+    );
     if (dbrows($result)) {
         $data = dbarray($result);
         $submit_criteria = unserialize($data['submit_criteria']);
@@ -38,25 +42,30 @@ if (isset($_GET['id']) && isnum($_GET['id'])) {
 }
 
 echo '<!DOCTYPE html>';
-echo '<html>';
+echo '<html dir="'.fusion_get_locale('text-direction').'">';
     echo '<head>';
         echo '<meta charset="'.fusion_get_locale('charset').'"/>';
         echo '<title>'.fusion_get_settings('sitename').'</title>';
         echo '<link rel="stylesheet" type="text/css" href="'.THEME.'styles.css"/>';
         if (!defined('NO_DEFAULT_CSS')) {
-            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.css"/>';
+            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.min.css"/>';
         }
         echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
-        echo render_favicons(IMAGES);
-        if (function_exists("get_head_tags")) {
-            echo get_head_tags();
-        }
+        echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
+        echo \PHPFusion\OutputHandler::$pageHeadTags;
     echo '</head>';
     echo '<body>';
         echo '<div class="align-center" style="margin-top: 15%;">';
             echo '<img src="'.BASEDIR.fusion_get_settings('sitebanner').'" alt="'.fusion_get_settings('sitename').'"/><br/>';
             echo '<a href="'.$urlprefix.$url.'" rel="nofollow">'.sprintf($locale['global_500'], $urlprefix.$url).'</a>';
         echo '</div>';
+
+        $fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
+        if (!empty($fusion_jquery_tags)) {
+            $fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, ['flaggedComments' => FALSE]);
+            echo "<script type='text/javascript'>$(function() { $fusion_jquery_tags; });</script>\n";
+        }
+        echo \PHPFusion\OutputHandler::$pageFooterTags;
     echo '</body>';
 echo '</html>';
 

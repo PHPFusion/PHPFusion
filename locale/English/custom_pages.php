@@ -1,5 +1,5 @@
 <?php
-$locale['page_400'] = "Access Denied!\nYou are not permitted to view this page.";
+$locale['page_400'] = "Access Denied!<br/>You are not permitted to view this page.";
 $locale['page_401'] = "Internal Error";
 $locale['page_402'] = "Unable to retrieve page content.";
 $locale['page_403'] = "Go Back";

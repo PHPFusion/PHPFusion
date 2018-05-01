@@ -28,7 +28,7 @@ $type = isset($_GET['error_type']) && isnum($_GET['error_type']) ? $_GET['error_
 
 if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
 
-    $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated');
+    $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated'];
 
     $result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
 
@@ -38,21 +38,23 @@ if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()
             // Delete Error
             $result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
             if ($result) {
-                $this_response = array('fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'RMD');
+                $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'RMD'];
             }
         } else {
             // Update Error Status
             $result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".intval($type)."' WHERE error_id='".intval($id)."'");
             if ($result) {
-                $this_response = array('fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'OK');
+                $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'OK'];
             }
         }
     } else {
         // Invalid error ID
-        $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid ID');
+        $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid ID'];
     }
 } else {
-    $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid Token or Insufficient Rights');
+    $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid Token or Insufficient Rights'];
 }
+
+header('Content-Type: application/json');
 
 echo json_encode($this_response);

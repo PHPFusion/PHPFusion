@@ -23,6 +23,7 @@ $locale['BLS_035'] = "Blacklist email address"; //442
 $locale['BLS_036'] = "Blacklist reason"; //443
 $locale['BLS_037'] = "Blacklist user";  //444
 $locale['BLS_038'] = "Update";
+$locale['BLS_039'] = "Select All";
 
 $locale['BLS_MS'] = "Entering an IP address will prevent a user whose IP address matches the entry from visiting this site.
 You can enter a full IP, e.g. <em>123.45.67.89.</em>, or a partial IP, e.g. <em>123.45.67</em> or <em>123.45</em>.
@@ -38,6 +39,6 @@ You can enter a full email address, e.g. <em>foo@bar.com</em>, or an email domai
 %.%.%.%@domain.tld bans any address that contains at least 3 dots.<br />
 %+%@domain.tld bans any address that contains at least one plus sign.<br />
 %@domain.tld bans any address from domain.tld<br />
-%.domain.tld bans all subdomains of domain.tld<br />
+%.domain.tld bans all sub-domains of domain.tld<br />
 %payday% bans any address that contains the word \"payday\" which was very often on sites.<br />
 domain.tld is an alias of %@domain.tld to make it compatible with rules defined in v7.<br />"; //440

@@ -48,7 +48,9 @@ class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imp
     }
 
     public function display_form_input() {
-        $widget_locale = fusion_get_locale('', WIDGETS."ratings/locale/".LANGUAGE.".php");
+        $lang = file_exists(WIDGETS."ratings/locale/".LANGUAGE.".php") ? WIDGETS."ratings/locale/".LANGUAGE.".php" : WIDGETS."ratings/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
+
         self::$colData['page_content'] = 'ratings';
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: panels_updater.php
+| Filename: site_links_updater.php
 | Author: Hans Kristian Flaatten {Starefossen}
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 pageAccess("SL");
+
+$result = '';
+
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
     foreach ($_GET['listItem'] as $position => $item) {
         if (isnum($position) && isnum($item)) {
@@ -24,6 +27,9 @@ if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
         }
     }
 }
+
 if ($result) {
-    echo json_encode(array('status' => 200));
+    header('Content-Type: application/json');
+
+    echo json_encode(['status' => 200]);
 }

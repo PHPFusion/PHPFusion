@@ -15,20 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once dirname(__FILE__).'/maincore.php';
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."user_fields.php";
-require_once THEMES."templates/global/register.php";
-include THEMES."templates/global/profile.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
+require_once THEMES."templates/global/profile.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
 
-if (iMEMBER or $settings['enable_registration'] == 0) {
-    redirect("index.php");
+if (iMEMBER or fusion_get_settings('enable_registration') == 0) {
+    redirect(BASEDIR.'index.php');
 }
 
-$errors = array();
+$errors = [];
 
 if (isset($_GET['email']) && isset($_GET['code'])) {
 
@@ -40,7 +39,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
         redirect("register.php?error=activate");
     }
 
-    $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'");
+    $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => $_GET['code'], ':email' => $_GET['email']]);
 
     if (dbrows($result) > 0) {
 
@@ -52,7 +51,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 
         dbquery_insert(DB_USERS, $user_info, 'save');
 
-        $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
+        $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
 
         if (fusion_get_settings('admin_activation') == 1) {
             addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
@@ -65,17 +64,17 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
         redirect(fusion_get_settings('opening_page'));
     }
 
-} elseif (isset($_POST['register'])) {
+} else if (isset($_POST['register'])) {
 
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->validation = $settings['display_validation']; //$settings['display_validation'];
-    $userInput->emailVerification = $settings['email_verification']; //$settings['email_verification'];
-    $userInput->adminActivation = $settings['admin_activation']; //$settings['admin_activation'];
+    $userInput->validation = $settings['display_validation'];
+    $userInput->emailVerification = $settings['email_verification'];
+    $userInput->adminActivation = $settings['admin_activation'];
     $userInput->skipCurrentPass = TRUE;
     $userInput->registration = TRUE;
     $insert = $userInput->saveInsert();
 
-    if ($insert && $defender->safe()) {
+    if ($insert && \defender::safe()) {
         redirect(fusion_get_settings('opening_page'));
     }
     unset($userInput);
@@ -88,13 +87,12 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
     $userFields->postValue = $locale['u101'];
     $userFields->displayValidation = $settings['display_validation'];
     $userFields->displayTerms = $settings['enable_terms'];
-    $userFields->plugin_folder = INCLUDES."user_fields/";
+    $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
     $userFields->showAdminPass = FALSE;
     $userFields->skipCurrentPass = TRUE;
     $userFields->registration = TRUE;
     $userFields->display_profile_input();
-    //display_registerform($info);
 }
 
 require_once THEMES."templates/footer.php";

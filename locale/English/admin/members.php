@@ -41,17 +41,19 @@ $locale['ME_451'] = '%s\'s Profile';
 $locale['ME_452'] = 'Edit %s\'s Profile';
 $locale['ME_453'] = 'Delete User %s';
 $locale['ME_454'] = "Warning!";
-$locale['ME_455'] = "You are about to delete user %s!\n\r\n\rThe contents posted by this user on this site will be deleted if you proceed.\n\r
-Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n\r
-Are you sure you want to delete this user?\n\r";
+$locale['ME_455'] = "You are about to delete user %s!<br/><br/>The contents posted by this user on this site will be deleted if you proceed.<br/>
+Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.<br/>
+Are you sure you want to delete this user?<br/>";
 $locale['ME_456'] = 'Delete User';
+$locale['ME_457'] = "You are about to delete New Unactivated user %s!<br/>
+Are you sure you want to delete this user?<br/>";
 
 $locale['ME_460'] = 'There are no users to be deactivated';
 $locale['ME_461'] = '%s has been deactivated';
 $locale['ME_462'] = 'Deactivate Inactive Members';
 $locale['ME_463'] = 'You have more then 50 inactive users and will have to run the deactivation process (%d) times.';
 $locale['ME_464'] = '%d user(s) have not logged in for %d day(s) and have been marked as inactive. By deactivating these users they will have (%d) day(s) before they are %s.';
-$locale['ME_465'] = 'Please note that some users may have submitted content to your site such as forum posts, comments, photos etc. These will be deleted when deactivated users are beeing deleted.';
+$locale['ME_465'] = 'Please note that some users may have submitted content to your site such as forum posts, comments, photos etc. These will be deleted when deactivated users are being deleted.';
 $locale['ME_466'] = 'It is strongly recommended to change deactivation action to anonymize instead of delete to prevent data loss!';
 $locale['ME_467'] = "Set deactivation system to anonymize.";
 $locale['ME_468'] = 'Automatic deactivation of inactive users.';
@@ -77,6 +79,7 @@ $locale['ME_557'] = 'permanently deleted';
 
 $locale['ME_560'] = "Display Results";
 $locale['ME_561'] = "Display User With Status";
+$locale['ME_562'] = "New Unactivated User";
 
 /*--------------------------------------------------------------------------
 These are old locale. They are MOST LIKELY not being used by the new member center.
@@ -121,7 +124,7 @@ $locale['424'] = "Member Activated";
 $locale['426'] = "Yes";
 $locale['427'] = "No";
 
-// Suspension Log 
+// Suspension Log
 $locale['510s'] = "Suspension Log for ";
 $locale['511s'] = "There are no recorded suspensions for this member in the suspension log.";
 $locale['512s'] = "Previous suspensions of ";

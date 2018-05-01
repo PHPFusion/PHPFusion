@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__.'/../maincore.php';
 pageAccess("LANG");
 require_once THEMES."templates/admin_header.php";
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-$locale += fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
+$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
 
 // Just follow the display of the current admin language.
 $settings = fusion_get_settings();
@@ -47,7 +46,7 @@ if (dbrows($inf_result) > 0) {
             } else {
                 //$defender->stop();
                 addNotice("danger",
-                          "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
+                    "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
             }
         }
         unset($inf_mlt);
@@ -57,37 +56,37 @@ if (dbrows($inf_result) > 0) {
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
 
 if (isset($_POST['savesettings'])) {
-    $inputData = array(
-        "localeset" => form_sanitizer($_POST['localeset'], fusion_get_settings('locale'), "localeset"),
-        "old_localeset" => form_sanitizer($_POST['old_localeset'], fusion_get_settings('locale'), "old_localeset"),
-        "enabled_languages" => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "",
-                                                                                   "enabled_languages") : fusion_get_settings('locale'),
+    $inputData = [
+        "localeset"             => form_sanitizer($_POST['localeset'], fusion_get_settings('locale'), "localeset"),
+        "old_localeset"         => form_sanitizer($_POST['old_localeset'], fusion_get_settings('locale'), "old_localeset"),
+        "enabled_languages"     => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "",
+            "enabled_languages") : fusion_get_settings('locale'),
         // returns Chinese_Simplified,English,Malay
         "old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
         // returns Chinese_Simplified.English.Malay
-    );
+    ];
 
     // format both to .
     if (empty($inputData['enabled_languages'])) {
-        $defender->stop();
+        \defender::stop();
         addNotice("danger", "You need to enable at least one language");
     }
 
     if (defender::safe()) {
 
-        $inArray_SQLCond = array(
-            "enabled_languages" => str_replace(".", "','", $inputData['enabled_languages']),
+        $inArray_SQLCond = [
+            "enabled_languages"     => str_replace(".", "','", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(".", "','", $inputData['old_enabled_languages'])
-        );
-        $core_SQLVal = array(
-            "enabled_languages" => str_replace(",", ".", $inputData['enabled_languages']),
+        ];
+        $core_SQLVal = [
+            "enabled_languages"     => str_replace(",", ".", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(",", ".", $inputData['old_enabled_languages'])
-        );
+        ];
 
-        $array = array(
+        $array = [
             "old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
-            "enabled_languages" => explode(",", $inputData['enabled_languages'])
-        );
+            "enabled_languages"     => explode(",", $inputData['enabled_languages'])
+        ];
 
         // update current system locale
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'"); // update on the new system locale.
@@ -123,7 +122,7 @@ if (isset($_POST['savesettings'])) {
 
                     $language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
                     if (is_null($language_exist['template_language'])) {
-                        include LOCALE.$language."/setup.php";
+                        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
@@ -153,7 +152,7 @@ if (isset($_POST['savesettings'])) {
 
             $inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
 
-            $lang_cmd = array();
+            $lang_cmd = [];
 
             if (dbrows($inf_result) > 0) {
 
@@ -163,16 +162,15 @@ if (isset($_POST['savesettings'])) {
                      * This will loop x amount of times of installed infusion.
                      */
 
-                    $mlt_insertdbrow = array();
-                    $mlt_deldbrow = array();
+                    $mlt_insertdbrow = [];
+                    $mlt_deldbrow = [];
 
                     include INFUSIONS.$cdata['inf_folder']."/infusion.php";
 
                     if (!empty($added_language)) {
                         $last_id = 0;
                         foreach ($added_language as $language) {
-
-                            include LOCALE.$language."/setup.php";
+                            $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
 
                             if (isset($mlt_insertdbrow[$language])) {
                                 $last_id = 0;
@@ -191,9 +189,7 @@ if (isset($_POST['savesettings'])) {
 
                     if (!empty($removed_language)) {
                         foreach ($removed_language as $language) {
-
-                            include LOCALE.$language."/setup.php";
-
+                            $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                             $lang_cmd['delete'][] = DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'";
 
                             if (isset($mlt_deldbrow[$language])) {
@@ -206,11 +202,9 @@ if (isset($_POST['savesettings'])) {
                     }
                 } // endwhile infusions loop
 
-
                 if (!empty($removed_language)) {
-
                     foreach ($removed_language as $language) {
-                        include LOCALE.$language."/setup.php";
+                        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
                         dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language='".$language."'");
                     }
 
@@ -278,10 +272,10 @@ echo "<div class='well'>".$locale['language_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
 echo form_hidden('old_localeset', '', fusion_get_settings("locale"));
 echo form_hidden('old_enabled_languages', '', fusion_get_settings("enabled_languages"));
-echo form_select('localeset', $locale['417'], fusion_get_settings("locale"), array(
+echo form_select('localeset', $locale['417'], fusion_get_settings("locale"), [
     'options' => fusion_get_enabled_languages(),
-    "inline" => TRUE
-));
+    "inline"  => TRUE
+]);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
 echo "<strong>".$locale['684ML']."</strong>\n";
@@ -306,7 +300,7 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "</div>\n";
 echo "</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
+echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
@@ -314,7 +308,9 @@ require_once THEMES."templates/footer.php";
 
 /**
  * Create Language Selector Checkboxes.
+ *
  * @param string[] $language_list
+ *
  * @return string
  */
 function form_lang_checkbox(array $language_list) {
@@ -325,13 +321,13 @@ function form_lang_checkbox(array $language_list) {
 
         $res .= form_checkbox("enabled_languages[]", translate_lang_names($language),
             (isset($enabled_languages[$language]) ? TRUE : FALSE),
-                              array(
-                                  "input_id" => "langcheck-".$language,
-                                  "value" => $language,
-                                  "class" => "m-b-0",
-                                  "reverse_label" => TRUE,
-                                  "deactivate" => $deactivate
-                              ));
+            [
+                "input_id"      => "langcheck-".$language,
+                "value"         => $language,
+                "class"         => "m-b-0",
+                "reverse_label" => TRUE,
+                "deactivate"    => $deactivate
+            ]);
         if ($deactivate == TRUE) {
             $res .= form_hidden('enabled_languages[]', '', $language);
         }
