@@ -1,4 +1,6 @@
-PHP-Fusion CMS Version 9.0
+PHP-Fusion Andromeda 
+---
+This is the development of PHP-Fusion Version 9.0.3, code name Andromeda.
 
 Welcome to the PHP-Fusion Official Repository
 ====
@@ -24,7 +26,14 @@ The latest repository contains all the previous commits done by all the core dev
 - Removed 9.1 branch
 - Protected 7.03 branch from branch removal
 
-We will be preparing Andromeda for public launch as soon as the issues are fixed. 
+New Core Team Project Colloboration
+====
+The project colloboration is now available at https://github.com/orgs/php-fusion/projects/1
+All issues are tied to the project for team colloboration, with assigned tasks based on volunteering effort or best person which has been closest tied to such issue. The Kanban cards are useful for fast turnover and clear monitoring of all task that blocks the project from being completed and we will work based on fixing that identified blockage.
+
+All Core Developers are given Admin Access for Read and Write. So feel free to add any critical issues that is critical to address for the completion of the project. 
+
+We will be preparing Andromeda for public launch as soon as the Kanban Cards are done.
 
 New development version naming system
 ---
