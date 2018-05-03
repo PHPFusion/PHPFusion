@@ -193,7 +193,6 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'width'      => '100px',
                 'max_length' => 2,
                 'number_min' => 1,
-                'number_max' => 20,
                 'class'      => 'pull-left m-r-10'
             ])."
         ".form_select('calc_c', '', $calc_c, [
