@@ -17,34 +17,6 @@
 +--------------------------------------------------------*/
 require_once(BASEDIR.'upgrade/upgrade_functions_include.php');
 
-/**
- * Package for All version of PHP-Fusion Below 9.00 (RC5)
- */
-if (!defined('DB_ARTICLES')) {
-    define('DB_ARTICLES', DB_PREFIX."articles");
-}
-if (!defined('DB_DOWNLOADS')) {
-    define('DB_DOWNLOADS', DB_PREFIX."downloads");
-}
-if (!defined('DB_FAQS')) {
-    define('DB_FAQS', DB_PREFIX."faqs");
-}
-if (!defined('DB_FORUMS')) {
-    define('DB_FORUMS', DB_PREFIX."forums");
-}
-if (!defined('DB_PHOTOS')) {
-    define('DB_PHOTOS', DB_PREFIX."photos");
-}
-if (!defined('DB_PHOTO_ALBUMS')) {
-    define('DB_PHOTO_ALBUMS', DB_PREFIX."photo_albums");
-}
-if (!defined('DB_NEWS')) {
-    define('DB_NEWS', DB_PREFIX."news");
-}
-if (!defined('DB_WEBLINKS')) {
-    define('DB_WEBLINKS', DB_PREFIX."weblinks");
-}
-
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 $settings = fusion_get_settings();
 
@@ -164,21 +136,21 @@ if (db_exists(DB_SETTINGS)) {
 // Insert Multi Language rights and status
 if (db_exists(DB_LANGUAGE_TABLES)) {
     $modules = [
-        'AR' => db_exists(DB_ARTICLES),
+        'AR' => db_exists(DB_PREFIX."articles"),
         'CP' => TRUE,
         'BL' => db_exists(DB_PREFIX.'blog'),
-        'DL' => db_exists(DB_DOWNLOADS),
-        'FQ' => db_exists(DB_FAQS),
-        'FO' => db_exists(DB_FORUMS),
-        'FR' => db_exists(DB_FORUMS) ? TRUE : FALSE,
-        'NS' => db_exists(DB_NEWS),
-        'PG' => db_exists(DB_PHOTOS),
+        'DL' => db_exists(DB_PREFIX."downloads"),
+        'FQ' => db_exists(DB_PREFIX."faqs"),
+        'FO' => db_exists(DB_PREFIX."forums"),
+        'FR' => db_exists(DB_PREFIX."forums") ? TRUE : FALSE,
+        'NS' => db_exists(DB_PREFIX."news"),
+        'PG' => db_exists(DB_PREFIX."photos"),
         'PO' => db_exists(DB_PREFIX.'polls'),
         'ET' => TRUE,
-        'WL' => db_exists(DB_WEBLINKS),
+        'WL' => db_exists(DB_PREFIX."weblinks"),
         'SL' => TRUE,
         'PN' => TRUE,
-        'PA' => db_exists(DB_PHOTOS) ? TRUE : FALSE,
+        'PA' => db_exists(DB_PREFIX."photos") ? TRUE : FALSE,
     ];
 
     $mlt_array = [
@@ -241,39 +213,39 @@ if (db_exists(DB_ADMIN)) {
     }
 
     // Update new infusion administration icons
-    if (db_exists(DB_ARTICLES)) {
+    if (db_exists(DB_PREFIX."articles")) {
         $new_icon_array = ['A' => '../infusions/articles/articles.svg'];
     }
 
-    if (db_exists(DB_DOWNLOADS)) {
+    if (db_exists(DB_PREFIX."downloads")) {
         $new_icon_array = ['D' => '../infusions/download/download.svg'];
     }
 
-    if (db_exists(DB_FAQS)) {
+    if (db_exists(DB_PREFIX."faqs")) {
         $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
     }
 
-    if (db_exists(DB_FORUMS)) {
+    if (db_exists(DB_PREFIX."forums")) {
         $new_icon_array = ['F' => '../infusions/forum/forums.svg'];
     }
 
-    if (db_exists(DB_PHOTO_ALBUMS)) {
+    if (db_exists(DB_PREFIX."photo_albums")) {
         $new_icon_array = ['PH' => '../infusions/gallery/gallery.svg'];
     }
 
-    if (db_exists(DB_NEWS)) {
+    if (db_exists(DB_PREFIX."news")) {
         $new_icon_array = ['N' => '../infusions/news/news.svg'];
     }
 
-    if (db_exists(DB_WEBLINKS)) {
+    if (db_exists(DB_PREFIX."weblinks")) {
         $new_icon_array = ['W' => '../infusions/weblinks/weblink.svg'];
     }
 
-    if (db_exists(DB_POLLS)) {
+    if (db_exists(DB_PREFIX."polls")) {
         $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.svg'];
     }
 
-    if (db_exists(DB_SHOUTBOX)) {
+    if (db_exists(DB_PREFIX."shoutbox")) {
         $new_icon_array = ['S' => '../infusions/shoutbox/shouts.svg'];
     }
 
@@ -431,39 +403,39 @@ if (db_exists(DB_USER_FIELDS)) {
 if (db_exists(DB_INFUSIONS)) {
     // The infusions table should not exist in any version prior to this:
     $check_infusions = [
-        DB_ARTICLES          => [
+        DB_PREFIX."articles"  => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '0')",
             'check'  => 'articles'
         ],
-        DB_DOWNLOADS         => [
+        DB_PREFIX."downloads" => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '0')",
             'check'  => 'downloads'
         ],
-        DB_FAQS              => [
+        DB_PREFIX."faqs"      => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '0')",
             'check'  => 'faq'
         ],
-        DB_FORUMS            => [
+        DB_PREFIX."forums"    => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '0')",
             'check'  => 'forum'
         ],
-        DB_PHOTOS            => [
+        DB_PREFIX."photos"    => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '0')",
             'check'  => 'gallery'
         ],
-        DB_NEWS              => [
+        DB_PREFIX."news"      => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '0')",
             'check'  => 'news'
         ],
-        DB_WEBLINKS          => [
+        DB_PREFIX."weblinks"  => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '0')",
             'check'  => 'weblinks'
         ],
-        DB_PREFIX."shoutbox" => [
+        DB_PREFIX."shoutbox"  => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox_panel', '0')",
             'check'  => 'shoutbox_panel'
         ],
-        DB_PREFIX."polls"    => [
+        DB_PREFIX."polls"     => [
             'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '0')",
             'check'  => 'member_poll_panel'
         ]
@@ -507,8 +479,8 @@ if (file_exists(BASEDIR."forum/attachments/")) {
 }
 
 // Move all photos
-if (db_exists(DB_PHOTO_ALBUMS)) {
-    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS);
+if (db_exists(DB_PREFIX."photo_albums")) {
+    $result = dbquery("SELECT * FROM ".DB_PREFIX."photo_albums");
 
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {

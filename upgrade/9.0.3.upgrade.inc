@@ -68,3 +68,5 @@ if (db_exists(DB_PREFIX.'sessions')) {
         PRIMARY KEY (session_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }
+
+dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
