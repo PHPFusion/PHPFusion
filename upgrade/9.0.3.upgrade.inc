@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: 9.1.upgrade.inc
+| Filename: 9.0.3.upgrade.inc
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,7 @@
 
 $update_settings_tbl = [
     'entypo'  => 0,
-    'version' => '9.1',
+    'version' => '9.0.3',
 ];
 
 foreach ($update_settings_tbl as $key => $value) {

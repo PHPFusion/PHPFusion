@@ -26,6 +26,7 @@ use PHPFusion\Database\DatabaseFactory;
  * @package PHPFusion
  */
 class Errors {
+    private $code_name = 'Andromeda';
     private static $instances = [];
     private static $locale = [];
     public $no_notice = 0;
@@ -441,14 +442,13 @@ class Errors {
         $settings = fusion_get_settings();
         $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        //$version = 9.03;
         $version = $settings['version'];
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
         return "
         <div class='btn-group'>\n
         <a class='btn btn-default' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n
-        <a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git m-0'></i></a>\n
+        <a class='btn btn-default' href='".$repository_address.$this->code_name.'-'.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git m-0'></i></a>\n
         </div>\n";
     }
 
