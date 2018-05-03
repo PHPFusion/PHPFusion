@@ -51,13 +51,14 @@ class Sessions {
      *
      * @return static
      */
-    public static function getInstance(string $handler) {
+    public static function getInstance($handler) {
+    	$handlers = (string) $handler;
         // this one can use a token.
-        if (empty(self::$_sess[$handler])) {
-            self::$_sess[$handler] = new static();
+        if (empty(self::$_sess[$handlers])) {
+            self::$_sess[$handlers] = new static();
         }
 
-        return self::$_sess[$handler];
+        return self::$_sess[$handlers];
     }
 
     /**
@@ -148,9 +149,10 @@ class Sessions {
      *
      * @return string
      */
-    public function _read(string $name) {
+    public function _read($name) {
+    	$names = (string) $name;
         $query = "SELECT session_data FROM ".DB_SESSIONS." WHERE session_id = :name";
-        $parameters = array(':name' => $name);
+        $parameters = [':name' => $names];
         $result = DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
         if (DatabaseFactory::getConnection(self::$_sess_key)->countRows($result)) {
             $rows = DatabaseFactory::getConnection(self::$_sess_key)->fetchAssoc($result);
@@ -175,11 +177,11 @@ class Sessions {
      * @return mixed
      */
     public function _write($name, $data) {
-        $parameters = array(
+        $parameters = [
             ':name'   => $name,
             ':access' => TIME,
             ':data'   => $data,
-        );
+        ];
         $query = "REPLACE INTO ".DB_SESSIONS." VALUES (:name, :access, :data)";
         if (DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters)) {
             return TRUE;
@@ -199,9 +201,9 @@ class Sessions {
      * @return mixed
      */
     public function _destroy($name) {
-        $parameters = array(
+        $parameters = [
             ':name' => $name,
-        );
+        ];
         $query = "DELETE FROM ".DB_SESSIONS." WHERE session_id=:name";
         DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
 
@@ -248,16 +250,16 @@ class Sessions {
 
     public function remote_cache($path) {
         echo "<script>
-        function timedRefresh(timeoutPeriod) {            
+        function timedRefresh(timeoutPeriod) {
             setTimeout(UpdateCache,timeoutPeriod);
-        }        
+        }
         function UpdateCache() {
             // get the latest state of the 3 fields
             var ttl = 36000;
             $.ajax({
             url: '".fusion_get_settings('site_path')."$path',
             type: 'post',
-            success: function (data) {                
+            success: function (data) {
                 timedRefresh(ttl);
             }
             });
