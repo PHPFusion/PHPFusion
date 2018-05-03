@@ -654,19 +654,18 @@ abstract class RewriteDriver {
                 $string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
             }
         }
-        $string = str_replace("&amp;", "&", $string); // Must Support &
-
-        //$string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
-
-        //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
-
+		
+		/* 
+		* More simple normalize function for customization, use HTML for it to understand ASCII in some instances like Apostrophe in there. 
+		* Because we run mixed charset tables.
+		* we could mb_string or iconv it, but we have the normalize function this is manual override for specific case scenarios.
+		*/
+		
+		$search = array("\"", "&#039;", "\\", "\'", "<", ">", "~", "!", "@", "$", "%", "^", "*", ";", ",", "[", "]", "{", "}");
+		$string = str_replace($search, "", $string);
+		$string = str_replace("&amp;", "&", $string); // Must Support &
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
-
-        $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
-            $string); // Replace multiple occurences of Delimiter by 1 occurence only
-
-        //$string = trim($string, "-");
-
+        $string = trim($string, "-");
         return (string)$string;
     }
 
