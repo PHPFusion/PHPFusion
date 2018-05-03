@@ -288,7 +288,6 @@ class AdminPasswordResetAdministration {
         $all_admin_reset = self::load_all_admin_reset();
 
         echo "<div class='m-t-15'>";
-        echo "<div class='well'>".self::$locale['apw_415']."</div>";
         if (!empty($all_admin_reset)) {
             echo openform('reset_table', 'post', FUSION_REQUEST);
             echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
@@ -362,7 +361,7 @@ class AdminPasswordResetAdministration {
             'inline'      => TRUE
         ]);
 
-        echo form_textarea('reset_message', self::$locale['apw_404'], '', ['required' => TRUE, 'autosize' => TRUE]);
+        echo form_textarea('reset_message', self::$locale['apw_404'], '', ['inline' => TRUE, 'required' => TRUE, 'autosize' => TRUE]);
         echo form_checkbox("reset_login", self::$locale['apw_405'], '', ["inline" => TRUE]);
         echo form_button('reset_admins', self::$locale['apw_406'], self::$locale['apw_406'], ['class' => 'btn-primary']);
         echo closeform();
