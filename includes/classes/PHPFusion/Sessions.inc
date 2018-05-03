@@ -34,7 +34,7 @@ class Sessions {
 
     private static $_sess = NULL;
     private $_sess_db = NULL;
-    private static $db_info = array();
+    private static $db_info = [];
     private static $_sess_key = 'sessions';
 
     /**
@@ -52,7 +52,7 @@ class Sessions {
      * @return static
      */
     public static function getInstance($handler) {
-    	$handlers = (string) $handler;
+        $handlers = (string)$handler;
         // this one can use a token.
         if (empty(self::$_sess[$handlers])) {
             self::$_sess[$handlers] = new static();
@@ -150,7 +150,7 @@ class Sessions {
      * @return string
      */
     public function _read($name) {
-    	$names = (string) $name;
+        $names = (string)$name;
         $query = "SELECT session_data FROM ".DB_SESSIONS." WHERE session_id = :name";
         $parameters = [':name' => $names];
         $result = DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
