@@ -238,10 +238,10 @@ class Sessions {
      */
     public function _clean($max) {
         $old = TIME - $max;
-        $parameters = array(
+        $parameters = [
             ':old' => $old,
-        );
-        $query = "DELETE FROM ".DB_SESSIONS." WHERE access < :old";
+        ];
+        $query = "DELETE FROM ".DB_SESSIONS." WHERE session_start < :old";
 
         DatabaseFactory::getConnection(self::$_sess_key)->query($query, $parameters);
 
