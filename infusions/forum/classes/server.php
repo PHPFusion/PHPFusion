@@ -617,7 +617,7 @@ abstract class ForumServer {
     /**
      * Method to change template path
      *
-     * @param $key  instance key
+     * @param string|array $key  instance key
      *
      * @return mixed
      */
@@ -646,8 +646,8 @@ abstract class ForumServer {
     /**
      * Method to set new template path
      *
-     * @param $key          instance key
-     * @param $file_path    path relative to basedir
+     * @param string $key          instance key
+     * @param string $file_path    path relative to basedir
      */
     public static function set_template($key, $file_path) {
         self::$forum_template_paths[$key] = $file_path;

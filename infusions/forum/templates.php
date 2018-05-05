@@ -640,8 +640,8 @@ if (!function_exists('render_postify')) {
         $html->set_tag('opentable', fusion_get_function('opentable', $info['title']));
         $html->set_tag('closetable', fusion_get_function('closetable'));
         $html->set_tag('alert_class', ($info['error'] ? "alert alert-danger" : "well"));
-        if (!empty($info['description'])) {
-            $html->set_block('description', ['message' => $info['description']]);
+        if (!empty($info['message'])) {
+            $html->set_block('message', ['message' => $info['message']]);
         }
         foreach ($info['link'] as $link) {
             $html->set_block('links', ['link_url' => $link['url'], 'link_title' => $link['title']]);
