@@ -13,7 +13,6 @@
 
 .carousel-caption {
     text-align: center;
-    bottom: 100%;
     position: absolute;
     padding: 0;
     display: block;
@@ -45,9 +44,9 @@
     background: #39c59c;
     display: block;
     position: absolute;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
     top: 100%;
     right: 0;
     bottom: 0;
@@ -64,9 +63,7 @@
     top: 0;
 }
 
-/*
-news item
- */
+/* news item */
 :root {
     --large-item-height: 380px;
 }
@@ -83,7 +80,6 @@ news item
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    overflow: hidden;
     margin-bottom: 29px;
     border: 0;
     height: var(--large-item-height);
@@ -138,29 +134,19 @@ news item
     position: relative;
     pointer-events: none;
     background: #ccc;
-    padding: 0;
-    border: 0;
     height: 210px;
     overflow: hidden;
     min-height: 36px;
-    padding: 0 !important;
-    border: none !important;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    border-radius: 0 !important;
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    box-shadow: none !important;
+    padding: 0;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
     display: block;
-    padding: 4px;
     line-height: 20px;
-    border: 1px solid #ddd;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
@@ -188,9 +174,6 @@ news item
     clear: both;
     display: block;
     overflow: hidden;
-    visibility: hidden;
-    width: 0;
-    height: 0;
 }
 
 .news-item .news-cat {
@@ -217,8 +200,7 @@ news item
     left: 0;
     display: block;
     background: #fff;
-    padding: 0 7%;
-    padding-bottom: 15px;
+    padding: 0 7% 15px;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
@@ -280,9 +262,7 @@ news item
 }
 
 .news-item .btn-default {
-    display: inline-block !important;
-    visibility: hidden;
-    opacity: 0;
+    display: inline-block;
     filter: alpha(opacity=0);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -410,7 +390,7 @@ news item
 
 .panel-footer {
     position: relative;
-    bottom: 0px;
+    bottom: 0;
 }
 
 #news-carousel img {
