@@ -40,7 +40,6 @@ $settings_data = [
     'maintenance_level'   => $settings['maintenance_level'],
     'maintenance'         => $settings['maintenance'],
     'maintenance_message' => $settings['maintenance_message'],
-    'maintenance_level'   => $settings['maintenance_level'],
     'bad_words_enabled'   => $settings['bad_words_enabled'],
     'bad_words'           => $settings['bad_words'],
     'bad_word_replace'    => $settings['bad_word_replace'],
@@ -127,9 +126,9 @@ echo form_btngroup('database_sessions', $locale['security_003'], $settings['data
         1 => $locale['security_004'],
         0 => $locale['security_005']
     ],
-    'class'   => 'm-b-0'
+    'class'   => 'btn-default m-b-0'
 ]);
-echo form_button('clear_cache', $locale['security_006'], 'clear_cache', ['class' => 'm-b-20']);
+echo form_button('clear_cache', $locale['security_006'], 'clear_cache', ['class' => 'btn-default m-b-20']);
 echo "</div></div>";
 
 echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
@@ -154,8 +153,7 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'options'     => $opts,
     'inline'      => TRUE,
     'width'       => '100%',
-    'inner_width' => '100%',
-    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
 echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
 closeside();
@@ -171,7 +169,6 @@ echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('captcha', $locale['693'], $settings['captcha'], [
     'options' => $available_captchas,
-    'inline'  => TRUE,
     'class'   => 'm-b-0'
 ]);
 echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
@@ -185,19 +182,17 @@ if (!$settings['recaptcha_public']) {
         'end'   => "</a>\n",
     ];
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
-    echo "<div class='alert alert-warning col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
+    echo "<div class='alert alert-warning m-t-10 col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
 }
 echo "<div class='row'>\n";
 echo "<div class='hidden-xs col-sm-3 text-right'>\n";
 echo thumbnail(INCLUDES."captchas/grecaptcha/grecaptcha.png", "196px");
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], $settings['recaptcha_public'], [
-    'inline'      => TRUE,
     'placeholder' => $locale['grecaptcha_placeholder_1'],
     'required'    => FALSE
 ]);
 echo form_text('recaptcha_private', $locale['grecaptcha_0101'], $settings['recaptcha_private'], [
-    'inline'      => TRUE,
     'placeholder' => $locale['grecaptcha_placeholder_2'],
     'required'    => FALSE
 ]);
@@ -206,7 +201,6 @@ echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], $settings['recap
         'light' => $locale['grecaptcha_0102a'],
         'dark'  => $locale['grecaptcha_0102b']
     ],
-    'inline'      => TRUE,
     'inner_width' => '100%',
     'width'       => '100%',
 ]);
@@ -215,7 +209,6 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
         'text'  => $locale['grecaptcha_0103a'],
         'audio' => $locale['grecaptcha_0103b']
     ],
-    'inline'      => TRUE,
     'type'        => 'number',
     'inner_width' => '100%',
     'width'       => '100%',
@@ -234,8 +227,7 @@ echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
 echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
     'options'     => $flood_opts,
     'width'       => '100%',
-    'inner_width' => '100%',
-    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
 closeside();
 openside('');
