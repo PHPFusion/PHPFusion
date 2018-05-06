@@ -1,5 +1,8 @@
 <?php
 $locale['400'] = "Settings";
+$locale['401a'] = "Site Host Settings";
+$locale['401b'] = "The configuration for your site url, site port and site protocols.";
+
 // Site Settings
 $locale['401'] = "Main";
 $locale['402'] = "Site name";
@@ -58,6 +61,10 @@ $locale['443a'] = "Exclude User 1 Panels";
 $locale['443b'] = "Exclude User 2 Panels";
 $locale['443c'] = "Exclude User 3 Panels";
 $locale['443d'] = "Exclude User 4 Panels";
+$locale['444'] = "Domain Servers";
+$locale['444a'] = "Configuration for multiple domains on a single site.\n\nSeperate and enter one domain each row.";
+$locale['444b'] = "Registered Domain Names";
+$locale['445'] = "Invalid (test purposes)";
 
 // Time & Date Settings
 $locale['450'] = "Time and Date";
