@@ -15,14 +15,25 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 use PHPFusion\Infusions\Login\Login;
 
 $settings = fusion_get_settings();
-$fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
-define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
+if (!empty($settings['domain_server'])) {
+    // convert to arr
+    $domain_server = explode("|", $settings['domain_server']);
+    $domain_server[] = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
+    $domain_server = array_unique(array_filter($domain_server));
+    foreach($domain_server as $server_name) {
+        if ($_SERVER['SERVER_NAME'] === $server_name) {
+            define("COOKIE_DOMAIN", $server_name);
+        }
+    }
+} else {
+    $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
+    define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
+}
 define("COOKIE_PATH", $settings['site_path']);
 define("COOKIE_USER", COOKIE_PREFIX."user");
 define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
@@ -141,7 +152,9 @@ class Authenticate {
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
         $cookieContent = $userID.".".$cookieExpiration.".".$hash;
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
+        print_p(COOKIE_DOMAIN);
         Authenticate::_setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, FALSE, TRUE);
+        print_p($_COOKIE);
         // Unable to set cookies properly
         if (!isset($_COOKIE[COOKIE_VISITED])) {
             redirect(Authenticate::getRedirectUrl(3));

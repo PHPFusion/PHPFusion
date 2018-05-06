@@ -180,7 +180,8 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
     }
 } else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
     $userdata = Authenticate::logOut();
-    redirect(BASEDIR.$settings['opening_page']);
+    $request = clean_request('', ['logout'], FALSE);
+    redirect($request);
 } else {
     $userdata = Authenticate::validateAuthUser();
 }
@@ -215,10 +216,8 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_G
     }
 }
 
-if (!defined('LANGUAGE') && !defined('LOCALESET')) {
-    define('LANGUAGE', $current_user_language);
-    define('LOCALESET', $current_user_language.'/');
-}
+if (!defined('LANGUAGE')) define('LANGUAGE', $current_user_language);
+if (!defined('LOCALESET')) define('LOCALESET', $current_user_language.'/');
 
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
 
