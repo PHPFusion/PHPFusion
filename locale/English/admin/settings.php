@@ -317,3 +317,5 @@ $locale['security_004'] = "Database System";
 $locale['security_005'] = "File System";
 $locale['security_006'] = "Clear System Session Cache";
 $locale['security_007'] = "All system sessions has been cleared successfully";
+$locale['security_008'] = "Form Tokens";
+$locale['security_009'] = "Number of issued tokens for each form";

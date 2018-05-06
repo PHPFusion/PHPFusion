@@ -34,7 +34,6 @@ class NewsAdmin extends NewsAdminModel {
             self::$instance = new static();
         }
         self::$locale = self::get_newsAdminLocale();
-
         return self::$instance;
     }
 
@@ -95,7 +94,6 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             if (\defender::safe()) {
-
                 if ($this->news_data['news_id']) {
                     // update news gallery default if exist
                     if (!empty($_POST['news_image_full_default'])) {
@@ -107,9 +105,7 @@ class NewsAdmin extends NewsAdminModel {
                     if (!empty($_POST['news_image_align'])) {
                         $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                     }
-
                 } else {
-
                     if (!empty($_FILES['featured_image'])) { // when files is uploaded.
                         $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
                         if (!empty($upload)) {
@@ -154,19 +150,12 @@ class NewsAdmin extends NewsAdminModel {
                     if ($this->news_data['news_sticky'] == 1) {
                         dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     }
-
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
-
-                        dbquery_insert(DB_NEWS, $this->news_data, 'update');
-
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session'=>TRUE]);
                         addNotice('success', self::$locale['news_0101']);
-
                     } else {
-
                         $this->data['news_name'] = fusion_get_userdata('user_id');
-
-                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
-
+                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session'=>TRUE]);
                         // update the last uploaded image to the news.
                         $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
                         if (dbrows($photo_result)) {
@@ -184,8 +173,6 @@ class NewsAdmin extends NewsAdminModel {
                     } else {
                         redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', ['ref'], FALSE));
                     }
-
-
                 }
             }
         }

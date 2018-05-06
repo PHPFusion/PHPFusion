@@ -53,11 +53,10 @@ class Token extends \defender {
     public function __construct() {
         $locale = fusion_get_locale();
         $error = FALSE;
-
         // Validate the Token When POST is not Empty Automatically
         if (!empty($_POST)) {
-            // Check if a token is being posted and make sure is a string
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
+                // Check if a token is being posted and make sure is a string
                 $error = $locale['token_error_2'];
             } else if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 // Cannot find any token for this form
@@ -65,20 +64,19 @@ class Token extends \defender {
                 // Check if the token exists in storage
             } else if (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
-            } /*else if ($error = self::verify_token()) {
-                //$error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
-            }*/
+            } else if ($error = self::verify_token()) {
+                $error = $locale['token_error_3'].stripinput($_POST['fusion_token']).$error;
+            }
 
-            // If you allow repost, token will be valid since it is not being consumed.
-            // Bots will capture a valid token key and repost again and again.
             $tokens_consumed = '';
-            if (self::$allow_repost == FALSE && !iADMIN && !empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+            if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $token_rings = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
                 if (!empty($token_rings)) {
                     foreach ($token_rings as $key => $token_storage) {
                         if ($token_storage == $_POST['fusion_token']) {
                             $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
-                            unset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key]);
+                            addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
+                            unset($tokens_consumed);
                             break;
                         }
                     }
@@ -111,13 +109,9 @@ class Token extends \defender {
     /**
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
      * Makes thorough checks of a posted token, and the token alone. It does not unset token.
-     *
-     * @param int $post_time The time in seconds before a posted form is accepted,
-     *                            this is used to prevent spamming post submissions
-     *
      * @return bool
      */
-    private static function verify_token($post_time = 0) {
+    private static function verify_token() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $error = FALSE;
@@ -141,13 +135,9 @@ class Token extends \defender {
                 // check if the hash is valid
             } else if ($hash !== hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
                 $error = $locale['token_error_7'];
+            } elseif ((TIME - $token_time) < fusion_get_settings('flood_interval') && !iADMIN) {
                 // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-                /*
-                 * Disable this because we have flood_control. Either implement flood control here for checks, and increment API altogether
-                 * or remove this.
-                 */
-                // } elseif ((TIME - $token_time) < $post_time && !iADMIN) {
-                // $error = $locale['token_error_6'];
+                $error = $locale['token_error_6'];
             }
         } else {
             // token format is incorrect
@@ -156,35 +146,26 @@ class Token extends \defender {
 
         if ($error) {
             return $error;
-        } else if (self::$debug) {
-            addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
         }
 
         return FALSE;
     }
 
     /**
-     * Generates a unique token in using open_form();
-     *
+     * Generates a unique token
      * @param string $form_id
      * @param int    $max_tokens
      * @param string $file
      *
-     * @return mixed|string|\string[]
+     * @return string
      */
     public static function generate_token($form_id = 'phpfusion', $max_tokens = 5, $file = '') {
         // resets remote file every callback
         $remote_file = ($file ? $file : '');
         \defender::getInstance()->set_RemoteFile($remote_file);
-
         $userdata = fusion_get_userdata();
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-        if ($user_id == 0)
-            $max_tokens = 1;
-
-        // Only generate new tokens when token is less than max allowed tokens
-        if (!isset($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) || count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) < $max_tokens) {
-
+        if (\defender::safe()) {
             $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
             $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
             $token_time = TIME;
@@ -195,13 +176,16 @@ class Token extends \defender {
             $token = $user_id.'.'.$token_time.'.'.hash_hmac($algo, $key, $salt);
             // Store into session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
+            // Round robin consume token
+            if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
+                array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
+            }
         } else {
-            // randomize token output
             $token_ring = $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id];
             $ring = array_rand($token_ring, 1);
             $token = $token_ring[$ring];
         }
-
+        // Debugging section
         if (self::$debug) {
             if (!self::safe()) {
                 echo alert('FUSION NULL is DECLARED');
@@ -215,6 +199,6 @@ class Token extends \defender {
             }
         }
 
-        return $token;
+        return (string) $token;
     }
 }

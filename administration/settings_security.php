@@ -46,6 +46,7 @@ $settings_data = [
     'bad_word_replace'    => $settings['bad_word_replace'],
     'user_name_ban'       => $settings['user_name_ban'],
     'database_sessions'   => $settings['database_sessions'],
+    'form_tokens'         => $settings['form_tokens'],
 ];
 
 if (isset($_POST['clear_cache'])) {
@@ -75,7 +76,8 @@ if (isset($_POST['savesettings'])) {
         'bad_words'           => stripinput($_POST['bad_words']),
         'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'user_name_ban'       => form_sanitizer($_POST['user_name_ban'], '', 'user_name_ban'),
-        'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions')
+        'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
+        'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens')
     ];
 
     // Validate extra fields
@@ -90,12 +92,13 @@ if (isset($_POST['savesettings'])) {
     }
 
     if (\defender::safe()) {
-        foreach ($settings_data as $key => $value) {
-            $data = [
-                'settings_name'  => $key,
-                'settings_value' => $value,
+        foreach ($settings_data as $settings_name => $settings_value) {
+            $query = "UPDATE ".DB_SETTINGS." SET `settings_value`=:settings_value WHERE `settings_name`=:settings_name";
+            $parameters = [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
             ];
-            dbquery_insert(DB_SETTINGS, $data, 'update', ['primary_key' => 'settings_name']);
+            dbquery($query, $parameters);
         }
         addNotice('success', $locale['900']);
 
@@ -124,15 +127,52 @@ echo form_btngroup('database_sessions', $locale['security_003'], $settings['data
         1 => $locale['security_004'],
         0 => $locale['security_005']
     ],
+    'class'   => 'm-b-0'
 ]);
-echo form_button('clear_cache', $locale['security_006'], 'clear_cache');
+echo form_button('clear_cache', $locale['security_006'], 'clear_cache', ['class' => 'm-b-20']);
+echo "</div></div>";
+
+echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
+echo "<strong>".$locale['security_008']."</strong><br/>".$locale['security_009'];
+echo "</div><div class='col-xs-12 col-sm-9'>\n";
+echo form_btngroup('form_tokens', '', $settings['form_tokens'], ['options' => range(0, 10)]);
 echo "</div></div>";
 closeside();
+openside('');
+$level_array = [
+    USER_LEVEL_ADMIN       => $locale['676'],
+    USER_LEVEL_SUPER_ADMIN => $locale['677'],
+    USER_LEVEL_MEMBER      => $locale['678']
+];
+echo form_select('maintenance_level', $locale['675'], $settings['maintenance_level'], [
+    'options' => $level_array,
+    'inline'  => TRUE,
+    'width'   => '100%'
+]);
+$opts = ['1' => $locale['on'], '0' => $locale['off']];
+echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
+    'options'     => $opts,
+    'inline'      => TRUE,
+    'width'       => '100%',
+    'inner_width' => '100%',
+    'width'       => '100%',
+]);
+echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
+closeside();
+openside('');
+echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+    'autosize'  => 1,
+    'form_name' => 'settingsform',
+    'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+]);
+closeside();
 
+echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('captcha', $locale['693'], $settings['captcha'], [
     'options' => $available_captchas,
-    'inline'  => TRUE
+    'inline'  => TRUE,
+    'class'   => 'm-b-0'
 ]);
 echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
 if (!$settings['recaptcha_public']) {
@@ -184,36 +224,6 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
 echo "</div>\n</div>\n";
 echo "</div>\n";
 closeside();
-openside('');
-$level_array = [
-    USER_LEVEL_ADMIN       => $locale['676'],
-    USER_LEVEL_SUPER_ADMIN => $locale['677'],
-    USER_LEVEL_MEMBER      => $locale['678']
-];
-echo form_select('maintenance_level', $locale['675'], $settings['maintenance_level'], [
-    'options' => $level_array,
-    'inline'  => TRUE,
-    'width'   => '100%'
-]);
-$opts = ['1' => $locale['on'], '0' => $locale['off']];
-echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
-    'options'     => $opts,
-    'inline'      => TRUE,
-    'width'       => '100%',
-    'inner_width' => '100%',
-    'width'       => '100%',
-]);
-echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
-closeside();
-openside('');
-echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
-    'autosize'  => 1,
-    'form_name' => 'settingsform',
-    'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
-]);
-closeside();
-
-echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 $flood_opts = ['1' => $locale['on'], '0' => $locale['off']];
 echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
