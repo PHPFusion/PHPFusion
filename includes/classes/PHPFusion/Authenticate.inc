@@ -152,9 +152,7 @@ class Authenticate {
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
         $cookieContent = $userID.".".$cookieExpiration.".".$hash;
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        print_p(COOKIE_DOMAIN);
         Authenticate::_setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, FALSE, TRUE);
-        print_p($_COOKIE);
         // Unable to set cookies properly
         if (!isset($_COOKIE[COOKIE_VISITED])) {
             redirect(Authenticate::getRedirectUrl(3));
