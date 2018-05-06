@@ -42,10 +42,9 @@ class InstallerInfusions extends Install_Core {
         if (isset($validation[3])) {
             if ($this->tableCheck()) {
                 /*
-                             * Use DB superadmin password.
-                             */
+                 * Use DB superadmin password.
+                 */
                 $userdata = fusion_get_user(1);
-
                 $settings = fusion_get_settings();
 
                 // User level, Admin Rights & User Group definitions

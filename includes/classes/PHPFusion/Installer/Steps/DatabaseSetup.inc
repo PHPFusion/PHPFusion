@@ -46,6 +46,11 @@ class InstallerDbSetup extends Install_Core {
             }
         }
         self::set_empty_prefix();
+
+        if (!empty($_SESSION['db_config_connection'])) {
+            self::$connection = $_SESSION['db_config_connection'];
+        }
+
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
         $content .= renderNotices(getNotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
@@ -53,21 +58,18 @@ class InstallerDbSetup extends Install_Core {
                 'inline'           => TRUE,
                 'required'         => TRUE,
                 'placeholder'      => self::$locale['setup_1225'],
-                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
             ]);
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
             [
                 'inline'           => TRUE,
                 'required'         => TRUE,
                 'placeholder'      => self::$locale['setup_1220'],
-                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
             ]);
         $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'],
             [
                 'inline'           => TRUE,
                 'required'         => TRUE,
                 'placeholder'      => self::$locale['setup_1221'],
-                'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE,
             ]);
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'],
             [
@@ -137,6 +139,16 @@ class InstallerDbSetup extends Install_Core {
                 'secret_key_salt' => self::createRandomPrefix(32),
                 'secret_key'      => self::createRandomPrefix(32),
             ];
+            /*
+             * Do not allow -
+             */
+            foreach(self::$connection as $key => $value) {
+                self::$connection[$key] = str_replace('-', '_', $value);
+            }
+
+            // Force underscore for these two values
+            self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
+            self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
 
             if (!defined('DB_PREFIX'))
                 define('DB_PREFIX', self::$connection['db_prefix']);
@@ -165,6 +177,8 @@ class InstallerDbSetup extends Install_Core {
                 'localeset'     => LOCALESET,
             ];
         }
+
+        $_SESSION['db_config_connection'] = self::$connection;
 
         if (\defender::safe()) {
 
