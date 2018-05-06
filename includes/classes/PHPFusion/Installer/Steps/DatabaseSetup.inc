@@ -145,7 +145,6 @@ class InstallerDbSetup extends Install_Core {
             foreach(self::$connection as $key => $value) {
                 self::$connection[$key] = str_replace('-', '_', $value);
             }
-
             // Force underscore for these two values
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
             self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
