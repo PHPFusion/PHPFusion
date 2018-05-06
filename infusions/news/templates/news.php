@@ -54,13 +54,13 @@ if (!function_exists('display_main_news')) {
         $tpl->set_tag('opentable', fusion_get_function('opentable', $locale['news_0004']));
         $tpl->set_tag('closetable', fusion_get_function('closetable'));
         $tpl->set_tag('news_cat_name', $info['news_cat_name']);
+        $tpl->set_tag('pagenav', '');
 
         // Carousel -- make it just sticky
         $ni_html = '';
         $carousel = FALSE;
         if (!empty($info['news_items'])) {
 
-            $tpl->set_tag('pagenav', '');
             if ($info['news_total_rows'] > $news_settings['news_pagination']) {
                 $type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
                 $cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
@@ -141,7 +141,7 @@ if (!function_exists('display_main_news')) {
         }
 
         $tpl->set_tag('breadcrumb', render_breadcrumbs());
-        $tpl->set_tag('last_update', $info['news_last_updated'] ?: $locale['na']);
+        $tpl->set_tag('last_update', !empty($info['news_last_updated']) ? $info['news_last_updated'] : $locale['na']);
 
         // Use Navbar
         $i = 1;
