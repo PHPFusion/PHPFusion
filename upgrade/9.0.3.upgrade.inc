@@ -18,8 +18,9 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'entypo'  => 0,
-    'version' => '9.0.3',
+    'entypo'        => 0,
+    'version'       => '9.0.3',
+    'domain_server' => ''
 ];
 
 foreach ($update_settings_tbl as $key => $value) {

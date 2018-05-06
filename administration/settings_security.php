@@ -31,6 +31,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 }
 
 $settings = fusion_get_settings();
+
 $settings_data = [
     'captcha'             => $settings['captcha'],
     'privacy_policy'      => $settings['privacy_policy'],
@@ -40,7 +41,6 @@ $settings_data = [
     'maintenance_level'   => $settings['maintenance_level'],
     'maintenance'         => $settings['maintenance'],
     'maintenance_message' => $settings['maintenance_message'],
-    'maintenance_level'   => $settings['maintenance_level'],
     'bad_words_enabled'   => $settings['bad_words_enabled'],
     'bad_words'           => $settings['bad_words'],
     'bad_word_replace'    => $settings['bad_word_replace'],
@@ -201,7 +201,6 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'inline'      => TRUE,
     'width'       => '100%',
     'inner_width' => '100%',
-    'width'       => '100%',
 ]);
 echo form_textarea('maintenance_message', $locale['658'], $settings['maintenance_message'], ['autosize' => TRUE]);
 closeside();
@@ -225,7 +224,6 @@ echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
     'options'     => $flood_opts,
     'width'       => '100%',
     'inner_width' => '100%',
-    'width'       => '100%',
 ]);
 closeside();
 openside('');

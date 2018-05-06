@@ -168,7 +168,7 @@ if (isset($_POST['savesettings'])) {
     if (\defender::safe()) {
         foreach ($settings_main as $settings_key => $settings_value) {
             $query = "UPDATE `".DB_SETTINGS."` SET `settings_value`=:settings_value WHERE `settings_name`=:settings_key";
-            $parameters = [':settings_key'=>$settings_key, ':settings_value'=>$settings_value];
+            $parameters = [':settings_key' => $settings_key, ':settings_value' => $settings_value];
             dbquery($query, $parameters);
         }
         addNotice("success", $locale['900']);
@@ -352,7 +352,7 @@ echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'bt
 echo closeform();
 
 echo fusion_get_function('closetable');
-$minified =  '$("#site_protocol").change(function(){$("#display_protocol").text($(this).val())}),$("#site_host").keyup(function(){$("#display_host").text($(this).val())}),$("#site_path").keyup(function(){$("#display_path").text($(this).val())}),$("#site_port").keyup(function(){if(":"==(t=":"+$(this).val())||":0"==t||":90"==t||":443"==t)var t="";$("#display_port").text(t)});';
+$minified = '$("#site_protocol").change(function(){$("#display_protocol").text($(this).val())}),$("#site_host").keyup(function(){$("#display_host").text($(this).val())}),$("#site_path").keyup(function(){$("#display_path").text($(this).val())}),$("#site_port").keyup(function(){if(":"==(t=":"+$(this).val())||":0"==t||":90"==t||":443"==t)var t="";$("#display_port").text(t)});';
 add_to_jquery($minified);
 
 /*

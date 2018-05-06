@@ -114,7 +114,6 @@ Administrator. [SITENAME] reserves the right to amend or edit any submission. Ne
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['news_0704'] = "Return to [SITENAME]";
 
-// New locale requried to update
 $locale['news_0705'] = "Width";
 $locale['news_0706'] = "Height";
 $locale['news_0707'] = "Main Settings";

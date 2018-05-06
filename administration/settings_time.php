@@ -21,16 +21,18 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
 
+$settings = fusion_get_settings();
+
 $settings_main = [
-    'shortdate'        => fusion_get_settings('shortdate'),
-    'longdate'         => fusion_get_settings('longdate'),
-    'forumdate'        => fusion_get_settings('forumdate'),
-    'newsdate'         => fusion_get_settings('newsdate'),
-    'subheaderdate'    => fusion_get_settings('subheaderdate'),
-    'timeoffset'       => fusion_get_settings('timeoffset'),
-    'serveroffset'     => fusion_get_settings('serveroffset'),
-    'default_timezone' => fusion_get_settings('default_timezone'),
-    'week_start'       => fusion_get_settings('week_start')
+    'shortdate'        => $settings['shortdate'],
+    'longdate'         => $settings['longdate'],
+    'forumdate'        => $settings['forumdate'],
+    'newsdate'         => $settings['newsdate'],
+    'subheaderdate'    => $settings['subheaderdate'],
+    'timeoffset'       => $settings['timeoffset'],
+    'serveroffset'     => $settings['serveroffset'],
+    'default_timezone' => $settings['default_timezone'],
+    'week_start'       => $settings['week_start'],
 ];
 
 if (isset($_POST['savesettings'])) {

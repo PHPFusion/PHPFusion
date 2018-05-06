@@ -20,12 +20,15 @@ pageAccess("S7");
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+
+$settings = fusion_get_settings();
+
 $pm_settings = [
-    'pm_inbox_limit'   => fusion_get_settings('pm_inbox_limit'),
-    'pm_outbox_limit'  => fusion_get_settings('pm_outbox_limit'),
-    'pm_archive_limit' => fusion_get_settings('pm_archive_limit'),
-    'pm_email_notify'  => fusion_get_settings('pm_email_notify'),
-    'pm_save_sent'     => fusion_get_settings('pm_save_sent'),
+    'pm_inbox_limit'   => $settings['pm_inbox_limit'],
+    'pm_outbox_limit'  => $settings['pm_outbox_limit'],
+    'pm_archive_limit' => $settings['pm_archive_limit'],
+    'pm_email_notify'  => $settings['pm_email_notify'],
+    'pm_save_sent'     => $settings['pm_save_sent'],
 ];
 
 if (isset($_POST['save_settings'])) {
