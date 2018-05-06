@@ -202,10 +202,11 @@ class Install_Core extends Infusion_Core {
 
     protected static function set_empty_prefix() {
         $default_init = [
-            'db_host' => '',
-            'db_name' => '',
-            'db_user' => '',
-            'db_pass' => '',
+            'db_host'       => '',
+            'db_name'       => '',
+            'db_user'       => '',
+            'db_pass'       => '',
+            'db_prefix'     => ''
         ];
 
         if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
@@ -214,24 +215,21 @@ class Install_Core extends Infusion_Core {
 
         self::$connection = self::$connection + $default_init;
 
-        if (!empty(self::$connection['db_prefix'])) {
-            if (substr_count(self::$connection['db_prefix'], '_') === 1) {
-                self::$connection['db_prefix'] = str_replace(self::$connection['db_prefix'], '_', '').'_';
-            }
-        } else {
+        if (empty(self::$connection['db_prefix'])) {
             self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
         }
 
         if (empty(self::$connection['cookie_prefix'])) {
             self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
         }
+
         if (empty(self::$connection['secret_key'])) {
             self::$connection['secret_key'] = self::createRandomPrefix(32);
         }
+
         if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
             self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
         }
-
     }
 
     public static function fusion_get_config($config_path) {
