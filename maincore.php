@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\Authenticate;
 
 // Uncomment to see server errors without modifying php.ini
@@ -57,12 +58,12 @@ if (!empty($settings['database_sessions'])) {
     // Establish secondary mySQL database connection for session caches
     $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name);
     session_set_save_handler(
-        array($handler, '_open'),
-        array($handler, '_close'),
-        array($handler, '_read'),
-        array($handler, '_write'),
-        array($handler, '_destroy'),
-        array($handler, '_clean')
+        [$handler, '_open'],
+        [$handler, '_close'],
+        [$handler, '_read'],
+        [$handler, '_write'],
+        [$handler, '_destroy'],
+        [$handler, '_clean']
     );
 }
 unset($db_host, $db_user, $db_pass);
@@ -100,7 +101,7 @@ if ($settings['site_protocol'] == 'https' && !isset($_SERVER['HTTPS'])) {
             'path'  => '',
             'query' => ''
         ];
-    $fusion_query = array();
+    $fusion_query = [];
     if ($url['query']) {
         parse_str($url['query'], $fusion_query); // this is original.
     }
@@ -216,8 +217,10 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && file_exists(LOCALE.$_G
     }
 }
 
-if (!defined('LANGUAGE')) define('LANGUAGE', $current_user_language);
-if (!defined('LOCALESET')) define('LOCALESET', $current_user_language.'/');
+if (!defined('LANGUAGE'))
+    define('LANGUAGE', $current_user_language);
+if (!defined('LOCALESET'))
+    define('LOCALESET', $current_user_language.'/');
 
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
 

@@ -21,30 +21,31 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
 
+$settings = fusion_get_settings();
+
 $settings_misc = [
-    'tinymce_enabled'        => fusion_get_settings('tinymce_enabled'),
-    'smtp_host'              => fusion_get_settings('smtp_host'),
-    'smtp_port'              => fusion_get_settings('smtp_port'),
-    'smtp_auth'              => fusion_get_settings('smtp_auth'),
-    'smtp_username'          => fusion_get_settings('smtp_username'),
-    'smtp_password'          => fusion_get_settings('smtp_password'),
-    'thumb_compression'      => fusion_get_settings('thumb_compression'),
-    'mime_check'             => fusion_get_settings('mime_check'),
-    'guestposts'             => fusion_get_settings('guestposts'),
-    'comments_enabled'       => fusion_get_settings('comments_enabled'),
-    'comments_per_page'      => fusion_get_settings('comments_per_page'),
-    'ratings_enabled'        => fusion_get_settings('ratings_enabled'),
-    'visitorcounter_enabled' => fusion_get_settings('visitorcounter_enabled'),
-    'rendertime_enabled'     => fusion_get_settings('rendertime_enabled'),
-    'comments_avatar'        => fusion_get_settings('comments_avatar'),
-    'comments_sorting'       => fusion_get_settings('comments_sorting'),
-    'index_url_bbcode'       => fusion_get_settings('index_url_bbcode'),
-    'index_url_userweb'      => fusion_get_settings('index_url_userweb'),
-    'create_og_tags'         => fusion_get_settings('create_og_tags')
+    'tinymce_enabled'        => $settings['tinymce_enabled'],
+    'smtp_host'              => $settings['smtp_host'],
+    'smtp_port'              => $settings['smtp_port'],
+    'smtp_auth'              => $settings['smtp_auth'],
+    'smtp_username'          => $settings['smtp_username'],
+    'smtp_password'          => $settings['smtp_password'],
+    'thumb_compression'      => $settings['thumb_compression'],
+    'mime_check'             => $settings['mime_check'],
+    'guestposts'             => $settings['guestposts'],
+    'comments_enabled'       => $settings['comments_enabled'],
+    'comments_per_page'      => $settings['comments_per_page'],
+    'ratings_enabled'        => $settings['ratings_enabled'],
+    'visitorcounter_enabled' => $settings['visitorcounter_enabled'],
+    'rendertime_enabled'     => $settings['rendertime_enabled'],
+    'comments_avatar'        => $settings['comments_avatar'],
+    'comments_sorting'       => $settings['comments_sorting'],
+    'index_url_bbcode'       => $settings['index_url_bbcode'],
+    'index_url_userweb'      => $settings['index_url_userweb'],
+    'create_og_tags'         => $settings['create_og_tags'],
 ];
 
 if (isset($_POST['savesettings'])) {
-
     $settings_misc = [
         'tinymce_enabled'        => form_sanitizer($_POST['tinymce_enabled'], '0', 'tinymce_enabled'),
         'smtp_host'              => form_sanitizer($_POST['smtp_host'], '', 'smtp_host'),

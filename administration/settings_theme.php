@@ -21,12 +21,14 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
 
+$settings = fusion_get_settings();
+
 $settings_theme = [
-    'admin_theme' => fusion_get_settings('admin_theme'),
-    'theme'       => fusion_get_settings('theme'),
-    'bootstrap'   => fusion_get_settings('bootstrap'),
-    'entypo'      => fusion_get_settings('entypo'),
-    'fontawesome' => fusion_get_settings('fontawesome'),
+    'admin_theme' => $settings['admin_theme'],
+    'theme'       => $settings['theme'],
+    'bootstrap'   => $settings['bootstrap'],
+    'entypo'      => $settings['entypo'],
+    'fontawesome' => $settings['fontawesome'],
 ];
 
 if (isset($_POST['savesettings'])) {

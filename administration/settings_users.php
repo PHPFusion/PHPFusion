@@ -21,19 +21,21 @@ require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
 
+$settings = fusion_get_settings();
+
 $settings2 = [
-    'enable_deactivation'   => fusion_get_settings('enable_deactivation'),
-    'deactivation_period'   => fusion_get_settings('deactivation_period'),
-    'deactivation_response' => fusion_get_settings('deactivation_response'),
-    'deactivation_action'   => fusion_get_settings('deactivation_action'),
-    'hide_userprofiles'     => fusion_get_settings('hide_userprofiles'),
-    'avatar_filesize'       => fusion_get_settings('avatar_filesize'),
-    'avatar_width'          => fusion_get_settings('avatar_width'),
-    'avatar_height'         => fusion_get_settings('avatar_height'),
-    'avatar_ratio'          => fusion_get_settings('avatar_ratio'),
-    'userNameChange'        => fusion_get_settings('userNameChange'),
-    'userthemes'            => fusion_get_settings('userthemes'),
-    'multiple_logins'       => fusion_get_settings('multiple_logins')
+    'enable_deactivation'   => $settings['enable_deactivation'],
+    'deactivation_period'   => $settings['deactivation_period'],
+    'deactivation_response' => $settings['deactivation_response'],
+    'deactivation_action'   => $settings['deactivation_action'],
+    'hide_userprofiles'     => $settings['hide_userprofiles'],
+    'avatar_filesize'       => $settings['avatar_filesize'],
+    'avatar_width'          => $settings['avatar_width'],
+    'avatar_height'         => $settings['avatar_height'],
+    'avatar_ratio'          => $settings['avatar_ratio'],
+    'userNameChange'        => $settings['userNameChange'],
+    'userthemes'            => $settings['userthemes'],
+    'multiple_logins'       => $settings['multiple_logins'],
 ];
 
 if (isset($_POST['savesettings'])) {

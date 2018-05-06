@@ -19,7 +19,7 @@ $settings = fusion_get_settings();
 
 $update_settings_tbl = [
     'entypo'  => 0,
-    'version' => '9.0.3',
+    'version' => '9.0.3'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
@@ -31,6 +31,7 @@ foreach ($update_settings_tbl as $key => $value) {
 $insert_settings_tbl = [
     'user_name_ban'     => '',
     'database_sessions' => 1,
+    'domain_server'     => ''
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
