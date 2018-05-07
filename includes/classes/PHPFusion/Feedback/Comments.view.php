@@ -103,7 +103,7 @@ if (!function_exists('display_comments_list')) {
                 <div class='comment_message'><!--comment_message-->{%comment_message%}<!--//comment_message--></div>
                 <div>
                     <small><?php
-                        echo !empty($info['show_reply_link']) ? '{%comment_reply_link%}' : '';
+                        echo !empty($info['reply_link']) ? '{%comment_reply_link%}' : '';
                         echo !empty($info['edit_link']) ? ' &middot; {%comment_edit_link%}' : '';
                         echo !empty($info['delete_link']) ? ' &middot; {%comment_delete_link%}' : ''; ?>
                         - <span class='comment_date'>{%comment_date%}</span></small>
