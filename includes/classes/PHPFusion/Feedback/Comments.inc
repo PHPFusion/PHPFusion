@@ -439,10 +439,6 @@ class Comments {
 
             $data_api = \defender::encode($options);
 
-            $can_post = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
-
-            $data['show_reply_link'] = $can_post && $this->getParams('comment_allow_reply') ? TRUE : FALSE;
-
             $comments_html .= "<!---comment-".$data['comment_id']."--->\n";
             ob_start();
             display_comments_list($data);
@@ -454,7 +450,7 @@ class Comments {
                     '{%comment_ratings%}'      => $data['comment_ratings'],
                     '{%comment_subject%}'      => $data['comment_subject'],
                     '{%comment_message%}'      => $data['comment_message'],
-                    '{%comment_reply_link%}'   => ($data['show_reply_link'] ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
+                    '{%comment_reply_link%}'   => ($data['reply_link'] ? "<a href='".$data['reply_link']."' class='comments-reply display-inline' data-id='$comments_id'>".$this->locale['c112']."</a>" : ''),
                     '{%comment_edit_link%}'    => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
                     '{%comment_delete_link%}'  => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
                     '{%comment_reply_form%}'   => ($data['reply_form'] ?: ''),
@@ -1030,7 +1026,8 @@ class Comments {
     /*
      * Parse Comment Results
      */
-    private function parse_comments_data($row, $i, $can_reply = TRUE) {
+    private function parse_comments_data($row, $i) {
+        $can_reply = iMEMBER || fusion_get_settings('guestposts') ? TRUE : FALSE;
         $garray = [];
 
         if (!isnum($row['comment_name'])) {
@@ -1087,7 +1084,7 @@ class Comments {
             );
 
             $_CAPTCHA_HTML = '';
-            if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+            /*if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
                 $_CAPTCHA_HTML .= "<div class='m-t-10 m-b-10'>";
                 $_CAPTCHA_HTML .= "<label class='col-xs-12 col-sm-3'>".$this->locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
@@ -1100,7 +1097,31 @@ class Comments {
                 }
                 $_CAPTCHA_HTML .= "</div>\n";
                 $_CAPTCHA_HTML .= "</div>\n";
+            }*/
+
+            if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+                $_CAPTCHA_HIDE_INPUT = FALSE;
+
+                $_CAPTCHA_HTML .= '<div class="row">';
+                $_CAPTCHA_HTML .= '<div class="col-xs-12 col-sm-8 col-md-6">';
+
+                include INCLUDES.'captchas/'.fusion_get_settings('captcha').'/captcha_display.php';
+
+                $_CAPTCHA_HTML .= display_captcha([
+                    'captcha_id' => 'reply_captcha_'.$this->getParams('comment_key'),
+                    'input_id'   => 'reply_captcha_code_'.$this->getParams('comment_key'),
+                    'image_id'   => 'reply_captcha_image_'.$this->getParams('comment_key')
+                ]);
+
+                $_CAPTCHA_HTML .= '</div>';
+                $_CAPTCHA_HTML .= '<div class="col-xs-12 col-sm-4 col-md-6">';
+                if (!$_CAPTCHA_HIDE_INPUT) {
+                    $_CAPTCHA_HTML .= form_text('captcha_code', $this->locale['global_151'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_'.$this->getParams('comment_key')]);
+                }
+                $_CAPTCHA_HTML .= '</div>';
+                $_CAPTCHA_HTML .= '</div>';
             }
+
             ob_start();
 
             display_comments_reply_form();
@@ -1154,7 +1175,7 @@ class Comments {
                     "user_avatar" => $row['user_avatar'],
                     "status"      => $row['user_status'],
                 ],
-                "reply_link"        => self::format_clink($this->getParams('clink')).'&amp;comment_reply='.$row['comment_id'].'#c'.$row['comment_id'],
+                "reply_link"        => $can_reply == TRUE ? self::format_clink($this->getParams('clink')).'&amp;comment_reply='.$row['comment_id'].'#c'.$row['comment_id'] : '',
                 "reply_form"        => $reply_form,
                 'ratings'           => isset($row['ratings']) ? $row['ratings'] : '',
                 "comment_datestamp" => showdate('longdate', $row['comment_datestamp']),

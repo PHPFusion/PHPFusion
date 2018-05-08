@@ -692,11 +692,6 @@ Grids
     color: rgb(138, 109, 59) !important;
 }
 
-.image-wrap {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-}
 
 .blur {
     -webkit-filter: blur(5px) grayscale(50%);
@@ -1161,8 +1156,9 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .image-wrap {
-    width: 100%;
     position: relative;
+    overflow: hidden;
+    width: 100%;
 }
 
 .image-wrap.cropfix {
