@@ -190,9 +190,18 @@ class ForumThreads extends ForumServer {
                         'user_avatar' => $threads['last_user_avatar']
                     ];
 
+                    // Automatic link to the latest post
+                    $thread_rowstart = '';
+                    if (!empty($threads['thread_postcount']) && !empty($forum_settings['posts_per_page'])) {
+                        if ($threads['thread_postcount'] > $forum_settings['posts_per_page']) {
+                            $thread_rowstart = $forum_settings['posts_per_page'] * floor($threads['thread_postcount'] / $forum_settings['posts_per_page']);
+                            $thread_rowstart = "&amp;rowstart=".$thread_rowstart;
+                        }
+                    }
+
                     $threads += [
                         "thread_link"         => [
-                            "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'],
+                            "link"  => FORUM."viewthread.php?thread_id=".$threads['thread_id'].$thread_rowstart."&amp;pid=".$threads['thread_lastpostid']."#post_".$threads['thread_lastpostid'],
                             "title" => $threads['thread_subject']
                         ],
                         "forum_type"          => $threads['forum_type'],
