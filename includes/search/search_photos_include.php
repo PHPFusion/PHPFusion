@@ -63,6 +63,9 @@ if (db_exists(DB_PHOTOS)) {
                 Search_Engine::search_column('album_title', 'gallery');
         }
 
+        $query = '';
+        $param = '';
+
         if (!empty(Search_Engine::get_param('search_param'))) {
 
             $query = "
@@ -87,7 +90,8 @@ if (db_exists(DB_PHOTOS)) {
             $search_result = '';
             while ($data = dbarray($result)) {
                 $search_result = "";
-                if ($data['photo_datestamp'] + 604800 > time() + ((float)$settings['timeoffset'] * 3600)) {
+                $timeoffset = timezone_offset_get(timezone_open($settings['timeoffset']), new \DateTime());
+                if ($data['photo_datestamp'] + 604800 > time() + ($timeoffset * 3600)) {
                     $new = " <span class='small'>".$locale['p403']."</span>";
                 } else {
                     $new = "";
@@ -95,8 +99,8 @@ if (db_exists(DB_PHOTOS)) {
                 $text_all = $data['photo_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
-                $subj_c = Search_Engine::search_stringscount($data['photo_title']) + Search_Engine::search_stringscount($data['album_title']);
-                $text_c = Search_Engine::search_stringscount($data['photo_description']) + Search_Engine::search_stringscount($data['album_description']);
+                // $subj_c = Search_Engine::search_stringscount($data['photo_title']) + Search_Engine::search_stringscount($data['album_title']);
+                // $text_c = Search_Engine::search_stringscount($data['photo_description']) + Search_Engine::search_stringscount($data['album_description']);
 
                 $image_link = INFUSIONS.'gallery/gallery.php?photo_id='.$data['photo_id'];
 
@@ -114,7 +118,7 @@ if (db_exists(DB_PHOTOS)) {
                 if ($text_frag != "") {
                     $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
                 }
-                $desc .= "<span class='small'><font class='alt'>".$locale['p405']."</font> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
+                $desc .= "<span class='small'><span class='alt'>".$locale['p405']."</span> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
 
                 $search_result .= strtr(Search::render_search_item_image(), [
                         '{%item_url%}'             => $image_link."&sref=search",

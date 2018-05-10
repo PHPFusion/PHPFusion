@@ -83,15 +83,16 @@ if (db_exists(DB_WEBLINKS)) {
             $search_result = '';
             while ($data = dbarray($result)) {
                 $new = "";
-                if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
+                $timeoffset = timezone_offset_get(timezone_open($settings['timeoffset']), new \DateTime());
+                if ($data['weblink_datestamp'] + 604800 > time() + ($timeoffset * 3600)) {
                     $new = " <span class='small'>".$locale['w403']."</span>";
                 }
 
                 $text_all = $data['weblink_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
-                $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
-                $text_c = Search_Engine::search_stringscount($data['weblink_description']);
+                // $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
+                // $text_c = Search_Engine::search_stringscount($data['weblink_description']);
                 $desc = '';
                 if ($text_frag != "") {
                     $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";

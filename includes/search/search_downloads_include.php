@@ -86,7 +86,8 @@ if (db_exists(DB_DOWNLOADS)) {
             $search_result = '';
 
             while ($data = dbarray($result)) {
-                if ($data['download_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
+                $timeoffset = timezone_offset_get(timezone_open($settings['timeoffset']), new \DateTime());
+                if ($data['download_datestamp'] + 604800 > time() + ($timeoffset * 3600)) {
                     $new = " <span class='small'>".$locale['d403']."</span>";
                 } else {
                     $new = "";
@@ -94,8 +95,8 @@ if (db_exists(DB_DOWNLOADS)) {
                 $text_all = $data['download_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
-                $subj_c = Search_Engine::search_stringscount($data['download_title']);
-                $text_c = Search_Engine::search_stringscount($data['download_description']);
+                // $subj_c = Search_Engine::search_stringscount($data['download_title']);
+                // $text_c = Search_Engine::search_stringscount($data['download_description']);
 
                 $context = '';
                 if ($text_frag != "") {

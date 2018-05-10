@@ -167,9 +167,7 @@ class Search extends Search_Engine {
         if (function_exists('render_search_item_image')) {
             return (string)self::render_search_item_image();
         }
-        return "
-        <li class='display-inline-block m-2'><a href='{%item_url%}'>{%item_image%}</a></li>
-        ";
+        return "<li class='display-inline-block m-2'><a href='{%item_url%}'>{%item_image%}</a></li>";
     }
 
     /**
@@ -190,7 +188,7 @@ class Search extends Search_Engine {
             <div class='panel-body'>
                 <h4>{%image%} {%search_title%}</h4>
             </div>
-            <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET."{%search_result%}</div></div>
+            <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET." {%search_result%}</div></div>
             <div class='panel-body'>
                 <ul class='block spacer-xs'>{%search_content%}</ul>
             </div>

@@ -48,6 +48,8 @@ if (db_exists(DB_FAQS)) {
                 Search_Engine::search_column('faq_question', 'faqs');
         }
 
+        $result = '';
+
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT faq_question, faq_answer, faq_cat_id
                 FROM ".DB_FAQS."
@@ -78,7 +80,7 @@ if (db_exists(DB_FAQS)) {
                         '{%item_target%}'          => '',
                         '{%item_image%}'           => '',
                         '{%item_title%}'           => $data['faq_question'],
-                        '{%item_description%}'     => $data['faq_answer'],
+                        '{%item_description%}'     => html_entity_decode($data['faq_answer']),
                         '{%item_search_criteria%}' => $criteria,
                         '{%item_search_context%}'  => $context,
                     ]
