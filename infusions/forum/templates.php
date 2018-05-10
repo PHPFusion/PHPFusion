@@ -1068,7 +1068,7 @@ if (!function_exists('render_post_item')) {
         $html->set_tag('user_online_status', ($data['user_online'] ? "fa fa-circle" : "fa fa-circle-thin"));
         $html->set_tag('user_signature', ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>" : ''));
         $html->set_tag('checkbox_input', (iMOD ? $data['post_checkbox'] : ''));
-        $html->set_tag('post_message', $data['post_message']);
+        $html->set_tag('post_message', fusion_parse_user($data['post_message']));
         $html->set_tag('post_edit_reason', $data['post_edit_reason']);
         $html->set_tag('post_reply_message', $data['post_reply_message']);
         $html->set_tag('post_mood_message', ($data['post_mood_message'] ? $data['post_mood_message'] : ''));
