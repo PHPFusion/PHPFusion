@@ -75,7 +75,7 @@ class Token extends \defender {
                     foreach ($token_rings as $key => $token_storage) {
                         if ($token_storage == $_POST['fusion_token']) {
                             $tokens_consumed = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']][$key];
-                            addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
+                            // addNotice('warning', "Token $tokens_consumed has been consumed", 'all');
                             unset($tokens_consumed);
                             break;
                         }
