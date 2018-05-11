@@ -423,7 +423,7 @@ class PanelsAdministration {
      * @return string
      */
     private function panel_reactor($side) {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $grid_opts = self::get_panel_grid();
         $type = $grid_opts[$side];
