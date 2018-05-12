@@ -438,7 +438,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             <tr>
                 <th></th>
                 <th><?php echo self::$locale['actions'] ?></th>
-                <th class="col-xs-4"><?php echo self::$locale['news_0300'] ?></th>
+                <th class="col-xs-3"><?php echo self::$locale['news_0300'] ?></th>
                 <th><?php echo self::$locale['news_0253'] ?></th>
                 <th><?php echo self::$locale['news_0215'] ?></th>
                 <th><?php echo self::$locale['sticky'] ?></th>

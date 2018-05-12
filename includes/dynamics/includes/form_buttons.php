@@ -104,9 +104,11 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class." clearfix'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? ' overflow-hide ' : '').$error_class." clearfix'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';
+
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
+
     $html .= "<div class='btn-group' id='".$options['input_id']."'>";
 
     if (!empty($options['options']) && is_array($options['options'])) {

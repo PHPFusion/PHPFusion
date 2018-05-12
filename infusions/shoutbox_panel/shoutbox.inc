@@ -448,7 +448,7 @@ class ShoutBox {
                 echo $total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center m-t-20'><a class='btn btn-default btn-xs side' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php'>".self::$locale['SB_archive']."</a>\n</div>\n" : "";
             }
         } else {
-            echo "<div class='text-center'>".self::$locale['SB_no_msgs']."</div>\n";
+            echo "<div class='text-center m-t-10'>".self::$locale['SB_no_msgs']."</div>\n";
         }
     }
 

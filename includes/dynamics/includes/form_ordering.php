@@ -55,28 +55,9 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
     } else {
         $input_name = "";
     }
-    if (isset($desc) && ($desc !== "")) {
-        $desc = stripinput($desc);
-    } else {
-        $desc = "";
-    }
-    if (isset($input_value) && ($input_value !== "")) {
-        $input_value = stripinput($input_value);
-    } else {
-        $input_value = "";
-    }
-    if (isset($is_order) && ($is_order !== "")) {
-        $is_order = stripinput($is_order);
-    } else {
-        $is_order = "";
-    }
     if (!is_array($array)) {
-        $array = [];
         $state_validation = "";
-        $required = "";
         $placeholder = "";
-        $deactivate = "";
-        $labeloff = "";
         $multiple = "";
         $allowclear = "";
         $width = "style='width:250px;'";
@@ -84,8 +65,6 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         $required = (array_key_exists('required', $array)) ? $array['required'] : "";
         $is_multiple = (array_key_exists('is_multiple', $array)) ? $array['is_multiple'] : "";
         $placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-        $deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-        $labeloff = (array_key_exists('labeloff', $array)) ? $array['labeloff'] : "";
         $width = (array_key_exists('width', $array)) ? "style='width:".$array['width']."'" : "style='width:250px;'";
         $allowclear = ($placeholder !== "") ? "allowClear:true" : "";
         // $requested by Tyler for his project
@@ -111,11 +90,6 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
              *  $arr['order'] = "the order"
              *  $arr['title'] = "the name"
              */
-            if ($input_value !== "" && ($arr['order'] == $input_value)) {
-                $select = "selected";
-            } else {
-                $select = "";
-            }
             if (array_key_exists("cat", $arr)) {
                 $subclass = "class='".$arr['cat']."'";
             } else {
@@ -127,15 +101,13 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         $html .= "<option value=''></option>";
     }
     $html .= "</select>";
-    $html .= add_to_jquery("
+    add_to_jquery("
         $('#".$input_id."').select2({
         placeholder: '".$placeholder."',
         $allowclear
         });
-        ");
-    $html .= add_to_jquery("
-    $('#".$input_id."').chained('#".$chain_to_parent_id."');
     ");
+    add_to_jquery("$('#".$input_id."').chained('#".$chain_to_parent_id."');");
     $html .= "</div></div>";
 
     return $html;

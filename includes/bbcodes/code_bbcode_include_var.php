@@ -21,5 +21,5 @@ if (!defined("IN_FUSION")) {
 $__BBCODE__[] = [
     "description" => $locale['bb_code_description'],
     "value"       => "code", "bbcode_start" => "[code]", "bbcode_end" => "[/code]",
-    "usage"       => "[code]".$locale['bb_code_usage']."[/code]"
+    "usage"       => "[code(=php)]".$locale['bb_code_usage']."[/code]"
 ];
