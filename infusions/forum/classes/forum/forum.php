@@ -635,20 +635,18 @@ class Forum extends ForumServer {
             'forum_threadcount_word' => '',
         ];
 
-        $forum_sql = "
-        SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid
-        FROM ".DB_FORUMS." f
-        ".(multilang_table('FO') ? " WHERE f.forum_language='".LANGUAGE."' AND " : " WHERE ").groupaccess('f.forum_access')."
-        ";
-        $forum_bind = [];
-        if ($forum_id AND $branch_id) {
-            $forum_sql .= " AND f.forum_branch=:forum_id";
-            $forum_bind = [
-                ':forum_id' => $forum_id,
-            ];
-        }
-        $forum_sql .= "GROUP BY f.forum_id ORDER BY f.forum_cat ASC, f.forum_order ASC";
-        $query = dbquery($forum_sql, $forum_bind);
+        $query = dbquery("
+            SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid, f.forum_language,
+            t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
+            FROM ".DB_FORUMS." f
+            LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
+            ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
+            ".($forum_id && $branch_id ? "AND f.forum_id=:forum_id or f.forum_cat=:forum_id OR f.forum_branch=:branch_id" : '')."
+            GROUP BY f.forum_id ORDER BY f.forum_cat ASC, f.forum_order ASC, t.thread_lastpost DESC
+        ", [
+            ':forum_id'  => intval($forum_id),
+            ':branch_id' => intval($branch_id)
+        ]);
 
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
             $newStatus = '';
@@ -659,47 +657,38 @@ class Forum extends ForumServer {
                 'time'         => '',
                 'date'         => '',
                 'thread_link'  => '',
-                'post_link'    => '',
+                'post_link'    => ''
             ];
 
             if ($data['forum_type'] > 1 && $data['forum_lastpost']) {
+                $user = fusion_get_user($data['thread_lastuser']);
+                $data['user_id'] = $user['user_id'];
+                $data['user_name'] = $user['user_name'];
+                $data['user_status'] = $user['user_status'];
+                $data['user_avatar'] = $user['user_avatar'];
+                $data['user_level'] = $user['user_level'];
 
-                // select on the forum last information
-                $thread_sql = "SELECT thread_id, thread_subject, thread_lastuser, thread_lastpostid, thread_lastpost FROM ".DB_FORUM_THREADS." WHERE forum_id=:forum_id AND thread_lastpost=:forum_lastpost AND thread_lastpostid=:forum_lastpostid ORDER BY thread_lastpost DESC";
-                $thread_param = [':forum_id'         => $data['forum_id'],
-                                 ':forum_lastpost'   => $data['forum_lastpost'],
-                                 ':forum_lastpostid' => $data['forum_lastpostid']
+                $lastPostInfo = [
+                    'avatar'       => $forum_settings['forum_last_post_avatar'] ? display_avatar($data, '30px', '', '', 'img-rounded') : '',
+                    'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
+                    'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
+                    'time'         => timer($data['thread_lastpost']),
+                    'date'         => showdate("forumdate", $data['thread_lastpost']),
+                    'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id'],
+                    'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
+                    'link_title'   => $data['forum_name']
                 ];
-                $thread_result = dbquery($thread_sql, $thread_param);
 
-                if (dbrows($thread_result)) {
-                    $data += dbarray($thread_result);
-                    $user = fusion_get_user($data['thread_lastuser']);
-                    $data['user_id'] = $user['user_id'];
-                    $data['user_name'] = $user['user_name'];
-                    $data['user_status'] = $user['user_status'];
-                    $data['user_avatar'] = $user['user_avatar'];
-                    $data['user_level'] = $user['user_level'];
-                    $lastPostInfo = [
-                        'avatar'       => $forum_settings['forum_last_post_avatar'] ? display_avatar($data, '30px', '', '', 'img-rounded') : '',
-                        'avatar_src'   => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
-                        'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
-                        'time'         => timer($data['thread_lastpost']),
-                        'date'         => showdate("forumdate", $data['thread_lastpost']),
-                        'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id'],
-                        'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
-                        'link_title'   => $data['forum_name'],
-                    ];
-                    // Calculate Forum New Status
-                    $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
-                    $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
-                    if ($data['thread_lastpost'] > $last_visited) {
-                        if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
-                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
-                        }
+                // Calculate Forum New Status
+                $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
+                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
+                if ($data['thread_lastpost'] > $last_visited) {
+                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
+                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
                     }
                 }
             }
+
             // Icons
             switch ($data['forum_type']) {
                 case '1':
@@ -722,6 +711,7 @@ class Forum extends ForumServer {
                     $forum_icon = "";
                     $forum_icon_lg = "";
             }
+
             $row = array_merge($row, $data, [
                 "forum_moderators"       => Moderator::parse_forum_mods($data['forum_mods']),
                 "forum_new_status"       => $newStatus,
@@ -736,6 +726,7 @@ class Forum extends ForumServer {
                 "forum_icon"             => $forum_icon,
                 "forum_icon_lg"          => $forum_icon_lg,
             ]);
+
             $row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '';
 
             $thisref = &$refs[$data['forum_id']];
