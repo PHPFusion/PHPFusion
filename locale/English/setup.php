@@ -2,8 +2,8 @@
 $locale['setup_0000'] = "PHP-Fusion Install";
 $locale['setup_0002'] = "Welcome to PHP-Fusion Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
-$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>Terms and Conditions of Use</a>";
-$locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href=\"https://www.php-fusion.co.uk/requirements\">system requirements</a> page for more information.";
+$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://www.php-fusion.co.uk/licensing/licensing.php' target='_blank'>Terms and Conditions of Use</a>";
+$locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href='https://www.php-fusion.co.uk/infusions/wiki/documentation.php?page=215'>system requirements</a> page for more information.";
 $locale['setup_0007'] = "Systems with OPCache installed must have <a href=\"http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments\">opcache.save_comments</a> enabled.";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['setup_0010'] = "Current Build Version - ";
@@ -62,7 +62,7 @@ $locale['setup_0143'] = "The specified table prefix is already in use and is run
 $locale['setup_0144'] = "Database Diagnostics Completed";
 // Step 1
 $locale['setup_1000'] = "Please select your language";
-$locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
+$locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/php_fusion_9_downloads.php' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
 $locale['setup_1002'] = "Welcome to PHP-Fusion 9.0 Recovery Mode.";
 $locale['setup_1003'] = "We have detected that there is an existing system installed. Please choose any of the following to proceed.";
 $locale['setup_1004'] = "Clean Installation";
