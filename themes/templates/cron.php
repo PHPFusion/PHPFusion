@@ -100,24 +100,22 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
 
             while ($data = dbarray($result)) {
 
-                $user_mysql = [':user_id', $data['user_id'], ':user_id_2' => $data['user_id']];
-
-                dbquery("DELETE FROM ".DB_USERS." WHERE user_id=:user_id", $user_mysql);
-                dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name=:user_id", $user_mysql);
-                dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to=:user_id OR message_from=:user_id_2", $user_mysql);
-                dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user=:user_id", $user_mysql);
-                dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:user_id", $user_mysql);
+                dbquery("DELETE FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => $data['user_id']]);
+                dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name=:user_id", [':user_id' => $data['user_id']]);
+                dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to=:user_id OR message_from=:user_id_2", [':user_id' => $data['user_id'], ':user_id_2' => $data['user_id']]);
+                dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user=:user_id", [':user_id' => $data['user_id']]);
+                dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:user_id", [':user_id' => $data['user_id']]);
 
                 if (infusion_exists('articles'))
-                    dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", [':user_id' => $data['user_id']]);
                 if (infusion_exists('news'))
-                    dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", [':user_id' => $data['user_id']]);
                 if (infusion_exists('member_poll_panel'))
-                    dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", [':user_id' => $data['user_id']]);
                 if (infusion_exists('forum')) {
-                    dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", $user_mysql);
-                    dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", $user_mysql);
-                    dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", $user_mysql);
+                    dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", [':user_id' => $data['user_id']]);
+                    dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", [':user_id' => $data['user_id']]);
+                    dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", [':user_id' => $data['user_id']]);
                 }
             }
         }
