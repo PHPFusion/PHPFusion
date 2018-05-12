@@ -81,7 +81,6 @@ if (empty($settings)) {
 
 
 //ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
-//ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Uncomment to compress and minify PHP-Fusion
 ob_start();
 
 // Sanitise $_SERVER globals
