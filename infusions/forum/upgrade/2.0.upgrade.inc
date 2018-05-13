@@ -20,7 +20,7 @@ $inf_version = '2.0';
 $check_array = [
     'forum_show_lastpost'      => '1',
     'forum_enabled_userfields' => '0',
-    'forum_show_reputation'    => '1',
+    'forum_show_reputation'    => '1'
 ];
 
 $settings = get_settings('forum');

@@ -29,7 +29,7 @@ $check_faq = [
     'faq_datestamp'  => " ADD faq_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '".time()."' AFTER faq_name",
     'faq_visibility' => " ADD faq_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER faq_datestamp",
     'faq_status'     => " ADD faq_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER faq_visibility",
-    'faq_language'   => " ADD faq_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER faq_status",
+    'faq_language'   => " ADD faq_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER faq_status"
 ];
 
 foreach ($check_faq as $key => $value) {

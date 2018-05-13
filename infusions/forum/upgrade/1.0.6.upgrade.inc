@@ -29,26 +29,24 @@ $check_array = [
     'downvote_points'    => 1,
     'answering_points'   => 15,
     'points_to_upvote'   => 100,
-    'points_to_downvote' => 100,
+    'points_to_downvote' => 100
 ];
 foreach ($check_array as $name => $val) {
     if (!dbcount("(settings_name)", DB_SETTINGS_INF, "settings_name=:col_name", [':col_name' => $name])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$name', '$val', 'forum')";
     }
 }
-if (!column_exists('forum_threads', 'thread_bounty')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty SMALLINT(8) NOT NULL DEFAULT '0' AFTER thread_answered";
-}
-if (!column_exists('forum_threads', 'thread_bounty_description')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_description TEXT NOT NULL AFTER thread_bounty";
-}
+$check_threads = [
+    'thread_bounty'             => " ADD thread_bounty SMALLINT(8) NOT NULL DEFAULT '0' AFTER thread_answered",
+    'thread_bounty_description' => " ADD thread_bounty_description TEXT NOT NULL AFTER thread_bounty",
+    'thread_bounty_start'       => " ADD thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_description",
+    'thread_bounty_user'        => " ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_start",
+];
 
-if (!column_exists('forum_threads', 'thread_bounty_start')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_start INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_description";
-}
-
-if (!column_exists(DB_FORUM_THREADS, 'thread_bounty_user', FALSE)) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_bounty_user MEDIUMINT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_bounty_start";
+foreach ($check_threads as $key => $value) {
+    if (!column_exists(DB_FORUM_THREADS, $key, FALSE)) {
+        $inf_altertable[] = DB_FORUM_THREADS.$value;
+    }
 }
 
 if (!column_exists(DB_FORUM_POSTS, 'post_cat', FALSE)) {

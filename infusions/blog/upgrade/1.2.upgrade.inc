@@ -19,7 +19,7 @@ $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
 $check_array = [
-    'blog_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
+    'blog_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z'
 ];
 
 $settings = get_settings('blog');

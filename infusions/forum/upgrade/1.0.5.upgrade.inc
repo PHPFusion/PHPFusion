@@ -83,7 +83,6 @@ if (!db_exists($db_prefix.'forum_thread_tags')) {
 
 // Install a new mood table
 if (!db_exists($db_prefix."forum_post_mood")) {
-
     $table_query = $db_prefix."forum_post_mood (
     mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     mood_name TEXT NOT NULL,
@@ -113,71 +112,44 @@ if (!db_exists($db_prefix."forum_post_notify")) {
 /*
  * Modify Forum Table
  */
-if (!column_exists('forums', 'forum_branch')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat";
+$check_forums = [
+    'forum_branch'           => " ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat",
+    'forum_type'             => " ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name",
+    'forum_answer_threshold' => " ADD forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type",
+    'forum_lock'             => " ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_threshold",
+    'forum_rules'            => " ADD forum_rules TEXT NOT NULL AFTER forum_description",
+    'forum_language'         => " ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER forum_merge",
+    'forum_meta'             => " ADD forum_meta TEXT NOT NULL AFTER forum_language",
+    'forum_alias'            => " ADD forum_alias TEXT NOT NULL AFTER forum_meta",
+    'forum_allow_poll'       => " ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply",
+    'forum_image'            => " ADD forum_image VARCHAR(100) NOT NULL DEFAULT '' AFTER forum_vote",
+    'forum_post_ratings'     => " ADD forum_post_ratings TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER." AFTER forum_image",
+    'forum_users'            => " ADD forum_users TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_post_ratings",
+    'forum_allow_attach'     => " ADD forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_users",
+    'forum_quick_edit'       => " ADD forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_attach_download",
+    'forum_lastpostid'       => " ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit"
+];
+
+foreach ($check_forums as $key => $value) {
+    if (!column_exists(DB_FORUMS, $key, FALSE)) {
+        $inf_altertable[] = DB_FORUMS.$value;
+    }
 }
-if (!column_exists('forums', 'forum_type')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name";
-}
-if (!column_exists('forums', 'forum_answer_threshold')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type";
-}
-if (!column_exists('forums', 'forum_lock')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_threshold";
-}
-if (!column_exists('forums', 'forum_rules')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_rules TEXT NOT NULL AFTER forum_description";
-}
-if (!column_exists('forums', 'forum_language')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER forum_merge";
-}
-if (!column_exists('forums', 'forum_meta')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_meta TEXT NOT NULL AFTER forum_language";
-}
-if (!column_exists('forums', 'forum_alias')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_alias TEXT NOT NULL AFTER forum_meta";
-}
-if (!column_exists('forums', 'forum_allow_poll')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply";
-}
-if (!column_exists('forums', 'forum_image')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_image VARCHAR(100) NOT NULL DEFAULT '' AFTER forum_vote";
-}
-if (!column_exists('forums', 'forum_post_ratings')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_post_ratings TINYINT(4) NOT NULL DEFAULT ".USER_LEVEL_MEMBER." AFTER forum_image";
-}
-if (!column_exists('forums', 'forum_users')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_users TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_post_ratings";
-}
-if (!column_exists('forums', 'forum_allow_attach')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_users";
-}
-if (!column_exists('forums', 'forum_quick_edit')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_attach_download";
-}
-if (!column_exists('forums', 'forum_lastpostid')) {
-    $inf_altertable[] = $db_prefix."forums ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit";
-}
-if (column_exists('forums', 'forum_moderators')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_moderators forum_mods TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_access')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_access forum_access TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_reply')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_vote')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_poll')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_attach')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
-}
-if (column_exists('forums', 'forum_attach_download')) {
-    $inf_altertable[] = $db_prefix."forums CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
+
+$change_forums = [
+    'forum_moderators'      => " CHANGE forum_moderators forum_mods TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_access'          => " CHANGE forum_access forum_access TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_reply'           => " CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_vote'            => " CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_poll'            => " CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_attach'          => " CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'"
+];
+
+foreach ($change_forums as $key => $value) {
+    if (column_exists(DB_FORUMS, $key, FALSE)) {
+        $inf_altertable[] = DB_FORUMS.$value;
+    }
 }
 
 // Update existing records and change level accesses to new user groups values
@@ -269,18 +241,17 @@ if (dbrows($result) > 0) {
 /*
  * Modify Forum Threads Table
  */
-if (!column_exists('forum_threads', 'thread_tags')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags TEXT NOT NULL AFTER thread_id";
-}
-if (!column_exists('forum_threads', 'thread_tags_old')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags_old TEXT NOT NULL AFTER thread_tags";
-}
-if (!column_exists('forum_threads', 'thread_tags_change')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_tags_old";
-}
-// Add thread answered to threads -- add column
-if (!column_exists('forum_threads', 'thread_answered')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky";
+$forum_threads = [
+    'thread_tags'        => " ADD thread_tags TEXT NOT NULL AFTER thread_id",
+    'thread_tags_old'    => " ADD thread_tags_old TEXT NOT NULL AFTER thread_tags",
+    'thread_tags_change' => " ADD thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_tags_old",
+    'thread_answered'    => " ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky"
+];
+
+foreach ($check_faq as $key => $value) {
+    if (!column_exists(DB_FORUM_THREADS, $key, FALSE)) {
+        $inf_altertable[] = DB_FORUM_THREADS.$value;
+    }
 }
 /*
  * Modify Forum Attachment Table
@@ -289,22 +260,32 @@ if (!column_exists('forum_attachments', 'attach_mime') && column_exists('forum_a
     $inf_altertable[] = $db_prefix."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
 }
 // Clear old core settings if they are there regardless of current state
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_ips'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_attachmax'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_attachmax_count'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_attachtypes'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_notify'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_ranks'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_edit_lock'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_edit_timelimit'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_threads_timeframe'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_last_posts_reply'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_last_post_avatar'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_editpost_to_lastpost'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='threads_per_page'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='posts_per_page'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='numofthreads'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='forum_rank_style'";
+$settings = fusion_get_settings();
+$del_forumsettings = [
+    0  => 'forum_ips',
+    1  => 'forum_attachmax',
+    2  => 'forum_attachmax_count',
+    3  => 'forum_attachtypes',
+    4  => 'forum_notify',
+    5  => 'forum_ranks',
+    6  => 'forum_edit_lock',
+    7  => 'forum_edit_timelimit',
+    8  => 'forum_threads_timeframe',
+    9  => 'forum_last_posts_reply',
+    10 => 'forum_last_post_avatar',
+    11 => 'forum_editpost_to_lastpost',
+    12 => 'threads_per_page',
+    13 => 'posts_per_page',
+    14 => 'numofthreads',
+    15 => 'forum_rank_style'
+];
+
+foreach ($del_forumsettings as $key => $value) {
+    if (isset($settings[$value])) {
+        $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";;
+    }
+}
+
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_forum.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='forum_ranks.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='forums.php'";
