@@ -22,8 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_latest_comments')) {
     function render_latest_comments($info) {
         $html = \PHPFusion\Template::getInstance('latest_comments');
-        $html->set_template(INFUSIONS."latest_comments_panel/templates/latest_comments.html");
-
+        $html->set_template(__DIR__.'/templates/latest_comments.html');
         $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));
 

@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_forum_mods')) {
     function render_forum_mods($info) {
         $html = \PHPFusion\Template::getInstance('render_forum_mods');
-        $html->set_template(INFUSIONS."forum_mods_online_panel/templates/forum_mods.html");
+        $html->set_template(__DIR__.'/templates/forum_mods.html');
 
         if (!empty($info['admin']['item'])) {
             $html->set_tag('adm_openside', fusion_get_function('openside', $info['admin']['openside']));

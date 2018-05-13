@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_threads_panel')) {
     function render_threads_panel($info) {
         $html = \PHPFusion\Template::getInstance('threads');
-        $html->set_template(INFUSIONS."forum_threads_panel/templates/threads.html");
+        $html->set_template(__DIR__.'/templates/threads.html');
 
         $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));

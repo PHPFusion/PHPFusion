@@ -24,8 +24,7 @@ if (!function_exists('render_latest_downloads')) {
         $locale = fusion_get_locale();
 
         $html = \PHPFusion\Template::getInstance('render_latest_downloads');
-        $html->set_template(INFUSIONS.'latest_downloads_panel/templates/latest_downloads.html');
-
+        $html->set_template(__DIR__.'/templates/latest_downloads.html');
         $html->set_tag('openside', fusion_get_function('openside', $info['title']));
         $html->set_tag('closeside', fusion_get_function('closeside'));
 
