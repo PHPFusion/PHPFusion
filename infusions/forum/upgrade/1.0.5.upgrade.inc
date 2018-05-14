@@ -248,7 +248,7 @@ $forum_threads = [
     'thread_answered'    => " ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky"
 ];
 
-foreach ($check_faq as $key => $value) {
+foreach ($forum_threads as $key => $value) {
     if (!column_exists(DB_FORUM_THREADS, $key, FALSE)) {
         $inf_altertable[] = DB_FORUM_THREADS.$value;
     }
@@ -422,7 +422,7 @@ if (db_exists(DB_FORUM_POSTS)) {
         }
     }
     $regex = '#\[img\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#si';
-    $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_message LIKE '%[img]".$siteurl."%' ORDER BY post_id ASC");
+    $result = dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE post_message LIKE '%[img]".fusion_get_settings('siteurl')."%' ORDER BY post_id ASC");
     if (dbrows($result)) {
         $i = 1;
         while ($data = dbarray($result)) {
