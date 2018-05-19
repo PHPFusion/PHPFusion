@@ -32,7 +32,7 @@ $insert_settings_tbl = [
     'user_name_ban'     => '',
     'database_sessions' => 1,
     'domain_server'     => '',
-    'form_tokens'       => 5,
+    'form_tokens'       => 1,
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
