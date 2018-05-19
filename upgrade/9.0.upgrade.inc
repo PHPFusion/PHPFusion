@@ -182,17 +182,18 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
 if (db_exists(DB_ADMIN)) {
     // Remove the deprecated administration links
     $del_table = [
-        'settings_photo.php',
-        'settings_forum.php',
-        'user_field_cats.php',
-        'settings_dl.php',
-        'settings_ipp.php',
-        'submissions.php'
+        'S5'  => 'settings_photo.php',
+        'S3'  => 'settings_forum.php',
+        'UFC' => 'user_field_cats.php',
+        'S11' => 'settings_dl.php',
+        'S10' => 'settings_ipp.php',
+        'SU'  => 'submissions.php'
     ];
 
-    foreach ($del_table as $link) {
+    foreach ($del_table as $key => $del_link) {
         // change to
-        $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='".$link."'";
+        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_link='".$del_link."'");
+        //$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='".$del_link."'";
     }
 
     // Add new core administration links
@@ -446,36 +447,6 @@ if (db_exists(DB_INFUSIONS)) {
             $inf_insertdbrow[] = $value['insert'];
         }
     }
-}
-
-// Move all download images
-if (file_exists(BASEDIR."downloads/images/")) {
-    $attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        rename(BASEDIR."downloads/images/".$file, INFUSIONS."downloads/images/".$file);
-    }
-}
-
-// Move all downloads
-if (file_exists(BASEDIR."downloads/")) {
-    $attachment_files = makefilelist(BASEDIR."downloads/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        rename(BASEDIR."downloads/".$file, INFUSIONS."downloads/files/".$file);
-    }
-
-    // Remove the whole old dir including rouge files
-    rrmdir(BASEDIR."downloads");
-}
-
-// Move all forum attachments
-if (file_exists(BASEDIR."forum/attachments/")) {
-    $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
-    }
-
-    // Remove the whole old dir including rouge files
-    rrmdir(BASEDIR."forum/attachments");
 }
 
 // Move all photos

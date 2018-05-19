@@ -115,20 +115,40 @@ if (dbrows($result)) {
                 'news_image_front_default' => $id,
             ];
             dbquery_insert(DB_NEWS, $cdata, 'update', ['keep_session' => TRUE]);
-            // Now we move all the images over
-            if (!empty($data['news_image']) && file_exists(IMAGES."news/".$data['news_image'])) {
-                rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
-            }
-            if (!empty($data['news_image_t1']) && file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
-                rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
-            }
-            if (!empty($data['news_image_t2']) && file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
-                rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
-            }
             // delay the process by 0.3 seconds to prevent redirection before process completes
-            sleep(0.3);
+            //sleep(0.3);
         }
     }
+}
+
+if (file_exists(IMAGES."news/thumbs/")) {
+    $attachment_files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    unset($file);
+    rmdir(IMAGES.'news/thumbs');
+}
+
+if (file_exists(IMAGES."news/")) {
+    $attachment_files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    unset($file);
+    rmdir(IMAGES.'news');
+}
+
+if (file_exists(IMAGES."news/news_cats/")) {
+    $attachment_files = makefilelist(IMAGES."news/news_cats/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(IMAGES."news/news_cats/".$file, INFUSIONS."news/news_cats/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    unset($file);
+    rmdir(IMAGES.'news/news_cats');
 }
 
 // Drop existing columns
@@ -219,4 +239,21 @@ if (!empty($enabled_languages)) {
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".LANGUAGE."')";
+}
+
+function rrmdir($dir) {
+    if (file_exists($dir) && is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir."/".$object) == "dir") {
+                    rrmdir($dir."/".$object);
+                } else {
+                    unlink($dir."/".$object);
+                }
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
 }

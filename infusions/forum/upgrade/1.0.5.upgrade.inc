@@ -432,3 +432,16 @@ if (db_exists(DB_FORUM_POSTS)) {
         }
     }
 }
+// Move all forum attachments
+if (file_exists(BASEDIR."forum/attachments/")) {
+    $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+    }
+
+    // Remove the whole old dir including rouge files
+    unset($files);
+    rmdir(BASEDIR.'forum/attachments');
+    rmdir(BASEDIR.'forum');
+}
+

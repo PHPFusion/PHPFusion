@@ -103,5 +103,15 @@ foreach ($check_array as $key => $value) {
     }
 }
 
+if (file_exists(IMAGES."articles/")) {
+    $attachment_files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    unset($file);
+    rmdir(IMAGES.'articles');
+}
+
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name = 'articles_per_page'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='article_cats.php'";
