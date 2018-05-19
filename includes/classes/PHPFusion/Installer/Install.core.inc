@@ -311,7 +311,7 @@ class Install_Core extends Infusion_Core {
                         if (!defined('DB_PREFIX') && !empty(self::$connection['DB_PREFIX'])) {
                             define('DB_PREFIX', self::$connection['DB_PREFIX']);
                         }
-                        self::set_empty_prefix();
+                        //self::set_empty_prefix();
                         return TRUE;
                     }
                 }
