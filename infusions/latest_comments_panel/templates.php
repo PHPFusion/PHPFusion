@@ -36,7 +36,7 @@ if (!function_exists('render_latest_comments')) {
                     'comment_subject'     => trim_text($data['title'], 40),
                     'comment_subject_url' => $data['url'],
                     'comment_url'         => $data['c_url'],
-                    'comment_message'     => trim_text(strip_tags(parse_textarea($data['data']['comment_message'])), 35),
+                    'comment_message'     => trim_text(strip_tags(parse_textarea($data['data']['comment_message'], FALSE, TRUE)), 35),
                     'comment_bullet'      => $info['theme_bullet']
                 ]);
             }
