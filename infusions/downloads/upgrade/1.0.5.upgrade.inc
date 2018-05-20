@@ -121,13 +121,13 @@ if (dbrows($result)) {
 }
 
 if (file_exists(BASEDIR.'downloads/')) {
+	include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php", TRUE);
     if (!empty($files)) {
         foreach ($files as $filename) {
             rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
         }
     }
-    unset($files);
 
     if (file_exists(BASEDIR.'downloads/images/')) {
         // Images folder
@@ -137,8 +137,7 @@ if (file_exists(BASEDIR.'downloads/')) {
                 rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
             }
         }
-        unset($files);
-        rmdir(BASEDIR.'downloads/images');
+        rrmdir(BASEDIR.'downloads/images');
     }
 
     if (file_exists(BASEDIR.'downloads/submissions/')) {
@@ -148,8 +147,7 @@ if (file_exists(BASEDIR.'downloads/')) {
             foreach ($files as $filename) {
                 rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
             }
-            unset($files);
-            rmdir(BASEDIR.'downloads/submissions');
+            rrmdir(BASEDIR.'downloads/submissions');
         }
         if (file_exists(BASEDIR.'downloads/submissions/images/')) {
             // Images folder
@@ -159,12 +157,10 @@ if (file_exists(BASEDIR.'downloads/')) {
                     rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
                 }
             }
-            unset($files);
-            rmdir(BASEDIR.'downloads/submissions/images');
+            rrmdir(BASEDIR.'downloads/submissions/images');
         }
     }
 
-    rmdir(BASEDIR.'downloads');
-
+    rrmdir(BASEDIR.'downloads');
 }
 

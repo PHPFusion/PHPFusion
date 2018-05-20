@@ -434,14 +434,24 @@ if (db_exists(DB_FORUM_POSTS)) {
 }
 // Move all forum attachments
 if (file_exists(BASEDIR."forum/attachments/")) {
+	include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
         rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
     }
 
     // Remove the whole old dir including rouge files
-    unset($files);
-    rmdir(BASEDIR.'forum/attachments');
-    rmdir(BASEDIR.'forum');
+    rrmdir(BASEDIR.'forum/attachments');
+    rrmdir(BASEDIR.'forum');
+}
+
+if (file_exists(IMAGES."ranks/")) {
+    $attachment_files = makefilelist(IMAGES."ranks/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
+    }
+
+    // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'ranks/');
 }
 

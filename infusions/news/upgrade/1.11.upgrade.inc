@@ -120,6 +120,7 @@ if (dbrows($result)) {
         }
     }
 }
+include_once BASEDIR.'upgrade/upgrade_functions_include.php';
 
 if (file_exists(IMAGES."news/thumbs/")) {
     $attachment_files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
@@ -127,8 +128,7 @@ if (file_exists(IMAGES."news/thumbs/")) {
         rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
     }
     // Remove the whole old dir including rouge files
-    unset($file);
-    rmdir(IMAGES.'news/thumbs');
+    rrmdir(IMAGES.'news/thumbs');
 }
 
 if (file_exists(IMAGES."news/")) {
@@ -137,8 +137,7 @@ if (file_exists(IMAGES."news/")) {
         rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
     }
     // Remove the whole old dir including rouge files
-    unset($file);
-    rmdir(IMAGES.'news');
+    rrmdir(IMAGES.'news');
 }
 
 if (file_exists(IMAGES."news/news_cats/")) {
@@ -147,8 +146,7 @@ if (file_exists(IMAGES."news/news_cats/")) {
         rename(IMAGES."news/news_cats/".$file, INFUSIONS."news/news_cats/".$file);
     }
     // Remove the whole old dir including rouge files
-    unset($file);
-    rmdir(IMAGES.'news/news_cats');
+    rrmdir(IMAGES.'news/news_cats');
 }
 
 // Drop existing columns
@@ -241,19 +239,3 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".LANGUAGE."')";
 }
 
-function rrmdir($dir) {
-    if (file_exists($dir) && is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir."/".$object) == "dir") {
-                    rrmdir($dir."/".$object);
-                } else {
-                    unlink($dir."/".$object);
-                }
-            }
-        }
-        reset($objects);
-        rmdir($dir);
-    }
-}
