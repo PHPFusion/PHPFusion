@@ -75,7 +75,7 @@ if (!db_exists($db_prefix.'forum_thread_tags')) {
     tag_description VARCHAR(250) NOT NULL DEFAULT '',
     tag_color VARCHAR(20) NOT NULL DEFAULT '',
     tag_status SMALLINT(1) NOT NULL DEFAULT '0',
-    tag_language VARCHAR(100) NOT NULL DEFAULT '',
+    tag_language VARCHAR(100) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (tag_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     dbquery("CREATE TABLE ".$table_query);
@@ -194,9 +194,6 @@ if (dbrows($result)) {
         }
 
         // Update new access levels for forum moderators
-        if (!empty($data['forum_mods'])) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='-".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."' AND forum_mods != 0 OR forum_mods != ''";
-        }
     }
 
     /*
@@ -209,7 +206,7 @@ if (dbrows($result)) {
 }
 
 // Update the forums with lastpost information
-$select = dbquery("SELECT forum_id FROM ".$db_prefix."forums ORDER BY forum_id ASC");
+$select = dbquery("SELECT forum_id, forum_mods FROM ".$db_prefix."forums ORDER BY forum_id ASC");
 if (dbrows($select)) {
     while ($data = dbarray($select)) {
         $select2 = dbquery("SELECT * FROM ".$db_prefix."forum_threads WHERE forum_id='".$data['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 1");
@@ -314,12 +311,13 @@ foreach ($check_array as $name => $val) {
     }
 }
 
-// Add forum default thread tag //FORUM_LOCALE
+/*// Add forum default thread tag //FORUM_LOCALE
 if (db_exists(DB_FORUM_TAGS)) {
     if (!dbcount("(tag_title)", DB_FORUM_TAGS)) {
-        $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
+        $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('locale')."')";
     }
 }
+*/
 
 // Delete the old link
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='forum/index.php'";
@@ -327,7 +325,7 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='forum/index.php'";
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"]);
+        $locale = fusion_get_locale("", [LOCALE.$language."/setup.php", INFUSIONS."forum/locale/".$language."/forum_tags.php"]);
 
         $sl_name_check = [
             $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '2', '1', '".$language."')",
@@ -379,20 +377,20 @@ if (!empty($enabled_languages)) {
         $mlt_deldbrow[$language][] = DB_FORUM_RANKS." WHERE rank_language='".$language."'";
     }
 } else {
-    $language = LANGUAGE;
+
     $sl_name_check = [
-        $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '2', '1', '".$language."')",
-        $locale['setup_3324'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', ".USER_LEVEL_MEMBER.", '2', '0', '1', '1', '".$language."')",
-        $locale['setup_3319'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".$language."')",
-        $locale['setup_3320'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', ".USER_LEVEL_MEMBER.", '2', '0', '3', '1', '".$language."')",
-        $locale['setup_3321'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', ".USER_LEVEL_MEMBER.", '2', '0', '4', '1', '".$language."')",
-        $locale['setup_3322'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".$language."')",
-        $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".$language."')",
+        $locale['setup_3304'] => DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '2', '1', '".LANGUAGE."')",
+        $locale['setup_3324'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', ".USER_LEVEL_MEMBER.", '2', '0', '1', '1', '".LANGUAGE."')",
+        $locale['setup_3319'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '1', '".LANGUAGE."')",
+        $locale['setup_3320'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3320']."', 'infusions/forum/index.php?section=participated', ".USER_LEVEL_MEMBER.", '2', '0', '3', '1', '".LANGUAGE."')",
+        $locale['setup_3321'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3321']."', 'infusions/forum/index.php?section=tracked', ".USER_LEVEL_MEMBER.", '2', '0', '4', '1', '".LANGUAGE."')",
+        $locale['setup_3322'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '1', '".LANGUAGE."')",
+        $locale['setup_3323'] => DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '1', '".LANGUAGE."')",
     ];
 
     foreach ($sl_name_check as $link_name => $_sql) {
         if (!dbcount("(link_id)", DB_SITE_LINKS, "link_name='".$link_name."'")) {
-            $mlt_insertdbrow[$language][] = $_sql;
+            $inf_insertdbrow[] = $_sql;
         }
     }
 }
@@ -433,8 +431,8 @@ if (db_exists(DB_FORUM_POSTS)) {
     }
 }
 // Move all forum attachments
+include_once BASEDIR.'upgrade/upgrade_functions_include.php';
 if (file_exists(BASEDIR."forum/attachments/")) {
-	include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
         rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
@@ -442,7 +440,6 @@ if (file_exists(BASEDIR."forum/attachments/")) {
 
     // Remove the whole old dir including rouge files
     rrmdir(BASEDIR.'forum/attachments');
-    rrmdir(BASEDIR.'forum');
 }
 
 if (file_exists(IMAGES."ranks/")) {
@@ -455,3 +452,4 @@ if (file_exists(IMAGES."ranks/")) {
     rrmdir(IMAGES.'ranks/');
 }
 
+rrmdir(BASEDIR.'forum');

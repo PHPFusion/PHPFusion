@@ -24,6 +24,14 @@ $locale = fusion_get_locale("",
 );
 
 $inf_version = '1.0.6';
+$select = dbquery("SELECT forum_id, forum_mods FROM ".$db_prefix."forums ORDER BY forum_id ASC");
+if (dbrows($select)) {
+    while ($data = dbarray($select)) {
+        if ($data['forum_mods']) {
+            $inf_updatedbrow[] = $db_prefix."forums SET forum_mods='-".$data['forum_mods']."' WHERE forum_id='".$data['forum_id']."' AND forum_mods != 0";
+        }
+    }
+}
 $check_array = [
     'upvote_points'      => 2,
     'downvote_points'    => 1,

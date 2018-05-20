@@ -59,16 +59,16 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
     while ($data = dbarray($result)) {
         $current_rights = explode('.', $data['user_rights']);
         $isset_rights = array_flip($current_rights);
-        $remove_rights = ['AC', 'DC', 'NC', 'WC', 'S5', 'S8', 'S11', 'S13', 'SU'];
-        foreach ($remove_rights as $remove) {
-            if (isset($isset_rights[$remove])) {
-                unset($current_rights[$remove]);
+        $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
+        foreach ($remove_rights as $key => $remove) {
+            if (in_array($remove, $isset_rights)) {
+                unset($current_rights[$isset_rights[$remove]]);
             }
         }
-        if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN) {
+        if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN || $data['user_level'] === '103') {
             $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
-            foreach ($new_rights as $add) {
-                if (!isset($isset_rights[$add])) {
+            foreach ($new_rights as $key => $add) {
+                if (!in_array($add, $current_rights)) {
                     $current_rights[] = $add;
                 }
             }
@@ -211,43 +211,6 @@ if (db_exists(DB_ADMIN)) {
         if (empty($count)) {
             $inf_insertdbrow[] = $value;
         }
-    }
-
-    // Update new infusion administration icons
-    if (db_exists(DB_PREFIX."articles")) {
-        $new_icon_array = ['A' => '../infusions/articles/articles.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."downloads")) {
-        $new_icon_array = ['D' => '../infusions/download/download.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."faqs")) {
-        $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."forums")) {
-        $new_icon_array = ['F' => '../infusions/forum/forums.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."photo_albums")) {
-        $new_icon_array = ['PH' => '../infusions/gallery/gallery.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."news")) {
-        $new_icon_array = ['N' => '../infusions/news/news.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."weblinks")) {
-        $new_icon_array = ['W' => '../infusions/weblinks/weblink.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."polls")) {
-        $new_icon_array = ['PO' => '../infusions/member_poll_panel/polls.svg'];
-    }
-
-    if (db_exists(DB_PREFIX."shoutbox")) {
-        $new_icon_array = ['S' => '../infusions/shoutbox/shouts.svg'];
     }
 
     // Update new administration icons
@@ -449,21 +412,3 @@ if (db_exists(DB_INFUSIONS)) {
     }
 }
 
-// Move all photos
-if (db_exists(DB_PREFIX."photo_albums")) {
-    $result = dbquery("SELECT * FROM ".DB_PREFIX."photo_albums");
-
-    if (dbrows($result) > 0) {
-        while ($data = dbarray($result)) {
-            if (!empty($data['album_thumb']) && file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
-                // Rename the album thumb here
-                rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
-                // Call the album directory rename function here
-                move_photos($data['album_id']);
-            }
-        }
-    }
-}
-
-// Remove the whole old photoalbum dir including rouge files
-rrmdir(IMAGES.'photoalbum');
