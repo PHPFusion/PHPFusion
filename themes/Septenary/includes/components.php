@@ -439,7 +439,7 @@ class SeptenaryComponents {
         echo "<a href='#' id='top'><i style='font-size:50px;' class='fa fa-arrow-circle-o-up mid-opacity'></i></a>\n";
         add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
-        echo "<p class='text-left'>".stripslashes($settings['footer'])."</p>
+        echo "<p class='text-left'>".nl2br(parse_textarea($settings['footer'], FALSE, TRUE))."</p>
         <p>".showcopyright().showprivacypolicy()."</p>
         <p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
         <p>";

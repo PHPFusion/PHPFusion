@@ -121,12 +121,12 @@ $settings_main = [
 if (isset($_POST['savesettings'])) {
 
     $settings_main = [
-        'siteintro'       => descript(addslashes(addslashes($_POST['siteintro']))),
+        'siteintro'       => descript(addslashes($_POST['siteintro'])),
         'sitename'        => form_sanitizer($_POST['sitename'], '', 'sitename'),
         'sitebanner'      => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
         'siteemail'       => form_sanitizer($_POST['siteemail'], '', 'siteemail'),
         'siteusername'    => form_sanitizer($_POST['siteusername'], '', 'siteusername'),
-        'footer'          => descript(addslashes(addslashes($_POST['footer']))),
+        'footer'          => descript(addslashes($_POST['footer'])),
         'site_protocol'   => form_sanitizer($_POST['site_protocol'], '', 'site_protocol'),
         'site_host'       => form_sanitizer($_POST['site_host'], '', 'site_host'),
         'site_path'       => form_sanitizer($_POST['site_path'], '', 'site_path'),
