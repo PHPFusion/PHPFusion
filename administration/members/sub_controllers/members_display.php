@@ -119,7 +119,8 @@ class Members_Display extends Members_Admin {
             'user_ip'         => self::$locale['ME_423'],
             'user_ip_type'    => self::$locale['ME_424'],
             'user_groups'     => self::$locale['ME_425'],
-            'user_timezone'   => self::$locale['ME_426']
+            'user_timezone'   => self::$locale['ME_426'],
+            'user_status'     => self::$locale['ME_427']
         ];
 
         $field_checkboxes = [
@@ -250,13 +251,14 @@ class Members_Display extends Members_Admin {
 
                 $list[$data['user_id']]['user_level'] = getuserlevel($data['user_level']);
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
+                $list[$data['user_id']]['user_status'] = getuserstatus($data['user_status']);
             }
         }
 
         // Render table header and table result
         $table_head = "<tr><th></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='".count($selected_fields)."' class='text-center'>".self::$locale['ME_409']."</th></tr>";
 
-        $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
+        $table_subheader = "<th></th><th colspan='2' class='col-xs-2'>".self::$locale['ME_410']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th class='min'>".self::$locale['ME_427']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
 
         foreach ($selected_fields as $column) {
             $table_subheader .= "<th>".$tLocale[$column]."</th>\n";
@@ -323,8 +325,9 @@ class Members_Display extends Members_Admin {
         $html = "<tr id='user-".$user_id."'>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
                 <td class='col-xs-2'>".$list[$user_id]['user_name']."</td>\n
-                <td class='no-break'>".$list[$user_id]['user_actions']."</td>
+                <td class='no-break'>".$list[$user_id]['user_actions']."</td>\n
                 <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
+                <td class='no-break'>\n".$list[$user_id]['user_status']."</td>\n
                 <td>\n".$list[$user_id]['user_email']."</td>\n";
 
         add_to_jquery('$("#user_id_'.$user_id.'").click(function() {

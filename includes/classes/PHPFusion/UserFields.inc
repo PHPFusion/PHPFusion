@@ -700,10 +700,12 @@ class UserFields extends QuantumFields {
                 'value' => getuserstatus($this->userData['user_status'])
             ];
 
-            $this->info['core_field']['profile_user_reason'] = [
-                'title' => $locale['u056'],
-                'value' => $this->userData['suspend_reason']
-            ];
+            if ($this->userData['user_status'] == 3) {
+                $this->info['core_field']['profile_user_reason'] = [
+                    'title' => $locale['u056'],
+                    'value' => $this->userData['suspend_reason']
+                ];
+            }
         }
 
         // IP

@@ -25,6 +25,7 @@ $locale['ME_423'] = 'IP Address';
 $locale['ME_424'] = 'IP Type';
 $locale['ME_425'] = 'User Groups';
 $locale['ME_426'] = 'Timezone';
+$locale['ME_427'] = 'User Status';
 
 // Action Form
 $locale['ME_430'] = 'Error: Actions against selected users could not be completed';
