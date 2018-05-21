@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess("PH");
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+pageAccess("PH");
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 
 if (isset($_POST['delete_watermarks'])) {
@@ -50,135 +50,179 @@ if (isset($_POST['delete_watermarks'])) {
     if (isset($_POST['savesettings'])) {
 
         $inputArray = [
-            "thumb_w"                     => form_sanitizer($_POST['thumb_w'], 200, "thumb_w"),
-            "thumb_h"                     => form_sanitizer($_POST['thumb_h'], 200, "thumb_h"),
-            "photo_w"                     => form_sanitizer($_POST['photo_w'], 800, "photo_w"),
-            "photo_h"                     => form_sanitizer($_POST['photo_h'], 800, "photo_h"),
-            "photo_max_w"                 => form_sanitizer($_POST['photo_max_w'], 2400, "photo_max_w"),
-            "photo_max_h"                 => form_sanitizer($_POST['photo_max_h'], 1800, "photo_max_h"),
-            "photo_max_b"                 => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
-            "gallery_pagination"          => form_sanitizer($_POST['gallery_pagination'], 24, "gallery_pagination"),
-            "photo_watermark"             => form_sanitizer($_POST['photo_watermark'], 0, "photo_watermark"),
-            "photo_watermark_save"        => isset($_POST['photo_watermark_save']) ? 1 : 0,
-            "photo_watermark_image"       => isset($_POST['photo_watermark_image']) ? form_sanitizer($_POST['photo_watermark_image'], "", "photo_watermark_image") : IMAGES_G."watermark.png",
-            "photo_watermark_text"        => isset($_POST['photo_watermark_text']) ? 1 : 0,
-            "photo_watermark_text_color1" => isset($_POST['photo_watermark_text_color1']) ? form_sanitizer($_POST['photo_watermark_text_color1'], "FF6600", "photo_watermark_text_color1") : "FF6600",
-            "photo_watermark_text_color2" => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], "FFFF00", "photo_watermark_text_color2") : "FFFF00",
-            "photo_watermark_text_color3" => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], "FFFFFF", "photo_watermark_text_color3") : "FFFFFF",
-            "gallery_allow_submission"    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
-            "gallery_extended_required"   => isset($_POST['gallery_extended_required']) ? 1 : 0,
-            "gallery_file_types"          => form_sanitizer($_POST['gallery_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "gallery_file_types"),
+            'thumb_w'                     => form_sanitizer($_POST['thumb_w'], 200, 'thumb_w'),
+            'thumb_h'                     => form_sanitizer($_POST['thumb_h'], 200, 'thumb_h'),
+            'photo_w'                     => form_sanitizer($_POST['photo_w'], 800, 'photo_w'),
+            'photo_h'                     => form_sanitizer($_POST['photo_h'], 800, 'photo_h'),
+            'photo_max_w'                 => form_sanitizer($_POST['photo_max_w'], 2400, 'photo_max_w'),
+            'photo_max_h'                 => form_sanitizer($_POST['photo_max_h'], 1800, 'photo_max_h'),
+            'photo_max_b'                 => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
+            'gallery_pagination'          => form_sanitizer($_POST['gallery_pagination'], 24, 'gallery_pagination'),
+            'photo_watermark'             => form_sanitizer($_POST['photo_watermark'], 0, 'photo_watermark'),
+            'photo_watermark_save'        => isset($_POST['photo_watermark_save']) ? 1 : 0,
+            'photo_watermark_image'       => isset($_POST['photo_watermark_image']) ? form_sanitizer($_POST['photo_watermark_image'], '', 'photo_watermark_image') : IMAGES_G.'watermark.png',
+            'photo_watermark_text'        => isset($_POST['photo_watermark_text']) ? 1 : 0,
+            'photo_watermark_text_color1' => isset($_POST['photo_watermark_text_color1']) ? form_sanitizer($_POST['photo_watermark_text_color1'], 'FF6600', 'photo_watermark_text_color1') : 'FF6600',
+            'photo_watermark_text_color2' => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], 'FFFF00', 'photo_watermark_text_color2') : 'FFFF00',
+            'photo_watermark_text_color3' => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], 'FFFFFF', 'photo_watermark_text_color3') : 'FFFFFF',
+            'gallery_allow_submission'    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
+            'gallery_extended_required'   => isset($_POST['gallery_extended_required']) ? 1 : 0,
+            'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', 'gallery_file_types'),
         ];
-        if (defender::safe()) {
+        if (\defender::safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
                 $inputSettings = [
-                    "settings_name"  => $settings_name,
-                    "settings_value" => $settings_value,
-                    "settings_inf"   => "gallery",
+                    'settings_name'  => $settings_name,
+                    'settings_value' => $settings_value,
+                    'settings_inf'   => 'gallery',
                 ];
-                dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
+                dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
             }
-            addNotice("success", $locale['900']);
+            addNotice('success', $locale['900']);
             redirect(FUSION_REQUEST);
         } else {
             addNotice('danger', $locale['901']);
         }
     }
 }
-echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='well m-t-15'>".$locale['gallery_0022']."</div>";
+
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
 $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
+
+echo "<div class='m-t-20'>";
+echo "<h2>".$locale['photo_settings']."</h2><hr/>";
+echo "<div class='well'>".$locale['gallery_0022']."</div>";
+echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
-openside('');
-echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], [
-    'max_length' => 2, 'inline' => 1, 'width' => '100px', 'type' => 'number', 'inner_width' => '150px'
-]);
+echo "<div class='spacer-sm'>";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+echo "<h4 class='m-0'>".$locale['gallery_0220']."</h4><i>".$locale['gallery_0221']."</i>\n<br/><br/>";
+echo "</div><div class='col-xs-12 col-sm-9'>\n";
 
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='thumb_w'>".$locale['gallery_0203']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0203']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('thumb_w', '', $gll_settings['thumb_w'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        "type"       => "number",
-        'width'      => '150px'
+        'class'         => 'pull-left m-r-10',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0222']
+    ]).
+    form_text('thumb_h', '', $gll_settings['thumb_h'], [
+        'class'         => 'pull-left',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0223']
     ])."
-        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
-    ".form_text('thumb_h', '', $gll_settings['thumb_h'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        'type'       => 'number',
-        'width'      => '150px'
-    ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>
-    </div>\n
-</div>\n
-";
+    </div>
+</div>";
+
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_max_w'>".$locale['gallery_0205']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0205']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_w', '', $gll_settings['photo_w'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        'type'       => 'number',
-        'width'      => '150px'
+        'class'         => 'pull-left m-r-10',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0222']
+    ]).
+    form_text('photo_h', '', $gll_settings['photo_h'], [
+        'class'         => 'pull-left',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0223']
     ])."
-    <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
-    ".form_text('photo_h', '', $gll_settings['photo_h'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        'type'       => 'number',
-        'width'      => '150px'
-    ])."
-    <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
-    </div>\n
-</div>\n";
+    </div>
+</div>";
+
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['gallery_0206']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0206']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        "type"       => "number",
-        'width'      => '150px'
+        'class'         => 'pull-left m-r-10',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0222']
+    ]).
+    form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
+        'class'         => 'pull-left',
+        'max_length'    => 4,
+        'type'          => 'number',
+        'width'         => '170px',
+        'prepend'       => TRUE,
+        'prepend_value' => $locale['gallery_0223']
     ])."
-    <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>\n
-    ".form_text('photo_max_h', '', $gll_settings['photo_max_h'], [
-        'class'      => 'pull-left',
-        'max_length' => 4,
-        "type"       => "number",
-        'width'      => '150px'
-    ])."
-    <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['gallery_0204'].")</small>\n
-    </div>\n
-</div>\n";
+    </div>
+</div>";
+
 echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['gallery_0207']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['gallery_0207']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [
-        'required'   => 1,
-        "type"       => "number",
+        'required'   => TRUE,
+        'type'       => 'number',
         'error_text' => $locale['error_rate'],
         'width'      => '100px',
         'max_length' => 4,
+        'number_min' => 1,
         'class'      => 'pull-left m-r-10'
     ])."
-    ".form_select('calc_c', '', $calc_c, ['options' => $calc_opts, 'class' => 'pull-left', 'inner_width' => '100%', 'width' => '180px'])."
-    </div>\n
-</div>\n
-";
-closeside();
-openside('');
-echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
-echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
-closeside();
-echo "</div><div class='col-xs-12 col-sm-4'>\n";
+    ".form_select('calc_c', '', $calc_c, [
+        'options'     => $calc_opts,
+        'placeholder' => $locale['choose'],
+        'width'       => '180px',
+        'inner_width' => '100%',
+        'class'       => 'pull-left'
+    ])."
+    </div>
+</div>";
+echo "</div>\n</div>\n";
+echo "</div>\n";
+echo "<hr/>\n";
+
+// default Settings
+echo "<div class='spacer-sm'>\n";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
+echo "<h4 class='m-0'>".$locale['gallery_0218']."</h4><i>".$locale['gallery_0219']."</i>\n<br/><br/>";
+echo "</div><div class='col-xs-12 col-sm-9'>\n";
+echo "<div class='display-block overflow-hide'>
+    ".form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], [
+        'inline'      => TRUE,
+        'max_length'  => 2,
+        'width'       => '100px',
+        'type'        => 'number',
+        'inner_width' => '150px'
+    ])."
+</div>";
+echo "<div class='display-block overflow-hide'>
+    ".form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE])."
+</div>";
+echo "<div class='display-block overflow-hide'>
+    ".form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE])."
+</div>";
+
+echo "</div>\n</div>\n";
+echo "</div>\n";
+
+echo "</div>\n<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-4 col-md-offset-0 col-lg-4'>\n";
+
 openside("");
 echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], [
-    'options' => ['0' => $locale['disable'], '1' => $locale['enable']], 'width' => '100%',
+    'options'     => ['0' => $locale['disable'], '1' => $locale['enable']],
+    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
 echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text']);
 echo form_checkbox('photo_watermark_save', $locale['gallery_0215'], $gll_settings['photo_watermark_save']);
@@ -210,16 +254,17 @@ echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['g
         'multiple'    => TRUE,
         'tags'        => TRUE,
         'width'       => '100%',
+        'inner_width' => '100%',
         'delimiter'   => '|'
     ]);
-echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
-echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
-    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'btn-danger', 'icon' => 'fa fa-trash'
-]);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
+    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'btn-danger', 'icon' => 'fa fa-trash'
+]);
 echo closeform();
+        echo '</div>';
 add_to_jquery("
         $('#photo_watermark').bind('change', function(){
         var vals = $(this).select2().val();
