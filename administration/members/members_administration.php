@@ -269,15 +269,16 @@ class Members_Admin {
                     break;
             }
         } else {
-            if (isset($_REQUEST['action']) && isset($_REQUEST['user_id'])) {
+            if (isset($_REQUEST['action']) && isset($_REQUEST['user_id']) || isset($_REQUEST['lookup'])) {
                 $user_action = new Members_Action();
-                if (!is_array($_REQUEST['user_id'])) {
-                    $_REQUEST['user_id'] = [$_REQUEST['user_id']];
+                if (isset($_REQUEST['lookup']) && !is_array($_REQUEST['lookup'])) {
+                    $_REQUEST['lookup'] = [$_REQUEST['lookup']];
                 }
-                $user_action->set_userID((array)$_REQUEST['user_id']);
+                $user_action->set_userID((array)(isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : $_REQUEST['lookup']));
                 $user_action->set_action((string)$_REQUEST['action']);
                 $user_action->execute();
             }
+
             opentable(self::$locale['ME_400']);
             echo Members_Display::render_listing();
             closetable();

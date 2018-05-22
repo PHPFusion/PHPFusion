@@ -192,16 +192,18 @@ class Members_Action extends Members_Admin {
                 $settings = fusion_get_settings();
                 $userdata = fusion_get_userdata();
                 $reason = '';
+
                 if (!empty($this->action_map[$this->action]['reason'])) {
                     $reason = form_sanitizer($_POST['reason'], '', 'reason');
                 }
+
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
                     $duration = form_sanitizer($_POST['duration'], '', 'duration');
                     $duration = ($duration * 86400) + TIME;
                 }
-                if (\defender::safe()) {
 
+                if (\defender::safe()) {
                     foreach ($this->users as $user_id => $u_data) {
 
                         dbquery("UPDATE ".DB_USERS." SET user_status=:user_status, user_actiontime=:action_time WHERE user_id=:user_id", [
@@ -243,11 +245,11 @@ class Members_Action extends Members_Admin {
                         }
                         $u_name[] = $u_data['user_name'];
                     }
+
                     addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
                     redirect(FUSION_REQUEST);
                 }
             } else {
-
                 $height = '45px';
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),
@@ -284,8 +286,8 @@ class Members_Action extends Members_Admin {
                 add_to_footer($modal);
             }
         } else {
-            addNotice('danger', self::$locale['ME_430']);
-            redirect(FUSION_REQUEST);
+            // addNotice('danger', self::$locale['ME_430']);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
 

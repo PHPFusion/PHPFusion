@@ -202,7 +202,6 @@ class Members_Profile extends Members_Admin {
                             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:forum_lastpost, forum_lastuser=:forum_lastuser WHERE forum_id=:forum_id AND forum_lastuser=:forum_lastuser",
                                 [
                                     ':forum_lastpost' => $last_forum_post['post_datestamp'],
-                                    ':forum_lastuser' => $last_forum_post['post_author'],
                                     ':forum_id'       => $forum['forum_id'],
                                     ':forum_lastuser' => $user_id
                                 ]);

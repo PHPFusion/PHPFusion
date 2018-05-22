@@ -33,6 +33,7 @@ $locale['u070'] = "Ban";
 $locale['u071'] = "Suspend";
 $locale['u072'] = "Delete";
 $locale['u073'] = "Delete this user?";
+$locale['u074'] = "Unban";
 // Profile and register
 $locale['u100'] = "In order to change your password or email address, you must enter your current password.";
 $locale['u101'] = "Register";
