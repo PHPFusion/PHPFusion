@@ -39,15 +39,11 @@ if ($profile_method == "input") {
     // Display in profile
 } else if ($profile_method == "display") {
     if ($field_value != "1900-01-01") {
-        //$months = explode("|", fusion_get_locale('months'));
         $user_birthDate = explode("-", $field_value);
         $lastday = mktime(0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0]);
-        //$month_name = $months[number_format($user_birthDate[1])];
-        $fmt = ['0' => '%Y %B %d', '1' => '%d %B %Y'];
-        $fmt_lg = ["hu", "eo", "eu", "ko", "it", "si", "zh-cn", "zh-tw"];
         $user_fields = [
             'title' => $locale['uf_birthdate'],
-            'value' => showdate($fmt[(in_array(fusion_get_locale('datepicker', LOCALE.LOCALESET.'global.php'), $fmt_lg) ? 0 : 1)], $lastday)
+            'value' => showdate($locale['uf_birthdate_date'], $lastday)
         ];
     } else {
         $user_fields = [
