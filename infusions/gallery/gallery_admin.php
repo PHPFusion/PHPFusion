@@ -72,6 +72,10 @@ add_to_head("
 </style>
 ");
 $allowed_pages = ['album_form', 'photo_form', 'settings', 'submissions', 'actions'];
+if (isset($_GET['section']) && $_GET['section'] == "back") {
+    redirect(clean_request("", ["ref", "section", "photo_id", "action", "cat_id", "submit_id"], FALSE));
+}
+
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'gallery';
 $_GET['album'] = 0;
 if (isset($_GET['section'])){
@@ -95,6 +99,11 @@ if (isset($_GET['section'])){
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
 
+if (!empty($_GET['ref']) || isset($_GET['photo_id']) || isset($_GET['cat_id'])) {
+    $tab['title'][] = $locale['back'];
+    $tab['id'][] = "back";
+    $tab['icon'][] = "fa fa-fw fa-arrow-left";
+}
 $tab['title'][] = $locale['gallery_0001'];
 $tab['id'][] = "gallery";
 $tab['icon'][] = "fa fa-camera-retro";
@@ -450,7 +459,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
             $image = thumbnail(IMAGES_G.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
         } else {
             // sure fire if image is usually more than thumb threshold
-            $image = thumbnail(IMAGES_G_T.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
+            $image = thumbnail(IMAGES_G_T.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
         }
 
         return $image;
@@ -459,7 +468,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
         return thumbnail(IMAGES_G.$album_thumb2, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
     }
     if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
-        return thumbnail(IMAGES_G.$album_image, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
+        return thumbnail(IMAGES_G.$album_image, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
     }
 
     return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
